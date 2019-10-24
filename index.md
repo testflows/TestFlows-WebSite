@@ -1,37 +1,81 @@
-## Welcome to GitHub Pages
+# TestFlows Test Framework
 
-You can use the [editor on GitHub](https://github.com/testflows/TestFlows-WebSite/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+**TestFlows is still work in progress and is currently under development.
+Please use it only for reference.**
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+![TestFlows](https://raw.githubusercontent.com/testflows/TestFlows-ArtWork/master/images/logo.png)
 
-### Markdown
+## Introduction
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+[TestFlows] is a **flow** oriented test framework that can be used for functional,
+integration, acceptance and unit testing. It uses **everything is a test** approach
+with the focus on providing test designers flexibility in writing and running their tests.
 
-```markdown
-Syntax highlighted code block
+## Supported environment
 
-# Header 1
-## Header 2
-### Header 3
+* [Ubuntu] 18.04
+* [Python 3] >= 3.6
 
-- Bulleted
-- List
+## Installation
 
-1. Numbered
-2. List
+You can install [TestFlows] using [pip3]
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```bash
+$ pip3 install testflows
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+or from sources
 
-### Jekyll Themes
+```bash
+$ git clone https://github.com/testflows/TestFlows.git
+$ cd TestFlows
+$ ./build ; ./install
+```
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/testflows/TestFlows-WebSite/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Styles
 
-### Support or Contact
+[TestFlows] supports defining tests using either the traditional keywords
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+*  **Module**, **Suite**, **Test**, and **Step**
+
+or using [BDD] (Behavior Driven Development) inspired keywords
+
+* **Module**, **Feature**, **Scenario**, **Given**, **When**, **Then**, **But**, **And**, **By** and **Finally**
+
+## Hello [TestFlows]
+
+An inline test scenario can be defined as follows
+
+```python
+from testflows.core import Scenario
+
+with Scenario("Hello TestFlows!"):
+    pass
+```
+
+then just run it using `python3` command
+
+```bash
+$ python3 ./test.py 
+Oct 21,2019 18:44:06   ⟥  Scenario Hello TestFlows!
+                 1ms   ⟥⟤ OK Hello TestFlows!, /Hello TestFlows!
+
+1 scenario (1 ok)
+
+Total time 1ms
+
+Executed on Dec 31,1969 19:00
+TestFlows Test Framework v1.3.191021.1223802
+```
+
+## What to know more?
+
+Join [@TestFlows] channel on [Telegram].
+
+[@TestFlows]: https://telegram.me/testflows
+[Telegram]: https://telegram.org/
+[BDD]: https://en.wikipedia.org/wiki/Behavior-driven_development
+[TestFlows]: https://github.com/testflows/testflows
+[pip3]: https://github.com/pypa/pip
+[Python 3]: https://www.python.org/
+[Ubuntu]: https://ubuntu.com/ 
