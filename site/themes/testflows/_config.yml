@@ -1,0 +1,7 @@
+favicon: favicon.png
+brand: brand.png
+menu:
+  - title: About
+    url: about
+    intro: "About me."
+    icon: "fa fa-user"

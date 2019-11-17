@@ -1,0 +1,103 @@
+.text-primary {
+  color: #425066;
+}
+
+footer {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.banner {
+    min-height: 50vh;
+    padding: 10vh 0 10vh 0;
+    background: #4b535a;
+    color: white;
+}
+
+.banner .command {
+    background: #5f5f5f;
+    border: 1px solid #777676;
+    line-height: 3em;
+    font-family: monospace;
+    font-size: 1.2em;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.banner .command .prompt {
+    color: #0fff9f;
+    padding-right: 10px;
+}
+
+/**
+ * container
+ */
+
+.container-narrow {
+  margin: 0 auto;
+  max-width:970px;
+}
+
+.container-narrow > footer {
+  margin-top: 20px;
+  text-align: center;
+}
+.container-narrow > footer p {
+  padding: 5px;
+  display: inline-block;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+
+a.header-anchor {
+  color: inherit;
+}
+/**
+ * navbar
+ */
+.navbar-default {
+  background-color: white;
+  border-bottom:  1px solig grey;
+}
+
+.navbar-brand > img {
+  height: 32px;
+}
+
+/**
+ * other
+ */
+body {
+  position: relative;
+  color: #2c3e50;
+}
+
+/**
+ * 
+ * For modern browsers
+ * 1. The space content is one way to avoid an Opera bug when the
+ *    contenteditable attribute is included anywhere else in the document.
+ *    Otherwise it causes space to appear at the top and bottom of elements
+ *    that are clearfixed.
+ * 2. The use of `table` rather than `block` is only necessary if using
+ *    `:before` to contain the top-margins of child elements.
+ */
+.cf:before,
+.cf:after {
+  content: ""; /* 1 */
+  display: table; /* 2 */
+}
+
+.cf:after {
+  clear: both;
+}
+
+/**
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+.cf {
+  *zoom: 1;
+}
+
