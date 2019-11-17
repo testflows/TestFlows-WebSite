@@ -78,6 +78,6 @@ theme: testflows
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
-  repo: git@github.com:testflows/TestFlows-WebSite.git
-  branch: master
+  repo: 
+    url: https://github.com/testflows/TestFlows-WebSite.git
+    branch: master
