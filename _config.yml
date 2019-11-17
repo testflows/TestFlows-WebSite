@@ -20,7 +20,7 @@ permalink_defaults:
 
 # Directory
 source_dir: source
-public_dir: public
+public_dir: docs
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
@@ -78,6 +78,3 @@ theme: testflows
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  repo: 
-    url: https://github.com/testflows/TestFlows-WebSite.git
-    branch: master
