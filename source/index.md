@@ -6,7 +6,9 @@ title:
 {% html div class="container-fluid text-center p-0" style="min-height: calc(100vh - 80px);" %}
 {% html div class="banner" %} 
 
-![TestFlows Logo](/img/logo-white.png)
+<p>
+<img src="/img/logo-white.png" alt="TestFlows Logo" style= "width: 70vw; max-width: 400px;">
+</p>
 
 ### An Open-Source Test Framework
 <div class="row justify-content-center no-gutters" style="padding-top: 3vh">
