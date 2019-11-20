@@ -10,7 +10,7 @@ layout: index
 </p>
 
 ### A Test Flow Oriented Test Framework
-#### makes your testing flow
+#### where testing flows
 <div class="row justify-content-center no-gutters" style="padding-top: 3vh">
     <div class="command">
         <span class="prompt">$</span>pip3 install testflows
