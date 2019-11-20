@@ -1,0 +1,123 @@
+figure.highlight {
+  margin-left: 0;
+  margin-right: 0;
+}
+figure.highlight figcaption {
+  padding-top: 10px;
+  font-size: 85%;
+  opacity: 0.75;
+}
+figure.highlight figcaption:before {
+  content: "\f016";
+  font-family: FontAwesome;
+  margin: 0 10px 0 20px;
+}
+figure.highlight figcaption a {
+  margin-left: 10px;
+}
+figure.highlight .gutter {
+  display: none;
+}
+figure.highlight .code {
+  padding-left: 15px;
+}
+code,
+pre,
+figure.highlight {
+  background-color: #f7f7f7;
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 85%;
+  line-height: 1.45;
+  overflow: auto;
+}
+pre .comment,
+pre .template_comment,
+pre .diff .header,
+pre .doctype,
+pre .pi,
+pre .lisp .string,
+pre .javadoc,
+pre .meta {
+  color: #02a257;
+}
+pre .variable,
+pre .attribute,
+pre .tag,
+pre .regexp,
+pre .ruby .constant,
+pre .xml .tag .title,
+pre .xml .pi,
+pre .xml .doctype,
+pre .html .doctype,
+pre .css .id,
+pre .css .class,
+pre .css .pseudo,
+pre .lisp .body,
+pre .smalltalk .number,
+pre .constant,
+pre .class .title,
+pre .parent,
+pre .haskell .type {
+  color: #c82829;
+}
+pre .number,
+pre .preprocessor,
+pre .built_in,
+pre .literal,
+pre .params,
+pre .constant,
+pre .preprocessor .keyword,
+pre .shebang,
+pre .symbol,
+pre .symbol .string,
+pre .diff .change,
+pre .special,
+pre .attr_selector,
+pre .important,
+pre .subst,
+pre .cdata,
+pre .clojure .title,
+pre .command,
+pre .tag .value,
+pre .phpdoc,
+pre .tex .formula,
+pre .regexp {
+  color: #fb6d19;
+}
+pre .class,
+pre .ruby .class .title,
+pre .css .rules .attribute {
+  color: #718c00;
+}
+pre .string,
+pre .value,
+pre .inheritance,
+pre .header,
+pre .ruby .symbol,
+pre .xml .cdata {
+  color: #02a257;
+}
+pre .hexcolor {
+  color: #3e999f;
+}
+pre .function,
+pre .python .decorator,
+pre .python .title,
+pre .ruby .function .title,
+pre .ruby .title .keyword,
+pre .perl .sub,
+pre .javascript .title,
+pre .coffeescript .title {
+  color: #4271ae;
+}
+pre .keyword,
+pre .javascript .function,
+pre .winutils,
+pre .method,
+pre .addition,
+pre .css .tag,
+pre .request,
+pre .status,
+pre .nginx .title {
+  color: #8959a8;
+}

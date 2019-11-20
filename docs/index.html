@@ -7,9 +7,10 @@
   <link href="/img/favicon.ico" rel="icon">
   
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/fontawesome/all.css" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/google-fonts.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css" type="text/css">
   <link rel="stylesheet" href="/css/style.css" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -32,16 +33,45 @@
 
   <div class="container-fluid p-0">
     <div class="content">
-      <div class="container-fluid text-center p-0" style="min-height: calc(100vh - 80px);"><div class="banner"><p>
+      <div class="container-fluid text-center p-0" style="padding-bottom: 2em !important"><div class="banner"><p>
 <img src="/img/logo-white.png" alt="TestFlows Logo" style="width: 70vw; max-width: 400px;">
 </p>
 
-<h3 id="an-open-source-test-framework">An Open-Source Test Framework</h3>
+<h3 id="a-test-flow-oriented-test-framework">A Test Flow Oriented Test Framework</h3>
+<h4 id="makes-your-testing-flow">makes your testing flow</h4>
 <div class="row justify-content-center no-gutters" style="padding-top: 3vh">
     <div class="command">
         <span class="prompt">$</span>pip3 install testflows
     </div>
+</div>
+<div class="row justify-content-center no-gutters">
+    <div class="links">
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-secondary">
+                <a href="https://pypi.org/project/testflows/" target="_blank" rel="noopener">
+                    <span class="fab fa-3x fa-python"></span>
+                </a>
+            </button>
+            <button type="button" class="btn btn-secondary">
+                <a href="https://twitter.com/TestFlowsTF" target="_blank" rel="noopener">
+                    <span class="fab fa-3x fa-twitter"></span>
+                </a>
+            </button>
+            <button type="button" class="btn btn-secondary">
+                <a href="https://t.me/testflows" target="_blank" rel="noopener">
+                    <span class="fab fa-3x fa-telegram-plane"></span>
+                </a>
+            </button>
+            <button type="button" class="btn btn-secondary">
+                <a href="https://github.com/testflows" target="_blank" rel="noopener">
+                    <span class="fab fa-3x fa-github"></span>
+                </a>
+            </button>
+        </div>
+    </div>
 </div></div></div>
+
+<h3 id="Hello-TestFlows"><a href="#Hello-TestFlows" class="headerlink" title="Hello TestFlows!"></a>Hello TestFlows!</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Scenario</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">"Hello TestFlows"</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 
     </div>
@@ -56,7 +86,6 @@
   </div>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
-<script src="/bootstrap-4.3.1/dist/js/bootstrap.js"></script>
 
 </body>
 </html>
