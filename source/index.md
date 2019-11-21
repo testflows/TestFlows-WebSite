@@ -45,8 +45,18 @@ layout: index
 {% endhtml %}
 {% endhtml %}
 
-### Hello TestFlows!  
+{% html div class="container" style="padding-bottom: 2em !important" %}
 
+## Write
+
+{% html div class=row" %}
+
+{% html div class="col-md-4 text-center" %}
+<div style="padding-bottom: 1em"><i class="fas fa-4x fa-pencil-alt"></i></div>
+Write a simple test.
+{% endhtml %}
+
+{% html div class="col-md-8" %}
 {% codeblock lang:python line_number:false highlight:true %}
 
 from testflows.core import Scenario
@@ -54,3 +64,36 @@ from testflows.core import Scenario
 with Scenario("Hello TestFlows"):
     pass
 {% endcodeblock %}
+{% endhtml %}
+{% endhtml %}
+
+## Execute
+
+{% html div class=row" %}
+
+{% html div class="col-md-4 text-center" %}
+<div style="padding-bottom: 1em"><i class="fas fa-4x fa-running"></i></div>
+Then execute it.
+{% endhtml %}
+
+{% html div class="col-md-8" %}
+{% codeblock lang:shell line_number:false highlight:true %}
+$ python3 ./test.py
+Nov 20,2019 16:42:00   ⟥  Scenario Hello TestFlows
+                 2ms   ⟥⟤ OK Hello TestFlows, /Hello TestFlows
+
+Passing
+
+✔ [ OK ] /Hello TestFlows
+
+1 scenario (1 ok)
+
+Total time 2ms
+
+Executed on Nov 20,2019 16:42
+TestFlows Test Framework v1.3.191112.1234833
+{% endcodeblock %}
+{% endhtml %}
+{% endhtml %}
+
+{% endhtml %}
