@@ -72,7 +72,7 @@ with Scenario("Hello TestFlows"):
 {% html div class=row" %}
 
 {% html div class="col-md-4 text-center" %}
-<div style="padding-bottom: 1em"><i class="fas fa-4x fa-running"></i></div>
+<div style="padding-bottom: 1em"><i class="fas fa-5x fa-running"></i></div>
 Then execute it.
 {% endhtml %}
 
