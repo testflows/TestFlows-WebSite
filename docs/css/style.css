@@ -17,6 +17,8 @@ footer {
     background: #4b535a;
     color: white;
     padding-bottom: 1em;
+    position: relative !important;
+    overflow: hidden;
 }
 
 .banner .command {

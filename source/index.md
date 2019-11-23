@@ -5,6 +5,21 @@ layout: index
 {% html div class="container-fluid text-center p-0" style="padding-bottom: 2em !important" %}
 
 {% html div class="banner" %} 
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
+<div class="firefly"></div>
 <p>
 <img src="/img/logo-white.png" alt="TestFlows Logo" style= "width: 70vw; max-width: 400px;">
 </p>
