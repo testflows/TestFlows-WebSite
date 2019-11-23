@@ -1,0 +1,37 @@
+---
+title: Contact Us
+heading: We are happy to hear from you.
+icon: fas fa-globe-americas pt-5
+date: 2019-11-23 10:41:21
+---
+
+# <div class="fab fa-2x fa-github text-success"></div>
+# GitHub
+
+{% html div class="text-center" %}
+Reach us on GitHub at https://github.com/testflows  
+by leaving a comment, creating a feature or a bug fix request,  
+or by submitting a pull-request with your improvements.
+{% endhtml %}
+
+---
+
+# <div class="fab fa-2x fa-telegram-plane text-success"></div>
+# Telegram
+
+{% html div class="text-center" %}
+Ping us on Telegram channel https://t.me/testflows  
+to get an answer to your question as fast as possible.
+{% endhtml %}
+
+---
+
+# <div class="fab fa-2x fa-twitter text-success"></div>
+# Twitter
+
+{% html div class="text-center" %}
+Subscribe to our Twitter channel https://twitter.com/TestFlowsTF  
+to keep in touch and hear about the latest news and developments.
+{% endhtml %}
+
+

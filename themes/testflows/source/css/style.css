@@ -69,6 +69,10 @@ figure.highlight table {
     min-height: calc(100vh - 80px);
 }
 
+.text-success {
+    color: #77bd87 !important;
+}
+
 /**
  * container
  */

@@ -78,3 +78,19 @@ theme: testflows
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
+
+# Markdown renderer
+marked:
+  gfm: true
+  pedantic: false
+  breaks: false
+  smartLists: true
+  smartypants: true
+  modifyAnchors: ''
+  autolink: true
+  sanitizeUrl: false
+  headerIds: true
+  prependRoot: false
+  external_link:
+    enable: false
+    exclude: []
