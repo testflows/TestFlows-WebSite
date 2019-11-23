@@ -73,6 +73,55 @@ figure.highlight table {
     color: #77bd87 !important;
 }
 
+.text-muted {
+    color: #b3b3b3 !important;
+}
+
+.nav-menu {
+    text-align: center;
+}
+
+.navbar-toggler-icon {
+    width: inherit;
+    height: inherit;
+    color: #495057;
+}
+
+.navbar-brand {
+    padding-bottom: 0.6em;
+    padding-top: 0;
+}
+
+.nav-link {
+    color: #425066;
+    font-size: 1.35em;
+    padding-left: 1.5rem !important;
+    color: inherit !important;
+}
+
+.nav-link > i {
+    color: #5cccfc;
+}
+
+.nav-link:hover > i,
+.nav-link:focus > i,
+.nav-link:active > i {
+    color: #77bd87;
+}
+
+.navbar-toggler-icon:hover,
+.navbar-toggler-icon:focus,
+.navbar-toggler-icon:active {
+    color: #77bd87;
+}
+
+.navbar-toggler,
+.navbar-toggler:hover,
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    outline: none;
+}
+
 /**
  * container
  */

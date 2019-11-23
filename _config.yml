@@ -11,6 +11,21 @@ author: TestFlows.com
 language: en
 timezone:
 
+# Header
+menu:
+#  Handbook:
+#    path: /
+#    icon: fas fa-book
+#  Blog:
+#    path: /
+#    icon: fas fa-blog
+  About:
+    path: /about.html
+    icon: fas fa-book-reader
+  Contact:
+    path: /contact.html
+    icon: fas fa-globe-americas
+
 # URL
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: https://testflows.github.io/TestFlows-WebSite

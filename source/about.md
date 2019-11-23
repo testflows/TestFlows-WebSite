@@ -1,5 +1,5 @@
 ---
-title: About the Project
+title: About TestFlows
 heading: TestFlows was created to provide an enterprise quality<br>open-source test framework. 
 icon: fas fa-book-reader
 date: 2019-11-22 19:49:22

@@ -1,9 +1,17 @@
-<nav id="main-nav" class="navbar navbar-default navbar-fixed-top" role="navigation">
+<nav id="main-nav" class="navbar navbar-expand-md navbar-fixed-top" role="navigation">
     <a class="navbar-brand" href="<%- config.root %>">
         <img src="<%- config.root %>img/logo.png" alt="TestFlows">
     </a>
-    <div class="collapse navbar-collapse nav-menu">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
         <ul class="nav navbar-nav">
+            <% for (var i in config.menu) { %>
+                <li class="nav-item">
+                    <a class="nav-link" href="<%- url_for(config.menu[i].path) %>"><i class="<%- config.menu[i].icon %> pr-2"></i><%= i %></a>
+                </li>
+            <% } %>
         </ul>
     </div>
 </nav>
