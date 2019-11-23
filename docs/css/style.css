@@ -1,5 +1,6 @@
 html, body {
     font-family: 'Open Sans', sans-serif;
+    -webkit-font-smoothing: subpixel-antialiased;
 }
 
 .text-primary {
@@ -19,6 +20,8 @@ footer {
     padding-bottom: 1em;
     position: relative !important;
     overflow: hidden;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .banner .command {
@@ -96,7 +99,7 @@ figure.highlight table {
 
 .nav-link {
     color: #425066;
-    font-size: 1.35em;
+    font-size: 1.1em;
     padding-left: 1.5rem !important;
     color: inherit !important;
 }
