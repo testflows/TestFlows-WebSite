@@ -24,6 +24,10 @@ footer {
     backface-visibility: hidden;
 }
 
+.banner h1 {
+    color: #7bb9c8;
+}
+
 .banner .command {
     background: #5f5f5f;
     border: 1px solid #777676;
