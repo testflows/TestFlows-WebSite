@@ -90,6 +90,11 @@ figure.highlight table {
     text-align: center;
 }
 
+@media (min-width: 768px) {
+    .navbar-expand-md {
+        margin: 0 10vw;
+    }
+}
 .navbar-toggler-icon {
     width: inherit;
     height: inherit;
