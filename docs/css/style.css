@@ -25,7 +25,6 @@ blockquote {
 .post-header {
     border-bottom: 2px solid #54e5ae;
     margin-bottom: 2em;
-    padding-bottom: 0.5em;
 }
 
 .post-summary h1 {
@@ -93,10 +92,31 @@ blockquote {
     color: inherit;
 }
 
+.post-metadata.row {
+   width: 100%;
+   font-size: 1em;
+}
+
+.post-author {
+}
+
+.post-author .author-title {
+    font-weight: bold;
+    padding-right: 0.65em;
+}
+
+.post-author .author-name,
+.post-author .authored-date {
+    font-weight: bold;
+    color: #adadad;
+}
+.post-author .author-name {
+    padding-right: 2em;
+}
+
 .post-share .caption {
     font-weight: bold;
-    line-height: 1.5em;
-    font-size: 1.2em;
+    line-height: 2em;
     padding-right: 0.5em;
 }
 

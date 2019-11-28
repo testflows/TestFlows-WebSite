@@ -1,6 +1,7 @@
 ---
 title: Making Your Tests Better or How to Break Your Tests Into Steps
 date: 2019-11-24 08:26:26
+author: Vitaliy Zakaznikov
 image: 
    asset: images/checklist.png
    credit: <a href="http://www.freepik.com">Designed by Freepik</a>
