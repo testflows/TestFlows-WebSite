@@ -4,7 +4,7 @@ figure.highlight {
 }
 figure.highlight figcaption {
   padding-top: 10px;
-  font-size: 85%;
+  font-size: 75%;
   opacity: 0.75;
 }
 figure.highlight figcaption:before {
@@ -26,7 +26,7 @@ pre,
 figure.highlight {
   background-color: #f7f7f7;
   font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-  font-size: 85%;
+  font-size: 0.7em;
   line-height: 1.45;
   overflow: auto;
 }

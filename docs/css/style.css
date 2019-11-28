@@ -1,6 +1,7 @@
 html, body {
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Source Sans Pro', 'Open Sans', sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;
+    font-size: 1.1em;
 }
 
 .text-primary {
@@ -12,16 +13,111 @@ footer {
     padding-bottom: 20px;
 }
 
+blockquote {
+    padding-left: 2em;
+    border-left: 5px solid #dee2e6;
+    font-weight: 300;
+}
+
+.post {
+}
+
+.post-header {
+    border-bottom: 2px solid #54e5ae;
+    margin-bottom: 2em;
+    padding-bottom: 0.5em;
+}
+
+.post-summary h1 {
+    font-weight: bold;
+    color: #ff8c16;
+    text-align: start;
+    padding-bottom: 1em;
+    font-family: Ubuntu;
+}
+
+.post-summary p {
+    display: contents;
+}
+
+.post-body {
+    margin: auto;
+    font-size: 1.1em;
+}
+.post-body h1,
+.post-body h2,
+.post-body h3,
+.post-body h4 {
+    padding-top: 0.5em;
+    text-align: start;
+    font-weight: bold;
+}
+.post-body h2 {
+    color: #ef8b28;
+}
+.post-body h3 {
+    color: #a1d6e1;
+}
+
+.post-summary {
+    text-align: start;
+}
+
+.post-image {
+    position: relative;
+}
+
+.post-image img {
+    max-height: 500px;
+    max-width: 90%;
+}
+
+.post-image-credit {
+    position: absolute;
+    bottom: 0px;
+    font-size: 8px;
+    right: 0;
+}
+
+.post-image-credit a {
+    color: grey;
+}
+
+.post-share.btn-group a {
+    color: #49c19d;
+    padding: 5px;
+    font-size: 0.7em;
+}
+
+.post-share.btn-group a:hover {
+    color: inherit;
+}
+
+.post-share .caption {
+    font-weight: bold;
+    line-height: 1.5em;
+    font-size: 1.2em;
+    padding-right: 0.5em;
+}
+
+.divider {
+    width: 100%;
+    border-top: 2px solid #54e5ae;
+    padding-top: 5px;
+    margin-top: 2em;
+}
+
 .banner {
     min-height: 40vh;
-    padding: 10vh 0 10vh 0;
-    background: #4b535a;
+    padding: 20vh 0 10vh 0;
+    background: #163551;
     color: white;
     padding-bottom: 1em;
     position: relative !important;
     overflow: hidden;
     transform: translateZ(0);
     backface-visibility: hidden;
+    font-weight: 300;
 }
 
 .banner h1 {
@@ -29,11 +125,10 @@ footer {
 }
 
 .banner .command {
-    background: #5f5f5f;
-    border: 1px solid #777676;
+    background: #0000005e;
     line-height: 3em;
     font-family: monospace;
-    font-size: 1.2em;
+    font-size: 1em;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -68,6 +163,11 @@ footer {
 
 h1,h2,h3,h4 {
     text-align: center;
+    font-weight: 300;
+}
+
+h2 {
+    font-size: 1.8em;
 }
 
 figure.highlight table {
@@ -90,9 +190,14 @@ figure.highlight table {
     text-align: center;
 }
 
+.navbar {
+    background: white;
+    font-weight: 300;
+}
+
 @media (min-width: 768px) {
     .navbar-expand-md {
-        margin: 0 10vw;
+        padding: 0 10vw;
     }
 }
 .navbar-toggler-icon {

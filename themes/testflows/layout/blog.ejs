@@ -1,0 +1,67 @@
+<div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+    <div class="banner">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <h1><%- page.heading %></h1>
+        <i class="fa-5x pt-3 <%- page.icon %>"></i>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 2em !important">
+<% site.posts.each(function(item){ %>
+    <div class="post">
+        <div class="post-header row">
+            <div class="post-summary col-lg-6 mt-auto mb-auto">
+                <h1 style="font-weight: bold;"><%- item.title %></h1>
+                <%- item.excerpt %><i class="post-summary-more">...</i>
+            </div>
+            <div class="post-image col-lg-6 m-auto">
+                <img src="<%- config.root %><%- item.image.asset %>"></img>
+                <span class="post-image-credit"><%- item.image.credit %></span>
+            </div>
+            <div class="post-share btn-group pl-3" role="group" aria-label="share">
+                <span class="caption">Share It</span>
+                <a href="https://twitter.com/intent/tweet?url=<%- item.permalink %>">
+                    <i class="fab fa-2x fa-twitter"></i>
+                </a>
+                <a href="https://www.facebook.com/sharer/sharer.php?u=<%- item.permalink %>">
+                    <i class="fab fa-2x fa-facebook"></i>
+                </a>
+                <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- item.permalink %>">
+                    <i class="fab fa-2x fa-linkedin"></i>
+                </a>
+            </div>
+        </div>
+        <div class="post-body row">
+            <div class="col-12">
+                <%- item.content %>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a href="https://twitter.com/intent/tweet?url=<%- item.permalink %>">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<%- item.permalink %>">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- item.permalink %>">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+                <div class="col-12 divider"></div>
+            </div>
+        </div>
+    </div>
+<% }); %>
+</div>

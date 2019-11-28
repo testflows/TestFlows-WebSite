@@ -1,7 +1,7 @@
 ---
 title: Contact Us
-heading: We are happy to hear from you.
-icon: fas fa-envelope-open-text pt-5
+heading: We are happy to hear from you
+icon: fas fa-envelope-open-text pt-5 pb-5
 date: 2019-11-23 10:41:21
 ---
 
