@@ -139,6 +139,18 @@ blockquote {
     font-weight: 300;
 }
 
+.banner.not-in-view .firefly,
+.banner.not-in-view .firefly::before,
+.banner.not-in-view .firefly::after {
+    animation-play-state: paused;
+}
+
+.banner .firefly,
+.banner .firefly::before,
+.banner .firefly::after {
+    transform: translateZ(0);
+}
+
 .banner h1 {
     color: #7bb9c8;
 }

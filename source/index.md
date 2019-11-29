@@ -4,12 +4,7 @@ layout: index
 
 {% html div class="container-fluid text-center p-0" style="padding-bottom: 2em !important" %}
 
-{% html div class="banner" %} 
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
+{% html div class="banner in-view-watcher" %} 
 <div class="firefly"></div>
 <div class="firefly"></div>
 <div class="firefly"></div>
