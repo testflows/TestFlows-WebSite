@@ -243,14 +243,9 @@ figure.highlight table {
 }
 
 .nav-link {
-    color: #425066;
     font-size: 1.1em;
     padding-left: 1.5rem !important;
     color: inherit !important;
-}
-
-.nav-link > i {
-    color: #e2e2e2;
 }
 
 .nav-link:hover > i,
