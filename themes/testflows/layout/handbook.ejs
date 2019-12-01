@@ -1,0 +1,55 @@
+<div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+    <div class="banner in-view-watcher">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <h1>Handbook</h1>
+        <h2><%- page.heading %></h2>
+        <i class="fa-5x pt-3 <%- page.icon %>"></i>
+    </div>
+</div>
+<div class="handbook">
+    <div class="container" style="padding-bottom: 2em !important;">
+        <div class="post">
+            <div class="post-body row">
+                <nav id="sidebar" class="col-md-3 sidebar">
+                    <div id="Contents" class="sidebar-header pt-4">
+                        <h3 class="d-none d-md-block">Contents</h3>
+                        <h2 class="d-block d-md-none">Contents</h2>
+                    </div>
+                    <div>
+                        <% site.pages.each(function(chapter) { %>
+                            <% if (chapter.path.startsWith("handbook")) { %>
+                                <% if (page.title == chapter.title) { %>
+                                    <%- toc(page.content) %>
+                                <% } else { %>
+                                    <div><a class="toc-link" href="/<%- chapter.path %>#Contents"><%- chapter.title %></a></div>
+                                <% } %>
+                            <% } %>
+                        <% }); %>
+                    </div>
+                </nav>
+                <div class="col-md-9">
+                    <%- page.content %>
+                    <div class="col-12 divider"></div>
+                    <div class="switch-page text-center">
+                        <% if (page.prev) { %>
+                            <a class="previous pr-5" href="/handbook<%- url_for(page.prev) %>.html#Contents"><i class="fas fa-hand-point-left pr-2"></i>Back</a>
+                        <% } %>
+                        <% if (page.next) { %>
+                            <a class="next" href="/handbook<%- url_for(page.next) %>.html#Contents">Next<i class="fas fa-hand-point-right pl-2"></i></a>
+                        <% } %>
+                    </div>
+                </div>
+                <a class="jump fas fa-chevron-up" href="#Contents"></a>
+            </div>
+        </div>
+    </div>
+</div>

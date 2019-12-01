@@ -13,9 +13,9 @@ timezone:
 
 # Header
 menu:
-#  Handbook:
-#    path: /
-#    icon: fas fa-book
+  Handbook:
+    path: /handbook
+    icon: fas fa-book
   Blog:
     path: /blog
     icon: fas fa-blog

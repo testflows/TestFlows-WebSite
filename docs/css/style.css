@@ -18,6 +18,75 @@ blockquote {
     font-weight: 300;
 }
 
+#sidebar {
+    padding-left: 15px;
+    z-index: 999;
+    transition: all 0.3s;
+    color: #50749c;
+}
+
+.jump {
+    position: fixed;
+    bottom: 0.5em;
+    right: 1em;
+    color: #6a6a6a;
+}
+
+.jump:active,
+.jump:focus,
+.jump:hover {
+    color: #49c19d;
+    text-decoration: none;
+}
+
+.handbook .toc-number {
+    display: none;
+}
+
+.handbook ol.toc,
+.handbook .toc ol li {
+    list-style-type: none;
+    margin-bottom: 0;
+}
+
+.handbook a.toc-link {
+    color: #50749c;
+    text-decoration: none;
+}
+
+.handbook a.toc-link:active,
+.handbook a.toc-link:focus,
+.handbook a.toc-link:hover {
+    color: #49c19d;
+}
+
+.toc-level-1 > .toc-link .toc-text {
+    font-weight: bold;
+    color: #49c19d;
+}
+
+.switch-page a {
+    color: inherit;
+}
+
+.switch-page a:active,
+.switch-page a:focus,
+.switch-page a:hover {
+    color: #49c19d;
+    text-decoration: none;
+}
+
+.handbook .toc-level-2 {
+    font-weight: normal;
+}
+
+.handbook ol.toc {
+    padding-inline-start: 0px;
+}
+.handbook ol.toc-child {
+    padding-inline-start: 10px;
+}
+
 .post {
 }
 
@@ -46,7 +115,7 @@ blockquote {
 .post-body h2,
 .post-body h3,
 .post-body h4 {
-    padding-top: 0.5em;
+    padding-top: 1.3em;
     text-align: start;
     font-weight: bold;
 }
