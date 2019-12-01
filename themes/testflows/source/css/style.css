@@ -115,9 +115,11 @@ blockquote {
 .post-body h2,
 .post-body h3,
 .post-body h4 {
-    padding-top: 1.3em;
     text-align: start;
     font-weight: bold;
+    padding: 2em 0 0;
+    padding-bottom: 0.5em;
+    margin: -1em 0 0;
 }
 .post-body h2 {
     color: #ef8b28;
