@@ -196,7 +196,7 @@ with Feature("My feature"):
 
 will create its own test.
 
-## Running Top Level Tests
+## Running Tests
 
 Top level tests can be run using either `python3` command or directly if they are made executable.
 For example with a top level test defined as
@@ -236,7 +236,7 @@ then it can be executed directly as
 ./test.py
 ```
 
-## Top Level Test Options
+### Options
 
 Top level test options can be obtained by passing `-h` or `--help` option.
 
@@ -244,15 +244,11 @@ Top level test options can be obtained by passing `-h` or `--help` option.
 python3 test.py --help
 ```
 
-## Saving Test Log
-
-Test log can be saved into a file by specifying `-l` or `--log` option.
-
 ```bash
 python3 test.py --log ./test.log
 ```
 
-## Test Output
+## Output
 
 Test output can be controlled with `-o` or `--output` option which specifies the output format to use
 to print to `stdout`. By default, a detailed `nice` output is used. See `--help` for other formats.
@@ -261,7 +257,7 @@ to print to `stdout`. By default, a detailed `nice` output is used. See `--help`
 python3 test.py --output short
 ```
 
-## Test Logs
+## Logs
 
 [TestFlows] produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
 
@@ -283,11 +279,15 @@ or `tfs transform decompress` command
 cat test.log | tfs transform decompress
 ```
 
-## Test Log Transformations
+### Saving Log
+
+Test log can be saved into a file by specifying `-l` or `--log` option.
+
+### Transformations
 
 Test logs can be transformed using `tfs transform` command. See `tfs transform --help` for a list available transformations.
 
-## Test Reports
+## Reports
 
 Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
 
