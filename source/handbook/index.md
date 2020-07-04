@@ -8,7 +8,7 @@ icon: fas fa-book pt-5 pb-5
 
 # TestFlows in 15 Minutes
 
-## TestFlows in One Paragraph
+## What is TestFlows?
 
 [TestFlows] is an open-source software testing framework that can be used for functional,
 integration, acceptance and unit testing across various teams. It is designed to provide
@@ -196,6 +196,264 @@ with Feature("My feature"):
 
 will create its own test.
 
+## Running Top Level Tests
+
+Top level tests can be run using either `python3` command or directly if they are made executable.
+For example with a top level test defined as
+
+```python
+from testflows.core import Test
+
+with Test("My test"):
+    pass
+```
+
+you can run it with `python3` command as follows
+
+```bash
+python3 test.py
+```
+
+or if the top level test is executable and defined as
+
+```python3
+#!/usr/bin/python3
+from testflows.core import Test
+
+with Test("My test"):
+    pass
+```
+
+and is made executable with
+
+```bash
+chmod +x test.py
+```
+
+then it can be executed directly as
+
+```bash
+./test.py
+```
+
+## Top Level Test Options
+
+Top level test options can be obtained by passing `-h` or `--help` option.
+
+```bash
+python3 test.py --help
+```
+
+## Saving Test Log
+
+Test log can be saved into a file by specifying `-l` or `--log` option.
+
+```bash
+python3 test.py --log ./test.log
+```
+
+## Test Output
+
+Test output can be controlled with `-o` or `--output` option which specifies the output format to use
+to print to `stdout`. By default, a detailed `nice` output is used. See `--help` for other formats.
+
+```bash
+python3 test.py --output short
+```
+
+## Test Logs
+
+[TestFlows] produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
+
+```json
+{"message_keyword":"TEST","message_hash":"ccd1ad1f","message_object":1,"message_num":2,"message_stream":null,"message_level":1,"message_time":1593887847.045375,"message_rtime":0.001051,"test_type":"Test","test_subtype":null,"test_id":"/68b96288-be25-11ea-8e14-2477034de0ec","test_name":"/My test","test_flags":0,"test_cflags":0,"test_level":1,"test_uid":null,"test_description":null}
+```
+
+Each message is a [JSON] object. Object fields depend on the type of the message that is specified by the `message_keyword`.
+
+Logs can be decompressed using either standard `xzcat` utility
+
+```bash
+xzcat test.log
+```
+
+or `tfs transform decompress` command
+
+```bash
+cat test.log | tfs transform decompress
+```
+
+## Test Log Transformations
+
+Test logs can be transformed using `tfs transform` command. See `tfs transform --help` for a list available transformations.
+
+## Test Reports
+
+Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
+
+## Command Line Arguments
+
+You can add command line arguments to the top level test either by setting [argparser] parameter of the inline test
+or using [ArgumentParser] decorator if top test is defined as a decorated function.
+
+### argparser
+
+The [argparser] parameter can be used to set a custom command line argument parser by passing it a function that takes `parser` as the first
+parameter. This function will be called with an instance of [argparse] parser instance as the argument for the `parser` parameter.
+The values of the command line arguments can be accessed using the `args` attribute of the test.
+
+For example,
+
+```python
+def argparser(parser):
+    """Custom command line arguments.
+
+    :param parser: an instance of argparse parser.
+    """
+    parser.add_argument("--arg0", action="store_true",
+        help="argument 0")
+    parser.add_argument("--arg1", action="store_true",
+        help="argument 1")
+
+with Module("regression", argparser=argparser) as module:
+    note(module.args["arg0"].value)
+    note(module.args["arg1"].value)
+```
+
+### ArgumentParser
+
+If [Module] is defined using a decorated function then [ArgumentParser] decorator can be used to set custom command line argument parser.
+The values of the custom command line arguments will be passed to the decorated function as test arguments and therefore
+the decorated function must take the first parameters with the same name as command line arguments.
+
+For example,
+
+```python
+def argparser(parser):
+    """Custom command line arguments.
+
+    :param parser: an instance of argparse parser.
+    """
+    parser.add_argument("--arg0", action="store_true",
+        help="argument 0")
+    parser.add_argument("--arg1", action="store_true",
+        help="argument 1")
+
+@TestModule
+@ArgumentParser(argparser)
+def regression(self, arg0, arg1):
+    note(arg0)
+    note(arg1)
+```
+
+When custom command line argument parser is defined then the help messages obtained using `-h` or `--help` option will include
+the description of the custom arguments. For example,
+
+```bash
+# python3 ./test.py
+...
+test arguments:
+  --arg0                                          argument 0
+  --arg1                                          argument 1
+
+```
+
+## Tagging Tests
+
+You can add `tags` to any test either by setting [tags] parameter of the inline test
+or using [Tags] decorator if the test is defined as a decorated function. The values of the tags can be accessed
+using the `tags` attribute of the test.
+
+### tags
+
+The [tags] parameter of the test can be use used to set [tags] of any inline test. The [tags] parameter
+can be passed either a `list`, `tuple` or a `set` of tag values. For example,
+
+```python
+with Test("My test", tags=("tagA", "tagB")) as test:
+    note(test.tags)
+```
+### Tags
+
+A [Tags] decorator can be used to set [tags] of any test that is defined used a decorated function. For example,
+
+```python
+@TestScenario
+@Tags("tagA", "tagB")
+def scenario(self):
+    note(self.tags)
+```
+
+## Test Attributes
+
+You can add `attributes` to any test either by setting [attributes] parameter of the inline test
+or using [Attributes] decorator if the test is defined as a decorated function. The values of the attributes can be accessed
+using the `attributes` attribute of the test.
+
+### attributes
+
+The [attributes] parameter of the test can be used to set [attributes] of any inline test. The [attributes] parameter
+can be passed either a `list` of `(name, value)` tuples or `Attribute` class instances. For example,
+
+```python
+with Test("My test", attributes=[("attr0", "value"), Attribute("attr1", "value")] as test:
+    note(test.attributes)
+```
+
+### Attributes
+
+An [Attributes] decorator can be used to set [attributes] of any test that is defined used a decorated function. For example,
+
+```python
+@TestScenario
+@Attributes(
+    ("attr0", "value"),
+    Attribute("attr1", "value")
+)
+def scenario(self):
+    note(self.attributes)
+```
+
+## Test Requirements
+
+You can add `requirements` to any test either by setting [requirements] parameter of the inline test
+or using [Requirements] decorator if the test is defined as a decorated function. The values of the requirements can be accessed
+using the `requirements` attribute of the test.
+
+> `Requirement` class instances must be always called with the version number the test is expected to verify.
+> `RequirementError` exception will be raised if version does not match the version of the instance.
+
+### requirements
+
+The [requirements] parameter of the test can be used to set `requirements` of any inline test. The [requirements] parameter
+must be passed a `list` of called `Requirement` instances.
+
+For example,
+
+```python
+
+RQ1 = Requirement("RQ1", version="1.0")
+
+with Test("My test", requirements=[RQ1("1.0")] as test:
+    note(test.requirements)
+```
+
+### Requirements
+
+A [Requirements] decorator can be used to set `requirements` attribute of any test that is defined used a decorated function.
+The decorator must be called with one or more called `Requirement` instances. For example,
+
+```python
+RQ1 = Requirement("RQ1", version="1.0")
+
+@TestScenario
+@Requirements(
+    RQ1("1.0")
+)
+def scenario(self):
+    note(self.requirements)
+```
+
 ## [BDD]-inspired keywords
 
 [TestFlows] encourages the usage of [BDD]-inspired keywords as they can provide the much needed context for your steps
@@ -215,6 +473,8 @@ when writing your test scenarios.
   * [Then](#Then) is used to define a step for positive assertion
   * [But](#But) is used to define a step for negative assertion
   * [Finally](#Finally) is used to define a cleanup step
+
+## Test Definition Classes
 
 ### Module
 
@@ -579,6 +839,15 @@ being an [Iteration] that is used to implement test repetitions.
 * **By**
 * **Finally**
 
+[tags]: #tags
+[#Tags]: #Tags
+[attributes]: #attributes
+[Attributes]: #Attributes
+[requirements]: #requirements
+[Requirements]: #Requirements
+[argparser]: #argparser
+[ArgumentParser]: #ArgumentParser
+[argparse]: https://docs.python.org/3/library/argparse.html
 [Module]: #Module
 [Feature]: #Feature
 [Type]: #Types
@@ -619,3 +888,5 @@ being an [Iteration] that is used to implement test repetitions.
 [ClickHouse]: https://clickhouse.tech/
 [Grafana]: https://grafana.com/
 [Python]: https://www.python.org/
+[LZMA]: https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm
+[JSON]: https://en.wikipedia.org/wiki/JSON
