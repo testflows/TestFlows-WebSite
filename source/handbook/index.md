@@ -285,7 +285,96 @@ Test log can be saved into a file by specifying `-l` or `--log` option.
 
 ### Transformations
 
-Test logs can be transformed using `tfs transform` command. See `tfs transform --help` for a list available transformations.
+Test logs can be transformed using `tfs transform` command. See `tfs transform --help` for a detailed list available transformations.
+
+#### nice
+
+The `tfs transform nice` command can be used to transform test log into a `nice` output format which the default output
+used for the `stdout`.
+
+For example,
+
+```bash
+$ cat test.log | tfs transform nice
+Jul 04,2020 19:20:21   ⟥  Module filters
+Jul 04,2020 19:20:21     ⟥  Scenario test_0
+Jul 04,2020 19:20:21       ⟥  Step first step
+               596us       ⟥⟤ OK first step, /filters/test_0/first step
+                 1ms     ⟥⟤ OK test_0, /filters/test_0
+Jul 04,2020 19:20:21     ⟥  Suite suite 0
+...
+```
+
+#### short
+
+The `tfs transform short` command can be used to transform test log into a `short` output format which contains test procedure
+and test results.
+
+For example,
+
+```bash
+$ cat test.log | tfs transform short
+Module filters
+  Scenario test_0
+    Step first step
+    OK
+  OK
+  Suite suite 0
+...
+```
+
+#### slick
+
+The `tfs transform slick` command can be used to transform test log into a `slick` output format which contains only test names
+with results provided as icons in front of the test name. This output format is very concise.
+
+For example,
+
+```bash
+$ cat test.log | tfs transform slick
+➤ Module filters
+  ✔ Scenario test_0
+  ➤ Suite suite 0
+...
+```
+#### dots
+
+The `tfs transform dots` command can be used to transform test log into a `dots` output format which outputs dots
+for each executed test.
+
+For example,
+
+```bash
+$ cat test.log | tfs transform dots
+.........................
+```
+
+#### raw
+
+The `tfs transform raw` command can be used to transform a test log into a `raw` output format which contains raw [JSON]
+messages.
+
+For example,
+
+```bash
+$ cat test.log | tfs transform raw
+{"message_keyword":"PROTOCOL","message_hash":"489eeba5","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1593904821.784232,"message_rtime":0.001027,"test_type":"Module","test_subtype":null,"test_id":"/ee772b86-be4c-11ea-8e14-2477034de0ec","test_name":"/filters","test_flags":0,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
+...
+```
+
+#### compact
+
+The `tfs transform compact` command can be used to transform a test log into a `compact` format which only contains
+raw [JSON] test definition and result messages while omiting all messages for the steps.
+It is used to create compact test logs used for comparison reports.
+
+#### compress
+
+The `tfs transform compress` command is used to compress a test log with [LZMA] compression algorithm.
+
+#### decompress
+
+The `tfs transform decompress` command is used to decompress a test log compressed with [LZMA] compression algorithm.
 
 ## Reports
 
