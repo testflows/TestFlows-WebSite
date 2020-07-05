@@ -281,7 +281,11 @@ cat test.log | tfs transform decompress
 
 ### Saving Log
 
-Test log can be saved into a file by specifying `-l` or `--log` option.
+Test log can be saved into a file by specifying `-l` or `--log` option when running the test. For example,
+
+```bash
+python3 test.py --log test.log
+```
 
 ### Transformations
 
@@ -379,6 +383,44 @@ The `tfs transform decompress` command is used to decompress a test log compress
 ## Reports
 
 Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
+
+### official
+
+An official test report can generated from a test log using `tfs report official` command. The report is created in [Markdown]
+and can be converted to [HTML] using `tfs document convert` command. For example,
+
+```bash
+cat test.log | tfs report official | tfs document convert > report.html
+```
+
+See `tfs report official --help` for details.
+
+### coverage
+
+A requirements coverage report can be generated from a test log using `tfs report coverage` command. The report is created in [Markdown]
+and can be converted to [HTML] using `tfs document convert` command. For example,
+
+```bash
+cat test.log | tfs report coverage requirements.py | tfs document convert > coverage.html
+```
+
+See `tfs report coverage --help` for details.
+
+### compare
+
+A comparison report can be generated using one of the `tfs report compare` commands.
+
+#### results
+
+A results comparison report can be generated using `tfs report compare results` command. See `tfs report compare results --help` for details.
+
+#### metrics
+
+A metrics comparison report can be generated using `tfs report compare metrics` command. See `tfs report compare metrics --help` for details.
+
+### specification
+
+A test specification for the test run can be generated using `tfs report specification` command. See `tfs report specification --help` for details.
 
 ## Command Line Arguments
 
@@ -979,3 +1021,4 @@ being an [Iteration] that is used to implement test repetitions.
 [Python]: https://www.python.org/
 [LZMA]: https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm
 [JSON]: https://en.wikipedia.org/wiki/JSON
+[Markdown]: https://en.wikipedia.org/wiki/Markdown
