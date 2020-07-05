@@ -209,7 +209,7 @@ with Test("My test"):
 you can run it with `python3` command as follows
 
 ```bash
-python3 test.py
+$ python3 test.py
 ```
 
 or if the top level test is executable and defined as
@@ -225,13 +225,13 @@ with Test("My test"):
 and is made executable with
 
 ```bash
-chmod +x test.py
+$ chmod +x test.py
 ```
 
 then it can be executed directly as
 
 ```bash
-./test.py
+$ ./test.py
 ```
 
 ## Options
@@ -239,11 +239,11 @@ then it can be executed directly as
 Top level test options can be obtained by passing `-h` or `--help` option.
 
 ```bash
-python3 test.py --help
+$ python3 test.py --help
 ```
 
 ```bash
-python3 test.py --log ./test.log
+$ python3 test.py --log ./test.log
 ```
 
 # Output
@@ -252,7 +252,7 @@ Test output can be controlled with `-o` or `--output` option which specifies the
 to print to `stdout`. By default, a detailed `nice` output is used. See `--help` for other formats.
 
 ```bash
-python3 test.py --output short
+$ python3 test.py --output short
 ```
 
 # Logs
@@ -268,13 +268,13 @@ Each message is a [JSON] object. Object fields depend on the type of the message
 Logs can be decompressed using either standard `xzcat` utility
 
 ```bash
-xzcat test.log
+$ xzcat test.log
 ```
 
 or `tfs transform decompress` command
 
 ```bash
-cat test.log | tfs transform decompress
+$ cat test.log | tfs transform decompress
 ```
 
 ## Saving Log
@@ -282,7 +282,7 @@ cat test.log | tfs transform decompress
 Test log can be saved into a file by specifying `-l` or `--log` option when running the test. For example,
 
 ```bash
-python3 test.py --log test.log
+$ python3 test.py --log test.log
 ```
 
 ## Transformations
@@ -388,7 +388,7 @@ An official test report can generated from a test log using `tfs report official
 and can be converted to [HTML] using `tfs document convert` command. For example,
 
 ```bash
-cat test.log | tfs report official | tfs document convert > report.html
+$ cat test.log | tfs report official | tfs document convert > report.html
 ```
 
 See `tfs report official --help` for details.
@@ -399,7 +399,7 @@ A requirements coverage report can be generated from a test log using `tfs repor
 and can be converted to [HTML] using `tfs document convert` command. For example,
 
 ```bash
-cat test.log | tfs report coverage requirements.py | tfs document convert > coverage.html
+$ cat test.log | tfs report coverage requirements.py | tfs document convert > coverage.html
 ```
 
 See `tfs report coverage --help` for details.
@@ -479,7 +479,7 @@ When custom command line argument parser is defined then the help messages obtai
 the description of the custom arguments. For example,
 
 ```bash
-# python3 ./test.py
+$ python3 ./test.py
 ...
 test arguments:
   --arg0                                          argument 0

@@ -11,10 +11,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1593908256311" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1593908256311" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1593908953046" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1593908953046" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1593908256311" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1593908953046" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -192,38 +192,38 @@ For example with a top level test defined as</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Test</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">"My test"</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 <p>you can run it with <code>python3</code> command as follows</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py</span><br></pre></td></tr></table></figure>
 
 <p>or if the top level test is executable and defined as</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/python3</span><br><span class="line">from testflows.core import Test</span><br><span class="line"></span><br><span class="line">with Test(&quot;My test&quot;):</span><br><span class="line">    pass</span><br></pre></td></tr></table></figure>
 
 <p>and is made executable with</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">chmod +x test.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ chmod +x test.py</span><br></pre></td></tr></table></figure>
 
 <p>then it can be executed directly as</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./test.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./test.py</span><br></pre></td></tr></table></figure>
 
 <h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><p>Top level test options can be obtained by passing <code>-h</code> or <code>--help</code> option.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">log</span> ./test.log</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --<span class="built_in">log</span> ./test.log</span><br></pre></td></tr></table></figure>
 
 <h1 id="Output"><a href="#Output" class="headerlink" title="Output"></a>Output</h1><p>Test output can be controlled with <code>-o</code> or <code>--output</code> option which specifies the output format to use
 to print to <code>stdout</code>. By default, a detailed <code>nice</code> output is used. See <code>--help</code> for other formats.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --output short</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --output short</span><br></pre></td></tr></table></figure>
 
 <h1 id="Logs"><a href="#Logs" class="headerlink" title="Logs"></a>Logs</h1><p><a href="https://github.com/testflows/testflows" target="_blank" rel="noopener">TestFlows</a> produces <a href="https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm" target="_blank" rel="noopener">LZMA</a> compressed logs that contains <a href="https://en.wikipedia.org/wiki/JSON" target="_blank" rel="noopener">JSON</a> encoded messages. For example,</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"message_keyword"</span>:<span class="string">"TEST"</span>,<span class="attr">"message_hash"</span>:<span class="string">"ccd1ad1f"</span>,<span class="attr">"message_object"</span>:<span class="number">1</span>,<span class="attr">"message_num"</span>:<span class="number">2</span>,<span class="attr">"message_stream"</span>:<span class="literal">null</span>,<span class="attr">"message_level"</span>:<span class="number">1</span>,<span class="attr">"message_time"</span>:<span class="number">1593887847.045375</span>,<span class="attr">"message_rtime"</span>:<span class="number">0.001051</span>,<span class="attr">"test_type"</span>:<span class="string">"Test"</span>,<span class="attr">"test_subtype"</span>:<span class="literal">null</span>,<span class="attr">"test_id"</span>:<span class="string">"/68b96288-be25-11ea-8e14-2477034de0ec"</span>,<span class="attr">"test_name"</span>:<span class="string">"/My test"</span>,<span class="attr">"test_flags"</span>:<span class="number">0</span>,<span class="attr">"test_cflags"</span>:<span class="number">0</span>,<span class="attr">"test_level"</span>:<span class="number">1</span>,<span class="attr">"test_uid"</span>:<span class="literal">null</span>,<span class="attr">"test_description"</span>:<span class="literal">null</span>&#125;</span><br></pre></td></tr></table></figure>
 
 <p>Each message is a <a href="https://en.wikipedia.org/wiki/JSON" target="_blank" rel="noopener">JSON</a> object. Object fields depend on the type of the message that is specified by the <code>message_keyword</code>.</p>
 <p>Logs can be decompressed using either standard <code>xzcat</code> utility</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xzcat test.log</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ xzcat test.log</span><br></pre></td></tr></table></figure>
 
 <p>or <code>tfs transform decompress</code> command</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat test.log | tfs transform decompress</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.log | tfs transform decompress</span><br></pre></td></tr></table></figure>
 
 <h2 id="Saving-Log"><a href="#Saving-Log" class="headerlink" title="Saving Log"></a>Saving Log</h2><p>Test log can be saved into a file by specifying <code>-l</code> or <code>--log</code> option when running the test. For example,</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">log</span> test.log</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --<span class="built_in">log</span> test.log</span><br></pre></td></tr></table></figure>
 
 <h2 id="Transformations"><a href="#Transformations" class="headerlink" title="Transformations"></a>Transformations</h2><p>Test logs can be transformed using <code>tfs transform</code> command. See <code>tfs transform --help</code> for a detailed list available transformations.</p>
 <h3 id="nice"><a href="#nice" class="headerlink" title="nice"></a>nice</h3><p>The <code>tfs transform nice</code> command can be used to transform test log into a <code>nice</code> output format which the default output
@@ -259,12 +259,12 @@ It is used to create compact test logs used for comparison reports.</p>
 <h1 id="Reports"><a href="#Reports" class="headerlink" title="Reports"></a>Reports</h1><p>Test logs can be used to create reports using <code>tfs report</code> command. See <code>tfs report --help</code> for a list of available reports.</p>
 <h2 id="official"><a href="#official" class="headerlink" title="official"></a>official</h2><p>An official test report can generated from a test log using <code>tfs report official</code> command. The report is created in <a href="https://en.wikipedia.org/wiki/Markdown" target="_blank" rel="noopener">Markdown</a>
 and can be converted to [HTML] using <code>tfs document convert</code> command. For example,</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat test.log | tfs report official | tfs document convert &gt; report.html</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.log | tfs report official | tfs document convert &gt; report.html</span><br></pre></td></tr></table></figure>
 
 <p>See <code>tfs report official --help</code> for details.</p>
 <h2 id="coverage"><a href="#coverage" class="headerlink" title="coverage"></a>coverage</h2><p>A requirements coverage report can be generated from a test log using <code>tfs report coverage</code> command. The report is created in <a href="https://en.wikipedia.org/wiki/Markdown" target="_blank" rel="noopener">Markdown</a>
 and can be converted to [HTML] using <code>tfs document convert</code> command. For example,</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat test.log | tfs report coverage requirements.py | tfs document convert &gt; coverage.html</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.log | tfs report coverage requirements.py | tfs document convert &gt; coverage.html</span><br></pre></td></tr></table></figure>
 
 <p>See <code>tfs report coverage --help</code> for details.</p>
 <h2 id="compare"><a href="#compare" class="headerlink" title="compare"></a>compare</h2><p>A comparison report can be generated using one of the <code>tfs report compare</code> commands.</p>
@@ -287,7 +287,7 @@ the decorated function must take the first parameters with the same name as comm
 
 <p>When custom command line argument parser is defined then the help messages obtained using <code>-h</code> or <code>--help</code> option will include
 the description of the custom arguments. For example,</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># python3 ./test.py</span></span><br><span class="line">...</span><br><span class="line"><span class="built_in">test</span> arguments:</span><br><span class="line">  --arg0                                          argument 0</span><br><span class="line">  --arg1                                          argument 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ python3 ./test.py</span><br><span class="line">...</span><br><span class="line"><span class="built_in">test</span> arguments:</span><br><span class="line">  --arg0                                          argument 0</span><br><span class="line">  --arg1                                          argument 1</span><br></pre></td></tr></table></figure>
 
 <h1 id="Tagging-Tests"><a href="#Tagging-Tests" class="headerlink" title="Tagging Tests"></a>Tagging Tests</h1><p>You can add <code>tags</code> to any test either by setting <a href="#tags">tags</a> parameter of the inline test
 or using <a href="#tags">Tags</a> decorator if the test is defined as a decorated function. The values of the tags can be accessed
