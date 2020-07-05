@@ -6,9 +6,7 @@ heading: Your Handbook for Using TestFlows
 icon: fas fa-book pt-5 pb-5
 ---
 
-# TestFlows in 15 Minutes
-
-## What is TestFlows?
+# What is TestFlows?
 
 [TestFlows] is an open-source software testing framework that can be used for functional,
 integration, acceptance and unit testing across various teams. It is designed to provide
@@ -24,14 +22,14 @@ and metrics reports. It is designed for large scale test analytics processing us
 writing advanced parallel tests that require test-to-test communication
 and could be executed in a hive mode on multi-node clusters.
 
-## Supported Environment
+# Supported Environment
 
 * [Ubuntu] 18.04
 * [Python 3] >= 3.6
 
 > However, known to run on other systems such as MacOS.
 
-## Installation
+# Installation
 
 You can install [TestFlows] using [pip3]
 
@@ -47,7 +45,7 @@ $ cd TestFlows
 $ ./build ; ./install
 ```
 
-## Hello World
+# Hello World
 
 You can write an inline test scenario in just three lines.
 
@@ -72,7 +70,7 @@ Passing
 1 scenario (1 ok)
 ```
 
-## Defining Tests
+# Defining Tests
 
 You can can define tests inline using classical [Step], [Test], [Suite], and [Module]
 test definition classes or using modern [BDD]-inspired variants of these
@@ -82,7 +80,7 @@ such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally]
 > You are encouraged to use the [BDD]-inspired classes to greatly improve readibiliy of
 > your tests and test procedures.
 
-### Inline
+## Inline
 
 Inline tests can be defined anywhere in your test code using test definition classes
 using the [with] statement.
@@ -107,7 +105,7 @@ with Module("My test module"):
                     pass
 ```
 
-### Decorated
+## Decorated
 
 For reusability you can also define tests using
 [TestStep], [TestCase], [TestSuite], [TestModule],
@@ -128,7 +126,7 @@ def scenario(self, action=None):
         pass
 ```
 
-### Calling Decorated Tests
+## Calling Decorated Tests
 
 **All arguments to tests must be passed using keyword arguments.**
 
@@ -196,7 +194,7 @@ with Feature("My feature"):
 
 will create its own test.
 
-## Running Tests
+# Running Tests
 
 Top level tests can be run using either `python3` command or directly if they are made executable.
 For example with a top level test defined as
@@ -236,7 +234,7 @@ then it can be executed directly as
 ./test.py
 ```
 
-### Options
+## Options
 
 Top level test options can be obtained by passing `-h` or `--help` option.
 
@@ -248,7 +246,7 @@ python3 test.py --help
 python3 test.py --log ./test.log
 ```
 
-## Output
+# Output
 
 Test output can be controlled with `-o` or `--output` option which specifies the output format to use
 to print to `stdout`. By default, a detailed `nice` output is used. See `--help` for other formats.
@@ -257,7 +255,7 @@ to print to `stdout`. By default, a detailed `nice` output is used. See `--help`
 python3 test.py --output short
 ```
 
-## Logs
+# Logs
 
 [TestFlows] produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
 
@@ -279,7 +277,7 @@ or `tfs transform decompress` command
 cat test.log | tfs transform decompress
 ```
 
-### Saving Log
+## Saving Log
 
 Test log can be saved into a file by specifying `-l` or `--log` option when running the test. For example,
 
@@ -287,11 +285,11 @@ Test log can be saved into a file by specifying `-l` or `--log` option when runn
 python3 test.py --log test.log
 ```
 
-### Transformations
+## Transformations
 
 Test logs can be transformed using `tfs transform` command. See `tfs transform --help` for a detailed list available transformations.
 
-#### nice
+### nice
 
 The `tfs transform nice` command can be used to transform test log into a `nice` output format which the default output
 used for the `stdout`.
@@ -309,7 +307,7 @@ Jul 04,2020 19:20:21     ⟥  Suite suite 0
 ...
 ```
 
-#### short
+### short
 
 The `tfs transform short` command can be used to transform test log into a `short` output format which contains test procedure
 and test results.
@@ -327,7 +325,7 @@ Module filters
 ...
 ```
 
-#### slick
+### slick
 
 The `tfs transform slick` command can be used to transform test log into a `slick` output format which contains only test names
 with results provided as icons in front of the test name. This output format is very concise.
@@ -341,7 +339,7 @@ $ cat test.log | tfs transform slick
   ➤ Suite suite 0
 ...
 ```
-#### dots
+### dots
 
 The `tfs transform dots` command can be used to transform test log into a `dots` output format which outputs dots
 for each executed test.
@@ -353,7 +351,7 @@ $ cat test.log | tfs transform dots
 .........................
 ```
 
-#### raw
+### raw
 
 The `tfs transform raw` command can be used to transform a test log into a `raw` output format which contains raw [JSON]
 messages.
@@ -366,25 +364,25 @@ $ cat test.log | tfs transform raw
 ...
 ```
 
-#### compact
+### compact
 
 The `tfs transform compact` command can be used to transform a test log into a `compact` format which only contains
 raw [JSON] test definition and result messages while omiting all messages for the steps.
 It is used to create compact test logs used for comparison reports.
 
-#### compress
+### compress
 
 The `tfs transform compress` command is used to compress a test log with [LZMA] compression algorithm.
 
-#### decompress
+### decompress
 
 The `tfs transform decompress` command is used to decompress a test log compressed with [LZMA] compression algorithm.
 
-## Reports
+# Reports
 
 Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
 
-### official
+## official
 
 An official test report can generated from a test log using `tfs report official` command. The report is created in [Markdown]
 and can be converted to [HTML] using `tfs document convert` command. For example,
@@ -395,7 +393,7 @@ cat test.log | tfs report official | tfs document convert > report.html
 
 See `tfs report official --help` for details.
 
-### coverage
+## coverage
 
 A requirements coverage report can be generated from a test log using `tfs report coverage` command. The report is created in [Markdown]
 and can be converted to [HTML] using `tfs document convert` command. For example,
@@ -406,28 +404,28 @@ cat test.log | tfs report coverage requirements.py | tfs document convert > cove
 
 See `tfs report coverage --help` for details.
 
-### compare
+## compare
 
 A comparison report can be generated using one of the `tfs report compare` commands.
 
-#### results
+## results
 
 A results comparison report can be generated using `tfs report compare results` command. See `tfs report compare results --help` for details.
 
-#### metrics
+## metrics
 
 A metrics comparison report can be generated using `tfs report compare metrics` command. See `tfs report compare metrics --help` for details.
 
-### specification
+## specification
 
 A test specification for the test run can be generated using `tfs report specification` command. See `tfs report specification --help` for details.
 
-## Command Line Arguments
+# Command Line Arguments
 
 You can add command line arguments to the top level test either by setting [argparser] parameter of the inline test
 or using [ArgumentParser] decorator if top test is defined as a decorated function.
 
-### argparser
+## argparser
 
 The [argparser] parameter can be used to set a custom command line argument parser by passing it a function that takes `parser` as the first
 parameter. This function will be called with an instance of [argparse] parser instance as the argument for the `parser` parameter.
@@ -451,7 +449,7 @@ with Module("regression", argparser=argparser) as module:
     note(module.args["arg1"].value)
 ```
 
-### ArgumentParser
+## ArgumentParser
 
 If [Module] is defined using a decorated function then [ArgumentParser] decorator can be used to set custom command line argument parser.
 The values of the custom command line arguments will be passed to the decorated function as test arguments and therefore
@@ -489,13 +487,13 @@ test arguments:
 
 ```
 
-## Tagging Tests
+# Tagging Tests
 
 You can add `tags` to any test either by setting [tags] parameter of the inline test
 or using [Tags] decorator if the test is defined as a decorated function. The values of the tags can be accessed
 using the `tags` attribute of the test.
 
-### tags
+## tags
 
 The [tags] parameter of the test can be use used to set [tags] of any inline test. The [tags] parameter
 can be passed either a `list`, `tuple` or a `set` of tag values. For example,
@@ -504,7 +502,7 @@ can be passed either a `list`, `tuple` or a `set` of tag values. For example,
 with Test("My test", tags=("tagA", "tagB")) as test:
     note(test.tags)
 ```
-### Tags
+## Tags
 
 A [Tags] decorator can be used to set [tags] of any test that is defined used a decorated function. For example,
 
@@ -515,13 +513,13 @@ def scenario(self):
     note(self.tags)
 ```
 
-## Test Attributes
+# Test Attributes
 
 You can add `attributes` to any test either by setting [attributes] parameter of the inline test
 or using [Attributes] decorator if the test is defined as a decorated function. The values of the attributes can be accessed
 using the `attributes` attribute of the test.
 
-### attributes
+## attributes
 
 The [attributes] parameter of the test can be used to set [attributes] of any inline test. The [attributes] parameter
 can be passed either a `list` of `(name, value)` tuples or `Attribute` class instances. For example,
@@ -531,7 +529,7 @@ with Test("My test", attributes=[("attr0", "value"), Attribute("attr1", "value")
     note(test.attributes)
 ```
 
-### Attributes
+## Attributes
 
 An [Attributes] decorator can be used to set [attributes] of any test that is defined used a decorated function. For example,
 
@@ -545,7 +543,7 @@ def scenario(self):
     note(self.attributes)
 ```
 
-## Test Requirements
+# Test Requirements
 
 You can add `requirements` to any test either by setting [requirements] parameter of the inline test
 or using [Requirements] decorator if the test is defined as a decorated function. The values of the requirements can be accessed
@@ -554,7 +552,7 @@ using the `requirements` attribute of the test.
 > `Requirement` class instances must be always called with the version number the test is expected to verify.
 > `RequirementError` exception will be raised if version does not match the version of the instance.
 
-### requirements
+## requirements
 
 The [requirements] parameter of the test can be used to set `requirements` of any inline test. The [requirements] parameter
 must be passed a `list` of called `Requirement` instances.
@@ -569,7 +567,7 @@ with Test("My test", requirements=[RQ1("1.0")] as test:
     note(test.requirements)
 ```
 
-### Requirements
+## Requirements
 
 A [Requirements] decorator can be used to set `requirements` attribute of any test that is defined used a decorated function.
 The decorator must be called with one or more called `Requirement` instances. For example,
@@ -585,7 +583,7 @@ def scenario(self):
     note(self.requirements)
 ```
 
-## [BDD]-inspired keywords
+# [BDD]-inspired keywords
 
 [TestFlows] encourages the usage of [BDD]-inspired keywords as they can provide the much needed context for your steps
 when writing your test scenarios.
@@ -605,9 +603,9 @@ when writing your test scenarios.
   * [But](#But) is used to define a step for negative assertion
   * [Finally](#Finally) is used to define a cleanup step
 
-## Test Definition Classes
+# Test Definition Classes
 
-### Module
+## Module
 
 A [Module] can be defined using [Module] test definition class or [TestModule] decorator.
 
@@ -624,7 +622,7 @@ with Module("module"):
     Feature(run=feature)
 ```
 
-### Suite
+## Suite
 
 A [Suite] can be defined using [Suite] test definition class or [TestSuite] decorator.
 
@@ -642,7 +640,7 @@ with Suite("My suite"):
     Test(run=testcase)
 ```
 
-### Feature
+## Feature
 
 A [Feature] can be defined using [Feature] test definition class or [TestFeature] decorator.
 
