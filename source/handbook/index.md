@@ -555,7 +555,9 @@ using the `requirements` attribute of the test.
 ## requirements
 
 The [requirements] parameter of the test can be used to set `requirements` of any inline test. The [requirements] parameter
-must be passed a `list` of called `Requirement` instances.
+must be passed a `list` of called `Requirement` instances. of the inline test
+or using [Requirements] decorator if the test is defined as a decorated function. The values of the requirements can be accessed
+using the `requirements` attribute of the test.
 
 For example,
 
@@ -581,6 +583,51 @@ RQ1 = Requirement("RQ1", version="1.0")
 )
 def scenario(self):
     note(self.requirements)
+```
+
+# Test Examples
+
+You can add `examples` to any test by setting [examples] parameter of the inline test
+or using [Examples] decorator if the test is defined as a decorated function. The examples can be accessed
+using the `examples` attribute of the test.
+
+## examples
+
+The [examples] parameter of the test can be used to set `examples` of any inline test. The [examples] parameter
+must be passed an table of examples which can be defined using `Examples` class for an inline test
+or using the same [Examples] class as a decorator if the test is defined as a decorated function.
+The rows of the examples table can be accessed
+using the `examples` attribute of the test.
+
+> Usually examples are used only with test outlines. Please see [Outline] for more details.
+
+For example,
+
+```python
+with Test("My test", examples=Examples("col0 col1", [("col0_row0 col1_row0"), ("col0_row1", "col1_row1")]) as test:
+    for example in test.examples:
+        note(str(example))
+```
+
+## Examples
+
+An [Examples] decorator can be used to set `examples` attribute of any test that is defined used a decorated function
+or used to as an argument of the `examples` parameter for the test.
+The [Examples] class defines a table of examples and should be passed a `header` and a `list` for the `rows`.
+
+> Usually examples are used only with test outlines. Please see [Outline] for more details.
+
+For example,
+
+```python
+@TestScenario
+@Examples("col0 col1", rows=[
+    ("col0_row0", "col1_row0"),
+    ("col0_row1", "col1_row1")
+])
+def scenario(self):
+    for example in test.examples:
+        note(str(example))
 ```
 
 # [BDD]-inspired keywords
@@ -709,11 +756,100 @@ However, because [Outline]s are meant to be called from other tests or used with
 it is best to define an [Outline] using [TestOutline] decorator as follows.
 
 ```python
-@TestOutline(Scenario):
+from testflows.core import *
+
+@TestOutline(Scenario)
 @Examples("greeting name", [
     ("Hello", "John"),
     ("Goodbye", "Eric")
 ])
+def outline(self, greeting, name):
+    note(f"{greeting} {name}!")
+
+outline()
+```
+
+When [Examples] are defined for the [Outline] and an outline is called with no arguments from a test
+that is of higher [Type] than the [Type] of outline itself then when called the outline will iterate over all
+the examples defined in the [Examples] table. For example, run the example above that executes the outline
+with no arguments you will see that the outline iterates over all the examples in the [Examples] table where
+each example, a row in the examples table, defines the values of the arguments for the outline.
+
+```bash
+Jul 05,2020 18:16:34   ⟥  Scenario outline
+                            Examples
+                              greeting | name
+                              -------- | ----
+                              Hello    | John
+                              Goodbye  | Eric
+Jul 05,2020 18:16:34     ⟥  Example greeting='Hello', name='John'
+                              Arguments
+                                greeting
+                                  Hello
+                                name
+                                  John
+               757us     ⟥    [note] Hello John!
+               868us     ⟥⟤ OK greeting='Hello', name='John', /outline/greeting='Hello', name='John'
+Jul 05,2020 18:16:34     ⟥  Example greeting='Goodbye', name='Eric'
+                              Arguments
+                                greeting
+                                  Goodbye
+                                name
+                                  Eric
+               675us     ⟥    [note] Goodbye Eric!
+               766us     ⟥⟤ OK greeting='Goodbye', name='Eric', /outline/greeting='Goodbye', name='Eric'
+                 4ms   ⟥⟤ OK outline, /outline
+```
+
+If we run the same outline with arguments, then the outline will not use the [Examples] but instead will
+use the argument values that were provided to the outline. For example,
+
+```python
+with Scenario("My scenario"):
+    outline(greeting="Hey", name="Bob")
+```
+
+will produce the following output.
+
+```bash
+Jul 05,2020 18:23:02   ⟥  Scenario My scenario
+                 1ms   ⟥    [note] Hey Bob!
+                 2ms   ⟥⟤ OK My scenario, /My scenario
+```
+
+#### Setting Parameters
+
+##### **For an Example**
+
+You can set parameters for an individual example by specifying them right after the values for the example row.
+
+> Any test parameters that are specified for the example will override any common parameter values.
+
+For example,
+
+```python
+@TestOutline(Scenario)
+@Examples("greeting name", [
+    ("Hello", "John", {"tags": ("tag0", "tag1"), "attributes": [("attr0", "value0")]}),
+    ("Goodbye", "Eric")
+])
+def outline(self, greeting, name):
+    note(f"{greeting} {name}!")
+```
+
+##### **For All Examples**
+
+You can set common parameter values for all the examples specified by the [Examples] table using the `args` parameter
+and passing it a `dict` with parameter values as the argument.
+
+> Note that parameters set for a specific example override any common values.
+
+```python
+@TestOutline(Scenario)
+@Examples("greeting name", [
+    ("Hello", "John", {"tags": ("tag0", "tag1"), "attributes":[("attr0", "value0")]}),
+    ("Goodbye", "Eric")
+], args={"tags": ("common_tag0", "common_tag1")})
 def outline(self, greeting, name):
     note(f"{greeting} {name}!")
 ```
@@ -968,6 +1104,8 @@ being an [Iteration] that is used to implement test repetitions.
 * **By**
 * **Finally**
 
+[examples]: #examples
+[Examples]: #Examples
 [tags]: #tags
 [#Tags]: #Tags
 [attributes]: #attributes
