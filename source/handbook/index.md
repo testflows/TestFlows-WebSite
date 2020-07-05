@@ -2,7 +2,7 @@
 layout: handbook
 p: /handbook
 title: Preface
-heading: A Practical Guide To Testing with TestFlows
+heading: Your Handbook for Using TestFlows
 icon: fas fa-book pt-5 pb-5
 ---
 
