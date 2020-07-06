@@ -236,15 +236,117 @@ $ ./test.py
 
 ## Options
 
-Top level test options can be obtained by passing `-h` or `--help` option.
+### -h, --help
+
+The `-h`, `--help` option can be used to obtain help message that describes all the command line
+options a test can accept. For example,
 
 ```bash
 $ python3 test.py --help
 ```
 
+### -l, --log
+
+The `-l`, `--log` option can be used to specify the path of the file where test log will be saved.
+For example,
+
 ```bash
 $ python3 test.py --log ./test.log
 ```
+
+### --name
+
+The `--name` option can be used to specify the name of the top level test.
+For example,
+
+```bash
+$ python3 test.py --name "My custom top level test name"
+```
+
+### --tag
+
+The `--tag` option can be used to specify one or more tags for the top level test.
+For example,
+
+```bash
+$ python3 test.py --tag "tag0" "tag1"
+```
+
+### --attr
+
+The `--attr` option can be used to specify one or more attributes for the top level test.
+For example,
+
+```bash
+$ python3 test.py --attr attr0=value0 attr1=value1
+```
+
+### Filtering
+
+#### pattern
+
+Options such as [--only], [--skip], [--start], [--end] as well as
+[--pause-before] and [--pause-after] take a [pattern] to specify the exact test
+to which the option shall be applied.
+
+The [pattern] is used to match test names using a [unix-like file path pattern] that supports wildcards
+
+* `/` path level separator
+* `*` matches everything
+* `?` matches any single character
+* `[seq]` matches any character in seq
+* `[!seq]` matches any character not in seq
+* `:` matches anything at the current path level
+
+> Note that for a literal match, you must wrap the meta-characters in brackets
+> where `[?]` matches the character `?`.
+
+#### --only
+
+The `--only` option can be used to filter the test flow so that only the specified tests
+are executed.
+
+> Note that mandatory tests will still be run.
+
+> Note that most of the time the [pattern] should end with `/*` so that
+> any steps or sub-tests are executed inside the selected test.
+
+For example,
+
+```bash
+$ python3 test.py --only "/my test/*"
+```
+
+#### --skip
+
+The `--skip` option can be used to filter the test flow so that the specified tests
+are skipped.
+
+> Note that mandatory tests will still be run.
+
+#### --start
+
+The `--start` option can be used to filter the test flow so that the test flow starts at
+the specified test.
+
+> Note that mandatory tests will still be run.
+
+#### --end
+
+The `--end` option can be used to filter the test flow so that the test flow ends at
+the specified tests.
+
+> Note that mandatory tests will still be run.
+
+#### --pause-before
+
+The `--pause-before` option can be used to specify the tests before which the test flow
+will be paused.
+
+#### --pause-after
+
+The `--pause-after` option can be used to specify the tests after which the test flow
+will be paused.
 
 # Output
 
@@ -1338,6 +1440,13 @@ being an [Iteration] that is used to implement test repetitions.
 * **By**
 * **Finally**
 
+[pattern]: #pattern
+[--only]: #–only
+[--skip]: #–skip
+[--start]: #–start
+[--end]: #–end
+[--pause-before]: #–pause-before
+[--pause-after]: #–pause-after
 [OK]: #OK
 [Fail]: #Fail
 [Error]: #Error
@@ -1425,3 +1534,4 @@ being an [Iteration] that is used to implement test repetitions.
 [LZMA]: https://en.wikipedia.org/wiki/Lempel%E2%80%93Ziv%E2%80%93Markov_chain_algorithm
 [JSON]: https://en.wikipedia.org/wiki/JSON
 [Markdown]: https://en.wikipedia.org/wiki/Markdown
+[unix-like file path pattern]: https://en.wikipedia.org/wiki/Glob_(programming)
