@@ -484,16 +484,19 @@ The `tfs transform decompress` command is used to decompress a test log compress
 
 Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
 
-## official
+## results
 
-An official test report can generated from a test log using `tfs report official` command. The report is created in [Markdown]
-and can be converted to [HTML] using `tfs document convert` command. For example,
+A results report can be generated from a test log using `tfs report results` command.
+The report can be generated in either [Markdown] format (default) or [JSON] format
+by specifying `--format json` option.
+The report in [Markdown] can be converted to [HTML] using `tfs document convert` command.
+For example,
 
 ```bash
-$ cat test.log | tfs report official | tfs document convert > report.html
+$ cat test.log | tfs report results | tfs document convert > report.html
 ```
 
-See `tfs report official --help` for details.
+See `tfs report results --help` for details.
 
 ## coverage
 
@@ -510,11 +513,11 @@ See `tfs report coverage --help` for details.
 
 A comparison report can be generated using one of the `tfs report compare` commands.
 
-## results
+### results
 
 A results comparison report can be generated using `tfs report compare results` command. See `tfs report compare results --help` for details.
 
-## metrics
+### metrics
 
 A metrics comparison report can be generated using `tfs report compare metrics` command. See `tfs report compare metrics --help` for details.
 
@@ -1535,3 +1538,4 @@ being an [Iteration] that is used to implement test repetitions.
 [JSON]: https://en.wikipedia.org/wiki/JSON
 [Markdown]: https://en.wikipedia.org/wiki/Markdown
 [unix-like file path pattern]: https://en.wikipedia.org/wiki/Glob_(programming)
+[HTML]: https://en.wikipedia.org/wiki/HTML
