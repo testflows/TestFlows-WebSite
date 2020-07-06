@@ -420,6 +420,240 @@ A metrics comparison report can be generated using `tfs report compare metrics` 
 
 A test specification for the test run can be generated using `tfs report specification` command. See `tfs report specification --help` for details.
 
+# Test Results
+
+Any given test will have one of the following results.
+
+## OK
+
+Test has passed.
+
+## Fail
+
+Test has failed.
+
+## Error
+
+Test produced an error.
+
+## Null
+
+Test result was not set.
+
+## Skip
+
+Test was skipped.
+
+## XOK
+
+[OK] result was crossed out. Result is considered as passing.
+
+## XFail
+
+[Fail] result was crossed out. Result is considered as passing.
+
+## XError
+
+[Error] result was crossed out. Result is considered as passing.
+
+## XNull
+
+[Null] result was crossed out. Result is considred as passing.
+
+
+# Test Parameters
+
+Test parameters can be used to set attributes of a test. Here is a list of most common
+parameters for a test:
+
+* [name]
+* [flags]
+* uid
+* [tags]
+* [attributes]
+* [requirements]
+* [examples]
+* description
+* xfails
+* only
+* skip
+* start
+* end
+* only_tags
+* skip_tags
+* args
+
+> Most parameter names match the names of the attributes of the test which they set.
+> For example, [name] parameter sets the name attribute of the test.
+
+When test is defined inline then parameters can be specified right when test definition class is instantiated.
+The first parameter is always `name` that sets the name of the test. The other parameters are usually
+specified using keyword arguments.
+
+For example,
+
+```python
+with Scenario("My test", description="This is a description of an inline test"):
+    pass
+```
+
+# Naming Tests
+
+You can set the name of any test either by setting the [name] parameter of the inline test
+or using the [Name] decorator if the test is defined as a decorated function.
+The name of the test can be accessed using the `name` attribute of the test.
+
+## name
+
+The [name] parameter of the test can be use used to set the [name] of any inline test. The [name] parameter
+must be passed a `str` which will define the name of the test.
+
+> For all test definition classes the first parameter is always the [name].
+
+For example,
+
+```python
+with Test("My test") as test:
+    note(test.name)
+```
+
+## Name
+
+A [Name] decorator can be used to set the [name] of any test that is defined using a decorated function.
+
+> The name of test defined using a decorated function
+> is set to the name of the function if the [Name] decorator is not used.
+
+For example,
+
+```python
+@TestScenario
+@Name("The name of the scenario")
+def scenario(self):
+    note(self.name)
+```
+
+or if the [Name] decorator is not used
+
+> Note that any underscores will be replaced with spaces in the name of the test.
+
+```python
+@TestScenario
+def the_name_of_the_scenario(self):
+    note(self.name)
+```
+
+# Test Flags
+
+You can set the flags of any test either by setting the [flags] parameter of the inline test
+or using the [Flags] decorator if the test is defined as a decorated function.
+The flags of the test can be accessed using the `flags` attribute of the test.
+
+## TE
+
+Test to end flag. Continues executing tests even if this test fails.
+
+## UT
+
+Utility test flags. Marks test as utility for reporting.
+
+## SKIP
+
+Skip test flag. Skips the test during execution.
+
+## EOK
+
+Expected [OK] flag. Test result will be set to [Fail] if the test result is not [OK] otherwise [OK].
+
+## EFAIL
+
+Expected [Fail] flag. Test result will be set to [Fail] if the test result is not [Fail] otherwise [OK].
+
+## EERROR
+
+Expected [Error] flag. Test result will be set to [Fail] if the test result is not [Error] otherwise [OK].
+
+## ESKIP
+
+Expected [Skip] flag. Test result will be set to [Fail] if the test result is not [Skip] otherwise [OK].
+
+## XOK
+
+Cross out [OK] flag. Test result will be set to [XOK] if the test result is [OK].
+
+## XFAIL
+
+Cross out [Fail] flag. Test result will be set to [XFail] if the test result is [Fail].
+
+## XERROR
+
+Cross out [Error] flag. Test result will be set to [XError] if the test result is [Error].
+
+## XNULL
+
+Cross out [Null] flag. Test result will be set to [XNull] if the test result is [Null].
+
+## FAIL_NOT_COUNTED
+
+[Fail] not counted. [Fail] result will not be counted.
+
+## ERROR_NOT_COUNTED
+
+[Error] not counted. [Error] result will not be counted.
+
+## NULL_NOT_COUNTED
+
+[Null] not counted. [Null] result will not be counted.
+
+## PAUSE_BEFORE
+
+Pause before test execution. Test flow will be paused before test execution.
+
+## PAUSE
+
+Pause before test execution short form. See [PAUSE_BEFORE].
+
+## PAUSE_AFTER
+
+Pause after test execution. Test flow will be pause after test execution.
+
+## REPORT
+
+Report flag. Mark test to be included for reporting.
+
+## DOCUMENT
+
+Document flag. Mark test to be included in the documentation.
+
+## MANDATORY
+
+Mandatory flag. Mark test as mandatory such that it can't be skipped.
+
+## flags
+
+The [flags] parameter of the test can be use used to set the [flags] of any inline test. The [flags] parameter
+must be passed valid flag or multiple flags combined with binary `OR` opertor.
+
+For example,
+
+```python
+with Test("My test", flags=TE) as test:
+    note(test.flags)
+```
+
+## Flags
+
+A [Flags] decorator can be used to set the [flags] of any test that is defined using a decorated function.
+
+For example,
+
+```python
+@TestScenario
+@Flags(TE)
+def scenario(self):
+    note(self.flags)
+```
+
 # Command Line Arguments
 
 You can add command line arguments to the top level test either by setting [argparser] parameter of the inline test
@@ -1104,10 +1338,43 @@ being an [Iteration] that is used to implement test repetitions.
 * **By**
 * **Finally**
 
+[OK]: #OK
+[Fail]: #Fail
+[Error]: #Error
+[Null]: #Null
+[Skip]: #Skip
+[XOK]: #XOK
+[XFail]: #XFail
+[XError]: #XError
+[XNull]: #XNull
+[TE]: #TE
+[UT]: #UT
+[SKIP]: #SKIP
+[EOK]: #EOK
+[EFAIL]: #EFAIL
+[EERROR]: #EERROR
+[ESKIP]: #ESKIP
+[XOK]: #XOK
+[XFAIL]: #XFAIL
+[XERROR]: #XERROR
+[XNULL]: #XNULL
+[FAIL_NOT_COUNTED]: #FAIL_NOT_COUNTED
+[ERROR_NOT_COUNTED]: #ERROR_NOT_COUNTED
+[NULL_NOT_COUNTED]: #NULL_NOT_COUNTED
+[PAUSE_BEFORE]: #PAUSE_BEFORE
+[PAUSE]: #PAUSE
+[PAUSE_AFTER]: #PAUSE_AFTER
+[REPORT]: #REPORT
+[DOCUMENT]: #DOCUMENT
+[MANDATORY]: #MANDATORY
+[flags]: #flags
+[Flags]: #Flags
+[name]: #name
+[Name]: #Name
 [examples]: #examples
 [Examples]: #Examples
 [tags]: #tags
-[#Tags]: #Tags
+[Tags]: #Tags
 [attributes]: #attributes
 [Attributes]: #Attributes
 [requirements]: #requirements
