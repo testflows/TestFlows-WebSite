@@ -1,7 +1,7 @@
 ---
 layout: handbook
 p: /handbook
-title: Preface
+title: Handbook
 heading: Your Handbook for Using TestFlows
 icon: fas fa-book pt-5 pb-5
 ---
@@ -1301,6 +1301,51 @@ with When("I do some action"):
 
 with And("I do another action"):
     pass
+```
+
+or
+
+```python
+with Given("I have something"):
+    with When("I do some action to setup things"):
+        pass
+    with And("I do another action to continue the setup"):
+        pass
+```
+
+> A `TypeError` exception will be raised if the [And] step is defined where it has no sibling. For example,
+>
+> ```python
+with Given("I have something"):
+   # TypeError exception will be raised on the next line
+   # and can be fixed by changing the `And` step into a `When` step
+   with And("I do something"):
+       pass
+```
+>
+> with the exception being as follows.
+>
+> ```
+TypeError: `And` subtype can't be used here as it has no sibling from which to inherit the subtype
+```
+>
+> A `TypeError` exception will also be raised if the [Type] of the sibling does not match the [Type] of the [And] step.
+> For example,
+>
+> ```python
+with Scenario("My scenario"):
+   pass
+
+# TypeError exception will be raised on the next line
+# and can be fixed by changing the `And` step into a `When` step
+with And("I do something"):
+   pass
+```
+>
+> with the exception being as follows.
+>
+> ```
+TypeError: `And` subtype can't be used here as it sibling is not of the same type
 ```
 
 ### By

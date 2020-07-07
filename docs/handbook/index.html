@@ -3,7 +3,7 @@
 <head><meta name="generator" content="Hexo 3.9.0">
   <meta charset="utf-8">
   
-  <title>Preface | TestFlows</title>
+  <title>Handbook | TestFlows</title>
   
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
@@ -11,10 +11,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1594077189226" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1594077189226" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1594122751180" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1594122751180" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1594077189226" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1594122751180" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -641,6 +641,26 @@ It is defined using <a href="#And">And</a> test definition class.</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> When(<span class="string">"I do some action"</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> And(<span class="string">"I do another action"</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
+<p>or</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Given(<span class="string">"I have something"</span>):</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">"I do some action to setup things"</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> And(<span class="string">"I do another action to continue the setup"</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>A <code>TypeError</code> exception will be raised if the <a href="#And">And</a> step is defined where it has no sibling. For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Given(<span class="string">"I have something"</span>):</span><br><span class="line">   <span class="comment"># TypeError exception will be raised on the next line</span></span><br><span class="line">   <span class="comment"># and can be fixed by changing the `And` step into a `When` step</span></span><br><span class="line">   <span class="keyword">with</span> And(<span class="string">"I do something"</span>):</span><br><span class="line">       <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>with the exception being as follows.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: `And` subtype can&apos;t be used here as it has no sibling from which to inherit the subtype</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>A <code>TypeError</code> exception will also be raised if the <a href="#Types">Type</a> of the sibling does not match the <a href="#Types">Type</a> of the <a href="#And">And</a> step.
+For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">"My scenario"</span>):</span><br><span class="line">   <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># TypeError exception will be raised on the next line</span></span><br><span class="line"><span class="comment"># and can be fixed by changing the `And` step into a `When` step</span></span><br><span class="line"><span class="keyword">with</span> And(<span class="string">"I do something"</span>):</span><br><span class="line">   <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>with the exception being as follows.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: `And` subtype can&apos;t be used here as it sibling is not of the same type</span><br></pre></td></tr></table></figure>
+</blockquote>
 <h3 id="By"><a href="#By" class="headerlink" title="By"></a>By</h3><p>A <a href="#By">By</a> step is usually used to define a sub-step using <a href="#By">By</a> test definition class.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> When(<span class="string">"I do something"</span>):</span><br><span class="line">    <span class="keyword">with</span> By(<span class="string">"doing some action"</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
