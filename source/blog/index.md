@@ -2,6 +2,6 @@
 layout: blog
 p: /blog
 title: Blog
-heading: Journal About Testing With TestFlows
+heading: Journal About Testing
 icon: fas fa-blog pt-5 pb-5
 ---

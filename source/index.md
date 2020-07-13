@@ -4,7 +4,7 @@ layout: index
 
 {% html div class="container-fluid text-center p-0" style="padding-bottom: 2em !important" %}
 
-{% html div class="banner in-view-watcher" %} 
+{% html div class="banner in-view-watcher" %}
 <div class="firefly"></div>
 <div class="firefly"></div>
 <div class="firefly"></div>
@@ -16,11 +16,11 @@ layout: index
 <div class="firefly"></div>
 <div class="firefly"></div>
 <p>
-<img src="/img/logo-white.png" alt="TestFlows Logo" style= "width: 70vw; max-width: 400px;">
+<img src="/img/logo-white.png" alt="Logo" style= "width: 70vw; max-width: 400px;">
 </p>
 
-### A Test Flow Oriented Test Framework
-#### where testing flows
+### A test framework that
+#### makes testing flow
 <div class="row justify-content-center no-gutters" style="padding-top: 3vh">
     <div class="command">
         <span class="prompt">$</span>pip3 install testflows
@@ -101,7 +101,7 @@ Passing
 Total time 2ms
 
 Executed on Nov 20,2019 16:42
-TestFlows Test Framework v1.3.191112.1234833
+TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% endcodeblock %}
 {% endhtml %}
 {% endhtml %}

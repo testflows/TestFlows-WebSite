@@ -2,16 +2,16 @@
 layout: handbook
 p: /handbook
 title: Handbook
-heading: Your Handbook for Using TestFlows
+heading: Your Handbook for Using The Framework
 icon: fas fa-book pt-5 pb-5
 ---
 
-# What is TestFlows?
+# What is it?
 
-[TestFlows] is an open-source software testing framework that can be used for functional,
+{% testflows %} is an open-source software testing framework that can be used for functional,
 integration, acceptance and unit testing across various teams. It is designed to provide
 complete control of how tests are written and executed by allowing to write tests and
-define test [flow] explicitely as [Python] code. It uses [everything is a test] approach
+define test [flow](#Flow-is) explicitely as [Python] code. It uses [everything is a test] approach
 with the focus on giving test authors flexibility in writing and running their tests.
 It designed to meet the needs of small QA groups at software startup companies
 while providing the tools to meet the formalities of the large enterprise QA groups
@@ -31,7 +31,7 @@ and could be executed in a hive mode on multi-node clusters.
 
 # Installation
 
-You can install [TestFlows] using [pip3]
+You can install the framework using [pip3]
 
 ```bash
 $ pip3 install testflows
@@ -73,11 +73,11 @@ Passing
 # Defining Tests
 
 You can can define tests inline using classical [Step], [Test], [Suite], and [Module]
-test definition classes or using modern [BDD]-inspired variants of these
+test definition classes or using specialized keyword classes as
 [Scenario], [Feature], [Module] and the steps
 such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally].
 
-> You are encouraged to use the [BDD]-inspired classes to greatly improve readibiliy of
+> You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
 > your tests and test procedures.
 
 ## Inline
@@ -359,7 +359,9 @@ $ python3 test.py --output short
 
 # Logs
 
-[TestFlows] produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
+The framework produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
+<br>
+<br>
 
 ```json
 {"message_keyword":"TEST","message_hash":"ccd1ad1f","message_object":1,"message_num":2,"message_stream":null,"message_level":1,"message_time":1593887847.045375,"message_rtime":0.001051,"test_type":"Test","test_subtype":null,"test_id":"/68b96288-be25-11ea-8e14-2477034de0ec","test_name":"/My test","test_flags":0,"test_cflags":0,"test_level":1,"test_uid":null,"test_description":null}
@@ -969,12 +971,12 @@ def scenario(self):
         note(str(example))
 ```
 
-# [BDD]-inspired keywords
+# Specialized keywords
 
-[TestFlows] encourages the usage of [BDD]-inspired keywords as they can provide the much needed context for your steps
+The framework encourages the usage of specialized keywords as they can provide the much needed context for your steps
 when writing your test scenarios.
 
-[BDD] keywords map to core [Step], [Test], [Suite], and [Module] test definition classes as follows:
+The specialized keywords map to core [Step], [Test], [Suite], and [Module] test definition classes as follows:
 
 * [Module](#Module) is defined as a [Module](#Module)
 * [Suite](#Suite) is defined as a [Feature](#Feature)
@@ -1419,14 +1421,14 @@ with Finally("I clean up"):
 
 # Concepts
 
-[TestFlows] was implemented with the following concepts and definitions in mind.
+The framework was implemented with the following concepts and definitions in mind.
 These definitions were used as a guideline to implement test [Tree](#Tree-is) hierarchy.
 While the implementation does not strictly enforce these concepts, users are encouraged
 to apply these definitions during the design of their tests.
 
 ## Everything is a Test
 
-[TestFlows] treats everything as a test including setup and teardown.
+The framework treats everything as a test including setup and teardown.
 
 ## Definitions
 
@@ -1460,7 +1462,7 @@ a [Test](#Test-is) that is made up of one or more [Suites](#Suite-is).
 
 # Types
 
-[TestFlows] devides tests into the following [Types] from highest to the lowest
+The framework devides tests into the following [Types] from highest to the lowest
 
 * **Module**
 * **Suite**
@@ -1474,7 +1476,7 @@ being an [Iteration] that is used to implement test repetitions.
 
 # Sub-Types
 
-[TestFlows] uses the following [Sub-Types] in order to provide more flexibility and implement [BDD]-inspired keywords
+The framework uses the following [Sub-Types] in order to provide more flexibility and implement specialized keywords
 
 * **Feature**
 * **Scenario**
@@ -1571,11 +1573,9 @@ being an [Iteration] that is used to implement test repetitions.
 [Background]: #Background
 [TestBackground]: #Background
 [with]: https://docs.python.org/3/reference/compound_stmts.html#the-with-statement
-[TestFlows]: https://github.com/testflows/testflows
 [pip3]: https://github.com/pypa/pip
 [Python 3]: https://www.python.org/
 [Ubuntu]: https://ubuntu.com/
-[BDD]: https://en.wikipedia.org/wiki/Behavior-driven_development
 [ClickHouse]: https://clickhouse.tech/
 [Grafana]: https://grafana.com/
 [Python]: https://www.python.org/
@@ -1584,3 +1584,5 @@ being an [Iteration] that is used to implement test repetitions.
 [Markdown]: https://en.wikipedia.org/wiki/Markdown
 [unix-like file path pattern]: https://en.wikipedia.org/wiki/Glob_(programming)
 [HTML]: https://en.wikipedia.org/wiki/HTML
+[Framework]: https://testflows.com
+[framework]: https://testflows.com
