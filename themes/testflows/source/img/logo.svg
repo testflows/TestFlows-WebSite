@@ -10,12 +10,12 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="106.90089mm"
-   height="29.255455mm"
-   viewBox="0 0 106.90089 29.255455"
+   width="99.837547mm"
+   height="39.701229mm"
+   viewBox="0 0 99.837551 39.701229"
    version="1.1"
    id="svg8"
-   sodipodi:docname="testflows_logo6.svg"
+   sodipodi:docname="logo.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    inkscape:export-filename="/home/user/Yandex.Disk/project/TestFlows/imgs/testflows_logo6.png"
    inkscape:export-xdpi="96"
@@ -27,14 +27,14 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1"
-     inkscape:cx="76.334061"
-     inkscape:cy="44.914472"
+     inkscape:zoom="2"
+     inkscape:cx="72.636724"
+     inkscape:cy="76.394525"
      inkscape:document-units="mm"
-     inkscape:current-layer="g3755"
+     inkscape:current-layer="g922"
      showgrid="false"
-     inkscape:window-width="1533"
-     inkscape:window-height="845"
+     inkscape:window-width="1853"
+     inkscape:window-height="1025"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -71,10 +71,10 @@
     </linearGradient>
     <inkscape:perspective
        id="perspective4707"
-       inkscape:persp3d-origin="97.591672 : 183.66666 : 1"
-       inkscape:vp_z="202.59168 : 233.16665 : 1"
-       inkscape:vp_y="0 : 999.99995 : 0"
-       inkscape:vp_x="-7.4083336 : 233.16665 : 1"
+       inkscape:persp3d-origin="97.59167 : 183.66669 : 1"
+       inkscape:vp_z="202.59168 : 233.16667 : 1"
+       inkscape:vp_y="0 : 999.99993 : 0"
+       inkscape:vp_x="-7.4083334 : 233.16667 : 1"
        sodipodi:type="inkscape:persp3d" />
     <linearGradient
        inkscape:collect="always"
@@ -84,7 +84,8 @@
        y1="187.48232"
        x2="-26.566921"
        y2="189.06981"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(1.5541253,-37.995331)" />
     <linearGradient
        inkscape:collect="always"
        xlink:href="#linearGradient942"
@@ -93,7 +94,18 @@
        y1="189.47552"
        x2="80.853218"
        y2="189.47552"
-       gradientUnits="userSpaceOnUse" />
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(4.3293491,-20.314638)" />
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient2416"
+       id="linearGradient865"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="translate(1.5541253,-37.995331)"
+       x1="73.423393"
+       y1="187.48232"
+       x2="-26.566921"
+       y2="189.06981" />
   </defs>
   <metadata
      id="metadata5">
@@ -111,7 +123,7 @@
      id="layer1"
      inkscape:groupmode="layer"
      inkscape:label="Layer 1"
-     transform="translate(-58.871308,-142.12202)">
+     transform="translate(-62.464681,-118.83869)">
     <g
        id="g3755">
       <flowRoot
@@ -129,38 +141,85 @@
            id="flowPara4611" /></flowRoot>      <g
          id="g922"
          transform="matrix(1.1917207,0,0,1.1917207,-2.4581843,-75.35833)">
-        <g
-           style="fill:#4d4d4d;fill-opacity:1"
-           id="g4696"
-           transform="translate(14.552083,10.870558)">
-          <text
-             id="text4599"
-             y="195.84135"
-             x="36.555801"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.36360359px;line-height:1.25;font-family:'Tlwg Typo';-inkscape-font-specification:'Tlwg Typo';letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient2418);fill-opacity:1;stroke:none;stroke-width:0.63409007"
-             xml:space="preserve"><tspan
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:url(#linearGradient2418);fill-opacity:1;stroke-width:0.63409007"
-               y="195.84135"
-               x="36.555801"
-               id="tspan4597"
-               sodipodi:role="line">Test</tspan></text>
-          <text
-             id="text4603"
-             y="195.84135"
-             x="75.426941"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.36360359px;line-height:1.25;font-family:'Tlwg Typo';-inkscape-font-specification:'Tlwg Typo';letter-spacing:0px;word-spacing:0px;fill:#00ccff;fill-opacity:1;stroke:none;stroke-width:0.63409007"
-             xml:space="preserve"><tspan
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#00ccff;fill-opacity:1;stroke-width:0.63409007"
-               y="195.84135"
-               x="75.426941"
-               id="tspan4601"
-               sodipodi:role="line">Flows</tspan></text>
+        <flowRoot
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+           id="flowRoot841"
+           xml:space="preserve"
+           transform="translate(14.552083,10.870558)"><flowRegion
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, '"
+             id="flowRegion843"><rect
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, '"
+               y="326.85529"
+               x="-234"
+               height="41"
+               width="422"
+               id="rect845" /></flowRegion><flowPara
+             id="flowPara847" /></flowRoot>        <g
+           id="g272">
+          <g
+             transform="translate(14.365865,11.647621)"
+             id="g857"
+             style="fill:#4d4d4d;fill-opacity:1">
+            <text
+               id="text835"
+               y="184.50627"
+               x="109.06671"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:8.88071632px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';letter-spacing:0px;word-spacing:0px;fill:#4d4d4d;fill-opacity:0.9372549;stroke:none;stroke-width:0.22201791"
+               xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#4d4d4d;fill-opacity:0.9372549;stroke-width:0.22201791"
+                 y="184.50627"
+                 x="109.06671"
+                 id="tspan833"
+                 sodipodi:role="line">.com</tspan></text>
+            <text
+               id="text851"
+               y="183.84781"
+               x="39.914795"
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.11658239px;line-height:1.25;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.10291456"
+               xml:space="preserve"><tspan
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#b3b3b3;stroke-width:0.10291456"
+                 y="183.84781"
+                 x="39.914795"
+                 id="tspan849"
+                 sodipodi:role="line">open-source software testing framework</tspan></text>
+          </g>
+          <g
+             transform="translate(-0.66696267,0.77706267)"
+             id="g905">
+            <g
+               style="fill:#4d4d4d;fill-opacity:1"
+               transform="translate(15.662173,31.407214)"
+               id="g863">
+              <text
+                 id="text4599"
+                 y="157.84602"
+                 x="38.109928"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.36360359px;line-height:1.25;font-family:'Tlwg Typo';-inkscape-font-specification:'Tlwg Typo';letter-spacing:0px;word-spacing:0px;fill:url(#linearGradient865);fill-opacity:1;stroke:none;stroke-width:0.63409007"
+                 xml:space="preserve"><tspan
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:url(#linearGradient865);fill-opacity:1;stroke-width:0.63409007"
+                   y="157.84602"
+                   x="38.109928"
+                   id="tspan4597"
+                   sodipodi:role="line">test</tspan></text>
+              <text
+                 id="text4603"
+                 y="157.84602"
+                 x="75.093918"
+                 style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:25.36360359px;line-height:1.25;font-family:'Tlwg Typo';-inkscape-font-specification:'Tlwg Typo';letter-spacing:0px;word-spacing:0px;fill:#00ccff;fill-opacity:1;stroke:none;stroke-width:0.63409007"
+                 xml:space="preserve"><tspan
+                   style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Ubuntu Condensed';-inkscape-font-specification:'Ubuntu Condensed, ';fill:#00ccff;fill-opacity:1;stroke-width:0.63409007"
+                   y="157.84602"
+                   x="75.093918"
+                   id="tspan4601"
+                   sodipodi:role="line">flows</tspan></text>
+            </g>
+            <path
+               inkscape:connector-curvature="0"
+               id="path2342"
+               d="m 62.671489,176.14367 c 8.701078,-13.35219 14.741059,3.74805 19.18081,-13.96559"
+               style="opacity:1;fill:url(#linearGradient944);fill-opacity:1;stroke:none;stroke-width:0.07234693px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+          </g>
         </g>
-        <path
-           inkscape:connector-curvature="0"
-           id="path2342"
-           d="m 58.34214,196.45831 c 8.701078,-13.35219 14.741059,3.74805 19.18081,-13.96559"
-           style="opacity:1;fill:url(#linearGradient944);fill-opacity:1;stroke:none;stroke-width:0.07234693px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       </g>
     </g>
   </g>
