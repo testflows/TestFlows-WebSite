@@ -2,7 +2,7 @@
 layout: handbook
 p: /handbook
 title: Handbook
-heading: Your Handbook for Using The Framework
+heading: Your handbook for using the framework
 icon: fas fa-book pt-5 pb-5
 ---
 
