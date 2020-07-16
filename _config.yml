@@ -3,11 +3,11 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: TestFlows
+title: TestFlows Open-Source Software Testing Framework
 subtitle:
-description: TestFlows - An Open Source Test Framework
+description: Open-Source Software Testing Framework
 keywords:
-author: TestFlows.com
+author:
 language: en
 timezone:
 
