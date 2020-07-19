@@ -17,9 +17,9 @@
    id="svg8"
    sodipodi:docname="logo.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   inkscape:export-filename="/home/user/Yandex.Disk/project/TestFlows/imgs/testflows_logo6.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   inkscape:export-filename="/home/user/Yandex.Disk/project/Katteli/WebSite/themes/katteli/source/img/testflows_logo.png"
+   inkscape:export-xdpi="152.90712"
+   inkscape:export-ydpi="152.90712">
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -115,7 +115,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
