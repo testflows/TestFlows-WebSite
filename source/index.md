@@ -106,13 +106,15 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% endhtml %}
 {% endhtml %}
 
+# <br>
+
 ---
 
 # <br>
 # **Professional & Beautiful Reports**
 ## right at your fingertips
 ## --
-<h4>generated in Markdown for easy customization</h4>
+#### generated in Markdown for easy customization</h4>
 
 ## <br>
 ---
@@ -192,5 +194,120 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-metrics.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
+
+# <br>
+
+---
+
+# <br>
+# **Write & Work with Requirements**
+## straightforward and convenient
+
+## <br>
+---
+
+<br>
+<br>
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+## Write requirements in Markdown document
+# <br>
+{% endhtml %}
+{% html div class="col-md-8" %}
+
+{% codeblock lang:markdown line_number:true highlight:true first_line:1 %}
+# SRS001 Software Requirements Specification
+
+## Requirements
+
+### Generic
+
+### RQ.SRS001-CU.LS
+version: 1.0
+
+The [ls](#ls) utility SHALL list the contents of a directory.
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+## Convert & use in tests
+# <br>
+
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+    <div class="command">
+        <span class="prompt">$</span>cat requirements.md | tfs requirements generate > requirements.py
+    </div>
+</div>
+
+
+{% endhtml %}
+{% html div class="col-md-8" %}
+
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+from requirements import *
+
+@TestScenario
+@Requirements(RQ_SRS001_CU_LS_Default_Directory("1.0"))
+def list_current_working_directory(self, shell):
+    """Check that `ls` utility when run without
+    any arguments lists the contents of the
+    current working directory.
+    """
+    with When("I execute `ls` command without arguments"):
+        r = shell("ls")
+
+    with Then("exitcode should be 0"):
+        assert r.exitcode == 0, error()
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+## Now always know your test coverage
+# <br>
+
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+    <div class="command">
+        <span class="prompt">$</span>cat test.log | tfs report coverage requirements.py
+    </div>
+</div>
+
+{% endhtml %}
+{% html div class="col-md-8" %}
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/coverage.png" alt="Requirements" style="width: 100%;"></div>
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+## Impress and share requirements with your team and customers
+# <br>
+
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+    <div class="command">
+        <span class="prompt">$</span>cat requirements.md | tfs document convert > requirements.html
+    </div>
+</div>
+
+{% endhtml %}
+{% html div class="col-md-8" %}
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/requirements.png" alt="Requirements" style="width: 100%;"></div>
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
 
 {% endhtml %}

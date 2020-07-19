@@ -29,7 +29,13 @@ figure.highlight {
   font-size: 0.85em;
   line-height: 1.45;
   overflow: auto;
+  padding: 1em;
 }
+
+pre .section {
+  color: purple;
+}
+
 pre .comment,
 pre .template_comment,
 pre .diff .header,
