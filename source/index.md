@@ -120,23 +120,23 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Requirements Coverage Report
-<div style="width: 400px; margin: auto; padding-bottom: 1em;">
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report coverage requirements.py
     </div>
 </div>
-<div style="height: 450px; max-width: 450px; margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/coverage.png" alt="Requirements Coverage Report" style="width: 100%;"></div>
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/coverage.png" alt="Requirements Coverage Report" style="width: 100%;"></div>
 {% endhtml %}
 
 {% html div class="col-md-6" %}
 ## <br>
 ## Requirements Traceability Report
-<div style="width: 320px; margin: auto; padding-bottom: 1em;">
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report traceability
     </div>
 </div>
-<div style="height: 450px; max-width: 450px; margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/traceability.png" alt="ScreenShot" style="width: 100%;"></div>
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/traceability.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
 
@@ -147,23 +147,23 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Results Report
-<div style="width: 280px; margin: auto; padding-bottom: 1em;">
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report results
     </div>
 </div>
-<div style="height: 450px; max-width: 450px; margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/results.png" alt="ScreenShot" style="width: 100%;"></div>
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/results.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 
 {% html div class="col-md-6" %}
 ## <br>
 ## Specification Report
-<div style="width: 320px; margin: auto; padding-bottom: 1em;">
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report specification
     </div>
 </div>
-<div style="height: 450px; max-width: 450px; margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/specification.png" alt="ScreenShot" style="width: 100%;"></div>
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/specification.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
 
@@ -173,23 +173,23 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Results Comparison Report
-<div style="width: 280px; margin: auto; padding-bottom: 1em;">
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>tfs report compare results *.log
     </div>
 </div>
-<div style="height: 450px; max-width: 450px; margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-results.png" alt="ScreenShot" style="width: 100%;"></div>
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-results.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 
 {% html div class="col-md-6" %}
 ## <br>
 ## Metrics Comparison Report
-<div style="width: 280px; margin: auto; padding-bottom: 1em;">
+<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>tfs report compare metrics *.log
     </div>
 </div>
-<div style="height: 450px; max-width: 450px; margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-metrics.png" alt="ScreenShot" style="width: 100%;"></div>
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-metrics.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
 
