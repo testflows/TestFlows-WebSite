@@ -21,7 +21,7 @@ menu:
     icon: fas fa-blog
   About:
     path: /about.html
-    icon: fas fa-book-reader
+    icon: fas fa-info-circle
   Contact:
     path: /contact.html
     icon: fas fa-envelope-open-text

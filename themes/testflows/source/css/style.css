@@ -235,6 +235,17 @@ blockquote {
     padding-right: 10px;
 }
 
+.command {
+    background: #383d41;
+    line-height: 3em;
+    font-family: monospace;
+    font-size: small;
+    color: white;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+}
+
 .banner .links {
     padding-top: 30px;
 }
@@ -260,6 +271,11 @@ blockquote {
 
 .banner .command .prompt {
     color: #a6a6a6;
+    padding-right: 10px;
+}
+
+.command .prompt {
+    color: #00ff7f;
     padding-right: 10px;
 }
 
@@ -383,7 +399,7 @@ body {
 }
 
 /**
- * 
+ *
  * For modern browsers
  * 1. The space content is one way to avoid an Opera bug when the
  *    contenteditable attribute is included anywhere else in the document.
@@ -409,4 +425,3 @@ body {
 .cf {
   *zoom: 1;
 }
-

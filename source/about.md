@@ -1,6 +1,6 @@
 ---
-title: About The Project
-heading: The project was created to provide an enterprise quality<br>open-source test framework.
+title: About
+heading: The project was created to provide an enterprise quality<br>open-source test framework
 icon: fas fa-book-reader pt-5 pb-5
 date: 2019-11-22 19:49:22
 ---
@@ -21,7 +21,7 @@ is being actively developed and improved.
 The motivation for the framework came from the experience of developing test automation for various projects.
 After developing multiple custom closed-source test automation systems,
 and not being quite satisfied with the capabilities and the approach
-of other open-source projects, and it serves as a platform for providing
+of other open-source projects, {% testflows %} serves as a platform for providing
 a flexible framework that can easily be adapted to the testing task at hand.
 {% endhtml %}
 ---
