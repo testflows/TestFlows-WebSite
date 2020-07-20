@@ -249,11 +249,12 @@ blockquote {
     background: #383d41;
     line-height: 3em;
     font-family: monospace;
-    font-size: 1em;
+    font-size: 0.8em;
     color: white;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 10px;
+    display: inline-block;
 }
 
 .links {
