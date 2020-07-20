@@ -120,7 +120,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Requirements Coverage Report
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report coverage requirements.py
     </div>
@@ -131,7 +131,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Requirements Traceability Report
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report traceability
     </div>
@@ -147,7 +147,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Results Report
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report results
     </div>
@@ -158,7 +158,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Specification Report
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report specification
     </div>
@@ -173,7 +173,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Results Comparison Report
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>tfs report compare results *.log
     </div>
@@ -184,7 +184,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% html div class="col-md-6" %}
 ## <br>
 ## Metrics Comparison Report
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>tfs report compare metrics *.log
     </div>
@@ -237,7 +237,7 @@ The [ls](#ls) utility SHALL list the contents of a directory.
 ## Convert & use in tests
 # <br>
 
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat requirements.md | tfs requirements generate > requirements.py
     </div>
@@ -274,7 +274,7 @@ def list_current_working_directory(self, shell):
 ## Track your test coverage
 # <br>
 
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat test.log | tfs report coverage requirements.py
     </div>
@@ -293,7 +293,7 @@ def list_current_working_directory(self, shell):
 ## Impress and share requirements with your team and customers
 # <br>
 
-<div style="width: fit-content; margin: auto; padding-bottom: 1em;">
+<div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
         <span class="prompt">$</span>cat requirements.md | tfs document convert > requirements.html
     </div>
