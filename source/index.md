@@ -19,8 +19,8 @@ layout: index
 <img src="/img/logo-white.png" alt="Logo" style= "width: 70vw; max-width: 400px;">
 </p>
 
-### enterprise quality test framework
-#### makes testing flow
+### enterprise quality open-source test framework
+#### that makes testing flow
 <div class="row justify-content-center no-gutters" style="padding-top: 3vh">
     <div class="command">
         <span class="prompt">$</span>pip3 install testflows
@@ -113,8 +113,6 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 # <br>
 # **Professional & Beautiful Reports**
 ## right at your fingertips
-## --
-#### generated in Markdown for easy customization</h4>
 
 ## <br>
 ---
@@ -273,7 +271,7 @@ def list_current_working_directory(self, shell):
 <br>
 {% html div class=row" %}
 {% html div class="col-md-4 text-center" %}
-## Now always know your test coverage
+## Track your test coverage
 # <br>
 
 <div style="width: fit-content; margin: auto; padding-bottom: 1em;">
