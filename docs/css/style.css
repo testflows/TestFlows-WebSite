@@ -11,6 +11,17 @@ html, body {
     padding: 0 !important;
 }
 
+.codeblock-image figure.highlight {
+    padding: 0;
+    background: #495057;
+}
+
+.codeblock-image figure.highlight pre ,
+.codeblock-image figure.highlight code {
+    color: white;
+    background: #495057;
+}
+
 footer {
     background: #163550;
     color: white;
