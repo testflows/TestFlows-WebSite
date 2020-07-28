@@ -68,7 +68,6 @@ Write a simple test.
 
 {% html div class="col-md-8" %}
 {% codeblock lang:python line_number:false highlight:true %}
-
 from testflows.core import Scenario
 
 with Scenario("Hello TestFlows"):

@@ -29,7 +29,8 @@ figure.highlight {
   font-size: 0.85em;
   line-height: 1.45;
   overflow: auto;
-  padding: 1em;
+  padding: 0em;
+  margin: 0em;
 }
 
 pre .section {
