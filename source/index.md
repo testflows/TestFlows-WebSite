@@ -210,8 +210,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ## Write requirements in Markdown document
 # <br>
 {% endhtml %}
-{% html div class="col-md-8" %}
-
+{% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:markdown line_number:true highlight:true first_line:1 %}
 # SRS001 Software Requirements Specification
 
@@ -244,8 +243,7 @@ The [ls](#ls) utility SHALL list the contents of a directory.
 
 
 {% endhtml %}
-{% html div class="col-md-8" %}
-
+{% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
 from requirements import *
 
@@ -310,6 +308,79 @@ def list_current_working_directory(self, shell):
 ---
 
 # <br>
+# **Results Analytics**
+## designed to provide analytics
+## using ClickHouse and Grafana
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+## On-The-Fly Logs Loading
+## Into ClickHouse
+# <br>
+
+<div style="text-align: center; padding-bottom: 1em;">
+    <div class="command">
+        <span class="prompt">$</span>python3 test.py --database host=localhost
+    </div>
+</div>
+{% endhtml %}
+
+{% html div class="col-md-8 codeblock-image dark" %}
+{% codeblock lang:bash line_number:true highlight:true first_line:1 %}
+$ clickhouse-client
+ClickHouse client version 20.7.1.4130.
+Connecting to localhost:9000 as user default.
+Connected to ClickHouse server version 20.7.1 revision 54437.
+
+user-node :) select test_name from messages WHERE message_keyword = 'RESULT' LIMIT 5
+
+SELECT test_name
+FROM messages
+WHERE message_keyword = 'RESULT'
+LIMIT 5
+
+┌─test_name───────────────────────────────────────────────────────────────────────────────────────┐
+│ /ls                                                                                             │
+│ /ls/list current working directory                                                              │
+│ /ls/list current working directory/I execute `ls` command without arguments                     │
+│ /ls/list current working directory/exitcode should be 0                                         │
+│ /ls/list current working directory/it should list the contents of the current working directory │
+└─────────────────────────────────────────────────────────────────────────────────────────────────┘
+
+5 rows in set. Elapsed: 0.010 sec.
+
+user-node :)
+{% endcodeblock %}
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+## Dashboards
+## available in Grafana
+# <br>
+
+{% endhtml %}
+
+{% html div class="col-md-8" %}
+<div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/grafana-testruns.png" alt="Dashboards" style="width: 100%;"></div>
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
 # **More Than Just a Framework**
 ## build on top of a messaging protocol
 ## for robustness and advanced applications
@@ -333,7 +404,7 @@ def list_current_working_directory(self, shell):
 </div>
 {% endhtml %}
 
-{% html div class="col-md-8 codeblock-image" %}
+{% html div class="col-md-8 codeblock-image dark" %}
 {% codeblock lang:json line_number:true highlight:true first_line:1 %}
 {"message_keyword":"PROTOCOL","message_hash":"6e6fca73","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1595181231.201574,"message_rtime":0.000875,"test_type":"Module","test_subtype":null,"test_id":"/cdc771be-c9e8-11ea-be5a-2477034de0ec","test_name":"/ls","test_flags":0,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
 {"message_keyword":"VERSION","message_hash":"2fdb9078","message_object":0,"message_num":1,"message_stream":null,"message_level":1,"message_time":1595181231.201672,"message_rtime":0.000973,"test_type":"Module","test_subtype":null,"test_id":"/cdc771be-c9e8-11ea-be5a-2477034de0ec","test_name":"/ls","test_flags":0,"test_cflags":0,"test_level":1,"framework_version":"1.6.200716.1214830"}
@@ -372,7 +443,7 @@ def list_current_working_directory(self, shell):
 </div>
 {% endhtml %}
 
-{% html div class="col-md-8 codeblock-image" %}
+{% html div class="col-md-8 codeblock-image dark" %}
 {% codeblock lang:bash %}
 00000000  fd 37 7a 58 5a 00 00 04  e6 d6 b4 46 02 00 21 01  |.7zXZ......F..!.|
 00000010  16 00 00 00 74 2f e5 a3  e0 29 89 05 03 5d 00 3d  |....t/...)...].=|
@@ -401,3 +472,20 @@ def list_current_working_directory(self, shell):
 <br>
 
 {% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
+# **Actively Developed**
+## become part of the team
+## and join us on <a href="https://github.com/testflows">GitHub</a>
+## or follow us to get the latest updates
+
+## <br>
+---
+
+<br>
+<br>

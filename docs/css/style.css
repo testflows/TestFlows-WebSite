@@ -12,14 +12,24 @@ html, body {
 }
 
 .codeblock-image figure.highlight {
-    padding: 0;
+   padding-top: 1em;
+   padding-bottom: 1em;
+}
+
+.codeblock-image.dark figure.highlight {
+   background: #495057;
+}
+
+.codeblock-image.dark figure.highlight pre ,
+.codeblock-image.dark figure.highlight code {
+    color: white;
     background: #495057;
 }
 
-.codeblock-image figure.highlight pre ,
-.codeblock-image figure.highlight code {
-    color: white;
-    background: #495057;
+.btn-primary {
+    color: #fff;
+    background-color: #16354f;
+    border-color: #16354f;
 }
 
 footer {
