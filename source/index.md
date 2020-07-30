@@ -320,8 +320,8 @@ def list_current_working_directory(self, shell):
 
 {% html div class=row" %}
 {% html div class="col-md-4 text-center" %}
-## On-The-Fly Logs Loading
-## Into ClickHouse
+## On-the-fly loading of logs
+## into ClickHouse
 # <br>
 
 <div style="text-align: center; padding-bottom: 1em;">
