@@ -471,11 +471,6 @@ user-node :)
 <br>
 <br>
 
-{% endhtml %}
-
-<br>
-<br>
-
 ---
 
 # <br>
@@ -489,3 +484,5 @@ user-node :)
 
 <br>
 <br>
+
+{% endhtml %}
