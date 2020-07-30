@@ -174,7 +174,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ## Results Comparison Report
 <div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
-        <span class="prompt">$</span>tfs report compare results *.log
+        <span class="prompt">$</span>tfs report compare results --log *.log
     </div>
 </div>
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-results.png" alt="ScreenShot" style="width: 100%;"></div>
@@ -185,7 +185,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ## Metrics Comparison Report
 <div style="text-align: center; padding-bottom: 1em;">
     <div class="command">
-        <span class="prompt">$</span>tfs report compare metrics *.log
+        <span class="prompt">$</span>tfs report compare metrics --log *.log
     </div>
 </div>
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-metrics.png" alt="ScreenShot" style="width: 100%;"></div>
