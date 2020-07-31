@@ -25,7 +25,7 @@ code,
 pre,
 figure.highlight {
   background-color: #f7f7f7;
-  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-family: monospace, monospace;
   font-size: 0.85em;
   line-height: 1.45;
   overflow: auto;
