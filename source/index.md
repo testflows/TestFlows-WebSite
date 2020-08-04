@@ -110,7 +110,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ---
 
 # <br>
-# **Professional & Beautiful Reports**
+# **Professional Reports**
 ## right at your fingertips
 
 ## <br>
