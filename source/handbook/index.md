@@ -77,6 +77,9 @@ test definition classes or using specialized keyword classes as
 [Scenario], [Feature], [Module] and the steps
 such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally].
 
+In addition, you can also define sub-tests using [Check] test definition class
+or its flavours [Critical], [Major] or [Minor]. 
+
 > You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
 > your tests and test procedures.
 
@@ -1046,7 +1049,7 @@ with Feature("My feature"):
     Scenario(run=scenario)
 ```
 
-### Test
+## Test
 
 A [Case](#Case-is) can be defined using [Test] test definition class or [TestCase] decorator.
 
@@ -1069,7 +1072,7 @@ with Test("My testcase"):
 > Note that here the word `test` is used to define a [Case](#Case-is) to match the most common meaning of the word `test`.
 > When someone says they will run a `test` they most likely mean they will run a test [Case](#Case-is).
 
-### Scenario
+## Scenario
 
 A [Scenario] can be defined using [Scenario] test definition class or [TestScenario] decorator.
 
@@ -1087,7 +1090,95 @@ with Scenario("My scenario"):
     pass
 ```
 
-### Outline
+## Check
+
+A [Check] can be defined using [Check] test definition class or [TestCheck] decorator
+
+```python
+@TestCheck
+@Name("My check")
+def check(self):
+    pass
+```
+
+or inline as
+
+```python
+with Check("My check"):
+    pass
+```
+
+and is usually used inside either [Test] or [Scenario] to define an inline sub-test
+
+```python
+with Scenario("My scenario"):
+    with Check("My check"):
+        pass
+
+    with Check("My other check"):
+        pass
+```
+
+## Critical, Major, Minor
+
+A [Critical], [Major], or [Minor] checks can be defined using [Critical], [Major]
+or [Minor] test definition class respectively or similarly using [TestCritical], [TestMajor],
+[TestMinor] decorators
+
+```python
+@TestCritical
+@Name("My critical check")
+def critical(self):
+    pass
+
+@TestMajor
+@Name("My major check")
+def major(self):
+    pass
+
+@TestMinor
+@Name("My minor minor")
+def minor(self):
+    pass
+```
+
+or inline as
+
+```python
+with Critical("My critical check"):
+    pass
+
+with Major("My major check"):
+    pass
+
+with Minor("My minor check"):
+    pass
+```
+
+and is usually used inside either [Test] or [Scenario] to define inline sub-tests.
+
+```python
+with Scenario("My scenario"):
+    with Critical("my critical check"):
+        pass
+
+    with Major("my major check"):
+        pass
+
+    with Minor("my minor check"):
+        pass
+```
+
+These classes are usually used for classification of checks during reporting.
+
+```bash
+1 scenario (1 ok)
+1 critical (1 ok)
+1 major (1 ok)
+1 minor (1 ok)
+```
+
+## Outline
 
 An [Outline] can be defined using [Outline] test definition class or [TestOutline] decorator.
 An [Outline] has its own test [Type] but can be made specific when defined using [TestOutline]
@@ -1158,9 +1249,9 @@ Jul 05,2020 18:23:02   ⟥  Scenario My scenario
                  2ms   ⟥⟤ OK My scenario, /My scenario
 ```
 
-#### Setting Parameters
+### Setting Parameters
 
-##### **For an Example**
+#### **For an Example**
 
 You can set parameters for an individual example by specifying them right after the values for the example row.
 
@@ -1178,7 +1269,7 @@ def outline(self, greeting, name):
     note(f"{greeting} {name}!")
 ```
 
-##### **For All Examples**
+#### **For All Examples**
 
 You can set common parameter values for all the examples specified by the [Examples] table using the `args` parameter
 and passing it a `dict` with parameter values as the argument.
@@ -1195,12 +1286,12 @@ def outline(self, greeting, name):
     note(f"{greeting} {name}!")
 ```
 
-### Iteration
+## Iteration
 
 An [Iteration] is not meant to be used explicitely and in most cases is only used internally to implement
 test repetitions.
 
-### Step
+## Step
 
 A [Step] can be defined using [Step] test definition class or [TestStep] decorator.
 
@@ -1225,7 +1316,7 @@ with Step("step"):
     note("generic test step")
 ```
 
-### Given
+## Given
 
 A [Given] step is used to define precodition or setup and is always treated as a mandatory step
 that can't be skipped. It is defined using [Given] test definition class or using [TestStep]
@@ -1244,7 +1335,7 @@ with Given("I have something"):
     pass
 ```
 
-### Background
+## Background
 
 A [Background] step is used define a complex precodition or setup usually containing multiple
 [Given](#Given)'s and can be defined using [Background] test definition class or [TestBackground]
@@ -1272,7 +1363,7 @@ with Background("My complex setup"):
         pass
 ```
 
-### When
+## When
 
 A [When](#When) step is used to define an action within a [Scenario]. It can be defined using [When] test definition class
 or using [TestStep] decorator with [When] passed as the [Sub-Type].
@@ -1290,7 +1381,7 @@ with When("I do some action"):
     do_some_action()
 ```
 
-### And
+## And
 
 An [And](#And) step is used to define a step of the same [Sub-Type] as the step right above it.
 It is defined using [And] test definition class.
@@ -1350,7 +1441,7 @@ with And("I do something"):
 TypeError: `And` subtype can't be used here as it sibling is not of the same type
 ```
 
-### By
+## By
 
 A [By](#By) step is usually used to define a sub-step using [By] test definition class.
 
@@ -1360,7 +1451,7 @@ with When("I do something"):
         pass
 ```
 
-### Then
+## Then
 
 A [Then] step is used to define a step that usually contains a positive assertion.
 It can be defined using [Then] test definition class
@@ -1379,7 +1470,7 @@ with Then("I expect something"):
     assert something
 ```
 
-### But
+## But
 
 A companion of the [Then] step is a [But] step and is
 used to define a step that usually contains an negative assertion.
@@ -1399,7 +1490,7 @@ with But("I check something is not true"):
     assert not something
 ```
 
-### Finally
+## Finally
 
 A [Finally] step is used to define a cleanup step and is treated as a mandatory step
 that can't be skipped. It can be defined using [Finally] test definition class
@@ -1559,6 +1650,14 @@ The framework uses the following [Sub-Types] in order to provide more flexibilit
 [TestStep]: #Step
 [Test]: #Test
 [TestCase]: #Test
+[Check]: #Check
+[TestCheck]: #Check
+[Critical]: #Critical-Major-Minor
+[Major]:  #Critical-Major-Minor
+[Minor]:  #Critical-Major-Minor
+[TestCritical]:  #Critical-Major-Minor
+[TestMajor]:  #Critical-Major-Minor
+[TestMinor]:  #Critical-Major-Minor
 [Scenario]: #Scenario
 [TestScenario]: #Scenario
 [Suite]: #Suite
