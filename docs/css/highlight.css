@@ -23,9 +23,6 @@ figure.highlight .code {
 }
 code,
 pre,
-kbd,
-samp,
-tt,
 figure.highlight {
   background-color: #f7f7f7;
   font-family: monospace, monospace;
