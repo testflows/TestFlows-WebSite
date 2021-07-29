@@ -11,7 +11,7 @@ icon: fas fa-book pt-5 pb-5
 {% testflows %} is an open-source software testing framework that can be used for functional,
 integration, acceptance and unit testing across various teams. It is designed to provide
 complete control of how tests are written and executed by allowing to write tests and
-define test [flow](#Flow-is) explicitely as [Python] code. It uses [everything is a test] approach
+define test [flow](#Flow-is) explicitly as [Python] code. It uses [everything is a test] approach
 with the focus on giving test authors flexibility in writing and running their tests.
 It designed to meet the needs of small QA groups at software startup companies
 while providing the tools to meet the formalities of the large enterprise QA groups
@@ -257,7 +257,7 @@ $ python3 test.py
 
 or if the top level test is executable and defined as
 
-```python3
+```python
 #!/usr/bin/python3
 from testflows.core import Test
 
@@ -276,6 +276,22 @@ then it can be executed directly as
 ```bash
 $ ./test.py
 ```
+
+# Top Level Test
+
+{% testflows %} only allows one top level test to exist in any given test program execution.
+Because a [Flow](#Flow-is) of tests can be represented as a rooted [Tree](#Tree-is), a test program
+exits on completion of the top level test. Therefore, any code that is defined after the top
+level test **is not executed**.
+
+```python
+with Module("module"):
+  pass
+
+something_else() # will not be executed
+```
+
+# Test Program Options
 
 ## Options
 
@@ -1608,7 +1624,7 @@ a [Test](#Test-is) that is made up of one or more [Suites](#Suite-is).
 
 # Types
 
-The framework devides tests into the following [Types] from highest to the lowest
+The framework divides tests into the following [Types] from highest to the lowest
 
 * [Module]
 * [Suite]
@@ -1785,3 +1801,4 @@ The [Sub-Types] have the following mapping to the core six [Types]
 [framework]: https://testflows.com
 [Test Definition Class]: #Defining-Tests
 [context manager]: https://docs.python.org/3/reference/datamodel.html#context-managers
+[Top Level Test]: #Top-Level-Test
