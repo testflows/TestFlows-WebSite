@@ -24,8 +24,8 @@ and could be executed in a hive mode on multi-node clusters.
 
 # Supported Environment
 
-* [Ubuntu] 18.04
-* [Python 3] >= 3.6
+* [Ubuntu] 20.04
+* [Python 3] >= 3.8
 
 > However, known to run on other systems such as MacOS.
 
