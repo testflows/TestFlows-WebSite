@@ -72,7 +72,7 @@ Passing
 
 # Defining Tests
 
-You can can define tests inline using classical [Step], [Test], [Suite], and [Module]
+You can define tests inline using classical [Step], [Test], [Suite], and [Module]
 test definition classes or using specialized keyword classes as
 [Scenario], [Feature], [Module] and the steps
 such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally].
@@ -83,10 +83,47 @@ or its flavours [Critical], [Major] or [Minor].
 > You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
 > your tests and test procedures.
 
+Given the variety of test definition classes above, fundamentally, 
+there only four core [Types] of tests in {% testflows %} and two special types
+giving us six [Types] in total. The core [Types] are
+
+  * [Module]
+  * [Suite]
+  * [Test]
+  * [Outline] (special)
+  * [Iteration] (special)
+  * [Step]
+
+and all other types are just a naming variation of one of the above having the following mapping
+
+* [Module]
+* [Suite]
+  * [Feature]
+* [Test]
+  * [Scenario]
+  * [Check]
+  * [Critical]
+  * [Major]
+  * [Minor]
+  * [Example]
+* [Outline] (special)
+* [Iteration] (special)
+* [Step]
+  * [Given]
+  * [When]
+  * [Then]
+  * [But]
+  * [By]
+  * [Finally]
+  * [Background]
+
+see [Types] for more information.
+
 ## Inline
 
-Inline tests can be defined anywhere in your test code using test definition classes
-using the [with] statement.
+Inline tests can be defined anywhere in your test code by using [Test Definition Class]es above.
+Because all test definition classes are [context manager]s and therefore must be used
+using the [with] statement or [async with] for asynchronous tests that leverage [Python]'s [asyncio] module.
 
 ```python
 with Module("My test module"):
@@ -110,10 +147,9 @@ with Module("My test module"):
 
 ## Decorated
 
-For reusability you can also define tests using
-[TestStep], [TestCase], [TestSuite], [TestModule],
-[TestScenario], [TestFeature], [TestOutline],
-and [TestBackground] function decorators.
+For re-usability you can also define tests using the
+[TestStep], [TestBackground], [TestCase], [TestCheck], [TestCritical], [TestMajor], [TestMinor],
+[TestSuite], [TestFeature], [TestModule], and [TestOutline] test function decorators.
 
 For example,
 
@@ -128,6 +164,10 @@ def scenario(self, action=None):
     with Then("I expect something"):
         pass
 ```
+
+Similar to how [class method]s take an instance of the object as the first argument, 
+test functions wrapped with test decorators take an instance of the current test as the first argument
+and therefore by convention the first argument is always named `self`.
 
 ## Calling Decorated Tests
 
@@ -1155,7 +1195,7 @@ with Minor("My minor check"):
     pass
 ```
 
-and is usually used inside either [Test] or [Scenario] to define inline sub-tests.
+and are usually used inside either [Test] or [Scenario] to define inline sub-tests.
 
 ```python
 with Scenario("My scenario"):
@@ -1176,6 +1216,21 @@ These classes are usually used for classification of checks during reporting.
 1 critical (1 ok)
 1 major (1 ok)
 1 minor (1 ok)
+```
+
+## Example
+
+An [Example] can be only defined inline using [Example] test definition class. There is no decorator
+to define it outside of existing test. An [Example] is of a [Test Type] and is used to define
+one or more sub-tests. Usually, [Example]s are created automatically using [Outline]s.
+
+```python
+with Scenario("My scenario"):
+    with Example("Example 1"):
+        pass
+
+    with Example("Example 2"):
+        pass
 ```
 
 ## Outline
@@ -1288,7 +1343,7 @@ def outline(self, greeting, name):
 
 ## Iteration
 
-An [Iteration] is not meant to be used explicitely and in most cases is only used internally to implement
+An [Iteration] is not meant to be used explicitly and in most cases is only used internally to implement
 test repetitions.
 
 ## Step
@@ -1555,12 +1610,12 @@ a [Test](#Test-is) that is made up of one or more [Suites](#Suite-is).
 
 The framework devides tests into the following [Types] from highest to the lowest
 
-* **Module**
-* **Suite**
-* **Test**
-* **Outline**
-* **Iteration**
-* **Step**
+* [Module]
+* [Suite]
+* [Test]
+* [Outline]
+* [Iteration]
+* [Step]
 
 Children of each [Type] usually must be of the same [Type] or lower with the only notable exception
 being an [Iteration] that is used to implement test repetitions.
@@ -1569,17 +1624,46 @@ being an [Iteration] that is used to implement test repetitions.
 
 The framework uses the following [Sub-Types] in order to provide more flexibility and implement specialized keywords
 
-* **Feature**
-* **Scenario**
-* **Example**
-* **Background**
-* **Given**
-* **When**
-* **Then**
-* **And**
-* **But**
-* **By**
-* **Finally**
+* [Feature]
+* [Scenario]
+* [Example]
+* [Check]
+* [Critical]
+* [Major]
+* [Minor]
+* [Background]
+* [Given]
+* [When]
+* [Then]
+* [And]
+* [But]
+* [By]
+* [Finally]
+
+# Sub-Types Mapping
+
+The [Sub-Types] have the following mapping to the core six [Types]
+
+* [Module]
+* [Suite]
+  * [Feature]
+* [Test]
+  * [Scenario]
+  * [Check]
+  * [Critical]
+  * [Major]
+  * [Minor]
+  * [Example]
+* [Outline]
+* [Iteration]
+* [Step]
+  * [Given]
+  * [When]
+  * [Then]
+  * [But]
+  * [By]
+  * [Finally]
+  * [Background]
 
 [pattern]: #pattern
 [--only]: #–only
@@ -1636,8 +1720,15 @@ The framework uses the following [Sub-Types] in order to provide more flexibilit
 [Feature]: #Feature
 [Type]: #Types
 [Types]: #Types
+[Module Type]: #Types
+[Suite Type]: #Types
+[Test Type]: #Types
+[Outline Type]: #Types
+[Iteration Type]: #Types
+[Step Type]: #Types
 [Sub-Type]: #Sub-Types
 [Sub-Types]: #Sub-Types
+[Sub-Types Mapping]: #Sub-Type-Mapping
 [everything is a test]: #Everything-is-a-Test
 [Given]: #Given
 [When]: #When
@@ -1658,6 +1749,7 @@ The framework uses the following [Sub-Types] in order to provide more flexibilit
 [TestCritical]:  #Critical-Major-Minor
 [TestMajor]:  #Critical-Major-Minor
 [TestMinor]:  #Critical-Major-Minor
+[Example]: #Example
 [Scenario]: #Scenario
 [TestScenario]: #Scenario
 [Suite]: #Suite
@@ -1672,8 +1764,14 @@ The framework uses the following [Sub-Types] in order to provide more flexibilit
 [Background]: #Background
 [TestBackground]: #Background
 [with]: https://docs.python.org/3/reference/compound_stmts.html#the-with-statement
+[async with]: https://docs.python.org/3/reference/compound_stmts.html#async-with
+[Classes]: https://docs.python.org/3/tutorial/classes.html
+[Class]: https://docs.python.org/3/tutorial/classes.html
+[class]: https://docs.python.org/3/tutorial/classes.html
+[class method]: https://docs.python.org/3/tutorial/classes.html#method-objects
 [pip3]: https://github.com/pypa/pip
 [Python 3]: https://www.python.org/
+[asyncio]: https://docs.python.org/3/library/asyncio.html
 [Ubuntu]: https://ubuntu.com/
 [ClickHouse]: https://clickhouse.tech/
 [Grafana]: https://grafana.com/
@@ -1685,3 +1783,5 @@ The framework uses the following [Sub-Types] in order to provide more flexibilit
 [HTML]: https://en.wikipedia.org/wiki/HTML
 [Framework]: https://testflows.com
 [framework]: https://testflows.com
+[Test Definition Class]: #Defining-Tests
+[context manager]: https://docs.python.org/3/reference/datamodel.html#context-managers
