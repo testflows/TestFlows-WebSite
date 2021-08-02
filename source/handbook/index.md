@@ -1004,7 +1004,7 @@ using the `examples` attribute of the test.
 For example,
 
 ```python
-with Test("My test", examples=Examples("col0 col1", [("col0_row0 col1_row0"), ("col0_row1", "col1_row1")]) as test:
+with Test("My test", examples=Examples("col0 col1", [("col0_row0", "col1_row0"), ("col0_row1", "col1_row1")])) as test:
     for example in test.examples:
         note(str(example))
 ```
@@ -1026,7 +1026,7 @@ For example,
     ("col0_row1", "col1_row1")
 ])
 def scenario(self):
-    for example in test.examples:
+    for example in self.examples:
         note(str(example))
 ```
 
