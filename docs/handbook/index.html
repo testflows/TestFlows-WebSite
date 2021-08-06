@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1627924003976" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1627924003976" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1628247399493" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1628247399493" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1627924003976" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1628247399493" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -183,6 +183,7 @@ giving us six <a href="#Types">Types</a> in total. The core <a href="#Types">Typ
 <li><a href="#By">By</a></li>
 <li><a href="#Finally">Finally</a></li>
 <li><a href="#Background">Background</a></li>
+<li><a href="#And">And</a> (special)</li>
 </ul>
 </li>
 </ul>
@@ -493,9 +494,12 @@ must be passed valid flag or multiple flags combined with binary <code>OR</code>
 or using <a href="#ArgumentParser">ArgumentParser</a> decorator if top test is defined as a decorated function.</p>
 <h2 id="argparser"><a href="#argparser" class="headerlink" title="argparser"></a>argparser</h2><p>The <a href="#argparser">argparser</a> parameter can be used to set a custom command line argument parser by passing it a function that takes <code>parser</code> as the first
 parameter. This function will be called with an instance of <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/argparse.html">argparse</a> parser instance as the argument for the <code>parser</code> parameter.
-The values of the command line arguments can be accessed using the <code>args</code> attribute of the test.</p>
+The values of the command line arguments can be accessed using the <code>attributes</code> attribute of the test.</p>
+<blockquote>
+<p>Note that all arguments of the top level test become its <code>attributes</code>.</p>
+</blockquote>
 <p>For example,</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">argparser</span>(<span class="params">parser</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Custom command line arguments.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param parser: an instance of argparse parser.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg0&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 0&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg1&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 1&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>, argparser=argparser) <span class="keyword">as</span> module:</span><br><span class="line">    note(module.args[<span class="string">&quot;arg0&quot;</span>].value)</span><br><span class="line">    note(module.args[<span class="string">&quot;arg1&quot;</span>].value)</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">argparser</span>(<span class="params">parser</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Custom command line arguments.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param parser: an instance of argparse parser.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg0&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 0&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg1&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 1&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>, argparser=argparser) <span class="keyword">as</span> module:</span><br><span class="line">    note(module.attributes[<span class="string">&quot;arg0&quot;</span>].value)</span><br><span class="line">    note(module.attributes[<span class="string">&quot;arg1&quot;</span>].value)</span><br></pre></td></tr></table></figure>
 
 <h2 id="ArgumentParser"><a href="#ArgumentParser" class="headerlink" title="ArgumentParser"></a>ArgumentParser</h2><p>If <a href="#Module">Module</a> is defined using a decorated function then <a href="#ArgumentParser">ArgumentParser</a> decorator can be used to set custom command line argument parser.
 The values of the custom command line arguments will be passed to the decorated function as test arguments and therefore

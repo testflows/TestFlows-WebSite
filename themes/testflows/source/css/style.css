@@ -60,7 +60,8 @@ blockquote {
     position: fixed;
     bottom: 0.5em;
     right: 1em;
-    color: #6a6a6a;
+    color: #ef8b28;
+    font-size: 2.5em;
 }
 
 .jump:active,

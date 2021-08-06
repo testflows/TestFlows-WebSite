@@ -116,6 +116,7 @@ and all other types are just a naming variation of one of the above having the f
   * [By]
   * [Finally]
   * [Background]
+  * [And] (special)
 
 see [Types] for more information.
 
@@ -829,7 +830,9 @@ or using [ArgumentParser] decorator if top test is defined as a decorated functi
 
 The [argparser] parameter can be used to set a custom command line argument parser by passing it a function that takes `parser` as the first
 parameter. This function will be called with an instance of [argparse] parser instance as the argument for the `parser` parameter.
-The values of the command line arguments can be accessed using the `args` attribute of the test.
+The values of the command line arguments can be accessed using the `attributes` attribute of the test.
+
+> Note that all arguments of the top level test become its `attributes`.
 
 For example,
 
@@ -845,8 +848,8 @@ def argparser(parser):
         help="argument 1")
 
 with Module("regression", argparser=argparser) as module:
-    note(module.args["arg0"].value)
-    note(module.args["arg1"].value)
+    note(module.attributes["arg0"].value)
+    note(module.attributes["arg1"].value)
 ```
 
 ## ArgumentParser
