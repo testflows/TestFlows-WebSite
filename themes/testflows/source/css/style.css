@@ -97,6 +97,15 @@ blockquote {
     color: #49c19d;
 }
 
+.handbook a.toc-link.active .toc-text {
+    font-weight: bolder;
+    color: #dc3545;
+}
+
+.handbook h1,h2,h3,h4,h5,h6 {
+    cursor: pointer;
+}
+
 .switch-page a {
     color: inherit;
 }

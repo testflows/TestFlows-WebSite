@@ -53,3 +53,21 @@
         </div>
     </div>
 </div>
+<script>
+window.addEventListener("load", function(){
+    // add support to go back to TOC by clicking any header
+    document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+        element.addEventListener("click", function(event){
+            element_id = element.getAttribute("id");
+            toc_element = document.querySelector(".toc .toc-item .toc-link[href=\"#" + encodeURI(element_id) + "\"]");
+            toc_element.scrollIntoView({block: 'start'})
+            window.scrollBy(0, -200);
+            toc_element.classList.add("active");
+            // remove active class after timeout
+            setTimeout(function(){
+                toc_element.classList.remove("active");
+            }, 1000);
+        }, true);
+    });
+});
+</script>
