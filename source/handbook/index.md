@@ -22,6 +22,23 @@ and metrics reports. It is designed for large scale test analytics processing us
 writing advanced parallel tests that require test-to-test communication
 and could be executed in a hive mode on multi-node clusters.
 
+# Using Handbook
+
+This handbook is a one-page document that you can search using standard
+browser search (`Ctrl-F`). For ease of navigation you can always click any
+heading to go back to the table of contents. 
+
+> &#9995; Try clicking `Using Handbook` heading and you will see that the page
+> will scroll up and the corresponding entry in the table of contents
+> will be highlighted in red. This handy feature will make sure you are never lost!
+
+There is also <span><a class="fas fa-chevron-up" style="color: orange" href="#Contents"></a><span>
+icon on the bottom right of the page to allow you quickly scroll to the top.
+
+If you find any errors or would like to add documentation for something that is
+still not documented then feel free to submit a pull request
+with your changes to [handbook source file](https://github.com/testflows/TestFlows-WebSite/blob/master/source/handbook/index.md).
+
 # Supported Environment
 
 * [Ubuntu] 20.04
