@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1630943942336" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1630943942336" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1630944549891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1630944549891" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1630943942336" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1630944549891" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -117,7 +117,7 @@ Then execute it.</div>
 <div class="col-md-8"><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> python3 ./test.py</span></span><br><span class="line">Nov 20,2019 16:42:00   ⟥  Scenario Hello TestFlows</span><br><span class="line">                 2ms   ⟥⟤ OK Hello TestFlows, /Hello TestFlows</span><br><span class="line"></span><br><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Hello TestFlows</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br><span class="line"></span><br><span class="line">Total time 2ms</span><br><span class="line"></span><br><span class="line">Executed on Nov 20,2019 16:42</span><br><span class="line">TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833</span><br></pre></td></tr></table></figure></div></div>
 
 <h1 id=""><a href="#" class="headerlink" title=""></a><br></h1><hr>
-<h1 id="-1"><a href="#-1" class="headerlink" title=""></a><br></h1><h1 id="Asynchronous-Tests"><a href="#Asynchronous-Tests" class="headerlink" title="Asynchronous Tests"></a><strong>Asynchronous Tests</strong></h1><h2 id="using-Python’s-support-for-asynchronous-programming"><a href="#using-Python’s-support-for-asynchronous-programming" class="headerlink" title="using Python’s support for asynchronous programming"></a>using Python’s support for asynchronous programming</h2><h2 id="-2"><a href="#-2" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-1"><a href="#-1" class="headerlink" title=""></a><br></h1><h1 id="Asynchronous-Tests"><a href="#Asynchronous-Tests" class="headerlink" title="Asynchronous Tests"></a><strong>Asynchronous Tests</strong></h1><h2 id="Take-advantage-of-asynchronous-programming"><a href="#Take-advantage-of-asynchronous-programming" class="headerlink" title="Take advantage of asynchronous programming"></a>Take advantage of asynchronous programming</h2><h2 id="-2"><a href="#-2" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
@@ -131,11 +131,11 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-3"><a href="#-3" class="headerlink" title=""></a><br></h1><h1 id="Parallel-Tests"><a href="#Parallel-Tests" class="headerlink" title="Parallel Tests"></a><strong>Parallel Tests</strong></h1><h2 id="easy-run-tests-in-parallel"><a href="#easy-run-tests-in-parallel" class="headerlink" title="easy run tests in parallel"></a>easy run tests in parallel</h2><h2 id="-4"><a href="#-4" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-3"><a href="#-3" class="headerlink" title=""></a><br></h1><h1 id="Parallel-Tests"><a href="#Parallel-Tests" class="headerlink" title="Parallel Tests"></a><strong>Parallel Tests</strong></h1><h2 id="easily-run-tests-in-parallel"><a href="#easily-run-tests-in-parallel" class="headerlink" title="easily run tests in parallel"></a>easily run tests in parallel</h2><h2 id="-4"><a href="#-4" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
-<div class="row""><div class="col-md-4 text-center"><h2 id="using-parallel-argument-and-join">Using <code>parallel</code> argument and <code>join</code></h2>
+<div class="row""><div class="col-md-4 text-center"><h2 id="specify-parallel-and-sync-with-join">Specify <code>parallel</code> and sync with <code>join</code></h2>
 <h1 id=""><br></h1>
 </div>
 <div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Scenario(run=my_test1, parallel=<span class="literal">True</span>)</span><br><span class="line">Scenario(run=my_test2, parallel=<span class="literal">True</span>)</span><br><span class="line">join() <span class="comment"># join current parallel tests</span></span><br><span class="line">Scenario(run=my_test3, parallel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>

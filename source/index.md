@@ -111,7 +111,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 
 # <br>
 # **Asynchronous Tests**
-## using Python's support for asynchronous programming 
+## Take advantage of asynchronous programming 
 
 ## <br>
 ---
@@ -150,7 +150,7 @@ asyncio.run(module())
 
 # <br>
 # **Parallel Tests**
-## easy run tests in parallel
+## easily run tests in parallel
 
 ## <br>
 ---
@@ -161,7 +161,7 @@ asyncio.run(module())
 {% html div class=row" %}
 {% html div class="col-md-4 text-center" %}
 
-## Using `parallel` argument and `join`
+## Specify `parallel` and sync with `join`
 # <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
