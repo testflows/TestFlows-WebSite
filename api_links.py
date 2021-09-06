@@ -5,14 +5,14 @@ import testflows.core
 from testflows._core import __repository__, __commit__
 
 
-github_root = f"{__repository__}/blob/{__commit__}"
+github_root = f"{__repository__.rsplit('.git',1)[0]}/blob/{__commit__}"
 
 
 def make_link(obj):
     """Make a link to a line of code in the github repository
     for a given object.
     """
-    return f"{github_root}{inspect.getsourcefile(obj).split('/testflows', 1)[-1]}#L{inspect.getsourcelines(obj)[1]}"
+    return f"{github_root}/testflows{inspect.getsourcefile(obj).split('/testflows', 1)[-1]}#L{inspect.getsourcelines(obj)[1]}"
 
 
 def generate(obj, writer, prefix=""):

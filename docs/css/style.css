@@ -106,6 +106,17 @@ blockquote {
     cursor: pointer;
 }
 
+.handbook h1:hover::after,
+.handbook h2:hover::after,
+.handbook h3:hover::after,
+.handbook h4:hover::after,
+.handbook h5:hover::after,
+.handbook h6:hover::after {
+    content: " §";
+    color:lightgrey;
+}
+
+
 .switch-page a {
     color: inherit;
 }
