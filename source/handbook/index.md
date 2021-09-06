@@ -2209,7 +2209,7 @@ def regression(self):
     Suite(run=my_suite)
 ```
 
-All the [pattern]'s are usually specified using relative form and are 
+All the [pattern]s are usually specified using relative form and are 
 anchored to the top level test during assignment.
 
 [using current_module()]: #Using-current-module

@@ -111,7 +111,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 
 # <br>
 # **Asynchronous Tests**
-## Take advantage of asynchronous programming 
+## take advantage of asynchronous programming 
 
 ## <br>
 ---
@@ -169,7 +169,7 @@ asyncio.run(module())
 with Feature("my feature"):
     Scenario(run=my_test1, parallel=True)
     Scenario(run=my_test2, parallel=True)
-    join() # join current parallel tests
+    join()
     Scenario(run=my_test3, parallel=True)
 {% endcodeblock %}
 
@@ -179,21 +179,37 @@ with Feature("my feature"):
 <br>
 <br>
 
+---
+
+# <br>
+# **Semi-Automated And Manual Tests**
+## seamlessly work with automated, semi-automated and manual tests
+
+## <br>
+---
+
 <br>
 <br>
 
 {% html div class=row" %}
 {% html div class="col-md-4 text-center" %}
 
-## Gain fine-grained control using explicit parallel executors 
+## Mix and match different test types in the same test flow
 # <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
-with Pool(2) as pool:
-    Scenario(run=my_test1, parallel=True, executor=pool)
-    Scenario(run=my_test2, parallel=True, executor=pool)
-    Scenario(run=my_test3, parallel=True, executor=pool)
+with Scenario("semi-automated scenario"):
+    with Given("automated setup"):
+        pass
+    with When("manual action", flags=MANUAL):
+        pass
+
+with Scenario("manual scenario", flags=MANUAL):
+    with Given("manual setup"):
+        pass
+    with When("manual action"):
+        pass
 {% endcodeblock %}
 
 {% endhtml %}

@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1630965408202" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1630965408202" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1630966644448" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1630966644448" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1630965408202" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1630966644448" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -1064,7 +1064,7 @@ of the test or using <a href="#xfails">XFails</a> decorator.</p>
 <p>In general, the <a href="#xfails">xfails</a> are set at the level of the top test. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@XFails(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my test&quot;</span>: [</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">Fail, <span class="string">&quot;known issue&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">OK, <span class="string">&quot;need to check if the issue has been fixed&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    ],</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my other test&quot;</span>: [</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">Fail, <span class="string">&quot;other known issue&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">Error, <span class="string">&quot;can also error&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">    ]</span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">regression</span>(<span class="params">self</span>):</span></span><br><span class="line">    Suite(run=my_suite)</span><br></pre></td></tr></table></figure>
 
-<p>All the <a href="#pattern">pattern</a>‘s are usually specified using relative form and are 
+<p>All the <a href="#pattern">pattern</a>s are usually specified using relative form and are 
 anchored to the top level test during assignment.</p>
 
                     <div class="col-12 divider"></div>
