@@ -110,6 +110,100 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ---
 
 # <br>
+# **Asynchronous Tests**
+## using Python's support for asynchronous programming 
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Using `asyncio` with `async def` and `async with`
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+import asyncio
+from testflows.core import *
+
+@TestModule
+async def module(self):
+    async with Test("my async test"):
+        async with Step("my async test step"):
+            note("Hello from asyncio!")
+
+        
+asyncio.run(module())
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
+# **Parallel Tests**
+## easy run tests in parallel
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Using `parallel` argument and `join`
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+Scenario(run=my_test1, parallel=True)
+Scenario(run=my_test2, parallel=True)
+join() # join current parallel tests
+Scenario(run=my_test3, parallel=True)
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Gain fine-grained control using explicit parallel executors 
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+with Pool(2) as pool:
+    Scenario(run=my_test1, parallel=True, executor=pool)
+    Scenario(run=my_test2, parallel=True, executor=pool)
+    Scenario(run=my_test3, parallel=True, executor=pool)
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
 # **Professional Reports**
 ## right at your fingertips
 
