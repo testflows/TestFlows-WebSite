@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1630968590310" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1630968590310" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1630969627969" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1630969627969" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1630968590310" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1630969627969" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -135,7 +135,7 @@ with your changes to <a target="_blank" rel="noopener" href="https://github.com/
 <li><a target="_blank" rel="noopener" href="https://www.python.org/">Python 3</a> &gt;= 3.8</li>
 </ul>
 <blockquote>
-<p>However, known to run on other systems such as MacOS.</p>
+<p><strong>&#9995;</strong> Known to run on other systems such as MacOS.</p>
 </blockquote>
 <h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><p>You can install the framework using <a target="_blank" rel="noopener" href="https://github.com/pypa/pip">pip3</a></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pip3 install testflows</span><br></pre></td></tr></table></figure>
@@ -156,7 +156,7 @@ such as <a href="#Background">Background</a>, <a href="#Given">Given</a>, <a hre
 <p>In addition, you can also define sub-tests using <a href="#Check">Check</a> test definition class
 or its flavours <a href="#Critical-Major-Minor">Critical</a>, <a href="#Critical-Major-Minor">Major</a> or <a href="#Critical-Major-Minor">Minor</a>. </p>
 <blockquote>
-<p>You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
+<p><strong>&#9995;</strong> You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
 your tests and test procedures.</p>
 </blockquote>
 <p>Given the variety of test definition classes above, fundamentally, 
@@ -215,7 +215,9 @@ using the <a target="_blank" rel="noopener" href="https://docs.python.org/3/refe
 <p>Similar to how <a target="_blank" rel="noopener" href="https://docs.python.org/3/tutorial/classes.html#method-objects">class method</a>s take an instance of the object as the first argument, 
 test functions wrapped with test decorators take an instance of the current test as the first argument
 and therefore by convention the first argument is always named <code>self</code>.</p>
-<h2 id="Calling-Decorated-Tests"><a href="#Calling-Decorated-Tests" class="headerlink" title="Calling Decorated Tests"></a>Calling Decorated Tests</h2><p><strong>All arguments to tests must be passed using keyword arguments.</strong></p>
+<h2 id="Calling-Decorated-Tests"><a href="#Calling-Decorated-Tests" class="headerlink" title="Calling Decorated Tests"></a>Calling Decorated Tests</h2><blockquote>
+<p><strong>&#9995;</strong>  All arguments to tests must be passed using keyword arguments.</p>
+</blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scenario(action=<span class="string">&quot;driving&quot;</span>)</span><br><span class="line"><span class="comment"># not scenario(&quot;driving&quot;)</span></span><br></pre></td></tr></table></figure>
 
@@ -228,7 +230,7 @@ the test as the argument of the <code>run</code> parameter.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Scenario(run=scenario)</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>Use the short form only when you don’t need to pass any arguments to the test.</p>
+<p><strong>&#9995;</strong> Use the short form only when you don’t need to pass any arguments to the test.</p>
 </blockquote>
 <p>This will be equivalent to</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Scenario(test=scenario)()</span><br></pre></td></tr></table></figure>
@@ -305,16 +307,16 @@ to which the option shall be applied.</p>
 <li><code>:</code> matches anything at the current path level</li>
 </ul>
 <blockquote>
-<p>Note that for a literal match, you must wrap the meta-characters in brackets
+<p><strong>&#9995;</strong> Note that for a literal match, you must wrap the meta-characters in brackets
 where <code>[?]</code> matches the character <code>?</code>.</p>
 </blockquote>
 <h4 id="–only"><a href="#–only" class="headerlink" title="–only"></a>–only</h4><p>The <code>--only</code> option can be used to filter the test flow so that only the specified tests
 are executed.</p>
 <blockquote>
-<p>Note that mandatory tests will still be run.</p>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
 <blockquote>
-<p>Note that most of the time the <a href="#pattern">pattern</a> should end with <code>/*</code> so that
+<p><strong>&#9995;</strong> Note that most of the time the <a href="#pattern">pattern</a> should end with <code>/*</code> so that
 any steps or sub-tests are executed inside the selected test.</p>
 </blockquote>
 <p>For example,</p>
@@ -323,17 +325,17 @@ any steps or sub-tests are executed inside the selected test.</p>
 <h4 id="–skip"><a href="#–skip" class="headerlink" title="–skip"></a>–skip</h4><p>The <code>--skip</code> option can be used to filter the test flow so that the specified tests
 are skipped.</p>
 <blockquote>
-<p>Note that mandatory tests will still be run.</p>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
 <h4 id="–start"><a href="#–start" class="headerlink" title="–start"></a>–start</h4><p>The <code>--start</code> option can be used to filter the test flow so that the test flow starts at
 the specified test.</p>
 <blockquote>
-<p>Note that mandatory tests will still be run.</p>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
 <h4 id="–end"><a href="#–end" class="headerlink" title="–end"></a>–end</h4><p>The <code>--end</code> option can be used to filter the test flow so that the test flow ends at
 the specified tests.</p>
 <blockquote>
-<p>Note that mandatory tests will still be run.</p>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
 <h4 id="–pause-before"><a href="#–pause-before" class="headerlink" title="–pause-before"></a>–pause-before</h4><p>The <code>--pause-before</code> option can be used to specify the tests before which the test flow
 will be paused.</p>
@@ -397,7 +399,7 @@ For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.log | tfs report results | tfs document convert &gt; report.html</span><br></pre></td></tr></table></figure>
 
 <p>See <code>tfs report results --help</code> for details.</p>
-<h2 id="coverage"><a href="#coverage" class="headerlink" title="coverage"></a>coverage</h2><p>A requirements coverage report can be generated from a test log using <code>tfs report coverage</code> command. The report is created in <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Markdown">Markdown</a>
+<h2 id="coverage"><a href="#coverage" class="headerlink" title="coverage"></a>coverage</h2><p>Requirements coverage report can be generated from a test log using <code>tfs report coverage</code> command. The report is created in <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Markdown">Markdown</a>
 and can be converted to <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/HTML">HTML</a> using <code>tfs document convert</code> command. For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cat test.log | tfs report coverage requirements.py | tfs document convert &gt; coverage.html</span><br></pre></td></tr></table></figure>
 
@@ -437,7 +439,7 @@ parameters for a test:</p>
 <li>args</li>
 </ul>
 <blockquote>
-<p>Most parameter names match the names of the attributes of the test which they set.
+<p><strong>&#9995;</strong> Most parameter names match the names of the attributes of the test which they set.
 For example, <a href="#name">name</a> parameter sets the name attribute of the test.</p>
 </blockquote>
 <p>When test is defined inline then parameters can be specified right when test definition class is instantiated.
@@ -452,14 +454,14 @@ The name of the test can be accessed using the <code>name</code> attribute of th
 <h2 id="name"><a href="#name" class="headerlink" title="name"></a>name</h2><p>The <a href="#name">name</a> parameter of the test can be use used to set the <a href="#name">name</a> of any inline test. The <a href="#name">name</a> parameter
 must be passed a <code>str</code> which will define the name of the test.</p>
 <blockquote>
-<p>For all test definition classes the first parameter is always the <a href="#name">name</a>.</p>
+<p><strong>&#9995;</strong> For all test definition classes the first parameter is always the <a href="#name">name</a>.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;My test&quot;</span>) <span class="keyword">as</span> test:</span><br><span class="line">    note(test.name)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Name"><a href="#Name" class="headerlink" title="Name"></a>Name</h2><p>A <a href="#name">Name</a> decorator can be used to set the <a href="#name">name</a> of any test that is defined using a decorated function.</p>
 <blockquote>
-<p>The name of test defined using a decorated function
+<p><strong>&#9995;</strong> The name of test defined using a decorated function
 is set to the name of the function if the <a href="#name">Name</a> decorator is not used.</p>
 </blockquote>
 <p>For example,</p>
@@ -467,7 +469,7 @@ is set to the name of the function if the <a href="#name">Name</a> decorator is 
 
 <p>or if the <a href="#name">Name</a> decorator is not used</p>
 <blockquote>
-<p>Note that any underscores will be replaced with spaces in the name of the test.</p>
+<p><strong>&#9995;</strong> Note that any underscores will be replaced with spaces in the name of the test.</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">the_name_of_the_scenario</span>(<span class="params">self</span>):</span></span><br><span class="line">    note(self.name)</span><br></pre></td></tr></table></figure>
 
@@ -512,7 +514,7 @@ or using <a href="#ArgumentParser">ArgumentParser</a> decorator if top test is d
 parameter. This function will be called with an instance of <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/argparse.html">argparse</a> parser instance as the argument for the <code>parser</code> parameter.
 The values of the command line arguments can be accessed using the <code>attributes</code> attribute of the test.</p>
 <blockquote>
-<p>Note that all arguments of the top level test become its <code>attributes</code>.</p>
+<p><strong>&#9995;</strong> Note that all arguments of the top level test become its <code>attributes</code>.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">argparser</span>(<span class="params">parser</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;Custom command line arguments.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param parser: an instance of argparse parser.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg0&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 0&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg1&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 1&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>, argparser=argparser) <span class="keyword">as</span> module:</span><br><span class="line">    note(module.attributes[<span class="string">&quot;arg0&quot;</span>].value)</span><br><span class="line">    note(module.attributes[<span class="string">&quot;arg1&quot;</span>].value)</span><br></pre></td></tr></table></figure>
@@ -550,7 +552,7 @@ can be passed either a <code>list</code> of <code>(name, value)</code> tuples or
 or using <a href="#requirements">Requirements</a> decorator if the test is defined as a decorated function. The values of the requirements can be accessed
 using the <code>requirements</code> attribute of the test.</p>
 <blockquote>
-<p><code>Requirement</code> class instances must be always called with the version number the test is expected to verify.
+<p><strong>&#9995;</strong> <code>Requirement</code> class instances must be always called with the version number the test is expected to verify.
 <code>RequirementError</code> exception will be raised if version does not match the version of the instance.</p>
 </blockquote>
 <h2 id="requirements"><a href="#requirements" class="headerlink" title="requirements"></a>requirements</h2><p>The <a href="#requirements">requirements</a> parameter of the test can be used to set <code>requirements</code> of any inline test. The <a href="#requirements">requirements</a> parameter
@@ -573,7 +575,7 @@ or using the same <a href="#examples">Examples</a> class as a decorator if the t
 The rows of the examples table can be accessed
 using the <code>examples</code> attribute of the test.</p>
 <blockquote>
-<p>Usually examples are used only with test outlines. Please see <a href="#Outline">Outline</a> for more details.</p>
+<p><strong>&#9995;</strong> Usually examples are used only with test outlines. Please see <a href="#Outline">Outline</a> for more details.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;My test&quot;</span>, examples=Examples(<span class="string">&quot;col0 col1&quot;</span>, [(<span class="string">&quot;col0_row0&quot;</span>, <span class="string">&quot;col1_row0&quot;</span>), (<span class="string">&quot;col0_row1&quot;</span>, <span class="string">&quot;col1_row1&quot;</span>)])) <span class="keyword">as</span> test:</span><br><span class="line">    <span class="keyword">for</span> example <span class="keyword">in</span> test.examples:</span><br><span class="line">        note(<span class="built_in">str</span>(example))</span><br></pre></td></tr></table></figure>
@@ -582,7 +584,7 @@ using the <code>examples</code> attribute of the test.</p>
 or used as an argument of the <code>examples</code> parameter for the test.
 The <a href="#examples">Examples</a> class defines a table of examples and should be passed a <code>header</code> and a <code>list</code> for the <code>rows</code>.</p>
 <blockquote>
-<p>Usually examples are used only with test outlines. Please see <a href="#Outline">Outline</a> for more details.</p>
+<p><strong>&#9995;</strong> Usually examples are used only with test outlines. Please see <a href="#Outline">Outline</a> for more details.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Examples(<span class="params"><span class="string">&quot;col0 col1&quot;</span>, rows=[</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;col0_row0&quot;</span>, <span class="string">&quot;col1_row0&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;col0_row1&quot;</span>, <span class="string">&quot;col1_row1&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">scenario</span>(<span class="params">self</span>):</span></span><br><span class="line">    <span class="keyword">for</span> example <span class="keyword">in</span> self.examples:</span><br><span class="line">        note(<span class="built_in">str</span>(example))</span><br></pre></td></tr></table></figure>
@@ -685,7 +687,7 @@ the result of the test itself.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;My testcase&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;do something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>Note that here the word <code>test</code> is used to define a <a href="#Case-is">Case</a> to match the most common meaning of the word <code>test</code>.
+<p><strong>&#9995;</strong> Note that here the word <code>test</code> is used to define a <a href="#Case-is">Case</a> to match the most common meaning of the word <code>test</code>.
 When someone says they will run a <code>test</code> they most likely mean they will run a test <a href="#Case-is">Case</a>.</p>
 </blockquote>
 <h2 id="Scenario"><a href="#Scenario" class="headerlink" title="Scenario"></a>Scenario</h2><p>A <a href="#Scenario">Scenario</a> can be defined using <a href="#Scenario">Scenario</a> test definition class or <a href="#Scenario">TestScenario</a> decorator.</p>
@@ -745,7 +747,7 @@ use the argument values that were provided to the outline. For example,</p>
 
 <h3 id="Setting-Parameters"><a href="#Setting-Parameters" class="headerlink" title="Setting Parameters"></a>Setting Parameters</h3><h4 id="For-an-Example"><a href="#For-an-Example" class="headerlink" title="For an Example"></a><strong>For an Example</strong></h4><p>You can set parameters for an individual example by specifying them right after the values for the example row.</p>
 <blockquote>
-<p>Any test parameters that are specified for the example will override any common parameter values.</p>
+<p><strong>&#9995;</strong> Any test parameters that are specified for the example will override any common parameter values.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestOutline(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Examples(<span class="params"><span class="string">&quot;greeting name&quot;</span>, [</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;Hello&quot;</span>, <span class="string">&quot;John&quot;</span>, &#123;<span class="string">&quot;tags&quot;</span>: (<span class="params"><span class="string">&quot;tag0&quot;</span>, <span class="string">&quot;tag1&quot;</span></span>), <span class="string">&quot;attributes&quot;</span>: [(<span class="params"><span class="string">&quot;attr0&quot;</span>, <span class="string">&quot;value0&quot;</span></span>)]&#125;</span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;Goodbye&quot;</span>, <span class="string">&quot;Eric&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">]</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">outline</span>(<span class="params">self, greeting, name</span>):</span></span><br><span class="line">    note(<span class="string">f&quot;<span class="subst">&#123;greeting&#125;</span> <span class="subst">&#123;name&#125;</span>!&quot;</span>)</span><br></pre></td></tr></table></figure>
@@ -753,7 +755,7 @@ use the argument values that were provided to the outline. For example,</p>
 <h4 id="For-All-Examples"><a href="#For-All-Examples" class="headerlink" title="For All Examples"></a><strong>For All Examples</strong></h4><p>You can set common parameter values for all the examples specified by the <a href="#examples">Examples</a> table using the <code>args</code> parameter
 and passing it a <code>dict</code> with parameter values as the argument.</p>
 <blockquote>
-<p>Note that parameters set for a specific example override any common values.</p>
+<p><strong>&#9995;</strong> Note that parameters set for a specific example override any common values.</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestOutline(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Examples(<span class="params"><span class="string">&quot;greeting name&quot;</span>, [</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;Hello&quot;</span>, <span class="string">&quot;John&quot;</span>, &#123;<span class="string">&quot;tags&quot;</span>: (<span class="params"><span class="string">&quot;tag0&quot;</span>, <span class="string">&quot;tag1&quot;</span></span>), <span class="string">&quot;attributes&quot;</span>:[(<span class="params"><span class="string">&quot;attr0&quot;</span>, <span class="string">&quot;value0&quot;</span></span>)]&#125;</span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    (<span class="params"><span class="string">&quot;Goodbye&quot;</span>, <span class="string">&quot;Eric&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">], args=&#123;<span class="string">&quot;tags&quot;</span>: (<span class="params"><span class="string">&quot;common_tag0&quot;</span>, <span class="string">&quot;common_tag1&quot;</span></span>)&#125;</span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">outline</span>(<span class="params">self, greeting, name</span>):</span></span><br><span class="line">    note(<span class="string">f&quot;<span class="subst">&#123;greeting&#125;</span> <span class="subst">&#123;name&#125;</span>!&quot;</span>)</span><br></pre></td></tr></table></figure>
 
@@ -794,7 +796,7 @@ or using <a href="#Step">TestStep</a> decorator with <a href="#When">When</a> pa
 <h2 id="And"><a href="#And" class="headerlink" title="And"></a>And</h2><p>An <a href="#And">And</a> step is used to define a step of the same <a href="#Sub-Types">Sub-Type</a> as the step right above it.
 It is defined using <a href="#And">And</a> test definition class.</p>
 <blockquote>
-<p>It does not make sense to use <a href="#Step">TestStep</a> decorator to define it so always define it inline.</p>
+<p><strong>&#9995;</strong> It does not make sense to use <a href="#Step">TestStep</a> decorator to define it so always define it inline.</p>
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> When(<span class="string">&quot;I do some action&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> And(<span class="string">&quot;I do another action&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
@@ -802,13 +804,14 @@ It is defined using <a href="#And">And</a> test definition class.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Given(<span class="string">&quot;I have something&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I do some action to setup things&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> And(<span class="string">&quot;I do another action to continue the setup&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>A <code>TypeError</code> exception will be raised if the <a href="#And">And</a> step is defined where it has no sibling. For example,</p>
+<p><strong>&#9995;</strong> <code>TypeError</code> exception will be raised if the <a href="#And">And</a> step is defined where it has no sibling. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Given(<span class="string">&quot;I have something&quot;</span>):</span><br><span class="line">  <span class="comment"># TypeError exception will be raised on the next line</span></span><br><span class="line">  <span class="comment"># and can be fixed by changing the `And` step into a `When` step</span></span><br><span class="line">  <span class="keyword">with</span> And(<span class="string">&quot;I do something&quot;</span>):</span><br><span class="line">      <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 <p>with the exception being as follows.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TypeError: `And` subtype can&#x27;t be used here as it has no sibling from which to inherit the subtype</span><br></pre></td></tr></table></figure>
-
-<p>A <code>TypeError</code> exception will also be raised if the <a href="#Types">Type</a> of the sibling does not match the <a href="#Types">Type</a> of the <a href="#And">And</a> step.
+</blockquote>
+<blockquote>
+<p><strong>&#9995;</strong> <code>TypeError</code> exception will also be raised if the <a href="#Types">Type</a> of the sibling does not match the <a href="#Types">Type</a> of the <a href="#And">And</a> step.
 For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;My scenario&quot;</span>):</span><br><span class="line">  <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># TypeError exception will be raised on the next line</span></span><br><span class="line"><span class="comment"># and can be fixed by changing the `And` step into a `When` step</span></span><br><span class="line"><span class="keyword">with</span> And(<span class="string">&quot;I do something&quot;</span>):</span><br><span class="line">  <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 

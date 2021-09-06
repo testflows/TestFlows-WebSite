@@ -44,7 +44,7 @@ with your changes to [handbook source file](https://github.com/testflows/TestFlo
 * [Ubuntu] 20.04
 * [Python 3] >= 3.8
 
-> However, known to run on other systems such as MacOS.
+> **{% attention %}** Known to run on other systems such as MacOS.
 
 # Installation
 
@@ -97,7 +97,7 @@ such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally]
 In addition, you can also define sub-tests using [Check] test definition class
 or its flavours [Critical], [Major] or [Minor]. 
 
-> You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
+> **{% attention %}** You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
 > your tests and test procedures.
 
 Given the variety of test definition classes above, fundamentally, 
@@ -189,7 +189,7 @@ and therefore by convention the first argument is always named `self`.
 
 ## Calling Decorated Tests
 
-**All arguments to tests must be passed using keyword arguments.**
+> **{% attention %}**  All arguments to tests must be passed using keyword arguments.
 
 For example,
 
@@ -213,7 +213,7 @@ the test as the argument of the `run` parameter.
 Scenario(run=scenario)
 ```
 
-> Use the short form only when you don't need to pass any arguments to the test.
+> **{% attention %}** Use the short form only when you don't need to pass any arguments to the test.
 
 This will be equivalent to
 
@@ -375,7 +375,7 @@ The [pattern] is used to match test names using a [unix-like file path pattern] 
 * `[!seq]` matches any character not in seq
 * `:` matches anything at the current path level
 
-> Note that for a literal match, you must wrap the meta-characters in brackets
+> **{% attention %}** Note that for a literal match, you must wrap the meta-characters in brackets
 > where `[?]` matches the character `?`.
 
 #### --only
@@ -383,9 +383,9 @@ The [pattern] is used to match test names using a [unix-like file path pattern] 
 The `--only` option can be used to filter the test flow so that only the specified tests
 are executed.
 
-> Note that mandatory tests will still be run.
+> **{% attention %}** Note that mandatory tests will still be run.
 
-> Note that most of the time the [pattern] should end with `/*` so that
+> **{% attention %}** Note that most of the time the [pattern] should end with `/*` so that
 > any steps or sub-tests are executed inside the selected test.
 
 For example,
@@ -399,21 +399,21 @@ $ python3 test.py --only "/my test/*"
 The `--skip` option can be used to filter the test flow so that the specified tests
 are skipped.
 
-> Note that mandatory tests will still be run.
+> **{% attention %}** Note that mandatory tests will still be run.
 
 #### --start
 
 The `--start` option can be used to filter the test flow so that the test flow starts at
 the specified test.
 
-> Note that mandatory tests will still be run.
+> **{% attention %}** Note that mandatory tests will still be run.
 
 #### --end
 
 The `--end` option can be used to filter the test flow so that the test flow ends at
 the specified tests.
 
-> Note that mandatory tests will still be run.
+> **{% attention %}** Note that mandatory tests will still be run.
 
 #### --pause-before
 
@@ -579,7 +579,7 @@ See `tfs report results --help` for details.
 
 ## coverage
 
-A requirements coverage report can be generated from a test log using `tfs report coverage` command. The report is created in [Markdown]
+Requirements coverage report can be generated from a test log using `tfs report coverage` command. The report is created in [Markdown]
 and can be converted to [HTML] using `tfs document convert` command. For example,
 
 ```bash
@@ -667,7 +667,7 @@ parameters for a test:
 * skip_tags
 * args
 
-> Most parameter names match the names of the attributes of the test which they set.
+> **{% attention %}** Most parameter names match the names of the attributes of the test which they set.
 > For example, [name] parameter sets the name attribute of the test.
 
 When test is defined inline then parameters can be specified right when test definition class is instantiated.
@@ -692,7 +692,7 @@ The name of the test can be accessed using the `name` attribute of the test.
 The [name] parameter of the test can be use used to set the [name] of any inline test. The [name] parameter
 must be passed a `str` which will define the name of the test.
 
-> For all test definition classes the first parameter is always the [name].
+> **{% attention %}** For all test definition classes the first parameter is always the [name].
 
 For example,
 
@@ -705,7 +705,7 @@ with Test("My test") as test:
 
 A [Name] decorator can be used to set the [name] of any test that is defined using a decorated function.
 
-> The name of test defined using a decorated function
+> **{% attention %}** The name of test defined using a decorated function
 > is set to the name of the function if the [Name] decorator is not used.
 
 For example,
@@ -719,7 +719,7 @@ def scenario(self):
 
 or if the [Name] decorator is not used
 
-> Note that any underscores will be replaced with spaces in the name of the test.
+> **{% attention %}** Note that any underscores will be replaced with spaces in the name of the test.
 
 ```python
 @TestScenario
@@ -861,7 +861,7 @@ The [argparser] parameter can be used to set a custom command line argument pars
 parameter. This function will be called with an instance of [argparse] parser instance as the argument for the `parser` parameter.
 The values of the command line arguments can be accessed using the `attributes` attribute of the test.
 
-> Note that all arguments of the top level test become its `attributes`.
+> **{% attention %}** Note that all arguments of the top level test become its `attributes`.
 
 For example,
 
@@ -981,7 +981,7 @@ You can add `requirements` to any test either by setting [requirements] paramete
 or using [Requirements] decorator if the test is defined as a decorated function. The values of the requirements can be accessed
 using the `requirements` attribute of the test.
 
-> `Requirement` class instances must be always called with the version number the test is expected to verify.
+> **{% attention %}** `Requirement` class instances must be always called with the version number the test is expected to verify.
 > `RequirementError` exception will be raised if version does not match the version of the instance.
 
 ## requirements
@@ -1031,7 +1031,7 @@ or using the same [Examples] class as a decorator if the test is defined as a de
 The rows of the examples table can be accessed
 using the `examples` attribute of the test.
 
-> Usually examples are used only with test outlines. Please see [Outline] for more details.
+> **{% attention %}** Usually examples are used only with test outlines. Please see [Outline] for more details.
 
 For example,
 
@@ -1047,7 +1047,7 @@ An [Examples] decorator can be used to set `examples` attribute of any test that
 or used as an argument of the `examples` parameter for the test.
 The [Examples] class defines a table of examples and should be passed a `header` and a `list` for the `rows`.
 
-> Usually examples are used only with test outlines. Please see [Outline] for more details.
+> **{% attention %}** Usually examples are used only with test outlines. Please see [Outline] for more details.
 
 For example,
 
@@ -1291,7 +1291,7 @@ with Test("My testcase"):
         pass
 ```
 
-> Note that here the word `test` is used to define a [Case](#Case-is) to match the most common meaning of the word `test`.
+> **{% attention %}** Note that here the word `test` is used to define a [Case](#Case-is) to match the most common meaning of the word `test`.
 > When someone says they will run a `test` they most likely mean they will run a test [Case](#Case-is).
 
 ## Scenario
@@ -1492,7 +1492,7 @@ Jul 05,2020 18:23:02   ⟥  Scenario My scenario
 
 You can set parameters for an individual example by specifying them right after the values for the example row.
 
-> Any test parameters that are specified for the example will override any common parameter values.
+> **{% attention %}** Any test parameters that are specified for the example will override any common parameter values.
 
 For example,
 
@@ -1511,7 +1511,7 @@ def outline(self, greeting, name):
 You can set common parameter values for all the examples specified by the [Examples] table using the `args` parameter
 and passing it a `dict` with parameter values as the argument.
 
-> Note that parameters set for a specific example override any common values.
+> **{% attention %}** Note that parameters set for a specific example override any common values.
 
 ```python
 @TestOutline(Scenario)
@@ -1623,7 +1623,7 @@ with When("I do some action"):
 An [And](#And) step is used to define a step of the same [Sub-Type] as the step right above it.
 It is defined using [And] test definition class.
 
-> It does not make sense to use [TestStep] decorator to define it so always define it inline.
+> **{% attention %}** It does not make sense to use [TestStep] decorator to define it so always define it inline.
 
 ```python
 with When("I do some action"):
@@ -1643,7 +1643,7 @@ with Given("I have something"):
         pass
 ```
 
-> A `TypeError` exception will be raised if the [And] step is defined where it has no sibling. For example,
+> **{% attention %}** `TypeError` exception will be raised if the [And] step is defined where it has no sibling. For example,
 >
 > ```python
 with Given("I have something"):
@@ -1658,8 +1658,8 @@ with Given("I have something"):
 > ```
 TypeError: `And` subtype can't be used here as it has no sibling from which to inherit the subtype
 ```
->
-> A `TypeError` exception will also be raised if the [Type] of the sibling does not match the [Type] of the [And] step.
+
+> **{% attention %}** `TypeError` exception will also be raised if the [Type] of the sibling does not match the [Type] of the [And] step.
 > For example,
 >
 > ```python
