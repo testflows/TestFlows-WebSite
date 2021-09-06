@@ -999,7 +999,7 @@ with Test("My test", requirements=[RQ1("1.0")] as test:
 
 ## Requirements
 
-A [Requirements] decorator can be used to set `requirements` attribute of any test that is defined used a decorated function.
+A [Requirements] decorator can be used to set `requirements` attribute of any test that is defined using a decorated function.
 The decorator must be called with one or more called `Requirement` instances. For example,
 
 ```python
@@ -1039,8 +1039,8 @@ with Test("My test", examples=Examples("col0 col1", [("col0_row0", "col1_row0"),
 
 ## Examples
 
-An [Examples] decorator can be used to set `examples` attribute of any test that is defined used a decorated function
-or used to as an argument of the `examples` parameter for the test.
+An [Examples] decorator can be used to set `examples` attribute of any test that is defined using a decorated function
+or used as an argument of the `examples` parameter for the test.
 The [Examples] class defines a table of examples and should be passed a `header` and a `list` for the `rows`.
 
 > Usually examples are used only with test outlines. Please see [Outline] for more details.
@@ -1056,6 +1056,69 @@ For example,
 def scenario(self):
     for example in self.examples:
         note(str(example))
+```
+
+# Test XFails
+
+You can specify test results to be crossed out known as `xfails` for any test
+either by setting `xfails` parameter of the inline test or using `XFails` decorator
+if the test is defined as a decorated function. See [Crossing Out Results](#Crossing-Out-Results)
+for more information.
+
+## xfails
+
+The [xfails] parameter of the test can be used to set `xfails` of any inline test. The [xfails] parameter
+must be passed a dictionary of the form
+
+```python
+{
+    "pattern":
+        [(Result, "cross out reason"), ...],
+    ...
+}
+```
+
+where key `pattern` is a test [pattern] that matches one or more tests for which one
+or more results can be crossed out that are specified by the list.
+A list must contain one or more `(Result, "reason")` two-tuples where
+`Result` shall be the result that you want to cross out, for example [Fail],
+and the reason shall be a string that specifies a reason why this result is being
+crossed out.
+
+> **{% attention %}** A reason for a crossed out result can be a URL such as
+> for an issue in an issue tracker.
+
+For example,
+
+```python
+with Suite("My test", xfails={"my_test": [(Fail, "needs to be investigated")]}):
+    Scenario(name="my_test", run=my_test)
+```
+
+or
+
+```python
+Suite(run=my_suite, xfails={"my test": [Fail, "https://my.issue.tracker.com/issue34567"]})
+```
+
+> **{% attention %}** If the test `pattern` is not absolute then it is
+> anchored to the test where [xfails] are being specified.
+
+## XFails
+
+The [XFails] decorator can be used to set `xfails` attribute of any test that is defined using a decorated function
+or used as an argument of the `examples` parameter for the test.
+The [XFails] decorator takes a dictionary of the same form as the [xfails] parameter.
+
+```python
+@TestSuite
+@XFails({
+    "my_test": [
+        (Fail, "needs to be investigated")  
+    ]
+})
+def suite(self):
+    Scenario(run=my_test)
 ```
 
 # Specialized keywords
@@ -2097,6 +2160,58 @@ with AsyncPool(5) as pool:
     Scenario(name="my async test 1", test=my_async_test, parallel=True, executor=pool)(number=1)
 ```
 
+# Crossing Out Results
+
+All test results except [Skip] result can be cross out including [OK]. This functionality
+is useful when one or more tests fail and you don't want to see the next run
+fail because of the same test failing.
+
+Crossing out a result means converting it to the corresponding crossed out result
+that starts with `X`.
+
+* ~[Fail]~ becomes [XFail]
+* ~[Error]~ becomes [XError]
+* ~[Null]~ becomes [XNull]
+* ~[OK]~ becomes [XOK]
+
+> **{% attention %}** The concept of crossing out result should not be confused with expected results.
+> It is invalid to say that, for example [XFail], means an expected fail. 
+> In general if you expect a fail then if the result of the test is [Fail] then
+> the final test result is [OK] and anything other result would cause the final
+> result to be [Fail] as the expectation was not satisfied.
+
+The correct way to think about crossed out results is to imagine that a test
+summary report is printed on a paper and after looking over the test results
+and performing some analysis any result can be crossed out with an optional reason. 
+
+Only the result that exactly matches the result to be crossed out is actually crossed out.
+For example, if you want to cross out [Fail] result of the test but the test has
+a different result then it will not be crossed out.
+
+The actual crossing out of the results is done by specifying either [xfails] parameter
+of the test or using [XFails] decorator.
+
+In general, the [xfails] are set at the level of the top test. For example,
+
+```python
+@TestModule
+@XFails({
+    "my suite/my test": [
+        (Fail, "known issue"),
+        (OK, "need to check if the issue has been fixed"),
+    ],
+    "my suite/my other test": [
+        (Fail, "other known issue"),
+        (Error, "can also error")
+    ]
+})
+def regression(self):
+    Suite(run=my_suite)
+```
+
+All the [pattern]'s are usually specified using relative form and are 
+anchored to the top level test during assignment.
+
 [using current_module()]: #Using-current-module
 [pattern]: #pattern
 [--only]: #–only
@@ -2136,6 +2251,8 @@ with AsyncPool(5) as pool:
 [MANDATORY]: #MANDATORY
 [flags]: #flags
 [Flags]: #Flags
+[xfails]: #xfails
+[XFails]: #XFails
 [name]: #name
 [Name]: #Name
 [examples]: #examples
