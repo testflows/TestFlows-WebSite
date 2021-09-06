@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1630951040254" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1630951040254" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1630965408201" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1630965408201" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1630951040254" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1630965408201" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -138,7 +138,7 @@ Then execute it.</div>
 <div class="row""><div class="col-md-4 text-center"><h2 id="specify-parallel-and-sync-with-join">Specify <code>parallel</code> and sync with <code>join</code></h2>
 <h1 id=""><br></h1>
 </div>
-<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Scenario(run=my_test1, parallel=<span class="literal">True</span>)</span><br><span class="line">Scenario(run=my_test2, parallel=<span class="literal">True</span>)</span><br><span class="line">join() <span class="comment"># join current parallel tests</span></span><br><span class="line">Scenario(run=my_test3, parallel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Feature(<span class="string">&quot;my feature&quot;</span>):</span><br><span class="line">    Scenario(run=my_test1, parallel=<span class="literal">True</span>)</span><br><span class="line">    Scenario(run=my_test2, parallel=<span class="literal">True</span>)</span><br><span class="line">    join() <span class="comment"># join current parallel tests</span></span><br><span class="line">    Scenario(run=my_test3, parallel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
 </div></div>
 
 <br>

@@ -166,10 +166,11 @@ asyncio.run(module())
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
-Scenario(run=my_test1, parallel=True)
-Scenario(run=my_test2, parallel=True)
-join() # join current parallel tests
-Scenario(run=my_test3, parallel=True)
+with Feature("my feature"):
+    Scenario(run=my_test1, parallel=True)
+    Scenario(run=my_test2, parallel=True)
+    join() # join current parallel tests
+    Scenario(run=my_test3, parallel=True)
 {% endcodeblock %}
 
 {% endhtml %}
