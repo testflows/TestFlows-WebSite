@@ -1556,8 +1556,8 @@ with Step("step"):
 ## Given
 
 A [Given] step is used to define precodition or setup and is always treated as a mandatory step
-that can't be skipped. It is defined using [Given] test definition class or using [TestStep]
-with [Given] passed as the [Sub-Type].
+that can't be skipped because [MANDATORY] flag will be set by default.
+It is defined using [Given] test definition class or using [TestStep] with [Given] passed as the [Sub-Type].
 
 ```python
 @TestStep(Given)
@@ -1730,7 +1730,9 @@ with But("I check something is not true"):
 ## Finally
 
 A [Finally] step is used to define a cleanup step and is treated as a mandatory step
-that can't be skipped. It can be defined using [Finally] test definition class
+that can't be skipped because [MANDATORY] flag will be set by default.
+
+It can be defined using [Finally] test definition class
 or using [TestStep] decorator with [Finally] passed as the [Sub-Type].
 
 ```python
@@ -1746,6 +1748,10 @@ or inline as
 with Finally("I clean up"):
     pass
 ```
+
+The [TE] flag is always set for [Finally] steps as multiple [Finally]
+steps can be defined back to back and the failure
+of previous step should not prevent execution of other [Finally] steps that follow.
 
 # Concepts
 
@@ -1846,6 +1852,259 @@ The [Sub-Types] have the following mapping to the core six [Types]
   * [By]
   * [Finally]
   * [Background]
+
+# Setups And Teardowns
+
+Test setup and teardown could be explicitly specified using [Given] and [Finally] steps.
+
+For example [Scenario] that needs to do some setup and perform clean up as part
+of teardown can be defined as follows using explicit [Given] and [Finally] steps.
+
+```python
+@TestScenario
+def my_scenario(self):
+    try:
+        with Given("my setup"):
+            do_some_setup()
+        
+        with When("I perform action"):
+            perform_action()
+    finally:
+        with Finally("clean up"):
+            do_cleanup()
+```
+
+> **{% attention %}** It is recommended to use a decorated [Given] step that contains `yield` statement
+> in most cases. See [Given With `yield`](#Given-With-yield).
+
+> **{% attention %}** [Given] and [Finally] steps have [MANDATORY] flag set by default
+> and therefore these steps can't be skipped.
+
+> **{% attention %}** [Finally] steps must be located within `finally` blocks
+> to ensure their execution.
+
+## Common Setup And Teardown
+
+If multiple tests require the same setup and teardown and the result of setup
+can be shared between these tests then the common setup and teardown
+should be defined at the parent test level. Therefore,
+for multiple [Scenario]s that share the same setup and teardown
+it should be defined at the [Feature] level and for multiple
+[Feature]s that share the same setup and teardown it should be defined
+at the [Module] level. 
+
+For example,
+
+```python
+from testflows.core import *
+
+@TestScenario
+def my_scenario1(self):
+    pass
+
+@TestScenario
+def my_scenario2(self):
+    pass
+
+with Feature("my feature"):
+    try:
+        with Given("my setup"):
+            pass
+        Scenario(run=my_scenario1)
+        Scenario(run=my_scenario2)
+    finally:
+        with Finally("clean up"):
+            pass
+```
+
+
+## Handling Resources
+
+When setup creates a resource that needs to be cleaned up one must 
+ensure that [Finally] step checks if [Given] has actually suceeded in creating
+the resource that needs to be cleaned up.
+
+For example,
+
+```python
+@TestScenario
+def my_scenario(self):
+    resource = None
+    try:
+        with Given("my setup"):
+            resource = do_some_setup()
+        
+        with When("I perform action"):
+            perform_action()
+    finally:
+        with Finally("clean up"):
+        	if resource is not None:
+	            do_cleanup()
+```
+
+## Multiple Setups and Teardowns
+
+When a test needs to perform multiple setups and teardowns then
+multiple [Given] and [Finally] can be used.
+
+> **{% attention %}** Use [And] step to make test procedure more fluid.
+
+```python
+@TestScenario
+def my_scenario(self):
+    try:
+        with Given("my first setup"):
+            do_first_setup()
+        
+        with And("my second setup"):
+            do_second_setup()
+        
+        with When("I perform action"):
+            perform_action()
+    finally:
+        with Finally("first clean up"):
+            do_first_cleanup()
+        
+        with And("second clean up"):
+            do_first_cleanup()
+```
+
+> **{% attention %}** [TE] flag is always implicitly set for [Finally] steps
+> to ensure that failure of one step does not prevent execution
+> of other [Finally] steps.
+>
+> Therefore,
+> 
+> ```python
+        with Finally("first clean up"):
+            do_first_cleanup()
+        
+        with And("second clean up"):
+            do_first_cleanup()
+```
+> is equivalent to the following.
+> ```python
+        with Finally("first clean up", flags=TE):
+            do_first_cleanup()
+        
+        with And("second clean up", flags=TE):
+            do_first_cleanup()
+```
+
+## Given With `yield`
+
+Because any [Given] step usually has a corresponding [Finally] step
+**{% testflows %}** supports `yield` statement inside a decorated [Given] step
+to convert the decorated function into a generator that
+will be first run to execute the setup and then executed
+the second time to perform the clean during test's teardown.
+
+> **{% attention %}** It is an error to define a [Given] step that
+> contains multiple `yield` statements.
+
+```python
+from testflows.core import *
+
+@TestStep(Given)
+def my_setup(self):
+    try:
+        #do_setup()
+        yield
+    finally:
+        with Finally("clean up"):
+            # do_cleanup()
+            pass
+			
+with Scenario("my scenario"):
+    with Given("my setup"):
+        my_setup()
+```
+
+Executing the example above shows that the [Finally] step gets executed
+at the end of the test.
+
+```bash
+Sep 07,2021 19:26:23   ⟥  Scenario my scenario
+Sep 07,2021 19:26:23     ⟥  Given my setup, flags:MANDATORY
+                 1ms     ⟥⟤ OK my setup, /my scenario/my setup
+Sep 07,2021 19:26:23     ⟥  Finally I clean up, flags:MANDATORY
+Sep 07,2021 19:26:23       ⟥  And clean up, flags:MANDATORY
+               442us       ⟥⟤ OK clean up, /my scenario/I clean up/clean up
+                 1ms     ⟥⟤ OK I clean up, /my scenario/I clean up
+                11ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+### Yielding Resources
+
+If [Given] step creates a resource it can by `yield`ed
+as a value.
+
+For example,
+
+```python
+from testflows.core import *
+
+@TestStep(Given)
+def my_setup(self):
+    try:
+        yield "resource"
+    finally:
+        with Finally("clean up"):
+            pass
+			
+with Scenario("my scenario"):
+    with Given("my setup"):
+        resource = my_setup()
+        note(resource)
+```
+
+produces the following output.
+
+```bash
+Sep 07,2021 19:36:52   ⟥  Scenario my scenario
+Sep 07,2021 19:36:52     ⟥  Given my setup, flags:MANDATORY
+               916us     ⟥    [note] resource
+                 1ms     ⟥⟤ OK my setup, /my scenario/my setup
+Sep 07,2021 19:36:52     ⟥  Finally I clean up, flags:MANDATORY
+Sep 07,2021 19:36:52       ⟥  And clean up, flags:MANDATORY
+               638us       ⟥⟤ OK clean up, /my scenario/I clean up/clean up
+                 1ms     ⟥⟤ OK I clean up, /my scenario/I clean up
+                12ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+## Cleanup Functions
+
+Explicit cleanup functions can be added by calling [Context.cleanup() function].
+
+For example,
+
+```python
+from testflows.core import *
+
+def my_cleanup():
+    note("my cleanup")
+
+@TestScenario
+def my_scenario(self):
+    # add explicit cleanup function to context
+    self.context.cleanup(my_cleanup)
+
+    with When("I perform action"):
+        pass
+```
+
+produces the following output.
+
+```bash
+Sep 07,2021 19:58:11   ⟥  Scenario my scenario
+Sep 07,2021 19:58:11     ⟥  When I perform action
+               796us     ⟥⟤ OK I perform action, /my scenario/I perform action
+Sep 07,2021 19:58:11     ⟥  Finally I clean up, flags:MANDATORY
+               575us     ⟥    [note] my cleanup
+               817us     ⟥⟤ OK I clean up, /my scenario/I clean up
+                11ms   ⟥⟤ OK my scenario, /my scenario
+
+```
 
 # Returning Values
 
