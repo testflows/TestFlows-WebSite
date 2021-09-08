@@ -2114,7 +2114,7 @@ or even on a remote host. Therefore, depending on how a test is called
 returning values from a test might not be as simple as
 when one calls a regular function. 
 
-## Using `value`
+## Using `value()`
 
 A generic way for a test to return a value is using [value() function].
 Test can call [value() function] to set one or more values.
@@ -2230,7 +2230,7 @@ with Test("my test"):
 
 # Loading Tests
 
-## Using `load`
+## Using `load()`
 
 You can use [load() function] to load a test or any object from another
 module.
@@ -2254,7 +2254,7 @@ with Module("my module"):
      Scenario("my test", run=load("tests.another_module", test="my_test_in_another_module"))
 ```
 
-## Using `loads`
+## Using `loads()`
 
 You can use [loads() function] to load one or more tests of a given 
 test class.
@@ -2297,7 +2297,7 @@ def feature(self):
 
 See also [using current_module()].
 
-## Using `ordered`
+## Using `ordered()`
 
 By default [loads() function] returns tests in random order. If you want
 a deterministic order then use [ordered() function] to sort
@@ -2314,7 +2314,7 @@ def feature(self):
 
 # Loading Modules
 
-## Using `current_module`
+## Using `current_module()`
 
 Using [current_module() function] allows to conveniently reference
 the current module. For example,
@@ -2326,7 +2326,7 @@ def feature(self):
         test()
 ```
 
-## Using `load_module`
+## Using `load_module()`
 
 The [load_module() function] allows to load any module by specifying module name.
 
