@@ -1108,7 +1108,7 @@ Suite(run=my_suite, xfails={"my test": [Fail, "https://my.issue.tracker.com/issu
 ```
 
 > **{% attention %}** If the test `pattern` is not absolute then it is
-> anchored to the test where [xfails] are being specified.
+> anchored to the test where [xfails] is being specified.
 
 ## XFails
 
@@ -1172,7 +1172,7 @@ Suite(run=my_suite, xflags={"my test": (0, SKIP|TE)})
 ```
 
 > **{% attention %}** If the test `pattern` is not absolute then it is
-> anchored to the test where [xflags] are being specified.
+> anchored to the test where [xflags] is being specified.
 
 ## XFlags
 
@@ -1185,6 +1185,64 @@ The [XFlags] decorator takes a dictionary of the same form as the [xflags] param
 @TestSuite
 @XFlags({
     "my_test": (TE, SKIP) # set TE and clear SKIP flags
+})
+def suite(self):
+    Scenario(run=my_test)
+```
+
+# Test FFails
+
+You can force result, including [Fail] result, of any test by setting
+`ffails` parameter or using `FFails` decorator
+for decorated tests. See [Forcing Results](#Forcing-Results).
+
+## ffails
+
+The [ffails] parameter of the test can be used to force any result of a test including [Fail]
+while skipping the execution of its test body. The [ffails] parameter
+must be passed a dictionary of the form
+
+```python
+{
+    "pattern":
+        (Result, reason),
+    ...
+}
+```
+
+where key `pattern` is a test [pattern] that matches one or more tests for which
+the result will be set by force and the body of the test will not be executed.
+The forced result is specified by a two-tuple of the form `(Result, reason)` where the
+first element specifies the force test result, such as [Fail], and the second element specifies
+the reason for forcing the result as a string.
+
+For example,
+
+```python
+with Suite("My test", ffails={"my_test": (Fail, "test gets stuck")}):
+    Scenario(name="my_test", run=my_test)
+```
+
+or
+
+```python
+Suite(run=my_suite, ffails={"my test": (Skip, "not supported")})
+```
+
+> **{% attention %}** If the test `pattern` is not absolute then it is
+> anchored to the test where [ffails] is being specified.
+
+## FFails
+
+The [FFails] decorator can be used to set `ffails` attribute of any test that is defined using a decorated function
+or used as an extra argument when defining a row for the [examples] of the test.
+
+The [FFails] decorator takes a dictionary of the same form as the [ffails] parameter.
+
+```python
+@TestSuite
+@FFails({
+    "my test": (Fail, "test gets stuck") # force fail "my test" because it gets stuck
 })
 def suite(self):
     Scenario(run=my_test)
@@ -2632,6 +2690,28 @@ def regression(self):
     Suite(run=my_suite)
 ```
 
+# Forcing Results
+
+Test result can be forced and the body of the test skipped
+by using [ffails] or [FFails] decorator.
+This test attribute is pushed down the flow from parent test to child tests
+as long as the [pattern] has a chance of matching.
+
+This allows to force the result of any child test at any level of the test flow
+including at the top level test.
+
+For example,
+
+```python
+@TestModule
+@FFails({
+    "my suite/my test": (Fail, "test gets stuck"), # skip body of the test and force `Fail` result 
+    "my suite/my other test": (SKIP, "not supported") # skip body of the test and force `Skip` result
+})
+def regression(self):
+    Suite(run=my_suite)
+```
+
 [using current_module()]: #Using-current-module
 [pattern]: #pattern
 [--only]: #–only
@@ -2676,6 +2756,8 @@ def regression(self):
 [XFails]: #XFails
 [xflags]: #xflags
 [XFlags]: #XFlags
+[ffails]: #ffails
+[FFails]: #FFails
 [name]: #name
 [Name]: #Name
 [examples]: #examples
