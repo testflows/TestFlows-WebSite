@@ -658,7 +658,9 @@ parameters for a test:
 * [requirements]
 * [examples]
 * description
-* xfails
+* [xfails]
+* [xflags]
+* [ffails]
 * only
 * skip
 * start
@@ -1111,7 +1113,7 @@ Suite(run=my_suite, xfails={"my test": [Fail, "https://my.issue.tracker.com/issu
 ## XFails
 
 The [XFails] decorator can be used to set `xfails` attribute of any test that is defined using a decorated function
-or used as an argument of the `examples` parameter for the test.
+or used as an extra argument when defining a row for the [examples] of the test.
 The [XFails] decorator takes a dictionary of the same form as the [xfails] parameter.
 
 ```python
@@ -1120,6 +1122,69 @@ The [XFails] decorator takes a dictionary of the same form as the [xfails] param
     "my_test": [
         (Fail, "needs to be investigated")  
     ]
+})
+def suite(self):
+    Scenario(run=my_test)
+```
+
+# Test XFlags
+
+You can specify flags to be externally set or cleared for any test by setting `xflags` parameter or using `XFlags` decorator
+for decorated tests. See [Setting or Clearing Flags](#Setting-or-Clearing-Flags).
+
+## xflags
+
+The [xflags] parameter of the test can be used to set `xflags` of a test. The [xflags] parameter
+must be passed a dictionary of the form
+
+```python
+{
+    "pattern":
+        (set_flags, clear_flags),
+    ...
+}
+```
+
+where key `pattern` is a test [pattern] that matches one or more tests for which
+flags will be set or cleared. The flags to be set or cleared are
+specified by a two-tuple of the form`(set_flags, clear_flags)` where the
+first element specifies flags to be set and the second element specifies
+flags to cleared.
+
+Here is an example to set [TE] flag and to clear the [SKIP] flag,
+
+```python
+with Suite("My test", xflags={"my_test": (TE, SKIP)}):
+    Scenario(name="my_test", run=my_test)
+```
+
+or just set [SKIP] flag without clearing any other flag
+
+```python
+Suite(run=my_suite, xflags={"my test": (SKIP, 0)})
+```
+
+and multiple flags can be combined using the binary `OR` (`|`) operator.
+
+```python
+# clear SKIP and TE flags for "my test"
+Suite(run=my_suite, xflags={"my test": (0, SKIP|TE)})
+```
+
+> **{% attention %}** If the test `pattern` is not absolute then it is
+> anchored to the test where [xflags] are being specified.
+
+## XFlags
+
+The [XFlags] decorator can be used to set `xflags` attribute of any test that is defined using a decorated function
+or used as an extra argument when defining a row for the [examples] of the test.
+
+The [XFlags] decorator takes a dictionary of the same form as the [xflags] parameter.
+
+```python
+@TestSuite
+@XFlags({
+    "my_test": (TE, SKIP) # set TE and clear SKIP flags
 })
 def suite(self):
     Scenario(run=my_test)
@@ -2546,6 +2611,27 @@ def regression(self):
 All the [pattern]s are usually specified using relative form and are 
 anchored to the top level test during assignment.
 
+# Setting or Clearing Flags
+
+Test flags can be set or cleared externally using [xflags] or [XFlags] decorator.
+This test attribute is pushed down the flow from parent test to child tests
+as long as the [pattern] has a chance of matching.
+
+This allows setting or clearing flags for any child test at any level of the test flow
+including at the top level test.
+
+For example,
+
+```python
+@TestModule
+@XFlags({
+    "my suite/my test": (0, TE), # clear TE flag
+    "my suite/my other test": (TE, 0) # set TE flag
+})
+def regression(self):
+    Suite(run=my_suite)
+```
+
 [using current_module()]: #Using-current-module
 [pattern]: #pattern
 [--only]: #–only
@@ -2588,6 +2674,8 @@ anchored to the top level test during assignment.
 [Flags]: #Flags
 [xfails]: #xfails
 [XFails]: #XFails
+[xflags]: #xflags
+[XFlags]: #XFlags
 [name]: #name
 [Name]: #Name
 [examples]: #examples
