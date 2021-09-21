@@ -1205,7 +1205,7 @@ must be passed a dictionary of the form
 ```python
 {
     "pattern":
-        (Result, reason),
+        (Result, reason[, when]),
     ...
 }
 ```
@@ -1232,6 +1232,34 @@ Suite(run=my_suite, ffails={"my test": (Skip, "not supported")})
 > **{% attention %}** If the test `pattern` is not absolute then it is
 > anchored to the test where [ffails] is being specified.
 
+### Optional `when` Condition 
+
+Optionally, the tuple can include 
+a `when` condition, specified as a function, as the last element.
+If present, the `when` function is called before test execution.
+The boolean result returned by the `when` function determines if the forced result is applied, 
+if the function returns `True`, or not, if it returns `False`. 
+The `when` function must take one argument which is the instance of the test.
+
+> **{% attention %}** The optional `when` function can define any logic that 
+> is needed to determine if some condition is met. Any [callable] can be used.
+
+For example,
+
+```python
+def version(*versions):
+    """Check if the value of version test context variable
+    matches any in the list.
+    """
+    def _when(test):
+        return test.context.version in versions
+    return _when
+
+with Module("regression"):
+    # force to skip my_suite test only on version 2.0
+    Suite(run=my_suite, ffails={"my test": (Skip, "not supported", version("2.0"))})
+```
+
 ## FFails
 
 The [FFails] decorator can be used to set `ffails` attribute of any test that is defined using a decorated function
@@ -1243,6 +1271,25 @@ The [FFails] decorator takes a dictionary of the same form as the [ffails] param
 @TestSuite
 @FFails({
     "my test": (Fail, "test gets stuck") # force fail "my test" because it gets stuck
+})
+def suite(self):
+    Scenario(run=my_test)
+```
+
+The optional `when` function can also be specified.
+
+```python
+def version(*versions):
+    """Check if the value of version test context variable
+    matches any in the list.
+    """
+    def _when(test):
+        return test.context.version in versions
+    return _when
+
+@TestSuite
+@FFails({
+    "my test": (Fail, "test gets stuck", version("2.0")) # force fail "my test" because it gets stuck on version 2.0
 })
 def suite(self):
     Scenario(run=my_test)
@@ -2700,6 +2747,8 @@ as long as the [pattern] has a chance of matching.
 This allows to force the result of any child test at any level of the test flow
 including at the top level test.
 
+> **{% attention %}** When test result is forced the body of the test is not executed.
+
 For example,
 
 ```python
@@ -2710,6 +2759,197 @@ For example,
 })
 def regression(self):
     Suite(run=my_suite)
+```
+
+The optional `when` function can also be specified.
+
+```python
+def version(*versions):
+    """Check if the value of version test context variable
+    matches any in the list.
+    """
+    def _when(test):
+        return test.context.version in versions
+    return _when
+
+@TestSuite
+@FFails({
+    # force fail "my test" because it gets stuck on version 2.0
+    "my test": (Fail, "test gets stuck", version("2.0"))
+})
+def suite(self):
+    Scenario(run=my_test)
+```
+
+## Forced Result Decorators
+
+Forced result decorators such as [Skipped], [Failed], [XFailed], [XErrored], [Okayed],
+and [XOkayed] can be used to tie force result right where the test is defined.
+
+> **{% attention %}** When test result is forced the body of the test is not executed.
+
+These decorators are just a short-hand form of
+specifying forced results using [ffails]
+test attribute. Therefore, if parent test explicitly specifies [ffails] then it overrides
+forced results tied to the test.
+
+> **{% attention %}** Only one such decorator can be applied to a given test.
+> If you need to specify more than one forced result then [FFails] decorator shall be used.
+
+See also description for the [Optional `when` Condition].
+
+### Skipped
+
+The [Skipped] decorator can be used to force [Skip] result.
+
+```python
+@TestScenario
+@Skipped("not supported on 2.0", when=version("2.0"))
+def my_test(self):
+    pass
+```
+
+### Failed
+
+The [Failed] decorator can be used to force [Fail] result.
+
+```python
+@TestScenario
+@Failed("force Fail on 2.0", when=version("2.0"))
+def my_test(self):
+    pass
+```
+
+### XFailed
+
+The [XFailed] decorator can be used to force [XFail] result.
+
+```python
+@TestScenario
+@XFailed("force XFail on 2.0", when=version("2.0"))
+def my_test(self):
+    pass
+```
+
+### XErrored
+
+The [XErrored] decorator can be used to force [XError] result.
+
+```python
+@TestScenario
+@XErrored("force XError on 2.0", when=version("2.0"))
+def my_test(self):
+    pass
+```
+
+### Okayed
+
+The [Okayed] decorator can be used to force [OK] result.
+
+```python
+@TestScenario
+@Okayed("force OK result on 2.0", when=version("2.0"))
+def my_test(self):
+    pass
+```
+
+### XOkayed
+
+The [XOkayed] decorator can be used to force [XOK] result.
+
+```python
+@TestScenario
+@XOkayed("force XOK result on 2.0", when=version("2.0"))
+def my_test(self):
+    pass
+```
+
+# Retrying Code or Function Calls
+
+When you need to retry a block of code or a function call you can use
+**retries** class and **retry** class respectively provided by `testflows.asserts` module.
+
+## Using `retries()`
+
+For example, you can retry any block of code using **retries** from `testflows.asserts`
+as follows where we wait for the code to succeed within `5` sec using `0.1` sec delay
+between retries and backoff multiplier of `1.2` with jitter range
+between `-0.05` min to `0.05` max.
+
+```python
+import random
+from testflows.core import *
+from testflows.asserts import retries, error
+
+with Scenario("my test"):
+    with When("I try to get a random number")
+        for attempt in retries(AssertionError, timeout=5, delay=0.1, backoff=1.2, jitter=(-0.05,0.05)):
+            with By(f"using random.random() attempt #{attempt.number}"):
+                with attempt:
+                    assert random.random() > 0.8, error()
+```
+
+The code block is considered as succeeded if no exception is raised. 
+If an exception is raised and it is one of the expected exceptions then 
+the code is retried until it succeeds or timeout occurs.
+
+> **{% attention %}** If code blocks raises an exception that is not one of the expected exceptions
+> then the unexpected exception is not caught.
+
+More than one exception can be specified as follows.
+
+```python
+for attempt in retries(TypeError, ValueError, AssertionError, timeout=5):
+    with attempt:
+        value = random.random()
+        if value < 0.5:
+            raise TypeError("less than 0.5")
+        elif value < 0.7:
+            raise ValueError("greater or equal to 0.5 but less than 0.7")
+        else:
+            assert random.random() > 0.9, error()
+```
+
+## Using `retry()`
+
+The **retry** from `testflows.asserts` can be used both as a plain function decorator
+or as wrapper for a plain function call.
+
+For example, using it as a decorator.
+
+```python
+import random
+
+@retry(AssertionError, timeout=5, delay=0.1)
+def my_func():
+    assert random.random() > 0.2, error()
+```
+
+> **{% attention %}** You cannot combine **retry** decorator with test decorators.
+> 
+> Therefore, the following code will not work
+> ```python
+@retry(Fail, timeout=5)
+@TestScenario
+def my_scenario(self):
+    pass
+```
+> neither will this
+> ```python
+@TestScenario
+@retry(Fail, timeout=5)
+def my_scenario(self):
+    pass
+```
+
+Another usage is to retry a common function call. For example,
+
+```python
+def my_func(x):
+    assert random.random() > x, error()
+
+with Test("my test"):
+    value = retry(AssertionError, timeout=5).call(my_func, x=0.2)
 ```
 
 [using current_module()]: #Using-current-module
@@ -2841,6 +3081,14 @@ def regression(self):
 [Test Definition Class]: #Defining-Tests
 [context manager]: https://docs.python.org/3/reference/datamodel.html#context-managers
 [Top Level Test]: #Top-Level-Test
+[callable]: https://docs.python.org/3/library/functions.html#callable
+[Skipped]: #Skipped
+[Failed]: #Failed
+[XFailed]: #XFailed
+[XErrored]: #XErrored
+[Okayed]: #Okayed
+[XOkayed]: #XOkayed
+[Optional `when` Condition]: #Optional-when-Condition
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/test.py#L2046
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/objects.py#L615
