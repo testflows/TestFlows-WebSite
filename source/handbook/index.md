@@ -109,6 +109,7 @@ giving us six [Types] in total. The core [Types] are
   * [Test]
   * [Outline] (special)
   * [Iteration] (special)
+  * [RetryIteration] (special)
   * [Step]
 
 and all other types are just a naming variation of one of the above having the following mapping
@@ -125,6 +126,7 @@ and all other types are just a naming variation of one of the above having the f
   * [Example]
 * [Outline] (special)
 * [Iteration] (special)
+* [RetryIteration] (special)
 * [Step]
   * [Given]
   * [When]
@@ -424,6 +426,14 @@ will be paused.
 
 The `--pause-after` option can be used to specify the tests after which the test flow
 will be paused.
+
+#### --repeat
+
+The `--repeat` option can be used to specify the tests to be repeated.
+
+#### --retry
+
+The `--retry` option can be used to specify the tests to be retried.
 
 # Output
 
@@ -826,6 +836,10 @@ Parallel test flag. This flag is set if test is running in parallel.
 ## MANUAL
 
 Manual test flag. This flag indicates that test is manual.
+
+## LAST_RETRY
+
+Last retry flag. This flag is auto-set for the last retry iteration.
 
 ## flags
 
@@ -1695,8 +1709,13 @@ def outline(self, greeting, name):
 
 ## Iteration
 
-An [Iteration] is not meant to be used explicitly and in most cases is only used internally to implement
-test repetitions.
+An [Iteration] is not meant to be used explicitly and in most cases is only used
+internally to implement test repetitions.
+
+## RetryIteration
+
+A [RetryIteration] is not meant to be used explicitly and in most cases is only used
+internally to implement test retries.
 
 ## Step
 
@@ -1973,6 +1992,7 @@ The framework divides tests into the following [Types] from highest to the lowes
 * [Test]
 * [Outline]
 * [Iteration]
+* [RetryIteration]
 * [Step]
 
 Children of each [Type] usually must be of the same [Type] or lower with the only notable exception
@@ -2864,10 +2884,191 @@ def my_test(self):
     pass
 ```
 
+# Repeating Tests
+
+You can repeat tests by specifying [repeats] parameter either explicitly
+for inline tests or using [Repeats] or [Repeat] decorator for decorated tests.
+
+Repeating a test means to rerun it multiple times. For each run a new [Iteration] is 
+creating with the name being the index of the current iteration. The result of each
+iteration is counted and fails are not ignored. 
+
+In general, it's useful to repeat a test when you would like to confirm test stability.
+In addition to specifying repeats inside a test program you can also pass [--repeat option]
+to your test program to specify which tests you would like to repeat from the command line.
+
+> {% attention %} If need you need to repeat a test and you would like to count only
+> the last passing iteration see [Retrying Tests] section.
+
+You can combine [Repeats] with [Retries] and if done so retries are performed
+for each [Iteration]. 
+
+You can repeat a test `until` either `pass`, `fail` or `complete` criteria is met
+by specifying `until` parameter.
+
+> **{% attention %}** Repeats can only be applied to tests that have a [Test Type] or higher.
+> Repeating [Step]s is not supported.
+
+## Until Condition
+
+### `pass`
+
+Until **pass** means that iteration over a test will stop before the specified number of
+repeats if an iteration has a passing results. Passing results include [OK], [XFail], [XError], [XOK], [XNull].
+
+### `fail`
+
+Until **fail** means that iteration over a test will stop before the specified number
+of repeats if an iteration has a failing results. Failing results include [Fail], [Error], and [Null].
+
+### `complete`
+
+Until **complete** means that iteration over a test will stop only after the specified number
+of repeats is performed regardless of the result of each iteration. 
+
+
+## Repeats
+
+The [Repeats] decorator can be applied to a decorated test that has a [Test Type] or higher.
+Repeating test [Step]s is not allowed. The [Repeats] decorator should be used
+when you want to specify more than one test to be repeated. The tests to be repeated
+are selected using test [pattern]s. The [Repeats] decorator sets [repeats] attribute
+of the test.
+
+For example,
+
+```python
+@TestFeature
+@Repeats({
+    "my scenario 0": (5, "pass") # (count, until)
+    "my scenario 1": (10, "complete"),
+    "my scenario 2": (3, "fail")
+})
+def my_feature(self):
+    Scenario(run="my_scenario")
+```
+
+If you want to specify to repeat only one test it is more convenient to use [Repeat]
+decorator instead.
+
+## Repeat
+
+The [Repeat] decorator is used to specify a repetition for a single test that has
+a [Test Type] or higher. Repeating test [Step]s is not allowed. The [Repeat] decorator is 
+usually applied the test to which the decorator is attached as by default, the `pattern` is empty
+and means it applies to the current test and the `until` is set to `complete`
+which means that the test will be repeated the specified number of times.
+
+> **{% attention %}** If you need to specify repeat for more than one test
+> use [Repeats] decorator instead.
+
+> **{% attention %}** [Repeat] decorator cannot be applied more than one time
+> to the same test.
+
+For example,
+
+```python
+@TestScenario
+@Repeat(5) # by default pattern="", until="complete"
+def my_scenario(self):
+    pass
+```
+
+If you want to specify custom `pattern` or `until` condition then pass them
+using `pattern` and `until` parameters respectively.
+
+```python
+@TestScenario
+@Repeat(count=5, pattern="my subtest", until="fail")
+def my_scenario(self):
+    Scenario(name="my subtest", run=my_test)
+```
+
+# Retrying Tests
+
+You can retry tests until they pass or until the number of retries is exhausted 
+by specifying [retries] parameter either explicitly
+for inline tests or using [Retries] or [Retry] decorator for decorated tests.
+
+Retrying a test means to rerun it multiple times until it passes.
+A pass means that a retry has either [OK], [XFail], [XError], [XNull], [XOK], or [Skip]
+result.
+
+For each attempt a [RetryIteration] is created with the name corresponding to the 
+try number. Any fails of an individual
+attempt is ignored unless it is the last retry attempt. Last [RetryIteration]
+is marked by [LAST_RETRY] flag.
+
+In general, it's useful to retry a test when test is unstable and sometimes could fail
+but you still would like to run it as long as it passes within the specified number
+of retries.
+
+## Retries
+
+The [Retries] decorator can be applied to a decorated test that has a [Test Type] or higher.
+Retrying test [Step]s is not allowed. The [Retries] decorator should be used
+when you want to specify more than one test to be retried. The tests to be retried
+are selected using test [pattern]s. The [Retries] decorator sets [retries] attribute
+of the test and causes the test to be retried until either it passes or maximum
+number of retries is reached.
+
+For example,
+
+```python
+@TestFeature
+@Retries({
+    "my scenario 0": 5,
+    "my scenario 1": 10
+})
+def my_feature(self):
+    Scenario(name="my scenario 0", run=my_scenario)
+    Scenario(name="my scneario 1", run=my_scenario)
+```
+
+If you want to specify to retry only one test it is more convenient to use [Retry]
+decorator instead.
+
+## Retry
+
+The [Retry] decorator is used to specify a retry for a single test that has
+a [Test Type] or higher. Retrying test [Step]s is not allowed. The [Retry] decorator is 
+usually applied the test to which the decorator is attached as by default, the `pattern` is empty
+and means it applies to the current test.
+The [Retry] decorator sets [retries] attribute
+of the test and causes the test to be retried until either it passes or maximum
+number of retries is reached. 
+
+> **{% attention %}** If you need to specify retries for more than one test
+> use [Retries] decorator instead.
+
+> **{% attention %}** [Retry] decorator cannot be applied more than one time
+> to the same test.
+
+For example,
+
+```python
+@TestScenario
+@Retry(5) # by default pattern=""
+def my_scenario(self):
+    pass
+```
+
+or you can specify `pattern` as
+
+```python
+@TestScenario
+@Retry(5, pattern="test to repeat")
+def my_scenario(self):
+    pass
+```
+
 # Retrying Code or Function Calls
 
 When you need to retry a block of code or a function call you can use
 **retries** class and **retry** class respectively provided by `testflows.asserts` module.
+
+> **{% attention %}** `retries()` or `retry()` should not be used to retry tests.
+> Use [Retries] or [Retry] decorator or explicitly specify [retries] parameter instead.
 
 ## Using `retries()`
 
@@ -2960,6 +3161,8 @@ with Test("my test"):
 [--end]: #–end
 [--pause-before]: #–pause-before
 [--pause-after]: #–pause-after
+[--repeat]: #–repeat
+[--retry]: #–retry
 [OK]: #OK
 [Fail]: #Fail
 [Error]: #Error
@@ -2990,6 +3193,7 @@ with Test("my test"):
 [DOCUMENT]: #DOCUMENT
 [MANDATORY]: #MANDATORY
 [MANUAL]: #MANUAL
+[LAST_RETRY]: #LAST_RETRY
 [flags]: #flags
 [Flags]: #Flags
 [xfails]: #xfails
@@ -3056,6 +3260,7 @@ with Test("my test"):
 [Outline]: #Outline
 [TestOutline]: #Outline
 [Iteration]: #Iteration
+[RetryIteration]: #RetryIteration
 [Background]: #Background
 [TestBackground]: #Background
 [with]: https://docs.python.org/3/reference/compound_stmts.html#the-with-statement
@@ -3089,6 +3294,12 @@ with Test("my test"):
 [Okayed]: #Okayed
 [XOkayed]: #XOkayed
 [Optional `when` Condition]: #Optional-when-Condition
+[Repeats]: #Repeats
+[Repeat]: #Repeat
+[Repeating Tests]: #Repeating-Tests
+[Retrying Tests]: #Retrying-Tests
+[Retries]: #Retries
+[Retry]: #Retry
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/test.py#L2046
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/objects.py#L615
