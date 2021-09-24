@@ -2043,6 +2043,117 @@ The [Sub-Types] have the following mapping to the core six [Types]
   * [Finally]
   * [Background]
 
+# Using Contexts
+
+Each test has `context` attribute that can be used for storing and passing state
+to sub-tests. Each test has unique object instance of [Context class] however
+context variables from the parent
+can be accessed as long as the same context variable was not redefined by the current
+test.
+
+The main use case for using `context` is to avoid passing common arguments
+to sub-tests and as `context`s allow to pass them _automatically_.
+
+Also, test clean up functions can be added to the current test using `context`.
+See [Cleanup Functions](#Cleanup-Functions).
+
+Here is an example of using `context` to store and pass state.
+
+```python
+from testflows.core import *
+
+@TestScenario
+def my_test(self):
+    # note will print 'hello there'
+    note(self.context.my_var) 
+    # this will redefine my_var for this test and any sub-tests
+    # but parent.context.my_var will remain unchanged
+    self.context.my_var = "hello here"
+    # note will print 'hello here'
+    note(self.context.my_var)
+
+@TestModule
+def regression(self):
+    self.context.my_var = "hello there"
+
+    Scenario(run=my_test)
+    # my_var change in sub-test does not change the value at the parent's level
+    # note will print 'hello there'
+    note(self.context.my_var)
+
+if main():
+    regression()
+```
+
+and you can confirm this by running the test program above.
+
+```bash
+Sep 24,2021 10:24:54   ⟥  Module regression
+Sep 24,2021 10:24:54     ⟥  Scenario my test
+               671us     ⟥    [note] hello there
+               730us     ⟥    [note] hello here
+               898us     ⟥⟤ OK my test, /regression/my test
+                10ms   ⟥    [note] hello there
+                10ms   ⟥⟤ OK regression, /regression
+```
+
+> **{% attention %}** You should not modify parent's context directly (~self.parent.context~).
+> Always set variables using the context of the current test either using
+> `self.context` or `current().context`.
+
+## Using `in` Operator
+
+You can use `in` operator to check if variable is set in context.
+
+```python
+# check if variable 'my_var' is set in context
+note("my_var" in self.context)
+```
+
+## Using `hasattr()`
+
+Alternatively, you can also use built-in [hasattr()] function.
+
+```python
+note(hasattr(self.context, "my_var"))
+```
+
+## Using `getattr()`
+
+If you are not sure if context variable is set you can use built-in [getattr()] function.
+
+```python
+note(getattr(self.context, "my_var2", "was not set"))
+```
+
+## Using `getsattr()`
+
+If you would like to set `context` variable to some value if the variable
+is not defined in the context use [getsattr() function].
+
+
+```python
+from testflows.core import Test, note
+from testflows.core import getsattr
+
+with Test("my test") as test:
+    getsattr(test.context, "my_var2", "value if my_var2 is not set")
+    note(test.context.my_var2)
+```
+
+## Arbitrary Variable Names
+
+If you would like to add a variable that for example has empty spaces
+and therefore would not be valid to be referenced directly
+as an attribute of the `context` then you can use [setattr()] and [getattr()]
+to set and get variable respectively.
+
+```python
+with Test("my test") as test:
+    setattr(test.context, "my long variable with spaces", "value")
+    note(getattr(test.context, "my long variable with spaces"))
+```
+
 # Setups And Teardowns
 
 Test setup and teardown could be explicitly specified using [Given] and [Finally] steps.
@@ -3300,6 +3411,9 @@ with Test("my test"):
 [Retrying Tests]: #Retrying-Tests
 [Retries]: #Retries
 [Retry]: #Retry
+[hasattr()]: https://docs.python.org/3/library/functions.html#hasattr
+[getattr()]: https://docs.python.org/3/library/functions.html#getattr
+[setattr()]: https://docs.python.org/3/library/functions.html#setattr
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/test.py#L2046
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/objects.py#L615
