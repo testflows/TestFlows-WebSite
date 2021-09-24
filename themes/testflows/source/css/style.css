@@ -60,8 +60,9 @@ blockquote {
     position: fixed;
     bottom: 0.5em;
     right: 1em;
-    color: #ef8b28;
+    color: orange !important;
     font-size: 2.5em;
+    cursor: pointer;
 }
 
 .jump:active,
