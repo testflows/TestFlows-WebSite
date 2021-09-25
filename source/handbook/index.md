@@ -311,145 +311,474 @@ with Module("module"):
 something_else() # will not be executed
 ```
 
-# Test Program Options
+## Renaming Top Test
 
-## Options
-
-### -h, --help
-
-The `-h`, `--help` option can be used to obtain help message that describes all the command line
-options a test can accept. For example,
+Top level test name can be changed using [--name] command line argument.
 
 ```bash
-$ python3 test.py --help
+--name name                                     test run name
 ```
 
-### -l, --log
-
-The `-l`, `--log` option can be used to specify the path of the file where test log will be saved.
-For example,
-
-```bash
-$ python3 test.py --log ./test.log
-```
-
-### --name
-
-The `--name` option can be used to specify the name of the top level test.
-For example,
-
-```bash
-$ python3 test.py --name "My custom top level test name"
-```
-
-### --tag
-
-The `--tag` option can be used to specify one or more tags for the top level test.
-For example,
-
-```bash
-$ python3 test.py --tag "tag0" "tag1"
-```
-
-### --attr
-
-The `--attr` option can be used to specify one or more attributes for the top level test.
-For example,
-
-```bash
-$ python3 test.py --attr attr0=value0 attr1=value1
-```
-
-### Filtering
-
-#### pattern
-
-Options such as [--only], [--skip], [--start], [--end] as well as
-[--pause-before] and [--pause-after] take a [pattern] to specify the exact test
-to which the option shall be applied.
-
-The [pattern] is used to match test names using a [unix-like file path pattern] that supports wildcards
-
-* `/` path level separator
-* `*` matches everything
-* `?` matches any single character
-* `[seq]` matches any character in seq
-* `[!seq]` matches any character not in seq
-* `:` matches anything at the current path level
-
-> **{% attention %}** Note that for a literal match, you must wrap the meta-characters in brackets
-> where `[?]` matches the character `?`.
-
-#### --only
-
-The `--only` option can be used to filter the test flow so that only the specified tests
-are executed.
-
-> **{% attention %}** Note that mandatory tests will still be run.
-
-> **{% attention %}** Note that most of the time the [pattern] should end with `/*` so that
-> any steps or sub-tests are executed inside the selected test.
+> **{% attention %}** This is not recommended as you can break any test name patterns
+> that are not relative. For example, this can affect [xfails], [ffails], etc.
 
 For example,
 
-```bash
-$ python3 test.py --only "/my test/*"
+> `test.py`
+> ```python
+from testflows.core import *
+
+with Module("regression"):
+    with Scenario("my test"):
+        pass
 ```
 
-#### --skip
+```bash
+$ python3 test.py --name "new top level test name"
+ Sep 25,2021 8:55:18   ⟥  Module new top level test name
+ Sep 25,2021 8:55:18     ⟥  Scenario my test
+               661us     ⟥⟤ OK my test, /new top level test name/my test
+                 9ms   ⟥⟤ OK new top level test name, /new top level test name
+```
 
-The `--skip` option can be used to filter the test flow so that the specified tests
-are skipped.
+## Adding Tags to Top Test
 
-> **{% attention %}** Note that mandatory tests will still be run.
-
-#### --start
-
-The `--start` option can be used to filter the test flow so that the test flow starts at
-the specified test.
-
-> **{% attention %}** Note that mandatory tests will still be run.
-
-#### --end
-
-The `--end` option can be used to filter the test flow so that the test flow ends at
-the specified tests.
-
-> **{% attention %}** Note that mandatory tests will still be run.
-
-#### --pause-before
-
-The `--pause-before` option can be used to specify the tests before which the test flow
-will be paused.
-
-#### --pause-after
-
-The `--pause-after` option can be used to specify the tests after which the test flow
-will be paused.
-
-#### --repeat
-
-The `--repeat` option can be used to specify the tests to be repeated.
-
-#### --retry
-
-The `--retry` option can be used to specify the tests to be retried.
-
-#### --output
-
-The `--output` option can be used to control output format of messages printed to `stdout`.
-
-#### --no-colors
-
-The `--no-colors` option can be used to turn off terminal color highlighting.
-
-# Output
-
-Test output can be controlled with `-o` or `--output` option which specifies the output format to use
-to print to `stdout`. By default, a detailed `nice` output is used. See `--help` for other formats.
+On the command line, tags can be added to [Top Level Test] using [--tag] option.
+One or more tags can be specified.
 
 ```bash
-$ python3 test.py --output short
+ --tag value [value ...]                         test run tags
+```
+
+For example,
+
+> `test.py`
+>```python
+from testflows.core import *
+
+with Module("regression"):
+    with Scenario("my test"):
+        pass
+```
+
+```bash
+$ python3 test.py --tag tag1 tag2
+ Sep 25,2021 8:56:58   ⟥  Module regression
+                            Tags
+                              tag1
+                              tag2
+ Sep 25,2021 8:56:58     ⟥  Scenario my test
+               640us     ⟥⟤ OK my test, /regression/my test
+                 9ms   ⟥⟤ OK regression, /regression
+```
+
+## Adding Attributes to Top Test
+
+Attributes of the [Top Level Test] can be used to associate important
+information with your test run. For example, common attributes include
+tester name, build number, CI/CD job id, artifacts URL and many others.
+
+> **{% attention %}** These attributes can be used extensively when filtering test runs
+> in test results database.
+
+On the command line, attributes can be added to [Top Level Test] using [--attr] option.
+One or more attributes can be specified.
+
+
+```bash
+  --attr name=value [name=value ...]              test run attributes
+```
+
+For example,
+
+> `test.py`
+>```python
+from testflows.core import *
+
+with Module("regression"):
+    with Scenario("my test"):
+        pass
+```
+
+```bash
+$ python3 top_name.py --attr build=21.10.1 tester="Vitaliy Zakaznikov" job_id=4325432 job_url="https://jobs.server.com/4325432"
+ Sep 25,2021 9:04:11   ⟥  Module regression
+                            Attributes
+                              build
+                                21.10.1
+                              tester
+                                Vitaliy Zakaznikov
+                              job_id
+                                4325432
+                              job_url
+                                https://jobs.server.com/4325432
+ Sep 25,2021 9:04:11     ⟥  Scenario my test
+               781us     ⟥⟤ OK my test, /regression/my test
+                10ms   ⟥⟤ OK regression, /regression
+```
+
+# Controlling Output
+
+Test output can be controlled with `-o` or [--output] option which specifies the output format to use
+to print to `stdout`. By default, the most detailed `nice` output is used.
+
+```bash
+  -o format, --output format                      stdout output format, choices are: ['new-fails',
+                                                  'fails', 'classic', 'slick', 'nice', 'brisk',
+                                                  'quiet', 'short', 'manual', 'dots', 'progress',
+                                                  'raw'], default: 'nice'
+```
+
+For example, you can use the following test and see how output format
+changes based on the output that is specified.
+
+> `test.py`
+>```python
+from testflows.core import *
+
+with Module("regression", flags=TE, attributes=[("name","value")], tags=("tag1", "tag2")):
+    with Scenario("my test", description="Test description."):
+        with When("I do something"):
+            note("do something")
+        with Then("I check the result"):
+            note("check the result")
+```
+
+## `nice` Output
+
+The [`nice`] output format is the default output format and provides the most
+details when developing and debugging tests. This output format includes all test types,
+their attributes and results as well as any messages that are associated with them.
+
+> **{% attention %}** This output format is the most useful for developing and 
+> debugging an individual test.
+
+> **{% attention %}** This output format is not useful when tests are executed in parallel.
+
+For example,
+
+```bash
+$ python3 test.py --output nice
+ Sep 25,2021 9:29:39   ⟥  Module regression, flags:TE
+                            Attributes
+                              name
+                                value
+                            Tags
+                              tag1
+                              tag2
+ Sep 25,2021 9:29:39     ⟥  Scenario my test
+                              Test description.
+ Sep 25,2021 9:29:39       ⟥  When I do something
+               508us       ⟥    [note] do something
+               715us       ⟥⟤ OK I do something, /regression/my test/I do something
+ Sep 25,2021 9:29:39       ⟥  Then I check the result
+               471us       ⟥    [note] check the result
+               704us       ⟥⟤ OK I check the result, /regression/my test/I check the result
+                 2ms     ⟥⟤ OK my test, /regression/my test
+                12ms   ⟥⟤ OK regression, /regression
+```
+
+produces the same output as when [--output] is omitted.
+
+```python
+$ python3 test.py
+```
+
+## `brisk` Output
+
+The [`brisk`] output format is very similar to [`nice`] output format but
+omits all steps (tests that have [Step Type]). This format is useful when
+you would like to focus on actions of the test such as commands executed
+on the system under test rather than on the test procedure itself.
+
+> **{% attention %}** This output format is useful for 
+> debugging individual test when you would like to omit test steps.
+
+> **{% attention %}** This output format is not useful when tests are executed in parallel.
+
+```bash
+$ python3 output.py -o brisk
+Sep 25,2021 12:05:25   ⟥  Module regression, flags:TE
+                            Attributes
+                              name
+                                value
+                            Tags
+                              tag2
+                              tag1
+Sep 25,2021 12:05:25     ⟥  Scenario my test
+                              Test description.
+               479us     ⟥    [note] do something
+               719us     ⟥    [note] check the result
+                 2ms     ⟥⟤ OK my test, /regression/my test
+                12ms   ⟥⟤ OK regression, /regression
+```
+
+## `short` Output
+
+The [`short`] output format provides a shorter output than [`nice`] output format
+as only test and result messages are formatted. 
+
+> **{% attention %}** This output format is very useful to highlight and verify test procedure.
+
+> **{% attention %}** This output format is not useful when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o short
+Module regression
+  Attributes
+    name
+      value
+  Tags
+    tag1
+    tag2
+  Scenario my test
+    Test description.
+    When I do something
+    OK
+    Then I check the result
+    OK
+  OK
+OK
+```
+
+## `classic` Output
+
+The [`classic`] output format shows only full test names for
+test and result messages for any test that has [Test Type] of higher.
+Tests that have [Step Type] are not showed.
+
+> **{% attention %}** This output format can be used for CI/CD runs as long as
+> number of tests is not too large.
+
+> **{% attention %}** This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o classic
+➤ Sep 25,2021 11:14:15 /regression
+➤ Sep 25,2021 11:14:15 /regression/my test
+✔ 2ms       [   OK   ] /regression/my test
+✔ 12ms      [   OK   ] /regression
+```
+
+## `progress` Output
+
+The [`progress`] output format shows the progress of the test run. 
+The output is always printed on one line on progress updates and is useful
+when running tests locally.
+
+Any test fails are printed inline as soon as they occur.
+
+> **{% attention %}** This output format should not be used for CI/CD runs
+> as it outputs terminal control codes to update the same line.
+
+> **{% attention %}** This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o progress
+Executing 2 tests /regression/my test/I do something
+```
+
+## `fails` Output
+
+The [`fails`] output format only shows failing results [Fail], [Error], and [Null]
+and crossed out results [XFail], [XError], [XNull], [XOK]. 
+
+Failing results are only shown for tests with [Test Type] of higher.
+
+> **{% attention %}** This output format can be used for CI/CD runs
+> as long as the number of cross out results is not too large otherwise
+> use [`new-fails`] output format instead.
+
+> **{% attention %}** This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o fails
+✘ 3ms       [ XFail  ] /regression/my test
+    expected fail
+```
+
+## `new-fails` Output
+
+The [`new-fails`] output format only shows failing results [Fail], [Error], and [Null].
+Crossed out results are not shown.
+
+Failing results are only shown for tests with [Test Type] of higher.
+
+> **{% attention %}** This output format can be used for CI/CD runs.
+
+> **{% attention %}** This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o new-fails
+✘ 3ms       [  Fail  ] /regression/my test
+    AssertionError
+    Traceback (most recent call last):
+      File "output.py", line 8, in <module>
+        assert False
+    AssertionError
+```
+
+## `slick` Output
+
+The [`slick`] output format provides even shorter output than [`short`] output format
+as only shows test and result messages for any test that has [Test Type] of higher.
+Tests that have [Step Type] are not showed.
+
+> **{% attention %}** This output format is more of an eye-candy.
+
+> **{% attention %}** This output format is not useful when tests are executed in parallel.
+
+```bash
+$ python3 test.py --output slick
+➤ Module regression
+  ✔ Scenario my test
+✔ Module regression
+```
+
+## `quiet` Output
+
+The [`quiet`] output format does not output anything to stdout.
+
+> **{% attention %}** This output format can be used for CI/CD runs.
+
+> **{% attention %}** This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o quiet
+```
+
+## `manual` Output
+
+The [`manual`] output format is only suitable for running manual or semi-automated
+tests where tester is constantly prompted for input. The terminal screen is always cleared
+before starting any test with [Test Type] or higher.
+
+> **{% attention %}** This output format is only useful for manual or semi-automated tests.
+
+```bash
+python3 test.py -o manual
+────────────────────────────────────────────────────────────────────────────────
+SCENARIO my test
+Test description.
+────────────────────────────────────────────────────────────────────────────────
+□ When I do something
+[note] do something
+✍  Enter `I do something` result? 
+```
+
+## `raw` Output
+
+The [`raw`] output format outputs raw messages.
+
+> **{% attention %}** This output format is only useful for **{% testflows %}**
+> developers and curious users that want to understand what raw messages look like.
+
+```bash
+$ python3 test.py -o raw
+{"message_keyword":"PROTOCOL","message_hash":"1336ea41","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1632584893.162271,"message_rtime":0.009011,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
+...
+{"message_keyword":"STOP","message_hash":"6956b3c5","message_object":0,"message_num":7,"message_stream":null,"message_level":2,"message_time":1632584893.167364,"message_rtime":0.014104,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1}
+```
+
+Advanced users can use this format to apply custom message transformations. 
+
+For example, it can be transformed using `tfs transform nice` command into [`nice`]
+format
+
+```bash
+$ python3 test.py -o raw | tfs transfrom nice
+```
+
+or combined with other unix tools such as `grep` with further message transformations.
+
+```bash
+$ python3 output.py -o raw | grep '{"message_keyword":"RESULT",' | tfs transform nice
+```
+
+## Summary Reports
+
+Most output formats include one or more summary reports.
+These reports are printed after all tests have been executed.
+
+> **{% attention %}** Most summary reports only include tests that have [Test Type] or higher.
+> Tests with [Step Type] are not included.
+
+### Passing
+
+This report generates `Passing` section and show passing tests.
+
+```bash
+Passing
+
+✔ [ OK ] /regression/my test
+✔ [ OK ] /regression
+```
+
+### Failing
+
+This report generates `Failing` section and show failing tests.
+
+```bash
+Failing
+
+✘ [ Fail ] /regression/my test
+✘ [ Fail ] /regression
+```
+
+### Known
+
+This report generates `Known` section.
+
+```bash
+Known
+
+✘ [ XFail ] /regression/my test ᐅ expected fail
+```
+
+### Unstable
+
+This report generates `Unstable` section. Tests are considered to be unstable
+if they are repeated and different iterations have different results.
+
+```bash
+Unstable
+
+◔ [ 50.00% ] /regression/my test (1 ok, 1 failed)
+```
+
+### Coverage
+
+This reports generates `Coverage` section. It is only generated if
+at least one `Specification` is attached to any of the tests and shows
+requirements coverage statistics for each `Specification`.
+
+```bash
+Coverage
+
+QA-SRS004 Tiered Storage
+  86 requirements (72 satisfied 83.7%, 4 unsatisfied 4.7%, 10 untested 11.6%)
+```
+
+### Totals
+
+This report generates test counts and total test time section.
+
+```bash
+1 module (1 ok)
+1 scenario (1 ok)
+2 steps (2 ok)
+
+Total time 12ms
+```
+
+### Version
+
+This report generate a message that shows date time of test run 
+and version of the framework that was used to run the test program.
+
+```bash
+Executed on Sep 25,2021 12:05
+TestFlows.com Open-Source Software Testing Framework v1.7.210922.1181131
 ```
 
 # Logs
@@ -476,7 +805,7 @@ or `tfs transform decompress` command
 $ cat test.log | tfs transform decompress
 ```
 
-## Saving Log
+## Saving Log File
 
 Test log can be saved into a file by specifying `-l` or `--log` option when running the test. For example,
 
@@ -484,9 +813,10 @@ Test log can be saved into a file by specifying `-l` or `--log` option when runn
 $ python3 test.py --log test.log
 ```
 
-## Transformations
+## Transforming Logs
 
-Test logs can be transformed using `tfs transform` command. See `tfs transform --help` for a detailed list available transformations.
+Test logs can be transformed using `tfs transform` command. See `tfs transform --help`
+for a detailed list available transformations.
 
 ### nice
 
@@ -577,7 +907,7 @@ The `tfs transform compress` command is used to compress a test log with [LZMA] 
 
 The `tfs transform decompress` command is used to decompress a test log compressed with [LZMA] compression algorithm.
 
-# Reports
+# Creating Reports
 
 Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
 
@@ -2051,6 +2381,96 @@ The [Sub-Types] have the following mapping to the core six [Types]
   * [Finally]
   * [Background]
 
+# Pausing Tests
+
+When tests perform complex automated actions it is often useful to pause a test either
+right before it starts executing it body or right after its completion. 
+Pausing a test means that the test execution will be halted and input in a form
+of pressing `Enter` will be requested from the user. This pause allows
+time to manually examine system under test as well the test environment.
+
+Pausing either before or after a test is controlled by setting either [PAUSE_BEFORE]
+or [PAUSE_AFTER] flags respectively. 
+
+> *{% attention %}* [PAUSE_BEFORE] and [PAUSE_AFTER] flags can be applied
+> to any test but the [Top Level Test] test. For [Top Level Test] test these flags are ignored.
+
+## Pausing Using Command Line  
+
+Most of the time the most convenient way to pause a test program is to specify at which
+test the program should pause using [--pause-before] or [--pause-after] arguments.
+These arguments accept one or more test name [pattern]s. Any test name
+that matches the pattern except for the [Top Level Test] will be paused.
+
+```bash
+  --pause-before pattern [pattern ...]            pause before executing selected tests
+  --pause-after pattern [pattern ...]             pause after executing selected tests
+```
+
+
+For example, if we have the following test program.
+
+> `pause.py`
+
+```python
+from testflows.core import *
+
+with Test("my test"):
+    with Step("my step 1"):
+        note("my step 1")
+    
+    with Step("my step 2"):
+        note("my step 2")
+```
+
+Then if we want to pause before executing the body of `my step 1` and right after
+executing `my step 2` we can execute our test program as follows.
+
+```bash
+$ python3 pause.py --pause-before "/my test/my step 1" --pause-after "/my test/my step 2"
+```
+
+This will cause the test program to be halted twice requesting `Enter` input
+from the user to continue execution.
+
+```bash
+ Sep 25,2021 8:34:45   ⟥  Test my test
+ Sep 25,2021 8:34:45     ⟥  Step my step 1, flags:PAUSE_BEFORE
+✋ Paused, enter any key to continue...
+               830ms     ⟥    [note] my step 1
+               830ms     ⟥⟤ OK my step 1, /my test/my step 1
+ Sep 25,2021 8:34:45     ⟥  Step my step 2, flags:PAUSE_AFTER
+               609us     ⟥    [note] my step 2
+               753us     ⟥⟤ OK my step 2, /my test/my step 2
+✋ Paused, enter any key to continue...
+            1s 490ms   ⟥⟤ OK my test, /my test
+```
+
+
+## Pausing In Code
+
+You can explicitly specify [PAUSE_BEFORE] or [PAUSE_AFTER] flags inside your test program.
+
+For example,
+
+```python
+with Test("my test"):
+    with Step("my step 1", flags=PAUSE_BEFORE):
+        note("my step 1")
+    
+    with Step("my step 2", flags=PAUSE_AFTER):
+        note("my step 2")
+```
+
+For decorated tests [Flags] decorator can be used to set these flags.
+
+```python
+@TestScenario
+@Flags(PAUSE_BEFORE|PAUSE_AFTER) # pause before and after this test
+def my_scenario(self):
+    pass
+```
+
 # Using Contexts
 
 Each test has `context` attribute that can be used for storing and passing state
@@ -3409,11 +3829,156 @@ Sep 24,2021 21:48:47   ⟥  Scenario my test
                                 hello there
                  4ms   ⟥⟤ OK my test, /my test
 ```
+# Test Program Options
 
+## Options
 
+### -h, --help
+
+The `-h`, `--help` option can be used to obtain help message that describes all the command line
+options a test can accept. For example,
+
+```bash
+$ python3 test.py --help
+```
+
+### -l, --log
+
+The `-l`, `--log` option can be used to specify the path of the file where test log will be saved.
+For example,
+
+```bash
+$ python3 test.py --log ./test.log
+```
+
+### --name
+
+The `--name` option can be used to specify the name of the top level test.
+For example,
+
+```bash
+$ python3 test.py --name "My custom top level test name"
+```
+
+### --tag
+
+The `--tag` option can be used to specify one or more tags for the top level test.
+For example,
+
+```bash
+$ python3 test.py --tag "tag0" "tag1"
+```
+
+### --attr
+
+The `--attr` option can be used to specify one or more attributes for the top level test.
+For example,
+
+```bash
+$ python3 test.py --attr attr0=value0 attr1=value1
+```
+
+### Filtering
+
+#### pattern
+
+Options such as [--only], [--skip], [--start], [--end] as well as
+[--pause-before] and [--pause-after] take a [pattern] to specify the exact test
+to which the option shall be applied.
+
+The [pattern] is used to match test names using a [unix-like file path pattern] that supports wildcards
+
+* `/` path level separator
+* `*` matches everything
+* `?` matches any single character
+* `[seq]` matches any character in seq
+* `[!seq]` matches any character not in seq
+* `:` matches anything at the current path level
+
+> **{% attention %}** Note that for a literal match, you must wrap the meta-characters in brackets
+> where `[?]` matches the character `?`.
+
+#### --only
+
+The `--only` option can be used to filter the test flow so that only the specified tests
+are executed.
+
+> **{% attention %}** Note that mandatory tests will still be run.
+
+> **{% attention %}** Note that most of the time the [pattern] should end with `/*` so that
+> any steps or sub-tests are executed inside the selected test.
+
+For example,
+
+```bash
+$ python3 test.py --only "/my test/*"
+```
+
+#### --skip
+
+The `--skip` option can be used to filter the test flow so that the specified tests
+are skipped.
+
+> **{% attention %}** Note that mandatory tests will still be run.
+
+#### --start
+
+The `--start` option can be used to filter the test flow so that the test flow starts at
+the specified test.
+
+> **{% attention %}** Note that mandatory tests will still be run.
+
+#### --end
+
+The `--end` option can be used to filter the test flow so that the test flow ends at
+the specified tests.
+
+> **{% attention %}** Note that mandatory tests will still be run.
+
+#### --pause-before
+
+The `--pause-before` option can be used to specify the tests before which the test flow
+will be paused.
+
+#### --pause-after
+
+The `--pause-after` option can be used to specify the tests after which the test flow
+will be paused.
+
+#### --repeat
+
+The `--repeat` option can be used to specify the tests to be repeated.
+
+#### --retry
+
+The `--retry` option can be used to specify the tests to be retried.
+
+#### --output
+
+The `--output` option can be used to control output format of messages printed to `stdout`.
+
+#### --no-colors
+
+The `--no-colors` option can be used to turn off terminal color highlighting.
+
+[`nice`]: #nice-Output
+[`short`]: #short-Output
+[`slick`]: #slick-Output
+[`classic`]: #classic-Output
+[`progress`]: #progress-Output
+[`fails`]: #fails-Output
+[`new-fails`]: #new-fails-Output
+[`dots`]: #dots-Output
+[`brisk`]: #brisk-Output
+[`manual`]: #manual-Output
+[`quiet`]: #quiet-Output
+[`raw`]: #raw-Output
 [YML]: https://yaml.org/
 [using current_module()]: #Using-current-module
 [pattern]: #pattern
+[--name]: #–name
+[--tag]: #–tag
+[--attr]: #–attr
 [--only]: #–only
 [--skip]: #–skip
 [--start]: #–start
