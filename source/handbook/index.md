@@ -417,6 +417,54 @@ $ python3 top_name.py --attr build=21.10.1 tester="Vitaliy Zakaznikov" job_id=43
                 10ms   ⟥⟤ OK regression, /regression
 ```
 
+## Custom Top Test Id
+
+By default [Top Level Test] test id is generated automatically using [UUIDv1]. However,
+if needed, you can specify custom id value using [--id] test program option.
+
+> **{% attention %}** Specifying [Top Level Test] id should only be done by advanced
+> users as each test run must have a unique id. 
+
+In general, the most common use case when you need to specify custom [--id]
+is when you need to know [Top Level Test] id before running your test program.
+Therefore, you would generate [UUIDv1] externaly using for example `uuid` utility
+ 
+ ```bash
+$ uuid
+52da6a26-1e54-11ec-9d7b-cf20ccc24475
+```
+ 
+and passing the generated value to your test program.
+
+For example, give the following test program
+
+> `test.py`
+> ```python
+from testflows.core import *
+
+with Test("my test"):
+    pass
+```
+
+if it is executed without [--id] you can check top level test id by looking at [`raw`] output
+messages and looking at `test_id` field.
+
+```bash
+python3 id.py -o raw
+{"message_keyword":"PROTOCOL",...,"test_id":"/8a75f8b2-1e52-11ec-8830-cb614fe11752",...}
+...
+```
+
+Now if you specify [--id] then you will see that `test_id` field of each message
+will contain the new id.
+
+```bash
+$ python3 id.py -o raw --id 112233445566
+{"message_keyword":"PROTOCOL",...,"test_id":"/112233445566",...}
+...
+```
+
+
 # Controlling Output
 
 Test output can be controlled with `-o` or [--output] option which specifies the output format to use
@@ -452,8 +500,7 @@ their attributes and results as well as any messages that are associated with th
 
 > **{% attention %}** This output format is the most useful for developing and 
 > debugging an individual test.
-
-> **{% attention %}** This output format is not useful when tests are executed in parallel.
+> This output format is not useful when tests are executed in parallel.
 
 For example,
 
@@ -493,8 +540,7 @@ on the system under test rather than on the test procedure itself.
 
 > **{% attention %}** This output format is useful for 
 > debugging individual test when you would like to omit test steps.
-
-> **{% attention %}** This output format is not useful when tests are executed in parallel.
+> This output format is not useful when tests are executed in parallel.
 
 ```bash
 $ python3 output.py -o brisk
@@ -519,8 +565,7 @@ The [`short`] output format provides a shorter output than [`nice`] output forma
 as only test and result messages are formatted. 
 
 > **{% attention %}** This output format is very useful to highlight and verify test procedure.
-
-> **{% attention %}** This output format is not useful when tests are executed in parallel.
+> This output format is not useful when tests are executed in parallel.
 
 ```bash
 $ python3 test.py -o short
@@ -549,8 +594,7 @@ Tests that have [Step Type] are not showed.
 
 > **{% attention %}** This output format can be used for CI/CD runs as long as
 > number of tests is not too large.
-
-> **{% attention %}** This output format can be used when tests are executed in parallel.
+> This output format can be used when tests are executed in parallel.
 
 ```bash
 $ python3 test.py -o classic
@@ -570,8 +614,7 @@ Any test fails are printed inline as soon as they occur.
 
 > **{% attention %}** This output format should not be used for CI/CD runs
 > as it outputs terminal control codes to update the same line.
-
-> **{% attention %}** This output format can be used when tests are executed in parallel.
+> This output format can be used when tests are executed in parallel.
 
 ```bash
 $ python3 test.py -o progress
@@ -588,8 +631,7 @@ Failing results are only shown for tests with [Test Type] of higher.
 > **{% attention %}** This output format can be used for CI/CD runs
 > as long as the number of cross out results is not too large otherwise
 > use [`new-fails`] output format instead.
-
-> **{% attention %}** This output format can be used when tests are executed in parallel.
+> This output format can be used when tests are executed in parallel.
 
 ```bash
 $ python3 test.py -o fails
@@ -605,8 +647,7 @@ Crossed out results are not shown.
 Failing results are only shown for tests with [Test Type] of higher.
 
 > **{% attention %}** This output format can be used for CI/CD runs.
-
-> **{% attention %}** This output format can be used when tests are executed in parallel.
+> This output format can be used when tests are executed in parallel.
 
 ```bash
 $ python3 test.py -o new-fails
@@ -625,8 +666,7 @@ as only shows test and result messages for any test that has [Test Type] of high
 Tests that have [Step Type] are not showed.
 
 > **{% attention %}** This output format is more of an eye-candy.
-
-> **{% attention %}** This output format is not useful when tests are executed in parallel.
+> This output format is not useful when tests are executed in parallel.
 
 ```bash
 $ python3 test.py --output slick
@@ -640,8 +680,7 @@ $ python3 test.py --output slick
 The [`quiet`] output format does not output anything to stdout.
 
 > **{% attention %}** This output format can be used for CI/CD runs.
-
-> **{% attention %}** This output format can be used when tests are executed in parallel.
+> This output format can be used when tests are executed in parallel.
 
 ```bash
 $ python3 test.py -o quiet
@@ -779,6 +818,76 @@ and version of the framework that was used to run the test program.
 ```bash
 Executed on Sep 25,2021 12:05
 TestFlows.com Open-Source Software Testing Framework v1.7.210922.1181131
+```
+
+# Turning Off Color Highlighting
+
+There are times when color highlighting might be in the way. For example,
+when piping output to a different utility or saving it into the file.
+In both of these cases use [--no-colors] to tell **{% testflows %}** 
+to turn off adding terminal control color codes.
+
+```bash
+$ python3 test.py --no-colors > nice.log
+```
+
+or 
+
+```bash
+$ python3 test.py --no-colors | less 
+```
+
+The same option can be specified for the `tfs` utility.
+
+```bash
+$ cat test.log | tfs --no-colors show messages
+```
+
+or
+
+```bash
+$ tail -f test.log | tfs --no-colors transform nice | less
+```
+
+## Use `--no-colors` in Code
+
+You can also detect if terminal color codes are turned off in code
+by looking at `settings.no_colors` attribute as follows
+
+```python
+import testflows.settings as settings
+from testflows.core import *
+
+with Test("my test"):
+    if settings.no_colors:
+        debug("do something when terminal colors are turned off")
+```
+
+
+# Enabling Debug Mode
+
+You can enable debug mode by specifying [--debug] option to your test program.
+When debug mode is enabled the tracebacks will include more details such as
+internal function calls inside the framework which are hidden by default to reduce
+clutter.
+
+```bash
+$ python3 test.py --debug
+```
+
+## Use `--debug` in Code
+
+You can also trigger actions in your test code based on if [--debug] option 
+was specified or not. When [--debug] option is specified the value
+can be retrieved from `settings.debug` as follows
+
+```python
+import testflows.settings as settings
+from testflows.core import *
+
+with Test("my test"):
+    if settings.debug:
+        debug("do something in debug mode")
 ```
 
 # Logs
@@ -3878,6 +3987,22 @@ For example,
 $ python3 test.py --attr attr0=value0 attr1=value1
 ```
 
+### --debug
+
+Enable debugging mode. Turned off by default.
+
+### --output
+
+The `--output` option can be used to control output format of messages printed to `stdout`.
+
+### --no-colors
+
+The `--no-colors` option can be used to turn off terminal color highlighting.
+
+### --id
+
+The `--id` option can be used to specify custom [Top Level Test] id.
+
 ### Filtering
 
 #### pattern
@@ -3953,14 +4078,6 @@ The `--repeat` option can be used to specify the tests to be repeated.
 
 The `--retry` option can be used to specify the tests to be retried.
 
-#### --output
-
-The `--output` option can be used to control output format of messages printed to `stdout`.
-
-#### --no-colors
-
-The `--no-colors` option can be used to turn off terminal color highlighting.
-
 [`nice`]: #nice-Output
 [`short`]: #short-Output
 [`slick`]: #slick-Output
@@ -3978,11 +4095,13 @@ The `--no-colors` option can be used to turn off terminal color highlighting.
 [pattern]: #pattern
 [--name]: #–name
 [--tag]: #–tag
+[--id]: #–id
 [--attr]: #–attr
 [--only]: #–only
 [--skip]: #–skip
 [--start]: #–start
 [--end]: #–end
+[--debug]: #–debug
 [--pause-before]: #–pause-before
 [--pause-after]: #–pause-after
 [--repeat]: #–repeat
@@ -4129,6 +4248,7 @@ The `--no-colors` option can be used to turn off terminal color highlighting.
 [hasattr()]: https://docs.python.org/3/library/functions.html#hasattr
 [getattr()]: https://docs.python.org/3/library/functions.html#getattr
 [setattr()]: https://docs.python.org/3/library/functions.html#setattr
+[UUIDv1]: https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_1_(date-time_and_MAC_address)
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/test.py#L2046
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/885496ab88c56335240c5a8fd826a5b03e92a00b/testflows/_core/objects.py#L615
