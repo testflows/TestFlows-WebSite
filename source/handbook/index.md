@@ -1382,6 +1382,112 @@ test arguments:
 
 ```
 
+# Filtering Tests
+
+**{% testflows %}** allows to control which tests to run during any
+specific test program run using advanced test filtering [pattern]s.
+Test filters can be either specified in the code or controlled using command line
+options.
+
+In both cases test filtering is performed by setting [skips], [onlys], [skip_tags]
+and [only_tags] attributes of a test. These attributes are propagated down
+to sub-tests as long as filtering [pattern] has a chance of matching
+test name of any sub-tests. Therefore, parent test filtering attributes, if specified,
+always override the same attributes of any of its sub-tests if the parent test
+filter is applicable to the sub-test and could match either the sub-test name
+or any of the sub-test children names.
+
+Test are filtered using a [pattern].
+The [pattern] is used to match test names using patterns similar
+[unix-like file path pattern] that supports wildcards
+
+* `/` path level separator
+* `*` matches everything
+* `?` matches any single character
+* `[seq]` matches any character in seq
+* `[!seq]` matches any character not in seq
+* `:` matches anything at the current path level
+
+> **{% attention %}** Note that for a literal match, you must wrap the meta-characters in brackets
+> where `[?]` matches the character `?`.
+
+It is important to remember that execution of test program results in a [Tree] where
+each test is node and test name being a unique path to this node in the [Tree].
+The [unix-like file path pattern]s work well because test program
+execution results in a [Tree] which is similar to the structure of a file system.
+
+Filtering tests is then nothing but selecting which nodes in the tree should be
+selected and which shall be skipped. Filtering is performed by matching the [pattern]
+to the test name.
+
+Below is a diagram that depicts a simple test program execution [Tree].
+
+&#128270; **Test Program Tree**
+
+<img src="/handbook/assets/flow.png" alt="Test Program Tree" style="width: 100%">
+
+During test program execution, when all tests are executed sequentially,
+the [Tree] is traversed in a depth first order. 
+
+The order of execution of tests shown is the diagram above is as follows
+
+>  * /Top Test
+>  * /Top Test/Suite A
+>  * /Top Test/Suite A/Test A/
+>  * /Top Test/Suite A/Test A/Step A
+>  * /Top Test/Suite A/Test A/Step B
+>  * /Top Test/Suite A/Test B/
+>  * /Top Test/Suite A/Test B/Step A
+>  * /Top Test/Suite A/Test B/Step B
+
+and this order of execution forms the [Flow] of the test program.
+This [Flow] can also be shown graphically as in the diagram below where depth first 
+order of execution is highlighted by the magenta colored arrows.
+
+&#128270; **Test Program Tree Traversal** *(sequential)*
+
+<img src="/handbook/assets/flow_traversal.png" alt="Test Program Tree Traversal" style="width: 100%">
+
+Skipping a test then means that the body of the test is skipped along with the sub-tree
+that is below the corresponding test node.
+
+When we want to include a test 
+it usually means that we also want to execute the test along with all the tests
+that form the sub-tree below the coresponding test node and therefore
+the [pattern] that indicates which tests should be included most of the time ends with `/*`.
+
+For example, 
+
+> `/Top Test/Suite A/Test A/*` [pattern] will match `/Top Test/Suite A/Test A`
+> and all its sub-tests which are `/Top Test/Suite A/Test A/Step A` and
+> `/Top Test/Suite A/Test A/Step B` because they also match the specified [pattern] as
+> it ends with `/*` where `*` matches any zero or more characters.
+
+Internally **{% testflows %}** converts all [pattern]s into
+regular expressions but these expressions become very complex and therefore
+not practicle to be specified explicitely.
+
+Let's see how test filtering can be specified either using command like or in the
+test program code.
+
+## Filtering Using Command Line
+
+### [--only] option 
+
+You can specify which tests you want to include in your test run using [--only]
+option.
+
+### [--skip] option
+
+You can specify which tests you want to skip in your test run using [--skip]
+option.
+
+### Combining [--only] and [--skip]
+
+You can combine selecting and skipping tests by specifying both [--only] and
+[--skip] options.
+
+
 # Tagging Tests
 
 You can add `tags` to any test either by setting [tags] parameter of the inline test
@@ -4078,6 +4184,8 @@ The `--repeat` option can be used to specify the tests to be repeated.
 
 The `--retry` option can be used to specify the tests to be retried.
 
+[Tree]: #Tree-is
+[Flow]: #Flow-is
 [`nice`]: #nice-Output
 [`short`]: #short-Output
 [`slick`]: #slick-Output
