@@ -1485,7 +1485,8 @@ options.
 ### [--only] option 
 
 You can specify which tests you want to include in your test run using [--only]
-option. 
+option. This option takes one or more test name [pattern]s that if not matched
+will cause the test to be skipped.
 
 ```bash
    --only pattern [pattern ...]                    run only selected tests
@@ -1564,8 +1565,8 @@ Sep 27,2021 14:19:46       ⟥  Scenario Test A
                 18ms   ⟥⟤ OK Top Test, /Top Test
 ```
 
-> **{% attention %}** Remember that [Given] and [Finally] steps
-> always have [MANDATORY] flag set so these steps cannot be skipped.
+> **{% attention %}** Remember that tests with [MANDATORY] flag cannot be skipped and 
+> [Given] and [Finally] steps always have [MANDATORY] flag set.
 
 If you want to see which tests where skipped you can specify [--show-skipped] option.
 
@@ -1576,13 +1577,100 @@ $ python3 test.py --only "/Top Test/Suite A/Test A" --show-skipped
 ### [--skip] option
 
 You can specify which tests you want to skip in your test run using [--skip]
-option.
+option. This option takes one of more test name [pattern]s that
+if match will cause the test be skipped. 
+
+```bash
+  --skip pattern [pattern ...]                    skip selected tests
+```
+
+Skipping test means that a [SKIP] flag will be added to the test, the body
+of the test will not be executed and the result of the test will be set to [Skip].
+By default, most output formats do not show [Skip]ped tests and thus you must
+use [--show-skipped] option to see them.
+
+Just like for [--only option], if you pass a relative pattern, any pattern that does not start with `/`, 
+then the [pattern] will be anchored to the top level test.
+For example, the [pattern] `Suite A/*` for the example below will become
+`/Top Test/Suite A/*`.
+
+> **{% attention %}** Remember that tests with [MANDATORY] flag cannot be skipped and 
+> [Given] and [Finally] steps always have [MANDATORY] flag set.
+
+Here are a couple of examples that are based on the same example test program
+that is used in the [--only option] section above.
+
+> **{% attention %}** Unlike for the [--only option] the [pattern]s for [--skip]
+> do not have to end with `/*` as skipping a test automatically
+> skips any sub-tests of the test being skipped.
+
+To skip running `Test A` in `Suite A`.
+
+```bash
+$ python3 test.py --skip "/Top Test/Suite A/Test A"
+```
+
+To skip running any test at second level that ends with letter `B`.
+
+```bash
+$ python3 filtering.py --skip "/Top Test/:B"
+```
+
+Here is an example of combining [--only] option with [--show-skipped] option
+to show [Skip]ped tests.
+
+```bash
+$ python3 test.py --skip "/Top Test/Suite A/Test A" --show-skipped
+```
+
+```bash
+✔ [ Skip ] /Top Test/Suite A/Test A
+```
+
+Now let's skip `Test A` in either `Suite A` or `Suite B`.
+
+```bash
+$ python3 test.py --skip "/Top Test/:/Test A" --show-skipped
+```
+
+```bash
+✔ [ Skip ] /Top Test/Suite A/Test A
+✔ [ Skip ] /Top Test/Suite B/Test A
+```
+
 
 ### Combining [--only] and [--skip]
 
 You can combine selecting and skipping tests by specifying both [--only] and
-[--skip] options.
+[--skip] options. See [--only option] and [--skip option] sections above.
 
+When [--only] and [--skip] are specified at the same time the [--only] option
+is applied first and selects a list of tests that will be run. If [--skip] option
+is present then it can only filter down the selected tests.
+
+> **{% attention %}** Remember that tests with [MANDATORY] flag cannot be skipped and 
+> [Given] and [Finally] steps always have [MANDATORY] flag set.
+
+For example, using example test program found in [--only option] section
+we can select to run `Test A` in either `Suite A` or `Suite B` but then
+skip `Test A` in `Suite B` using [--skip option] as follows.
+
+```bash
+$ python3 test.py --only "/Top Test/:/Test A" --skip "Suite B/Test A"
+```
+
+```bash
+Passing
+
+✔ [ OK ] /Top Test/Suite A/Test A
+✔ [ OK ] /Top Test/Suite A
+✔ [ OK ] /Top Test/Suite B
+✔ [ OK ] /Top Test
+```
+
+As you can see from the output above the `Suite B` gets started but all its tests are skipped
+as `Test B` did not match the [pattern] specified to the [--only] 
+and `Test A` was skipped by the [--skip].
 
 # Tagging Tests
 
@@ -4288,6 +4376,8 @@ The `--repeat` option can be used to specify the tests to be repeated.
 
 The `--retry` option can be used to specify the tests to be retried.
 
+[--only option]: #–only-option
+[--skip option]: #–skip-option
 [Tree]: #Tree-is
 [Flow]: #Flow-is
 [`nice`]: #nice-Output

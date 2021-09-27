@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1632768454678" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1632768454678" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1632779477711" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1632779477711" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1632768454678" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1632779477711" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -803,7 +803,8 @@ test program code.</p>
 by specifying <a href="#%E2%80%93only">–only</a>, <a href="#%E2%80%93skip">–skip</a>, [–only-tags], and [–skip-tags]
 options.</p>
 <h3 id="–only-option"><a href="#–only-option" class="headerlink" title="–only option"></a><a href="#%E2%80%93only">–only</a> option</h3><p>You can specify which tests you want to include in your test run using <a href="#%E2%80%93only">–only</a>
-option. </p>
+option. This option takes one or more test name <a href="#pattern">pattern</a>s that if not matched
+will cause the test to be skipped.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--only pattern [pattern ...]                    run only selected tests</span><br></pre></td></tr></table></figure>
 
 <p>If you pass a relative pattern, any pattern that does not start with <code>/</code>, 
@@ -839,16 +840,73 @@ are <code>Step A</code> and <code>Step B</code> are skipped as these tests don�
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Sep 27,2021 14:19:46   ⟥  Module Top Test</span><br><span class="line">Sep 27,2021 14:19:46     ⟥  Suite Suite A</span><br><span class="line">Sep 27,2021 14:19:46       ⟥  Scenario Test A</span><br><span class="line">                3ms       ⟥⟤ OK Test A, /Top Test/Suite A/Test A</span><br><span class="line">                6ms     ⟥⟤ OK Suite A, /Top Test/Suite A</span><br><span class="line">               18ms   ⟥⟤ OK Top Test, /Top Test</span><br></pre></td></tr></table></figure>
 </blockquote>
 <blockquote>
-<p><strong>&#9995;</strong> Remember that <a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps
-always have <a href="#MANDATORY">MANDATORY</a> flag set so these steps cannot be skipped.</p>
+<p><strong>&#9995;</strong> Remember that tests with <a href="#MANDATORY">MANDATORY</a> flag cannot be skipped and 
+<a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps always have <a href="#MANDATORY">MANDATORY</a> flag set.</p>
 </blockquote>
 <p>If you want to see which tests where skipped you can specify <a href="#%E2%80%93show-skipped">–show-skipped</a> option.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --only <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span> --show-skipped</span><br></pre></td></tr></table></figure>
 
 <h3 id="–skip-option"><a href="#–skip-option" class="headerlink" title="–skip option"></a><a href="#%E2%80%93skip">–skip</a> option</h3><p>You can specify which tests you want to skip in your test run using <a href="#%E2%80%93skip">–skip</a>
-option.</p>
+option. This option takes one of more test name <a href="#pattern">pattern</a>s that
+if match will cause the test be skipped. </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--skip pattern [pattern ...]                    skip selected tests</span><br></pre></td></tr></table></figure>
+
+<p>Skipping test means that a <a href="#Skip">SKIP</a> flag will be added to the test, the body
+of the test will not be executed and the result of the test will be set to <a href="#Skip">Skip</a>.
+By default, most output formats do not show <a href="#Skip">Skip</a>ped tests and thus you must
+use <a href="#%E2%80%93show-skipped">–show-skipped</a> option to see them.</p>
+<p>Just like for <a href="#%E2%80%93only-option">–only option</a>, if you pass a relative pattern, any pattern that does not start with <code>/</code>, 
+then the <a href="#pattern">pattern</a> will be anchored to the top level test.
+For example, the <a href="#pattern">pattern</a> <code>Suite A/*</code> for the example below will become
+<code>/Top Test/Suite A/*</code>.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Remember that tests with <a href="#MANDATORY">MANDATORY</a> flag cannot be skipped and 
+<a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps always have <a href="#MANDATORY">MANDATORY</a> flag set.</p>
+</blockquote>
+<p>Here are a couple of examples that are based on the same example test program
+that is used in the <a href="#%E2%80%93only-option">–only option</a> section above.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Unlike for the <a href="#%E2%80%93only-option">–only option</a> the <a href="#pattern">pattern</a>s for <a href="#%E2%80%93skip">–skip</a>
+do not have to end with <code>/*</code> as skipping a test automatically
+skips any sub-tests of the test being skipped.</p>
+</blockquote>
+<p>To skip running <code>Test A</code> in <code>Suite A</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --skip <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>To skip running any test at second level that ends with letter <code>B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 filtering.py --skip <span class="string">&quot;/Top Test/:B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Here is an example of combining <a href="#%E2%80%93only">–only</a> option with <a href="#%E2%80%93show-skipped">–show-skipped</a> option
+to show <a href="#Skip">Skip</a>ped tests.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --skip <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span> --show-skipped</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ [ Skip ] /Top Test/Suite A/Test A</span><br></pre></td></tr></table></figure>
+
+<p>Now let’s skip <code>Test A</code> in either <code>Suite A</code> or <code>Suite B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --skip <span class="string">&quot;/Top Test/:/Test A&quot;</span> --show-skipped</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ [ Skip ] /Top Test/Suite A/Test A</span><br><span class="line">✔ [ Skip ] /Top Test/Suite B/Test A</span><br></pre></td></tr></table></figure>
+
+
 <h3 id="Combining-–only-and-–skip"><a href="#Combining-–only-and-–skip" class="headerlink" title="Combining –only and –skip"></a>Combining <a href="#%E2%80%93only">–only</a> and <a href="#%E2%80%93skip">–skip</a></h3><p>You can combine selecting and skipping tests by specifying both <a href="#%E2%80%93only">–only</a> and
-<a href="#%E2%80%93skip">–skip</a> options.</p>
+<a href="#%E2%80%93skip">–skip</a> options. See <a href="#%E2%80%93only-option">–only option</a> and <a href="#%E2%80%93skip-option">–skip option</a> sections above.</p>
+<p>When <a href="#%E2%80%93only">–only</a> and <a href="#%E2%80%93skip">–skip</a> are specified at the same time the <a href="#%E2%80%93only">–only</a> option
+is applied first and selects a list of tests that will be run. If <a href="#%E2%80%93skip">–skip</a> option
+is present then it can only filter down the selected tests.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Remember that tests with <a href="#MANDATORY">MANDATORY</a> flag cannot be skipped and 
+<a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps always have <a href="#MANDATORY">MANDATORY</a> flag set.</p>
+</blockquote>
+<p>For example, using example test program found in <a href="#%E2%80%93only-option">–only option</a> section
+we can select to run <code>Test A</code> in either <code>Suite A</code> or <code>Suite B</code> but then
+skip <code>Test A</code> in <code>Suite B</code> using <a href="#%E2%80%93skip-option">–skip option</a> as follows.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test.py --only <span class="string">&quot;/Top Test/:/Test A&quot;</span> --skip <span class="string">&quot;Suite B/Test A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Top Test/Suite A/Test A</span><br><span class="line">✔ [ OK ] /Top Test/Suite A</span><br><span class="line">✔ [ OK ] /Top Test/Suite B</span><br><span class="line">✔ [ OK ] /Top Test</span><br></pre></td></tr></table></figure>
+
+<p>As you can see from the output above the <code>Suite B</code> gets started but all its tests are skipped
+as <code>Test B</code> did not match the <a href="#pattern">pattern</a> specified to the <a href="#%E2%80%93only">–only</a> 
+and <code>Test A</code> was skipped by the <a href="#%E2%80%93skip">–skip</a>.</p>
 <h1 id="Tagging-Tests"><a href="#Tagging-Tests" class="headerlink" title="Tagging Tests"></a>Tagging Tests</h1><p>You can add <code>tags</code> to any test either by setting <a href="#tags">tags</a> parameter of the inline test
 or using <a href="#tags">Tags</a> decorator if the test is defined as a decorated function. The values of the tags can be accessed
 using the <code>tags</code> attribute of the test.</p>
