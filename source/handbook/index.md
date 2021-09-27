@@ -35,8 +35,14 @@ heading to go back to the table of contents.
 There is also <span><a class="fas fa-chevron-up" style="color: orange" href="#Contents"></a><span>
 icon on the bottom right of the page to allow you quickly scroll to the top.
 
+Also, feel free to click on any internal or external references as you can
+use your browser's &#8678; back button to return back to where you were. 
+
+>  **{% attention %}** Try clicking [Using Handbook](#Using-Handbook) link and then
+> browser's use &#8678; back button to return to the same scroll position in the handbook.
+
 If you find any errors or would like to add documentation for something that is
-still not documented then feel free to submit a pull request
+still not documented then submit a pull request
 with your changes to [handbook source file](https://github.com/testflows/TestFlows-WebSite/blob/master/source/handbook/index.md).
 
 # Supported Environment
@@ -1389,24 +1395,24 @@ specific test program run using advanced test filtering [pattern]s.
 Test filters can be either specified in the code or controlled using command line
 options.
 
-In both cases test filtering is performed by setting [skips], [onlys], [skip_tags]
-and [only_tags] attributes of a test. These attributes are propagated down
+In both cases test filtering is performed by setting `skips`, `onlys`, `skip_tags`
+and `only_tags` attributes of a test. These attributes are propagated down
 to sub-tests as long as filtering [pattern] has a chance of matching
-test name of any sub-tests. Therefore, parent test filtering attributes, if specified,
+test name. Therefore, parent test filtering attributes, if specified,
 always override the same attributes of any of its sub-tests if the parent test
 filter is applicable to the sub-test and could match either the sub-test name
 or any of the sub-test children names.
 
 Test are filtered using a [pattern].
-The [pattern] is used to match test names using patterns similar
-[unix-like file path pattern] that supports wildcards
+The [pattern] is used to match test names and **{% testflows %}** uses 
+[unix-like file path pattern]s that support wildcards where
 
-* `/` path level separator
-* `*` matches everything
+* `/` is path level separator
+* `*` matches anything (zero or more characters)
 * `?` matches any single character
 * `[seq]` matches any character in seq
 * `[!seq]` matches any character not in seq
-* `:` matches anything at the current path level
+* `:` matches one or more characters only at the current path level
 
 > **{% attention %}** Note that for a literal match, you must wrap the meta-characters in brackets
 > where `[?]` matches the character `?`.
@@ -1414,7 +1420,7 @@ The [pattern] is used to match test names using patterns similar
 It is important to remember that execution of test program results in a [Tree] where
 each test is node and test name being a unique path to this node in the [Tree].
 The [unix-like file path pattern]s work well because test program
-execution results in a [Tree] which is similar to the structure of a file system.
+execution [Tree] is similar to the structure of a file system.
 
 Filtering tests is then nothing but selecting which nodes in the tree should be
 selected and which shall be skipped. Filtering is performed by matching the [pattern]
@@ -1467,15 +1473,105 @@ Internally **{% testflows %}** converts all [pattern]s into
 regular expressions but these expressions become very complex and therefore
 not practicle to be specified explicitely.
 
-Let's see how test filtering can be specified either using command like or in the
+Let's see how test filtering can be specified either using command line or inside the
 test program code.
 
 ## Filtering Using Command Line
 
+Filtering of tests using command line options is accomplished
+by specifying [--only], [--skip], [--only-tags], and [--skip-tags]
+options.
+
 ### [--only] option 
 
 You can specify which tests you want to include in your test run using [--only]
-option.
+option. 
+
+```bash
+   --only pattern [pattern ...]                    run only selected tests
+```
+
+If you pass a relative pattern, any pattern that does not start with `/`, 
+then the pattern will be anchored to the top level test.
+For example, [pattern] `Suite A/*` for the example below will become
+`/Top Test/Suite A/*`.
+
+Let's practice. Given this example test program,
+
+> `test.py`
+>```python
+from testflows.core import *
+
+@TestScenario
+def my_scenario(self):
+    with Step("Step A"):
+        pass
+    with Step("Step B"):
+        pass
+
+@TestSuite
+def my_suite(self):
+    Scenario("Test A", run=my_scenario)
+    Scenario("Test B", run=my_scenario)
+
+with Module("Top Test"):
+    Suite("Suite A", run=my_suite)
+    Suite("Suite B", run=my_suite)
+```
+
+the following command will run only `Suite A` and its sub-tests.
+
+```bash
+$ python3 test.py --only "Suite A/*"
+```
+
+To select only running `Test A` in `Suite A`.
+
+```bash
+$ python3 test.py --only "/Top Test/Suite A/Test A/*"
+```
+
+To select running any test at second level that ends with letter `B`.
+This will select every test in `Suite B`.
+
+```bash
+$ python3 filtering.py --only "/Top Test/:B/*"
+```
+
+To run only `Test A` in `Suite A` and `Test B` in `Suite B`.
+
+```bash
+$ python3 test.py --only "/Top Test/Suite A/Test A/*" "/Top Test/Suite B/Test B/*"
+```
+
+If you forget to specify `/*` at the end your test [pattern] then 
+tests that are not mandatory will be skipped.
+
+```bash
+$ python3 test.py --only "/Top Test/Suite A/Test A"
+```
+
+From the output below you can see that steps inside `Test A` which
+are `Step A` and `Step B` are skipped as these tests don't have
+[MANDATORY] flag set.
+
+>```bash
+Sep 27,2021 14:19:46   ⟥  Module Top Test
+Sep 27,2021 14:19:46     ⟥  Suite Suite A
+Sep 27,2021 14:19:46       ⟥  Scenario Test A
+                 3ms       ⟥⟤ OK Test A, /Top Test/Suite A/Test A
+                 6ms     ⟥⟤ OK Suite A, /Top Test/Suite A
+                18ms   ⟥⟤ OK Top Test, /Top Test
+```
+
+> **{% attention %}** Remember that [Given] and [Finally] steps
+> always have [MANDATORY] flag set so these steps cannot be skipped.
+
+If you want to see which tests where skipped you can specify [--show-skipped] option.
+
+```bash
+$ python3 test.py --only "/Top Test/Suite A/Test A" --show-skipped
+```
 
 ### [--skip] option
 
@@ -4109,6 +4205,14 @@ The `--no-colors` option can be used to turn off terminal color highlighting.
 
 The `--id` option can be used to specify custom [Top Level Test] id.
 
+### --show-skipped
+
+Show skipped tests.
+
+### --show-retries
+
+Show retried tests.
+
 ### Filtering
 
 #### pattern
@@ -4216,6 +4320,8 @@ The `--retry` option can be used to specify the tests to be retried.
 [--retry]: #–retry
 [--no-colors]: #–no-colors
 [--output]: #–output
+[--show-skipped]: #–show-skipped
+[--show-retries]: #–show-retries
 [OK]: #OK
 [Fail]: #Fail
 [Error]: #Error
