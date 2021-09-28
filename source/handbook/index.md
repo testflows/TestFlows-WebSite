@@ -1388,7 +1388,7 @@ test arguments:
 
 ```
 
-# Filtering Tests
+# Filtering Tests By Name
 
 **{% testflows %}** allows to control which tests to run during any
 specific test program run using advanced test filtering [pattern]s.
@@ -1476,13 +1476,7 @@ not practicle to be specified explicitely.
 Let's see how test filtering can be specified either using command line or inside the
 test program code.
 
-## Filtering Using Command Line
-
-Filtering of tests using command line options is accomplished
-by specifying [--only], [--skip], [--only-tags], and [--skip-tags]
-options.
-
-### [--only] option 
+## [--only] option 
 
 You can specify which tests you want to include in your test run using [--only]
 option. This option takes one or more test name [pattern]s that if not matched
@@ -1574,7 +1568,7 @@ If you want to see which tests where skipped you can specify [--show-skipped] op
 $ python3 test.py --only "/Top Test/Suite A/Test A" --show-skipped
 ```
 
-### [--skip] option
+## [--skip] option
 
 You can specify which tests you want to skip in your test run using [--skip]
 option. This option takes one of more test name [pattern]s that
@@ -1638,8 +1632,7 @@ $ python3 test.py --skip "/Top Test/:/Test A" --show-skipped
 ✔ [ Skip ] /Top Test/Suite B/Test A
 ```
 
-
-### Combining [--only] and [--skip]
+## [--only] and [--skip]
 
 You can combine selecting and skipping tests by specifying both [--only] and
 [--skip] options. See [--only option] and [--skip option] sections above.
@@ -1671,6 +1664,79 @@ Passing
 As you can see from the output above the `Suite B` gets started but all its tests are skipped
 as `Test B` did not match the [pattern] specified to the [--only] 
 and `Test A` was skipped by the [--skip].
+
+# Filtering Tests By Tags
+
+In addition to filtering test by name you can also filter them by tags.
+When you filter by tags a `type` must be specified to indicate which test [Types]
+should have the tag.
+
+## Tags Filtering `type`
+
+The `type` can be one of the following:
+  * `test` will require all tests with [Test Type] to have the tag
+    * `scenario` just an alias for `test`
+  * `suite` will require all tests with [Suite Type] to have the tag
+    * `feature` just an alias for `suite`
+  * `module` will require all tests with [Module Type] to have the tag
+  * `any` will require all test with either [Test Type], [Suite Type] or [Module Type] to have the tag
+
+
+## `--only-tags` option
+
+If you assign tags to your tests then [--only-tags] option can be used to select
+only the tests that match a particular tag. This option takes values
+of the form `type:tag,...` where [type](#Tags-Filtering-type) is used to specify a test type
+of the tests that must have the specified tag.
+
+```bash
+ --only-tags type:tag,... [type:tag,... ...]     run only tests with selected tags
+```
+
+For example, you can select all tests with [Suite Type] that have `tag A` tag
+as follows.
+
+```bash
+python3 test.py --only-tags suite:"tag A"
+```
+
+You can select all tests with [Test Type] that either have `tag A` **OR** `tag B`.
+
+```bash
+python3 test.py --only-tags test:"tag A","tag B"
+```
+
+Currently, you cannot select tests that must contain
+more than one tag, for example, `tag A` **AND** `tag B`.
+
+## `--skip-tags` option
+
+If you assign tags to your tests then you can also use [--skip-tags] option to select
+which tests should be skipped based on tests matching a particular tag. 
+Similar to [--only-tags] option, it also takes values
+of the form `type:tag,...` where [type](#Tags-Filtering-type) is used to specify a test type
+of the tests that must have the specified tags.
+
+```bash
+  --skip-tags type:tag,... [type:tag,... ...]     skip tests with selected tags
+```
+
+For example, you can skip all tests with [Suite Type] that have `tag A` tag
+as follows.
+
+```bash
+python3 test.py --skip-tags suite:"tag A"
+```
+
+You can skip all tests with [Test Type] that either have `tag A` **OR** `tag B`.
+
+```bash
+python3 test.py --skip-tags test:"tag A","tag B"
+```
+
+Currently, you cannot skip tests that must contain
+more than one tag, for example, `tag A` **AND** `tag B`.
+
 
 # Tagging Tests
 
@@ -4351,6 +4417,20 @@ the specified test.
 
 > **{% attention %}** Note that mandatory tests will still be run.
 
+#### --only-tags
+
+The `--only-tags` option can be used to filter the test flow so that only
+tests with particular tag are selected to run and other are skipped.
+
+> **{% attention %}** Note that mandatory tests will still be run.
+
+#### --skip-tags
+
+The `--skip-tags` option can be used to filter the test flow so that only
+tests with particular tag are skipped.
+
+> **{% attention %}** Note that mandatory tests will still be run.
+
 #### --end
 
 The `--end` option can be used to filter the test flow so that the test flow ends at
@@ -4401,6 +4481,8 @@ The `--retry` option can be used to specify the tests to be retried.
 [--attr]: #–attr
 [--only]: #–only
 [--skip]: #–skip
+[--only-tags]: #–only-tags
+[--skip-tags]: #–skip-tags
 [--start]: #–start
 [--end]: #–end
 [--debug]: #–debug
