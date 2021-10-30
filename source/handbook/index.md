@@ -1256,7 +1256,7 @@ Cross out [Null] flag. Test result will be set to [XNull] if the test result is 
 
 ## PAUSE_BEFORE
 
-Pause before test execution. Test flow will be paused before test execution.
+Pause before test execution.
 
 ## PAUSE
 
@@ -1264,7 +1264,15 @@ Pause before test execution short form. See [PAUSE_BEFORE].
 
 ## PAUSE_AFTER
 
-Pause after test execution. Test flow will be pause after test execution.
+Pause after test execution.
+
+## PAUSE_ON_PASS
+
+Pause after test execution on passing result.
+
+## PAUSE_ON_FAIL
+
+Pause after test execution on failing result.
 
 ## REPORT
 
@@ -2855,21 +2863,27 @@ of pressing `Enter` will be requested from the user. This pause allows
 time to manually examine system under test as well the test environment.
 
 Pausing either before or after a test is controlled by setting either [PAUSE_BEFORE]
-or [PAUSE_AFTER] flags respectively. 
+or [PAUSE_AFTER] flags respectively. You can also conditionally pause
+after test execution on passing or failing result using [PAUSE_ON_PASS] or [PAUSE_ON_FAIL].
 
-> *{% attention %}* [PAUSE_BEFORE] and [PAUSE_AFTER] flags can be applied
-> to any test but the [Top Level Test] test. For [Top Level Test] test these flags are ignored.
+> *{% attention %}* [PAUSE_BEFORE], [PAUSE_AFTER], [PAUSE_ON_PASS], and [PAUSE_ON_FAIL]
+> flags can be applied to any test but the [Top Level Test] test.
+> For [Top Level Test] test these flags are ignored.
 
 ## Pausing Using Command Line  
 
 Most of the time the most convenient way to pause a test program is to specify at which
-test the program should pause using [--pause-before] or [--pause-after] arguments.
+test the program should pause using [--pause-before], [--pause-after],
+[--pause-on-pass], and [--pause-on-fail] arguments.
+
 These arguments accept one or more test name [pattern]s. Any test name
 that matches the pattern except for the [Top Level Test] will be paused.
 
 ```bash
   --pause-before pattern [pattern ...]            pause before executing selected tests
   --pause-after pattern [pattern ...]             pause after executing selected tests
+  --pause-on-fail pattern [pattern ...]           pause after selected tests on failing result
+  --pause-on-pass pattern [pattern ...]           pause after selected tests on passing result
 ```
 
 
@@ -2911,10 +2925,10 @@ from the user to continue execution.
             1s 490ms   ⟥⟤ OK my test, /my test
 ```
 
-
 ## Pausing In Code
 
-You can explicitly specify [PAUSE_BEFORE] or [PAUSE_AFTER] flags inside your test program.
+You can explicitly specify [PAUSE_BEFORE], [PAUSE_AFTER], [PAUSE_ON_PASS] and 
+[PAUSE_ON_FAIL] flags inside your test program.
 
 For example,
 
@@ -2924,6 +2938,12 @@ with Test("my test"):
         note("my step 1")
     
     with Step("my step 2", flags=PAUSE_AFTER):
+        note("my step 2")
+
+    with Step("my step 2", flags=PAUSE_ON_PASS):
+        note("my step 2")
+        
+    with Step("my step 2", flags=PAUSE_ON_FAIL):
         note("my step 2")
 ```
 
@@ -4540,6 +4560,16 @@ will be paused.
 The `--pause-after` option can be used to specify the tests after which the test flow
 will be paused.
 
+#### --pause-on-pass
+
+The `--pause-on-pass` option can be used to specify the tests after which the test flow
+will be paused if the test has a passing result.
+
+#### --pause-on-fail
+
+The `--pause-on-fail` option can be used to specify the tests after which the test flow
+will be paused if the test has a failing result.
+
 #### --repeat
 
 The `--repeat` option can be used to specify the tests to be repeated.
@@ -4580,6 +4610,8 @@ The `--retry` option can be used to specify the tests to be retried.
 [--debug]: #–debug
 [--pause-before]: #–pause-before
 [--pause-after]: #–pause-after
+[--pause-on-pass]: #–pause-on-pass
+[--pause-on-fail]: #–pause-on-fail
 [--repeat]: #–repeat
 [--retry]: #–retry
 [--no-colors]: #–no-colors
@@ -4612,6 +4644,8 @@ The `--retry` option can be used to specify the tests to be retried.
 [PAUSE_BEFORE]: #PAUSE_BEFORE
 [PAUSE]: #PAUSE
 [PAUSE_AFTER]: #PAUSE_AFTER
+[PAUSE_ON_PASS]: #PAUSE_ON_PASS
+[PAUSE_ON_FAIL]: #PAUSE_ON_FAIL
 [REPORT]: #REPORT
 [DOCUMENT]: #DOCUMENT
 [MANDATORY]: #MANDATORY
