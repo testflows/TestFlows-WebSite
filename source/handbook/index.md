@@ -13,11 +13,11 @@ integration, acceptance and unit testing across various teams. It is designed to
 complete control of how tests are written and executed by allowing to write tests and
 define test [flow](#Flow-is) explicitly as [Python] code. It uses [everything is a test] approach
 with the focus on giving test authors flexibility in writing and running their tests.
-It designed to meet the needs of small QA groups at software startup companies
+It's designed to meet the needs of small QA groups at software startup companies
 while providing the tools to meet the formalities of the large enterprise QA groups
 producing professional test process documentation that includes detailed test and
 software requirements specifications as well as requirements coverage, official test
-and metrics reports. It is designed for large scale test analytics processing using
+and metrics reports. Designed for large scale test analytics processing using
 [ClickHouse] and [Grafana] and built on top of a messaging protocol to allow
 writing advanced parallel tests that require test-to-test communication
 and could be executed in a hive mode on multi-node clusters.
@@ -25,8 +25,9 @@ and could be executed in a hive mode on multi-node clusters.
 # Using Handbook
 
 This handbook is a one-page document that you can search using standard
-browser search (`Ctrl-F`). For ease of navigation you can always click any
-heading to go back to the table of contents. 
+browser search (`Ctrl-F`).
+
+For ease of navigation you can always click any heading to go back to the table of contents. 
 
 > **{% attention %}** Try clicking `Using Handbook` heading and you will see that the page
 > will scroll up and the corresponding entry in the table of contents
@@ -147,8 +148,8 @@ see [Types] for more information.
 
 ## Inline
 
-Inline tests can be defined anywhere in your test code by using [Test Definition Class]es above.
-Because all test definition classes are [context manager]s and therefore must be used
+Inline tests can be defined anywhere in your test program by using [Test Definition Class]es above.
+Because all test definition classes are [context manager]s, therefore they must be used
 using the [with] statement or [async with] for asynchronous tests that leverage [Python]'s [asyncio] module.
 
 ```python
@@ -191,7 +192,7 @@ def scenario(self, action=None):
         pass
 ```
 
-Similar to how [class method]s take an instance of the object as the first argument, 
+Similarly to how [class method]s take an instance of the object as the first argument, 
 test functions wrapped with test decorators take an instance of the current test as the first argument
 and therefore by convention the first argument is always named `self`.
 
@@ -215,7 +216,7 @@ Scenario(test=scenario)(action="running")
 where the test is passed as the argument to the `test` parameter.
 
 If the test does not need any arguments use a short form by passing
-the test as the argument of the `run` parameter.
+the test as the value of the `run` parameter.
 
 ```python
 Scenario(run=scenario)
@@ -229,17 +230,18 @@ This will be equivalent to
 Scenario(test=scenario)()
 ```
 
-You can also call also the decorated test directly as
+You can also call decorated tests directly as
 
 ```python
 scenario(action="swimming")
 ```
 
-Note that `scenario()` call will only create its own [Scenario] if and only if it is running within
-a parent that has a higher test [Type] such as [Feature] or [Module].
+Note that `scenario()` call will only create its own [Scenario] if and only if it is
+running within a parent that has a higher test [Type] such as [Feature] or [Module].
 
 However, if you call it within the same test [Type]
-then it will not crete its own [Scenario] but will run simply as a function within the scope of the current test.
+then it will not create its own [Scenario] but will run simply as a function
+within the scope of the current test.
 
 For example,
 
@@ -281,7 +283,7 @@ you can run it with `python3` command as follows
 $ python3 test.py
 ```
 
-or if the top level test is executable and defined as
+or we can make the top level test executable and defined as
 
 ```python
 #!/usr/bin/python3
@@ -291,13 +293,13 @@ with Test("My test"):
     pass
 ```
 
-and is made executable with
+and then we can make it executable with
 
 ```bash
 $ chmod +x test.py
 ```
 
-then it can be executed directly as
+allowing us to execute it directly as follows.
 
 ```bash
 $ ./test.py
@@ -308,7 +310,7 @@ $ ./test.py
 {% testflows %} only allows one top level test to exist in any given test program execution.
 Because a [Flow](#Flow-is) of tests can be represented as a rooted [Tree](#Tree-is), a test program
 exits on completion of the top level test. Therefore, any code that is defined after the top
-level test **is not executed**.
+level test **will not be executed**.
 
 ```python
 with Module("module"):
