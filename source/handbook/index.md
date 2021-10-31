@@ -22,6 +22,131 @@ and metrics reports. Designed for large scale test analytics processing using
 writing advanced parallel tests that require test-to-test communication
 and could be executed in a hive mode on multi-node clusters.
 
+# Differentiating Features
+
+**{% testflows %}** has the following differentiating features that makes
+it stand out from a plenty of other open and closed source test frameworks.
+
+**Use what you need design**
+
+**{% testflows %}** has many advanced features but it allows you to use only
+the pieces that you need. For example, if you don't want to use requirements
+you don't have to or if you don't want to break your tests into steps or
+using behavior driven step keywords that is perfectly fine. 
+At the heart, **{% testflows %}** is just a collection of Python modules so you are always
+in control and you are not forced to use anything that you don't need.
+
+**Supports requirements oriented quality assurance process**
+
+An enterprise quality assurance process must always revolve around ***requirements***.
+However, requirements are most often ignored in software development groups even at
+large companies. **{% testflows %}** is designed to break that trend
+and allows to write and work with requirements just like you work with code.
+However, if you are not ready to use requirements then you don't have to.
+
+Whether you realize it or not the only true purpose of writing any test is
+_to verify one or more requirements_ and it does not really matter if you have
+clearly identified these requirements or not. _Tests verify requirements_ and
+each requirement must be verified by either fully automated, semi-automated or
+manual test. If you don't have any tests to verify some requirement
+then you can't be sure that requirement is met or that the next version
+of your software does not break it.
+
+With **{% testflows %}** you don't have to wait for your company's culture related
+to handling and managing requirements to change. You are able
+to write and manage requirements yourself just like code. Requirements are simply
+written in Markdown document where each requirement has a unique identifier and version.
+These documents are the source of the requirements that you can convert to Python requirement objects 
+which you can easily link with your tests. **{% testflows %}** allows
+one-to-one, one-to-many, many-to-one, or many-to-many requirement to test
+relationships to match real-world complexities of requirement verification.
+
+**Allows to write test programs not just tests**
+
+**{% testflows %}** allows you to write Python _test programs_ not just tests. A _test program_
+can execute any number of tests. This provides the unsurpassed flexibility to match any project needs.
+Tests are not decoupled from test flow where the flow defines a precise order of
+how tests are executed. However, you can write many kind of test runners
+using the framework if you need them. For example, you can write _test programs_
+that read tests cases from databases, API endpoints or file systems and trigger
+your test cases based on any condition. By writing a _test program_ you are in total control
+of how you want to structure and approach testing of a given project. 
+
+Through its flexibility, **{% testflows %}** helps to avoid test tools fragmentation
+where each project in a company sooner or later starts to use their own test framework
+and nobody knows how to run tests written by other groups and reporting accross
+groups becomes inconsistent and difficult to follow.
+
+**Allows to write self-documenting tests with explicitly defined test procedures**
+
+**{% testflows %}** provides tools for test authors to break tests into test [Step]s and
+use behavior driven step keywords such as [Given], [When], [Then] and others to make
+tests and test procedures pleasantly readable. Breaking tests into steps brings the advantage
+of test code becoming self-documenting, provides an easy way to auto-generate
+formal documentation such as test specification without doing any extra work,
+produces detailed test logs and test fail debugging.  
+
+Test steps can also be made reusable allowing test authors to create reusable 
+steps modules that greatly simplify writing new test scenarios. Just
+like you write regular programs by using function calls you can
+modularize tests by using reusable test steps. Using reusable steps
+produces clean test code and greatly improves readability and maintainability
+of tests.
+
+**Allows to write asynchronous tests**
+
+Writing asynchronous tests is as easy as writing regular tests. 
+**{% testflows %}** even allows you to run asynchronous and synchronous test code
+in the same test program. 
+
+**Allows to auto-generate test specifications**
+
+If your test process or your manager requires you to produce formal test
+specifications that must describe procedure of each test then you can easily
+auto-generate these documents using **{% testflows %}**.
+
+**Supports writing semi-automated and manual tests**
+
+Testing real-world applications usually is not done only by fully automated test scenarios.
+Most often verification requires a mix of automated, semi-automated and manual tests.
+
+**{% testflows %}** allows to unify your testing and provides uniform test reporting
+no matter what type of tests you need for you project by natively supporting
+authoring of automated, semi-automated and manual tests. 
+
+**Supports authoring parallel tests and executing tests in parallel**
+
+**{% testflows %}** natively supports authoring of parallel tests and
+executing tests in parallel with fine-grain control of what and where runs in parallel.
+Asynchronous tests are also supported and allow to run thousands of concurrent
+tests at the same time. Mixing parallel and asynchronous tests is also supported.
+
+**Uses everything is a test approach**
+
+It uses everything is a test approach that allows unified treatment
+of any code that is executed during testing. There are no second class test code.
+If test fails in setup or teardown or during execution of one of its actions
+the fail is treated in exactly same way. This avoids mixing analysis of why the test failed
+with test execution and results in clean and uniform approach to testing.
+
+**Uses message based protocol**
+
+It is built on top of a messaging protocol. This brings
+many benefits including ability to transform test output and logs into variety of
+different formats as well as enables advanced parallel testing.
+
+**Supports test log storage and test data analytics using ClickHouse**
+
+**{% testflows %}** test logs were designed to be easily stored in [ClickHouse].
+Given that testing produces huge amounts of data this integration
+brings test data analytics right to your fingertips.
+
+**Test data visualization using Grafana**
+
+Standard [Grafana] dashboards are available to visualize your test data
+stored in [ClickHouse]. Additional dashboards can be easily created in [Grafana]
+to highlight test results that are the most important for your project.
+
 # Using Handbook
 
 This handbook is a one-page document that you can search using standard
