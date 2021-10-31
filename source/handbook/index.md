@@ -147,6 +147,14 @@ Standard [Grafana] dashboards are available to visualize your test data
 stored in [ClickHouse]. Additional dashboards can be easily created in [Grafana]
 to highlight test results that are the most important for your project.
 
+**Avoids unnecessary abstraction layers**
+
+**{% testflows %}** tries to avoid unnecessary abstraction layers such
+as when test runners are decoupled from tests or the usage of behavior driven
+(BDD) keywords is always tied to Gherkin specifications. These abstractions,
+while providing some benefit, in most cases lead to more problems than
+solutions when applied to real-world projects.
+
 # Using Handbook
 
 This handbook is a one-page document that you can search using standard
