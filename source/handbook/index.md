@@ -1060,432 +1060,6 @@ $ python3 id.py -o raw --id 112233445566
 ...
 ```
 
-
-# Controlling Output
-
-Test output can be controlled with `-o` or [--output] option which specifies the output format to use
-to print to `stdout`. By default, the most detailed `nice` output is used.
-
-```bash
-  -o format, --output format                      stdout output format, choices are: ['new-fails',
-                                                  'fails', 'classic', 'slick', 'nice', 'brisk',
-                                                  'quiet', 'short', 'manual', 'dots', 'progress',
-                                                  'raw'], default: 'nice'
-```
-
-For example, you can use the following test and see how output format
-changes based on the output that is specified.
-
-> `test.py`
->```python
-from testflows.core import *
-
-with Module("regression", flags=TE, attributes=[("name","value")], tags=("tag1", "tag2")):
-    with Scenario("my test", description="Test description."):
-        with When("I do something"):
-            note("do something")
-        with Then("I check the result"):
-            note("check the result")
-```
-
-## `nice` Output
-
-The [`nice`] output format is the default output format and provides the most
-details when developing and debugging tests. This output format includes all test types,
-their attributes and results as well as any messages that are associated with them.
-
-> **{% attention %}** This output format is the most useful for developing and 
-> debugging an individual test.
-> This output format is not useful when tests are executed in parallel.
-
-For example,
-
-```bash
-$ python3 test.py --output nice
- Sep 25,2021 9:29:39   ⟥  Module regression, flags:TE
-                            Attributes
-                              name
-                                value
-                            Tags
-                              tag1
-                              tag2
- Sep 25,2021 9:29:39     ⟥  Scenario my test
-                              Test description.
- Sep 25,2021 9:29:39       ⟥  When I do something
-               508us       ⟥    [note] do something
-               715us       ⟥⟤ OK I do something, /regression/my test/I do something
- Sep 25,2021 9:29:39       ⟥  Then I check the result
-               471us       ⟥    [note] check the result
-               704us       ⟥⟤ OK I check the result, /regression/my test/I check the result
-                 2ms     ⟥⟤ OK my test, /regression/my test
-                12ms   ⟥⟤ OK regression, /regression
-```
-
-produces the same output as when [--output] is omitted.
-
-```python
-$ python3 test.py
-```
-
-## `brisk` Output
-
-The [`brisk`] output format is very similar to [`nice`] output format but
-omits all steps (tests that have [Step Type]). This format is useful when
-you would like to focus on actions of the test such as commands executed
-on the system under test rather than on the test procedure itself.
-
-> **{% attention %}** This output format is useful for 
-> debugging individual test when you would like to omit test steps.
-> This output format is not useful when tests are executed in parallel.
-
-```bash
-$ python3 output.py -o brisk
-Sep 25,2021 12:05:25   ⟥  Module regression, flags:TE
-                            Attributes
-                              name
-                                value
-                            Tags
-                              tag2
-                              tag1
-Sep 25,2021 12:05:25     ⟥  Scenario my test
-                              Test description.
-               479us     ⟥    [note] do something
-               719us     ⟥    [note] check the result
-                 2ms     ⟥⟤ OK my test, /regression/my test
-                12ms   ⟥⟤ OK regression, /regression
-```
-
-## `short` Output
-
-The [`short`] output format provides a shorter output than [`nice`] output format
-as only test and result messages are formatted. 
-
-> **{% attention %}** This output format is very useful to highlight and verify test procedure.
-> This output format is not useful when tests are executed in parallel.
-
-```bash
-$ python3 test.py -o short
-Module regression
-  Attributes
-    name
-      value
-  Tags
-    tag1
-    tag2
-  Scenario my test
-    Test description.
-    When I do something
-    OK
-    Then I check the result
-    OK
-  OK
-OK
-```
-
-## `classic` Output
-
-The [`classic`] output format shows only full test names for
-test and result messages for any test that has [Test Type] of higher.
-Tests that have [Step Type] are not showed.
-
-> **{% attention %}** This output format can be used for CI/CD runs as long as
-> number of tests is not too large.
-> This output format can be used when tests are executed in parallel.
-
-```bash
-$ python3 test.py -o classic
-➤ Sep 25,2021 11:14:15 /regression
-➤ Sep 25,2021 11:14:15 /regression/my test
-✔ 2ms       [   OK   ] /regression/my test
-✔ 12ms      [   OK   ] /regression
-```
-
-## `progress` Output
-
-The [`progress`] output format shows the progress of the test run. 
-The output is always printed on one line on progress updates and is useful
-when running tests locally.
-
-Any test fails are printed inline as soon as they occur.
-
-> **{% attention %}** This output format should not be used for CI/CD runs
-> as it outputs terminal control codes to update the same line.
-> This output format can be used when tests are executed in parallel.
-
-```bash
-$ python3 test.py -o progress
-Executing 2 tests /regression/my test/I do something
-```
-
-## `fails` Output
-
-The [`fails`] output format only shows failing results [Fail], [Error], and [Null]
-and crossed out results [XFail], [XError], [XNull], [XOK]. 
-
-Failing results are only shown for tests with [Test Type] of higher.
-
-> **{% attention %}** This output format can be used for CI/CD runs
-> as long as the number of cross out results is not too large otherwise
-> use [`new-fails`] output format instead.
-> This output format can be used when tests are executed in parallel.
-
-```bash
-$ python3 test.py -o fails
-✘ 3ms       [ XFail  ] /regression/my test
-    expected fail
-```
-
-## `new-fails` Output
-
-The [`new-fails`] output format only shows failing results [Fail], [Error], and [Null].
-Crossed out results are not shown.
-
-Failing results are only shown for tests with [Test Type] of higher.
-
-> **{% attention %}** This output format can be used for CI/CD runs.
-> This output format can be used when tests are executed in parallel.
-
-```bash
-$ python3 test.py -o new-fails
-✘ 3ms       [  Fail  ] /regression/my test
-    AssertionError
-    Traceback (most recent call last):
-      File "output.py", line 8, in <module>
-        assert False
-    AssertionError
-```
-
-## `slick` Output
-
-The [`slick`] output format provides even shorter output than [`short`] output format
-as only shows test and result messages for any test that has [Test Type] of higher.
-Tests that have [Step Type] are not showed.
-
-> **{% attention %}** This output format is more of an eye-candy.
-> This output format is not useful when tests are executed in parallel.
-
-```bash
-$ python3 test.py --output slick
-➤ Module regression
-  ✔ Scenario my test
-✔ Module regression
-```
-
-## `quiet` Output
-
-The [`quiet`] output format does not output anything to stdout.
-
-> **{% attention %}** This output format can be used for CI/CD runs.
-> This output format can be used when tests are executed in parallel.
-
-```bash
-$ python3 test.py -o quiet
-```
-
-## `manual` Output
-
-The [`manual`] output format is only suitable for running manual or semi-automated
-tests where tester is constantly prompted for input. The terminal screen is always cleared
-before starting any test with [Test Type] or higher.
-
-> **{% attention %}** This output format is only useful for manual or semi-automated tests.
-
-```bash
-python3 test.py -o manual
-────────────────────────────────────────────────────────────────────────────────
-SCENARIO my test
-Test description.
-────────────────────────────────────────────────────────────────────────────────
-□ When I do something
-[note] do something
-✍  Enter `I do something` result? 
-```
-
-## `raw` Output
-
-The [`raw`] output format outputs raw messages.
-
-> **{% attention %}** This output format is only useful for **{% testflows %}**
-> developers and curious users that want to understand what raw messages look like.
-
-```bash
-$ python3 test.py -o raw
-{"message_keyword":"PROTOCOL","message_hash":"1336ea41","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1632584893.162271,"message_rtime":0.009011,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
-...
-{"message_keyword":"STOP","message_hash":"6956b3c5","message_object":0,"message_num":7,"message_stream":null,"message_level":2,"message_time":1632584893.167364,"message_rtime":0.014104,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1}
-```
-
-Advanced users can use this format to apply custom message transformations. 
-
-For example, it can be transformed using `tfs transform nice` command into [`nice`]
-format
-
-```bash
-$ python3 test.py -o raw | tfs transfrom nice
-```
-
-or combined with other unix tools such as `grep` with further message transformations.
-
-```bash
-$ python3 output.py -o raw | grep '{"message_keyword":"RESULT",' | tfs transform nice
-```
-
-## Summary Reports
-
-Most output formats include one or more summary reports.
-These reports are printed after all tests have been executed.
-
-> **{% attention %}** Most summary reports only include tests that have [Test Type] or higher.
-> Tests with [Step Type] are not included.
-
-### Passing
-
-This report generates `Passing` section and show passing tests.
-
-```bash
-Passing
-
-✔ [ OK ] /regression/my test
-✔ [ OK ] /regression
-```
-
-### Failing
-
-This report generates `Failing` section and show failing tests.
-
-```bash
-Failing
-
-✘ [ Fail ] /regression/my test
-✘ [ Fail ] /regression
-```
-
-### Known
-
-This report generates `Known` section.
-
-```bash
-Known
-
-✘ [ XFail ] /regression/my test ᐅ expected fail
-```
-
-### Unstable
-
-This report generates `Unstable` section. Tests are considered to be unstable
-if they are repeated and different iterations have different results.
-
-```bash
-Unstable
-
-◔ [ 50.00% ] /regression/my test (1 ok, 1 failed)
-```
-
-### Coverage
-
-This reports generates `Coverage` section. It is only generated if
-at least one `Specification` is attached to any of the tests and shows
-requirements coverage statistics for each `Specification`.
-
-```bash
-Coverage
-
-QA-SRS004 Tiered Storage
-  86 requirements (72 satisfied 83.7%, 4 unsatisfied 4.7%, 10 untested 11.6%)
-```
-
-### Totals
-
-This report generates test counts and total test time section.
-
-```bash
-1 module (1 ok)
-1 scenario (1 ok)
-2 steps (2 ok)
-
-Total time 12ms
-```
-
-### Version
-
-This report generate a message that shows date time of test run 
-and version of the framework that was used to run the test program.
-
-```bash
-Executed on Sep 25,2021 12:05
-TestFlows.com Open-Source Software Testing Framework v1.7.210922.1181131
-```
-
-# Turning Off Color Highlighting
-
-There are times when color highlighting might be in the way. For example,
-when piping output to a different utility or saving it into the file.
-In both of these cases use [--no-colors] to tell **{% testflows %}** 
-to turn off adding terminal control color codes.
-
-```bash
-$ python3 test.py --no-colors > nice.log
-```
-
-or 
-
-```bash
-$ python3 test.py --no-colors | less 
-```
-
-The same option can be specified for the `tfs` utility.
-
-```bash
-$ cat test.log | tfs --no-colors show messages
-```
-
-or
-
-```bash
-$ tail -f test.log | tfs --no-colors transform nice | less
-```
-
-## Use `--no-colors` in Code
-
-You can also detect if terminal color codes are turned off in code
-by looking at `settings.no_colors` attribute as follows
-
-```python
-import testflows.settings as settings
-from testflows.core import *
-
-with Test("my test"):
-    if settings.no_colors:
-        debug("do something when terminal colors are turned off")
-```
-
-
-# Enabling Debug Mode
-
-You can enable debug mode by specifying [--debug] option to your test program.
-When debug mode is enabled the tracebacks will include more details such as
-internal function calls inside the framework which are hidden by default to reduce
-clutter.
-
-```bash
-$ python3 test.py --debug
-```
-
-## Use `--debug` in Code
-
-You can also trigger actions in your test code based on if [--debug] option 
-was specified or not. When [--debug] option is specified the value
-can be retrieved from `settings.debug` as follows
-
-```python
-import testflows.settings as settings
-from testflows.core import *
-
-with Test("my test"):
-    if settings.debug:
-        debug("do something in debug mode")
-```
-
 # Logs
 
 The framework produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
@@ -1782,120 +1356,11 @@ def the_name_of_the_scenario(self):
     note(self.name)
 ```
 
-# Test Flags
+# Setting Test Flags
 
-You can set the flags of any test either by setting the [flags] parameter of the inline test
+You can set the [Test Flags](#Test-Flags) of any test either by setting the [flags] parameter of the inline test
 or using the [Flags] decorator if the test is defined as a decorated function.
 The flags of the test can be accessed using the `flags` attribute of the test.
-
-## TE
-
-Test to end flag. Continues executing tests even if this test fails.
-
-## UT
-
-Utility test flags. Marks test as utility for reporting.
-
-## SKIP
-
-Skip test flag. Skips the test during execution.
-
-## EOK
-
-Expected [OK] flag. Test result will be set to [Fail] if the test result is not [OK] otherwise [OK].
-
-## EFAIL
-
-Expected [Fail] flag. Test result will be set to [Fail] if the test result is not [Fail] otherwise [OK].
-
-## EERROR
-
-Expected [Error] flag. Test result will be set to [Fail] if the test result is not [Error] otherwise [OK].
-
-## ESKIP
-
-Expected [Skip] flag. Test result will be set to [Fail] if the test result is not [Skip] otherwise [OK].
-
-## XOK
-
-Cross out [OK] flag. Test result will be set to [XOK] if the test result is [OK].
-
-## XFAIL
-
-Cross out [Fail] flag. Test result will be set to [XFail] if the test result is [Fail].
-
-## XERROR
-
-Cross out [Error] flag. Test result will be set to [XError] if the test result is [Error].
-
-## XNULL
-
-Cross out [Null] flag. Test result will be set to [XNull] if the test result is [Null].
-
-## FAIL_NOT_COUNTED
-
-[Fail] not counted. [Fail] result will not be counted.
-
-## ERROR_NOT_COUNTED
-
-[Error] not counted. [Error] result will not be counted.
-
-## NULL_NOT_COUNTED
-
-[Null] not counted. [Null] result will not be counted.
-
-## PAUSE_BEFORE
-
-Pause before test execution.
-
-## PAUSE
-
-Pause before test execution short form. See [PAUSE_BEFORE].
-
-## PAUSE_AFTER
-
-Pause after test execution.
-
-## PAUSE_ON_PASS
-
-Pause after test execution on passing result.
-
-## PAUSE_ON_FAIL
-
-Pause after test execution on failing result.
-
-## REPORT
-
-Report flag. Mark test to be included for reporting.
-
-## DOCUMENT
-
-Document flag. Mark test to be included in the documentation.
-
-## MANDATORY
-
-Mandatory flag. Mark test as mandatory such that it can't be skipped.
-
-## ASYNC
-
-Asynchronous test flag. This flag is set for all asynchronous tests.
-
-## PARALLEL
-
-Parallel test flag. This flag is set if test is running in parallel.
-
-## MANUAL
-
-Manual test flag. This flag indicates that test is manual.
-
-## AUTO
-
-Automated test flag. This flag indicates that the test is automated
-when parent test has [MANUAL] flag set.
-
-## LAST_RETRY
-
-Last retry flag. This flag is auto-set for the last retry iteration.
 
 ## flags
 
@@ -5424,6 +4889,546 @@ The `--repeat` option can be used to specify the tests to be repeated.
 #### --retry
 
 The `--retry` option can be used to specify the tests to be retried.
+
+## Test Flags
+
+**{% testflows %}** supports the following test flags.
+
+## TE
+
+Test to end flag. Continues executing tests even if this test fails.
+
+## UT
+
+Utility test flags. Marks test as utility for reporting.
+
+## SKIP
+
+Skip test flag. Skips the test during execution.
+
+## EOK
+
+Expected [OK] flag. Test result will be set to [Fail] if the test result is not [OK] otherwise [OK].
+
+## EFAIL
+
+Expected [Fail] flag. Test result will be set to [Fail] if the test result is not [Fail] otherwise [OK].
+
+## EERROR
+
+Expected [Error] flag. Test result will be set to [Fail] if the test result is not [Error] otherwise [OK].
+
+## ESKIP
+
+Expected [Skip] flag. Test result will be set to [Fail] if the test result is not [Skip] otherwise [OK].
+
+## XOK
+
+Cross out [OK] flag. Test result will be set to [XOK] if the test result is [OK].
+
+## XFAIL
+
+Cross out [Fail] flag. Test result will be set to [XFail] if the test result is [Fail].
+
+## XERROR
+
+Cross out [Error] flag. Test result will be set to [XError] if the test result is [Error].
+
+## XNULL
+
+Cross out [Null] flag. Test result will be set to [XNull] if the test result is [Null].
+
+## FAIL_NOT_COUNTED
+
+[Fail] not counted. [Fail] result will not be counted.
+
+## ERROR_NOT_COUNTED
+
+[Error] not counted. [Error] result will not be counted.
+
+## NULL_NOT_COUNTED
+
+[Null] not counted. [Null] result will not be counted.
+
+## PAUSE_BEFORE
+
+Pause before test execution.
+
+## PAUSE
+
+Pause before test execution short form. See [PAUSE_BEFORE].
+
+## PAUSE_AFTER
+
+Pause after test execution.
+
+## PAUSE_ON_PASS
+
+Pause after test execution on passing result.
+
+## PAUSE_ON_FAIL
+
+Pause after test execution on failing result.
+
+## REPORT
+
+Report flag. Mark test to be included for reporting.
+
+## DOCUMENT
+
+Document flag. Mark test to be included in the documentation.
+
+## MANDATORY
+
+Mandatory flag. Mark test as mandatory such that it can't be skipped.
+
+## ASYNC
+
+Asynchronous test flag. This flag is set for all asynchronous tests.
+
+## PARALLEL
+
+Parallel test flag. This flag is set if test is running in parallel.
+
+## MANUAL
+
+Manual test flag. This flag indicates that test is manual.
+
+## AUTO
+
+Automated test flag. This flag indicates that the test is automated
+when parent test has [MANUAL] flag set.
+
+## LAST_RETRY
+
+Last retry flag. This flag is auto-set for the last retry iteration.
+
+
+
+# Controlling Output
+
+Test output can be controlled with `-o` or [--output] option which specifies the output format to use
+to print to `stdout`. By default, the most detailed `nice` output is used.
+
+```bash
+  -o format, --output format                      stdout output format, choices are: ['new-fails',
+                                                  'fails', 'classic', 'slick', 'nice', 'brisk',
+                                                  'quiet', 'short', 'manual', 'dots', 'progress',
+                                                  'raw'], default: 'nice'
+```
+
+For example, you can use the following test and see how output format
+changes based on the output that is specified.
+
+> `test.py`
+>```python
+from testflows.core import *
+
+with Module("regression", flags=TE, attributes=[("name","value")], tags=("tag1", "tag2")):
+    with Scenario("my test", description="Test description."):
+        with When("I do something"):
+            note("do something")
+        with Then("I check the result"):
+            note("check the result")
+```
+
+## `nice` Output
+
+The [`nice`] output format is the default output format and provides the most
+details when developing and debugging tests. This output format includes all test types,
+their attributes and results as well as any messages that are associated with them.
+
+> **{% attention %}** This output format is the most useful for developing and 
+> debugging an individual test.
+> This output format is not useful when tests are executed in parallel.
+
+For example,
+
+```bash
+$ python3 test.py --output nice
+ Sep 25,2021 9:29:39   ⟥  Module regression, flags:TE
+                            Attributes
+                              name
+                                value
+                            Tags
+                              tag1
+                              tag2
+ Sep 25,2021 9:29:39     ⟥  Scenario my test
+                              Test description.
+ Sep 25,2021 9:29:39       ⟥  When I do something
+               508us       ⟥    [note] do something
+               715us       ⟥⟤ OK I do something, /regression/my test/I do something
+ Sep 25,2021 9:29:39       ⟥  Then I check the result
+               471us       ⟥    [note] check the result
+               704us       ⟥⟤ OK I check the result, /regression/my test/I check the result
+                 2ms     ⟥⟤ OK my test, /regression/my test
+                12ms   ⟥⟤ OK regression, /regression
+```
+
+produces the same output as when [--output] is omitted.
+
+```python
+$ python3 test.py
+```
+
+## `brisk` Output
+
+The [`brisk`] output format is very similar to [`nice`] output format but
+omits all steps (tests that have [Step Type]). This format is useful when
+you would like to focus on actions of the test such as commands executed
+on the system under test rather than on the test procedure itself.
+
+> **{% attention %}** This output format is useful for 
+> debugging individual test when you would like to omit test steps.
+> This output format is not useful when tests are executed in parallel.
+
+```bash
+$ python3 output.py -o brisk
+Sep 25,2021 12:05:25   ⟥  Module regression, flags:TE
+                            Attributes
+                              name
+                                value
+                            Tags
+                              tag2
+                              tag1
+Sep 25,2021 12:05:25     ⟥  Scenario my test
+                              Test description.
+               479us     ⟥    [note] do something
+               719us     ⟥    [note] check the result
+                 2ms     ⟥⟤ OK my test, /regression/my test
+                12ms   ⟥⟤ OK regression, /regression
+```
+
+## `short` Output
+
+The [`short`] output format provides a shorter output than [`nice`] output format
+as only test and result messages are formatted. 
+
+> **{% attention %}** This output format is very useful to highlight and verify test procedure.
+> This output format is not useful when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o short
+Module regression
+  Attributes
+    name
+      value
+  Tags
+    tag1
+    tag2
+  Scenario my test
+    Test description.
+    When I do something
+    OK
+    Then I check the result
+    OK
+  OK
+OK
+```
+
+## `classic` Output
+
+The [`classic`] output format shows only full test names for
+test and result messages for any test that has [Test Type] of higher.
+Tests that have [Step Type] are not showed.
+
+> **{% attention %}** This output format can be used for CI/CD runs as long as
+> number of tests is not too large.
+> This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o classic
+➤ Sep 25,2021 11:14:15 /regression
+➤ Sep 25,2021 11:14:15 /regression/my test
+✔ 2ms       [   OK   ] /regression/my test
+✔ 12ms      [   OK   ] /regression
+```
+
+## `progress` Output
+
+The [`progress`] output format shows the progress of the test run. 
+The output is always printed on one line on progress updates and is useful
+when running tests locally.
+
+Any test fails are printed inline as soon as they occur.
+
+> **{% attention %}** This output format should not be used for CI/CD runs
+> as it outputs terminal control codes to update the same line.
+> This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o progress
+Executing 2 tests /regression/my test/I do something
+```
+
+## `fails` Output
+
+The [`fails`] output format only shows failing results [Fail], [Error], and [Null]
+and crossed out results [XFail], [XError], [XNull], [XOK]. 
+
+Failing results are only shown for tests with [Test Type] of higher.
+
+> **{% attention %}** This output format can be used for CI/CD runs
+> as long as the number of cross out results is not too large otherwise
+> use [`new-fails`] output format instead.
+> This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o fails
+✘ 3ms       [ XFail  ] /regression/my test
+    expected fail
+```
+
+## `new-fails` Output
+
+The [`new-fails`] output format only shows failing results [Fail], [Error], and [Null].
+Crossed out results are not shown.
+
+Failing results are only shown for tests with [Test Type] of higher.
+
+> **{% attention %}** This output format can be used for CI/CD runs.
+> This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o new-fails
+✘ 3ms       [  Fail  ] /regression/my test
+    AssertionError
+    Traceback (most recent call last):
+      File "output.py", line 8, in <module>
+        assert False
+    AssertionError
+```
+
+## `slick` Output
+
+The [`slick`] output format provides even shorter output than [`short`] output format
+as only shows test and result messages for any test that has [Test Type] of higher.
+Tests that have [Step Type] are not showed.
+
+> **{% attention %}** This output format is more of an eye-candy.
+> This output format is not useful when tests are executed in parallel.
+
+```bash
+$ python3 test.py --output slick
+➤ Module regression
+  ✔ Scenario my test
+✔ Module regression
+```
+
+## `quiet` Output
+
+The [`quiet`] output format does not output anything to stdout.
+
+> **{% attention %}** This output format can be used for CI/CD runs.
+> This output format can be used when tests are executed in parallel.
+
+```bash
+$ python3 test.py -o quiet
+```
+
+## `manual` Output
+
+The [`manual`] output format is only suitable for running manual or semi-automated
+tests where tester is constantly prompted for input. The terminal screen is always cleared
+before starting any test with [Test Type] or higher.
+
+> **{% attention %}** This output format is only useful for manual or semi-automated tests.
+
+```bash
+python3 test.py -o manual
+────────────────────────────────────────────────────────────────────────────────
+SCENARIO my test
+Test description.
+────────────────────────────────────────────────────────────────────────────────
+□ When I do something
+[note] do something
+✍  Enter `I do something` result? 
+```
+
+## `raw` Output
+
+The [`raw`] output format outputs raw messages.
+
+> **{% attention %}** This output format is only useful for **{% testflows %}**
+> developers and curious users that want to understand what raw messages look like.
+
+```bash
+$ python3 test.py -o raw
+{"message_keyword":"PROTOCOL","message_hash":"1336ea41","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1632584893.162271,"message_rtime":0.009011,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
+...
+{"message_keyword":"STOP","message_hash":"6956b3c5","message_object":0,"message_num":7,"message_stream":null,"message_level":2,"message_time":1632584893.167364,"message_rtime":0.014104,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1}
+```
+
+Advanced users can use this format to apply custom message transformations. 
+
+For example, it can be transformed using `tfs transform nice` command into [`nice`]
+format
+
+```bash
+$ python3 test.py -o raw | tfs transfrom nice
+```
+
+or combined with other unix tools such as `grep` with further message transformations.
+
+```bash
+$ python3 output.py -o raw | grep '{"message_keyword":"RESULT",' | tfs transform nice
+```
+
+## Summary Reports
+
+Most output formats include one or more summary reports.
+These reports are printed after all tests have been executed.
+
+> **{% attention %}** Most summary reports only include tests that have [Test Type] or higher.
+> Tests with [Step Type] are not included.
+
+### Passing
+
+This report generates `Passing` section and show passing tests.
+
+```bash
+Passing
+
+✔ [ OK ] /regression/my test
+✔ [ OK ] /regression
+```
+
+### Failing
+
+This report generates `Failing` section and show failing tests.
+
+```bash
+Failing
+
+✘ [ Fail ] /regression/my test
+✘ [ Fail ] /regression
+```
+
+### Known
+
+This report generates `Known` section.
+
+```bash
+Known
+
+✘ [ XFail ] /regression/my test ᐅ expected fail
+```
+
+### Unstable
+
+This report generates `Unstable` section. Tests are considered to be unstable
+if they are repeated and different iterations have different results.
+
+```bash
+Unstable
+
+◔ [ 50.00% ] /regression/my test (1 ok, 1 failed)
+```
+
+### Coverage
+
+This reports generates `Coverage` section. It is only generated if
+at least one `Specification` is attached to any of the tests and shows
+requirements coverage statistics for each `Specification`.
+
+```bash
+Coverage
+
+QA-SRS004 Tiered Storage
+  86 requirements (72 satisfied 83.7%, 4 unsatisfied 4.7%, 10 untested 11.6%)
+```
+
+### Totals
+
+This report generates test counts and total test time section.
+
+```bash
+1 module (1 ok)
+1 scenario (1 ok)
+2 steps (2 ok)
+
+Total time 12ms
+```
+
+### Version
+
+This report generate a message that shows date time of test run 
+and version of the framework that was used to run the test program.
+
+```bash
+Executed on Sep 25,2021 12:05
+TestFlows.com Open-Source Software Testing Framework v1.7.210922.1181131
+```
+
+# Turning Off Color Highlighting
+
+There are times when color highlighting might be in the way. For example,
+when piping output to a different utility or saving it into the file.
+In both of these cases use [--no-colors] to tell **{% testflows %}** 
+to turn off adding terminal control color codes.
+
+```bash
+$ python3 test.py --no-colors > nice.log
+```
+
+or 
+
+```bash
+$ python3 test.py --no-colors | less 
+```
+
+The same option can be specified for the `tfs` utility.
+
+```bash
+$ cat test.log | tfs --no-colors show messages
+```
+
+or
+
+```bash
+$ tail -f test.log | tfs --no-colors transform nice | less
+```
+
+## Use `--no-colors` in Code
+
+You can also detect if terminal color codes are turned off in code
+by looking at `settings.no_colors` attribute as follows
+
+```python
+import testflows.settings as settings
+from testflows.core import *
+
+with Test("my test"):
+    if settings.no_colors:
+        debug("do something when terminal colors are turned off")
+```
+
+
+# Enabling Debug Mode
+
+You can enable debug mode by specifying [--debug] option to your test program.
+When debug mode is enabled the tracebacks will include more details such as
+internal function calls inside the framework which are hidden by default to reduce
+clutter.
+
+```bash
+$ python3 test.py --debug
+```
+
+## Use `--debug` in Code
+
+You can also trigger actions in your test code based on if [--debug] option 
+was specified or not. When [--debug] option is specified the value
+can be retrieved from `settings.debug` as follows
+
+```python
+import testflows.settings as settings
+from testflows.core import *
+
+with Test("my test"):
+    if settings.debug:
+        debug("do something in debug mode")
+```
 
 [for loop]: https://docs.python.org/3/tutorial/controlflow.html#for-statements
 [assert]: https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement
