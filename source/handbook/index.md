@@ -438,6 +438,461 @@ allowing us to execute it directly as follows.
 $ ./test.py
 ```
 
+# Writing Tests
+
+With {% testflows %} you actually write test programs not just tests. This means
+that the [Python] source file that contains [Top Level Test] can be run directly if 
+it is made executable and has `#!/usr/bin/env python3` 
+or using `python3` command.
+
+> {% attention %} Note that {% testflows %} only allows one top level test in your test program. 
+> See [Top Level Test].
+
+Writing tests is actually very easy given that you are in full control of your test program.
+You can either define inline tests anywhere in your test program
+code or define them separately as test decorated functions. 
+
+An inline test is defined using the [with] statement and one of the [Test Definition Classes].
+The choice of which test definition class you should use depends only on your preference.
+See [Defining Tests](#Defining-Tests).
+
+The example from the [Hello World](#Hello-World) shows an example of how an inline test
+can be easily defined.
+
+```python
+#!/usr/bin/env python3
+from testflows.core import Scenario
+
+with Scenario("Hello World!"):
+    pass
+```
+
+The same test can be defined using [TestScenario] decorated function.
+See [Decorated Tests](#Decorated).
+
+```python
+#!/usr/bin/env python3
+from testflows.core import TestScenario, Name
+
+@TestScenario
+@Name("Hello World!")
+def hello_world(self):
+    pass
+
+# run `Hello World!` test
+hello_world()
+```
+
+> {% attention %} Note that if the code inside the test does not raise any exception and does not
+> [set test result explicitly](#Setting-Test-Results-Explicitly) it is considered as passing and will have [OK] result.
+
+In the above example, the `Hello World` is the [Top Level Test] and the only test
+in the test program. 
+
+> **{% attention %}** Note that instead of just having `pass` you could **add any code you want**. 
+ 
+The `Hello World` test will pass if no exception is raised in the
+[with] block otherwise it will have a [Fail] or [Error] result. [Fail] result is set
+if code raises [AssertionError] any other exceptions will result in [Error].
+
+Let's add a failing [assert] to `Hello World` test.
+
+```python
+from testflows.core import Scenario
+
+with Scenario("Hello World!"):
+    assert 1 == 0, "1 != 0"
+```
+
+The result will be as follows.
+
+```bash
+$ python3 hello_world.py 
+Nov 03,2021 17:09:17   ⟥  Scenario Hello World!
+                 8ms   ⟥    Exception: Traceback (most recent call last):
+                                File "hello_world.py", line 4, in <module>
+                                  assert 1 == 0, "1 != 0"
+                              AssertionError: 1 != 0
+                 8ms   ⟥⟤ Fail Hello World!, /Hello World!, AssertionError
+                         Traceback (most recent call last):
+                           File "hello_world.py", line 4, in <module>
+                             assert 1 == 0, "1 != 0"
+                         AssertionError: 1 != 0
+```
+
+Now raise let's raise some other exception like [RuntimeError] to see [Error] result.
+
+```python
+from testflows.core import Scenario
+
+with Scenario("Hello World!"):
+    raise RuntimeError("boom!")
+```
+
+```bash
+$ python3 hello_world.py 
+Nov 03,2021 17:14:10   ⟥  Scenario Hello World!
+                 5ms   ⟥    Exception: Traceback (most recent call last):
+                                File "hello_world.py", line 4, in <module>
+                                  raise RuntimeError("boom!")
+                              RuntimeError: boom!
+                 5ms   ⟥⟤ Error Hello World!, /Hello World!, RuntimeError
+                         Traceback (most recent call last):
+                           File "hello_world.py", line 4, in <module>
+                             raise RuntimeError("boom!")
+                         RuntimeError: boom!
+```
+
+## Flexibility In Writing Tests
+
+{% testflows %} provides unmatched flexibility in how you can author your tests and
+this is what makes it adaptable to your testing projects at hand.
+
+Let's see this using an example of how you could verify functionality
+of a simple `add(a, b)` function.
+
+> {% attention %} Note that this is just a toy example used for demonstration purposes only.
+
+```python
+from testflows.core import *
+
+def add(a, b):
+    return a + b
+
+with Feature("check `add(a, b)` function"):
+    with Scenario("check 2 + 2 == 4"):
+        assert add(2,2) == 4
+    with Scenario("check -5 + 100 == -95"):
+        assert add(-5,100) == 95
+    with Scenario("check -5 + -5 == -10"):
+        assert add(-5,-5) == -10   
+```
+
+Now you can put the code above anywhere you want. Let's move it into a function.
+For example,
+
+```python
+from testflows.core import *
+
+def add(a, b):
+    return a + b
+
+def regression():
+    with Feature("check `add(a, b)` function"):
+        with Scenario("check 2 + 2 == 4"):
+            assert add(2,2) == 4
+        with Scenario("check -5 + 100 == -95"):
+            assert add(-5,100) == 95
+        with Scenario("check -5 + -5 == -10"):
+            assert add(-5,-5) == -10   
+
+if main(): # short for `if __name__ == "__main__":` which is ugly
+    regression()
+```
+
+We can also decide that we don't want to use [Feature] and [Scenario] in this case
+but you'd like to use [Scenario] that has multiple [Example]s with test steps
+such as [When] and [Then].
+
+```python
+from testflows.core import *
+from testflows.asserts import error
+
+def add(a, b):
+    return a + b
+
+def regression():
+    with Scenario("check `add(a, b)` function"):
+        with Example("check 2 + 2 == 4"):
+            with When("I call add function with 2,2"):
+                r = add(2, 2)
+            with Then("I expect the result to be 4"):
+                # error() will generate detailed error message if assertion fails
+                assert r == 4, error()
+
+        with Example("check -5 + 100 == -95"):
+            with When("I call add function with -5,100"):
+                r = add(-5, 100)
+            with Then("I expect the result to be -95"):
+                assert r == 95, error()
+
+        with Example("check -5 + -5 == -10"):
+            with When("I call add function with -5,-5"):
+                r = add(-5, -5)
+            with Then("I expect the result to be -10"):
+                assert r == -10, error()
+
+if main():
+    regression()
+```
+
+The test code seems to be redundant so we could move the [When] and [Then] steps into
+a function `check_add(a, b, expected)` that can be called with different parameters.
+
+```python
+from testflows.core import *
+from testflows.asserts import error
+
+def add(a, b):
+    return a + b
+
+def check_add(a, b, expected):
+    """Check that function add(a, b)
+    returns expected result for given `a` and `b` values.
+    """
+    with When(f"I call add function with {a},{b}"):
+        r = add(a, b)
+    with Then("I expect the result to be -95"):
+        assert r == expected, error()
+
+def regression():
+    with Scenario("check `add(a, b)` function"):
+        with Example("check 2 + 2 == 4"):
+            check_add(a=2, b=2, expected=4)
+
+        with Example("check -5 + 100 == 95"):
+            check_add(a=-5, b=100, expected=95)
+
+        with Example("check -5 + -5 == -10"):
+            check_add(a=-5, b =-5, expected=-10)
+
+if main():
+    regression()
+```
+
+We could actually define all examples we want to check up-front and generate
+[Example] steps on the fly depending on how many examples we want to check.
+
+```python
+from testflows.core import *
+from testflows.asserts import error
+
+def add(a, b):
+    return a + b
+
+def check_add(a, b, expected):
+    """Check that function add(a, b)
+    returns expected result for given `a` and `b` values.
+    """
+    with When(f"I call add function with {a},{b}"):
+        r = add(a, b)
+    with Then("I expect the result to be -95"):
+        assert r == expected, error()
+
+def regression():
+    with Scenario("check `add(a, b)` function"):
+        examples = [
+            (2, 2, 4),
+            (-5, 100, 95),
+            (-5, -5, -10)
+        ] 
+        for example in examples:
+            a, b, expected = example
+            with Example(f"check {a} + {b} == {expected}"):
+                check_add(a=a, b=b, expected=expected)
+
+if main():
+    regression()
+```
+
+We could modify the above code and use [Examples] instead of our custom list of tuples.
+
+```python
+from testflows.core import *
+from testflows.asserts import error
+
+def add(a, b):
+    return a + b
+
+def check_add(a, b, expected):
+    """Check that function add(a, b)
+    returns expected result for given `a` and `b` values.
+    """
+    with When(f"I call add function with {a},{b}"):
+        r = add(a, b)
+    with Then("I expect the result to be -95"):
+        assert r == expected, error()
+
+def regression():
+    with Scenario("check `add(a, b)` function", examples=Examples("a b expected", [
+            (2, 2, 4),
+            (-5, 100, 95),
+            (-5, -5, -10)
+        ])) as scenario:
+        for example in scenario.examples:
+            with Example(f"check {example.a} + {example.b} == {example.expected}"):
+                # `vars(example)` converts example named tuple to a dictionary
+                check_add(**vars(example))
+
+if main():
+    regression()
+```
+
+Another option is to move to using decorated tests. See [Decorated Tests](#Defining-Tests).
+
+Let's move inline [Scenario] into a decorated [TestScenario] function with [Examples]
+and create [Example]s for each example that we have.
+
+```python
+from testflows.core import *
+from testflows.asserts import error
+
+def add(a, b):
+    return a + b
+
+@TestScenario
+@Examples("a b expected", [
+    (2, 2, 4),
+    (-5, 100, 95),
+    (-5, -5, -10)
+])
+def check_add(self):
+    """Check that function add(a, b)
+    returns expected result for given `a` and `b` values.
+    """
+    for example in self.examples:
+        a, b, expected = example
+        with Example(f"check {a} + {b} == {expected}"):
+            with When(f"I call add function with {a},{b}"):
+                r = add(a, b)
+            with Then("I expect the result to be {expected}"):
+                assert r == expected, error()
+
+def regression():
+    Scenario("check `add(a, b)` function", run=check_add)
+
+if main():
+    regression()
+```
+
+We could also get rid of the explicit [for loop] over examples by
+using [Outline] with [Examples].
+
+```python
+from testflows.core import *
+from testflows.asserts import error
+
+def add(a, b):
+    return a + b
+
+@TestOutline(Scenario)
+@Examples("a b expected", [
+    (2, 2, 4),
+    (-5, 100, 95),
+    (-5, -5, -10)
+])
+def check_add(self, a, b, expected):
+    """Check that function add(a, b)
+    returns expected result for given `a` and `b` values.
+    """
+    with When(f"I call add function with {a},{b}"):
+        r = add(a, b)
+    with Then("I expect the result to be {expected}"):
+        assert r == expected, error()
+
+def regression():
+    Scenario("check `add(a, b)` function", run=check_add)
+
+if main():
+    regression()
+```
+
+The [Outline] with [Examples] turns out to be the exact fit for the problem.
+However, there are many cases where you would want to have choice and **{% testflows %}**
+provides the flexibility you need to author your tests the way that fits best for you.
+
+# Setting Test Results Explicitly
+
+A result of any test can be set explicitly using the following result functions:
+
+* [fail() function] for [Fail]
+* [err() function] for [Error]
+* [skip() function] for [Skip]
+* [null() function] for [Null]
+* [ok() function] for [OK]
+* [xfail() function] for [XFail]
+* [xerr() function] for [XError]
+* [xnull() function] for [XNull]
+* [xok() function] for [XOK]
+
+Here are the arguments that each result function can take. All arguments are optional.
+
+* `message` is used to set an optional result message
+* `reason` is used to set an optional reason for the result. Usually is only set
+  for crossed out results such as [XFail], [XError], [XNull] and [XOK] to indicate
+  the reason for the result being crossed out such as a link to an opened issue
+* `test` argument is usually not passed as it is set by to the current test by default.
+  See [current() function].
+
+```python
+ok(message=None, reason=None, test=None)
+fail(message=None, reason=None, test=None, type=None)
+skip(message=None, reason=None, test=None)
+err(message=None, reason=None, test=None)
+null(message=None, reason=None, test=None)
+xok(message=None, reason=None, test=None)
+xfail(message=None, reason=None, test=None)
+xerr(message=None, reason=None, test=None)
+xnull(message=None, reason=None, test=None)
+```
+
+These functions raise an exception that corresponds to appropriate result class and 
+therefore unless you explicitly catch the exception the test stops
+at the point in which the result function is called.
+
+For example, 
+
+```python
+from testflows.core import *
+
+with Scenario("Hello World!"):
+    fail("forcing test fail")
+    # this line will not be reached
+```
+
+You can also raise the result explicitly.
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("Hello World!"):
+    raise Fail("forcing test fail")
+```
+
+## Fails of Specific Types
+
+**{% testflows %}** does not support adding types to the [Fail]s but
+the [fail() function] takes an optional `type` argument that takes
+one of the [Test Definition Classes] which will be used to create a sub-test
+with the name specified by the `message` and failed with the specified
+`reason`.
+
+The original use case is to provide a way to seperate
+fails of [Check]s into [Critical], [Major] and [Minor] without explicitly
+defining [Critical], [Major], or [Minor] sub-tests.
+
+For example,
+
+```python
+from testflows.core import *
+
+with Check("Hello World!"):
+    fail("some critical check", reason="critical fail", type=Critical)
+```
+
+The above code is equivalent to the following.
+
+```python
+from testflows.core import *
+
+with Check("Hello World!"):
+    with Critical("some critical check"):
+        fail("critical fail")
+```
+
+
 # Top Level Test
 
 {% testflows %} only allows one top level test to exist in any given test program execution.
@@ -1432,6 +1887,11 @@ Parallel test flag. This flag is set if test is running in parallel.
 ## MANUAL
 
 Manual test flag. This flag indicates that test is manual.
+
+## AUTO
+
+Automated test flag. This flag indicates that the test is automated
+when parent test has [MANUAL] flag set.
 
 ## LAST_RETRY
 
@@ -2531,6 +2991,8 @@ Sep 06,2021 18:39:00     ⟥  Step manual step, flags:MANUAL
 A manual test is just test that has [MANUAL] flag set at the test level.
 Any sub-tests such as steps inherit [MANUAL] flag from the parent test.
 
+> **{% attention %}** Manual tests are best executed using [manual output](#manual-Output) format.
+
 For example,
 
 ```python
@@ -2560,6 +3022,42 @@ Sep 06,2021 18:44:33     ⟥  When manual action, flags:MANUAL
 ✍  Is this correct [Y/n]? Y
            13s 368ms   ⟥⟤ OK manual scenario, /manual scenario
 ```
+
+## Manual With Automated Steps
+
+A test that has [MANUAL] flag could also include some automated steps
+which can be marked as automated using [AUTO] flag.
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("manual scenario", flags=MANUAL):
+    with Given("manual setup"):
+        pass
+    with When("automated action", flags=AUTO):
+        note("some note")
+```
+
+When the above example is executed it will produce the following output that shows that the
+result for `/manual scenario/automated action` was set automatically
+based on the automated actions performed in this step.
+
+```bash
+Oct 31,2021 18:24:53   ⟥  Scenario manual scenario, flags:MANUAL
+Oct 31,2021 18:24:53     ⟥  Given manual setup, flags:MANUAL|MANDATORY
+✍  Enter `manual setup` result? 
+✍  Is this correct [Y/n]? 
+            1s 410ms     ⟥⟤ OK manual setup, /manual scenario/manual setup
+Oct 31,2021 18:24:54     ⟥  When automated action, flags:AUTO
+               304us     ⟥    [note] some note
+               374us     ⟥⟤ OK automated action, /manual scenario/automated action
+✍  Enter `manual scenario` result? 
+✍  Is this correct [Y/n]? 
+            5s 611ms   ⟥⟤ OK manual scenario, /manual scenario
+```
+
 # Test Definition Classes
 
 ## Module
@@ -4927,6 +5425,11 @@ The `--repeat` option can be used to specify the tests to be repeated.
 
 The `--retry` option can be used to specify the tests to be retried.
 
+[for loop]: https://docs.python.org/3/tutorial/controlflow.html#for-statements
+[assert]: https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement
+[AssertionError]: https://docs.python.org/3/library/exceptions.html#AssertionError
+[RuntimeError]: https://docs.python.org/3/library/exceptions.html#RuntimeError
+[Test Definition Classes]: #Test-Definition-Classes
 [--only option]: #–only-option
 [--skip option]: #–skip-option
 [Tree]: #Tree-is
@@ -4999,6 +5502,7 @@ The `--retry` option can be used to specify the tests to be retried.
 [DOCUMENT]: #DOCUMENT
 [MANDATORY]: #MANDATORY
 [MANUAL]: #MANUAL
+[AUTO]: #AUTO
 [LAST_RETRY]: #LAST_RETRY
 [flags]: #flags
 [Flags]: #Flags
