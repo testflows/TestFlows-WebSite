@@ -4791,6 +4791,14 @@ Show skipped tests.
 
 Show retried tests.
 
+### --test-to-end
+
+Force all tests to be test to end and continue the run even if one of the tests fails.
+
+### --first-fail
+
+Force all tests to be first fail and stop the run on the first failing test.
+
 ### Filtering
 
 #### pattern
@@ -5403,6 +5411,29 @@ with Test("my test"):
         debug("do something when terminal colors are turned off")
 ```
 
+# Forcing To Abort On First Fail
+
+You can force test program to abort on first fail irrespective
+of the presence of [TE] flags by using [--first-fail]
+test program argument.
+
+For example,
+
+```bash
+$ python3 test.py --first-fail
+```
+
+# Forcing To Continue On Fail
+
+You can force test program to continue running if any of the tests fail
+irrespective of the presence of [TE] flags by using [--test-to-end]
+test program argument.
+
+For example,
+
+```bash
+$ python3 test.py --test-to-end
+```
 
 # Enabling Debug Mode
 
@@ -5475,6 +5506,8 @@ with Test("my test"):
 [--output]: #–output
 [--show-skipped]: #–show-skipped
 [--show-retries]: #–show-retries
+[--test-to-end]: #–test-to-end
+[--first-fail]: #–first-fail
 [OK]: #OK
 [Fail]: #Fail
 [Error]: #Error
