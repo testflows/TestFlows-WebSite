@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1636582675029" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1636582675029" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1636583574316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1636583574316" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1636582675029" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1636583574316" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -556,15 +556,18 @@ defining <a href="#Critical-Major-Minor">Critical</a>, <a href="#Critical-Major-
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Check(<span class="string">&quot;Hello World!&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Critical(<span class="string">&quot;some critical check&quot;</span>):</span><br><span class="line">        fail(<span class="string">&quot;critical fail&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <h1 id="Working-With-Requirements"><a href="#Working-With-Requirements" class="headerlink" title="Working With Requirements"></a>Working With Requirements</h1><p>Requirements must be at the core of any enterprise QA process. Many proprietary and complex
-systems exist for handling requirements. This complexity is usually is not necessary
+systems exist for handling requirements. This complexity is usually not necessary
 and <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> provides a way to work with requirements just like with code
-and leveraging development tools to enable easy linking of requirements to your tests.</p>
+and leverage the same development tools to enable easy linking of requirements to your tests.</p>
 <p>In general when writing requirements you should think how they will be tested.
-Writing untestable requirements is not of much use. Keep this in mind during
+Requirements are can either be high level or low level. High level
+requirements are usually verified by <a href="#Feature">Feature</a>s or <a href="#Module">Module</a>s and low level requirements
+by individual <a href="#Test">Test</a>s or <a href="#Scenario">Scenario</a>s.</p>
+<p>Writing untestable requirements is not of much use. Keep this in mind during
 your software testing process.</p>
 <blockquote>
-<p><em>When writing requirements you should be thinking about tests that would verify them and
-where writing tests you should think about which requirements they will verify.</em></p>
+<p><em>When writing requirements you should be thinking about tests or test suites that would verify them and
+when writing tests or test suites you should think about which requirements they will verify.</em></p>
 </blockquote>
 <p>The ideal requirement to test relationship is one-to-one. Where one requirement
 is verified by one test. However, in practice the relationship can be
@@ -595,7 +598,7 @@ just like for your other source files.</p>
 <p>requirements.md</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># SRS001 `ls` Unix Command Utility</span></span><br><span class="line"><span class="section"># Software Requirements Specification</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Introduction</span></span><br><span class="line"></span><br><span class="line">This software requirements specification covers behavior of the standard</span><br><span class="line">Unix <span class="code">`ls`</span> utility.</span><br><span class="line"></span><br><span class="line"><span class="section">## Requirements</span></span><br><span class="line"></span><br><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL list the contents of a directory.</span><br></pre></td></tr></table></figure>
 </blockquote>
-<p>The above document server as the source of all the requirements and can be
+<p>The above document serves as the source of all the requirements and can be
 used to generate corresponding <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/6ce5978f80aabb84544eefc8dbd753aa39245fc2/testflows/_core/objects.py#L208">Requirement class</a> objects that can be linked with tests
 using <code>tfs requirements generate</code> command. See <a href="#Generating-Requirements-Objects">Generating Requirements Objects</a>.</p>
 <p>Each requirement is defined as a heading that starts with <code>RQ.</code> prefix and contains
@@ -603,9 +606,9 @@ attributes such as <code>version</code>, <code>priority</code>, <code>group</cod
 on the following line which must be followed by an empty line.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br></pre></td></tr></table></figure>
 
-<p>Only the <code>version</code> attribute is requirement and the others are optional.
+<p>Only the <code>version</code> attribute is always required and the others are optional.
 The <code>version</code> attribute allows to track material changes to the requirement over the 
-lifetime of the product and makes sure the tests get updates when requirement has been
+lifetime of the product and makes sure the tests get updated when requirement has been
 updated to a new version.</p>
 <p>Any text found until the next section is considered to be the description of the requirement.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">This is the first paragraph of the requirements description.</span><br><span class="line"></span><br><span class="line">This is the second paragraph.</span><br></pre></td></tr></table></figure>
@@ -614,7 +617,7 @@ updated to a new version.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL list the contents of a directory.</span><br><span class="line"></span><br><span class="line"><span class="section">### RQ.SRS001-CU.LS.ListHiddenEntries</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL accept <span class="code">`-a, --all`</span> option that SHALL cause the output</span><br><span class="line">to list entries starting with <span class="code">`.`</span> that SHALL be considered to be hidden.</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p><strong>&#9995;</strong> Accept for the basic format to define the requirements described above,
+<p><strong>&#9995;</strong> Except for the basic format to define the requirements described above,
 you can structure and organize the document in any way that is the most appropriate for
 your case.</p>
 </blockquote>

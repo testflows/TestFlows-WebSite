@@ -1012,16 +1012,20 @@ with Check("Hello World!"):
 # Working With Requirements
 
 Requirements must be at the core of any enterprise QA process. Many proprietary and complex
-systems exist for handling requirements. This complexity is usually is not necessary
+systems exist for handling requirements. This complexity is usually not necessary
 and **{% testflows %}** provides a way to work with requirements just like with code
-and leveraging development tools to enable easy linking of requirements to your tests.
+and leverage the same development tools to enable easy linking of requirements to your tests.
 
 In general when writing requirements you should think how they will be tested.
+Requirements are can either be high level or low level. High level
+requirements are usually verified by [Feature]s or [Module]s and low level requirements
+by individual [Test]s or [Scenario]s.
+
 Writing untestable requirements is not of much use. Keep this in mind during
 your software testing process.
 
-> _When writing requirements you should be thinking about tests that would verify them and
-> where writing tests you should think about which requirements they will verify._
+> _When writing requirements you should be thinking about tests or test suites that would verify them and
+> when writing tests or test suites you should think about which requirements they will verify._
 
 The ideal requirement to test relationship is one-to-one. Where one requirement
 is verified by one test. However, in practice the relationship can be
@@ -1074,7 +1078,7 @@ version: 1.0
 The [ls](#ls) utility SHALL list the contents of a directory.
 ```
 
-The above document server as the source of all the requirements and can be
+The above document serves as the source of all the requirements and can be
 used to generate corresponding [Requirement class] objects that can be linked with tests
 using `tfs requirements generate` command. See [Generating Requirements Objects](#Generating-Requirements-Objects).
 
@@ -1087,9 +1091,9 @@ on the following line which must be followed by an empty line.
 version: 1.0
 ```
 
-Only the `version` attribute is requirement and the others are optional.
+Only the `version` attribute is always required and the others are optional.
 The `version` attribute allows to track material changes to the requirement over the 
-lifetime of the product and makes sure the tests get updates when requirement has been
+lifetime of the product and makes sure the tests get updated when requirement has been
 updated to a new version.
 
 Any text found until the next section is considered to be the description of the requirement.
@@ -1118,7 +1122,7 @@ The [ls](#ls) utility SHALL accept `-a, --all` option that SHALL cause the outpu
 to list entries starting with `.` that SHALL be considered to be hidden.
 ```
 
-> **{% attention %}** Accept for the basic format to define the requirements described above,
+> **{% attention %}** Except for the basic format to define the requirements described above,
 > you can structure and organize the document in any way that is the most appropriate for
 > your case.
 
