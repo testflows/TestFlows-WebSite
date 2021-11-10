@@ -551,7 +551,7 @@ this is what makes it adaptable to your testing projects at hand.
 Let's see this using an example of how you could verify functionality
 of a simple `add(a, b)` function.
 
-> {% attention %} Note that this is just a toy example used for demonstration purposes only.
+> **{% attention %}** Note that this is just a toy example used for demonstration purposes only.
 
 ```python
 from testflows.core import *
@@ -800,6 +800,123 @@ if main():
 The [Outline] with [Examples] turns out to be the exact fit for the problem.
 However, there are many cases where you would want to have choice and **{% testflows %}**
 provides the flexibility you need to author your tests the way that fits best for you.
+
+# Test Flow Control
+
+The control of the [Flow] of tests allows you to precisely 
+define the order of test execution. **{% testflows %}** allows
+to write complete test programs and therefore the order of executed tests
+is defined in your [Python] test program code explicitly. 
+
+For example, the following test program defines decorated tests
+`testA`, `testB`, and `testC` which are executed in the `regression()` module
+in the `testA` -> `testB` -> `testC` order.
+
+```python
+from testflows.core import *
+
+@TestScenario
+def testA(self):
+    pass
+
+@TestScenario
+def testB(self):
+    pass
+
+@TestScenario
+def testC(self):
+    pass
+
+@TestModule
+def regression(self):
+    Scenario(run=testA)
+    Scenario(run=testB)
+    Scenario(run=testC)
+```
+
+It is trivial to see that given that the order or test execution ([Flow]) is explicitely
+defined in `regression()` we could easily change it from `testA` -> `testB` -> `testC` to
+`testC` -> `testA` -> `testB`.
+
+```python
+@TestModule
+def regression(self):
+    Scenario(run=testC)
+    Scenario(run=testA)
+    Scenario(run=testB)
+```
+
+## Conditional Test Execution
+
+Conditional execution can be added to any explictely defined test [Flow] using
+standard [Python Flow Control Tools](https://docs.python.org/3.8/tutorial/controlflow.html)
+using [if](https://docs.python.org/3.8/tutorial/controlflow.html#if-statements),
+[while](https://docs.python.org/3.8/reference/compound_stmts.html#while),
+and [for](https://docs.python.org/3.8/tutorial/controlflow.html#for-statements) statements. 
+
+For example,
+
+```python
+@TestModule
+def regression(self):
+    if Scenario(run=testA).result != Fail:
+        for i in range(3):
+            Scenario(f"testB #{i}", run=testB)
+        while True:
+            if Scenario(run=testC).result == OK:
+                break
+```
+
+will execute `testA` and only proceed to run other tests if its result is not [Fail] otherwise
+only `testA` will be executed. If result of `testA` is not [Fail] then
+we run `testB` 3 times and `testC` gets executed forever until its result is not [OK].
+
+## Creating Automatic Flows
+
+When precise control over test [Flow] is not necessary you
+can easily define a list of tests to be executed in any way you might see fit
+including using a simple list.
+
+For example,
+
+```python
+# list of all tests
+tests = [testA, testB, testC]
+
+@TestModule
+def regression(self):
+    for test in tests:
+        test()
+```
+
+For such simple cases you can also use [loads() function]. See [Using `loads()`](#Using-loads).
+
+The [loads() function] allows you to create a list of tests of the specified type
+from either current or some other module.
+
+For example,
+
+```python
+@TestModule
+def regression(self):
+    for test in loads(current_module(), Scenario):
+        test()
+```
+
+Here is an example of loading tests from `my_project/tests.py` module,
+
+```python
+@TestModule
+def regression(self):
+    for test in loads("my_project.tests", Scenario):
+        test()
+```
+
+The list of tests can be randomized or ordered for example using [ordered() function]
+or [Python]'s [sorted](https://docs.python.org/3/library/functions.html#sorted) function.
+
+> **{% attention %}** You could also write [Python] code to load your list of tests from any other source
+> such as a file system, database, or API endpoint, etc.
 
 # Setting Test Results Explicitly
 
@@ -3785,6 +3902,19 @@ with Module("my module"):
 You can use [loads() function] to load one or more tests of a given 
 test class.
 
+```python
+loads(name, *types, package=None, frame=None, filter=None)
+```
+where 
+
+* `name` module name or module 
+* `*types` test types ([Step], [Test], [Scenario], [Suite], [Feature], or [Module]), default: all
+* `package` package name if module name is relative (optional)
+* `frame` caller frame if module name is not specified (optional)
+* `filter` filter function (optional)
+
+and **returns** list of tests.
+
 For example, given multiple [Scenario]s defined in the same file one can
 use `loads() function` to execute all the [Scenario]s as follows
 
@@ -3800,7 +3930,7 @@ def test2(self):
 @TestFeature
 def feature(self):
     for scenario in loads(current_module(), Scenario):
-        scneario()
+        scenario()
 ```
 
 If a file contains multiple test types then you can just 
