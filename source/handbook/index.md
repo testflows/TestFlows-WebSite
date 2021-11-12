@@ -801,6 +801,313 @@ The [Outline] with [Examples] turns out to be the exact fit for the problem.
 However, there are many cases where you would want to have choice and **{% testflows %}**
 provides the flexibility you need to author your tests the way that fits best for you.
 
+## Using Test Steps
+
+When writing tests it is best practice to break the test procedure
+into individual test [Step]s. While using **{% testflows %}** you can write
+tests without explicitly defining [Step]s it is not recommended.
+
+Breaking tests into steps has the following advantages:
+
+* improves code structure
+* results in self documented test code
+* greatly improves debugging of test fails
+* enables auto generation of test specifications
+
+### Structuring Code
+
+Using test [Step]s helps to structure test code. Any test inherently implements a 
+test procedure and the procedure is usually described by a set of steps.
+Therefore, it is natural to structure tests in form of a series of individual
+[Step]s. In **{% testflows %}** test [Step]s are defined and used just like [Test]s
+or [Scenario]s as [Step]s also have results just like [Test]s. 
+
+Test [Step]s can be either be defined inline or using [TestStep] function decorator
+with the combination of both being the most common.
+
+For example, the following code clearly shows that by identifying steps such as setup,
+action and assertion the structure of test code is improved.
+
+```python
+from testflows.core import *
+
+@TestScenario
+def my_scenario(self):
+    with Given("I setup something"):
+        pass
+
+    with When("I do something"):
+        pass
+    
+    with Then("I expect something"):
+        pass
+
+if main():
+    my_scenario()
+```
+
+In many cases steps themselves can be reused between many different tests. In this
+case defining steps as decorated functions helps to make them reusable.
+
+For example,
+
+```python
+from testflows.core import *
+
+@TestStep(Given)
+def setup_something(self):
+    pass
+
+@TestStep(When)
+def do_something(self):
+    pass
+
+@TestStep(Then)
+def expect_something(self):
+    pass
+```
+
+The [Step]s above just like [Test]s can be called directly (not recommended) as follows:
+
+```python
+@TestScenario
+def my_scenario(self):
+    setup_something()
+    do_something()
+    expect_something()
+```
+
+However, the best practice is to wrap calls to decorated test steps with inline
+[Step]s which allows to clearly give each [Step] a proper `name` in the context
+of the specific test scenario as well as allows to specify a detailed `description`
+when needed.
+
+For example,
+
+```python
+@TestScenario
+def my_scenario(self):
+    with Given("I setup something",
+               description="""detailed description if needed"""):
+        setup_something()
+
+    with When("I do something",
+              description="""detailed description if needed"""):
+        do_something()
+    
+    with Then("I expect something",
+              description="""detailed description if needed"""):
+        expect_something()
+```
+
+> **{% attention %}** Note that because decorated test steps are being called within a [Step] these
+> calls are similar to just calling a function which is another advantage of wrapping calls
+> with inline steps. This means that return value from the 
+> decorated test step can be received just like from a function:
+> ```python
+@TestStep(When)
+def do_something(self):
+    return "hello there"
+
+@TestScenario
+def my_scenario(self):
+    with When("I do something",
+              description="""detailed description if needed"""):
+        value = do_something() # value will be set to "hello there"
+```
+
+### Self Documenting Test Code
+
+Using test [Step]s results in self documented test code. Take another look at this example.
+
+```python
+@TestScenario
+def my_scenario(self):
+    with Given("I setup something",
+               description="""detailed description if needed"""):
+        setup_something()
+
+    with When("I do something",
+              description="""detailed description if needed"""):
+        do_something()
+    
+    with Then("I expect something",
+              description="""detailed description if needed"""):
+        expect_something()
+```
+
+It is clear to see that explicitly defined [Given], [When], and [Then] steps
+when given proper `name`s and `description`s makes reading test code
+a pleasant experience as test author has a way to clearly communicate
+the test procedure to the reader.
+
+The result of using test [Step]s is clear, readable and highly maintainable
+test code. Given that each [Step] produces corresponding messages in the test output it forces
+test maintainers to ensure [Step] `name`s and `description`s are
+maintained accurate over the lifetime of the test.
+
+### Improved Debugging of Test Fails
+
+Using test [Step]s helps with debugging test fails as you can clearly see
+at which [Step] of the test procedure the test has failed. Combined with the
+clearly identified test procedure it becomes much easier to debug any test fails.
+
+For example,
+
+```python
+from testflows.core import *
+
+@TestStep(Given)
+def setup_something(self):
+    pass
+
+@TestStep(When)
+def do_something(self):
+    pass
+
+@TestStep(Then)
+def expect_something(self):
+    pass
+
+@TestScenario
+def my_scenario(self):
+    with Given("I setup something",
+               description="""detailed description if needed"""):
+        setup_something()
+
+    with When("I do something",
+              description="""detailed description if needed"""):
+        do_something()
+    
+    with Then("I expect something",
+              description="""detailed description if needed"""):
+        expect_something()
+
+if main():
+  my_scenario()
+```
+
+Running the test program above results in the following output using the default [`nice`]
+format.
+
+```bash
+Nov 12,2021 10:56:17   ⟥  Scenario my scenario
+Nov 12,2021 10:56:17     ⟥  Given I setup something, flags:MANDATORY
+                              detailed description if needed
+               305us     ⟥⟤ OK I setup something, /my scenario/I setup something
+Nov 12,2021 10:56:17     ⟥  When I do something
+                              detailed description if needed
+               165us     ⟥⟤ OK I do something, /my scenario/I do something
+Nov 12,2021 10:56:17     ⟥  Then I expect something
+                              detailed description if needed
+               225us     ⟥⟤ OK I expect something, /my scenario/I expect something
+                 7ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+If we introduce a fail in the [When] step, we can see that it will be easy to see at which 
+point in the test procedure the test is failing.
+
+```python
+@TestStep(When)
+def do_something(self):
+    assert False
+```
+
+```bash
+Nov 12,2021 10:58:02   ⟥  Scenario my scenario
+Nov 12,2021 10:58:02     ⟥  Given I setup something, flags:MANDATORY
+                              detailed description if needed
+               328us     ⟥⟤ OK I setup something, /my scenario/I setup something
+Nov 12,2021 10:58:02     ⟥  When I do something
+                              detailed description if needed
+               689us     ⟥    Exception: Traceback (most recent call last):
+                                  File "steps.py", line 30, in <module>
+                                    my_scenario()
+                                  File "steps.py", line 23, in my_scenario
+                                    do_something()
+                                  File "steps.py", line 9, in do_something
+                                    assert False
+                                AssertionError
+               824us     ⟥⟤ Fail I do something, /my scenario/I do something, AssertionError
+                           Traceback (most recent call last):
+                             File "steps.py", line 30, in <module>
+                               my_scenario()
+                             File "steps.py", line 23, in my_scenario
+                               do_something()
+                             File "steps.py", line 9, in do_something
+                               assert False
+                           AssertionError
+                 7ms   ⟥⟤ Fail my scenario, /my scenario, AssertionError
+                         Traceback (most recent call last):
+                           File "steps.py", line 30, in <module>
+                             my_scenario()
+                           File "steps.py", line 23, in my_scenario
+                             do_something()
+                           File "steps.py", line 9, in do_something
+                             assert False
+                         AssertionError
+```
+
+> **{% attention %}** Note that the failing test result always `bubbles up` all the way to the 
+> [Top Level Test] and therefore it might seem that the output is redundant.
+> However, this allows to examine the fail just by looking at the result of the 
+> [Top Level Test].
+
+### Auto Generation Of Test Specifications
+
+When tests are broken up into [Step]s generating test specifications is very easy.
+
+For example,
+
+```python
+from testflows.core import *
+
+@TestScenario
+def my_scenario(self):
+    with Given("I setup something"):
+        pass
+
+    with When("I do something"):
+        pass
+    
+    with Then("I expect something"):
+        pass
+
+if main():
+    my_scenario()
+```
+
+when executed with [`short`] output format highlights the test procedure.
+
+```bash
+Scenario my scenario
+  Given I setup something
+  OK
+  When I do something
+  OK
+  Then I expect something
+  OK
+OK
+```
+
+If you save test log using `--log test.log` option, then you can also use `tfs show procedure` command to
+extract the procedure of a given test within a test program run.
+
+```bash
+$ cat test.log | tfs show procedure "/my scenario"
+Scenario my scenario
+  Given I setup something
+  When I do something
+  Then I expect something
+```
+
+Full test specification for a given test program run can be obtained
+using `tfs report specification` command.
+
+```bash
+ cat test.log | tfs report specification | tfs document convert > specification.html
+```
+
 # Test Flow Control
 
 The control of the [Flow] of tests allows you to precisely 
