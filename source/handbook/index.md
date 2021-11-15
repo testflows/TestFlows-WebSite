@@ -1945,46 +1945,166 @@ The `tfs transform decompress` command is used to decompress a test log compress
 
 Test logs can be used to create reports using `tfs report` command. See `tfs report --help` for a list of available reports.
 
-## results
+## Results Report
 
 A results report can be generated from a test log using `tfs report results` command.
 The report can be generated in either [Markdown] format (default) or [JSON] format
 by specifying `--format json` option.
 The report in [Markdown] can be converted to [HTML] using `tfs document convert` command.
+
+```bash
+Generate results report.
+
+positional arguments:
+  input                      input log, default: stdin
+  output                     output file, default: stdout
+
+optional arguments:
+  -h, --help                 show this help message and exit
+  -a link, --artifacts link  link to the artifacts
+  --format type              output format choices: 'md', 'json', default: md (Markdown)
+  --copyright name           add copyright notice
+  --confidential             mark as confidential
+  --logo path                use logo image (.png)
+  --title name               custom title
+```
+
 For example,
 
 ```bash
 $ cat test.log | tfs report results | tfs document convert > report.html
 ```
 
-See `tfs report results --help` for details.
-
-## coverage
+## Coverage Report
 
 Requirements coverage report can be generated from a test log using `tfs report coverage` command. The report is created in [Markdown]
 and can be converted to [HTML] using `tfs document convert` command. For example,
 
 ```bash
+Generate requirements coverage report.
+
+positional arguments:
+  requirements                requirements source file, default: '-' (from input log)
+  input                       input log, default: stdin
+  output                      output file, default: stdout
+
+optional arguments:
+  -h, --help                  show this help message and exit
+  --show status [status ...]  verification status. Choices: 'satisfied', 'unsatisfied', 'untested'
+  --input-link attribute      attribute that is used as a link to the input log, default: job.url
+  --format type               output format, default: md (Markdown)
+  --copyright name            add copyright notice
+  --confidential              mark as confidential
+  --logo path                 use logo image (.png)
+  --title name                custom title
+  --only name [name ...]      name of one or more specifications for which to generate coverage
+                              report, default: include all specifications. Only a unique part of the
+                              name can be specified.
+```
+
+For example,
+
+```bash
 $ cat test.log | tfs report coverage requirements.py | tfs document convert > coverage.html
 ```
 
-See `tfs report coverage --help` for details.
+## Metrics Report
 
-## compare
+You can generate metrics report using `tfs report metrics` command.
+
+```bash
+Generate metrics report.
+
+positional arguments:
+  input          input log, default: stdin
+  output         output file, default: stdout
+
+optional arguments:
+  -h, --help     show this help message and exit
+  --format type  output format choices: 'openmetrics', 'csv' default: openmetrics
+```
+
+## Comparison Reports
 
 A comparison report can be generated using one of the `tfs report compare` commands.
 
-### results
+```bash
+Generate comparison report between runs.
 
-A results comparison report can be generated using `tfs report compare results` command. See `tfs report compare results --help` for details.
+optional arguments:
+  -h, --help  show this help message and exit
 
-### metrics
+commands:
+  command
+    results   results report
+    metrics   metrics report
+```
 
-A metrics comparison report can be generated using `tfs report compare metrics` command. See `tfs report compare metrics --help` for details.
+### Compare Results
 
-## specification
+A results comparison report can be generated using `tfs report compare results` command.
 
-A test specification for the test run can be generated using `tfs report specification` command. See `tfs report specification --help` for details.
+```bash
+Generate results comparison report.
+
+positional arguments:
+  output                        output file, default: stdout
+
+optional arguments:
+  -h, --help                    show this help message and exit
+  --log pattern [pattern ...]   log file pattern
+  --log-link attribute          attribute that is used as a link for the log, default: job.url
+  --only pattern [pattern ...]  compare only selected tests
+  --order-by attribute          attribute that is used to order the logs
+  --sort direction              sort direction. Either 'asc' or 'desc', default: asc
+  --format type                 output format, default: md (Markdown)
+  --copyright name              add copyright notice
+  --confidential                mark as confidential
+  --logo path                   use logo image (.png)
+```
+
+### Compare Metrics
+
+A metrics comparison report can be generated using `tfs report compare metrics` command.
+
+```bash
+Generate metrics comparison report.
+
+positional arguments:
+  output                        output file, default: stdout
+
+optional arguments:
+  -h, --help                    show this help message and exit
+  --log pattern [pattern ...]   log file pattern
+  --log-link attribute          attribute that is used as a link for the log, default: job.url
+  --only pattern [pattern ...]  compare only selected tests
+  --order-by attribute          attribute that is used to order the logs
+  --sort direction              sort direction. Either 'asc' or 'desc', default: asc
+  --format type                 output format, default: md (Markdown)
+  --copyright name              add copyright notice
+  --confidential                mark as confidential
+  --logo path                   use logo image (.png)
+  --name name [name ...]        metrics name, default: test-time
+```
+
+## Specification Report
+
+A test specification for the test run can be generated using `tfs report specification` command.
+
+```bash
+Generate specifiction report.
+
+positional arguments:
+  input             input log, default: stdin
+  output            output file, default: stdout
+
+optional arguments:
+  -h, --help        show this help message and exit
+  --copyright name  add copyright notice
+  --confidential    mark as confidential
+  --logo path       use logo image (.png)
+  --title name      custom title
+```
 
 # Test Results
 
@@ -5527,6 +5647,235 @@ Sep 24,2021 21:48:47   ⟥  Scenario my test
                                 hello there
                  4ms   ⟥⟤ OK my test, /my test
 ```
+
+# Adding Messages
+
+You can add custom messages to your tests using [note() function], [debug() function],
+[trace() function], and [message() function].
+
+> **{% attention %}** Use Python [f-string]s if you need to format a message using variables.
+
+
+## Using `note()`
+
+Use [note() function] to add a note message to your test.
+
+```python
+note(message, test=None)
+```
+
+where
+
+* `message` is a string that contains your message
+* `test` (optional) the instance of the test to which the message will be added, default: current test
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    name = "Your Name"
+    note(f"Hello {name}!")
+```
+
+when executed shows the `note` message.
+
+```bash
+Nov 15,2021 14:17:21   ⟥  Scenario my scenario
+                 8ms   ⟥    [note] Hello Your Name!
+                 8ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+## Using `debug()`
+
+Use [debug() function] to add a debug message to your test.
+
+```python
+debug(message, test=None)
+```
+
+where
+
+* `message` is a string that contains your message
+* `test` (optional) the instance of the test to which the message will be added, default: current test
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    name = "Your Name"
+    debug(f"Hello {name}!")
+```
+
+when executed shows the `debug` message.
+
+```bash
+Nov 15,2021 14:19:27   ⟥  Scenario my scenario
+                 4ms   ⟥    [debug] Hello Your Name!
+                 4ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+## Using `trace()`
+
+Use [trace() function] to add a trace message to your test.
+
+```python
+trace(message, test=None)
+```
+
+where
+
+* `message` is a string that contains your message
+* `test` (optional) the instance of the test to which the message will be added, default: current test
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    name = "Your Name"
+    trace(f"Hello {name}!")
+```
+
+when executed shows the `trace` message.
+
+```bash
+Nov 15,2021 14:20:17   ⟥  Scenario my scenario
+                 4ms   ⟥    [trace] Hello Your Name!
+                 4ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+## Using `message()`
+
+Use [message() function] to add a generic message to your test
+that could optionally be assigned to a `stream`.
+
+```python
+message(message, test=None, stream=None)
+```
+
+where
+
+* `message` is a string that contains your message
+* `test` (optional) the instance of the test to which the message will be added, default: current test
+* `stream` (option) is a stream with which the message should be associated
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    name = "Your Name"
+    message(f"Hello {name}!", stream="my stream")
+    message(f"Hello {name} there again!", stream="another stream")
+```
+
+when executed shows the custom `message`.
+
+```bash
+Nov 15,2021 14:37:53   ⟥  Scenario my scenario
+                 4ms        [my stream] Hello Your Name!
+                 4ms        [another stream] Hello Your Name there again!
+                 4ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+## Using `exception()`
+
+Use [exception() function] to manually add an exception message to your test.
+
+```python
+exception(exc_type, exc_value, exc_traceback, test=None)
+```
+
+where
+
+* `exc_type` exception type
+* `exc_value` exception value
+* `exc_traceback` exception traceback
+* `test` (optional) the instance of the test to which the message will be added, default: current test
+
+> **{% attention %}** The `exc_type`, `exc_value`, and `exc_traceback`
+> are usually obtained from [sys.exc_info()] that must be called
+> within `except` block.
+
+For example,
+
+```python
+import sys
+from testflows.core import *
+
+with Scenario("my scenario"):
+    try:
+        raise RuntimeError("error")
+    except:
+        exception(*sys.exc_info())
+```
+
+when executed shows the `exception` message.
+
+```bash
+Nov 15,2021 15:08:48   ⟥  Scenario my scenario
+                 4ms   ⟥    Exception: Traceback (most recent call last):
+                                File "msgs.py", line 6, in <module>
+                                  raise RuntimeError("error")
+                              RuntimeError: error
+                 4ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+# Adding Metrics
+
+You can add `metric` messages to your test using [metric() function].
+
+```python
+metric(name, value, units, type=None, group=None, uid=None, base=Metric, test=None)
+```
+
+where
+
+* `name` name of the metric
+* `value` value of the metric
+* `units` units of the metric (string)
+* `type` (optional) metric type
+* `group` (optional) metric group
+* `uid` (optionl) metric unique identifier
+* `base` (optional) metric base class, default: [Metric class]
+* `test` (optional) the instance of the test to which the message will be added, default: current test
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    metric("my metric", 20.56, "Hz")
+```
+
+when executed shows the `metric` message.
+
+```bash
+Nov 15,2021 16:44:13   ⟥  Scenario my scenario
+                 5ms   ⟥    Metric my metric
+                              20.56 Hz
+                 5ms   ⟥⟤ OK my scenario, /my scenario
+```
+
+You can use `cat test.log | tfs show metrics` command to see all the metrics for a given test.
+See [Show Metrics](#Show-Metrics) and [Metrics Report](#Metrics-Report).
+
+For example,
+
+```bash
+$ cat test.log | tfs show metrics
+Scenario /my scenario
+  Metric my metric
+    20.56 Hz
+```
+
 # Test Program Options
 
 ## Options
@@ -6270,6 +6619,62 @@ with Test("my test"):
         debug("do something in debug mode")
 ```
 
+# Show Test Data
+
+After test program is executed you can retrieve different test data related to the test run
+using `tfs show` command.
+
+The following commands are available:
+
+```bash
+$ tfs show -h
+
+commands:
+  command
+    results         results
+    passing         passing
+    fails           fails
+    unstable        unstable
+    totals          totals
+    coverage        coverage
+    version         version
+    tests           tests
+    messages        messages
+    details         details
+    procedure       procedure
+    description     description
+    arguments       arguments
+    attributes      attributes
+    requirements    requirements
+    tags            tags
+    metrics         metrics
+    examples        examples
+    specifications  specifications
+    result          result
+```
+
+## Show Metrics
+
+Use `tfs show metrics` command to show metrics for a given test.
+
+```bash
+positional arguments:
+  name               test name
+
+optional arguments:
+  -h, --help         show this help message and exit
+  --log [input]      input log, default: stdin
+  --output [output]  output, default: stdout
+```
+
+For example,
+
+```bash
+$ cat test.log | tfs show metrics
+```
+
+
+[Show Test Data]: #Show-Test-Data
 [for loop]: https://docs.python.org/3/tutorial/controlflow.html#for-statements
 [assert]: https://docs.python.org/3/reference/simple_stmts.html#the-assert-statement
 [AssertionError]: https://docs.python.org/3/library/exceptions.html#AssertionError
@@ -6459,6 +6864,8 @@ with Test("my test"):
 [Retrying Tests]: #Retrying-Tests
 [Retries]: #Retries
 [Retry]: #Retry
+[f-string]: https://docs.python.org/3/tutorial/inputoutput.html#tut-f-strings
+[sys.exc_info()]: https://docs.python.org/3/library/sys.html#sys.exc_info
 
 [hasattr()]: https://docs.python.org/3/library/functions.html#hasattr
 [getattr()]: https://docs.python.org/3/library/functions.html#getattr
