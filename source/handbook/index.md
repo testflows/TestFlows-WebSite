@@ -1646,8 +1646,6 @@ def regression(self):
     note(self.specifications)
 ```
 
-
-
 # Top Level Test
 
 {% testflows %} only allows one top level test to exist in any given test program execution.
@@ -1814,6 +1812,41 @@ $ python3 id.py -o raw --id 112233445566
 {"message_keyword":"PROTOCOL",...,"test_id":"/112233445566",...}
 ...
 ```
+
+# Test Program Tree
+
+Executing any **{% testflows %}** test program results in a [Tree]. Below is a
+diagram that depicts a simple test program execution [Tree].
+
+&#128270; **Test Program Tree**
+
+<img src="/handbook/assets/flow.png" alt="Test Program Tree" style="width: 100%">
+
+During test program execution, when all tests are executed sequentially,
+the [Tree] is traversed in a depth first order. 
+
+The order of execution of tests shown is the diagram above is as follows
+
+>  * /Top Test
+>  * /Top Test/Suite A
+>  * /Top Test/Suite A/Test A/
+>  * /Top Test/Suite A/Test A/Step A
+>  * /Top Test/Suite A/Test A/Step B
+>  * /Top Test/Suite A/Test B/
+>  * /Top Test/Suite A/Test B/Step A
+>  * /Top Test/Suite A/Test B/Step B
+
+and this order of execution forms the [Flow] of the test program.
+This [Flow] can also be shown graphically as in the diagram below where depth first 
+order of execution is highlighted by the magenta colored arrows.
+
+&#128270; **Test Program Tree Traversal** *(sequential)*
+
+<img src="/handbook/assets/flow_traversal.png" alt="Test Program Tree Traversal" style="width: 100%">
+
+When dealing with test names when [Filtering Tests](#Filtering-Tests-By-Name) it is best
+to keep the diagram above in mind to help visualize and understand how **{% testflows %}**
+works.
 
 # Logs
 
@@ -2367,35 +2400,7 @@ execution [Tree] is similar to the structure of a file system.
 
 Filtering tests is then nothing but selecting which nodes in the tree should be
 selected and which shall be skipped. Filtering is performed by matching the [pattern]
-to the test name.
-
-Below is a diagram that depicts a simple test program execution [Tree].
-
-&#128270; **Test Program Tree**
-
-<img src="/handbook/assets/flow.png" alt="Test Program Tree" style="width: 100%">
-
-During test program execution, when all tests are executed sequentially,
-the [Tree] is traversed in a depth first order. 
-
-The order of execution of tests shown is the diagram above is as follows
-
->  * /Top Test
->  * /Top Test/Suite A
->  * /Top Test/Suite A/Test A/
->  * /Top Test/Suite A/Test A/Step A
->  * /Top Test/Suite A/Test A/Step B
->  * /Top Test/Suite A/Test B/
->  * /Top Test/Suite A/Test B/Step A
->  * /Top Test/Suite A/Test B/Step B
-
-and this order of execution forms the [Flow] of the test program.
-This [Flow] can also be shown graphically as in the diagram below where depth first 
-order of execution is highlighted by the magenta colored arrows.
-
-&#128270; **Test Program Tree Traversal** *(sequential)*
-
-<img src="/handbook/assets/flow_traversal.png" alt="Test Program Tree Traversal" style="width: 100%">
+to the test name. See [Test Program Tree](#Test-Program-Tree).
 
 Skipping a test then means that the body of the test is skipped along with the sub-tree
 that is below the corresponding test node.
