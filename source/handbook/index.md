@@ -3335,6 +3335,9 @@ The specialized keywords map to core [Step], [Test], [Suite], and [Module] test 
 Tests can be semi-automated and include one or more manual steps or
 be fully manual.
 
+> **{% attention %}** It is often common to use [input() function] to prompt
+> for input during execution of semi-automated or manual tests. See [Reading Input](#Reading-Input).
+
 ## Semi-Automated
 
 Semi-automated tests are tests that have one or more steps with the [MANUAL] flag set.
@@ -5874,6 +5877,61 @@ $ cat test.log | tfs show metrics
 Scenario /my scenario
   Metric my metric
     20.56 Hz
+```
+
+# Reading Input
+
+You can read input during test program execution using [input() function].
+This function is commonly used in [Semi-Automated And Manual Tests](#Semi-Automated-And-Manual-Tests).
+
+```python
+input(type, multiline=False, choices=None, confirm=True, test=None
+```
+
+where 
+
+* `type` is either a string or `result` function.
+* `multiline` (optional) flag to indicate if input is multiline string, default: `False`
+* `choices` (optional) a list of valid choices (only applies if `type` is string)
+* `confirm` (optional) ask for confirmation, default: `True`
+* `test` the instance of the test with which input message will be associated, default: current test
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    input("What is your name?", multiline=False)
+```
+
+when executed prompts for `input`
+
+```bash
+Nov 15,2021 17:19:25   ⟥  Scenario my scenario
+✍  What is your name?
+TestFlows
+✍  Is this correct [Y/n]? Y
+            6s 490ms   ⟥⟤ OK my scenario, /my scenario
+
+```
+
+Also, you can prompt for the result. For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    input(result)
+```
+
+when executed prompts for `result`
+
+```bash
+Nov 15,2021 17:22:26   ⟥  Scenario my scenario
+✍  Enter `my scenario` result? OK success
+✍  Is this correct [Y/n]? 
+            3s 198ms   ⟥⟤ OK my scenario, /my scenario, success
 ```
 
 # Test Program Options
