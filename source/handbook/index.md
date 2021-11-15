@@ -4187,6 +4187,36 @@ def my_scenario(self):
     pass
 ```
 
+### Using `pause()`
+
+You can also use [pause() function] to explicitely pause the test during test program
+execution.
+
+```python
+pause(test=None)
+```
+
+where
+
+* `test` the instance of the test where test program will be paused, default: current test
+
+For example,
+
+```python
+from testflows.core import *
+
+with Scenario("my scenario"):
+    pause()
+```
+
+when executed the test program is paused.
+
+```bash
+Nov 15,2021 17:31:58   ⟥  Scenario my scenario
+✋ Paused, enter any key to continue...
+             1s 55ms   ⟥⟤ OK my scenario, /my scenario
+```
+
 # Using Contexts
 
 Each test has `context` attribute that can be used for storing and passing state
