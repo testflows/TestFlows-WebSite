@@ -6714,6 +6714,8 @@ with Test("my test"):
 
 # Getting Test Time
 
+## Using `current_time()`
+
 *{% available %}* [1.7.57]
 
 You can get current test execution time using [current_time() function].
@@ -6724,7 +6726,7 @@ current_time(test=None)
 
 where
 
-* `test` is the instance of the test for which to obtain test time, default: current test
+* `test` (optional) the instance of the test for which to obtain test time, default: current test
 
 The returned value is fixed after test has finished its execution.
 
