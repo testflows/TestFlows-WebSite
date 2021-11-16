@@ -6716,7 +6716,7 @@ with Test("my test"):
 
 *{% available %}* [1.7.57]
 
-You can get current tests execution time using [current_time() function].
+You can get current test execution time using [current_time() function].
 
 ```python
 current_time(test=None)

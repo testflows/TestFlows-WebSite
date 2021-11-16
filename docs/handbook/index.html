@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1637075412940" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1637075412940" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1637076559550" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1637076559550" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1637075412940" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1637076559550" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -3001,10 +3001,8 @@ was specified or not. When <a href="#%E2%80%93debug">–debug</a> option is spec
 can be retrieved from <code>settings.debug</code> as follows</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.settings <span class="keyword">as</span> settings</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> settings.debug:</span><br><span class="line">        debug(<span class="string">&quot;do something in debug mode&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<h1 id="Getting-Test-Time"><a href="#Getting-Test-Time" class="headerlink" title="Getting Test Time"></a>Getting Test Time</h1><blockquote>
-<p><strong>&#9995; New in</strong> <a target="_blank" rel="noopener" href="https://pypi.org/project/testflows/1.7.57/">1.7.57</a></p>
-</blockquote>
-<p>You can get current tests execution time using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/funcs.py#L366">current_time() function</a>.</p>
+<h1 id="Getting-Test-Time"><a href="#Getting-Test-Time" class="headerlink" title="Getting Test Time"></a>Getting Test Time</h1><p><em>&#10024; Available in</em> <a target="_blank" rel="noopener" href="https://pypi.org/project/testflows/1.7.57/">1.7.57</a></p>
+<p>You can get current test execution time using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/funcs.py#L366">current_time() function</a>.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">current_time(test=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
 
 <p>where</p>
