@@ -1645,6 +1645,127 @@ from requirements import SRS001_ls_Unix_Command_Utility
 def regression(self):
     note(self.specifications)
 ```
+# Attributes Of Decorated Tests
+
+You can set different test attributred for decorated tests using different decorator classes
+such as [Flags class] to set test `flags`, [Name class] to set test `name`, [Examples class]
+to set `examples` etc.
+
+For example,
+
+```python
+@TestScenario
+@Name("check add two numbers")
+@Flags(TE)
+@Examples("x y result", [
+  (1,1,2),
+])
+def test(self, x, y, result):
+    assert sum([x,y]) == result
+```
+
+When creating a test based on a decorated test the attributes of the test get preserved unless
+you override them explicitly.
+
+For example,
+
+```python
+# execute `test()` using a Scenario that will have
+# the same flags, name, and examples attributes
+Scenario(test=test)(x=1, y=1, result=2)
+```
+
+However, if you call decorated test as a function within the test of the same type
+then the attributes of the parent test are not changed in any way as
+the test is executed just like a function.
+
+```python
+with Scenario("my test"):
+    # calling decorated test here will have no effect on
+    # attributes of `my test` scenario
+    test(x=1, y=1, result=2)
+```
+
+## Overriding Attributes
+
+You can override any attributes of a decorated tests by explicitly creating a test
+that uses it as a base via `test` parameter, or `run` parameter if there is no need to pass
+any arguments to the test, and define any new values of the attributes as needed. 
+
+For example, we can override the `name` and `flags` attributes of a decorated
+`test()` while not modifying `examples` or any other attributes as follows:
+
+```python
+Scenario(name="my new name", flags=PAUSE_BEFORE, test=test)(x=1, y=1, result=2)
+```
+
+> **{% attention %}** The `test` parameter sets the decorated test to be the base
+> for the explicitly defined `Scenario`.
+
+If we also want to set custom `examples`, you could do it as follows:
+
+```python
+Scenario(name="my new name", flags=PAUSE_BEFORE,
+         examples=Examples("x y result", [
+            (1,2,3), (2,2,4)
+         ], test=test)(x=1, y=1, result=2)
+```
+
+Similarly, any other attribute of the scenario can be set. If the same attribute
+is set already for the decorated test then the value is overwritten. 
+
+## Modifying Attributes
+
+If you don't want to completely override the attributes of the decorated test
+then you need to explicitly modify them by accessing the original values of the decorated
+test.
+
+Any set attributes of the decorated test can be accessed as the attribute of the
+decorated test object. For example,
+
+```python
+from testflows.core import *
+
+@TestScenario
+@Name("check add two numbers")
+@Flags(TE)
+@Examples("x y result", [
+  (1,1,2),
+])
+def test(self, x, y, result):
+    assert sum([x,y]) == result
+
+# `name`, `flags` and `examples` attributes can be accessed
+# using the corresponding attributes of the test decorator object
+print("name:", test.name)
+print("flags:", test.flags)
+print("examples:\n", test.examples)
+```
+
+Use standard [getattr()] function to check if a particular attribute is set and if not
+then use the default value.
+
+For example,
+
+```python
+Scenario("my new test", flags=Flags(getattr(test, "flags", None)) | PAUSE_BEFORE, test=test)(x=1, y=1, result=2)
+```
+
+adds [PAUSE_BEFORE] flag to the initial flags of the decorated test.
+
+> **{% attention %}** Note that we don't want to modify the original attributes
+> but instead must always create a new object based on the initial attribute value.
+
+Here is an example of how to add another example to existing `examples`
+
+```python
+    Scenario("my new test", examples=Examples(
+                "x y result",
+                list(getattr(test, "examples", Examples("", [])).rows) + [
+                    (2,2,4)
+                ]),
+             test=test)(x=1, y=1, result=2)
+```
 
 # Top Level Test
 
@@ -6988,7 +7109,8 @@ $ cat test.log | tfs show metrics
 [Retry]: #Retry
 [f-string]: https://docs.python.org/3/tutorial/inputoutput.html#tut-f-strings
 [sys.exc_info()]: https://docs.python.org/3/library/sys.html#sys.exc_info
-
+[getattr()]: https://docs.python.org/3/library/functions.html#getattr
+[setattr()]: https://docs.python.org/3/library/functions.html#setattr
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/test.py#L2246
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/objects.py#L784
