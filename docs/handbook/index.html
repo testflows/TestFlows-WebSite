@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1637613717856" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1637613717856" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1637613928816" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1637613928816" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1637613717856" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1637613928816" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -800,7 +800,7 @@ called with a specific version just like <a target="_blank" rel="noopener" href=
 decorator.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> SRS001_ls_Unix_Command_Utility</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@Specifications(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="meta">  SRS001_ls_Unix_Command_Utility</span></span></span><br><span class="line"><span class="params"><span class="meta"></span>)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">regression</span>(<span class="params">self</span>):</span></span><br><span class="line">    note(self.specifications)</span><br></pre></td></tr></table></figure>
-<h1 id="Attributes-Of-Decorated-Tests"><a href="#Attributes-Of-Decorated-Tests" class="headerlink" title="Attributes Of Decorated Tests"></a>Attributes Of Decorated Tests</h1><p>You can set different test attributred for decorated tests using different decorator classes
+<h1 id="Attributes-Of-Decorated-Tests"><a href="#Attributes-Of-Decorated-Tests" class="headerlink" title="Attributes Of Decorated Tests"></a>Attributes Of Decorated Tests</h1><p>You can set attributes for decorated tests using different decorator classes
 such as <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/flags.py#L91">Flags class</a> to set test <code>flags</code>, <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/objects.py#L839">Name class</a> to set test <code>name</code>, <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/2f5ab1f234e4bd35c5f772d467f2a1492823796d/testflows/_core/objects.py#L845">Examples class</a>
 to set <code>examples</code> etc.</p>
 <p>For example,</p>

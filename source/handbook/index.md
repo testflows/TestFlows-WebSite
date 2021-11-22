@@ -1647,7 +1647,7 @@ def regression(self):
 ```
 # Attributes Of Decorated Tests
 
-You can set different test attributred for decorated tests using different decorator classes
+You can set attributes for decorated tests using different decorator classes
 such as [Flags class] to set test `flags`, [Name class] to set test `name`, [Examples class]
 to set `examples` etc.
 
