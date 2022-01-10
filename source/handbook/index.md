@@ -202,6 +202,15 @@ $ cd TestFlows
 $ ./build ; ./install
 ```
 
+## Upgrading
+
+If you have already {% testflows %} installed, you can upgrade it to the latest version
+using the `--upgrade` option when executing `pip3 install` command.
+
+```bash
+$ pip3 install --upgrade testflows
+```
+
 # Hello World
 
 You can write an inline test scenario in just three lines.
