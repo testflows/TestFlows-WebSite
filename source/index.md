@@ -221,6 +221,40 @@ with Scenario("manual scenario", flags=MANUAL):
 ---
 
 # <br>
+# **Testing Documentation**
+## automate your documentation with ease
+## and keep it always up to date
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Write executable documentation by mixing Markdown and Python code using `testflows.texts`
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+<div>
+<pre># Welcome to TestFlows Texts<br>
+```python:testflows
+# any Python code
+<span class="keyword">text</span>("Add this string to my Markdown document"
+     "from this Python code block")
+```</pre>
+</div>
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
 # **Professional Reports**
 ## right at your fingertips
 
