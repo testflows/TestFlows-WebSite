@@ -651,7 +651,7 @@ def check_add(a, b, expected):
     """
     with When(f"I call add function with {a},{b}"):
         r = add(a, b)
-    with Then("I expect the result to be -95"):
+    with Then(f"I expect the result to be {expected}"):
         assert r == expected, error()
 
 def regression():
@@ -685,7 +685,7 @@ def check_add(a, b, expected):
     """
     with When(f"I call add function with {a},{b}"):
         r = add(a, b)
-    with Then("I expect the result to be -95"):
+    with Then(f"I expect the result to be {expected}"):
         assert r == expected, error()
 
 def regression():
@@ -719,7 +719,7 @@ def check_add(a, b, expected):
     """
     with When(f"I call add function with {a},{b}"):
         r = add(a, b)
-    with Then("I expect the result to be -95"):
+    with Then(f"I expect the result to be {expected}"):
         assert r == expected, error()
 
 def regression():
@@ -764,7 +764,7 @@ def check_add(self):
         with Example(f"check {a} + {b} == {expected}"):
             with When(f"I call add function with {a},{b}"):
                 r = add(a, b)
-            with Then("I expect the result to be {expected}"):
+            with Then(f"I expect the result to be {expected}"):
                 assert r == expected, error()
 
 def regression():
@@ -796,7 +796,7 @@ def check_add(self, a, b, expected):
     """
     with When(f"I call add function with {a},{b}"):
         r = add(a, b)
-    with Then("I expect the result to be {expected}"):
+    with Then(f"I expect the result to be {expected}"):
         assert r == expected, error()
 
 def regression():
