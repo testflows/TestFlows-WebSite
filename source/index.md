@@ -35,11 +35,6 @@ layout: index
                 </a>
             </button>
             <button type="button" class="btn btn-secondary">
-                <a href="https://twitter.com/TestFlowsTF">
-                    <span class="fab fa-3x fa-twitter"></span>
-                </a>
-            </button>
-            <button type="button" class="btn btn-secondary">
                 <a href="https://t.me/testflows">
                     <span class="fab fa-3x fa-telegram-plane"></span>
                 </a>
