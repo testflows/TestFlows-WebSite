@@ -45,7 +45,7 @@ footer .btn {
 
 blockquote {
     padding-left: 2em;
-    border-left: 5px solid #dee2e6;
+    border-left: 5px solid #0bcfff;
     font-weight: 300;
 }
 
@@ -54,6 +54,20 @@ blockquote {
     z-index: 999;
     transition: all 0.3s;
     color: #50749c;
+    padding-bottom: 50px;
+}
+
+@media (min-width: 992px) {
+    #sidebar {
+        position: sticky;
+        top: 0px;
+        max-height: calc(100vh);
+        overflow-y: scroll;
+    }
+ }
+
+#sidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .jump {
@@ -73,7 +87,8 @@ blockquote {
 }
 
 .handbook .toc-number {
-    display: none;
+    display: inline;
+    font-size: 0.8em;
 }
 
 .handbook ol.toc,
@@ -288,6 +303,36 @@ blockquote {
     padding-right: 10px;
 }
 
+.users-banner h2 {
+    font-size: 1.6em;
+}
+
+.users-banner h5 {
+    font-size: 1em;
+    font-weight: 200;
+    text-align: center;
+}
+
+
+.users-banner .row {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+.users-banner .altinity {
+    padding: 5px;
+}
+
+.users-banner strong {
+    color: orange;
+}
+
+.users-banner .blockquote {
+    font-size: .8em;
+    border: none;
+    padding-left: 0;
+}
+
 .command {
     background: #383d41;
     line-height: 3em;
@@ -345,10 +390,16 @@ h2 {
 figure.highlight {
     margin-bottom: 1em;
     margin-top: 1em;
+    border: 1px solid #2c3e506b;
+    padding: 10px;
 }
 
 figure.highlight table {
     font-size: 1.3em;
+}
+
+code, pre, figure.highlight {
+    background-color: white;
 }
 
 .content {
