@@ -23,15 +23,3 @@ or by submitting a pull-request with your improvements.
 Ping us on Telegram channel https://t.me/testflows  
 to get an answer to your question as fast as possible.
 {% endhtml %}
-
----
-
-# <div class="fab fa-2x fa-twitter text-success"></div>
-# Twitter
-
-{% html div class="text-center" %}
-Subscribe to our Twitter channel https://twitter.com/TestFlowsTF  
-to keep in touch and hear about the latest news and developments.
-{% endhtml %}
-
-
