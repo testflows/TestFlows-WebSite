@@ -26,6 +26,23 @@ html, body {
     background: #495057;
 }
 
+.btn.codeblock-copy {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-size: 1.5em;
+    border: none;
+    outline: none !important;
+}
+
+.btn.codeblock-copy:focus,
+.btn.codeblock-copy:active {
+    color: #02a257;
+    border: none;
+    outline: none !important;
+    box-shadow: none;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #16354f;
@@ -388,6 +405,7 @@ h2 {
 }
 
 figure.highlight {
+    position: relative;
     margin-bottom: 1em;
     margin-top: 1em;
     border: 1px solid #2c3e506b;
@@ -396,6 +414,12 @@ figure.highlight {
 
 figure.highlight table {
     font-size: 1.3em;
+    overflow: auto;
+    display: block;
+}
+
+figure.highlight table::-webkit-scrollbar {
+    display: none;
 }
 
 code, pre, figure.highlight {
