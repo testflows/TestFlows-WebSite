@@ -191,15 +191,15 @@ with your changes to [handbook source file](https://github.com/testflows/TestFlo
 You can install the framework using [pip3]
 
 ```bash
-$ pip3 install testflows
+pip3 install testflows
 ```
 
 or from sources
 
 ```bash
-$ git clone https://github.com/testflows/TestFlows.git
-$ cd TestFlows
-$ ./build ; ./install
+git clone https://github.com/testflows/TestFlows.git
+cd TestFlows
+./build ; ./install
 ```
 
 ## Upgrading
@@ -208,7 +208,7 @@ If you have already {% testflows %} installed, you can upgrade it to the latest 
 using the `--upgrade` option when executing `pip3 install` command.
 
 ```bash
-$ pip3 install --upgrade testflows
+pip3 install --upgrade testflows
 ```
 
 # Hello World
@@ -225,7 +225,9 @@ with Scenario("Hello World!"):
 and simply run it using `python3` command.
 
 ```bash
-$ python3 ./test.py
+python3 ./test.py
+```
+```bash
 Jun 28,2020 14:47:02   ⟥  Scenario Hello World!
                  2ms   ⟥⟤ OK Hello World!, /Hello World!
 
@@ -422,7 +424,7 @@ with Test("My test"):
 you can run it with `python3` command as follows
 
 ```bash
-$ python3 test.py
+python3 test.py
 ```
 
 or we can make the top level test executable and defined as
@@ -438,13 +440,13 @@ with Test("My test"):
 and then we can make it executable with
 
 ```bash
-$ chmod +x test.py
+chmod +x test.py
 ```
 
 allowing us to execute it directly as follows.
 
 ```bash
-$ ./test.py
+./test.py
 ```
 
 # Writing Tests
@@ -516,7 +518,9 @@ with Scenario("Hello World!"):
 The result will be as follows.
 
 ```bash
-$ python3 hello_world.py 
+python3 hello_world.py
+```
+```bash
 Nov 03,2021 17:09:17   ⟥  Scenario Hello World!
                  8ms   ⟥    Exception: Traceback (most recent call last):
                                 File "hello_world.py", line 4, in <module>
@@ -539,7 +543,9 @@ with Scenario("Hello World!"):
 ```
 
 ```bash
-$ python3 hello_world.py 
+python3 hello_world.py
+```
+```bash
 Nov 03,2021 17:14:10   ⟥  Scenario Hello World!
                  5ms   ⟥    Exception: Traceback (most recent call last):
                                 File "hello_world.py", line 4, in <module>
@@ -1103,7 +1109,9 @@ If you save test log using `--log test.log` option, then you can also use `tfs s
 extract the procedure of a given test within a test program run.
 
 ```bash
-$ cat test.log | tfs show procedure "/my scenario"
+cat test.log | tfs show procedure "/my scenario"
+```
+```bash
 Scenario my scenario
   Given I setup something
   When I do something
@@ -1114,7 +1122,7 @@ Full test specification for a given test program run can be obtained
 using `tfs report specification` command.
 
 ```bash
- cat test.log | tfs report specification | tfs document convert > specification.html
+cat test.log | tfs report specification | tfs document convert > specification.html
 ```
 
 # Test Flow Control
@@ -1468,7 +1476,9 @@ version: 1.0
 using `tfs requirements generate` command.
 
 ```bash
-$ tfs requirements generate -h
+tfs requirements generate -h
+```
+```bash
 usage: tfs requirements generate [-h] [input] [output]
 
 Generate requirements from an SRS document.
@@ -1502,7 +1512,7 @@ The [ls](#ls) utility SHALL list the contents of a directory.
 You can generate `requirements.py` file from it using the following command.
 
 ```bash
-$ cat srs.md | tfs requirements generate > requirements.py
+cat srs.md | tfs requirements generate > requirements.py
 ```
 
 The `requirements.py` will have the following content.
@@ -1813,7 +1823,9 @@ with Module("regression"):
 ```
 
 ```bash
-$ python3 test.py --name "new top level test name"
+python3 test.py --name "new top level test name"
+```
+```bash
  Sep 25,2021 8:55:18   ⟥  Module new top level test name
  Sep 25,2021 8:55:18     ⟥  Scenario my test
                661us     ⟥⟤ OK my test, /new top level test name/my test
@@ -1841,7 +1853,9 @@ with Module("regression"):
 ```
 
 ```bash
-$ python3 test.py --tag tag1 tag2
+python3 test.py --tag tag1 tag2
+```
+```bash
  Sep 25,2021 8:56:58   ⟥  Module regression
                             Tags
                               tag1
@@ -1880,7 +1894,9 @@ with Module("regression"):
 ```
 
 ```bash
-$ python3 top_name.py --attr build=21.10.1 tester="Vitaliy Zakaznikov" job_id=4325432 job_url="https://jobs.server.com/4325432"
+python3 top_name.py --attr build=21.10.1 tester="Vitaliy Zakaznikov" job_id=4325432 job_url="https://jobs.server.com/4325432"
+```
+```bash
  Sep 25,2021 9:04:11   ⟥  Module regression
                             Attributes
                               build
@@ -1909,7 +1925,9 @@ is when you need to know [Top Level Test] id before running your test program.
 Therefore, you would generate [UUIDv1] externaly using for example `uuid` utility
  
  ```bash
-$ uuid
+uuid
+```
+```bash
 52da6a26-1e54-11ec-9d7b-cf20ccc24475
 ```
  
@@ -1938,7 +1956,9 @@ Now if you specify [--id] then you will see that `test_id` field of each message
 will contain the new id.
 
 ```bash
-$ python3 id.py -o raw --id 112233445566
+python3 id.py -o raw --id 112233445566
+```
+```bash
 {"message_keyword":"PROTOCOL",...,"test_id":"/112233445566",...}
 ...
 ```
@@ -1993,13 +2013,13 @@ Each message is a [JSON] object. Object fields depend on the type of the message
 Logs can be decompressed using either standard `xzcat` utility
 
 ```bash
-$ xzcat test.log
+xzcat test.log
 ```
 
 or `tfs transform decompress` command
 
 ```bash
-$ cat test.log | tfs transform decompress
+cat test.log | tfs transform decompress
 ```
 
 ## Saving Log File
@@ -2007,7 +2027,7 @@ $ cat test.log | tfs transform decompress
 Test log can be saved into a file by specifying `-l` or `--log` option when running the test. For example,
 
 ```bash
-$ python3 test.py --log test.log
+python3 test.py --log test.log
 ```
 
 ## Transforming Logs
@@ -2023,7 +2043,9 @@ used for the `stdout`.
 For example,
 
 ```bash
-$ cat test.log | tfs transform nice
+cat test.log | tfs transform nice
+```
+```bash
 Jul 04,2020 19:20:21   ⟥  Module filters
 Jul 04,2020 19:20:21     ⟥  Scenario test_0
 Jul 04,2020 19:20:21       ⟥  Step first step
@@ -2041,7 +2063,9 @@ and test results.
 For example,
 
 ```bash
-$ cat test.log | tfs transform short
+cat test.log | tfs transform short
+```
+```bash
 Module filters
   Scenario test_0
     Step first step
@@ -2059,7 +2083,9 @@ with results provided as icons in front of the test name. This output format is 
 For example,
 
 ```bash
-$ cat test.log | tfs transform slick
+cat test.log | tfs transform slick
+```
+```bash
 ➤ Module filters
   ✔ Scenario test_0
   ➤ Suite suite 0
@@ -2073,7 +2099,9 @@ for each executed test.
 For example,
 
 ```bash
-$ cat test.log | tfs transform dots
+cat test.log | tfs transform dots
+```
+```bash
 .........................
 ```
 
@@ -2085,7 +2113,9 @@ messages.
 For example,
 
 ```bash
-$ cat test.log | tfs transform raw
+cat test.log | tfs transform raw
+```
+```bash
 {"message_keyword":"PROTOCOL","message_hash":"489eeba5","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1593904821.784232,"message_rtime":0.001027,"test_type":"Module","test_subtype":null,"test_id":"/ee772b86-be4c-11ea-8e14-2477034de0ec","test_name":"/filters","test_flags":0,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
 ...
 ```
@@ -2135,7 +2165,7 @@ optional arguments:
 For example,
 
 ```bash
-$ cat test.log | tfs report results | tfs document convert > report.html
+cat test.log | tfs report results | tfs document convert > report.html
 ```
 
 ## Coverage Report
@@ -2168,7 +2198,7 @@ optional arguments:
 For example,
 
 ```bash
-$ cat test.log | tfs report coverage requirements.py | tfs document convert > coverage.html
+cat test.log | tfs report coverage requirements.py | tfs document convert > coverage.html
 ```
 
 ## Metrics Report
@@ -2486,7 +2516,9 @@ When custom command line argument parser is defined then the help messages obtai
 the description of the custom arguments. For example,
 
 ```bash
-$ python3 ./test.py
+python3 ./test.py
+```
+```bash
 ...
 test arguments:
   --arg0                                          argument 0
@@ -2595,33 +2627,33 @@ with Module("Top Test"):
 the following command will run only `Suite A` and its sub-tests.
 
 ```bash
-$ python3 test.py --only "Suite A/*"
+python3 test.py --only "Suite A/*"
 ```
 
 To select only running `Test A` in `Suite A`.
 
 ```bash
-$ python3 test.py --only "/Top Test/Suite A/Test A/*"
+python3 test.py --only "/Top Test/Suite A/Test A/*"
 ```
 
 To select running any test at second level that ends with letter `B`.
 This will select every test in `Suite B`.
 
 ```bash
-$ python3 filtering.py --only "/Top Test/:B/*"
+python3 filtering.py --only "/Top Test/:B/*"
 ```
 
 To run only `Test A` in `Suite A` and `Test B` in `Suite B`.
 
 ```bash
-$ python3 test.py --only "/Top Test/Suite A/Test A/*" "/Top Test/Suite B/Test B/*"
+python3 test.py --only "/Top Test/Suite A/Test A/*" "/Top Test/Suite B/Test B/*"
 ```
 
 If you forget to specify `/*` at the end your test [pattern] then 
 tests that are not mandatory will be skipped.
 
 ```bash
-$ python3 test.py --only "/Top Test/Suite A/Test A"
+python3 test.py --only "/Top Test/Suite A/Test A"
 ```
 
 From the output below you can see that steps inside `Test A` which
@@ -2643,7 +2675,7 @@ Sep 27,2021 14:19:46       ⟥  Scenario Test A
 If you want to see which tests where skipped you can specify [--show-skipped] option.
 
 ```bash
-$ python3 test.py --only "/Top Test/Suite A/Test A" --show-skipped
+python3 test.py --only "/Top Test/Suite A/Test A" --show-skipped
 ```
 
 ## [--skip] option
@@ -2679,20 +2711,20 @@ that is used in the [--only option] section above.
 To skip running `Test A` in `Suite A`.
 
 ```bash
-$ python3 test.py --skip "/Top Test/Suite A/Test A"
+python3 test.py --skip "/Top Test/Suite A/Test A"
 ```
 
 To skip running any test at second level that ends with letter `B`.
 
 ```bash
-$ python3 filtering.py --skip "/Top Test/:B"
+python3 filtering.py --skip "/Top Test/:B"
 ```
 
 Here is an example of combining [--only] option with [--show-skipped] option
 to show [Skip]ped tests.
 
 ```bash
-$ python3 test.py --skip "/Top Test/Suite A/Test A" --show-skipped
+python3 test.py --skip "/Top Test/Suite A/Test A" --show-skipped
 ```
 
 ```bash
@@ -2702,7 +2734,7 @@ $ python3 test.py --skip "/Top Test/Suite A/Test A" --show-skipped
 Now let's skip `Test A` in either `Suite A` or `Suite B`.
 
 ```bash
-$ python3 test.py --skip "/Top Test/:/Test A" --show-skipped
+python3 test.py --skip "/Top Test/:/Test A" --show-skipped
 ```
 
 ```bash
@@ -2727,7 +2759,7 @@ we can select to run `Test A` in either `Suite A` or `Suite B` but then
 skip `Test A` in `Suite B` using [--skip option] as follows.
 
 ```bash
-$ python3 test.py --only "/Top Test/:/Test A" --skip "Suite B/Test A"
+python3 test.py --only "/Top Test/:/Test A" --skip "Suite B/Test A"
 ```
 
 ```bash
@@ -4272,7 +4304,7 @@ Then if we want to pause before executing the body of `my step 1` and right afte
 executing `my step 2` we can execute our test program as follows.
 
 ```bash
-$ python3 pause.py --pause-before "/my test/my step 1" --pause-after "/my test/my step 2"
+python3 pause.py --pause-before "/my test/my step 1" --pause-after "/my test/my step 2"
 ```
 
 This will cause the test program to be halted twice requesting `Enter` input
@@ -5731,7 +5763,9 @@ for the test run will be set to `progress` and no terminal color highlighting wi
 to the output.
 
 ```bash
-$ python3 test.py --config config.yml
+python3 test.py --config config.yml
+```
+```bash
 Executed 1 test (1 ok)
 
 Passing
@@ -5779,7 +5813,9 @@ and apply it when running `test.py` then you will see that `custom-arg` value
 will be set to the one you've specified in the `config.yml`.
 
 ```bash
-$ python3 test.py -c config.yml
+python3 test.py -c config.yml
+```
+```bash
 Sep 24,2021 21:40:52   ⟥  Scenario my test
                             Attributes
                               custom-arg
@@ -5808,7 +5844,9 @@ custom-arg: hello there
 ```
 
 ```bash
-$ python3 test.py -c config1.yml -c config2.yml
+python3 test.py -c config1.yml -c config2.yml
+```
+```bash
 Sep 24,2021 21:48:47   ⟥  Scenario my test
                             Attributes
                               custom-arg
@@ -6038,7 +6076,9 @@ See [Show Metrics](#Show-Metrics) and [Metrics Report](#Metrics-Report).
 For example,
 
 ```bash
-$ cat test.log | tfs show metrics
+cat test.log | tfs show metrics
+```
+```bash
 Scenario /my scenario
   Metric my metric
     20.56 Hz
@@ -6109,7 +6149,7 @@ The `-h`, `--help` option can be used to obtain help message that describes all 
 options a test can accept. For example,
 
 ```bash
-$ python3 test.py --help
+python3 test.py --help
 ```
 
 ### -l, --log
@@ -6118,7 +6158,7 @@ The `-l`, `--log` option can be used to specify the path of the file where test 
 For example,
 
 ```bash
-$ python3 test.py --log ./test.log
+python3 test.py --log ./test.log
 ```
 
 ### --name
@@ -6127,7 +6167,7 @@ The `--name` option can be used to specify the name of the top level test.
 For example,
 
 ```bash
-$ python3 test.py --name "My custom top level test name"
+python3 test.py --name "My custom top level test name"
 ```
 
 ### --tag
@@ -6136,7 +6176,7 @@ The `--tag` option can be used to specify one or more tags for the top level tes
 For example,
 
 ```bash
-$ python3 test.py --tag "tag0" "tag1"
+python3 test.py --tag "tag0" "tag1"
 ```
 
 ### --attr
@@ -6145,7 +6185,7 @@ The `--attr` option can be used to specify one or more attributes for the top le
 For example,
 
 ```bash
-$ python3 test.py --attr attr0=value0 attr1=value1
+python3 test.py --attr attr0=value0 attr1=value1
 ```
 
 ### --debug
@@ -6213,7 +6253,7 @@ are executed.
 For example,
 
 ```bash
-$ python3 test.py --only "/my test/*"
+python3 test.py --only "/my test/*"
 ```
 
 #### --skip
@@ -6434,7 +6474,9 @@ their attributes and results as well as any messages that are associated with th
 For example,
 
 ```bash
-$ python3 test.py --output nice
+python3 test.py --output nice
+```
+```bash
  Sep 25,2021 9:29:39   ⟥  Module regression, flags:TE
                             Attributes
                               name
@@ -6457,7 +6499,7 @@ $ python3 test.py --output nice
 produces the same output as when [--output] is omitted.
 
 ```python
-$ python3 test.py
+python3 test.py
 ```
 
 ## `brisk` Output
@@ -6472,7 +6514,9 @@ on the system under test rather than on the test procedure itself.
 > This output format is not useful when tests are executed in parallel.
 
 ```bash
-$ python3 output.py -o brisk
+python3 output.py -o brisk
+```
+```bash
 Sep 25,2021 12:05:25   ⟥  Module regression, flags:TE
                             Attributes
                               name
@@ -6497,7 +6541,9 @@ as only test and result messages are formatted.
 > This output format is not useful when tests are executed in parallel.
 
 ```bash
-$ python3 test.py -o short
+python3 test.py -o short
+```
+```bash
 Module regression
   Attributes
     name
@@ -6526,7 +6572,9 @@ Tests that have [Step Type] are not showed.
 > This output format can be used when tests are executed in parallel.
 
 ```bash
-$ python3 test.py -o classic
+python3 test.py -o classic
+```
+```bash
 ➤ Sep 25,2021 11:14:15 /regression
 ➤ Sep 25,2021 11:14:15 /regression/my test
 ✔ 2ms       [   OK   ] /regression/my test
@@ -6546,7 +6594,9 @@ Any test fails are printed inline as soon as they occur.
 > This output format can be used when tests are executed in parallel.
 
 ```bash
-$ python3 test.py -o progress
+python3 test.py -o progress
+```
+```bash
 Executing 2 tests /regression/my test/I do something
 ```
 
@@ -6563,7 +6613,9 @@ Failing results are only shown for tests with [Test Type] of higher.
 > This output format can be used when tests are executed in parallel.
 
 ```bash
-$ python3 test.py -o fails
+python3 test.py -o fails
+```
+```bash
 ✘ 3ms       [ XFail  ] /regression/my test
     expected fail
 ```
@@ -6579,7 +6631,9 @@ Failing results are only shown for tests with [Test Type] of higher.
 > This output format can be used when tests are executed in parallel.
 
 ```bash
-$ python3 test.py -o new-fails
+python3 test.py -o new-fails
+```
+```bash
 ✘ 3ms       [  Fail  ] /regression/my test
     AssertionError
     Traceback (most recent call last):
@@ -6598,7 +6652,9 @@ Tests that have [Step Type] are not showed.
 > This output format is not useful when tests are executed in parallel.
 
 ```bash
-$ python3 test.py --output slick
+python3 test.py --output slick
+```
+```bash
 ➤ Module regression
   ✔ Scenario my test
 ✔ Module regression
@@ -6612,7 +6668,7 @@ The [`quiet`] output format does not output anything to stdout.
 > This output format can be used when tests are executed in parallel.
 
 ```bash
-$ python3 test.py -o quiet
+python3 test.py -o quiet
 ```
 
 ## `manual` Output
@@ -6642,7 +6698,9 @@ The [`raw`] output format outputs raw messages.
 > developers and curious users that want to understand what raw messages look like.
 
 ```bash
-$ python3 test.py -o raw
+python3 test.py -o raw
+```
+```bash
 {"message_keyword":"PROTOCOL","message_hash":"1336ea41","message_object":0,"message_num":0,"message_stream":null,"message_level":1,"message_time":1632584893.162271,"message_rtime":0.009011,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1,"protocol_version":"TFSPv2.1"}
 ...
 {"message_keyword":"STOP","message_hash":"6956b3c5","message_object":0,"message_num":7,"message_stream":null,"message_level":2,"message_time":1632584893.167364,"message_rtime":0.014104,"test_type":"Module","test_subtype":null,"test_id":"/fd823a2c-1e17-11ec-8830-cb614fe11752","test_name":"/regression","test_flags":1,"test_cflags":0,"test_level":1}
@@ -6654,13 +6712,13 @@ For example, it can be transformed using `tfs transform nice` command into [`nic
 format
 
 ```bash
-$ python3 test.py -o raw | tfs transfrom nice
+python3 test.py -o raw | tfs transfrom nice
 ```
 
 or combined with other unix tools such as `grep` with further message transformations.
 
 ```bash
-$ python3 output.py -o raw | grep '{"message_keyword":"RESULT",' | tfs transform nice
+python3 output.py -o raw | grep '{"message_keyword":"RESULT",' | tfs transform nice
 ```
 
 ## Summary Reports
@@ -6757,25 +6815,25 @@ In both of these cases use [--no-colors] to tell **{% testflows %}**
 to turn off adding terminal control color codes.
 
 ```bash
-$ python3 test.py --no-colors > nice.log
+python3 test.py --no-colors > nice.log
 ```
 
 or 
 
 ```bash
-$ python3 test.py --no-colors | less 
+python3 test.py --no-colors | less 
 ```
 
 The same option can be specified for the `tfs` utility.
 
 ```bash
-$ cat test.log | tfs --no-colors show messages
+cat test.log | tfs --no-colors show messages
 ```
 
 or
 
 ```bash
-$ tail -f test.log | tfs --no-colors transform nice | less
+tail -f test.log | tfs --no-colors transform nice | less
 ```
 
 ## Use `--no-colors` in Code
@@ -6801,7 +6859,7 @@ test program argument.
 For example,
 
 ```bash
-$ python3 test.py --first-fail
+python3 test.py --first-fail
 ```
 
 # Forcing To Continue On Fail
@@ -6813,7 +6871,7 @@ test program argument.
 For example,
 
 ```bash
-$ python3 test.py --test-to-end
+python3 test.py --test-to-end
 ```
 
 # Enabling Debug Mode
@@ -6824,7 +6882,7 @@ internal function calls inside the framework which are hidden by default to redu
 clutter.
 
 ```bash
-$ python3 test.py --debug
+python3 test.py --debug
 ```
 
 ## Use `--debug` in Code
@@ -6879,8 +6937,9 @@ using `tfs show` command.
 The following commands are available:
 
 ```bash
-$ tfs show -h
-
+tfs show -h
+```
+```bash
 commands:
   command
     results         results
@@ -6922,7 +6981,7 @@ optional arguments:
 For example,
 
 ```bash
-$ cat test.log | tfs show metrics
+cat test.log | tfs show metrics
 ```
 # Using Secrets
 
@@ -7042,7 +7101,7 @@ that must be executed using `tfs document run` command to produce final
 Markdown documentation files.
 
 ```bash
-$ tfs document run --input my_document.tfd --output my_document.md
+tfs document run --input my_document.tfd --output my_document.md
 ```
 ## Installing `testflows.texts`
 
@@ -7121,13 +7180,13 @@ to remove the indentation.
 Then you can run it as
 
 ```bash
-$ tfs document run -i test.tfd -o -
+tfs document run -i test.tfd -o -
 ```
 
 and you should get the output of the final Markdown document printed to the stdout.
 
 ```bash
-$ tfs document run -i test.tfd -o -
+tfs document run -i test.tfd -o -
 ## This is a heading
 
 This file is written using Markdown where you can have any number
@@ -7417,8 +7476,10 @@ where `triple_quotes` is provided by default by [testflows.texts] module. This i
 
 ## Using `tfs document run`
 
-````
-$ tfs document run -h
+```bash
+tfs document run -h
+```
+````raw
 usage: tfs document run [-h] [-i path [path ...]] [-o [path]] [-f]
 
   ---- o o o ----

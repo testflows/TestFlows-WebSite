@@ -12,16 +12,16 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1666718871021" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1666718871021" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1670713031176" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1670713031176" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1666718871021" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1670713031176" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
   <![endif]-->
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.2"></head>
 
 <body>
   <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
@@ -72,11 +72,6 @@
                     </a>
                 </button>
                 <button type="button" class="btn btn-secondary">
-                    <a target="_blank" rel="noopener" href="https://twitter.com/TestFlowsTF">
-                        <span class="fab fa-2x fa-twitter"></span>
-                    </a>
-                </button>
-                <button type="button" class="btn btn-secondary">
                     <a target="_blank" rel="noopener" href="https://t.me/testflows">
                         <span class="fab fa-2x fa-telegram-plane"></span>
                     </a>
@@ -93,7 +88,7 @@
         <img src="/img/favicon-square.png"</img>
     </div>
     <div class="col-12 text-center">
-        Copyright 2020 Katteli Inc.
+        Copyright 2020-2022 Katteli Inc.
     </div>
     <div class="col-12 text-center">
         <span class="text-nowrap">All rights reserved.</span>
@@ -107,6 +102,9 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
 <script>
 var isInViewport = function (elem) {
     var bounding = elem.getBoundingClientRect();
@@ -125,6 +123,25 @@ window.addEventListener('scroll', function (event) {
 	    banner.classList.add("not-in-view");
 	}
 }, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
 </script>
 
 </body>

@@ -27,7 +27,9 @@ we need something to test. What could it be? After much thought and for no
 obvious reason a simple `ls` utility found on all Unix-like systems comes to mind. 
 
 ```bash
-$ ls foo
+ls foo
+```
+```bash
 ls: cannot access 'foo': No such file or directory
 ```
 
@@ -64,7 +66,9 @@ with Test("Check 'ls' behaviour when file or directory does not exist"):
 And, run it.
 
 ```bash
-$ python3 ./test.py
+python3 ./test.py
+```
+```bash
 Nov 25,2019 18:42:19   ⟥  Test Check 'ls' behaviour when file or directory does not exist
                215ms        [bash] bash# ls foo
                216ms        [bash] ls: cannot access 'foo': No such file or directory
@@ -178,7 +182,9 @@ Nov 26,2019 17:57:25     ⟥  Step check error message and exit code
 The test steps are even more apparent if we use the **short** output format.
 
 ```bash
-$ python3 ./test.py -o short
+python3 ./test.py -o short
+```
+```bash
 Test Check 'ls' behaviour when file or directory does not exist
   Step execute 'ls' with an invalid path
   OK

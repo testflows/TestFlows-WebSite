@@ -1,6 +1,9 @@
 <script src="<%- config.root %>js/jquery-3.4.1.slim.js"></script>
 <script src="<%- config.root %>js/popper.min.js"></script>
 <script src="<%- config.root %>js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
 <script>
 var isInViewport = function (elem) {
     var bounding = elem.getBoundingClientRect();
@@ -19,4 +22,23 @@ window.addEventListener('scroll', function (event) {
 	    banner.classList.add("not-in-view");
 	}
 }, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
 </script>

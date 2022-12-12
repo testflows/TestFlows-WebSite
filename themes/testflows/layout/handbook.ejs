@@ -60,8 +60,7 @@ window.addEventListener("load", function(){
         element.addEventListener("click", function(event){
             element_id = element.getAttribute("id");
             toc_element = document.querySelector(".toc .toc-item .toc-link[href=\"#" + encodeURI(element_id) + "\"]");
-            toc_element.scrollIntoView({block: 'start'})
-            window.scrollBy(0, -200);
+            toc_element.scrollIntoView({block: 'center'})
             toc_element.classList.add("active");
             // remove active class after timeout
             setTimeout(function(){

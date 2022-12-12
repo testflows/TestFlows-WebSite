@@ -20,16 +20,6 @@ or submitting a pull-request with your improvements.
 # Telegram
 
 {% html div class="text-center" %}
-Ping us on our Telegram channel https://t.me/testflows  
+Ping us on our Telegram channel https://t.me/testflows
 to get an answer to your question as fast as possible.
-{% endhtml %}
-
----
-
-# <div class="fab fa-2x fa-twitter text-success"></div>
-# Twitter
-
-{% html div class="text-center" %}
-Subscribe to our Twitter channel at https://twitter.com/TestFlowsTF  
-to keep in touch and hear about the latest news and developments.
 {% endhtml %}
