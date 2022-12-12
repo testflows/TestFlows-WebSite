@@ -1,6 +1,6 @@
 ---
 title: Contact Us
-heading: We are happy to hear from you
+heading: We are happy to hear from you.
 icon: fas fa-envelope-open-text pt-5 pb-5
 date: 2019-11-23 10:41:21
 ---
@@ -9,9 +9,9 @@ date: 2019-11-23 10:41:21
 # GitHub
 
 {% html div class="text-center" %}
-Reach us on GitHub at https://github.com/testflows  
-by leaving a comment, creating a feature or a bug fix request,  
-or by submitting a pull-request with your improvements.
+Reach us on GitHub at https://github.com/testflows
+by leaving a comment, creating a feature or bug fix request,
+or submitting a pull-request with your improvements.
 {% endhtml %}
 
 ---
@@ -20,7 +20,7 @@ or by submitting a pull-request with your improvements.
 # Telegram
 
 {% html div class="text-center" %}
-Ping us on Telegram channel https://t.me/testflows  
+Ping us on our Telegram channel https://t.me/testflows  
 to get an answer to your question as fast as possible.
 {% endhtml %}
 
@@ -30,8 +30,6 @@ to get an answer to your question as fast as possible.
 # Twitter
 
 {% html div class="text-center" %}
-Subscribe to our Twitter channel https://twitter.com/TestFlowsTF  
+Subscribe to our Twitter channel at https://twitter.com/TestFlowsTF  
 to keep in touch and hear about the latest news and developments.
 {% endhtml %}
-
-

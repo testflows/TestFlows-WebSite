@@ -1,6 +1,6 @@
 ---
 title: About
-heading: The project was created to provide an enterprise quality<br>open-source test framework
+heading: The project was created to provide an enterprise-quality<br>open-source test framework
 icon: fas fa-book-reader pt-5 pb-5
 date: 2019-11-22 19:49:22
 ---
@@ -9,7 +9,7 @@ date: 2019-11-22 19:49:22
 # History
 
 {% html div class="text-center" %}
-The first line of the framework was committed on September 9, 2019 and since then it
+The first line of the framework was committed on September 9, 2019, and since then it
 is being actively developed and improved.
 {% endhtml %}
 ---
@@ -30,9 +30,9 @@ a flexible framework that can easily be adapted to the testing task at hand.
 # Goals
 
 {% html div class="text-center" %}
-The goal of the project is to provide an enterprise quality test framework
+The goal of the project is to provide an enterprise-quality testing framework
 to avoid writing more closed-source automation
 systems. A generic tool that can be used across multiple
-personal, open-source and commercial projects that require different
+personal,open-source and commercial projects that require different
 level of formalism.
 {% endhtml %}
