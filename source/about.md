@@ -33,6 +33,6 @@ a flexible framework that can easily be adapted to the testing task at hand.
 The goal of the project is to provide an enterprise-quality testing framework
 to avoid writing more closed-source automation
 systems. A generic tool that can be used across multiple
-personal,open-source and commercial projects that require different
+personal, open-source and commercial projects that require different
 level of formalism.
 {% endhtml %}
