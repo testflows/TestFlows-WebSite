@@ -52,41 +52,41 @@ manual test. If you don't have any tests to verify some requirement
 then you can't be sure that requirement is met or that the next version
 of your software does not break it.
 
-With **{% testflows %}** you don't have to wait for your company's culture related
-to handling and managing requirements to change. You are able
-to write and manage requirements yourself just like code. Requirements are simply
-written in [Markdown] document where each requirement has a unique identifier and version.
-These documents are the source of the requirements that you can convert to Python requirement objects 
-which you can easily link with your tests. **{% testflows %}** allows
-one-to-one, one-to-many, many-to-one, or many-to-many requirement to test
-relationships to match real-world complexities of requirement verification.
+With **{% testflows %}**, you don't have to wait for your company's culture to change in relation
+to handling and managing requirements. You are able
+to write and manage requirements yourself, just like code. Requirements are simply
+written in a [Markdown] document, where each requirement has a unique identifier and version.
+These documents are the source of the requirements that you can convert to Python requirement objects, 
+which you can easily link with your tests. To match the complexities of real world requirement verification,
+**{% testflows %}** allows one-to-one, one-to-many, many-to-one, or many-to-many test-to-requirement 
+relationships.
 
-**Allows to write test programs not just tests**
+**Allows to write test programs and not just tests**
 
-**{% testflows %}** allows you to write Python _test programs_ not just tests. A _test program_
-can execute any number of tests. This provides the unsurpassed flexibility to match any project needs.
+**{% testflows %}** allows you to write Python _test programs_ and not just tests. A _test program_
+can execute any number of tests. This provides the unrivalled flexibility to meet the needs of any project.
 Tests are not decoupled from test flow where the flow defines a precise order of
-how tests are executed. However, you can write many kind of test runners
+how tests are executed. However, you can write many kinds of test runners
 using the framework if you need them. For example, you can write _test programs_
-that read tests cases from databases, API endpoints or file systems and trigger
+that read test cases from databases, API endpoints, or file systems and trigger
 your test cases based on any condition. By writing a _test program_ you are in total control
-of how you want to structure and approach testing of a given project. 
+of how you want to structure and approach the testing of a given project. 
 
-Through its flexibility, **{% testflows %}** helps to avoid test tools fragmentation
-where each project in a company sooner or later starts to use their own test framework
+Through its flexibility, **{% testflows %}** helps to avoid test tool fragmentation
+where each project in a company eventually starts to use their own test framework
 and nobody knows how to run tests written by other groups and reporting accross
-groups becomes inconsistent and difficult to follow.
+groups become inconsistent and difficult to follow.
 
-**Allows to write self-documenting tests with explicitly defined test procedures**
+**Supports writing self-documenting tests with clearly defined test procedures**
 
 **{% testflows %}** provides tools for test authors to break tests into test [Step]s and
 use behavior driven step keywords such as [Given], [When], [Then] and others to make
-tests and test procedures pleasantly readable. Breaking tests into steps brings the advantage
-of test code becoming self-documenting, provides an easy way to auto-generate
-formal documentation such as test specification without doing any extra work,
-produces detailed test logs and test fail debugging.  
+tests and test procedures pleasantly readable. Breaking tests into steps brings an advantage
+of test code becoming self-documenting, it provides an easy way to auto-generate
+formal documentation such as a test specification without doing any extra work,
+produces detailed test logs and test failure debugging.  
 
-Test steps can also be made reusable allowing test authors to create reusable 
+Test steps can also be made reusable, allowing test authors to create reusable 
 steps modules that greatly simplify writing new test scenarios. Just
 like you write regular programs by using function calls you can
 modularize tests by using reusable test steps. Using reusable steps
@@ -102,43 +102,43 @@ in the same test program.
 **Allows to auto-generate test specifications**
 
 If your test process or your manager requires you to produce formal test
-specifications that must describe procedure of each test then you can easily
+specifications that must describe the procedure of each test, then you can easily
 auto-generate these documents using **{% testflows %}**.
 
 **Supports writing semi-automated and manual tests**
 
-Testing real-world applications usually is not done only by fully automated test scenarios.
-Most often verification requires a mix of automated, semi-automated and manual tests.
+Testing real-world applications is usually not done only with fully automated test scenarios.
+Most often, verification requires a mix of automated, semi-automated, and manual tests.
 
-**{% testflows %}** allows to unify your testing and provides uniform test reporting
-no matter what type of tests you need for you project by natively supporting
-authoring of automated, semi-automated and manual tests. 
+**{% testflows %}** allows you to unify your testing and provides uniform test reporting
+no matter what type of tests you need for your project by natively supporting the
+authoring of automated, semi-automated, and manual tests. 
 
 **Supports authoring parallel tests and executing tests in parallel**
 
-**{% testflows %}** natively supports authoring of parallel tests and
-executing tests in parallel with fine-grain control of what and where runs in parallel.
-Asynchronous tests are also supported and allow to run thousands of concurrent
-tests at the same time. Mixing parallel and asynchronous tests is also supported.
+**{% testflows %}** natively supports authoring parallel tests and
+executing them in parallel, with fine-grain control over what and where runs in parallel.
+Asynchronous tests are also supported and allow for thousands of concurrent
+tests to be run at the same time. Mixing parallel and asynchronous tests is also supported.
 
-**Uses everything is a test approach**
+**Uses everything-is-a-test approach**
 
-It uses everything is a test approach that allows unified treatment
-of any code that is executed during testing. There are no second class test code.
-If test fails in setup or teardown or during execution of one of its actions
-the fail is treated in exactly same way. This avoids mixing analysis of why the test failed
-with test execution and results in clean and uniform approach to testing.
+It uses everything-is-a-test approach that allows unified treatment
+of any code that is executed during testing. There is no second class test code.
+If test fails during setup, teardown or execution of one of its actions,
+the failure is handled identically. This avoids mixing analysis of why the test failed
+with test execution and results in a clean and uniform approach to testing.
 
-**Uses message based protocol**
+**Uses a message-based protocol**
 
 It is built on top of a messaging protocol. This brings
-many benefits including ability to transform test output and logs into variety of
-different formats as well as enables advanced parallel testing.
+many benefits, including the ability to transform test output and logs into a variety of
+different formats as well as enable advanced parallel testing.
 
 **Supports test log storage and test data analytics using ClickHouse**
 
 **{% testflows %}** test logs were designed to be easily stored in [ClickHouse].
-Given that testing produces huge amounts of data this integration
+Given that testing produces huge amounts of data, this integration
 brings test data analytics right to your fingertips.
 
 **Test data visualization using Grafana**
@@ -149,7 +149,7 @@ to highlight test results that are the most important for your project.
 
 **Avoids unnecessary abstraction layers**
 
-**{% testflows %}** tries to avoid unnecessary abstraction layers such
+**{% testflows %}** tries to avoid unnecessary abstraction layers, such
 as when test runners are decoupled from tests or the usage of behavior driven
 (BDD) keywords is always tied to Gherkin specifications. These abstractions,
 while providing some benefit, in most cases lead to more problems than
@@ -160,23 +160,23 @@ solutions when applied to real-world projects.
 This handbook is a one-page document that you can search using standard
 browser search (`Ctrl-F`).
 
-For ease of navigation you can always click any heading to go back to the table of contents. 
+For ease of navigation, you can always click any heading to go back to the table of contents. 
 
 > **{% attention %}** Try clicking `Using Handbook` heading and you will see that the page
 > will scroll up and the corresponding entry in the table of contents
 > will be highlighted in red. This handy feature will make sure you are never lost!
 
 There is also <span><a class="fas fa-chevron-up" style="color: orange" href="#Contents"></a><span>
-icon on the bottom right of the page to allow you quickly scroll to the top.
+icon on the bottom right of the page to allow you to quickly scroll to the top.
 
-Also, feel free to click on any internal or external references as you can
-use your browser's &#8678; back button to return back to where you were. 
+Also, feel free to click on any internal or external references, as you can
+use your browser's &#8678; back button to return to where you were. 
 
 >  **{% attention %}** Try clicking [Using Handbook](#Using-Handbook) link and then
 > browser's use &#8678; back button to return to the same scroll position in the handbook.
 
 If you find any errors or would like to add documentation for something that is
-still not documented then submit a pull request
+still not documented, then submit a pull request
 with your changes to [handbook source file](https://github.com/testflows/TestFlows-WebSite/blob/master/source/handbook/index.md).
 
 # Supported Environment
@@ -204,7 +204,7 @@ cd TestFlows
 
 ## Upgrading
 
-If you have already {% testflows %} installed, you can upgrade it to the latest version
+If you already have {% testflows %} installed, you can upgrade it to the latest version
 using the `--upgrade` option when executing `pip3 install` command.
 
 ```bash
@@ -240,7 +240,7 @@ Passing
 
 # Defining Tests
 
-You can define tests inline using classical [Step], [Test], [Suite], and [Module]
+You can define tests inline using the classical [Step], [Test], [Suite], and [Module]
 test definition classes or using specialized keyword classes as
 [Scenario], [Feature], [Module] and the steps
 such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally].
@@ -248,11 +248,11 @@ such as [Background], [Given], [When], [Then], [But], [By], [And], and [Finally]
 In addition, you can also define sub-tests using [Check] test definition class
 or its flavours [Critical], [Major] or [Minor]. 
 
-> **{% attention %}** You are encouraged to use the specialized keyword classes to greatly improve readibiliy of
+> **{% attention %}** You are encouraged to use the specialized keyword classes to greatly improve the readability of
 > your tests and test procedures.
 
 Given the variety of test definition classes above, fundamentally, 
-there only four core [Types] of tests in {% testflows %} and two special types
+there are only four core [Types] of tests in {% testflows %} and two special types,
 giving us six [Types] in total. The core [Types] are
 
   * [Module]
@@ -263,7 +263,7 @@ giving us six [Types] in total. The core [Types] are
   * [RetryIteration] (special)
   * [Step]
 
-and all other types are just a naming variation of one of the above having the following mapping
+and all other types are just a naming variation of one of the above with the following mapping
 
 * [Module]
 * [Suite]
@@ -318,7 +318,7 @@ with Module("My test module"):
 
 ## Decorated
 
-For re-usability you can also define tests using the
+For re-usability, you can also define tests using the
 [TestStep], [TestBackground], [TestCase], [TestCheck], [TestCritical], [TestMajor], [TestMinor],
 [TestSuite], [TestFeature], [TestModule], and [TestOutline] test function decorators.
 
@@ -336,9 +336,9 @@ def scenario(self, action=None):
         pass
 ```
 
-Similarly to how [class method]s take an instance of the object as the first argument, 
+Similarly to how [class method]'s take an instance of the object as the first argument, 
 test functions wrapped with test decorators take an instance of the current test as the first argument
-and therefore by convention the first argument is always named `self`.
+and therefore, by convention, the first argument is always named `self`.
 
 ## Calling Decorated Tests
 
