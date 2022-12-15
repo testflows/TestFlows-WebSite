@@ -252,8 +252,8 @@ or its flavours [Critical], [Major] or [Minor].
 > your tests and test procedures.
 
 Given the variety of test definition classes above, fundamentally, 
-there are only four core [Types] of tests in {% testflows %} and two special types,
-giving us six [Types] in total. The core [Types] are
+there are only four core [Types] of tests in {% testflows %} and three special types,
+giving us seven [Types] in total. The core [Types] are
 
   * [Module]
   * [Suite]
