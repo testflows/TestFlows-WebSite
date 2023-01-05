@@ -10,7 +10,7 @@ date: 2019-11-22 19:49:22
 
 {% html div class="text-center" %}
 The first line of the framework was committed on September 9, 2019, and since then it
-is being actively developed and improved.
+has been actively developed and improved.
 {% endhtml %}
 ---
 
@@ -19,7 +19,7 @@ is being actively developed and improved.
 
 {% html div class="text-center" %}
 The motivation for the framework came from the experience of developing test automation for various projects.
-After developing multiple custom closed-source test automation systems,
+After developing multiple custom closed-source test automation systems
 and not being quite satisfied with the capabilities and the approach
 of other open-source projects, {% testflows %} serves as a platform for providing
 a flexible framework that can easily be adapted to the testing task at hand.
@@ -33,6 +33,6 @@ a flexible framework that can easily be adapted to the testing task at hand.
 The goal of the project is to provide an enterprise-quality testing framework
 to avoid writing more closed-source automation
 systems. A generic tool that can be used across multiple
-personal,open-source and commercial projects that require different
-level of formalism.
+personal, open-source, and commercial projects that require different
+levels of formality.
 {% endhtml %}

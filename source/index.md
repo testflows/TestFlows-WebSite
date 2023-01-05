@@ -55,7 +55,7 @@ layout: index
 {% html div class="users-banner" %}
 
 ## Our Users And Supporters
-##### that implement their QA process with us
+##### who implement their QA process with us
 {% html div class="row" %}
 {% html div class="col-md-4 text-center" %}
 {% endhtml %}
@@ -199,8 +199,8 @@ with Feature("my feature"):
 ---
 
 # <br>
-# **Semi-Automated And Manual Tests**
-## seamlessly work with automated, semi-automated and manual tests
+# **Semi-Automated and Manual Tests**
+## seamlessly work with automated, semi-automated, and manual tests
 
 ## <br>
 ---
@@ -239,8 +239,8 @@ with Scenario("manual scenario", flags=MANUAL):
 
 # <br>
 # **Testing Documentation**
-## automate your documentation with ease
-## and keep it always up to date
+## you can easily automate your documentation
+## and keep it up to date
 
 ## <br>
 ---
@@ -359,8 +359,8 @@ with Scenario("manual scenario", flags=MANUAL):
 ---
 
 # <br>
-# **Write & Work with Requirements**
-## straightforward and convenient
+# **Write and Work with Requirements**
+## in a straightforward and convenient way
 
 ## <br>
 ---
@@ -412,8 +412,8 @@ from requirements import *
 @TestScenario
 @Requirements(RQ_SRS001_CU_LS_Default_Directory("1.0"))
 def list_current_working_directory(self, shell):
-    """Check that `ls` utility when run without
-    any arguments lists the contents of the
+    """Check that the `ls` utility, when run without
+    any arguments, lists the contents of the
     current working directory.
     """
     with When("I execute `ls` command without arguments"):
