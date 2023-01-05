@@ -1968,7 +1968,7 @@ python3 id.py -o raw --id 112233445566
 Executing any **{% testflows %}** test program results in a [Tree]. Below is a
 diagram that depicts a simple test program execution [Tree].
 
-&#128270; **Test Program Tree**
+🔎 **Test Program Tree**
 
 <img src="/handbook/assets/flow.png" alt="Test Program Tree" style="width: 100%">
 
@@ -1990,7 +1990,7 @@ and this order of execution forms the [Flow] of the test program.
 This [Flow] can also be shown graphically as in the diagram below where depth first 
 order of execution is highlighted by the magenta colored arrows.
 
-&#128270; **Test Program Tree Traversal** *(sequential)*
+🔎 **Test Program Tree Traversal** *(sequential)*
 
 <img src="/handbook/assets/flow_traversal.png" alt="Test Program Tree Traversal" style="width: 100%">
 
