@@ -252,8 +252,8 @@ or its flavours [Critical], [Major] or [Minor].
 > your tests and test procedures.
 
 Given the variety of test definition classes above, fundamentally, 
-there are only four core [Types] of tests in {% testflows %} and two special types,
-giving us six [Types] in total. The core [Types] are
+there are only four core [Types] of tests in {% testflows %} and three special types,
+giving us seven [Types] in total. The core [Types] are
 
   * [Module]
   * [Suite]
@@ -359,7 +359,7 @@ Scenario(test=scenario)(action="running")
 
 where the test is passed as the argument to the `test` parameter.
 
-If the test does not need any arguments use a short form by passing
+If the test does not need any arguments, use a short form by passing
 the test as the value of the `run` parameter.
 
 ```python
@@ -412,7 +412,7 @@ will create its own test.
 # Running Tests
 
 Top level tests can be run using either `python3` command or directly if they are made executable.
-For example with a top level test defined as
+For example, with a top level test defined as
 
 ```python
 from testflows.core import Test
@@ -451,7 +451,7 @@ allowing us to execute it directly as follows.
 
 # Writing Tests
 
-With {% testflows %} you actually write test programs not just tests. This means
+With {% testflows %} you actually write test programs, not just tests. This means
 that the [Python] source file that contains [Top Level Test] can be run directly if 
 it is made executable and has `#!/usr/bin/env python3` 
 or using `python3` command.
@@ -459,7 +459,7 @@ or using `python3` command.
 > {% attention %} Note that {% testflows %} only allows one top level test in your test program. 
 > See [Top Level Test].
 
-Writing tests is actually very easy given that you are in full control of your test program.
+Writing tests is actually very easy, given that you are in full control of your test program.
 You can either define inline tests anywhere in your test program
 code or define them separately as test decorated functions. 
 
@@ -478,7 +478,7 @@ with Scenario("Hello World!"):
     pass
 ```
 
-The same test can be defined using [TestScenario] decorated function.
+The same test can be defined using the [TestScenario] decorated function.
 See [Decorated Tests](#Decorated).
 
 ```python
@@ -494,8 +494,8 @@ def hello_world(self):
 hello_world()
 ```
 
-> {% attention %} Note that if the code inside the test does not raise any exception and does not
-> [set test result explicitly](#Setting-Test-Results-Explicitly) it is considered as passing and will have [OK] result.
+> {% attention %} Note that if the code inside the test does not raise any exceptions and does not
+> [explicitly set test result](#Setting-Test-Results-Explicitly) it is considered as passing and will have [OK] result.
 
 In the above example, the `Hello World` is the [Top Level Test] and the only test
 in the test program. 
@@ -533,7 +533,7 @@ Nov 03,2021 17:09:17   ⟥  Scenario Hello World!
                          AssertionError: 1 != 0
 ```
 
-Now raise let's raise some other exception like [RuntimeError] to see [Error] result.
+Now, let's raise some other exception like [RuntimeError] to see [Error] result.
 
 ```python
 from testflows.core import Scenario
@@ -560,10 +560,10 @@ Nov 03,2021 17:14:10   ⟥  Scenario Hello World!
 
 ## Flexibility In Writing Tests
 
-{% testflows %} provides unmatched flexibility in how you can author your tests and
+{% testflows %} provides unmatched flexibility in how you can author your tests, and
 this is what makes it adaptable to your testing projects at hand.
 
-Let's see this using an example of how you could verify functionality
+Let's look at an example of how to test the functionality
 of a simple `add(a, b)` function.
 
 > **{% attention %}** Note that this is just a toy example used for demonstration purposes only.
@@ -641,7 +641,7 @@ if main():
     regression()
 ```
 
-The test code seems to be redundant so we could move the [When] and [Then] steps into
+The test code seems to be redundant, so we could move the [When] and [Then] steps into
 a function `check_add(a, b, expected)` that can be called with different parameters.
 
 ```python
@@ -743,7 +743,7 @@ if main():
     regression()
 ```
 
-Another option is to move to using decorated tests. See [Decorated Tests](#Defining-Tests).
+Another option is to switch to using decorated tests. See [Decorated Tests](#Defining-Tests).
 
 Let's move inline [Scenario] into a decorated [TestScenario] function with [Examples]
 and create [Example]s for each example that we have.
@@ -813,35 +813,35 @@ if main():
 ```
 
 The [Outline] with [Examples] turns out to be the exact fit for the problem.
-However, there are many cases where you would want to have choice and **{% testflows %}**
-provides the flexibility you need to author your tests the way that fits best for you.
+However, there are many cases where you would want to have choice, and **{% testflows %}**
+provides the flexibility you need to author your tests in the way that fits best for you.
 
 ## Using Test Steps
 
-When writing tests it is best practice to break the test procedure
+When writing tests, it is best practice to break the test procedure
 into individual test [Step]s. While using **{% testflows %}** you can write
 tests without explicitly defining [Step]s it is not recommended.
 
 Breaking tests into steps has the following advantages:
 
 * improves code structure
-* results in self documented test code
-* greatly improves debugging of test fails
+* results in a self documented test code
+* significantly improves test failure debugging
 * enables auto generation of test specifications
 
 ### Structuring Code
 
-Using test [Step]s helps to structure test code. Any test inherently implements a 
-test procedure and the procedure is usually described by a set of steps.
-Therefore, it is natural to structure tests in form of a series of individual
+Using test [Step]s helps structure test code. Any test inherently implements a 
+test procedure, and the procedure is usually described by a set of steps.
+Therefore, it is natural to structure tests in the form of a series of individual
 [Step]s. In **{% testflows %}** test [Step]s are defined and used just like [Test]s
 or [Scenario]s as [Step]s also have results just like [Test]s. 
 
-Test [Step]s can be either be defined inline or using [TestStep] function decorator
+Test [Step]s can either be defined inline or using [TestStep] function decorator,
 with the combination of both being the most common.
 
 For example, the following code clearly shows that by identifying steps such as setup,
-action and assertion the structure of test code is improved.
+action, and assertion, the structure of test code is improved.
 
 ```python
 from testflows.core import *
@@ -861,8 +861,8 @@ if main():
     my_scenario()
 ```
 
-In many cases steps themselves can be reused between many different tests. In this
-case defining steps as decorated functions helps to make them reusable.
+In many cases, steps themselves can be reused between many different tests. In this
+case, defining steps as decorated functions helps to make them reusable.
 
 For example,
 
@@ -892,10 +892,10 @@ def my_scenario(self):
     expect_something()
 ```
 
-However, the best practice is to wrap calls to decorated test steps with inline
-[Step]s which allows to clearly give each [Step] a proper `name` in the context
+The best practice, however, is to wrap calls to decorated test steps with inline
+[Step]s which allows you to clearly give each [Step] a proper `name` in the context
 of the specific test scenario as well as allows to specify a detailed `description`
-when needed.
+when necessary.
 
 For example,
 
@@ -916,7 +916,7 @@ def my_scenario(self):
 ```
 
 > **{% attention %}** Note that because decorated test steps are being called within a [Step] these
-> calls are similar to just calling a function which is another advantage of wrapping calls
+> calls are similar to just calling a function, which is another advantage of wrapping calls
 > with inline steps. This means that return value from the 
 > decorated test step can be received just like from a function:
 > ```python
@@ -952,12 +952,12 @@ def my_scenario(self):
 ```
 
 It is clear to see that explicitly defined [Given], [When], and [Then] steps
-when given proper `name`s and `description`s makes reading test code
-a pleasant experience as test author has a way to clearly communicate
+when given proper `name`s and `description`s make reading test code
+a pleasant experience as the test author has a way to clearly communicate
 the test procedure to the reader.
 
-The result of using test [Step]s is clear, readable and highly maintainable
-test code. Given that each [Step] produces corresponding messages in the test output it forces
+The result of using test [Step]s is a clear, readable, and highly maintainable
+test code. Given that each [Step] produces corresponding messages in the test output, it forces
 test maintainers to ensure [Step] `name`s and `description`s are
 maintained accurate over the lifetime of the test.
 
@@ -1065,7 +1065,7 @@ Nov 12,2021 10:58:02     ⟥  When I do something
 
 > **{% attention %}** Note that the failing test result always `bubbles up` all the way to the 
 > [Top Level Test] and therefore it might seem that the output is redundant.
-> However, this allows to examine the fail just by looking at the result of the 
+> However, this allows for the failure to be examined just by looking at the result of the 
 > [Top Level Test].
 
 ### Auto Generation Of Test Specifications
@@ -1105,7 +1105,7 @@ Scenario my scenario
 OK
 ```
 
-If you save test log using `--log test.log` option, then you can also use `tfs show procedure` command to
+If you save the test log using `--log test.log` option, then you can also use `tfs show procedure` command to
 extract the procedure of a given test within a test program run.
 
 ```bash
@@ -1128,8 +1128,8 @@ cat test.log | tfs report specification | tfs document convert > specification.h
 # Test Flow Control
 
 The control of the [Flow] of tests allows you to precisely 
-define the order of test execution. **{% testflows %}** allows
-to write complete test programs and therefore the order of executed tests
+define the order of test execution. **{% testflows %}** allows you
+to write complete test programs, and therefore the order of executed tests
 is defined in your [Python] test program code explicitly. 
 
 For example, the following test program defines decorated tests
@@ -1193,12 +1193,12 @@ def regression(self):
 
 will execute `testA` and only proceed to run other tests if its result is not [Fail] otherwise
 only `testA` will be executed. If result of `testA` is not [Fail] then
-we run `testB` 3 times and `testC` gets executed forever until its result is not [OK].
+we run `testB` 3 times, and `testC` gets executed indefinitely until its result is not [OK].
 
 ## Creating Automatic Flows
 
-When precise control over test [Flow] is not necessary you
-can easily define a list of tests to be executed in any way you might see fit
+When precise control over test [Flow] is not necessary, you
+can easily define a list of tests to be executed in any way you might see fit,
 including using a simple list.
 
 For example,
@@ -1213,10 +1213,10 @@ def regression(self):
         test()
 ```
 
-For such simple cases you can also use [loads() function]. See [Using `loads()`](#Using-loads).
+For such simple cases, you can also use [loads() function]. See [Using `loads()`](#Using-loads).
 
 The [loads() function] allows you to create a list of tests of the specified type
-from either current or some other module.
+from either the current or some other module.
 
 For example,
 
@@ -1236,7 +1236,7 @@ def regression(self):
         test()
 ```
 
-The list of tests can be randomized or ordered for example using [ordered() function]
+The list of tests can be randomized or ordered, for example, using [ordered() function]
 or [Python]'s [sorted](https://docs.python.org/3/library/functions.html#sorted) function.
 
 > **{% attention %}** You could also write [Python] code to load your list of tests from any other source
@@ -1259,10 +1259,10 @@ A result of any test can be set explicitly using the following result functions:
 Here are the arguments that each result function can take. All arguments are optional.
 
 * `message` is used to set an optional result message
-* `reason` is used to set an optional reason for the result. Usually is only set
+* `reason` is used to set an optional reason for the result. Usually, it is only set
   for crossed out results such as [XFail], [XError], [XNull] and [XOK] to indicate
   the reason for the result being crossed out such as a link to an opened issue
-* `test` argument is usually not passed as it is set by to the current test by default.
+* `test` argument is usually not passed, as it is set to the current test by default.
   See [current() function].
 
 ```python
@@ -1277,9 +1277,9 @@ xerr(message=None, reason=None, test=None)
 xnull(message=None, reason=None, test=None)
 ```
 
-These functions raise an exception that corresponds to appropriate result class and 
-therefore unless you explicitly catch the exception the test stops
-at the point in which the result function is called.
+These functions raise an exception that corresponds to the appropriate result class and 
+therefore, unless you explicitly catch the exception, the test stops
+at the point at which the result function is called.
 
 For example, 
 
@@ -1310,7 +1310,7 @@ one of the [Test Definition Classes] which will be used to create a sub-test
 with the name specified by the `message` and failed with the specified
 `reason`.
 
-The original use case is to provide a way to seperate
+The original use case is to provide a way to separate
 fails of [Check]s into [Critical], [Major] and [Minor] without explicitly
 defining [Critical], [Major], or [Minor] sub-tests.
 
@@ -1335,50 +1335,50 @@ with Check("Hello World!"):
 
 # Working With Requirements
 
-Requirements must be at the core of any enterprise QA process. Many proprietary and complex
-systems exist for handling requirements. This complexity is usually not necessary
+Requirements must be at the core of any enterprise QA process. There are numerous proprietary and complex
+systems exist for handling requirements. This complexity is usually not necessary,
 and **{% testflows %}** provides a way to work with requirements just like with code
 and leverage the same development tools to enable easy linking of requirements to your tests.
 
-In general when writing requirements you should think how they will be tested.
-Requirements are can either be high level or low level. High level
+In general, when writing requirements, you should think about how they will be tested.
+Requirements can either be high level or low level. High level
 requirements are usually verified by [Feature]s or [Module]s and low level requirements
 by individual [Test]s or [Scenario]s.
 
-Writing untestable requirements is not of much use. Keep this in mind during
+Writing untestable requirements is not much use. Keep this in mind during
 your software testing process.
 
-> _When writing requirements you should be thinking about tests or test suites that would verify them and
-> when writing tests or test suites you should think about which requirements they will verify._
+> _When writing requirements, you should be thinking about tests or test suites that would verify them, and
+> when writing tests or test suites, you should think about which requirements they will verify._
 
-The ideal requirement to test relationship is one-to-one. Where one requirement
-is verified by one test. However, in practice the relationship can be
-one-to-many, many-to-one, and many-to-many and **{% testflows %}** supports
+The ideal requirement to test a relationship is one-to-one. Where one requirement
+is verified by one test. However, in practice, the relationship can be
+one-to-many, many-to-one, and many-to-many, and **{% testflows %}** supports
 all of these cases.
 
-In many cases don't be afraid to modify and restructure your requirements once you
-start writing tests. Refactoring of requirements during test development is a natural
+In many cases, don't be afraid to modify and restructure your requirements once you
+start writing tests. It is natural to refactor requirements during test development
 process that helps better align requirements to tests and vice versa. 
 
-> _Writing requirements is hard but developing enterprise software without requirements
+> _Writing requirements is hard, but developing enterprise software without requirements
 > is even harder._
 
 ## Requirements As Code
 
-Working with requirements as code is very convenient but it does not necessary mean
+Working with requirements as code is very convenient, but it does not necessarily mean
 that we need to write requirements as [Python] code.
 
 Requirements form documents such as SRS (Software Requirements Specification)
-where in addition to pure requirements you might find additional sections
-such as introductions, diagrams, references etc. Therefore, the most
+where, in addition to the requirements, you might find additional sections
+such as introductions, diagrams, references, etc. Therefore, the most
 convenient way to define requirements is inside a document. 
 
-**{% testflows %}** allows to write requirements as a [Markdown]
+**{% testflows %}** allows you to write requirements as a [Markdown]
 document that serves as the source of all the requirements. The document is the source
 and is stored just like code in the source control repository such as [Git](https://git-scm.com/).
 This allows the same process to be applied to requirements as to the code.
-For example, you can use the same review process and the same tools. You also get full
-tracebility of when and who defined the requirement and keep track of any changes
+For example, you can use the same review process and the same tools. You also receive full
+traceability of when and who defined the requirement and keep track of any changes
 just like for your other source files.
 
 For example, a simple requirements document in [Markdown] can be defined as follows.
@@ -1391,7 +1391,7 @@ For example, a simple requirements document in [Markdown] can be defined as foll
 
 ## Introduction
 
-This software requirements specification covers behavior of the standard
+This software requirements specification covers the behavior of the standard
 Unix `ls` utility.
 
 ## Requirements
@@ -1408,25 +1408,25 @@ using `tfs requirements generate` command. See [Generating Requirements Objects]
 
 Each requirement is defined as a heading that starts with `RQ.` prefix and contains
 attributes such as `version`, `priority`, `group`, `type` and `uid` defined
-on the following line which must be followed by an empty line.
+on the following line, which must be followed by an empty line.
 
 ```markdown
 ### RQ.SRS001-CU.LS
 version: 1.0
 ```
 
-Only the `version` attribute is always required and the others are optional.
-The `version` attribute allows to track material changes to the requirement over the 
-lifetime of the product and makes sure the tests get updated when requirement has been
+Only the `version` attribute is always required, and the others are optional.
+The `version` attribute allows for tracking material changes to the requirement over
+lifetime of the product and makes sure the tests get updated when a requirement has been
 updated to a new version.
 
-Any text found until the next section is considered to be the description of the requirement.
+Any text found in the next section is considered to be the description of the requirement.
 
 ```markdown
 ### RQ.SRS001-CU.LS
 version: 1.0
 
-This is the first paragraph of the requirements description.
+This is the first paragraph of the requirement description.
 
 This is the second paragraph.
 ```
@@ -1451,12 +1451,12 @@ to list entries starting with `.` that SHALL be considered to be hidden.
 > your case.
 
 Each requirement must be given a unique name. The most common convention
-is to start with the SRS number as a prefix followed by a dot separated
+is to start with the SRS number as a prefix, followed by a dot separated
 name. The `.` separator serves to implicitly group the requirements.
 It is usually best to combine the grouping with the corresponding document sections.
 
 For example, we can create `Options` section where we would add requirements
-for the supported options. Then all the requirements in this sections would have
+for the supported options. Then all the requirements in this section would have
 `RQ.SRS001-CU.LS.Options.` prefix.
 
 
@@ -1467,7 +1467,7 @@ for the supported options. Then all the requirements in this sections would have
 version: 1.0
 ```
 
-> **{% attention %}** Names are usually prefered over numbers to facilitate moving of requirements between
+> **{% attention %}** Names are usually preferred over numbers to facilitate the movement of requirements between
 > different parts of the document.
 
 ## Generating Requirements Objects
@@ -1498,7 +1498,7 @@ For example, given `requirements.md` file having the following content.
 
 ## Introduction
 
-This software requirements specification covers behavior of the standard
+This software requirements specification covers the behavior of the standard
 Unix `ls` utility.
 
 ## Requirements
@@ -1544,8 +1544,8 @@ RQ_SRS001_CU_LS = Requirement(
 ...
 ```
 
-Where for each requirement a corresponding [Requirement class] object will be
-defined in addition to the [Specification class] object that describes
+For each requirement, a corresponding [Requirement class] object will be
+defined in addition to the [Specification class] object that describes the
 full requirements specification document.
 
 ```python
@@ -1562,7 +1562,7 @@ source files and used to link with tests.
 
 Once you have written your requirements in a [Markdown] document as described in [Requirements As Code](#Requirements-As-Code)
 and have generated [Requirement class] objects from the requirements source file using `tfs requirements generate`
-command as desribed in [Generating Requirements Objects](#Generating-Requirements-Objects)
+command as described in [Generating Requirements Objects](#Generating-Requirements-Objects)
 you can link the requirements to any of the tests by either setting
 [requirements](#requirements) attribute of the inline test or using [Requirements](#Requirements)
 decorator for decorated tests.
@@ -1576,10 +1576,10 @@ with Test("My test", requirements=[RQ_SRS001_CU_LS("1.0")] as test:
     note(test.requirements)
 ```
 
-The `requirements` argument takes a list of requirements so you can link
+The `requirements` argument takes a list of requirements, so you can link
 any number of requirements to a single test.
 
-Instead of passing a list you can also pass [Requirements] object directly as follows,
+Instead of passing a list, you can also pass [Requirements] object directly as follows,
 
 ```python
 from requirements import RQ_SRS001_CU_LS
@@ -1592,7 +1592,7 @@ where [Requirements] can be passed one or more requirements.
 
 > **{% attention %}** Note that when linking requirements to test you should
 > **always** call the requirement
-> with the version which the test is verifying. If the version does not match
+> with the version that the test is verifying. If the version does not match
 > the actual requirement version `RequirementError` exception will be raised.
 > See [Test Requirements](#Test-Requirements).
 
@@ -1616,10 +1616,10 @@ def my_test(self):
 When generating requirements, in addition to [Requirement class] objects created
 for each requirement [Specification class] object is also generated that describes
 the whole requirements specification document. This object can be 
-linked to higher level tests so that coverage report can be easily calculated
+linked to higher level tests so that a coverage report can be easily calculated
 for a specific test program run.
 
-To link [Specification class] object to a test either use 
+To link [Specification class] object to a test, either use 
 [specifications] parameter for inline tests or [Specifications] decorator
 for decorated tests.
 
@@ -1637,7 +1637,7 @@ with Module("regression", specifications=[SRS001_ls_Unix_Command_Utility]) as te
 
 One or more specifications can be linked.
 
-Instead of passing a list you can also pass [Specifications] object directly as follows,
+Instead of passing a list, you can also pass [Specifications] object directly as follows,
 
 ```python
 from requirements import SRS001_ls_Unix_Command_Utility
@@ -1647,9 +1647,9 @@ with Module("regression", specifications=Specifications(SRS001_ls_Unix_Command_U
 ```
 
 > **{% attention %}** Note that [Specification class] object call also be
-> called with a specific version just like [Requirement class] objects.
+> called with a specific version, just like [Requirement class] objects.
 
-If a higher level test is defined using a decorated function then you can use [Specifications]
+If a higher level test is defined using a decorated function, then you can use [Specifications]
 decorator.
 
 For example,
@@ -1683,7 +1683,7 @@ def test(self, x, y, result):
     assert sum([x,y]) == result
 ```
 
-When creating a test based on a decorated test the attributes of the test get preserved unless
+When creating a test based on a decorated test, the attributes of the test get preserved unless
 you override them explicitly.
 
 For example,
@@ -1694,7 +1694,7 @@ For example,
 Scenario(test=test)(x=1, y=1, result=2)
 ```
 
-However, if you call decorated test as a function within the test of the same type
+However, if you call decorated test a function within a test of the same type,
 then the attributes of the parent test are not changed in any way as
 the test is executed just like a function.
 
@@ -1707,7 +1707,7 @@ with Scenario("my test"):
 
 ## Overriding Attributes
 
-You can override any attributes of a decorated tests by explicitly creating a test
+You can override any attributes of a decorated test by explicitly creating a test
 that uses it as a base via `test` parameter, or `run` parameter if there is no need to pass
 any arguments to the test, and define any new values of the attributes as needed. 
 
