@@ -2008,9 +2008,9 @@ The framework produces [LZMA] compressed logs that contains [JSON] encoded messa
 {"message_keyword":"TEST","message_hash":"ccd1ad1f","message_object":1,"message_num":2,"message_stream":null,"message_level":1,"message_time":1593887847.045375,"message_rtime":0.001051,"test_type":"Test","test_subtype":null,"test_id":"/68b96288-be25-11ea-8e14-2477034de0ec","test_name":"/My test","test_flags":0,"test_cflags":0,"test_level":1,"test_uid":null,"test_description":null}
 ```
 
-Each message is a [JSON] object. Object fields depend on the type of the message that is specified by the `message_keyword`.
+Each message is a [JSON] object. Object fields depend on the type of message that is specified by the `message_keyword`.
 
-Logs can be decompressed using either standard `xzcat` utility
+Logs can be decompressed using either the standard `xzcat` utility
 
 ```bash
 xzcat test.log
@@ -2033,7 +2033,7 @@ python3 test.py --log test.log
 ## Transforming Logs
 
 Test logs can be transformed using `tfs transform` command. See `tfs transform --help`
-for a detailed list available transformations.
+for a detailed list of available transformations.
 
 ### nice
 
@@ -2057,7 +2057,7 @@ Jul 04,2020 19:20:21     ⟥  Suite suite 0
 
 ### short
 
-The `tfs transform short` command can be used to transform test log into a `short` output format which contains test procedure
+The `tfs transform short` command can be used to transform test log into a `short` output format that contains test procedures
 and test results.
 
 For example,
@@ -2077,7 +2077,7 @@ Module filters
 
 ### slick
 
-The `tfs transform slick` command can be used to transform test log into a `slick` output format which contains only test names
+The `tfs transform slick` command can be used to transform test log into a `slick` output format that contains only test names
 with results provided as icons in front of the test name. This output format is very concise.
 
 For example,
@@ -2093,7 +2093,7 @@ cat test.log | tfs transform slick
 ```
 ### dots
 
-The `tfs transform dots` command can be used to transform test log into a `dots` output format which outputs dots
+The `tfs transform dots` command can be used to transform test log into a `dots` output format, which outputs dots
 for each executed test.
 
 For example,
@@ -2107,7 +2107,7 @@ cat test.log | tfs transform dots
 
 ### raw
 
-The `tfs transform raw` command can be used to transform a test log into a `raw` output format which contains raw [JSON]
+The `tfs transform raw` command can be used to transform a test log into a `raw` output format that contains raw [JSON]
 messages.
 
 For example,
@@ -2122,8 +2122,8 @@ cat test.log | tfs transform raw
 
 ### compact
 
-The `tfs transform compact` command can be used to transform a test log into a `compact` format which only contains
-raw [JSON] test definition and result messages while omiting all messages for the steps.
+The `tfs transform compact` command can be used to transform a test log into a `compact` format that only contains
+raw [JSON] test definition and result messages while omitting all messages for the steps.
 It is used to create compact test logs used for comparison reports.
 
 ### compress
@@ -2876,7 +2876,7 @@ def test_B(self):
 # Filtering Tests By Tags
 
 In addition to filtering test by name you can also filter them by tags.
-When you filter by tags a `type` must be specified to indicate which test [Types]
+When you filter by tags, you must specify a `type` to indicate which test [Types]
 should have the tag.
 
 > **{% attention %}** Filtering test [Step]s by tags is not supported.
@@ -2931,7 +2931,7 @@ python3 test.py --only-tags test:"tag A" test:"tag A","tag B"
 
 ## `--skip-tags` option
 
-If you assign tags to your tests then you can also use [--skip-tags] option to select
+If you assign tags to your tests, then you can also use [--skip-tags] option to select
 which tests should be skipped based on tests matching a particular tag. 
 Similar to [--only-tags] option, it also takes values
 of the form `type:tag` where [type](#Tags-Filtering-type) is used to specify a test type
@@ -2970,13 +2970,13 @@ python3 test.py --skip-tags test:"tag A" test:"tag A","tag B"
 
 ## Filtering By Tags In Code
 
-In your test program you can filter child tests by tags to control what tests are included or skipped 
+In your test program, you can filter child tests by tags to control which tests are included or skipped 
 by setting `only_tags` and `skip_tags` test attributes.
 
 ### `only_tags` and `skip_tags` Arguments
 
 When test is defined inline you can explicitly set filtering by tags using `only_tags` and `skip_tags`
-arguments. These arguments take [OnlyTags class] or [SkipTags class] object instances respectively
+arguments. These arguments take [OnlyTags class] or [SkipTags class] object instances, respectively,
 that provide a convenient way to set these filters.
 
 For example,
@@ -3014,7 +3014,7 @@ with Scenario("my tests", only_tags=OnlyTags(test=["tag1",("tag1","tag2"),...]),
 
 You can also specify `only_tags` and `skip_tags` attributes of the decorated tests
 using [OnlyTags class] and [SkipTags class] that can act as decorators to
-set `only_tags` and `skip_tags` attributes of a decorated test respectively.
+set `only_tags` and `skip_tags` attributes of a decorated test, respectively.
 
 ```python
     @OnlyTags(
@@ -3070,7 +3070,7 @@ using the `tags` attribute of the test.
 
 ## tags
 
-The [tags] parameter of the test can be use used to set [tags] of any inline test. The [tags] parameter
+The [tags] parameter of the test can be used to set [tags] of any inline test. The [tags] parameter
 can be passed either a `list`, `tuple` or a `set` of tag values. For example,
 
 ```python
@@ -3091,7 +3091,7 @@ def scenario(self):
 # Test Attributes
 
 You can add `attributes` to any test either by setting [attributes] parameter of the inline test
-or using [Attributes] decorator if the test is defined as a decorated function. The values of the attributes can be accessed
+or by using [Attributes] decorator if the test is defined as a decorated function. The values of the attributes can be accessed
 using the `attributes` attribute of the test.
 
 ## attributes
@@ -3121,10 +3121,10 @@ def scenario(self):
 # Test Requirements
 
 You can add `requirements` to any test either by setting [requirements] parameter of the inline test
-or using [Requirements] decorator if the test is defined as a decorated function. The values of the requirements can be accessed
+or by using [Requirements] decorator if the test is defined as a decorated function. The values of the requirements can be accessed
 using the `requirements` attribute of the test.
 
-> **{% attention %}** `Requirement` class instances must be always called with the version number the test is expected to verify.
+> **{% attention %}** `Requirement` class instances must always be called with the version number the test is expected to verify.
 > `RequirementError` exception will be raised if version does not match the version of the instance.
 
 ## requirements
@@ -3167,7 +3167,7 @@ or using [Specifications] decorator if the test is defined as a decorated functi
 using the `specifications` attribute of the test.
 
 > **{% attention %}** [Specification class] instances may be called with the version number the test is expected to verify.
-> `SpecificationError` exception will be raised if version does not match the version of the instance.
+> `SpecificationError` exception will be raised if the version does not match the version of the instance.
 
 ## specifications
 
@@ -3210,12 +3210,12 @@ using the `examples` attribute of the test.
 ## examples
 
 The [examples] parameter of the test can be used to set `examples` of any inline test. The [examples] parameter
-must be passed an table of examples which can be defined using `Examples` class for an inline test
+must be passed a table of examples, which can be defined using `Examples` class for an inline test
 or using the same [Examples] class as a decorator if the test is defined as a decorated function.
 The rows of the examples table can be accessed
 using the `examples` attribute of the test.
 
-> **{% attention %}** Usually examples are used only with test outlines. Please see [Outline] for more details.
+> **{% attention %}** Usually, examples are used only with test outlines. Please see [Outline] for more details.
 
 For example,
 
@@ -3231,7 +3231,7 @@ An [Examples] decorator can be used to set `examples` attribute of any test that
 or used as an argument of the `examples` parameter for the test.
 The [Examples] class defines a table of examples and should be passed a `header` and a `list` for the `rows`.
 
-> **{% attention %}** Usually examples are used only with test outlines. Please see [Outline] for more details.
+> **{% attention %}** Usually, examples are used only with test outlines. Please see [Outline] for more details.
 
 For example,
 
@@ -3248,8 +3248,8 @@ def scenario(self):
 
 # Test XFails
 
-You can specify test results to be crossed out known as `xfails` for any test
-either by setting `xfails` parameter of the inline test or using `XFails` decorator
+You can specify test results to be crossed out, known as `xfails` for any test
+either by setting `xfails` parameter of the inline test or by using `XFails` decorator
 if the test is defined as a decorated function. See [Crossing Out Results](#Crossing-Out-Results)
 for more information.
 
@@ -3289,8 +3289,8 @@ or
 Suite(run=my_suite, xfails={"my test": [Fail, "https://my.issue.tracker.com/issue34567"]})
 ```
 
-> **{% attention %}** If the test `pattern` is not absolute then it is
-> anchored to the test where [xfails] is being specified.
+> **{% attention %}** If the test `pattern` is not absolute, then it is
+> anchored to the test where [xfails] is specified.
 
 ## XFails
 
@@ -3331,7 +3331,7 @@ where key `pattern` is a test [pattern] that matches one or more tests for which
 flags will be set or cleared. The flags to be set or cleared are
 specified by a two-tuple of the form`(set_flags, clear_flags)` where the
 first element specifies flags to be set and the second element specifies
-flags to cleared.
+flags to be cleared.
 
 Here is an example to set [TE] flag and to clear the [SKIP] flag,
 
@@ -3374,13 +3374,13 @@ def suite(self):
 
 # Test FFails
 
-You can force result, including [Fail] result, of any test by setting
+You can force the result, including [Fail] result, of any test by setting
 `ffails` parameter or using `FFails` decorator
 for decorated tests. See [Forcing Results](#Forcing-Results).
 
 ## ffails
 
-The [ffails] parameter of the test can be used to force any result of a test including [Fail]
+The [ffails] parameter of the test can be used to force any result of a test, including [Fail]
 while skipping the execution of its test body. The [ffails] parameter
 must be passed a dictionary of the form
 
@@ -3393,7 +3393,7 @@ must be passed a dictionary of the form
 ```
 
 where key `pattern` is a test [pattern] that matches one or more tests for which
-the result will be set by force and the body of the test will not be executed.
+the result will be set by force, and the body of the test will not be executed.
 The forced result is specified by a two-tuple of the form `(Result, reason)` where the
 first element specifies the force test result, such as [Fail], and the second element specifies
 the reason for forcing the result as a string.
@@ -3421,7 +3421,7 @@ a `when` condition, specified as a function, as the last element.
 If present, the `when` function is called before test execution.
 The boolean result returned by the `when` function determines if the forced result is applied, 
 if the function returns `True`, or not, if it returns `False`. 
-The `when` function must take one argument which is the instance of the test.
+The `when` function must take one argument, which is the instance of the test.
 
 > **{% attention %}** The optional `when` function can define any logic that 
 > is needed to determine if some condition is met. Any [callable] can be used.
@@ -3479,8 +3479,8 @@ def suite(self):
 
 # Specialized keywords
 
-The framework encourages the usage of specialized keywords as they can provide the much needed context for your steps
-when writing your test scenarios.
+when writing your test scenarios, the framework encourages the usage of specialized keywords because they can provide
+the much-needed context for your steps.
 
 The specialized keywords map to core [Step], [Test], [Suite], and [Module] test definition classes as follows:
 
@@ -3499,7 +3499,7 @@ The specialized keywords map to core [Step], [Test], [Suite], and [Module] test 
 
 # Semi-Automated And Manual Tests
 
-Tests can be semi-automated and include one or more manual steps or
+Tests can be semi-automated and include one or more manual steps, or
 be fully manual.
 
 > **{% attention %}** It is often common to use [input() function] to prompt
@@ -3523,7 +3523,7 @@ with Scenario("my mixed scenario"):
         pass
 ```
 
-When a semi-automated test is run the test program pauses and asks for input
+When a semi-automated test is run, the test program pauses and asks for input
 for each manual step.
 
 ```bash
@@ -3539,8 +3539,8 @@ Sep 06,2021 18:39:00     ⟥  Step manual step, flags:MANUAL
 
 ## Manual
 
-A manual test is just test that has [MANUAL] flag set at the test level.
-Any sub-tests such as steps inherit [MANUAL] flag from the parent test.
+A manual test is just a test that has [MANUAL] flag set at the test level.
+Any sub-tests, such as steps, inherit [MANUAL] flag from the parent test.
 
 > **{% attention %}** Manual tests are best executed using [manual output](#manual-Output) format.
 
@@ -3556,7 +3556,7 @@ with Scenario("manual scenario", flags=MANUAL):
         pass
 ```
 
-When a manual test is run the test program pauses for each test step as well as to get
+When a manual test is run, the test program pauses for each test step as well as to get
 the result of the test itself.
 
 ```bash
@@ -3576,7 +3576,7 @@ Sep 06,2021 18:44:33     ⟥  When manual action, flags:MANUAL
 
 ## Manual With Automated Steps
 
-A test that has [MANUAL] flag could also include some automated steps
+A test that has [MANUAL] flag could also include some automated steps,
 which can be marked as automated using [AUTO] flag.
 
 For example,
@@ -3591,7 +3591,7 @@ with Scenario("manual scenario", flags=MANUAL):
         note("some note")
 ```
 
-When the above example is executed it will produce the following output that shows that the
+When the above example is executed, it will produce the following output that shows that the
 result for `/manual scenario/automated action` was set automatically
 based on the automated actions performed in this step.
 
@@ -3737,7 +3737,7 @@ with Scenario("My scenario"):
 ## Critical, Major, Minor
 
 A [Critical], [Major], or [Minor] checks can be defined using [Critical], [Major]
-or [Minor] test definition class respectively or similarly using [TestCritical], [TestMajor],
+or [Minor] test definition class, respectively, or similarly using [TestCritical], [TestMajor],
 [TestMinor] decorators
 
 ```python
@@ -3784,7 +3784,7 @@ with Scenario("My scenario"):
         pass
 ```
 
-These classes are usually used for classification of checks during reporting.
+These classes are usually used for the classification of checks during reporting.
 
 ```bash
 1 scenario (1 ok)
@@ -3795,7 +3795,7 @@ These classes are usually used for classification of checks during reporting.
 
 ## Example
 
-An [Example] can be only defined inline using [Example] test definition class. There is no decorator
+An [Example] can only be defined inline using [Example] test definition class. There is no decorator
 to define it outside of existing test. An [Example] is of a [Test Type] and is used to define
 one or more sub-tests. Usually, [Example]s are created automatically using [Outline]s.
 
@@ -3832,9 +3832,9 @@ outline()
 ```
 
 When [Examples] are defined for the [Outline] and an outline is called with no arguments from a test
-that is of higher [Type] than the [Type] of outline itself then when called the outline will iterate over all
-the examples defined in the [Examples] table. For example, run the example above that executes the outline
-with no arguments you will see that the outline iterates over all the examples in the [Examples] table where
+that is of a higher [Type] than the [Type] of outline itself, then when called, the outline will iterate over all
+the examples defined in the [Examples] table. For example,if you run the example above that executes the outline
+with no arguments, you will see that the outline iterates over all the examples in the [Examples] table, where
 each example, a row in the examples table, defines the values of the arguments for the outline.
 
 ```bash
@@ -3918,12 +3918,12 @@ def outline(self, greeting, name):
 
 ## Iteration
 
-An [Iteration] is not meant to be used explicitly and in most cases is only used
+An [Iteration] is not meant to be used explicitly, and in most cases it is only used
 internally to implement test repetitions.
 
 ## RetryIteration
 
-A [RetryIteration] is not meant to be used explicitly and in most cases is only used
+A [RetryIteration] is not meant to be used explicitly and, in most cases, is only used
 internally to implement test retries.
 
 ## Step
@@ -3953,7 +3953,7 @@ with Step("step"):
 
 ## Given
 
-A [Given] step is used to define precodition or setup and is always treated as a mandatory step
+A [Given] step is used to define preconditions or setup and is always treated as a mandatory step
 that can't be skipped because [MANDATORY] flag will be set by default.
 It is defined using [Given] test definition class or using [TestStep] with [Given] passed as the [Sub-Type].
 
@@ -3972,7 +3972,7 @@ with Given("I have something"):
 
 ## Background
 
-A [Background] step is used define a complex precodition or setup usually containing multiple
+A [Background] step is used to define a complex preconditions or setup, usually containing multiple
 [Given](#Given)'s and can be defined using [Background] test definition class or [TestBackground]
 decorator. It is treated as a mandatory step that can't be skipped.
 
@@ -4021,7 +4021,7 @@ with When("I do some action"):
 An [And](#And) step is used to define a step of the same [Sub-Type] as the step right above it.
 It is defined using [And] test definition class.
 
-> **{% attention %}** It does not make sense to use [TestStep] decorator to define it so always define it inline.
+> **{% attention %}** It does not make sense to use [TestStep] decorator to define it, so always define it inline.
 
 ```python
 with When("I do some action"):
@@ -4041,7 +4041,7 @@ with Given("I have something"):
         pass
 ```
 
-> **{% attention %}** `TypeError` exception will be raised if the [And] step is defined where it has no sibling. For example,
+> **{% attention %}** `TypeError` exception will be raised if the [And] step is defined where it has no siblings. For example,
 >
 > ```python
 with Given("I have something"):
@@ -4108,7 +4108,7 @@ with Then("I expect something"):
 ## But
 
 A companion of the [Then] step is a [But] step and is
-used to define a step that usually contains an negative assertion.
+used to define a step that usually contains a negative assertion.
 It can be defined using [But] test definition class
 or using [TestStep] decorator with [But] passed as the [Sub-Type].
 
@@ -4149,18 +4149,18 @@ with Finally("I clean up"):
 
 The [TE] flag is always set for [Finally] steps as multiple [Finally]
 steps can be defined back to back and the failure
-of previous step should not prevent execution of other [Finally] steps that follow.
+of a previous step should not prevent execution of other [Finally] steps that follow.
 
 # Concepts
 
 The framework was implemented with the following concepts and definitions in mind.
-These definitions were used as a guideline to implement test [Tree](#Tree-is) hierarchy.
+These definitions were used as a guideline to implement the test [Tree](#Tree-is) hierarchy.
 While the implementation does not strictly enforce these concepts, users are encouraged
 to apply these definitions during the design of their tests.
 
 ## Everything is a Test
 
-The framework treats everything as a test including setup and teardown.
+The framework treats everything as a test, including setup and teardown.
 
 ## Definitions
 
@@ -4204,7 +4204,7 @@ The framework divides tests into the following [Types] from highest to the lowes
 * [RetryIteration]
 * [Step]
 
-Children of each [Type] usually must be of the same [Type] or lower with the only notable exception
+Children of each [Type] usually must be of the same [Type] or lower, with the only notable exception
 being an [Iteration] that is used to implement test repetitions.
 
 # Sub-Types
@@ -4254,18 +4254,18 @@ The [Sub-Types] have the following mapping to the core six [Types]
 
 # Pausing Tests
 
-When tests perform complex automated actions it is often useful to pause a test either
-right before it starts executing it body or right after its completion. 
-Pausing a test means that the test execution will be halted and input in a form
+When tests perform complex automated actions, it is often useful to pause a test either
+right before it starts executing its body or right after its completion. 
+Pausing a test means that the test execution will be halted and input in the form
 of pressing `Enter` will be requested from the user. This pause allows
-time to manually examine system under test as well the test environment.
+time to manually examine the system under test as well as the test environment.
 
 Pausing either before or after a test is controlled by setting either [PAUSE_BEFORE]
-or [PAUSE_AFTER] flags respectively. You can also conditionally pause
+or [PAUSE_AFTER] flags, respectively. You can also conditionally pause
 after test execution on passing or failing result using [PAUSE_ON_PASS] or [PAUSE_ON_FAIL].
 
 > *{% attention %}* [PAUSE_BEFORE], [PAUSE_AFTER], [PAUSE_ON_PASS], and [PAUSE_ON_FAIL]
-> flags can be applied to any test but the [Top Level Test] test.
+> flags can be applied to any test except the [Top Level Test] test.
 > For [Top Level Test] test these flags are ignored.
 
 ## Pausing Using Command Line  
