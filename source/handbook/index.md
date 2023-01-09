@@ -4268,7 +4268,7 @@ after test execution on passing or failing result using [PAUSE_ON_PASS] or [PAUS
 > flags can be applied to any test except the [Top Level Test] test.
 > For [Top Level Test] test these flags are ignored.
 
-## Pausing Using Command Line  
+## Pausing Using Command Line
 
 Most of the time the most convenient way to pause a test program is to specify at which
 test the program should pause using [--pause-before], [--pause-after],
