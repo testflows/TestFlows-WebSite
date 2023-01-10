@@ -4999,22 +4999,27 @@ def feature(self):
 Asynchronous tests are natively supported.
 All asynchronous tests get [ASYNC](#ASYNC) flag set in [flags].
 
+> **{% attention %}** Note that the top level test must *not* be asynchronous.
+
+If you try to run asynchronous test as the top level test, you will get an error:
+
+> `error: top level test was not started in main thread`
+
 ## Inline
 
 An inline asynchronous tests can be defined using [async with] statement as follows.
 
 ```python
-import asyncio
 from testflows.core import *
 
-@TestModule
-async def module(self):
+@TestSuite
+async def suite(self):
     async with Test("my async test"):
         async with Step("my async test step"):
             note("Hello from asyncio!")
 
-
-asyncio.run(module())
+with Module("module"):
+    suite()
 ```
 
 ## Decorated
@@ -5024,19 +5029,19 @@ The only difference is that the decorated function must be asynchronous
 and be defined using `async def` keyword just like any other asynchronous function.
 
 ```python
-import asyncio
 from testflows.core import *
 
 @TestScenario
 async def my_test(self, number):
     note("Hello from async scenario {number}!")
 
-@TestModule
-async def module(self):
+@TestSuite
+async def suite(self):
     await Scenario(name="my test 0", test=my_test)(number=0)
     await Scenario(name="my test 1", test=my_test)(number=1)
 
-asyncio.run(module())
+with Module("module"):
+    suite()
 ```
 
 > **{% attention %}** See [asyncio] module to learn more about asynchronous programming in [Python].
