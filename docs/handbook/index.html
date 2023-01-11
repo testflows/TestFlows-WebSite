@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1673314423712" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1673314423712" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1673469141564" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1673469141564" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1673314423712" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1673469141564" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -1947,10 +1947,10 @@ after test execution on passing or failing result using <a href="#PAUSE_ON_PASS"
 flags can be applied to any test except the <a href="#Top-Level-Test">Top Level Test</a> test.
 For <a href="#Top-Level-Test">Top Level Test</a> test these flags are ignored.</p>
 </blockquote>
-<h2 id="Pausing-Using-Command-Line"><a href="#Pausing-Using-Command-Line" class="headerlink" title="Pausing Using Command Line"></a>Pausing Using Command Line</h2><p>Most of the time the most convenient way to pause a test program is to specify at which
-test the program should pause using <a href="#%E2%80%93pause-before">–pause-before</a>, <a href="#%E2%80%93pause-after">–pause-after</a>,
+<h2 id="Pausing-Using-Command-Line"><a href="#Pausing-Using-Command-Line" class="headerlink" title="Pausing Using Command Line"></a>Pausing Using Command Line</h2><p>Most of the time, the most convenient way to pause a test program is to specify at which
+test, the program should pause using <a href="#%E2%80%93pause-before">–pause-before</a>, <a href="#%E2%80%93pause-after">–pause-after</a>,
 <a href="#%E2%80%93pause-on-pass">–pause-on-pass</a>, and <a href="#%E2%80%93pause-on-fail">–pause-on-fail</a> arguments.</p>
-<p>These arguments accept one or more test name <a href="#pattern">pattern</a>s. Any test name
+<p>These arguments accept one or more test names <a href="#pattern">pattern</a>s. Any test name
 that matches the pattern except for the <a href="#Top-Level-Test">Top Level Test</a> will be paused.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--pause-before pattern [pattern ...]            pause before executing selected tests</span><br><span class="line">--pause-after pattern [pattern ...]             pause after executing selected tests</span><br><span class="line">--pause-on-fail pattern [pattern ...]           pause after selected tests on failing result</span><br><span class="line">--pause-on-pass pattern [pattern ...]           pause after selected tests on passing result</span><br></pre></td></tr></table></figure>
 
@@ -1961,11 +1961,11 @@ that matches the pattern except for the <a href="#Top-Level-Test">Top Level Test
 </blockquote>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 1&quot;</span>):</span><br><span class="line">        note(<span class="string">&quot;my step 1&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 2&quot;</span>):</span><br><span class="line">        note(<span class="string">&quot;my step 2&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<p>Then if we want to pause before executing the body of <code>my step 1</code> and right after
+<p>Then, if we want to pause before executing the body of <code>my step 1</code> and right after
 executing <code>my step 2</code> we can execute our test program as follows.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 pause.py --pause-before <span class="string">&quot;/my test/my step 1&quot;</span> --pause-after <span class="string">&quot;/my test/my step 2&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p>This will cause the test program to be halted twice requesting <code>Enter</code> input
+<p>This will cause the test program to be halted twice, requesting <code>Enter</code> input
 from the user to continue execution.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> Sep 25,2021 8:34:45   ⟥  Test my <span class="built_in">test</span></span><br><span class="line"> Sep 25,2021 8:34:45     ⟥  Step my step 1, flags:PAUSE_BEFORE</span><br><span class="line">✋ Paused, enter any key to <span class="built_in">continue</span>...</span><br><span class="line">               830ms     ⟥    [note] my step 1</span><br><span class="line">               830ms     ⟥⟤ OK my step 1, /my <span class="built_in">test</span>/my step 1</span><br><span class="line"> Sep 25,2021 8:34:45     ⟥  Step my step 2, flags:PAUSE_AFTER</span><br><span class="line">               609us     ⟥    [note] my step 2</span><br><span class="line">               753us     ⟥⟤ OK my step 2, /my <span class="built_in">test</span>/my step 2</span><br><span class="line">✋ Paused, enter any key to <span class="built_in">continue</span>...</span><br><span class="line">            1s 490ms   ⟥⟤ OK my <span class="built_in">test</span>, /my <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 
@@ -1977,13 +1977,13 @@ from the user to continue execution.</p>
 <p>For decorated tests <a href="#flags">Flags</a> decorator can be used to set these flags.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">PAUSE_BEFORE|PAUSE_AFTER</span>) </span><span class="comment"># pause before and after this test</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="Using-pause"><a href="#Using-pause" class="headerlink" title="Using pause()"></a>Using <code>pause()</code></h3><p>You can also use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L312">pause() function</a> to explicitely pause the test during test program
+<h3 id="Using-pause"><a href="#Using-pause" class="headerlink" title="Using pause()"></a>Using <code>pause()</code></h3><p>You can also use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L312">pause() function</a> to explicitly pause the test during test program
 execution.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pause(test=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
 
 <p>where</p>
 <ul>
-<li><code>test</code> the instance of the test where test program will be paused, default: current test</li>
+<li><code>test</code> the test instance in which the test program will be paused, default: current test</li>
 </ul>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my scenario&quot;</span>):</span><br><span class="line">    pause()</span><br></pre></td></tr></table></figure>
@@ -1991,13 +1991,13 @@ execution.</p>
 <p>when executed the test program is paused.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Nov 15,2021 17:31:58   ⟥  Scenario my scenario</span><br><span class="line">✋ Paused, enter any key to <span class="built_in">continue</span>...</span><br><span class="line">             1s 55ms   ⟥⟤ OK my scenario, /my scenario</span><br></pre></td></tr></table></figure>
 
-<h1 id="Using-Contexts"><a href="#Using-Contexts" class="headerlink" title="Using Contexts"></a>Using Contexts</h1><p>Each test has <code>context</code> attribute that can be used for storing and passing state
-to sub-tests. Each test has unique object instance of <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L131">Context class</a> however
+<h1 id="Using-Contexts"><a href="#Using-Contexts" class="headerlink" title="Using Contexts"></a>Using Contexts</h1><p>Each test has <code>context</code> attribute for storing and passing state
+to sub-tests. Each test has a unique object instance of <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L131">Context class</a> however,
 context variables from the parent
-can be accessed as long as the same context variable was not redefined by the current
+can be accessed as long as the same context variable is not redefined by the current
 test.</p>
-<p>The main use case for using <code>context</code> is to avoid passing common arguments
-to sub-tests and as <code>context</code>s allow to pass them <em>automatically</em>.</p>
+<p>The main use case for using <code>context</code> is to avoid passing along common arguments
+to sub-tests, and becuase <code>context</code>s enable them to pass_automatically_.</p>
 <p>Also, test clean up functions can be added to the current test using <code>context</code>.
 See <a href="#Cleanup-Functions">Cleanup Functions</a>.</p>
 <p>Here is an example of using <code>context</code> to store and pass state.</p>
@@ -2008,30 +2008,30 @@ See <a href="#Cleanup-Functions">Cleanup Functions</a>.</p>
 
 <blockquote>
 <p><strong>&#9995;</strong> You should not modify parent’s context directly (<del>self.parent.context</del>).
-Always set variables using the context of the current test either using
+Always set variables using the context of the current test, either by using
 <code>self.context</code> or <code>current().context</code>.</p>
 </blockquote>
-<h2 id="Using-in-Operator"><a href="#Using-in-Operator" class="headerlink" title="Using in Operator"></a>Using <code>in</code> Operator</h2><p>You can use <code>in</code> operator to check if variable is set in context.</p>
+<h2 id="Using-in-Operator"><a href="#Using-in-Operator" class="headerlink" title="Using in Operator"></a>Using <code>in</code> Operator</h2><p>You can use <code>in</code> operator to check if a variable is set in context.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># check if variable &#x27;my_var&#x27; is set in context</span></span><br><span class="line">note(<span class="string">&quot;my_var&quot;</span> <span class="keyword">in</span> self.context)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Using-hasattr"><a href="#Using-hasattr" class="headerlink" title="Using hasattr()"></a>Using <code>hasattr()</code></h2><p>Alternatively, you can also use built-in [hasattr()] function.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">note(<span class="built_in">hasattr</span>(self.context, <span class="string">&quot;my_var&quot;</span>))</span><br></pre></td></tr></table></figure>
 
-<h2 id="Using-getattr"><a href="#Using-getattr" class="headerlink" title="Using getattr()"></a>Using <code>getattr()</code></h2><p>If you are not sure if context variable is set you can use built-in <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#getattr">getattr()</a> function.</p>
+<h2 id="Using-getattr"><a href="#Using-getattr" class="headerlink" title="Using getattr()"></a>Using <code>getattr()</code></h2><p>If you are not sure if context variable is set, you can use built-in <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#getattr">getattr()</a> function.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">note(<span class="built_in">getattr</span>(self.context, <span class="string">&quot;my_var2&quot;</span>, <span class="string">&quot;was not set&quot;</span>))</span><br></pre></td></tr></table></figure>
 
-<h2 id="Using-getsattr"><a href="#Using-getsattr" class="headerlink" title="Using getsattr()"></a>Using <code>getsattr()</code></h2><p>If you would like to set <code>context</code> variable to some value if the variable
-is not defined in the context use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L407">getsattr() function</a>.</p>
+<h2 id="Using-getsattr"><a href="#Using-getsattr" class="headerlink" title="Using getsattr()"></a>Using <code>getsattr()</code></h2><p>If you want to set <code>context</code> variable to a specific value, if the variable
+is not defined in the context, use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L407">getsattr() function</a>.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Test, note</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> getsattr</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>) <span class="keyword">as</span> test:</span><br><span class="line">    getsattr(test.context, <span class="string">&quot;my_var2&quot;</span>, <span class="string">&quot;value if my_var2 is not set&quot;</span>)</span><br><span class="line">    note(test.context.my_var2)</span><br></pre></td></tr></table></figure>
 
-<h2 id="Arbitrary-Variable-Names"><a href="#Arbitrary-Variable-Names" class="headerlink" title="Arbitrary Variable Names"></a>Arbitrary Variable Names</h2><p>If you would like to add a variable that for example has empty spaces
+<h2 id="Arbitrary-Variable-Names"><a href="#Arbitrary-Variable-Names" class="headerlink" title="Arbitrary Variable Names"></a>Arbitrary Variable Names</h2><p>If you would like to add a variable that, for example, has empty spaces
 and therefore would not be valid to be referenced directly
 as an attribute of the <code>context</code> then you can use <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#setattr">setattr()</a> and <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/functions.html#getattr">getattr()</a>
-to set and get variable respectively.</p>
+to set and get the variable respectively.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>) <span class="keyword">as</span> test:</span><br><span class="line">    <span class="built_in">setattr</span>(test.context, <span class="string">&quot;my long variable with spaces&quot;</span>, <span class="string">&quot;value&quot;</span>)</span><br><span class="line">    note(<span class="built_in">getattr</span>(test.context, <span class="string">&quot;my long variable with spaces&quot;</span>))</span><br></pre></td></tr></table></figure>
 
 <h1 id="Setups-And-Teardowns"><a href="#Setups-And-Teardowns" class="headerlink" title="Setups And Teardowns"></a>Setups And Teardowns</h1><p>Test setup and teardown could be explicitly specified using <a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps.</p>
-<p>For example <a href="#Scenario">Scenario</a> that needs to do some setup and perform clean up as part
+<p>For example, <a href="#Scenario">Scenario</a> that needs to do some setup and perform clean up as part
 of teardown can be defined as follows using explicit <a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> Given(<span class="string">&quot;my setup&quot;</span>):</span><br><span class="line">            do_some_setup()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> When(<span class="string">&quot;I perform action&quot;</span>):</span><br><span class="line">            perform_action()</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">with</span> Finally(<span class="string">&quot;clean up&quot;</span>):</span><br><span class="line">            do_cleanup()</span><br></pre></td></tr></table></figure>
 
@@ -2040,31 +2040,31 @@ of teardown can be defined as follows using explicit <a href="#Given">Given</a> 
 in most cases. See <a href="#Given-With-yield">Given With <code>yield</code></a>.</p>
 </blockquote>
 <blockquote>
-<p><strong>&#9995;</strong> <a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps have <a href="#MANDATORY">MANDATORY</a> flag set by default
+<p><strong>&#9995;</strong> <a href="#Given">Given</a> and <a href="#Finally">Finally</a> steps have <a href="#MANDATORY">MANDATORY</a> flag set by default,
 and therefore these steps can’t be skipped.</p>
 </blockquote>
 <blockquote>
 <p><strong>&#9995;</strong> <a href="#Finally">Finally</a> steps must be located within <code>finally</code> blocks
 to ensure their execution.</p>
 </blockquote>
-<h2 id="Common-Setup-And-Teardown"><a href="#Common-Setup-And-Teardown" class="headerlink" title="Common Setup And Teardown"></a>Common Setup And Teardown</h2><p>If multiple tests require the same setup and teardown and the result of setup
-can be shared between these tests then the common setup and teardown
+<h2 id="Common-Setup-And-Teardown"><a href="#Common-Setup-And-Teardown" class="headerlink" title="Common Setup And Teardown"></a>Common Setup And Teardown</h2><p>If multiple tests require the same setup and teardown and the result of the setup
+can be shared between these tests, then the common setup and teardown
 should be defined at the parent test level. Therefore,
-for multiple <a href="#Scenario">Scenario</a>s that share the same setup and teardown
+for multiple <a href="#Scenario">Scenario</a>s that share the same setup and teardown,
 it should be defined at the <a href="#Feature">Feature</a> level and for multiple
-<a href="#Feature">Feature</a>s that share the same setup and teardown it should be defined
+<a href="#Feature">Feature</a>s that share the same setup and teardown, it should be defined
 at the <a href="#Module">Module</a> level.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario1</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario2</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Feature(<span class="string">&quot;my feature&quot;</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> Given(<span class="string">&quot;my setup&quot;</span>):</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line">        Scenario(run=my_scenario1)</span><br><span class="line">        Scenario(run=my_scenario2)</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">with</span> Finally(<span class="string">&quot;clean up&quot;</span>):</span><br><span class="line">            <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
 
-<h2 id="Handling-Resources"><a href="#Handling-Resources" class="headerlink" title="Handling Resources"></a>Handling Resources</h2><p>When setup creates a resource that needs to be cleaned up one must
-ensure that <a href="#Finally">Finally</a> step checks if <a href="#Given">Given</a> has actually suceeded in creating
+<h2 id="Handling-Resources"><a href="#Handling-Resources" class="headerlink" title="Handling Resources"></a>Handling Resources</h2><p>When setup creates a resource that needs to be cleaned up, one must
+ensure that <a href="#Finally">Finally</a> step checks if <a href="#Given">Given</a> has actually succeeded in creating
 the resource that needs to be cleaned up.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    resource = <span class="literal">None</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">with</span> Given(<span class="string">&quot;my setup&quot;</span>):</span><br><span class="line">            resource = do_some_setup()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">with</span> When(<span class="string">&quot;I perform action&quot;</span>):</span><br><span class="line">            perform_action()</span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">with</span> Finally(<span class="string">&quot;clean up&quot;</span>):</span><br><span class="line">        	<span class="keyword">if</span> resource <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">	            do_cleanup()</span><br></pre></td></tr></table></figure>
 
-<h2 id="Multiple-Setups-and-Teardowns"><a href="#Multiple-Setups-and-Teardowns" class="headerlink" title="Multiple Setups and Teardowns"></a>Multiple Setups and Teardowns</h2><p>When a test needs to perform multiple setups and teardowns then
+<h2 id="Multiple-Setups-and-Teardowns"><a href="#Multiple-Setups-and-Teardowns" class="headerlink" title="Multiple Setups and Teardowns"></a>Multiple Setups and Teardowns</h2><p>When a test needs to perform multiple setups and teardowns, then
 multiple <a href="#Given">Given</a> and <a href="#Finally">Finally</a> can be used.</p>
 <blockquote>
 <p><strong>&#9995;</strong> Use <a href="#And">And</a> step to make test procedure more fluid.</p>
@@ -2084,7 +2084,7 @@ of other <a href="#Finally">Finally</a> steps.</p>
 <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> supports <code>yield</code> statement inside a decorated <a href="#Given">Given</a> step
 to convert the decorated function into a generator that
 will be first run to execute the setup and then executed
-the second time to perform the clean during test’s teardown.</p>
+a second time to perform the clean during the test’s teardown.</p>
 <blockquote>
 <p><strong>&#9995;</strong> It is an error to define a <a href="#Given">Given</a> step that
 contains multiple <code>yield</code> statements.</p>
@@ -2095,7 +2095,7 @@ contains multiple <code>yield</code> statements.</p>
 at the end of the test.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Sep 07,2021 19:26:23   ⟥  Scenario my scenario</span><br><span class="line">Sep 07,2021 19:26:23     ⟥  Given my setup, flags:MANDATORY</span><br><span class="line">                 1ms     ⟥⟤ OK my setup, /my scenario/my setup</span><br><span class="line">Sep 07,2021 19:26:23     ⟥  Finally I clean up, flags:MANDATORY</span><br><span class="line">Sep 07,2021 19:26:23       ⟥  And clean up, flags:MANDATORY</span><br><span class="line">               442us       ⟥⟤ OK clean up, /my scenario/I clean up/clean up</span><br><span class="line">                 1ms     ⟥⟤ OK I clean up, /my scenario/I clean up</span><br><span class="line">                11ms   ⟥⟤ OK my scenario, /my scenario</span><br></pre></td></tr></table></figure>
 
-<h3 id="Yielding-Resources"><a href="#Yielding-Resources" class="headerlink" title="Yielding Resources"></a>Yielding Resources</h3><p>If <a href="#Given">Given</a> step creates a resource it can by <code>yield</code>ed
+<h3 id="Yielding-Resources"><a href="#Yielding-Resources" class="headerlink" title="Yielding Resources"></a>Yielding Resources</h3><p>If <a href="#Given">Given</a> step creates a resource, it can by <code>yield</code>ed
 as a value.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">Given</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_setup</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="keyword">yield</span> <span class="string">&quot;resource&quot;</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        <span class="keyword">with</span> Finally(<span class="string">&quot;clean up&quot;</span>):</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my scenario&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;my setup&quot;</span>):</span><br><span class="line">        resource = my_setup()</span><br><span class="line">        note(resource)</span><br></pre></td></tr></table></figure>
@@ -2111,11 +2111,11 @@ as a value.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Sep 07,2021 19:58:11   ⟥  Scenario my scenario</span><br><span class="line">Sep 07,2021 19:58:11     ⟥  When I perform action</span><br><span class="line">               796us     ⟥⟤ OK I perform action, /my scenario/I perform action</span><br><span class="line">Sep 07,2021 19:58:11     ⟥  Finally I clean up, flags:MANDATORY</span><br><span class="line">               575us     ⟥    [note] my cleanup</span><br><span class="line">               817us     ⟥⟤ OK I clean up, /my scenario/I clean up</span><br><span class="line">                11ms   ⟥⟤ OK my scenario, /my scenario</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <h1 id="Returning-Values"><a href="#Returning-Values" class="headerlink" title="Returning Values"></a>Returning Values</h1><p>A test is not just a function but an entity that can either be run
-within caller’s thread, another thread, in a different process
-or even on a remote host. Therefore, depending on how a test is called
+within caller’s thread, in another thread, in a different process,
+or even on a remote host. Therefore, depending on how a test is called,
 returning values from a test might not be as simple as
 when one calls a regular function.</p>
-<h2 id="Using-value"><a href="#Using-value" class="headerlink" title="Using value()"></a>Using <code>value()</code></h2><p>A generic way for a test to return a value is using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L158">value() function</a>.
+<h2 id="Using-value"><a href="#Using-value" class="headerlink" title="Using value()"></a>Using <code>value()</code></h2><p>A generic way for a test to return a value is by using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L158">value() function</a>.
 Test can call <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L158">value() function</a> to set one or more values.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_step</span>(<span class="params">self</span>):</span><br><span class="line">    value(name=<span class="string">&quot;first&quot;</span>, value=<span class="string">&quot;my first value&quot;</span>)</span><br><span class="line">    value(name=<span class="string">&quot;second&quot;</span>, value=<span class="string">&quot;my second value&quot;</span>)</span><br></pre></td></tr></table></figure>
@@ -2127,32 +2127,32 @@ Test can call <a target="_blank" rel="noopener" href="https://github.com/testflo
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    my_value = my_step().result.value</span><br><span class="line">    note(my_value) <span class="comment"># [note] my second value</span></span><br></pre></td></tr></table></figure>
 
 <p>Note that if the decorated test is called as a function
-within the same test type the return value is <code>None</code>
+within the same test type, the return value is <code>None</code>
 if the test function did not return any value using the <code>return</code> statement.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Step(<span class="string">&quot;my step&quot;</span>):</span><br><span class="line">    my_step() <span class="comment"># returns None</span></span><br></pre></td></tr></table></figure>
 
-<p>But if the test does <code>return</code> a value then it is set as the last value
+<p>But if the test does <code>return</code> a value, then it is set as the last value
 in the <code>values</code> attribute of the <code>result</code> of the test.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_step</span>(<span class="params">self</span>):</span><br><span class="line">    value(name=<span class="string">&quot;first&quot;</span>, value=<span class="string">&quot;my first value&quot;</span>)</span><br><span class="line">    value(name=<span class="string">&quot;second&quot;</span>, value=<span class="string">&quot;my second value&quot;</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;my third value&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    my_values = my_step().result.values[-<span class="number">1</span>]</span><br><span class="line">    <span class="comment"># [note] Value(name=&#x27;return&#x27;,value=&#x27;my third value&#x27;,type=None,group=None,uid=None)</span></span><br><span class="line">    note(my_values)</span><br></pre></td></tr></table></figure>
 
-<h2 id="Using-return"><a href="#Using-return" class="headerlink" title="Using return"></a>Using <code>return</code></h2><p>The most convenient way a decorated test can return a value is
-using <code>return</code> statement. For example, a test step can be defined as follows</p>
+<h2 id="Using-return"><a href="#Using-return" class="headerlink" title="Using return"></a>Using <code>return</code></h2><p>The most convenient way a decorated test can return a value is by
+using <code>return</code> statement. For example, a test step can be defined as follows:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_step</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;my value&quot;</span></span><br></pre></td></tr></table></figure>
 
-<p>and when called within another step the returned value is received just
+<p>and when called within another step, the returned value is received just
 like from a function.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Step(<span class="string">&quot;my step&quot;</span>):</span><br><span class="line">    my_value = my_step()</span><br></pre></td></tr></table></figure>
 
 <p>This is because calling a decorated test
-within a test of the same type just runs the decorated test function
+within a test of the same type, just runs the decorated test function
 and therefore the call is similar to calling a function with the ability
 to get the return value directly. See <a href="#Calling-Decorated-Tests">Calling Decorated Tests</a>.</p>
 <p>However, if you call a decorated test as a function
 within a higher test type, for example calling a <a href="#Step">Step</a> within a <a href="#Test">Test</a>,
 or when you call an inline defined test, then the return value
 is a <code>TestBase</code> object and the returned value needs to be retrieved
-as <code>value</code> attribute from the <code>result</code> attribute of the <code>TestBase</code> object
-or using <code>values</code> attribute to get a list of all the values produced by a test.</p>
+as <code>value</code> attribute from the <code>result</code> attribute of the <code>TestBase</code> object,
+ or using <code>values</code> attribute to get a list of all the values produced by a test.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="comment"># incorrect - `my_value` is TestBase object</span></span><br><span class="line">    <span class="comment"># my_value = my_step()</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># incorrect - `my_value` is Step object</span></span><br><span class="line">    <span class="comment"># my_value = Step(test=my_step)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># incorrect - `my_value` is TestBase object</span></span><br><span class="line">    <span class="comment"># my_value = Step(test=my_step)()</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># incorrect - `my_value` is TestBase object</span></span><br><span class="line">    <span class="comment"># my_value = Step(run=my_step)</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># correct</span></span><br><span class="line">    my_value = my_step().result.value</span><br><span class="line"></span><br><span class="line">    <span class="comment"># correct</span></span><br><span class="line">    my_value = my_step().result.values[-<span class="number">1</span>].value</span><br><span class="line"></span><br><span class="line">    <span class="comment"># correct</span></span><br><span class="line">    my_value = Step(test=my_step)().result.value</span><br><span class="line"></span><br><span class="line">    <span class="comment"># correct</span></span><br><span class="line">    my_value = Step(run=my_step).result.value</span><br></pre></td></tr></table></figure>
 
 <h1 id="Loading-Tests"><a href="#Loading-Tests" class="headerlink" title="Loading Tests"></a>Loading Tests</h1><h2 id="Using-load"><a href="#Using-load" class="headerlink" title="Using load()"></a>Using <code>load()</code></h2><p>You can use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L60">load() function</a> to load a test or any object from another
@@ -2160,8 +2160,8 @@ module.</p>
 <p>For example, given a <a href="#Scenario">Scenario</a> defined in <code>tests/another_module.py</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_test_in_another_module</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<p>then you can use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L60">load() function</a> to load this test in another module
-and use it as a base for an inline defined <a href="#Scenario">Scenario</a> as follows.</p>
+<p>then, using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L60">load() function</a> you can load this test in another module
+and use it as a base test for an inline defined <a href="#Scenario">Scenario</a> as follows.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;my module&quot;</span>):</span><br><span class="line">     Scenario(<span class="string">&quot;my test&quot;</span>, run=load(<span class="string">&quot;tests.another_module&quot;</span>, test=<span class="string">&quot;my_test_in_another_module&quot;</span>))</span><br></pre></td></tr></table></figure>
 
 <h2 id="Using-loads"><a href="#Using-loads" class="headerlink" title="Using loads()"></a>Using <code>loads()</code></h2><p>You can use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2692">loads() function</a> to load one or more tests of a given
@@ -2176,26 +2176,26 @@ test class.</p>
 <li><code>filter</code> filter function (optional)</li>
 </ul>
 <p>and <strong>returns</strong> list of tests.</p>
-<p>For example, given multiple <a href="#Scenario">Scenario</a>s defined in the same file one can
+<p>For example, given multiple <a href="#Scenario">Scenario</a>s defined in the same file, one can
 use <code>loads() function</code> to execute all the <a href="#Scenario">Scenario</a>s as follows</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test1</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test2</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">feature</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> scenario <span class="keyword">in</span> loads(current_module(), Scenario):</span><br><span class="line">        scenario()</span><br></pre></td></tr></table></figure>
 
-<p>If a file contains multiple test types then you can just
+<p>If a file contains multiple test types, then you can just
 specify them as needed. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test1</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test2</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">feature</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> test <span class="keyword">in</span> loads(current_module(), Scenario, Suite):</span><br><span class="line">        test()</span><br></pre></td></tr></table></figure>
 
 <p>See also <a href="#Using-current-module">using current_module()</a>.</p>
-<h2 id="Using-ordered"><a href="#Using-ordered" class="headerlink" title="Using ordered()"></a>Using <code>ordered()</code></h2><p>By default <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2692">loads() function</a> returns tests in random order. If you want
-a deterministic order then use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2683">ordered() function</a> to sort
+<h2 id="Using-ordered"><a href="#Using-ordered" class="headerlink" title="Using ordered()"></a>Using <code>ordered()</code></h2><p>By default, <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2692">loads() function</a> returns tests in random order. If you want
+a deterministic order, then use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2683">ordered() function</a> to sort
 a list of tests loaded with <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2692">loads() function</a> by test function name.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">feature</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> scenario <span class="keyword">in</span> ordered(loads(current_module(), Scenario)):</span><br><span class="line">        scenario()</span><br></pre></td></tr></table></figure>
 
-<h1 id="Loading-Modules"><a href="#Loading-Modules" class="headerlink" title="Loading Modules"></a>Loading Modules</h1><h2 id="Using-current-module"><a href="#Using-current-module" class="headerlink" title="Using current_module()"></a>Using <code>current_module()</code></h2><p>Using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L39">current_module() function</a> allows to conveniently reference
+<h1 id="Loading-Modules"><a href="#Loading-Modules" class="headerlink" title="Loading Modules"></a>Loading Modules</h1><h2 id="Using-current-module"><a href="#Using-current-module" class="headerlink" title="Using current_module()"></a>Using <code>current_module()</code></h2><p>Using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L39">current_module() function</a> allows you to conveniently reference
 the current module. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">feature</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> test <span class="keyword">in</span> loads(current_module(), Scenario, Suite):</span><br><span class="line">        test()</span><br></pre></td></tr></table></figure>
 
-<h2 id="Using-load-module"><a href="#Using-load-module" class="headerlink" title="Using load_module()"></a>Using <code>load_module()</code></h2><p>The <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L46">load_module() function</a> allows to load any module by specifying module name.</p>
+<h2 id="Using-load-module"><a href="#Using-load-module" class="headerlink" title="Using load_module()"></a>Using <code>load_module()</code></h2><p>The <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L46">load_module() function</a> allows to load any module by specifying the module name.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">feature</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> scenario <span class="keyword">in</span> loads(load_module(<span class="string">&quot;tests.another_module&quot;</span>), Scenario):</span><br><span class="line">        scenario()</span><br></pre></td></tr></table></figure>
 
@@ -2204,11 +2204,11 @@ All asynchronous tests get <a href="#ASYNC">ASYNC</a> flag set in <a href="#flag
 <blockquote>
 <p><strong>&#9995;</strong> Note that the top level test must <em>not</em> be asynchronous.</p>
 </blockquote>
-<p>If you try to run asynchronous test as the top level test, you will get an error:</p>
+<p>If you try to run an asynchronous test as the top level test, you will get an error:</p>
 <blockquote>
 <p><code>error: top level test was not started in main thread</code></p>
 </blockquote>
-<h2 id="Inline-1"><a href="#Inline-1" class="headerlink" title="Inline"></a>Inline</h2><p>An inline asynchronous tests can be defined using <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#async-with">async with</a> statement as follows.</p>
+<h2 id="Inline-1"><a href="#Inline-1" class="headerlink" title="Inline"></a>Inline</h2><p>An inline asynchronous test can be defined using <a target="_blank" rel="noopener" href="https://docs.python.org/3/reference/compound_stmts.html#async-with">async with</a> statement as follows.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> Test(<span class="string">&quot;my async test&quot;</span>):</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> Step(<span class="string">&quot;my async test step&quot;</span>):</span><br><span class="line">            note(<span class="string">&quot;Hello from asyncio!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;module&quot;</span>):</span><br><span class="line">    suite()</span><br></pre></td></tr></table></figure>
 
 <h2 id="Decorated-1"><a href="#Decorated-1" class="headerlink" title="Decorated"></a>Decorated</h2><p>A decorated asynchronous test can be defined in a similar way as a non-asynchronous test.
@@ -2220,15 +2220,15 @@ and be defined using <code>async def</code> keyword just like any other asynchro
 <p><strong>&#9995;</strong> See <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/asyncio.html">asyncio</a> module to learn more about asynchronous programming in <a target="_blank" rel="noopener" href="https://www.python.org/">Python</a>.</p>
 </blockquote>
 <h1 id="Parallel-Tests"><a href="#Parallel-Tests" class="headerlink" title="Parallel Tests"></a>Parallel Tests</h1><h2 id="Running"><a href="#Running" class="headerlink" title="Running"></a>Running</h2><p>Tests can be executed in parallel either using threads
-or asynchronous executor defined using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/thread.py#L57">ThreadPool class</a> or <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/asyncio.py#L113">AsyncPool class</a> respectively.</p>
-<p>In order to run a test in parallel, a test must either have <a href="#PARALLEL">PARALLEL</a> flag
-set or <code>parallel=True</code> specified during test definition.</p>
+or an asynchronous executor defined using <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/thread.py#L57">ThreadPool class</a> or <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/asyncio.py#L113">AsyncPool class</a> respectively.</p>
+<p>In order to run a test in parallel, it must either have <a href="#PARALLEL">PARALLEL</a> flag
+set or <code>parallel=True</code> specified during the test definition.</p>
 <p>A parallel executor can be specified using <code>executor</code> parameter. If no executor
-is explicitly specified then a default executor is created for the
+is explicitly specified, then a default executor is created for the
 test of the type that is needed to execute a test.</p>
 <blockquote>
-<p><strong>&#9995;</strong> Note that the default executor does not have a limit on a number
-of parallel tests as the pool size is not limited.</p>
+<p><strong>&#9995;</strong> Note that the default executor does not have a limit on the number
+of parallel tests because the pool size is not limited.</p>
 </blockquote>
 <p>Here is an example when <code>executor</code> is not specified.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_test</span>(<span class="params">self, number, sleep=<span class="number">1</span></span>):</span><br><span class="line">    note(<span class="string">f&quot;<span class="subst">&#123;self.name&#125;</span> starting&quot;</span>)</span><br><span class="line">    time.sleep(sleep)</span><br><span class="line">    note(<span class="string">f&quot;<span class="subst">&#123;self.name&#125;</span> done&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">module</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 0&quot;</span>, test=my_test, parallel=<span class="literal">True</span>)(number=<span class="number">0</span>)</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 1&quot;</span>, test=my_test, parallel=<span class="literal">True</span>)(number=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> main():</span><br><span class="line">    module()</span><br></pre></td></tr></table></figure>
@@ -2237,26 +2237,26 @@ of parallel tests as the pool size is not limited.</p>
 For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">module</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 0&quot;</span>, test=my_test, parallel=<span class="literal">True</span>)(number=<span class="number">0</span>)</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 1&quot;</span>, test=my_test, parallel=<span class="literal">True</span>)(number=<span class="number">1</span>)</span><br><span class="line">    <span class="comment"># wait until `my test 0` and `my test 1` complete</span></span><br><span class="line">    join()</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 2&quot;</span>, test=my_test, parallel=<span class="literal">True</span>)(number=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 
-<h1 id="Parallel-Executors"><a href="#Parallel-Executors" class="headerlink" title="Parallel Executors"></a>Parallel Executors</h1><p>Parallel executors can be used to gain fine grain control of how many
+<h1 id="Parallel-Executors"><a href="#Parallel-Executors" class="headerlink" title="Parallel Executors"></a>Parallel Executors</h1><p>Parallel executors can be used to gain fine grained control over how many
 tests are executed in parallel.</p>
 <blockquote>
 <p><strong>&#9995;</strong> You should not share a single pool executor between different tests
 as it can lead to a deadlock given that a situation might arise when a parent test
-can be left waiting for the child test to complete and a child test will not be
+can be left waiting for the child test to complete, and a child test will not be
 able to complete due to the shared pool having no available workers.</p>
 </blockquote>
-<p>If you want to share a pool between different tests you must use either
-<code>SharedThreadPool class</code> or <code>SharedAsyncPool class</code> for normal or asynchronous tests
+<p>If you want to share a pool between different tests, you must use either
+<code>SharedThreadPool class</code> or <code>SharedAsyncPool class</code> for normal or asynchronous tests,
 respectively. These classes ensure that a deadlock between a parent and child test is avoided
-by blocking and waiting for completion of any task that is submitted when no idle workers
+by blocking and waiting for the completion of any task that is submitted when no idle workers
 are available.</p>
 <h2 id="Thread-Pool"><a href="#Thread-Pool" class="headerlink" title="Thread Pool"></a>Thread Pool</h2><p>A thread pool executor is defined by creating an object of <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/thread.py#L57">Pool class</a> which is
-a short form to define a <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/thread.py#L57">ThreadPool class</a> and will run a test in another thread.</p>
+a short form for defining a <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/parallel/executor/thread.py#L57">ThreadPool class</a> and will run a test in another thread.</p>
 <p>The maximum number of threads can be controlled by setting <code>max_workers</code>
-parameter and by default is set to <code>16</code>. If <code>max_workers</code> is set to <code>None</code>
+parameter, and by default is set to <code>16</code>. If <code>max_workers</code> is set to <code>None</code>
 then the pool size is not limited.</p>
-<p>If there are more tasks submitted to the pool then the currently available
-threads then any extra tasks will block until a worker in the pool
+<p>If there are more tasks submitted to the pool than there are currently available
+threads, then any extra tasks will block until a worker in the pool
 is freed up.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Pool(<span class="number">5</span>) <span class="keyword">as</span> pool:</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 0&quot;</span>, test=my_test, parallel=<span class="literal">True</span>, executor=pool)(number=<span class="number">0</span>)</span><br><span class="line">    Scenario(name=<span class="string">&quot;my test 1&quot;</span>, test=my_test, parallel=<span class="literal">True</span>, executor=pool)(number=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
@@ -2264,14 +2264,14 @@ is freed up.</p>
 and will run an asynchronous test using a new loop running in another thread unless
 <code>loop</code> parameter is explicitly specified during executor object creation.</p>
 <p>The maximum number of concurrent asynchronous tasks can be controlled by setting <code>max_workers</code>
-parameter and by default is set to <code>1024</code>. If <code>max_workers</code> is set to <code>None</code>
+parameter, and by default is set to <code>1024</code>. If <code>max_workers</code> is set to <code>None</code>
 then the pool size is not limited.</p>
-<p>If there are more tasks submitted to the pool then the currently available
-threads then any extra tasks will block until a worker in the pool
+<p>If there are more tasks submitted to the pool than there are currently available
+threads, then any extra tasks will block until a worker in the pool
 is freed up.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> AsyncPool(<span class="number">5</span>) <span class="keyword">as</span> pool:</span><br><span class="line">    Scenario(name=<span class="string">&quot;my async test 0&quot;</span>, test=my_async_test, parallel=<span class="literal">True</span>, executor=pool)(number=<span class="number">0</span>)</span><br><span class="line">    Scenario(name=<span class="string">&quot;my async test 1&quot;</span>, test=my_async_test, parallel=<span class="literal">True</span>, executor=pool)(number=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
 
-<h1 id="Crossing-Out-Results"><a href="#Crossing-Out-Results" class="headerlink" title="Crossing Out Results"></a>Crossing Out Results</h1><p>All test results except <a href="#Skip">Skip</a> result can be cross out including <a href="#OK">OK</a>. This functionality
+<h1 id="Crossing-Out-Results"><a href="#Crossing-Out-Results" class="headerlink" title="Crossing Out Results"></a>Crossing Out Results</h1><p>All test results except <a href="#Skip">Skip</a> result can be crossed out, including <a href="#OK">OK</a>. This functionality
 is useful when one or more tests fail and you don’t want to see the next run
 fail because of the same test failing.</p>
 <p>Crossing out a result means converting it to the corresponding crossed out result
@@ -2283,41 +2283,40 @@ that starts with <code>X</code>.</p>
 <li><del><a href="#OK">OK</a></del> becomes <a href="#XOK">XOK</a></li>
 </ul>
 <blockquote>
-<p><strong>&#9995;</strong> The concept of crossing out result should not be confused with expected results.
-It is invalid to say that, for example <a href="#XFail">XFail</a>, means an expected fail.
-In general if you expect a fail then if the result of the test is <a href="#Fail">Fail</a> then
-the final test result is <a href="#OK">OK</a> and anything other result would cause the final
+<p><strong>&#9995;</strong> The concept of crossing out a result should not be confused with expected results.
+It is invalid to say that, for example, <a href="#XFail">XFail</a>, means an expected fail.
+In general, if you expect a fail, then if the result of the test is <a href="#Fail">Fail</a>, then
+the final test result is <a href="#OK">OK</a> and any other result would cause the final
 result to be <a href="#Fail">Fail</a> as the expectation was not satisfied.</p>
 </blockquote>
 <p>The correct way to think about crossed out results is to imagine that a test
-summary report is printed on a paper and after looking over the test results
-and performing some analysis any result can be crossed out with an optional reason.</p>
+summary report is printed on a paper, and after looking over the test results
+and performing some analysis, any result can be crossed out with an optional reason.</p>
 <p>Only the result that exactly matches the result to be crossed out is actually crossed out.
 For example, if you want to cross out <a href="#Fail">Fail</a> result of the test but the test has
-a different result then it will not be crossed out.</p>
+a different result, then it will not be crossed out.</p>
 <p>The actual crossing out of the results is done by specifying either <a href="#xfails">xfails</a> parameter
 of the test or using <a href="#xfails">XFails</a> decorator.</p>
 <p>In general, the <a href="#xfails">xfails</a> are set at the level of the top test. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@XFails(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my test&quot;</span>: [</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">Fail, <span class="string">&quot;known issue&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">OK, <span class="string">&quot;need to check if the issue has been fixed&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    ],</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my other test&quot;</span>: [</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">Fail, <span class="string">&quot;other known issue&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">        (<span class="params">Error, <span class="string">&quot;can also error&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">    ]</span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">regression</span>(<span class="params">self</span>):</span><br><span class="line">    Suite(run=my_suite)</span><br></pre></td></tr></table></figure>
 
 <p>All the <a href="#pattern">pattern</a>s are usually specified using relative form and are
-anchored to the top level test during assignment.</p>
+anchored to the top level test during the assignment.</p>
 <h1 id="Setting-or-Clearing-Flags"><a href="#Setting-or-Clearing-Flags" class="headerlink" title="Setting or Clearing Flags"></a>Setting or Clearing Flags</h1><p>Test flags can be set or cleared externally using <a href="#xflags">xflags</a> or <a href="#xflags">XFlags</a> decorator.
-This test attribute is pushed down the flow from parent test to child tests
-as long as the <a href="#pattern">pattern</a> has a chance of matching.</p>
+As long as the <a href="#pattern">pattern</a> has a chance of matching, this test attribute is pushed down the flow from parent test to child tests.</p>
 <p>This allows setting or clearing flags for any child test at any level of the test flow
 including at the top level test.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@XFlags(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my test&quot;</span>: (<span class="params"><span class="number">0</span>, TE</span>), <span class="comment"># clear TE flag</span></span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my other test&quot;</span>: (<span class="params">TE, <span class="number">0</span></span>) <span class="comment"># set TE flag</span></span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">regression</span>(<span class="params">self</span>):</span><br><span class="line">    Suite(run=my_suite)</span><br></pre></td></tr></table></figure>
 
-<h1 id="Forcing-Results"><a href="#Forcing-Results" class="headerlink" title="Forcing Results"></a>Forcing Results</h1><p>Test result can be forced and the body of the test skipped
+<h1 id="Forcing-Results"><a href="#Forcing-Results" class="headerlink" title="Forcing Results"></a>Forcing Results</h1><p>Test results can be forced, and the body of the test can be skipped
 by using <a href="#ffails">ffails</a> or <a href="#ffails">FFails</a> decorator.
-This test attribute is pushed down the flow from parent test to child tests
-as long as the <a href="#pattern">pattern</a> has a chance of matching.</p>
-<p>This allows to force the result of any child test at any level of the test flow
+As long as the <a href="#pattern">pattern</a> has a chance of matching, this test attribute is pushed down the flow 
+from parent test to child tests</p>
+<p>This enables the result of any child test to be force at any level of the test flow,
 including at the top level test.</p>
 <blockquote>
-<p><strong>&#9995;</strong> When test result is forced the body of the test is not executed.</p>
+<p><strong>&#9995;</strong> When a test result is forced, the body of the test is not executed.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@FFails(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my test&quot;</span>: (<span class="params">Fail, <span class="string">&quot;test gets stuck&quot;</span></span>), <span class="comment"># skip body of the test and force `Fail` result</span></span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my suite/my other test&quot;</span>: (<span class="params">SKIP, <span class="string">&quot;not supported&quot;</span></span>) <span class="comment"># skip body of the test and force `Skip` result</span></span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">regression</span>(<span class="params">self</span>):</span><br><span class="line">    Suite(run=my_suite)</span><br></pre></td></tr></table></figure>
@@ -2326,9 +2325,9 @@ including at the top level test.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">version</span>(<span class="params">*versions</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Check if the value of version test context variable</span></span><br><span class="line"><span class="string">    matches any in the list.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_when</span>(<span class="params">test</span>):</span><br><span class="line">        <span class="keyword">return</span> test.context.version <span class="keyword">in</span> versions</span><br><span class="line">    <span class="keyword">return</span> _when</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="meta">@FFails(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="comment"># force fail &quot;my test&quot; because it gets stuck on version 2.0</span></span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my test&quot;</span>: (<span class="params">Fail, <span class="string">&quot;test gets stuck&quot;</span>, version(<span class="params"><span class="string">&quot;2.0&quot;</span></span>)</span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">suite</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(run=my_test)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Forced-Result-Decorators"><a href="#Forced-Result-Decorators" class="headerlink" title="Forced Result Decorators"></a>Forced Result Decorators</h2><p>Forced result decorators such as <a href="#Skipped">Skipped</a>, <a href="#Failed">Failed</a>, <a href="#XFailed">XFailed</a>, <a href="#XErrored">XErrored</a>, <a href="#Okayed">Okayed</a>,
-and <a href="#XOkayed">XOkayed</a> can be used to tie force result right where the test is defined.</p>
+and <a href="#XOkayed">XOkayed</a> can be used to tie the force result right where the test is defined.</p>
 <blockquote>
-<p><strong>&#9995;</strong> When test result is forced the body of the test is not executed.</p>
+<p><strong>&#9995;</strong> When a test result is forced, the body of the test is not executed.</p>
 </blockquote>
 <p>These decorators are just a short-hand form of
 specifying forced results using <a href="#ffails">ffails</a>
@@ -2336,9 +2335,9 @@ test attribute. Therefore, if parent test explicitly specifies <a href="#ffails"
 forced results tied to the test.</p>
 <blockquote>
 <p><strong>&#9995;</strong> Only one such decorator can be applied to a given test.
-If you need to specify more than one forced result then <a href="#ffails">FFails</a> decorator shall be used.</p>
+If you want to specify more than one forced result, use <a href="#ffails">FFails</a> decorator.</p>
 </blockquote>
-<p>See also description for the <a href="#Optional-when-Condition">Optional <code>when</code> Condition</a>.</p>
+<p>See also the description for the <a href="#Optional-when-Condition">Optional <code>when</code> Condition</a>.</p>
 <h3 id="Skipped"><a href="#Skipped" class="headerlink" title="Skipped"></a>Skipped</h3><p>The <a href="#Skipped">Skipped</a> decorator can be used to force <a href="#Skip">Skip</a> result.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Skipped(<span class="params"><span class="string">&quot;not supported on 2.0&quot;</span>, when=version(<span class="params"><span class="string">&quot;2.0&quot;</span></span>)</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_test</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
