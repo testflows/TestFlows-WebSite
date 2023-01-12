@@ -4270,11 +4270,11 @@ after test execution on passing or failing result using [PAUSE_ON_PASS] or [PAUS
 
 ## Pausing Using Command Line
 
-Most of the time the most convenient way to pause a test program is to specify at which
-test the program should pause using [--pause-before], [--pause-after],
+Most of the time, the most convenient way to pause a test program is to specify at which
+test, the program should pause using [--pause-before], [--pause-after],
 [--pause-on-pass], and [--pause-on-fail] arguments.
 
-These arguments accept one or more test name [pattern]s. Any test name
+These arguments accept one or more test names [pattern]s. Any test name
 that matches the pattern except for the [Top Level Test] will be paused.
 
 ```bash
@@ -4300,14 +4300,14 @@ with Test("my test"):
         note("my step 2")
 ```
 
-Then if we want to pause before executing the body of `my step 1` and right after
+Then, if we want to pause before executing the body of `my step 1` and right after
 executing `my step 2` we can execute our test program as follows.
 
 ```bash
 python3 pause.py --pause-before "/my test/my step 1" --pause-after "/my test/my step 2"
 ```
 
-This will cause the test program to be halted twice requesting `Enter` input
+This will cause the test program to be halted twice, requesting `Enter` input
 from the user to continue execution.
 
 ```bash
@@ -4356,7 +4356,7 @@ def my_scenario(self):
 
 ### Using `pause()`
 
-You can also use [pause() function] to explicitely pause the test during test program
+You can also use [pause() function] to explicitly pause the test during test program
 execution.
 
 ```python
@@ -4365,7 +4365,7 @@ pause(test=None)
 
 where
 
-* `test` the instance of the test where test program will be paused, default: current test
+* `test` the test instance in which the test program will be paused, default: current test
 
 For example,
 
@@ -4386,14 +4386,14 @@ Nov 15,2021 17:31:58   ⟥  Scenario my scenario
 
 # Using Contexts
 
-Each test has `context` attribute that can be used for storing and passing state
-to sub-tests. Each test has unique object instance of [Context class] however
+Each test has `context` attribute for storing and passing state
+to sub-tests. Each test has a unique object instance of [Context class] however,
 context variables from the parent
-can be accessed as long as the same context variable was not redefined by the current
+can be accessed as long as the same context variable is not redefined by the current
 test.
 
-The main use case for using `context` is to avoid passing common arguments
-to sub-tests and as `context`s allow to pass them _automatically_.
+The main use case for using `context` is to avoid passing along common arguments
+to sub-tests, and becuase `context`s enable them to pass_automatically_.
 
 Also, test clean up functions can be added to the current test using `context`.
 See [Cleanup Functions](#Cleanup-Functions).
@@ -4439,12 +4439,12 @@ Sep 24,2021 10:24:54     ⟥  Scenario my test
 ```
 
 > **{% attention %}** You should not modify parent's context directly (~self.parent.context~).
-> Always set variables using the context of the current test either using
+> Always set variables using the context of the current test, either by using
 > `self.context` or `current().context`.
 
 ## Using `in` Operator
 
-You can use `in` operator to check if variable is set in context.
+You can use `in` operator to check if a variable is set in context.
 
 ```python
 # check if variable 'my_var' is set in context
@@ -4461,7 +4461,7 @@ note(hasattr(self.context, "my_var"))
 
 ## Using `getattr()`
 
-If you are not sure if context variable is set you can use built-in [getattr()] function.
+If you are not sure if context variable is set, you can use built-in [getattr()] function.
 
 ```python
 note(getattr(self.context, "my_var2", "was not set"))
@@ -4469,8 +4469,8 @@ note(getattr(self.context, "my_var2", "was not set"))
 
 ## Using `getsattr()`
 
-If you would like to set `context` variable to some value if the variable
-is not defined in the context use [getsattr() function].
+If you want to set `context` variable to a specific value, if the variable
+is not defined in the context, use [getsattr() function].
 
 
 ```python
@@ -4484,10 +4484,10 @@ with Test("my test") as test:
 
 ## Arbitrary Variable Names
 
-If you would like to add a variable that for example has empty spaces
+If you would like to add a variable that, for example, has empty spaces
 and therefore would not be valid to be referenced directly
 as an attribute of the `context` then you can use [setattr()] and [getattr()]
-to set and get variable respectively.
+to set and get the variable respectively.
 
 ```python
 with Test("my test") as test:
@@ -4499,7 +4499,7 @@ with Test("my test") as test:
 
 Test setup and teardown could be explicitly specified using [Given] and [Finally] steps.
 
-For example [Scenario] that needs to do some setup and perform clean up as part
+For example, [Scenario] that needs to do some setup and perform clean up as part
 of teardown can be defined as follows using explicit [Given] and [Finally] steps.
 
 ```python
@@ -4519,7 +4519,7 @@ def my_scenario(self):
 > **{% attention %}** It is recommended to use a decorated [Given] step that contains `yield` statement
 > in most cases. See [Given With `yield`](#Given-With-yield).
 
-> **{% attention %}** [Given] and [Finally] steps have [MANDATORY] flag set by default
+> **{% attention %}** [Given] and [Finally] steps have [MANDATORY] flag set by default,
 > and therefore these steps can't be skipped.
 
 > **{% attention %}** [Finally] steps must be located within `finally` blocks
@@ -4527,12 +4527,12 @@ def my_scenario(self):
 
 ## Common Setup And Teardown
 
-If multiple tests require the same setup and teardown and the result of setup
-can be shared between these tests then the common setup and teardown
+If multiple tests require the same setup and teardown and the result of the setup
+can be shared between these tests, then the common setup and teardown
 should be defined at the parent test level. Therefore,
-for multiple [Scenario]s that share the same setup and teardown
+for multiple [Scenario]s that share the same setup and teardown,
 it should be defined at the [Feature] level and for multiple
-[Feature]s that share the same setup and teardown it should be defined
+[Feature]s that share the same setup and teardown, it should be defined
 at the [Module] level.
 
 For example,
@@ -4562,8 +4562,8 @@ with Feature("my feature"):
 
 ## Handling Resources
 
-When setup creates a resource that needs to be cleaned up one must
-ensure that [Finally] step checks if [Given] has actually suceeded in creating
+When setup creates a resource that needs to be cleaned up, one must
+ensure that [Finally] step checks if [Given] has actually succeeded in creating
 the resource that needs to be cleaned up.
 
 For example,
@@ -4586,7 +4586,7 @@ def my_scenario(self):
 
 ## Multiple Setups and Teardowns
 
-When a test needs to perform multiple setups and teardowns then
+When a test needs to perform multiple setups and teardowns, then
 multiple [Given] and [Finally] can be used.
 
 > **{% attention %}** Use [And] step to make test procedure more fluid.
@@ -4639,7 +4639,7 @@ Because any [Given] step usually has a corresponding [Finally] step
 **{% testflows %}** supports `yield` statement inside a decorated [Given] step
 to convert the decorated function into a generator that
 will be first run to execute the setup and then executed
-the second time to perform the clean during test's teardown.
+a second time to perform the clean during the test's teardown.
 
 > **{% attention %}** It is an error to define a [Given] step that
 > contains multiple `yield` statements.
@@ -4678,7 +4678,7 @@ Sep 07,2021 19:26:23       ⟥  And clean up, flags:MANDATORY
 
 ### Yielding Resources
 
-If [Given] step creates a resource it can by `yield`ed
+If [Given] step creates a resource, it can by `yield`ed
 as a value.
 
 For example,
@@ -4751,14 +4751,14 @@ Sep 07,2021 19:58:11     ⟥  Finally I clean up, flags:MANDATORY
 # Returning Values
 
 A test is not just a function but an entity that can either be run
-within caller's thread, another thread, in a different process
-or even on a remote host. Therefore, depending on how a test is called
+within caller's thread, in another thread, in a different process,
+or even on a remote host. Therefore, depending on how a test is called,
 returning values from a test might not be as simple as
 when one calls a regular function.
 
 ## Using `value()`
 
-A generic way for a test to return a value is using [value() function].
+A generic way for a test to return a value is by using [value() function].
 Test can call [value() function] to set one or more values.
 
 For example,
@@ -4788,7 +4788,7 @@ with Test("my test"):
 ```
 
 Note that if the decorated test is called as a function
-within the same test type the return value is `None`
+within the same test type, the return value is `None`
 if the test function did not return any value using the `return` statement.
 
 ```python
@@ -4796,7 +4796,7 @@ with Step("my step"):
     my_step() # returns None
 ```
 
-But if the test does `return` a value then it is set as the last value
+But if the test does `return` a value, then it is set as the last value
 in the `values` attribute of the `result` of the test.
 
 ```python
@@ -4814,8 +4814,8 @@ with Test("my test"):
 
 ## Using `return`
 
-The most convenient way a decorated test can return a value is
-using `return` statement. For example, a test step can be defined as follows
+The most convenient way a decorated test can return a value is by
+using `return` statement. For example, a test step can be defined as follows:
 
 ```python
 @TestStep
@@ -4823,7 +4823,7 @@ def my_step(self):
     return "my value"
 ```
 
-and when called within another step the returned value is received just
+and when called within another step, the returned value is received just
 like from a function.
 
 ```python
@@ -4832,7 +4832,7 @@ with Step("my step"):
 ```
 
 This is because calling a decorated test
-within a test of the same type just runs the decorated test function
+within a test of the same type, just runs the decorated test function
 and therefore the call is similar to calling a function with the ability
 to get the return value directly. See [Calling Decorated Tests](#Calling-Decorated-Tests).
 
@@ -4840,8 +4840,8 @@ However, if you call a decorated test as a function
 within a higher test type, for example calling a [Step] within a [Test],
 or when you call an inline defined test, then the return value
 is a `TestBase` object and the returned value needs to be retrieved
-as `value` attribute from the `result` attribute of the `TestBase` object
-or using `values` attribute to get a list of all the values produced by a test.
+as `value` attribute from the `result` attribute of the `TestBase` object,
+ or using `values` attribute to get a list of all the values produced by a test.
 
 ```python
 with Test("my test"):
@@ -4888,8 +4888,8 @@ def my_test_in_another_module(self):
 
 ```
 
-then you can use [load() function] to load this test in another module
-and use it as a base for an inline defined [Scenario] as follows.
+then, using [load() function] you can load this test in another module
+and use it as a base test for an inline defined [Scenario] as follows.
 
 ```python
 with Module("my module"):
@@ -4914,7 +4914,7 @@ where
 
 and **returns** list of tests.
 
-For example, given multiple [Scenario]s defined in the same file one can
+For example, given multiple [Scenario]s defined in the same file, one can
 use `loads() function` to execute all the [Scenario]s as follows
 
 ```python
@@ -4932,7 +4932,7 @@ def feature(self):
         scenario()
 ```
 
-If a file contains multiple test types then you can just
+If a file contains multiple test types, then you can just
 specify them as needed. For example,
 
 ```python
@@ -4954,8 +4954,8 @@ See also [using current_module()].
 
 ## Using `ordered()`
 
-By default [loads() function] returns tests in random order. If you want
-a deterministic order then use [ordered() function] to sort
+By default, [loads() function] returns tests in random order. If you want
+a deterministic order, then use [ordered() function] to sort
 a list of tests loaded with [loads() function] by test function name.
 
 For example,
@@ -4971,7 +4971,7 @@ def feature(self):
 
 ## Using `current_module()`
 
-Using [current_module() function] allows to conveniently reference
+Using [current_module() function] allows you to conveniently reference
 the current module. For example,
 
 ```python
@@ -4983,7 +4983,7 @@ def feature(self):
 
 ## Using `load_module()`
 
-The [load_module() function] allows to load any module by specifying module name.
+The [load_module() function] allows to load any module by specifying the module name.
 
 For example,
 
@@ -5001,13 +5001,13 @@ All asynchronous tests get [ASYNC](#ASYNC) flag set in [flags].
 
 > **{% attention %}** Note that the top level test must *not* be asynchronous.
 
-If you try to run asynchronous test as the top level test, you will get an error:
+If you try to run an asynchronous test as the top level test, you will get an error:
 
 > `error: top level test was not started in main thread`
 
 ## Inline
 
-An inline asynchronous tests can be defined using [async with] statement as follows.
+An inline asynchronous test can be defined using [async with] statement as follows.
 
 ```python
 from testflows.core import *
@@ -5051,17 +5051,17 @@ with Module("module"):
 ## Running
 
 Tests can be executed in parallel either using threads
-or asynchronous executor defined using [ThreadPool class] or [AsyncPool class] respectively.
+or an asynchronous executor defined using [ThreadPool class] or [AsyncPool class] respectively.
 
-In order to run a test in parallel, a test must either have [PARALLEL](#PARALLEL) flag
-set or `parallel=True` specified during test definition.
+In order to run a test in parallel, it must either have [PARALLEL](#PARALLEL) flag
+set or `parallel=True` specified during the test definition.
 
 A parallel executor can be specified using `executor` parameter. If no executor
-is explicitly specified then a default executor is created for the
+is explicitly specified, then a default executor is created for the
 test of the type that is needed to execute a test.
 
-> **{% attention %}** Note that the default executor does not have a limit on a number
-> of parallel tests as the pool size is not limited.
+> **{% attention %}** Note that the default executor does not have a limit on the number
+> of parallel tests because the pool size is not limited.
 
 Here is an example when `executor` is not specified.
 
@@ -5101,31 +5101,31 @@ def module(self):
 
 # Parallel Executors
 
-Parallel executors can be used to gain fine grain control of how many
+Parallel executors can be used to gain fine grained control over how many
 tests are executed in parallel.
 
 > **{% attention %}** You should not share a single pool executor between different tests
 > as it can lead to a deadlock given that a situation might arise when a parent test
-> can be left waiting for the child test to complete and a child test will not be
+> can be left waiting for the child test to complete, and a child test will not be
 > able to complete due to the shared pool having no available workers.
 
-If you want to share a pool between different tests you must use either
-`SharedThreadPool class` or `SharedAsyncPool class` for normal or asynchronous tests
+If you want to share a pool between different tests, you must use either
+`SharedThreadPool class` or `SharedAsyncPool class` for normal or asynchronous tests,
 respectively. These classes ensure that a deadlock between a parent and child test is avoided
-by blocking and waiting for completion of any task that is submitted when no idle workers
+by blocking and waiting for the completion of any task that is submitted when no idle workers
 are available.
 
 ## Thread Pool
 
 A thread pool executor is defined by creating an object of [Pool class] which is
-a short form to define a [ThreadPool class] and will run a test in another thread.
+a short form for defining a [ThreadPool class] and will run a test in another thread.
 
 The maximum number of threads can be controlled by setting `max_workers`
-parameter and by default is set to `16`. If `max_workers` is set to `None`
+parameter, and by default is set to `16`. If `max_workers` is set to `None`
 then the pool size is not limited.
 
-If there are more tasks submitted to the pool then the currently available
-threads then any extra tasks will block until a worker in the pool
+If there are more tasks submitted to the pool than there are currently available
+threads, then any extra tasks will block until a worker in the pool
 is freed up.
 
 ```python
@@ -5141,11 +5141,11 @@ and will run an asynchronous test using a new loop running in another thread unl
 `loop` parameter is explicitly specified during executor object creation.
 
 The maximum number of concurrent asynchronous tasks can be controlled by setting `max_workers`
-parameter and by default is set to `1024`. If `max_workers` is set to `None`
+parameter, and by default is set to `1024`. If `max_workers` is set to `None`
 then the pool size is not limited.
 
-If there are more tasks submitted to the pool then the currently available
-threads then any extra tasks will block until a worker in the pool
+If there are more tasks submitted to the pool than there are currently available
+threads, then any extra tasks will block until a worker in the pool
 is freed up.
 
 ```python
@@ -5156,7 +5156,7 @@ with AsyncPool(5) as pool:
 
 # Crossing Out Results
 
-All test results except [Skip] result can be cross out including [OK]. This functionality
+All test results except [Skip] result can be crossed out, including [OK]. This functionality
 is useful when one or more tests fail and you don't want to see the next run
 fail because of the same test failing.
 
@@ -5168,19 +5168,19 @@ that starts with `X`.
 * ~[Null]~ becomes [XNull]
 * ~[OK]~ becomes [XOK]
 
-> **{% attention %}** The concept of crossing out result should not be confused with expected results.
-> It is invalid to say that, for example [XFail], means an expected fail.
-> In general if you expect a fail then if the result of the test is [Fail] then
-> the final test result is [OK] and anything other result would cause the final
+> **{% attention %}** The concept of crossing out a result should not be confused with expected results.
+> It is invalid to say that, for example, [XFail], means an expected fail.
+> In general, if you expect a fail, then if the result of the test is [Fail], then
+> the final test result is [OK] and any other result would cause the final
 > result to be [Fail] as the expectation was not satisfied.
 
 The correct way to think about crossed out results is to imagine that a test
-summary report is printed on a paper and after looking over the test results
-and performing some analysis any result can be crossed out with an optional reason.
+summary report is printed on a paper, and after looking over the test results
+and performing some analysis, any result can be crossed out with an optional reason.
 
 Only the result that exactly matches the result to be crossed out is actually crossed out.
 For example, if you want to cross out [Fail] result of the test but the test has
-a different result then it will not be crossed out.
+a different result, then it will not be crossed out.
 
 The actual crossing out of the results is done by specifying either [xfails] parameter
 of the test or using [XFails] decorator.
@@ -5204,13 +5204,12 @@ def regression(self):
 ```
 
 All the [pattern]s are usually specified using relative form and are
-anchored to the top level test during assignment.
+anchored to the top level test during the assignment.
 
 # Setting or Clearing Flags
 
 Test flags can be set or cleared externally using [xflags] or [XFlags] decorator.
-This test attribute is pushed down the flow from parent test to child tests
-as long as the [pattern] has a chance of matching.
+As long as the [pattern] has a chance of matching, this test attribute is pushed down the flow from parent test to child tests.
 
 This allows setting or clearing flags for any child test at any level of the test flow
 including at the top level test.
@@ -5229,15 +5228,16 @@ def regression(self):
 
 # Forcing Results
 
-Test result can be forced and the body of the test skipped
+Test results can be forced, and the body of the test can be skipped
 by using [ffails] or [FFails] decorator.
-This test attribute is pushed down the flow from parent test to child tests
-as long as the [pattern] has a chance of matching.
+As long as the [pattern] has a chance of matching, this test attribute is pushed down the flow 
+from parent test to child tests
 
-This allows to force the result of any child test at any level of the test flow
+
+This enables the result of any child test to be force at any level of the test flow,
 including at the top level test.
 
-> **{% attention %}** When test result is forced the body of the test is not executed.
+> **{% attention %}** When a test result is forced, the body of the test is not executed.
 
 For example,
 
@@ -5274,9 +5274,9 @@ def suite(self):
 ## Forced Result Decorators
 
 Forced result decorators such as [Skipped], [Failed], [XFailed], [XErrored], [Okayed],
-and [XOkayed] can be used to tie force result right where the test is defined.
+and [XOkayed] can be used to tie the force result right where the test is defined.
 
-> **{% attention %}** When test result is forced the body of the test is not executed.
+> **{% attention %}** When a test result is forced, the body of the test is not executed.
 
 These decorators are just a short-hand form of
 specifying forced results using [ffails]
@@ -5284,9 +5284,9 @@ test attribute. Therefore, if parent test explicitly specifies [ffails] then it 
 forced results tied to the test.
 
 > **{% attention %}** Only one such decorator can be applied to a given test.
-> If you need to specify more than one forced result then [FFails] decorator shall be used.
+> If you want to specify more than one forced result, use [FFails] decorator.
 
-See also description for the [Optional `when` Condition].
+See also the description for the [Optional `when` Condition].
 
 ### Skipped
 
