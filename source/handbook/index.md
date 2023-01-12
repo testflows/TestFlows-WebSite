@@ -1193,7 +1193,7 @@ def regression(self):
 
 will execute `testA` and only proceed to run other tests if its result is not [Fail] otherwise
 only `testA` will be executed. If result of `testA` is not [Fail] then
-we run `testB` 3 times, and `testC` gets executed indefinitely until its result is not [OK].
+we run `testB` 3 times, and `testC` gets executed indefinitely until its result is [OK].
 
 ## Creating Automatic Flows
 
@@ -1335,8 +1335,8 @@ with Check("Hello World!"):
 
 # Working With Requirements
 
-Requirements must be at the core of any enterprise QA process. There are numerous proprietary and complex
-systems exist for handling requirements. This complexity is usually not necessary,
+Requirements must be at the core of any enterprise QA process. There exist numerous proprietary and complex
+systems for handling requirements. This complexity is usually not necessary,
 and **{% testflows %}** provides a way to work with requirements just like with code
 and leverage the same development tools to enable easy linking of requirements to your tests.
 
@@ -1345,7 +1345,7 @@ Requirements can either be high level or low level. High level
 requirements are usually verified by [Feature]s or [Module]s and low level requirements
 by individual [Test]s or [Scenario]s.
 
-Writing untestable requirements is not much use. Keep this in mind during
+Writing untestable requirements is not very useful. Keep this in mind during
 your software testing process.
 
 > _When writing requirements, you should be thinking about tests or test suites that would verify them, and
