@@ -1800,6 +1800,9 @@ with Module("module"):
 something_else() # will not be executed
 ```
 
+> **{% attention %}** Top level test can't be an asyncrounous test. See [Async Tests](#Async-Tests).
+
+
 ## Renaming Top Test
 
 Top level test name can be changed using the [--name] command line argument.

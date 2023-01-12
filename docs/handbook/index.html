@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1673486470310" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1673486470310" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1673487217848" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1673487217848" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1673486470310" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1673487217848" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -867,6 +867,9 @@ exits on completion of the top level test. Therefore, any code that is defined a
 level test <strong>will not be executed</strong>.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;module&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">something_else() <span class="comment"># will not be executed</span></span><br></pre></td></tr></table></figure>
 
+<blockquote>
+<p><strong>&#9995;</strong> Top level test can’t be an asyncrounous test. See <a href="#Async-Tests">Async Tests</a>.</p>
+</blockquote>
 <h2 id="Renaming-Top-Test"><a href="#Renaming-Top-Test" class="headerlink" title="Renaming Top Test"></a>Renaming Top Test</h2><p>Top level test name can be changed using the <a href="#%E2%80%93name">–name</a> command line argument.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--name name                                     <span class="built_in">test</span> run name</span><br></pre></td></tr></table></figure>
 
