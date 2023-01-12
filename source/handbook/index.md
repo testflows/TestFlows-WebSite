@@ -1420,7 +1420,7 @@ The `version` attribute allows for tracking material changes to the requirement 
 lifetime of the product and makes sure the tests get updated when a requirement has been
 updated to a new version.
 
-Any text found in the next section is considered to be the description of the requirement.
+Any text found before the next section is considered to be the description of the requirement.
 
 ```markdown
 ### RQ.SRS001-CU.LS
@@ -1453,7 +1453,7 @@ to list entries starting with `.` that SHALL be considered to be hidden.
 Each requirement must be given a unique name. The most common convention
 is to start with the SRS number as a prefix, followed by a dot separated
 name. The `.` separator serves to implicitly group the requirements.
-It is usually best to combine the grouping with the corresponding document sections.
+It is usually best to align these groups with the corresponding document sections.
 
 For example, we can create `Options` section where we would add requirements
 for the supported options. Then all the requirements in this section would have
@@ -1613,8 +1613,8 @@ def my_test(self):
 
 ## Linking Specifications
 
-When generating requirements, in addition to [Requirement class] objects created
-for each requirement [Specification class] object is also generated that describes
+When generating requirements, in addition to the [Requirement class] objects created
+for each requirement, a [Specification class] object is also generated that describes
 the whole requirements specification document. This object can be
 linked to higher level tests so that a coverage report can be easily calculated
 for a specific test program run.
