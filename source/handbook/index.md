@@ -1694,7 +1694,7 @@ For example,
 Scenario(test=test)(x=1, y=1, result=2)
 ```
 
-However, if you call decorated test a function within a test of the same type,
+However, if you call a decorated test within a test of the same type,
 then the attributes of the parent test are not changed in any way as
 the test is executed just like a function.
 
@@ -1708,7 +1708,7 @@ with Scenario("my test"):
 ## Overriding Attributes
 
 You can override any attributes of a decorated test by explicitly creating a test
-that uses it as a base via `test` parameter, or `run` parameter if there is no need to pass
+that uses it as a base using the `test` parameter, or the `run` parameter if there is no need to pass
 any arguments to the test, and define any new values of the attributes as needed.
 
 For example, we can override the `name` and `flags` attributes of a decorated
@@ -1772,8 +1772,8 @@ Scenario("my new test", flags=Flags(getattr(test, "flags", None)) | PAUSE_BEFORE
 
 adds [PAUSE_BEFORE] flag to the initial flags of the decorated test.
 
-> **{% attention %}** Note that we don't want to modify the original attributes
-> but instead must always create a new object based on the initial attribute value.
+> **{% attention %}** Note that you don't want to modify the original attributes
+> but instead you should always create a new object based on the initial attribute value.
 
 Here is an example of how to add another example to existing `examples`
 
@@ -1795,20 +1795,20 @@ level test **will not be executed**.
 
 ```python
 with Module("module"):
-  pass
+    pass
 
 something_else() # will not be executed
 ```
 
 ## Renaming Top Test
 
-Top level test name can be changed using [--name] command line argument.
+Top level test name can be changed using the [--name] command line argument.
 
 ```bash
 --name name                                     test run name
 ```
 
-> **{% attention %}** This is not recommended as you can break any test name patterns
+> **{% attention %}** Changing name of the top level test is usually not recommended as you can break any test name patterns
 > that are not relative. For example, this can affect [xfails], [ffails], etc.
 
 For example,

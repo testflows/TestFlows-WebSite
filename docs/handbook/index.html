@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1673485912763" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1673485912763" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1673486470310" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1673486470310" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1673485912763" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1673486470310" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -820,13 +820,13 @@ you override them explicitly.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># execute `test()` using a Scenario that will have</span></span><br><span class="line"><span class="comment"># the same flags, name, and examples attributes</span></span><br><span class="line">Scenario(test=test)(x=<span class="number">1</span>, y=<span class="number">1</span>, result=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 
-<p>However, if you call decorated test a function within a test of the same type,
+<p>However, if you call a decorated test within a test of the same type,
 then the attributes of the parent test are not changed in any way as
 the test is executed just like a function.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="comment"># calling decorated test here will have no effect on</span></span><br><span class="line">    <span class="comment"># attributes of `my test` scenario</span></span><br><span class="line">    test(x=<span class="number">1</span>, y=<span class="number">1</span>, result=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Overriding-Attributes"><a href="#Overriding-Attributes" class="headerlink" title="Overriding Attributes"></a>Overriding Attributes</h2><p>You can override any attributes of a decorated test by explicitly creating a test
-that uses it as a base via <code>test</code> parameter, or <code>run</code> parameter if there is no need to pass
+that uses it as a base using the <code>test</code> parameter, or the <code>run</code> parameter if there is no need to pass
 any arguments to the test, and define any new values of the attributes as needed.</p>
 <p>For example, we can override the <code>name</code> and <code>flags</code> attributes of a decorated
 <code>test()</code> while not modifying <code>examples</code> or any other attributes as follows:</p>
@@ -855,8 +855,8 @@ then use the default value.</p>
 
 <p>adds <a href="#PAUSE_BEFORE">PAUSE_BEFORE</a> flag to the initial flags of the decorated test.</p>
 <blockquote>
-<p><strong>&#9995;</strong> Note that we don’t want to modify the original attributes
-but instead must always create a new object based on the initial attribute value.</p>
+<p><strong>&#9995;</strong> Note that you don’t want to modify the original attributes
+but instead you should always create a new object based on the initial attribute value.</p>
 </blockquote>
 <p>Here is an example of how to add another example to existing <code>examples</code></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Scenario(<span class="string">&quot;my new test&quot;</span>, examples=Examples(</span><br><span class="line">            <span class="string">&quot;x y result&quot;</span>,</span><br><span class="line">            <span class="built_in">list</span>(<span class="built_in">getattr</span>(test, <span class="string">&quot;examples&quot;</span>, Examples(<span class="string">&quot;&quot;</span>, [])).rows) + [</span><br><span class="line">                (<span class="number">2</span>,<span class="number">2</span>,<span class="number">4</span>)</span><br><span class="line">            ]),</span><br><span class="line">         test=test)(x=<span class="number">1</span>, y=<span class="number">1</span>, result=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
@@ -865,13 +865,13 @@ but instead must always create a new object based on the initial attribute value
 <p>Because a <a href="#Flow-is">Flow</a> of tests can be represented as a rooted <a href="#Tree-is">Tree</a>, a test program
 exits on completion of the top level test. Therefore, any code that is defined after the top
 level test <strong>will not be executed</strong>.</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;module&quot;</span>):</span><br><span class="line">  <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">something_else() <span class="comment"># will not be executed</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;module&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">something_else() <span class="comment"># will not be executed</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Renaming-Top-Test"><a href="#Renaming-Top-Test" class="headerlink" title="Renaming Top Test"></a>Renaming Top Test</h2><p>Top level test name can be changed using <a href="#%E2%80%93name">–name</a> command line argument.</p>
+<h2 id="Renaming-Top-Test"><a href="#Renaming-Top-Test" class="headerlink" title="Renaming Top Test"></a>Renaming Top Test</h2><p>Top level test name can be changed using the <a href="#%E2%80%93name">–name</a> command line argument.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--name name                                     <span class="built_in">test</span> run name</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p><strong>&#9995;</strong> This is not recommended as you can break any test name patterns
+<p><strong>&#9995;</strong> Changing name of the top level test is usually not recommended as you can break any test name patterns
 that are not relative. For example, this can affect <a href="#xfails">xfails</a>, <a href="#ffails">ffails</a>, etc.</p>
 </blockquote>
 <p>For example,</p>
