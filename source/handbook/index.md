@@ -5741,7 +5741,7 @@ where
   normally distributed between the `min` and `max` values, default: `None`
 
 and returns an iterator that can be used in `for` loop. For each iteration,
-the iterator returns a `RetryIteration` object that wraps the code that needs to be retries.
+the iterator returns a `RetryIteration` object that wraps the code that needs to be retried.
 
 For example, below we wait for the code to succeed within `5` sec using `0.1` sec delay
 between retries and backoff multiplier of `1.2` with a jitter range

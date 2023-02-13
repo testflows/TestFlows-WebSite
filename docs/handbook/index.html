@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1676327986123" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1676327986123" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1676329403909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1676329403909" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1676327986123" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1676329403909" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -2570,7 +2570,7 @@ enough to retry code that includes tests.</p>
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 </ul>
 <p>and returns an iterator that can be used in <code>for</code> loop. For each iteration,
-the iterator returns a <code>RetryIteration</code> object that wraps the code that needs to be retries.</p>
+the iterator returns a <code>RetryIteration</code> object that wraps the code that needs to be retried.</p>
 <p>For example, below we wait for the code to succeed within <code>5</code> sec using <code>0.1</code> sec delay
 between retries and backoff multiplier of <code>1.2</code> with a jitter range
 of <code>-0.05</code> min to <code>0.05</code> max.</p>
