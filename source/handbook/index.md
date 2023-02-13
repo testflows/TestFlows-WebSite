@@ -1193,7 +1193,7 @@ def regression(self):
 
 will execute `testA` and only proceed to run other tests if its result is not [Fail] otherwise
 only `testA` will be executed. If result of `testA` is not [Fail] then
-we run `testB` 3 times, and `testC` gets executed indefinitely until its result is not [OK].
+we run `testB` 3 times, and `testC` gets executed indefinitely until its result is [OK].
 
 ## Creating Automatic Flows
 
@@ -1335,8 +1335,8 @@ with Check("Hello World!"):
 
 # Working With Requirements
 
-Requirements must be at the core of any enterprise QA process. There are numerous proprietary and complex
-systems exist for handling requirements. This complexity is usually not necessary,
+Requirements must be at the core of any enterprise QA process. There exist numerous proprietary and complex
+systems for handling requirements. This complexity is usually not necessary,
 and **{% testflows %}** provides a way to work with requirements just like with code
 and leverage the same development tools to enable easy linking of requirements to your tests.
 
@@ -1345,7 +1345,7 @@ Requirements can either be high level or low level. High level
 requirements are usually verified by [Feature]s or [Module]s and low level requirements
 by individual [Test]s or [Scenario]s.
 
-Writing untestable requirements is not much use. Keep this in mind during
+Writing untestable requirements is not very useful. Keep this in mind during
 your software testing process.
 
 > _When writing requirements, you should be thinking about tests or test suites that would verify them, and
@@ -1420,7 +1420,7 @@ The `version` attribute allows for tracking material changes to the requirement 
 lifetime of the product and makes sure the tests get updated when a requirement has been
 updated to a new version.
 
-Any text found in the next section is considered to be the description of the requirement.
+Any text found before the next section is considered to be the description of the requirement.
 
 ```markdown
 ### RQ.SRS001-CU.LS
@@ -1453,7 +1453,7 @@ to list entries starting with `.` that SHALL be considered to be hidden.
 Each requirement must be given a unique name. The most common convention
 is to start with the SRS number as a prefix, followed by a dot separated
 name. The `.` separator serves to implicitly group the requirements.
-It is usually best to combine the grouping with the corresponding document sections.
+It is usually best to align these groups with the corresponding document sections.
 
 For example, we can create `Options` section where we would add requirements
 for the supported options. Then all the requirements in this section would have
@@ -1613,8 +1613,8 @@ def my_test(self):
 
 ## Linking Specifications
 
-When generating requirements, in addition to [Requirement class] objects created
-for each requirement [Specification class] object is also generated that describes
+When generating requirements, in addition to the [Requirement class] objects created
+for each requirement, a [Specification class] object is also generated that describes
 the whole requirements specification document. This object can be
 linked to higher level tests so that a coverage report can be easily calculated
 for a specific test program run.
@@ -1694,7 +1694,7 @@ For example,
 Scenario(test=test)(x=1, y=1, result=2)
 ```
 
-However, if you call decorated test a function within a test of the same type,
+However, if you call a decorated test within a test of the same type,
 then the attributes of the parent test are not changed in any way as
 the test is executed just like a function.
 
@@ -1708,7 +1708,7 @@ with Scenario("my test"):
 ## Overriding Attributes
 
 You can override any attributes of a decorated test by explicitly creating a test
-that uses it as a base via `test` parameter, or `run` parameter if there is no need to pass
+that uses it as a base using the `test` parameter, or the `run` parameter if there is no need to pass
 any arguments to the test, and define any new values of the attributes as needed.
 
 For example, we can override the `name` and `flags` attributes of a decorated
@@ -1772,8 +1772,8 @@ Scenario("my new test", flags=Flags(getattr(test, "flags", None)) | PAUSE_BEFORE
 
 adds [PAUSE_BEFORE] flag to the initial flags of the decorated test.
 
-> **{% attention %}** Note that we don't want to modify the original attributes
-> but instead must always create a new object based on the initial attribute value.
+> **{% attention %}** Note that you don't want to modify the original attributes
+> but instead you should always create a new object based on the initial attribute value.
 
 Here is an example of how to add another example to existing `examples`
 
@@ -1795,20 +1795,23 @@ level test **will not be executed**.
 
 ```python
 with Module("module"):
-  pass
+    pass
 
 something_else() # will not be executed
 ```
 
+> **{% attention %}** Top level test can't be an asyncrounous test. See [Async Tests](#Async-Tests).
+
+
 ## Renaming Top Test
 
-Top level test name can be changed using [--name] command line argument.
+Top level test name can be changed using the [--name] command line argument.
 
 ```bash
 --name name                                     test run name
 ```
 
-> **{% attention %}** This is not recommended as you can break any test name patterns
+> **{% attention %}** Changing name of the top level test is usually not recommended as you can break any test name patterns
 > that are not relative. For example, this can affect [xfails], [ffails], etc.
 
 For example,
