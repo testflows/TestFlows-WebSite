@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1673487217848" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1673487217848" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1676327986123" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1676327986123" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1673487217848" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1676327986123" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -2361,20 +2361,19 @@ If you want to specify more than one forced result, use <a href="#ffails">FFails
 
 <h1 id="Repeating-Tests"><a href="#Repeating-Tests" class="headerlink" title="Repeating Tests"></a>Repeating Tests</h1><p>You can repeat tests by specifying <a href="#Repeats">repeats</a> parameter either explicitly
 for inline tests or using <a href="#Repeats">Repeats</a> or <a href="#Repeat">Repeat</a> decorator for decorated tests.</p>
-<p>Repeating a test means to rerun it multiple times. For each run a new <a href="#Iteration">Iteration</a> is
-creating with the name being the index of the current iteration. The result of each
-iteration is counted and fails are not ignored.</p>
+<p>Repeating a test means to run it multiple times. For each run, a new <a href="#Iteration">Iteration</a> is
+created, with the name being the index of the current iteration. The result of each
+iteration is counted, and failures are not ignored.</p>
 <p>In general, it’s useful to repeat a test when you would like to confirm test stability.
-In addition to specifying repeats inside a test program you can also pass [–repeat option]
+In addition to specifying repeats inside a test program, you can also pass [–repeat option]
 to your test program to specify which tests you would like to repeat from the command line.</p>
 <blockquote>
-&#9995; If need you need to repeat a test and you would like to count only
-<p>the last passing iteration see <a href="#Retrying-Tests">Retrying Tests</a> section.</p>
+&#9995; If you need to repeat a test and you would like to count only
+<p>the last passing iteration, see <a href="#Retrying-Tests">Retrying Tests</a> section.</p>
 </blockquote>
-<p>You can combine <a href="#Repeats">Repeats</a> with <a href="#Retries">Retries</a> and if done so retries are performed
+<p>You can combine <a href="#Repeats">Repeats</a> with <a href="#Retries">Retries</a> and if done so, retries are performed
 for each <a href="#Iteration">Iteration</a>.</p>
-<p>You can repeat a test <code>until</code> either <code>pass</code>, <code>fail</code> or <code>complete</code> criteria is met
-by specifying <code>until</code> parameter.</p>
+<p>By specifying <code>until</code> parameter, you can repeat a test <code>until</code> either <code>pass</code>, <code>fail</code> or <code>complete</code> criteria is met.</p>
 <blockquote>
 <p><strong>&#9995;</strong> Repeats can only be applied to tests that have a <a href="#Types">Test Type</a> or higher.
 Repeating <a href="#Step">Step</a>s is not supported.</p>
@@ -2383,8 +2382,8 @@ Repeating <a href="#Step">Step</a>s is not supported.</p>
 repeats if an iteration has a passing results. Passing results include <a href="#OK">OK</a>, <a href="#XFail">XFail</a>, <a href="#XError">XError</a>, <a href="#XOK">XOK</a>, <a href="#XNull">XNull</a>.</p>
 <h3 id="fail"><a href="#fail" class="headerlink" title="fail"></a><code>fail</code></h3><p>Until <strong>fail</strong> means that iteration over a test will stop before the specified number
 of repeats if an iteration has a failing results. Failing results include <a href="#Fail">Fail</a>, <a href="#Error">Error</a>, and <a href="#Null">Null</a>.</p>
-<h3 id="complete"><a href="#complete" class="headerlink" title="complete"></a><code>complete</code></h3><p>Until <strong>complete</strong> means that iteration over a test will stop only after the specified number
-of repeats is performed regardless of the result of each iteration.</p>
+<h3 id="complete"><a href="#complete" class="headerlink" title="complete"></a><code>complete</code></h3><p>Until <strong>complete</strong> indicates that iteration over a test will end only after the specified number
+of repetitions completes, regardless of the outcome of the result of each iteration.</p>
 <h2 id="Repeats"><a href="#Repeats" class="headerlink" title="Repeats"></a>Repeats</h2><p>The <a href="#Repeats">Repeats</a> decorator can be applied to a decorated test that has a <a href="#Types">Test Type</a> or higher.
 Repeating test <a href="#Step">Step</a>s is not allowed. The <a href="#Repeats">Repeats</a> decorator should be used
 when you want to specify more than one test to be repeated. The tests to be repeated
@@ -2393,26 +2392,26 @@ of the test.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="meta">@Repeats(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my scenario 0&quot;</span>: (<span class="params"><span class="number">5</span>, <span class="string">&quot;pass&quot;</span></span>) <span class="comment"># (count, until)</span></span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my scenario 1&quot;</span>: (<span class="params"><span class="number">10</span>, <span class="string">&quot;complete&quot;</span></span>),</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my scenario 2&quot;</span>: (<span class="params"><span class="number">3</span>, <span class="string">&quot;fail&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_feature</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(run=<span class="string">&quot;my_scenario&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<p>If you want to specify to repeat only one test it is more convenient to use <a href="#Repeat">Repeat</a>
+<p>If you want to specify that only one test should repeat, it is more convenient to use <a href="#Repeat">Repeat</a>
 decorator instead.</p>
 <h2 id="Repeat"><a href="#Repeat" class="headerlink" title="Repeat"></a>Repeat</h2><p>The <a href="#Repeat">Repeat</a> decorator is used to specify a repetition for a single test that has
 a <a href="#Types">Test Type</a> or higher. Repeating test <a href="#Step">Step</a>s is not allowed. The <a href="#Repeat">Repeat</a> decorator is
-usually applied the test to which the decorator is attached as by default, the <code>pattern</code> is empty
-and means it applies to the current test and the <code>until</code> is set to <code>complete</code>
+usually applied to the test to which the decorator is attached as, by default, the <code>pattern</code> is empty
+and means it applies to the current test, and the <code>until</code> is set to <code>complete</code>
 which means that the test will be repeated the specified number of times.</p>
 <blockquote>
-<p><strong>&#9995;</strong> If you need to specify repeat for more than one test
+<p><strong>&#9995;</strong> If you need to specify repeat for more than one test,
 use <a href="#Repeats">Repeats</a> decorator instead.</p>
 </blockquote>
 <blockquote>
-<p><strong>&#9995;</strong> <a href="#Repeat">Repeat</a> decorator cannot be applied more than one time
+<p><strong>&#9995;</strong> <a href="#Repeat">Repeat</a> decorator cannot be applied more than once
 to the same test.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Repeat(<span class="params"><span class="number">5</span></span>) </span><span class="comment"># by default pattern=&quot;&quot;, until=&quot;complete&quot;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
-<p>If you want to specify custom <code>pattern</code> or <code>until</code> condition then pass them
-using <code>pattern</code> and <code>until</code> parameters respectively.</p>
+<p>If you want to specify a custom <code>pattern</code> or <code>until</code> condition, then pass them
+using the parameters <code>pattern</code> and <code>until</code> respectively.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Repeat(<span class="params">count=<span class="number">5</span>, pattern=<span class="string">&quot;my subtest&quot;</span>, until=<span class="string">&quot;fail&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(name=<span class="string">&quot;my subtest&quot;</span>, run=my_test)</span><br></pre></td></tr></table></figure>
 
 <h1 id="Repeating-Code-or-Function-Calls"><a href="#Repeating-Code-or-Function-Calls" class="headerlink" title="Repeating Code or Function Calls"></a>Repeating Code or Function Calls</h1><p>When you need to repeat a block of code or a function call, you can use
@@ -2427,22 +2426,22 @@ enough to repeat code that includes tests.</p>
 <ul>
 <li><code>count</code> number of iterations, default: <code>None</code></li>
 <li><code>until</code> stop condition, either <code>pass</code>, <code>fail</code>, or <code>complete</code>, default: <code>complete</code></li>
-<li><code>delay</code> delay in sec between iterations, default: 0 sec</li>
+<li><code>delay</code> delay in seconds between iterations, default: 0 seconds</li>
 <li><code>backoff</code> backoff multiplier that is applied to the delay, default: 1</li>
 <li><code>jitter</code> jitter added to delay between iterations specified as a tuple(min, max), default: <code>(0,0)</code></li>
 </ul>
-<p>and returns an iterator that can be used in <code>for</code> loop. For each iteration
-the iterator returns a <code>Iteration</code> object that you can use to wrap the code that needs to be repeated.</p>
-<p>For example, below we repeat for the code <code>5</code> iterations until all iterations complete using <code>0.1</code> sec delay
-between repeats, backoff multiplier of <code>1.2</code>, and jitter range between <code>-0.05</code> min to <code>0.05</code> max.</p>
+<p>and returns an iterator that can be used in <code>for</code> loop. For each iteration,
+the iterator returns an <code>Iteration</code> object that you can use to wrap the code that needs to be repeated.</p>
+<p>For example, below, we repeat for the code <code>5</code> times until all iterations are complete using <code>0.1</code> sec delay
+between each iteration, a backoff multiplier of <code>1.2</code>, and jitter range between <code>-0.05</code> min to <code>0.05</code> max.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> testflows.asserts <span class="keyword">import</span> error</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I try to get a random number&quot;</span>):</span><br><span class="line">        <span class="keyword">for</span> iteration <span class="keyword">in</span> repeats(count=<span class="number">5</span>, until=<span class="string">&quot;complete&quot;</span>, delay=<span class="number">0.1</span>, backoff=<span class="number">1.2</span>, jitter=(-<span class="number">0.05</span>,<span class="number">0.05</span>)):</span><br><span class="line">            <span class="keyword">with</span> iteration:</span><br><span class="line">                <span class="keyword">assert</span> random.random() &gt; <span class="number">0.8</span>, error()</span><br></pre></td></tr></table></figure>
 
-<p>The code block is considered as succeeded if no exception is raised during any of the iterations.
-If an exception is raised the code, the corresponding iteration is marked as failed.
+<p>The code block is considered successful if no exception is raised during any of the iterations.
+If an exception is raised in the code, the corresponding iteration is marked as failed.
 The until condition controls when to stop iterations.</p>
 <h2 id="Using-repeat"><a href="#Using-repeat" class="headerlink" title="Using repeat()"></a>Using <code>repeat()</code></h2><p>The <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2900">repeat() function</a> can be used to repeat any function call
 including decorated tests.</p>
-<p>It takes the following arguments where only <code>func</code> is mandatory.</p>
+<p>It takes the following arguments, where only <code>func</code> is mandatory.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">repeat(func, count=<span class="literal">None</span>, until=<span class="string">&quot;complete&quot;</span>, delay=<span class="number">0</span>, backoff=<span class="number">1</span>, jitter=<span class="literal">None</span>)(*args, **kwargs)</span><br></pre></td></tr></table></figure>
 
 <p>where</p>
@@ -2455,7 +2454,7 @@ including decorated tests.</p>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 </ul>
-<p>that returns a wrapper function which then can be called with any arguments that are
+<p>that returns a wrapper function, which then can be called with any arguments that are
 passed to the repeated <code>func</code> on each iteration.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> testflows.asserts <span class="keyword">import</span> error</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_func</span>(<span class="params">x</span>):</span><br><span class="line">    v = random.random()</span><br><span class="line">    <span class="keyword">assert</span> v &lt; x, error()</span><br><span class="line">    <span class="keyword">return</span> v</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    value = repeat(my_func, count=<span class="number">5</span>)(<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
@@ -2470,23 +2469,23 @@ passed to the repeated <code>func</code> on each iteration.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_step</span>(<span class="params">self, x</span>):</span><br><span class="line">    <span class="keyword">return</span> my_func(x)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I run my step&quot;</span>):</span><br><span class="line">        repeat(my_step, count=<span class="number">5</span>)(x=<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
 
 <h1 id="Retrying-Tests"><a href="#Retrying-Tests" class="headerlink" title="Retrying Tests"></a>Retrying Tests</h1><p>You can retry tests until they pass or until the number of retries is exhausted
-or timeout is reached by specifying <a href="#Retries">retries</a> parameter either explicitly
+or a timeout is reached by specifying <a href="#Retries">retries</a> parameter either explicitly
 for inline tests or using <a href="#Retries">Retries</a> or <a href="#Retry">Retry</a> decorator for decorated tests.</p>
-<p>Retrying a test means to rerun it multiple times until it passes.
+<p>Retrying a test means to run it multiple times until it passes.
 A pass means that a retry has either <a href="#OK">OK</a>, <a href="#XFail">XFail</a>, <a href="#XError">XError</a>, <a href="#XNull">XNull</a>, <a href="#XOK">XOK</a>, or <a href="#Skip">Skip</a>
 result.</p>
-<p>For each attempt a <a href="#RetryIteration">RetryIteration</a> is created with the name corresponding to the
-attempt number. Any fails of an individual
-attempt are ignored except for the last retry attempt. Last <a href="#RetryIteration">RetryIteration</a>
+<p>For each attempt, a <a href="#RetryIteration">RetryIteration</a> is created with a name corresponding to the
+attempt number. Any failures of an individual
+attempt are ignored except for the last retry attempt. The last <a href="#RetryIteration">RetryIteration</a>
 is marked using <a href="#LAST_RETRY">LAST_RETRY</a> flag.</p>
-<p>In general, it’s useful to retry a test when test is unstable and sometimes could fail
-but you still would like to run it as long as it passes within the specified number
+<p>In general, it’s useful to retry a test when test is unstable and sometimes could fail.
+However, you still would like to run it as long as it passes within the specified number
 of attempts or within a specified timeout period.</p>
-<h2 id="Retries"><a href="#Retries" class="headerlink" title="Retries"></a>Retries</h2><p>The <a href="#Retries">Retries</a> decorator can be applied to any decorated test including steps or higher.
+<h2 id="Retries"><a href="#Retries" class="headerlink" title="Retries"></a>Retries</h2><p>The <a href="#Retries">Retries</a> decorator can be applied to any decorated test, including steps or higher.
 The <a href="#Retries">Retries</a> decorator should be used when you want to specify more than one test to be retried.
 The tests to be retried are selected using test <a href="#pattern">pattern</a>s. The <a href="#Retries">Retries</a> decorator sets <a href="#Retries">retries</a> attribute
-of the test and causes the test to be retried until either it passes or maximum
-number of retries is reached or timeout occurs if a timeout was specified.</p>
+of the test and causes the test to be retried until either it passes, the maximum
+number of retries is reached, or timeout occurs if a timeout was specified.</p>
 <p>The <a href="#Retries">Retries</a> decorator takes as an argument a dictionary of the following form</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    pattern: count[, timeout[, delay[, backoff[, jitter]]]],</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -2499,32 +2498,32 @@ number of retries is reached or timeout occurs if a timeout was specified.</p>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 </ul>
-<p>If both <code>count</code> and <code>timeout</code> are specified then the test is retried until
-either until maximum retry <code>count</code> is reached or <code>timeout</code> is hit - whichever comes first.</p>
+<p>If both <code>count</code> and <code>timeout</code> are specified, then the test is retried 
+either until the maximum retry <code>count</code> is reached or <code>timeout</code> is hit - whichever comes first.</p>
 <blockquote>
-<p><strong>&#9995;</strong> By default, if number of retries or timeout is not specified then
-the test will be retried until it passes but note that if the test can’t reach a passing result
+<p><strong>&#9995;</strong> By default, if the number of retries or timeout is not specified, then
+the test will be retried until it passes, but note that if the test can’t reach a passing result
 then it can lead to an infinite loop.</p>
 </blockquote>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="meta">@Retries(<span class="params">&#123;</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my scenario 0&quot;</span>: <span class="number">5</span>,</span></span></span><br><span class="line"><span class="params"><span class="meta">    <span class="string">&quot;my scenario 1&quot;</span>: <span class="number">10</span></span></span></span><br><span class="line"><span class="params"><span class="meta">&#125;</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_feature</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(name=<span class="string">&quot;my scenario 0&quot;</span>, run=my_scenario)</span><br><span class="line">    Scenario(name=<span class="string">&quot;my scenario 1&quot;</span>, run=my_scenario)</span><br></pre></td></tr></table></figure>
 
-<p>will retry test <code>my scenario 0</code> maximum <code>5</code> times and <code>my scenario 1</code> maximum 10 times.</p>
-<p>If you want to retry only one test it is more convenient to use <a href="#Retry">Retry</a>
+<p>will retry test <code>my scenario 0</code> up to <code>5</code> times and <code>my scenario 1</code> up to 10 times.</p>
+<p>If you want to retry only one test, it is more convenient to use <a href="#Retry">Retry</a>
 decorator instead.</p>
 <h2 id="Retry"><a href="#Retry" class="headerlink" title="Retry"></a>Retry</h2><p>The <a href="#Retry">Retry</a> decorator is used to specify a retry for a single test that has
 a <a href="#Types">Step Type</a> or higher. The <a href="#Retry">Retry</a> decorator is
-usually applied the test to which the decorator is attached as by default, the <code>pattern</code> is empty
-and that means it applies to the current test.
+usually applied to the test to which the decorator is attached, as by default, the <code>pattern</code> is empty,
+which means it applies to the current test.
 The <a href="#Retry">Retry</a> decorator sets <a href="#Retries">retries</a> attribute
-of the test and causes the test to be retried until either it passes, maximum
+of the test and causes the test to be retried until either it passes, the maximum
 number of retries or timeout is reached.</p>
 <blockquote>
-<p><strong>&#9995;</strong> If you need to specify retries for more than one test
+<p><strong>&#9995;</strong> If you need to specify retries for more than one test,
 use <a href="#Retries">Retries</a> decorator instead.</p>
 </blockquote>
 <blockquote>
-<p><strong>&#9995;</strong> <a href="#Retry">Retry</a> decorator cannot be applied more than one time
+<p><strong>&#9995;</strong> <a href="#Retry">Retry</a> decorator cannot be applied more than once
 for the same test.</p>
 </blockquote>
 <p>The <a href="#Retry">Retry</a> decorator can take the following optional arguments</p>
@@ -2540,11 +2539,11 @@ for the same test.</p>
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 <li><code>pattern</code> is the test name pattern, default: <code>&quot;&quot;</code> which means the current test</li>
 </ul>
-<p>If both <code>count</code> and <code>timeout</code> are specified then the test is retried until
-either until maximum retry <code>count</code> is reached or <code>timeout</code> is hit - whichever comes first.</p>
+<p>If both <code>count</code> and <code>timeout</code> are specified, then the test is retried until
+either the maximum retry <code>count</code> is reached or <code>timeout</code> is hit - whichever comes first.</p>
 <blockquote>
-<p><strong>&#9995;</strong> By default, if number of retries or timeout is not specified then
-the test will be retried until it passes but note that if the test can’t reach a passing result
+<p><strong>&#9995;</strong> By default, if number of retries or timeout is not specified, then
+the test will be retried until it passes, but note that if the test can’t reach a passing result
 then it can lead to an infinite loop.</p>
 </blockquote>
 <p>For example,</p>
@@ -2553,11 +2552,11 @@ then it can lead to an infinite loop.</p>
 <p>or you can specify <code>pattern</code> explicitely. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Retry(<span class="params"><span class="number">5</span>, pattern=<span class="string">&quot;test to repeat&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
-<h1 id="Retrying-Code-or-Function-Calls"><a href="#Retrying-Code-or-Function-Calls" class="headerlink" title="Retrying Code or Function Calls"></a>Retrying Code or Function Calls</h1><p>When you need to retry a block of code or a function call you can use
+<h1 id="Retrying-Code-or-Function-Calls"><a href="#Retrying-Code-or-Function-Calls" class="headerlink" title="Retrying Code or Function Calls"></a>Retrying Code or Function Calls</h1><p>When you need to retry a block of code or a function call, you can use
 <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/objects.py#L880">retries class</a> and <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2800">retry() function</a> respectively. This class and function
-is flexible enough to retry functions or inline code that contains tests.</p>
+are flexible enough to retry functions or inline code that contains tests.</p>
 <h2 id="Using-retries"><a href="#Using-retries" class="headerlink" title="Using retries()"></a>Using <code>retries()</code></h2><p>The <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/objects.py#L880">retries class</a> can be used to retry any block of inline code and is flexible
-enough to retry code includes tests.</p>
+enough to retry code that includes tests.</p>
 <p>It takes the following optional arguments:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">retries(count=<span class="literal">None</span>, timeout=<span class="literal">None</span>, delay=<span class="number">0</span>, backoff=<span class="number">1</span>, jitter=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
 
@@ -2570,19 +2569,19 @@ enough to retry code includes tests.</p>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 </ul>
-<p>and returns an iterator that can be used in <code>for</code> loop. For each iteration
-the iterator return a <code>RetryIteration</code> object that wrap the code that needs to be retries.</p>
+<p>and returns an iterator that can be used in <code>for</code> loop. For each iteration,
+the iterator returns a <code>RetryIteration</code> object that wraps the code that needs to be retries.</p>
 <p>For example, below we wait for the code to succeed within <code>5</code> sec using <code>0.1</code> sec delay
-between retries and backoff multiplier of <code>1.2</code> with jitter range
-between <code>-0.05</code> min to <code>0.05</code> max.</p>
+between retries and backoff multiplier of <code>1.2</code> with a jitter range
+of <code>-0.05</code> min to <code>0.05</code> max.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> testflows.asserts <span class="keyword">import</span> error</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I try to get a random number&quot;</span>):</span><br><span class="line">        <span class="keyword">for</span> attempt <span class="keyword">in</span> retries(timeout=<span class="number">5</span>, delay=<span class="number">0.1</span>, backoff=<span class="number">1.2</span>, jitter=(-<span class="number">0.05</span>,<span class="number">0.05</span>)):</span><br><span class="line">            <span class="keyword">with</span> attempt:</span><br><span class="line">                <span class="keyword">assert</span> random.random() &gt; <span class="number">0.8</span>, error()</span><br></pre></td></tr></table></figure>
 
-<p>The code block is considered as succeeded if no exception is raised.</p>
-<p>If an exception is raised the code is retried until it succeeds or if specified
+<p>The code block is considered successful if no exception is raised.</p>
+<p>If an exception is raised, the code is retried until it succeeds, or, if specified,
 the maximum number of retries or timeout is reached.</p>
-<h2 id="Using-retry"><a href="#Using-retry" class="headerlink" title="Using retry()"></a>Using <code>retry()</code></h2><p>The <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2800">retry() function</a> can be used to retry any function call
+<h2 id="Using-retry"><a href="#Using-retry" class="headerlink" title="Using retry()"></a>Using <code>retry()</code></h2><p>The <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/test.py#L2800">retry() function</a> can be used to retry any function call,
 including decorated tests.</p>
-<p>It takes the following arguments where only <code>func</code> is mandatory.</p>
+<p>It takes the following arguments, where only <code>func</code> is mandatory.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">retry(func, count=<span class="literal">None</span>, timeout=<span class="literal">None</span>, delay=<span class="number">0</span>, backoff=<span class="number">1</span>, jitter=<span class="literal">None</span>)(*args, **kwargs)</span><br></pre></td></tr></table></figure>
 
 <p>where</p>
@@ -2595,7 +2594,7 @@ including decorated tests.</p>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 </ul>
-<p>that returns a wrapper function which then can be called with any arguments that are
+<p>that returns a wrapper function, which then can be called with any arguments that are
 passed to the retried <code>func</code> on each retry.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">from</span> testflows.asserts <span class="keyword">import</span> error</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_func</span>(<span class="params">x</span>):</span><br><span class="line">    v = random.random()</span><br><span class="line">    <span class="keyword">assert</span> v &lt; x, error()</span><br><span class="line">    <span class="keyword">return</span> v</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    value = retry(my_func, timeout=<span class="number">5</span>)(<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
@@ -2612,13 +2611,13 @@ passed to the retried <code>func</code> on each retry.</p>
 <h1 id="Using-YML-Config-Files"><a href="#Using-YML-Config-Files" class="headerlink" title="Using YML Config Files"></a>Using YML Config Files</h1><p>All the test programs have a common optional <code>--config</code> argument that allows to
 specify one or more configuration files in <a target="_blank" rel="noopener" href="https://yaml.org/">YML</a> format.
 The configuration files can be used to specify either common test program arguments
-such as <a href="#%E2%80%93no-colors">–no-colors</a>, <a href="#%E2%80%93output">–output</a>, etc. as well custom
-<a href="#Command-Line-Arguments">Command Line Arguments</a> that added using
+such as <a href="#%E2%80%93no-colors">–no-colors</a>, <a href="#%E2%80%93output">–output</a>, etc. as well as custom
+<a href="#Command-Line-Arguments">Command Line Arguments</a> that were added using
 <a href="#argparser">argparser</a> parameter.</p>
 <blockquote>
 <p><em>&#9995;</em> Technically <a target="_blank" rel="noopener" href="https://yaml.org/">YML</a> files should always start with <code>---</code>
 to indicate the start of a new document. However, in <em><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></em> configuration
-files you can omit them.</p>
+files, you can omit them.</p>
 </blockquote>
 <h2 id="Test-Run-Arguments"><a href="#Test-Run-Arguments" class="headerlink" title="Test Run Arguments"></a>Test Run Arguments</h2><p>Common test run arguments such as <a href="#%E2%80%93no-colors">–no-colors</a>, <a href="#%E2%80%93output">–output</a>, etc. must be specified
 in the <code>test run:</code> section of the <a target="_blank" rel="noopener" href="https://yaml.org/">YML</a> configuration file.</p>
@@ -2628,14 +2627,14 @@ in the <code>test run:</code> section of the <a target="_blank" rel="noopener" h
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">   <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 </blockquote>
 <p>can be called with the following <a target="_blank" rel="noopener" href="https://yaml.org/">YML</a> config file to set <a href="#%E2%80%93output">–output</a> and <a href="#%E2%80%93no-colors">–no-colors</a>
-options for the test program run.</p>
+options for the test program to run.</p>
 <blockquote>
 <p><code>config.yml</code></p>
 <figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">test run:</span></span><br><span class="line"> <span class="attr">no-colors:</span> <span class="literal">true</span></span><br><span class="line"> <span class="attr">output:</span> <span class="string">progress</span></span><br></pre></td></tr></table></figure>
 </blockquote>
 <blockquote>
 &#9995; Names of the common test run arguments have the same names as the corresponding
-<p>command line option without the <code>--</code> prefix.</p>
+<p>command line option, without the <code>--</code> prefix.</p>
 <p>For example,</p>
 <ul>
 <li><code>--no-colors</code> is <code>no-colors:</code></li>
@@ -2675,9 +2674,9 @@ will be set to the one you’ve specified in the <code>config.yml</code>.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py -c config.yml</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Sep 24,2021 21:40:52   ⟥  Scenario my <span class="built_in">test</span></span><br><span class="line">                            Attributes</span><br><span class="line">                              custom-arg</span><br><span class="line">                                hello there</span><br><span class="line">                 3ms   ⟥⟤ OK my <span class="built_in">test</span>, /my <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Applying-Multiple-YML-Files"><a href="#Applying-Multiple-YML-Files" class="headerlink" title="Applying Multiple YML Files"></a>Applying Multiple YML Files</h2><p>If more than one <a target="_blank" rel="noopener" href="https://yaml.org/">YML</a> configuration file is specified on the command line
-then config files are applied left to right based on the order they are specified
-on the command line with the right most file having the highest precedence.</p>
+<h2 id="Applying-Multiple-YML-Files"><a href="#Applying-Multiple-YML-Files" class="headerlink" title="Applying Multiple YML Files"></a>Applying Multiple YML Files</h2><p>If more than one <a target="_blank" rel="noopener" href="https://yaml.org/">YML</a> configuration file is specified on the command line,
+the configuration files are then applied in the order specified, from left to right
+as specified on the command line, with the right most file having the highest precedence.</p>
 <p>For example,</p>
 <blockquote>
 <p><code>config1.yml</code></p>
@@ -2808,9 +2807,9 @@ This function is commonly used in <a href="#Semi-Automated-And-Manual-Tests">Sem
 <ul>
 <li><code>type</code> is either a string or <code>result</code> function.</li>
 <li><code>multiline</code> (optional) flag to indicate if input is multiline string, default: <code>False</code></li>
-<li><code>choices</code> (optional) a list of valid choices (only applies if <code>type</code> is string)</li>
-<li><code>confirm</code> (optional) ask for confirmation, default: <code>True</code></li>
-<li><code>test</code> the instance of the test with which input message will be associated, default: current test</li>
+<li><code>choices</code> (optional) a list of valid options (only applies if <code>type</code> is string)</li>
+<li><code>confirm</code> (optional) request confirmation, default: <code>True</code></li>
+<li><code>test</code> the instance of the test that will be associated with the input message, default: current test</li>
 </ul>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my scenario&quot;</span>):</span><br><span class="line">    <span class="built_in">input</span>(<span class="string">&quot;What is your name?&quot;</span>, multiline=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
@@ -2824,11 +2823,11 @@ This function is commonly used in <a href="#Semi-Automated-And-Manual-Tests">Sem
 <p>when executed prompts for <code>result</code></p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Nov 15,2021 17:22:26   ⟥  Scenario my scenario</span><br><span class="line">✍  Enter `my scenario` result? OK success</span><br><span class="line">✍  Is this correct [Y/n]?</span><br><span class="line">            3s 198ms   ⟥⟤ OK my scenario, /my scenario, success</span><br></pre></td></tr></table></figure>
 
-<h1 id="Test-Program-Options"><a href="#Test-Program-Options" class="headerlink" title="Test Program Options"></a>Test Program Options</h1><h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><h3 id="h-–help"><a href="#h-–help" class="headerlink" title="-h, –help"></a>-h, –help</h3><p>The <code>-h</code>, <code>--help</code> option can be used to obtain help message that describes all the command line
+<h1 id="Test-Program-Options"><a href="#Test-Program-Options" class="headerlink" title="Test Program Options"></a>Test Program Options</h1><h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><h3 id="h-–help"><a href="#h-–help" class="headerlink" title="-h, –help"></a>-h, –help</h3><p>The <code>-h</code>, <code>--help</code> option can be used to obtain a help message that describes all the command line
 options a test can accept. For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="l-–log"><a href="#l-–log" class="headerlink" title="-l, –log"></a>-l, –log</h3><p>The <code>-l</code>, <code>--log</code> option can be used to specify the path of the file where test log will be saved.
+<h3 id="l-–log"><a href="#l-–log" class="headerlink" title="-l, –log"></a>-l, –log</h3><p>The <code>-l</code>, <code>--log</code> option can be used to specify the path of the file where the test log will be saved.
 For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">log</span> ./test.log</span><br></pre></td></tr></table></figure>
 
@@ -2845,16 +2844,16 @@ For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --attr attr0=value0 attr1=value1</span><br></pre></td></tr></table></figure>
 
 <h3 id="–debug"><a href="#–debug" class="headerlink" title="–debug"></a>–debug</h3><p>Enable debugging mode. Turned off by default.</p>
-<h3 id="–output"><a href="#–output" class="headerlink" title="–output"></a>–output</h3><p>The <code>--output</code> option can be used to control output format of messages printed to <code>stdout</code>.</p>
+<h3 id="–output"><a href="#–output" class="headerlink" title="–output"></a>–output</h3><p>The <code>--output</code> option can be used to control the output format of messages printed to <code>stdout</code>.</p>
 <h3 id="–no-colors"><a href="#–no-colors" class="headerlink" title="–no-colors"></a>–no-colors</h3><p>The <code>--no-colors</code> option can be used to turn off terminal color highlighting.</p>
-<h3 id="–id"><a href="#–id" class="headerlink" title="–id"></a>–id</h3><p>The <code>--id</code> option can be used to specify custom <a href="#Top-Level-Test">Top Level Test</a> id.</p>
+<h3 id="–id"><a href="#–id" class="headerlink" title="–id"></a>–id</h3><p>The <code>--id</code> option can be used to specify a custom <a href="#Top-Level-Test">Top Level Test</a> id.</p>
 <h3 id="–show-skipped"><a href="#–show-skipped" class="headerlink" title="–show-skipped"></a>–show-skipped</h3><p>Show skipped tests.</p>
 <h3 id="–show-retries"><a href="#–show-retries" class="headerlink" title="–show-retries"></a>–show-retries</h3><p>Show retried tests.</p>
-<h3 id="–test-to-end"><a href="#–test-to-end" class="headerlink" title="–test-to-end"></a>–test-to-end</h3><p>Force all tests to be test to end and continue the run even if one of the tests fails.</p>
-<h3 id="–first-fail"><a href="#–first-fail" class="headerlink" title="–first-fail"></a>–first-fail</h3><p>Force all tests to be first fail and stop the run on the first failing test.</p>
+<h3 id="–test-to-end"><a href="#–test-to-end" class="headerlink" title="–test-to-end"></a>–test-to-end</h3><p>Force all tests to be completed and continue the run even if one of the tests fails.</p>
+<h3 id="–first-fail"><a href="#–first-fail" class="headerlink" title="–first-fail"></a>–first-fail</h3><p>Force all tests to fail and stop the run on the first failing test.</p>
 <h3 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering"></a>Filtering</h3><h4 id="pattern"><a href="#pattern" class="headerlink" title="pattern"></a>pattern</h4><p>Options such as <a href="#%E2%80%93only">–only</a>, <a href="#%E2%80%93skip">–skip</a>, <a href="#%E2%80%93start">–start</a>, <a href="#%E2%80%93end">–end</a> as well as
 <a href="#%E2%80%93pause-before">–pause-before</a> and <a href="#%E2%80%93pause-after">–pause-after</a> take a <a href="#pattern">pattern</a> to specify the exact test
-to which the option shall be applied.</p>
+which the option will be applied.</p>
 <p>The <a href="#pattern">pattern</a> is used to match test names using a <a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Glob_(programming)">unix-like file path pattern</a> that supports wildcards</p>
 <ul>
 <li><code>/</code> path level separator</li>
@@ -2891,12 +2890,12 @@ the specified test.</p>
 <p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
 <h4 id="–only-tags"><a href="#–only-tags" class="headerlink" title="–only-tags"></a>–only-tags</h4><p>The <code>--only-tags</code> option can be used to filter the test flow so that only
-tests with particular tag are selected to run and other are skipped.</p>
+tests with a particular tag are selected to run and others are skipped.</p>
 <blockquote>
 <p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
 <h4 id="–skip-tags"><a href="#–skip-tags" class="headerlink" title="–skip-tags"></a>–skip-tags</h4><p>The <code>--skip-tags</code> option can be used to filter the test flow so that only
-tests with particular tag are skipped.</p>
+tests with a particular tag are skipped.</p>
 <blockquote>
 <p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
 </blockquote>
@@ -2944,11 +2943,11 @@ will be paused if the test has a failing result.</p>
 <h2 id="AUTO"><a href="#AUTO" class="headerlink" title="AUTO"></a>AUTO</h2><p>Automated test flag. This flag indicates that the test is automated
 when parent test has <a href="#MANUAL">MANUAL</a> flag set.</p>
 <h2 id="LAST-RETRY"><a href="#LAST-RETRY" class="headerlink" title="LAST_RETRY"></a>LAST_RETRY</h2><p>Last retry flag. This flag is auto-set for the last retry iteration.</p>
-<h1 id="Controlling-Output"><a href="#Controlling-Output" class="headerlink" title="Controlling Output"></a>Controlling Output</h1><p>Test output can be controlled with <code>-o</code> or <a href="#%E2%80%93output">–output</a> option which specifies the output format to use
+<h1 id="Controlling-Output"><a href="#Controlling-Output" class="headerlink" title="Controlling Output"></a>Controlling Output</h1><p>Test output can be controlled with <code>-o</code> or <a href="#%E2%80%93output">–output</a> option, which specifies the output format to use
 to print to <code>stdout</code>. By default, the most detailed <code>nice</code> output is used.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-o format, --output format                      stdout output format, choices are: [<span class="string">&#x27;new-fails&#x27;</span>,</span><br><span class="line">                                                <span class="string">&#x27;fails&#x27;</span>, <span class="string">&#x27;classic&#x27;</span>, <span class="string">&#x27;slick&#x27;</span>, <span class="string">&#x27;nice&#x27;</span>, <span class="string">&#x27;brisk&#x27;</span>,</span><br><span class="line">                                                <span class="string">&#x27;quiet&#x27;</span>, <span class="string">&#x27;short&#x27;</span>, <span class="string">&#x27;manual&#x27;</span>, <span class="string">&#x27;dots&#x27;</span>, <span class="string">&#x27;progress&#x27;</span>,</span><br><span class="line">                                                <span class="string">&#x27;raw&#x27;</span>], default: <span class="string">&#x27;nice&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<p>For example, you can use the following test and see how output format
+<p>For example, you can use the following test and see how the output format
 changes based on the output that is specified.</p>
 <blockquote>
 <p><code>test.py</code></p>
@@ -2956,7 +2955,7 @@ changes based on the output that is specified.</p>
 </blockquote>
 <h2 id="nice-Output"><a href="#nice-Output" class="headerlink" title="nice Output"></a><code>nice</code> Output</h2><p>The <a href="#nice-Output"><code>nice</code></a> output format is the default output format and provides the most
 details when developing and debugging tests. This output format includes all test types,
-their attributes and results as well as any messages that are associated with them.</p>
+their attributes and results, as well as any messages that are associated with them.</p>
 <blockquote>
 <p><strong>&#9995;</strong> This output format is the most useful for developing and
 debugging an individual test.
@@ -2971,11 +2970,11 @@ This output format is not useful when tests are executed in parallel.</p>
 
 <h2 id="brisk-Output"><a href="#brisk-Output" class="headerlink" title="brisk Output"></a><code>brisk</code> Output</h2><p>The <a href="#brisk-Output"><code>brisk</code></a> output format is very similar to <a href="#nice-Output"><code>nice</code></a> output format but
 omits all steps (tests that have <a href="#Types">Step Type</a>). This format is useful when
-you would like to focus on actions of the test such as commands executed
-on the system under test rather than on the test procedure itself.</p>
+you would like to focus on the actions of the test, such as commands executed
+on the system under test, rather than on the test procedure itself.</p>
 <blockquote>
 <p><strong>&#9995;</strong> This output format is useful for
-debugging individual test when you would like to omit test steps.
+debugging individual tests when you would like to omit test steps.
 This output format is not useful when tests are executed in parallel.</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 output.py -o brisk</span><br></pre></td></tr></table></figure>
@@ -2984,17 +2983,17 @@ This output format is not useful when tests are executed in parallel.</p>
 <h2 id="short-Output"><a href="#short-Output" class="headerlink" title="short Output"></a><code>short</code> Output</h2><p>The <a href="#short-Output"><code>short</code></a> output format provides a shorter output than <a href="#nice-Output"><code>nice</code></a> output format
 as only test and result messages are formatted.</p>
 <blockquote>
-<p><strong>&#9995;</strong> This output format is very useful to highlight and verify test procedure.
+<p><strong>&#9995;</strong> This output format is very useful to highlight and verify test procedures.
 This output format is not useful when tests are executed in parallel.</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py -o short</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Module regression</span><br><span class="line">  Attributes</span><br><span class="line">    name</span><br><span class="line">      value</span><br><span class="line">  Tags</span><br><span class="line">    tag1</span><br><span class="line">    tag2</span><br><span class="line">  Scenario my <span class="built_in">test</span></span><br><span class="line">    Test description.</span><br><span class="line">    When I <span class="keyword">do</span> something</span><br><span class="line">    OK</span><br><span class="line">    Then I check the result</span><br><span class="line">    OK</span><br><span class="line">  OK</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 
 <h2 id="classic-Output"><a href="#classic-Output" class="headerlink" title="classic Output"></a><code>classic</code> Output</h2><p>The <a href="#classic-Output"><code>classic</code></a> output format shows only full test names for
-test and result messages for any test that has <a href="#Types">Test Type</a> of higher.
-Tests that have <a href="#Types">Step Type</a> are not showed.</p>
+any test with a <a href="#Types">Test Type</a> of higher will receive test and result messages.
+Tests with <a href="#Types">Step Type</a> are not displayed.</p>
 <blockquote>
-<p><strong>&#9995;</strong> This output format can be used for CI&#x2F;CD runs as long as
+<p><strong>&#9995;</strong> This output format can be used for CI&#x2F;CD runs as long as the
 number of tests is not too large.
 This output format can be used when tests are executed in parallel.</p>
 </blockquote>
@@ -3004,7 +3003,7 @@ This output format can be used when tests are executed in parallel.</p>
 <h2 id="progress-Output"><a href="#progress-Output" class="headerlink" title="progress Output"></a><code>progress</code> Output</h2><p>The <a href="#progress-Output"><code>progress</code></a> output format shows the progress of the test run.
 The output is always printed on one line on progress updates and is useful
 when running tests locally.</p>
-<p>Any test fails are printed inline as soon as they occur.</p>
+<p>Any test failures are printed inline as soon as they occur.</p>
 <blockquote>
 <p><strong>&#9995;</strong> This output format should not be used for CI&#x2F;CD runs
 as it outputs terminal control codes to update the same line.
@@ -3014,11 +3013,11 @@ This output format can be used when tests are executed in parallel.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Executing 2 tests /regression/my <span class="built_in">test</span>/I <span class="keyword">do</span> something</span><br></pre></td></tr></table></figure>
 
 <h2 id="fails-Output"><a href="#fails-Output" class="headerlink" title="fails Output"></a><code>fails</code> Output</h2><p>The <a href="#fails-Output"><code>fails</code></a> output format only shows failing results <a href="#Fail">Fail</a>, <a href="#Error">Error</a>, and <a href="#Null">Null</a>
-and crossed out results <a href="#XFail">XFail</a>, <a href="#XError">XError</a>, <a href="#XNull">XNull</a>, <a href="#XOK">XOK</a>.</p>
+and crossed out the results <a href="#XFail">XFail</a>, <a href="#XError">XError</a>, <a href="#XNull">XNull</a>, <a href="#XOK">XOK</a>.</p>
 <p>Failing results are only shown for tests with <a href="#Types">Test Type</a> of higher.</p>
 <blockquote>
 <p><strong>&#9995;</strong> This output format can be used for CI&#x2F;CD runs
-as long as the number of cross out results is not too large otherwise
+as long as the number of crossed-out results is not too large; otherwise,
 use <a href="#new-fails-Output"><code>new-fails</code></a> output format instead.
 This output format can be used when tests are executed in parallel.</p>
 </blockquote>
@@ -3036,10 +3035,10 @@ This output format can be used when tests are executed in parallel.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">✘ 3ms       [  Fail  ] /regression/my <span class="built_in">test</span></span><br><span class="line">    AssertionError</span><br><span class="line">    Traceback (most recent call last):</span><br><span class="line">      File <span class="string">&quot;output.py&quot;</span>, line 8, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">        assert False</span><br><span class="line">    AssertionError</span><br></pre></td></tr></table></figure>
 
 <h2 id="slick-Output"><a href="#slick-Output" class="headerlink" title="slick Output"></a><code>slick</code> Output</h2><p>The <a href="#slick-Output"><code>slick</code></a> output format provides even shorter output than <a href="#short-Output"><code>short</code></a> output format
-as only shows test and result messages for any test that has <a href="#Types">Test Type</a> of higher.
+as it only shows test and result messages for any test that has <a href="#Types">Test Type</a> of higher.
 Tests that have <a href="#Types">Step Type</a> are not showed.</p>
 <blockquote>
-<p><strong>&#9995;</strong> This output format is more of an eye-candy.
+<p><strong>&#9995;</strong> This output format is more eye-candy.
 This output format is not useful when tests are executed in parallel.</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --output slick</span><br></pre></td></tr></table></figure>
@@ -3053,7 +3052,7 @@ This output format can be used when tests are executed in parallel.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py -o quiet</span><br></pre></td></tr></table></figure>
 
 <h2 id="manual-Output"><a href="#manual-Output" class="headerlink" title="manual Output"></a><code>manual</code> Output</h2><p>The <a href="#manual-Output"><code>manual</code></a> output format is only suitable for running manual or semi-automated
-tests where tester is constantly prompted for input. The terminal screen is always cleared
+tests where the tester is constantly prompted for input. The terminal screen is always cleared
 before starting any test with <a href="#Types">Test Type</a> or higher.</p>
 <blockquote>
 <p><strong>&#9995;</strong> This output format is only useful for manual or semi-automated tests.</p>
@@ -3063,7 +3062,7 @@ before starting any test with <a href="#Types">Test Type</a> or higher.</p>
 <h2 id="raw-Output"><a href="#raw-Output" class="headerlink" title="raw Output"></a><code>raw</code> Output</h2><p>The <a href="#raw-Output"><code>raw</code></a> output format outputs raw messages.</p>
 <blockquote>
 <p><strong>&#9995;</strong> This output format is only useful for <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>
-developers and curious users that want to understand what raw messages look like.</p>
+developers and curious users who want to understand what raw messages look like.</p>
 </blockquote>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py -o raw</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;message_keyword&quot;</span>:<span class="string">&quot;PROTOCOL&quot;</span>,<span class="string">&quot;message_hash&quot;</span>:<span class="string">&quot;1336ea41&quot;</span>,<span class="string">&quot;message_object&quot;</span>:0,<span class="string">&quot;message_num&quot;</span>:0,<span class="string">&quot;message_stream&quot;</span>:null,<span class="string">&quot;message_level&quot;</span>:1,<span class="string">&quot;message_time&quot;</span>:1632584893.162271,<span class="string">&quot;message_rtime&quot;</span>:0.009011,<span class="string">&quot;test_type&quot;</span>:<span class="string">&quot;Module&quot;</span>,<span class="string">&quot;test_subtype&quot;</span>:null,<span class="string">&quot;test_id&quot;</span>:<span class="string">&quot;/fd823a2c-1e17-11ec-8830-cb614fe11752&quot;</span>,<span class="string">&quot;test_name&quot;</span>:<span class="string">&quot;/regression&quot;</span>,<span class="string">&quot;test_flags&quot;</span>:1,<span class="string">&quot;test_cflags&quot;</span>:0,<span class="string">&quot;test_level&quot;</span>:1,<span class="string">&quot;protocol_version&quot;</span>:<span class="string">&quot;TFSPv2.1&quot;</span>&#125;</span><br><span class="line">...</span><br><span class="line">&#123;<span class="string">&quot;message_keyword&quot;</span>:<span class="string">&quot;STOP&quot;</span>,<span class="string">&quot;message_hash&quot;</span>:<span class="string">&quot;6956b3c5&quot;</span>,<span class="string">&quot;message_object&quot;</span>:0,<span class="string">&quot;message_num&quot;</span>:7,<span class="string">&quot;message_stream&quot;</span>:null,<span class="string">&quot;message_level&quot;</span>:2,<span class="string">&quot;message_time&quot;</span>:1632584893.167364,<span class="string">&quot;message_rtime&quot;</span>:0.014104,<span class="string">&quot;test_type&quot;</span>:<span class="string">&quot;Module&quot;</span>,<span class="string">&quot;test_subtype&quot;</span>:null,<span class="string">&quot;test_id&quot;</span>:<span class="string">&quot;/fd823a2c-1e17-11ec-8830-cb614fe11752&quot;</span>,<span class="string">&quot;test_name&quot;</span>:<span class="string">&quot;/regression&quot;</span>,<span class="string">&quot;test_flags&quot;</span>:1,<span class="string">&quot;test_cflags&quot;</span>:0,<span class="string">&quot;test_level&quot;</span>:1&#125;</span><br></pre></td></tr></table></figure>
@@ -3085,17 +3084,17 @@ Tests with <a href="#Types">Step Type</a> are not included.</p>
 <h3 id="Passing"><a href="#Passing" class="headerlink" title="Passing"></a>Passing</h3><p>This report generates <code>Passing</code> section and show passing tests.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /regression/my <span class="built_in">test</span></span><br><span class="line">✔ [ OK ] /regression</span><br></pre></td></tr></table></figure>
 
-<h3 id="Failing"><a href="#Failing" class="headerlink" title="Failing"></a>Failing</h3><p>This report generates <code>Failing</code> section and show failing tests.</p>
+<h3 id="Failing"><a href="#Failing" class="headerlink" title="Failing"></a>Failing</h3><p>This report generates <code>Failing</code> section and shows failing tests.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Failing</span><br><span class="line"></span><br><span class="line">✘ [ Fail ] /regression/my <span class="built_in">test</span></span><br><span class="line">✘ [ Fail ] /regression</span><br></pre></td></tr></table></figure>
 
 <h3 id="Known"><a href="#Known" class="headerlink" title="Known"></a>Known</h3><p>This report generates <code>Known</code> section.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Known</span><br><span class="line"></span><br><span class="line">✘ [ XFail ] /regression/my <span class="built_in">test</span> ᐅ expected fail</span><br></pre></td></tr></table></figure>
 
-<h3 id="Unstable"><a href="#Unstable" class="headerlink" title="Unstable"></a>Unstable</h3><p>This report generates <code>Unstable</code> section. Tests are considered to be unstable
+<h3 id="Unstable"><a href="#Unstable" class="headerlink" title="Unstable"></a>Unstable</h3><p>This report generates <code>Unstable</code> section. Tests are considered unstable
 if they are repeated and different iterations have different results.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Unstable</span><br><span class="line"></span><br><span class="line">◔ [ 50.00% ] /regression/my <span class="built_in">test</span> (1 ok, 1 failed)</span><br></pre></td></tr></table></figure>
 
-<h3 id="Coverage"><a href="#Coverage" class="headerlink" title="Coverage"></a>Coverage</h3><p>This reports generates <code>Coverage</code> section. It is only generated if
+<h3 id="Coverage"><a href="#Coverage" class="headerlink" title="Coverage"></a>Coverage</h3><p>This report generates <code>Coverage</code> section. It is only generated if
 at least one <code>Specification</code> is attached to any of the tests and shows
 requirements coverage statistics for each <code>Specification</code>.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Coverage</span><br><span class="line"></span><br><span class="line">QA-SRS004 Tiered Storage</span><br><span class="line">  86 requirements (72 satisfied 83.7%, 4 unsatisfied 4.7%, 10 untested 11.6%)</span><br></pre></td></tr></table></figure>
@@ -3103,13 +3102,13 @@ requirements coverage statistics for each <code>Specification</code>.</p>
 <h3 id="Totals"><a href="#Totals" class="headerlink" title="Totals"></a>Totals</h3><p>This report generates test counts and total test time section.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1 module (1 ok)</span><br><span class="line">1 scenario (1 ok)</span><br><span class="line">2 steps (2 ok)</span><br><span class="line"></span><br><span class="line">Total time 12ms</span><br></pre></td></tr></table></figure>
 
-<h3 id="Version"><a href="#Version" class="headerlink" title="Version"></a>Version</h3><p>This report generate a message that shows date time of test run
-and version of the framework that was used to run the test program.</p>
+<h3 id="Version"><a href="#Version" class="headerlink" title="Version"></a>Version</h3><p>This report generates a message that shows the date time of the test run
+and the version of the framework that was used to run the test program.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Executed on Sep 25,2021 12:05</span><br><span class="line">TestFlows.com Open-Source Software Testing Framework v1.7.210922.1181131</span><br></pre></td></tr></table></figure>
 
 <h1 id="Turning-Off-Color-Highlighting"><a href="#Turning-Off-Color-Highlighting" class="headerlink" title="Turning Off Color Highlighting"></a>Turning Off Color Highlighting</h1><p>There are times when color highlighting might be in the way. For example,
 when piping output to a different utility or saving it into the file.
-In both of these cases use <a href="#%E2%80%93no-colors">–no-colors</a> to tell <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>
+In both of these cases, use <a href="#%E2%80%93no-colors">–no-colors</a> to tell <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>
 to turn off adding terminal control color codes.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --no-colors &gt; nice.log</span><br></pre></td></tr></table></figure>
 
@@ -3123,29 +3122,29 @@ to turn off adding terminal control color codes.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">tail</span> -f test.log | tfs --no-colors transform <span class="built_in">nice</span> | less</span><br></pre></td></tr></table></figure>
 
 <h2 id="Use-no-colors-in-Code"><a href="#Use-no-colors-in-Code" class="headerlink" title="Use --no-colors in Code"></a>Use <code>--no-colors</code> in Code</h2><p>You can also detect if terminal color codes are turned off in code
-by looking at <code>settings.no_colors</code> attribute as follows</p>
+by looking at <code>settings.no_colors</code> attribute, as follows</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.settings <span class="keyword">as</span> settings</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> settings.no_colors:</span><br><span class="line">        debug(<span class="string">&quot;do something when terminal colors are turned off&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<h1 id="Forcing-To-Abort-On-First-Fail"><a href="#Forcing-To-Abort-On-First-Fail" class="headerlink" title="Forcing To Abort On First Fail"></a>Forcing To Abort On First Fail</h1><p>You can force test program to abort on first fail irrespective
+<h1 id="Forcing-To-Abort-On-First-Fail"><a href="#Forcing-To-Abort-On-First-Fail" class="headerlink" title="Forcing To Abort On First Fail"></a>Forcing To Abort On First Fail</h1><p>You can force a test program to abort on first failure irrespective
 of the presence of <a href="#TE">TE</a> flags by using <a href="#%E2%80%93first-fail">–first-fail</a>
 test program argument.</p>
 <p>For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --first-fail</span><br></pre></td></tr></table></figure>
 
-<h1 id="Forcing-To-Continue-On-Fail"><a href="#Forcing-To-Continue-On-Fail" class="headerlink" title="Forcing To Continue On Fail"></a>Forcing To Continue On Fail</h1><p>You can force test program to continue running if any of the tests fail
+<h1 id="Forcing-To-Continue-On-Fail"><a href="#Forcing-To-Continue-On-Fail" class="headerlink" title="Forcing To Continue On Fail"></a>Forcing To Continue On Fail</h1><p>You can force the test program to continue running if any of the tests fail
 irrespective of the presence of <a href="#TE">TE</a> flags by using <a href="#%E2%80%93test-to-end">–test-to-end</a>
 test program argument.</p>
 <p>For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --test-to-end</span><br></pre></td></tr></table></figure>
 
 <h1 id="Enabling-Debug-Mode"><a href="#Enabling-Debug-Mode" class="headerlink" title="Enabling Debug Mode"></a>Enabling Debug Mode</h1><p>You can enable debug mode by specifying <a href="#%E2%80%93debug">–debug</a> option to your test program.
-When debug mode is enabled the tracebacks will include more details such as
-internal function calls inside the framework which are hidden by default to reduce
+When debug mode is enabled, the tracebacks will include more details, such as
+internal function calls inside the framework that are hidden by default to reduce
 clutter.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --debug</span><br></pre></td></tr></table></figure>
 
 <h2 id="Use-debug-in-Code"><a href="#Use-debug-in-Code" class="headerlink" title="Use --debug in Code"></a>Use <code>--debug</code> in Code</h2><p>You can also trigger actions in your test code based on if <a href="#%E2%80%93debug">–debug</a> option
-was specified or not. When <a href="#%E2%80%93debug">–debug</a> option is specified the value
+was specified or not. When <a href="#%E2%80%93debug">–debug</a> option is specified, the value
 can be retrieved from <code>settings.debug</code> as follows</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.settings <span class="keyword">as</span> settings</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> settings.debug:</span><br><span class="line">        debug(<span class="string">&quot;do something in debug mode&quot;</span>)</span><br></pre></td></tr></table></figure>
 
@@ -3155,13 +3154,13 @@ can be retrieved from <code>settings.debug</code> as follows</p>
 
 <p>where</p>
 <ul>
-<li><code>test</code> (optional) the instance of the test for which to obtain test time, default: current test</li>
+<li><code>test</code> (optional) the instance of the test for which a test time should be obtained, default: current test</li>
 </ul>
 <p>The returned value is fixed after test has finished its execution.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step&quot;</span>) <span class="keyword">as</span> step:</span><br><span class="line">        note(current_time())</span><br><span class="line">    note(current_time(test=step))</span><br></pre></td></tr></table></figure>
 
-<h1 id="Show-Test-Data"><a href="#Show-Test-Data" class="headerlink" title="Show Test Data"></a>Show Test Data</h1><p>After test program is executed you can retrieve different test data related to the test run
+<h1 id="Show-Test-Data"><a href="#Show-Test-Data" class="headerlink" title="Show Test Data"></a>Show Test Data</h1><p>After the test program is executed, you can retrieve different test data related to the test run
 using <code>tfs show</code> command.</p>
 <p>The following commands are available:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs show -h</span><br></pre></td></tr></table></figure>
@@ -3184,10 +3183,10 @@ In <strong><span><img style="display: inline; vertical-align: bottom; height: 2e
 <li><code>group</code> secret group (optional)</li>
 <li><code>uid</code> secret unique identifier (optional)</li>
 </ul>
-<p>The <code>name</code> is the only mandatory argument when creating a secret, the other arguments <code>type</code>,
-<code>group</code>, <code>uid</code> are optional.</p>
+<p> When creating a secret,only the <code>name</code> is required, the other arguments <code>type</code>,
+<code>group</code>, <code>uid</code>, are optional.</p>
 <p>The name must be a valid regex group name as defined by Python’s <a target="_blank" rel="noopener" href="https://docs.python.org/3/library/re.html">re</a> module.
-For example, no spaces or dashes are allowed in the name, you must use underscored instead.</p>
+For example, no spaces or dashes are allowed in the name, you must use underscores instead.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># secret = Secret(&quot;my secret&quot;)(&quot;my secret value&quot;) # invalid, empty spaces not allowed</span></span><br><span class="line">secret = Secret(<span class="string">&quot;my_secret&quot;</span>)(<span class="string">&quot;my secret value&quot;</span>) <span class="comment"># valid</span></span><br></pre></td></tr></table></figure>
 
 <p>If a name is invalid, you will see an exception as follows,</p>
@@ -3200,8 +3199,8 @@ For example, no spaces or dashes are allowed in the name, you must use underscor
 
 <p>Secret values are only filtered by <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> in messages added to the test by <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L215">message() function</a>,
 <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L200">note() function</a>, <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L205">debug() function</a>, <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/funcs.py#L210">trace() function</a> and messages in results.</p>
-<p>If you need to create multiple secrets, the names of each secret must be unique,
-otherwise you will get an error.</p>
+<p>If you need to create multiple secrets, the names of each secret must be unique
+otherwise, you will get an error.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Mar 24,2022 9:54:46    ⟥  Scenario using secrets</span><br><span class="line">                4ms    ⟥    Exception: Traceback (most recent call last):</span><br><span class="line">                                File <span class="string">&quot;/Using_Secrets.py&quot;</span>, line 11, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">                                  secret2 = Secret(<span class="string">&quot;mysecret&quot;</span>)(<span class="string">&quot;[masked]:Secret(name=&#x27;mysecret&#x27;)&quot;</span>)</span><br><span class="line">                              ValueError: secret <span class="string">&#x27;mysecret&#x27;</span> already registered</span><br></pre></td></tr></table></figure>
 
 <p>Here is an example of creating multiple secrets,</p>
@@ -3210,18 +3209,18 @@ otherwise you will get an error.</p>
 <p>Note, that multiple secrets can have the same secret value. For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;using secrets&quot;</span>):</span><br><span class="line">    secret1 = Secret(<span class="string">&quot;mysecret1&quot;</span>)(<span class="string">&quot;the same secret value&quot;</span>)</span><br><span class="line">    secret2 = Secret(<span class="string">&quot;mysecret2&quot;</span>)(<span class="string">&quot;the same secret value&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<h2 id="Secrets-in-Argument-Parser"><a href="#Secrets-in-Argument-Parser" class="headerlink" title="Secrets in Argument Parser"></a>Secrets in Argument Parser</h2><p>You can easily use secrets in Argument Parser by setting <code>type</code> of
+<h2 id="Secrets-in-Argument-Parser"><a href="#Secrets-in-Argument-Parser" class="headerlink" title="Secrets in Argument Parser"></a>Secrets in Argument Parser</h2><p>You can easily use secrets in the Argument Parser by setting <code>type</code> of
 the argument to the <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Core/blob/4f10348ac435c38f685dc4c4e4e162b5a799ca26/testflows/_core/objects.py#L411">Secret class</a> object.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">argparser</span>(<span class="params">parser</span>):</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg0&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=Secret(<span class="string">&quot;arg0&quot;</span>), <span class="built_in">help</span>=<span class="string">&quot;argument0&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg1&quot;</span>,</span><br><span class="line">        <span class="built_in">type</span>=Secret(<span class="string">&quot;arg1&quot;</span>), <span class="built_in">help</span>=<span class="string">&quot;argument1&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@ArgumentParser(<span class="params">argparser</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">regression</span>(<span class="params">self, arg0, arg1</span>):</span><br><span class="line">    note(<span class="string">f&quot;<span class="subst">&#123;arg0&#125;</span> <span class="subst">&#123;arg1&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
 
 <h1 id="Testing-Documentation"><a href="#Testing-Documentation" class="headerlink" title="Testing Documentation"></a>Testing Documentation</h1><p>Use <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Texts">testflows.texts</a> module to help you write auto verified software documentation
-by combining your text with the verification procedure of the described functionality
+by combining your text with the verification procedure for the described functionality,
 in the same source file while leveraging the power and flexibility of <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>.</p>
-<p>Source files for auto verified documentation by convention have <code>.tfd</code> extension
+<p>By convention the <code>.tfd</code> extension is used for source files for auto verified documentation
 and are written using Markdown. Therefore, all <code>.tfd</code> files are valid
 Markdown files. However, <code>.tfd</code> files are only the source files for your documentation
-that must be executed using <code>tfs document run</code> command to produce final
+that must be executed using <code>tfs document run</code> command to produce the final
 Markdown documentation files.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run --input my_document.tfd --output my_document.md</span><br></pre></td></tr></table></figure>
 <h2 id="Installing-testflows-texts"><a href="#Installing-testflows-texts" class="headerlink" title="Installing testflows.texts"></a>Installing <code>testflows.texts</code></h2><p>You can install <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Texts">testflows.texts</a> using <code>pip3</code> command:</p>
@@ -3231,7 +3230,7 @@ Markdown documentation files.</p>
 <h2 id="Writing-Auto-Verified-Docs"><a href="#Writing-Auto-Verified-Docs" class="headerlink" title="Writing Auto Verified Docs"></a>Writing Auto Verified Docs</h2><p>Follow the example Markdown document to get to know how you can write auto verified docs yourself.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## This is a heading</span></span><br><span class="line"></span><br><span class="line">This file is written using Markdown where you can have any number</span><br><span class="line">of <span class="code">`python:testflows`</span> code blocks that contain executable Python code.</span><br><span class="line"></span><br><span class="line"><span class="code">```python:testflows</span></span><br><span class="line"><span class="code"># This is Python code that will be executed when .tfd document is run.</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">msg = &quot;Hello TestFlows Texts&quot;</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">The scope is shared between all the code blocks in the same document.</span><br><span class="line"></span><br><span class="line"><span class="code">```python:testflows</span></span><br><span class="line"><span class="code"># so `msg` variable defined above can also be accessed in this</span></span><br><span class="line"><span class="code"># `python:testflows` code block</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">new_msg = msg + &quot; Thanks for making verifying docs so easy!&quot;</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">The output of executing <span class="code">`.tfd`</span> document using <span class="code">`tfs document run`</span></span><br><span class="line">is the final <span class="code">`.md`</span> file with all the <span class="code">`python:testflows`</span> code blocks</span><br><span class="line">removed and replaced with the text added to the document using</span><br><span class="line">the <span class="code">`text()`</span> function.</span><br><span class="line"></span><br><span class="line"><span class="code">```python:testflows</span></span><br><span class="line"><span class="code"># Let&#x27;s use `text()` function to add some text to our document</span></span><br><span class="line"><span class="code"># dynamically in our Python code</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">text(&quot;add this line to the final Markdown document&quot;)</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">Any text outside the <span class="code">`python:testflows`</span> code blocks are treated as Python</span><br><span class="line">f-strings. This allows you to specify expressions for substitutions.</span><br><span class="line">See [<span class="string">Python formatted string literals</span>](<span class="link">https://docs.python.org/3/tutorial/inputoutput.html#formatted-string-literals</span>)</span><br><span class="line">for more details.</span><br><span class="line"></span><br><span class="line">Here is an example where we will substitute the value of <span class="code">`msg`</span> variable next &#123;msg&#125;.</span><br><span class="line">But with Python f-strings you can specify even complex expressions. For example, we can</span><br><span class="line">convert our string in <span class="code">`msg`</span> to title case as follows &#123;msg.title()&#125;.</span><br><span class="line"></span><br><span class="line">You can double your curly brackets to escape them when substitution expression is not needed</span><br><span class="line">using <span class="code">`&#123;&#123;`</span> or <span class="code">`&#125;&#125;`</span>.</span><br><span class="line"></span><br><span class="line">By the way, your document can&#x27;t contain any triple quotes. If you need them then you have to</span><br><span class="line">add them using <span class="code">`&#123;triple_quotes&#125;`</span> expression. For example,</span><br><span class="line"></span><br><span class="line"><span class="code">```markdown</span></span><br><span class="line"><span class="code">This text has &#123;triple_quotes&#125; triple quotes.</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">Well, this is pretty much it. With <span class="code">`testflows.texts`</span> you have full power of full featured</span><br><span class="line">test framework and Python language at your disposal to make sure your documentation always</span><br><span class="line">stays up to date.</span><br></pre></td></tr></table></figure>
 
-<p>Now if you want to give it a try then save the above Markdown into <code>test.tfd</code> file but make sure
+<p>Now, if you want to give it a try, then save the above Markdown into <code>test.tfd</code> file, but make sure
 to remove the indentation.</p>
 <p>Then you can run it as</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run -i test.tfd -o -</span><br></pre></td></tr></table></figure>
@@ -3246,7 +3245,7 @@ to remove the indentation.</p>
 file <code>tutorial.md</code> that we can use on our documentation site.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run -i tutorial.tfd -o tutorial.md</span><br></pre></td></tr></table></figure>
 
-<p>We know that the instructions in this article are correct as <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Texts">testflows.texts</a> has executed them during
+<p>We know that the instructions in this article are correct as <a target="_blank" rel="noopener" href="https://github.com/testflows/TestFlows-Texts">testflows.texts</a> has executed them during the
 writing of <code>tutorial.md</code> just like a technical writer would execute the commands
 as part of the process of writing a technical article.</p>
 <p>Moreover, we can rerun our documentation any time a new version of <code>ls</code> utility is ready
@@ -3255,20 +3254,20 @@ to be shipped to make sure our documentation is still valid and the software sti
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># TestFlows Texts Tutorial</span></span><br><span class="line"></span><br><span class="line">Let&#x27;s see <span class="code">`testflows.texts`</span> in action by writing auto verified</span><br><span class="line">documentation for the <span class="code">`-a`</span> option of the <span class="code">`ls`</span> command.</span><br><span class="line"></span><br><span class="line">The man page for the <span class="code">`ls`</span> utility says the following:</span><br><span class="line"></span><br><span class="line"><span class="code">```</span></span><br><span class="line"><span class="code">NAME</span></span><br><span class="line"><span class="code">       ls - list directory contents</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">SYNOPSIS</span></span><br><span class="line"><span class="code">       ls [OPTION]... [FILE]...</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">DESCRIPTION</span></span><br><span class="line"><span class="code">       List  information  about  the FILEs (the current directory by default).</span></span><br><span class="line"><span class="code">       Sort entries alphabetically if none of -cftuvSUX nor --sort  is  speci‐</span></span><br><span class="line"><span class="code">       fied.</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">       Mandatory  arguments  to  long  options are mandatory for short options</span></span><br><span class="line"><span class="code">       too.</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">       -a, --all</span></span><br><span class="line"><span class="code">              do not ignore entries starting with .</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">Let&#x27;s see how <span class="code">`-a`</span> option works.</span><br><span class="line"></span><br><span class="line">First, create a file that starts with <span class="code">`.`</span> using the <span class="code">`touch`</span> command</span><br><span class="line"></span><br><span class="line"><span class="code">```bash</span></span><br><span class="line"><span class="code">touch .hidden_file</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">Let&#x27;s now run</span><br><span class="line"></span><br><span class="line"><span class="code">```bash</span></span><br><span class="line"><span class="code">ls -a | grep .hidden_file</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">and you should see our <span class="code">`.hidden_file`</span> listed</span><br><span class="line"></span><br><span class="line"><span class="code">```bash</span></span><br><span class="line"><span class="code">.hidden_file</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line"></span><br><span class="line">Voilà, <span class="code">`ls -a`</span> does indeed show hidden files!</span><br></pre></td></tr></table></figure>
 
 <h2 id="Passing-Arguments"><a href="#Passing-Arguments" class="headerlink" title="Passing Arguments"></a>Passing Arguments</h2><p>Execution of any <code>.tfd</code> file using <code>tfs document run</code> command results in execution of a document writer program.
-This is similar to the test programs you write with <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>.</p>
-<p>You can control different aspects of writer program execution by passing arguments as follows.</p>
+This is comparable to the test programs you write with <strong><span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>.</p>
+<p>You can control different aspects of writer program’s execution by passing arguments as follows.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run -t test.tfd -o test.md -- &lt;writer program arguments&gt;</span><br></pre></td></tr></table></figure>
 
 <p>For example, to see all the arguments your document writer program can take pass <code>-h/--help</code> argument</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run -- --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
 
-<h2 id="Controlling-Output-Format"><a href="#Controlling-Output-Format" class="headerlink" title="Controlling Output Format"></a>Controlling Output Format</h2><p>You can control output format by passing <code>-o/--output</code> argument to your writer program.</p>
+<h2 id="Controlling-Output-Format"><a href="#Controlling-Output-Format" class="headerlink" title="Controlling Output Format"></a>Controlling Output Format</h2><p>By passing <code>-o/--output</code> argument to your writer program, you can control output format</p>
 <p>For example,</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run -i test.tfd -o test.md -- --output classic</span><br></pre></td></tr></table></figure>
 
 <p>See <code>-h/--help</code> for other formats.</p>
 <h2 id="Debugging-Errors"><a href="#Debugging-Errors" class="headerlink" title="Debugging Errors"></a>Debugging Errors</h2><p>Here are some common errors that you might run into while writing your <code>.tfd</code> source files.</p>
-<p>All exceptions will point to the line number where the error has occured.</p>
+<p>All exceptions will point to the line number indicating where the error occurred.</p>
 <h3 id="Unescaped-Curly-Brackets"><a href="#Unescaped-Curly-Brackets" class="headerlink" title="Unescaped Curly Brackets"></a>Unescaped Curly Brackets</h3><p>If you forget to double your curly brackets when you are not using f-string expression
 then you will see an error.</p>
 <p>For example,</p>
@@ -3277,12 +3276,12 @@ then you will see an error.</p>
 <p>when executed will result in the <code>NameError</code>.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">10ms   ⟥⟤ Error test.tfd, /test.tfd, NameError</span><br><span class="line">         Traceback (most recent call last):</span><br><span class="line">           File <span class="string">&quot;/tmp/tmp_ckk4f3m.py&quot;</span>, line 1, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">             text(fr<span class="string">&quot;&quot;</span><span class="string">&quot;Oh, I forgot to double &#123;quote&#125; my curly brackets.</span></span><br><span class="line"><span class="string">         NameError: name &#x27;quote&#x27; is not defined</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">         Error occurred in the following text:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">           3|&gt; Oops I forgot to double &#123;quote&#125; my curly brackets.</span></span><br></pre></td></tr></table></figure>
 
-<h3 id="Syntax-Errors"><a href="#Syntax-Errors" class="headerlink" title="Syntax Errors"></a>Syntax Errors</h3><p>If you have a syntax error in the <code>python:testflows</code> block you will get an error.</p>
+<h3 id="Syntax-Errors"><a href="#Syntax-Errors" class="headerlink" title="Syntax Errors"></a>Syntax Errors</h3><p>If you have a syntax error in the <code>python:testflows</code> block, you will get an error.</p>
 <p>For example,</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Hello there</span><br><span class="line"></span><br><span class="line"><span class="code">```python:testflows</span></span><br><span class="line"><span class="code">x = 1</span></span><br><span class="line"><span class="code">y = 2 boo</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">when executed will result in the SyntaxError.</span><br><span class="line"></span><br><span class="line">```bash</span><br><span class="line">11ms   ⟥⟤ Error test.tfd, /test.tfd, SyntaxError</span><br><span class="line">         Traceback (most recent call last):</span><br><span class="line">           File &quot;/home/user/.local/lib/python3.8/site-packages/testflows/texts/executable.py&quot;, line 87, in execute</span><br><span class="line">             exec(compile(source_code, source_name, &#x27;exec&#x27;),</span><br><span class="line">         SyntaxError: invalid syntax (tmp7e6op1y_.py, line 2)</span><br><span class="line"></span><br><span class="line">         Syntax Error occured in the following text:</span><br><span class="line"></span><br><span class="line">           3|  ```python:testflows</span><br><span class="line">           4|  x = 1</span><br><span class="line">           5|&gt; y = 2 boo</span><br><span class="line">           6|  ```</span><br></pre></td></tr></table></figure>
 
-<h3 id="Triple-Quotes"><a href="#Triple-Quotes" class="headerlink" title="Triple Quotes"></a>Triple Quotes</h3><p>If your text have triple quotes like <code>&quot;&quot;&quot;</code> it will result in an error.</p>
+<h3 id="Triple-Quotes"><a href="#Triple-Quotes" class="headerlink" title="Triple Quotes"></a>Triple Quotes</h3><p>If your text has triple quotes, like <code>&quot;&quot;&quot;</code> it will result in an error.</p>
 <p>For example,</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Hello There</span><br><span class="line"></span><br><span class="line">This text has &quot;&quot;&quot; triple quotes.</span><br></pre></td></tr></table></figure>
 
@@ -3297,7 +3296,7 @@ then you will see an error.</p>
 <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">```python:testflows</span></span><br><span class="line"><span class="code">triple_quotes = &#x27;&quot;&quot;&quot;&#x27;</span></span><br><span class="line"><span class="code">```</span></span><br><span class="line">Hello There</span><br><span class="line"></span><br><span class="line">This text has &#123;triple<span class="emphasis">_quotes&#125; triple quotes.</span></span><br></pre></td></tr></table></figure>
 
 <h2 id="Using-tfs-document-run"><a href="#Using-tfs-document-run" class="headerlink" title="Using tfs document run"></a>Using <code>tfs document run</code></h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs document run -h</span><br></pre></td></tr></table></figure>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">usage: tfs document run [-h] [-i path [path ...]] [-o [path]] [-f]</span><br><span class="line"></span><br><span class="line">  ---- o o o ----</span><br><span class="line"> |   o       o   |</span><br><span class="line"> | 1 o 10010 o 0 |</span><br><span class="line"> |   o       o   |    TestFlows.com Open-Source Software Testing Framework v1.7.211208.1222904</span><br><span class="line">  ---  o o oxx --</span><br><span class="line"> /           xx   \</span><br><span class="line">/  ^^^        xx   \</span><br><span class="line"> ------------------</span><br><span class="line"></span><br><span class="line">Run executable document.</span><br><span class="line"></span><br><span class="line">Executable documents are Markdown documents that</span><br><span class="line">contain `python:testflows` code blocks which may contain</span><br><span class="line">any Python code that will be run during document execution.</span><br><span class="line"></span><br><span class="line">All text within executable document except for the</span><br><span class="line">`python:testflows` code blocks are treated as Python f-strings.</span><br><span class="line">Therefore, you must escape any `&#123;`, `&#125;` characters by doubling</span><br><span class="line">them, for example: `&#123;&#123;` or `&#125;&#125;`, otherwise they will be treated</span><br><span class="line">as f-string expressions.</span><br><span class="line"></span><br><span class="line">Text must not contain triple quotes `&quot;&quot;&quot;`. If you need them</span><br><span class="line">then you must use either `text()` function within `python:testflows` code block</span><br><span class="line">to explicitly add them to the the text or use `&#123;triple_quotes&#125;` expression.</span><br><span class="line"></span><br><span class="line">For example:</span><br><span class="line">    ```python:testflows</span><br><span class="line">    text(&#x27;adding triple quotes &quot;&quot;&quot; to text&#x27;)</span><br><span class="line">    ```</span><br><span class="line">    or</span><br><span class="line"></span><br><span class="line">    &#123;triple_quotes&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Specify &#x27;--&#x27; at the end of the command line options to pass</span><br><span class="line">options to the executable document writer program itself.</span><br><span class="line"></span><br><span class="line">For example:</span><br><span class="line">   tfs document run -i &lt;path&gt;--o &lt;path&gt; -- --help</span><br><span class="line"></span><br><span class="line">You must set PYTHONPATH when modules needed by the executable</span><br><span class="line">document are not in the default path.</span><br><span class="line"></span><br><span class="line">For example:</span><br><span class="line">   PYTHONPATH=&lt;path/to/module&gt; tfs document run -i &lt;path&gt; -o &lt;path&gt;</span><br><span class="line"></span><br><span class="line">The `--input` can take multiple files and in such case if `--output`</span><br><span class="line">is specified it is treated as directory name.</span><br><span class="line"></span><br><span class="line">For example,</span><br><span class="line">   tfs document run -i `find $(pwd) -name &quot;*.tfd&quot;` -o . -f</span><br><span class="line">or</span><br><span class="line">   tfs document run -i `find $(pwd) -name &quot;*.tfd&quot;` -o /path/to/output/dir -f</span><br><span class="line"></span><br><span class="line">If input is &#x27;-&#x27; (stdin) and output is &#x27;.&#x27; then output file is &#x27;document.md&#x27;</span><br><span class="line">which is created in the current working directory.</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help                                   show this help message and exit</span><br><span class="line">  -i path [path ...], --input path [path ...]  input file, use &#x27;-&#x27; for stdin, default: stdin</span><br><span class="line">  -o [path], --output [path]                   output file or directory if multiple input files are</span><br><span class="line">                                               passed, default: &#x27;.&#x27; or if input is stdin then &#x27;-&#x27;.</span><br><span class="line">                                               The &#x27;.&#x27; means to create output file in the same</span><br><span class="line">                                               directory as the input file having .md extension and</span><br><span class="line">                                               the &#x27;-&#x27; means output to stdout.</span><br><span class="line">  -f, --force                                  force to override existing output file if it already</span><br><span class="line">                                               exists</span><br><span class="line"></span><br><span class="line">TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">usage: tfs document run [-h] [-i path [path ...]] [-o [path]] [-f]</span><br><span class="line"></span><br><span class="line">  ---- o o o ----</span><br><span class="line"> |   o       o   |</span><br><span class="line"> | 1 o 10010 o 0 |</span><br><span class="line"> |   o       o   |    TestFlows.com Open-Source Software Testing Framework v1.7.211208.1222904</span><br><span class="line">  ---  o o oxx --</span><br><span class="line"> /           xx   \</span><br><span class="line">/  ^^^        xx   \</span><br><span class="line"> ------------------</span><br><span class="line"></span><br><span class="line">Run executable document.</span><br><span class="line"></span><br><span class="line">Executable documents are Markdown documents that</span><br><span class="line">contain `python:testflows` code blocks, which may contain</span><br><span class="line">any Python code that will be run during document execution.</span><br><span class="line"></span><br><span class="line">All text within an executable document except for the</span><br><span class="line">`python:testflows` code blocks are treated as Python f-strings.</span><br><span class="line">Therefore, you must escape any `&#123;`, `&#125;` characters by doubling</span><br><span class="line">them, for example: `&#123;&#123;` or `&#125;&#125;`, otherwise they will be treated</span><br><span class="line">as f-string expressions.</span><br><span class="line"></span><br><span class="line">Text must not contain triple quotes `&quot;&quot;&quot;`. If you need them</span><br><span class="line">then you must use either `text()` function within `python:testflows` code block</span><br><span class="line">to explicitly add them to the text or use `&#123;triple_quotes&#125;` expression.</span><br><span class="line"></span><br><span class="line">For example:</span><br><span class="line">    ```python:testflows</span><br><span class="line">    text(&#x27;adding triple quotes &quot;&quot;&quot; to text&#x27;)</span><br><span class="line">    ```</span><br><span class="line">    or</span><br><span class="line"></span><br><span class="line">    &#123;triple_quotes&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Specify &#x27;--&#x27; at the end of the command line options to pass</span><br><span class="line">options to the executable document writer program itself.</span><br><span class="line"></span><br><span class="line">For example:</span><br><span class="line">   tfs document run -i &lt;path&gt;--o &lt;path&gt; -- --help</span><br><span class="line"></span><br><span class="line">You must set PYTHONPATH when modules needed by the executable</span><br><span class="line">document are not in the default path.</span><br><span class="line"></span><br><span class="line">For example:</span><br><span class="line">   PYTHONPATH=&lt;path/to/module&gt; tfs document run -i &lt;path&gt; -o &lt;path&gt;</span><br><span class="line"></span><br><span class="line">The `--input` can take multiple files, and in such a case, if `--output`</span><br><span class="line">is specified, it is treated as directory name.</span><br><span class="line"></span><br><span class="line">For example,</span><br><span class="line">   tfs document run -i `find $(pwd) -name &quot;*.tfd&quot;` -o . -f</span><br><span class="line">or</span><br><span class="line">   tfs document run -i `find $(pwd) -name &quot;*.tfd&quot;` -o /path/to/output/dir -f</span><br><span class="line"></span><br><span class="line">If input is &#x27;-&#x27; (stdin) and output is &#x27;.&#x27; then output file is &#x27;document.md&#x27;</span><br><span class="line">which is created in the current working directory.</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --help                                   show this help message and exit</span><br><span class="line">  -i path [path ...], --input path [path ...]  input file, use &#x27;-&#x27; for stdin, default: stdin</span><br><span class="line">  -o [path], --output [path]                   output file or directory if multiple input files are</span><br><span class="line">                                               passed, default: &#x27;.&#x27; or if input is stdin then &#x27;-&#x27;.</span><br><span class="line">                                               The &#x27;.&#x27; means to create output file in the same</span><br><span class="line">                                               directory as the input file having .md extension and</span><br><span class="line">                                               the &#x27;-&#x27; means output to stdout.</span><br><span class="line">  -f, --force                                  force to override existing output file if it already</span><br><span class="line">                                               exists</span><br><span class="line"></span><br><span class="line">TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc.</span><br></pre></td></tr></table></figure>
 
 
                     <div class="col-12 divider"></div>
