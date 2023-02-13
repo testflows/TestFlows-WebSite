@@ -5359,22 +5359,21 @@ def my_test(self):
 You can repeat tests by specifying [repeats] parameter either explicitly
 for inline tests or using [Repeats] or [Repeat] decorator for decorated tests.
 
-Repeating a test means to rerun it multiple times. For each run a new [Iteration] is
-creating with the name being the index of the current iteration. The result of each
-iteration is counted and fails are not ignored.
+Repeating a test means to run it multiple times. For each run, a new [Iteration] is
+created, with the name being the index of the current iteration. The result of each
+iteration is counted, and failures are not ignored.
 
 In general, it's useful to repeat a test when you would like to confirm test stability.
-In addition to specifying repeats inside a test program you can also pass [--repeat option]
+In addition to specifying repeats inside a test program, you can also pass [--repeat option]
 to your test program to specify which tests you would like to repeat from the command line.
 
-> {% attention %} If need you need to repeat a test and you would like to count only
-> the last passing iteration see [Retrying Tests] section.
+> {% attention %} If you need to repeat a test and you would like to count only
+> the last passing iteration, see [Retrying Tests] section.
 
-You can combine [Repeats] with [Retries] and if done so retries are performed
+You can combine [Repeats] with [Retries] and if done so, retries are performed
 for each [Iteration].
 
-You can repeat a test `until` either `pass`, `fail` or `complete` criteria is met
-by specifying `until` parameter.
+By specifying `until` parameter, you can repeat a test `until` either `pass`, `fail` or `complete` criteria is met.
 
 > **{% attention %}** Repeats can only be applied to tests that have a [Test Type] or higher.
 > Repeating [Step]s is not supported.
@@ -5393,8 +5392,8 @@ of repeats if an iteration has a failing results. Failing results include [Fail]
 
 ### `complete`
 
-Until **complete** means that iteration over a test will stop only after the specified number
-of repeats is performed regardless of the result of each iteration.
+Until **complete** indicates that iteration over a test will end only after the specified number
+of repetitions completes, regardless of the outcome of the result of each iteration.
 
 
 ## Repeats
@@ -5418,21 +5417,21 @@ def my_feature(self):
     Scenario(run="my_scenario")
 ```
 
-If you want to specify to repeat only one test it is more convenient to use [Repeat]
+If you want to specify that only one test should repeat, it is more convenient to use [Repeat]
 decorator instead.
 
 ## Repeat
 
 The [Repeat] decorator is used to specify a repetition for a single test that has
 a [Test Type] or higher. Repeating test [Step]s is not allowed. The [Repeat] decorator is
-usually applied the test to which the decorator is attached as by default, the `pattern` is empty
-and means it applies to the current test and the `until` is set to `complete`
+usually applied to the test to which the decorator is attached as, by default, the `pattern` is empty
+and means it applies to the current test, and the `until` is set to `complete`
 which means that the test will be repeated the specified number of times.
 
-> **{% attention %}** If you need to specify repeat for more than one test
+> **{% attention %}** If you need to specify repeat for more than one test,
 > use [Repeats] decorator instead.
 
-> **{% attention %}** [Repeat] decorator cannot be applied more than one time
+> **{% attention %}** [Repeat] decorator cannot be applied more than once
 > to the same test.
 
 For example,
@@ -5444,8 +5443,8 @@ def my_scenario(self):
     pass
 ```
 
-If you want to specify custom `pattern` or `until` condition then pass them
-using `pattern` and `until` parameters respectively.
+If you want to specify a custom `pattern` or `until` condition, then pass them
+using the parameters `pattern` and `until` respectively.
 
 ```python
 @TestScenario
@@ -5475,15 +5474,15 @@ where
 
 * `count` number of iterations, default: `None`
 * `until` stop condition, either `pass`, `fail`, or `complete`, default: `complete`
-* `delay` delay in sec between iterations, default: 0 sec
+* `delay` delay in seconds between iterations, default: 0 seconds
 * `backoff` backoff multiplier that is applied to the delay, default: 1
 * `jitter` jitter added to delay between iterations specified as a tuple(min, max), default: `(0,0)`
 
-and returns an iterator that can be used in `for` loop. For each iteration
-the iterator returns a `Iteration` object that you can use to wrap the code that needs to be repeated.
+and returns an iterator that can be used in `for` loop. For each iteration,
+the iterator returns an `Iteration` object that you can use to wrap the code that needs to be repeated.
 
-For example, below we repeat for the code `5` iterations until all iterations complete using `0.1` sec delay
-between repeats, backoff multiplier of `1.2`, and jitter range between `-0.05` min to `0.05` max.
+For example, below, we repeat for the code `5` times until all iterations are complete using `0.1` sec delay
+between each iteration, a backoff multiplier of `1.2`, and jitter range between `-0.05` min to `0.05` max.
 
 ```python
 import random
@@ -5497,8 +5496,8 @@ with Scenario("my test"):
                 assert random.random() > 0.8, error()
 ```
 
-The code block is considered as succeeded if no exception is raised during any of the iterations.
-If an exception is raised the code, the corresponding iteration is marked as failed.
+The code block is considered successful if no exception is raised during any of the iterations.
+If an exception is raised in the code, the corresponding iteration is marked as failed.
 The until condition controls when to stop iterations.
 
 
@@ -5507,7 +5506,7 @@ The until condition controls when to stop iterations.
 The [repeat() function] can be used to repeat any function call
 including decorated tests.
 
-It takes the following arguments where only `func` is mandatory.
+It takes the following arguments, where only `func` is mandatory.
 
 ```python
 repeat(func, count=None, until="complete", delay=0, backoff=1, jitter=None)(*args, **kwargs)
@@ -5523,7 +5522,7 @@ where
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
 
-that returns a wrapper function which then can be called with any arguments that are
+that returns a wrapper function, which then can be called with any arguments that are
 passed to the repeated `func` on each iteration.
 
 For example,
@@ -5588,29 +5587,29 @@ with Test("my test"):
 # Retrying Tests
 
 You can retry tests until they pass or until the number of retries is exhausted
-or timeout is reached by specifying [retries] parameter either explicitly
+or a timeout is reached by specifying [retries] parameter either explicitly
 for inline tests or using [Retries] or [Retry] decorator for decorated tests.
 
-Retrying a test means to rerun it multiple times until it passes.
+Retrying a test means to run it multiple times until it passes.
 A pass means that a retry has either [OK], [XFail], [XError], [XNull], [XOK], or [Skip]
 result.
 
-For each attempt a [RetryIteration] is created with the name corresponding to the
-attempt number. Any fails of an individual
-attempt are ignored except for the last retry attempt. Last [RetryIteration]
+For each attempt, a [RetryIteration] is created with a name corresponding to the
+attempt number. Any failures of an individual
+attempt are ignored except for the last retry attempt. The last [RetryIteration]
 is marked using [LAST_RETRY] flag.
 
-In general, it's useful to retry a test when test is unstable and sometimes could fail
-but you still would like to run it as long as it passes within the specified number
+In general, it's useful to retry a test when test is unstable and sometimes could fail.
+However, you still would like to run it as long as it passes within the specified number
 of attempts or within a specified timeout period.
 
 ## Retries
 
-The [Retries] decorator can be applied to any decorated test including steps or higher.
+The [Retries] decorator can be applied to any decorated test, including steps or higher.
 The [Retries] decorator should be used when you want to specify more than one test to be retried.
 The tests to be retried are selected using test [pattern]s. The [Retries] decorator sets [retries] attribute
-of the test and causes the test to be retried until either it passes or maximum
-number of retries is reached or timeout occurs if a timeout was specified.
+of the test and causes the test to be retried until either it passes, the maximum
+number of retries is reached, or timeout occurs if a timeout was specified.
 
 The [Retries] decorator takes as an argument a dictionary of the following form
 
@@ -5630,11 +5629,11 @@ where
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
 
-If both `count` and `timeout` are specified then the test is retried until
-either until maximum retry `count` is reached or `timeout` is hit - whichever comes first.
+If both `count` and `timeout` are specified, then the test is retried 
+either until the maximum retry `count` is reached or `timeout` is hit - whichever comes first.
 
-> **{% attention %}** By default, if number of retries or timeout is not specified then
-> the test will be retried until it passes but note that if the test can't reach a passing result
+> **{% attention %}** By default, if the number of retries or timeout is not specified, then
+> the test will be retried until it passes, but note that if the test can't reach a passing result
 > then it can lead to an infinite loop.
 
 For example,
@@ -5650,25 +5649,25 @@ def my_feature(self):
     Scenario(name="my scenario 1", run=my_scenario)
 ```
 
-will retry test `my scenario 0` maximum `5` times and `my scenario 1` maximum 10 times.
+will retry test `my scenario 0` up to `5` times and `my scenario 1` up to 10 times.
 
-If you want to retry only one test it is more convenient to use [Retry]
+If you want to retry only one test, it is more convenient to use [Retry]
 decorator instead.
 
 ## Retry
 
 The [Retry] decorator is used to specify a retry for a single test that has
 a [Step Type] or higher. The [Retry] decorator is
-usually applied the test to which the decorator is attached as by default, the `pattern` is empty
-and that means it applies to the current test.
+usually applied to the test to which the decorator is attached, as by default, the `pattern` is empty,
+which means it applies to the current test.
 The [Retry] decorator sets [retries] attribute
-of the test and causes the test to be retried until either it passes, maximum
+of the test and causes the test to be retried until either it passes, the maximum
 number of retries or timeout is reached.
 
-> **{% attention %}** If you need to specify retries for more than one test
+> **{% attention %}** If you need to specify retries for more than one test,
 > use [Retries] decorator instead.
 
-> **{% attention %}** [Retry] decorator cannot be applied more than one time
+> **{% attention %}** [Retry] decorator cannot be applied more than once
 > for the same test.
 
 The [Retry] decorator can take the following optional arguments
@@ -5687,11 +5686,11 @@ where
   normally distributed between the `min` and `max` values, default: `None`
 * `pattern` is the test name pattern, default: `""` which means the current test
 
-If both `count` and `timeout` are specified then the test is retried until
-either until maximum retry `count` is reached or `timeout` is hit - whichever comes first.
+If both `count` and `timeout` are specified, then the test is retried until
+either the maximum retry `count` is reached or `timeout` is hit - whichever comes first.
 
-> **{% attention %}** By default, if number of retries or timeout is not specified then
-> the test will be retried until it passes but note that if the test can't reach a passing result
+> **{% attention %}** By default, if number of retries or timeout is not specified, then
+> the test will be retried until it passes, but note that if the test can't reach a passing result
 > then it can lead to an infinite loop.
 
 For example,
@@ -5714,14 +5713,14 @@ def my_scenario(self):
 
 # Retrying Code or Function Calls
 
-When you need to retry a block of code or a function call you can use
+When you need to retry a block of code or a function call, you can use
 [retries class] and [retry() function] respectively. This class and function
-is flexible enough to retry functions or inline code that contains tests.
+are flexible enough to retry functions or inline code that contains tests.
 
 ## Using `retries()`
 
 The [retries class] can be used to retry any block of inline code and is flexible
-enough to retry code includes tests.
+enough to retry code that includes tests.
 
 It takes the following optional arguments:
 
@@ -5738,12 +5737,12 @@ where
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
 
-and returns an iterator that can be used in `for` loop. For each iteration
-the iterator return a `RetryIteration` object that wrap the code that needs to be retries.
+and returns an iterator that can be used in `for` loop. For each iteration,
+the iterator returns a `RetryIteration` object that wraps the code that needs to be retries.
 
 For example, below we wait for the code to succeed within `5` sec using `0.1` sec delay
-between retries and backoff multiplier of `1.2` with jitter range
-between `-0.05` min to `0.05` max.
+between retries and backoff multiplier of `1.2` with a jitter range
+of `-0.05` min to `0.05` max.
 
 ```python
 import random
@@ -5757,18 +5756,18 @@ with Scenario("my test"):
                 assert random.random() > 0.8, error()
 ```
 
-The code block is considered as succeeded if no exception is raised.
+The code block is considered successful if no exception is raised.
 
-If an exception is raised the code is retried until it succeeds or if specified
+If an exception is raised, the code is retried until it succeeds, or, if specified,
 the maximum number of retries or timeout is reached.
 
 
 ## Using `retry()`
 
-The [retry() function] can be used to retry any function call
+The [retry() function] can be used to retry any function call,
 including decorated tests.
 
-It takes the following arguments where only `func` is mandatory.
+It takes the following arguments, where only `func` is mandatory.
 
 ```python
 retry(func, count=None, timeout=None, delay=0, backoff=1, jitter=None)(*args, **kwargs)
@@ -5784,7 +5783,7 @@ where
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
 
-that returns a wrapper function which then can be called with any arguments that are
+that returns a wrapper function, which then can be called with any arguments that are
 passed to the retried `func` on each retry.
 
 For example,
@@ -5851,13 +5850,13 @@ with Test("my test"):
 All the test programs have a common optional `--config` argument that allows to
 specify one or more configuration files in [YML](https://yaml.org/) format.
 The configuration files can be used to specify either common test program arguments
-such as [--no-colors], [--output], etc. as well custom
-[Command Line Arguments](#Command-Line-Arguments) that added using
+such as [--no-colors], [--output], etc. as well as custom
+[Command Line Arguments](#Command-Line-Arguments) that were added using
 [argparser](#argparser) parameter.
 
 > *{% attention %}* Technically [YML] files should always start with `---`
 > to indicate the start of a new document. However, in *{% testflows %}* configuration
-> files you can omit them.
+> files, you can omit them.
 
 ## Test Run Arguments
 
@@ -5876,7 +5875,7 @@ with Scenario("my test"):
 ```
 
 can be called with the following [YML] config file to set [--output] and [--no-colors]
-options for the test program run.
+options for the test program to run.
 
 > `config.yml`
 >
@@ -5887,7 +5886,7 @@ test run:
 ```
 
 > {% attention %} Names of the common test run arguments have the same names as the corresponding
-> command line option without the `--` prefix.
+> command line option, without the `--` prefix.
 >
 > For example,
 >  *  `--no-colors` is `no-colors:`
@@ -5961,9 +5960,9 @@ Sep 24,2021 21:40:52   ⟥  Scenario my test
 
 ## Applying Multiple YML Files
 
-If more than one [YML] configuration file is specified on the command line
-then config files are applied left to right based on the order they are specified
-on the command line with the right most file having the highest precedence.
+If more than one [YML] configuration file is specified on the command line,
+the configuration files are then applied in the order specified, from left to right
+as specified on the command line, with the right most file having the highest precedence.
 
 For example,
 
@@ -6233,9 +6232,9 @@ where
 
 * `type` is either a string or `result` function.
 * `multiline` (optional) flag to indicate if input is multiline string, default: `False`
-* `choices` (optional) a list of valid choices (only applies if `type` is string)
-* `confirm` (optional) ask for confirmation, default: `True`
-* `test` the instance of the test with which input message will be associated, default: current test
+* `choices` (optional) a list of valid options (only applies if `type` is string)
+* `confirm` (optional) request confirmation, default: `True`
+* `test` the instance of the test that will be associated with the input message, default: current test
 
 For example,
 
@@ -6281,7 +6280,7 @@ Nov 15,2021 17:22:26   ⟥  Scenario my scenario
 
 ### -h, --help
 
-The `-h`, `--help` option can be used to obtain help message that describes all the command line
+The `-h`, `--help` option can be used to obtain a help message that describes all the command line
 options a test can accept. For example,
 
 ```bash
@@ -6290,7 +6289,7 @@ python3 test.py --help
 
 ### -l, --log
 
-The `-l`, `--log` option can be used to specify the path of the file where test log will be saved.
+The `-l`, `--log` option can be used to specify the path of the file where the test log will be saved.
 For example,
 
 ```bash
@@ -6330,7 +6329,7 @@ Enable debugging mode. Turned off by default.
 
 ### --output
 
-The `--output` option can be used to control output format of messages printed to `stdout`.
+The `--output` option can be used to control the output format of messages printed to `stdout`.
 
 ### --no-colors
 
@@ -6338,7 +6337,7 @@ The `--no-colors` option can be used to turn off terminal color highlighting.
 
 ### --id
 
-The `--id` option can be used to specify custom [Top Level Test] id.
+The `--id` option can be used to specify a custom [Top Level Test] id.
 
 ### --show-skipped
 
@@ -6350,11 +6349,11 @@ Show retried tests.
 
 ### --test-to-end
 
-Force all tests to be test to end and continue the run even if one of the tests fails.
+Force all tests to be completed and continue the run even if one of the tests fails.
 
 ### --first-fail
 
-Force all tests to be first fail and stop the run on the first failing test.
+Force all tests to fail and stop the run on the first failing test.
 
 ### Filtering
 
@@ -6362,7 +6361,7 @@ Force all tests to be first fail and stop the run on the first failing test.
 
 Options such as [--only], [--skip], [--start], [--end] as well as
 [--pause-before] and [--pause-after] take a [pattern] to specify the exact test
-to which the option shall be applied.
+which the option will be applied.
 
 The [pattern] is used to match test names using a [unix-like file path pattern] that supports wildcards
 
@@ -6409,14 +6408,14 @@ the specified test.
 #### --only-tags
 
 The `--only-tags` option can be used to filter the test flow so that only
-tests with particular tag are selected to run and other are skipped.
+tests with a particular tag are selected to run and others are skipped.
 
 > **{% attention %}** Note that mandatory tests will still be run.
 
 #### --skip-tags
 
 The `--skip-tags` option can be used to filter the test flow so that only
-tests with particular tag are skipped.
+tests with a particular tag are skipped.
 
 > **{% attention %}** Note that mandatory tests will still be run.
 
@@ -6572,7 +6571,7 @@ Last retry flag. This flag is auto-set for the last retry iteration.
 
 # Controlling Output
 
-Test output can be controlled with `-o` or [--output] option which specifies the output format to use
+Test output can be controlled with `-o` or [--output] option, which specifies the output format to use
 to print to `stdout`. By default, the most detailed `nice` output is used.
 
 ```bash
@@ -6582,7 +6581,7 @@ to print to `stdout`. By default, the most detailed `nice` output is used.
                                                   'raw'], default: 'nice'
 ```
 
-For example, you can use the following test and see how output format
+For example, you can use the following test and see how the output format
 changes based on the output that is specified.
 
 > `test.py`
@@ -6601,7 +6600,7 @@ with Module("regression", flags=TE, attributes=[("name","value")], tags=("tag1",
 
 The [`nice`] output format is the default output format and provides the most
 details when developing and debugging tests. This output format includes all test types,
-their attributes and results as well as any messages that are associated with them.
+their attributes and results, as well as any messages that are associated with them.
 
 > **{% attention %}** This output format is the most useful for developing and
 > debugging an individual test.
@@ -6642,11 +6641,11 @@ python3 test.py
 
 The [`brisk`] output format is very similar to [`nice`] output format but
 omits all steps (tests that have [Step Type]). This format is useful when
-you would like to focus on actions of the test such as commands executed
-on the system under test rather than on the test procedure itself.
+you would like to focus on the actions of the test, such as commands executed
+on the system under test, rather than on the test procedure itself.
 
 > **{% attention %}** This output format is useful for
-> debugging individual test when you would like to omit test steps.
+> debugging individual tests when you would like to omit test steps.
 > This output format is not useful when tests are executed in parallel.
 
 ```bash
@@ -6673,7 +6672,7 @@ Sep 25,2021 12:05:25     ⟥  Scenario my test
 The [`short`] output format provides a shorter output than [`nice`] output format
 as only test and result messages are formatted.
 
-> **{% attention %}** This output format is very useful to highlight and verify test procedure.
+> **{% attention %}** This output format is very useful to highlight and verify test procedures.
 > This output format is not useful when tests are executed in parallel.
 
 ```bash
@@ -6700,10 +6699,10 @@ OK
 ## `classic` Output
 
 The [`classic`] output format shows only full test names for
-test and result messages for any test that has [Test Type] of higher.
-Tests that have [Step Type] are not showed.
+any test with a [Test Type] of higher will receive test and result messages.
+Tests with [Step Type] are not displayed.
 
-> **{% attention %}** This output format can be used for CI/CD runs as long as
+> **{% attention %}** This output format can be used for CI/CD runs as long as the
 > number of tests is not too large.
 > This output format can be used when tests are executed in parallel.
 
@@ -6723,7 +6722,7 @@ The [`progress`] output format shows the progress of the test run.
 The output is always printed on one line on progress updates and is useful
 when running tests locally.
 
-Any test fails are printed inline as soon as they occur.
+Any test failures are printed inline as soon as they occur.
 
 > **{% attention %}** This output format should not be used for CI/CD runs
 > as it outputs terminal control codes to update the same line.
@@ -6739,12 +6738,12 @@ Executing 2 tests /regression/my test/I do something
 ## `fails` Output
 
 The [`fails`] output format only shows failing results [Fail], [Error], and [Null]
-and crossed out results [XFail], [XError], [XNull], [XOK].
+and crossed out the results [XFail], [XError], [XNull], [XOK].
 
 Failing results are only shown for tests with [Test Type] of higher.
 
 > **{% attention %}** This output format can be used for CI/CD runs
-> as long as the number of cross out results is not too large otherwise
+> as long as the number of crossed-out results is not too large; otherwise,
 > use [`new-fails`] output format instead.
 > This output format can be used when tests are executed in parallel.
 
@@ -6781,10 +6780,10 @@ python3 test.py -o new-fails
 ## `slick` Output
 
 The [`slick`] output format provides even shorter output than [`short`] output format
-as only shows test and result messages for any test that has [Test Type] of higher.
+as it only shows test and result messages for any test that has [Test Type] of higher.
 Tests that have [Step Type] are not showed.
 
-> **{% attention %}** This output format is more of an eye-candy.
+> **{% attention %}** This output format is more eye-candy.
 > This output format is not useful when tests are executed in parallel.
 
 ```bash
@@ -6810,7 +6809,7 @@ python3 test.py -o quiet
 ## `manual` Output
 
 The [`manual`] output format is only suitable for running manual or semi-automated
-tests where tester is constantly prompted for input. The terminal screen is always cleared
+tests where the tester is constantly prompted for input. The terminal screen is always cleared
 before starting any test with [Test Type] or higher.
 
 > **{% attention %}** This output format is only useful for manual or semi-automated tests.
@@ -6831,7 +6830,7 @@ Test description.
 The [`raw`] output format outputs raw messages.
 
 > **{% attention %}** This output format is only useful for **{% testflows %}**
-> developers and curious users that want to understand what raw messages look like.
+> developers and curious users who want to understand what raw messages look like.
 
 ```bash
 python3 test.py -o raw
@@ -6878,7 +6877,7 @@ Passing
 
 ### Failing
 
-This report generates `Failing` section and show failing tests.
+This report generates `Failing` section and shows failing tests.
 
 ```bash
 Failing
@@ -6899,7 +6898,7 @@ Known
 
 ### Unstable
 
-This report generates `Unstable` section. Tests are considered to be unstable
+This report generates `Unstable` section. Tests are considered unstable
 if they are repeated and different iterations have different results.
 
 ```bash
@@ -6910,7 +6909,7 @@ Unstable
 
 ### Coverage
 
-This reports generates `Coverage` section. It is only generated if
+This report generates `Coverage` section. It is only generated if
 at least one `Specification` is attached to any of the tests and shows
 requirements coverage statistics for each `Specification`.
 
@@ -6935,8 +6934,8 @@ Total time 12ms
 
 ### Version
 
-This report generate a message that shows date time of test run
-and version of the framework that was used to run the test program.
+This report generates a message that shows the date time of the test run
+and the version of the framework that was used to run the test program.
 
 ```bash
 Executed on Sep 25,2021 12:05
@@ -6947,7 +6946,7 @@ TestFlows.com Open-Source Software Testing Framework v1.7.210922.1181131
 
 There are times when color highlighting might be in the way. For example,
 when piping output to a different utility or saving it into the file.
-In both of these cases use [--no-colors] to tell **{% testflows %}**
+In both of these cases, use [--no-colors] to tell **{% testflows %}**
 to turn off adding terminal control color codes.
 
 ```bash
@@ -6975,7 +6974,7 @@ tail -f test.log | tfs --no-colors transform nice | less
 ## Use `--no-colors` in Code
 
 You can also detect if terminal color codes are turned off in code
-by looking at `settings.no_colors` attribute as follows
+by looking at `settings.no_colors` attribute, as follows
 
 ```python
 import testflows.settings as settings
@@ -6988,7 +6987,7 @@ with Test("my test"):
 
 # Forcing To Abort On First Fail
 
-You can force test program to abort on first fail irrespective
+You can force a test program to abort on first failure irrespective
 of the presence of [TE] flags by using [--first-fail]
 test program argument.
 
@@ -7000,7 +6999,7 @@ python3 test.py --first-fail
 
 # Forcing To Continue On Fail
 
-You can force test program to continue running if any of the tests fail
+You can force the test program to continue running if any of the tests fail
 irrespective of the presence of [TE] flags by using [--test-to-end]
 test program argument.
 
@@ -7013,8 +7012,8 @@ python3 test.py --test-to-end
 # Enabling Debug Mode
 
 You can enable debug mode by specifying [--debug] option to your test program.
-When debug mode is enabled the tracebacks will include more details such as
-internal function calls inside the framework which are hidden by default to reduce
+When debug mode is enabled, the tracebacks will include more details, such as
+internal function calls inside the framework that are hidden by default to reduce
 clutter.
 
 ```bash
@@ -7024,7 +7023,7 @@ python3 test.py --debug
 ## Use `--debug` in Code
 
 You can also trigger actions in your test code based on if [--debug] option
-was specified or not. When [--debug] option is specified the value
+was specified or not. When [--debug] option is specified, the value
 can be retrieved from `settings.debug` as follows
 
 ```python
@@ -7050,7 +7049,7 @@ current_time(test=None)
 
 where
 
-* `test` (optional) the instance of the test for which to obtain test time, default: current test
+* `test` (optional) the instance of the test for which a test time should be obtained, default: current test
 
 The returned value is fixed after test has finished its execution.
 
@@ -7067,7 +7066,7 @@ with Scenario("my test"):
 
 # Show Test Data
 
-After test program is executed you can retrieve different test data related to the test run
+After the test program is executed, you can retrieve different test data related to the test run
 using `tfs show` command.
 
 The following commands are available:
@@ -7136,11 +7135,11 @@ where
 * `group` secret group (optional)
 * `uid` secret unique identifier (optional)
 
-The `name` is the only mandatory argument when creating a secret, the other arguments `type`,
-`group`, `uid` are optional.
+ When creating a secret,only the `name` is required, the other arguments `type`,
+`group`, `uid`, are optional.
 
 The name must be a valid regex group name as defined by Python's [re] module.
-For example, no spaces or dashes are allowed in the name, you must use underscored instead.
+For example, no spaces or dashes are allowed in the name, you must use underscores instead.
 
 ```python
 # secret = Secret("my secret")("my secret value") # invalid, empty spaces not allowed
@@ -7177,8 +7176,8 @@ Mar 03,2022 11:22:01   ⟥  Scenario using secrets
 Secret values are only filtered by **{% testflows %}** in messages added to the test by [message() function],
 [note() function], [debug() function], [trace() function] and messages in results.
 
-If you need to create multiple secrets, the names of each secret must be unique,
-otherwise you will get an error.
+If you need to create multiple secrets, the names of each secret must be unique
+otherwise, you will get an error.
 
 ```bash
 Mar 24,2022 9:54:46    ⟥  Scenario using secrets
@@ -7206,7 +7205,7 @@ with Scenario("using secrets"):
 
 ## Secrets in Argument Parser
 
-You can easily use secrets in Argument Parser by setting `type` of
+You can easily use secrets in the Argument Parser by setting `type` of
 the argument to the [Secret class] object.
 
 For example,
@@ -7227,13 +7226,13 @@ def regression(self, arg0, arg1):
 # Testing Documentation
 
 Use [testflows.texts] module to help you write auto verified software documentation
-by combining your text with the verification procedure of the described functionality
+by combining your text with the verification procedure for the described functionality,
 in the same source file while leveraging the power and flexibility of **{% testflows %}**.
 
-Source files for auto verified documentation by convention have `.tfd` extension
+By convention the `.tfd` extension is used for source files for auto verified documentation
 and are written using Markdown. Therefore, all `.tfd` files are valid
 Markdown files. However, `.tfd` files are only the source files for your documentation
-that must be executed using `tfs document run` command to produce final
+that must be executed using `tfs document run` command to produce the final
 Markdown documentation files.
 
 ```bash
@@ -7310,7 +7309,7 @@ Follow the example Markdown document to get to know how you can write auto verif
     stays up to date.
 ````
 
-Now if you want to give it a try then save the above Markdown into `test.tfd` file but make sure
+Now, if you want to give it a try, then save the above Markdown into `test.tfd` file, but make sure
 to remove the indentation.
 
 Then you can run it as
@@ -7410,7 +7409,7 @@ file `tutorial.md` that we can use on our documentation site.
 tfs document run -i tutorial.tfd -o tutorial.md
 ```
 
-We know that the instructions in this article are correct as [testflows.texts] has executed them during
+We know that the instructions in this article are correct as [testflows.texts] has executed them during the
 writing of `tutorial.md` just like a technical writer would execute the commands
 as part of the process of writing a technical article.
 
@@ -7472,9 +7471,9 @@ By the way, here is the final Markdown we get
 ## Passing Arguments
 
 Execution of any `.tfd` file using `tfs document run` command results in execution of a document writer program.
-This is similar to the test programs you write with **{% testflows %}**.
+This is comparable to the test programs you write with **{% testflows %}**.
 
-You can control different aspects of writer program execution by passing arguments as follows.
+You can control different aspects of writer program's execution by passing arguments as follows.
 
 ```bash
 tfs document run -t test.tfd -o test.md -- <writer program arguments>
@@ -7488,7 +7487,7 @@ tfs document run -- --help
 
 ## Controlling Output Format
 
-You can control output format by passing `-o/--output` argument to your writer program.
+By passing `-o/--output` argument to your writer program, you can control output format
 
 For example,
 
@@ -7502,7 +7501,7 @@ See `-h/--help` for other formats.
 
 Here are some common errors that you might run into while writing your `.tfd` source files.
 
-All exceptions will point to the line number where the error has occured.
+All exceptions will point to the line number indicating where the error occurred.
 
 ### Unescaped Curly Brackets
 
@@ -7533,7 +7532,7 @@ when executed will result in the `NameError`.
 
 ### Syntax Errors
 
-If you have a syntax error in the `python:testflows` block you will get an error.
+If you have a syntax error in the `python:testflows` block, you will get an error.
 
 For example,
 
@@ -7565,7 +7564,7 @@ when executed will result in the SyntaxError.
 
 ### Triple Quotes
 
-If your text have triple quotes like `"""` it will result in an error.
+If your text has triple quotes, like `"""` it will result in an error.
 
 For example,
 
@@ -7630,10 +7629,10 @@ usage: tfs document run [-h] [-i path [path ...]] [-o [path]] [-f]
 Run executable document.
 
 Executable documents are Markdown documents that
-contain `python:testflows` code blocks which may contain
+contain `python:testflows` code blocks, which may contain
 any Python code that will be run during document execution.
 
-All text within executable document except for the
+All text within an executable document except for the
 `python:testflows` code blocks are treated as Python f-strings.
 Therefore, you must escape any `{`, `}` characters by doubling
 them, for example: `{{` or `}}`, otherwise they will be treated
@@ -7641,7 +7640,7 @@ as f-string expressions.
 
 Text must not contain triple quotes `"""`. If you need them
 then you must use either `text()` function within `python:testflows` code block
-to explicitly add them to the the text or use `{triple_quotes}` expression.
+to explicitly add them to the text or use `{triple_quotes}` expression.
 
 For example:
     ```python:testflows
@@ -7664,8 +7663,8 @@ document are not in the default path.
 For example:
    PYTHONPATH=<path/to/module> tfs document run -i <path> -o <path>
 
-The `--input` can take multiple files and in such case if `--output`
-is specified it is treated as directory name.
+The `--input` can take multiple files, and in such a case, if `--output`
+is specified, it is treated as directory name.
 
 For example,
    tfs document run -i `find $(pwd) -name "*.tfd"` -o . -f
