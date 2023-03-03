@@ -5643,7 +5643,7 @@ where
 * `backoff` delay backoff multiplier, default: `1`
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
-* `inital_delay` initial delay in seconds, default: `0`
+* `initial_delay` initial delay in seconds, default: `0`
 
 If both `count` and `timeout` are specified, then the test is retried
 either until the maximum retry `count` is reached or `timeout` is hit - whichever comes first.
@@ -5701,7 +5701,7 @@ where
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
 * `pattern` is the test name pattern, default: `""` which means the current test
-* `inital_delay` initial delay in seconds, default: `0`
+* `initial_delay` initial delay in seconds, default: `0`
 
 If both `count` and `timeout` are specified, then the test is retried until
 either the maximum retry `count` is reached or `timeout` is hit - whichever comes first.
@@ -5753,7 +5753,7 @@ where
 * `backoff` delay backoff multiplier, default: `1`
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
-* `inital_delay` initial delay in seconds, default: `0`
+* `initial_delay` initial delay in seconds, default: `0`
 
 and returns an iterator that can be used in `for` loop. For each iteration,
 the iterator returns a `RetryIteration` object that wraps the code that needs to be retried.
@@ -5800,7 +5800,7 @@ where
 * `backoff` delay backoff multiplier, default: `1`
 * `jitter` tuple of the form `(min, max)` that specifies delay jitter
   normally distributed between the `min` and `max` values, default: `None`
-* `inital_delay` initial delay in seconds, default: `0`
+* `initial_delay` initial delay in seconds, default: `0`
 
 that returns a wrapper function, which then can be called with any arguments that are
 passed to the retried `func` on each retry.
