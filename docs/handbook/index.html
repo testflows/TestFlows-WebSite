@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1677809785146" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1677809785146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1677810005673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1677810005673" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1677809785146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1677810005673" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -2509,7 +2509,7 @@ number of retries is reached, or timeout occurs if a timeout was specified.</p>
 <li><code>backoff</code> delay backoff multiplier, default: <code>1</code></li>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
-<li><code>inital_delay</code> initial delay in seconds, default: <code>0</code></li>
+<li><code>initial_delay</code> initial delay in seconds, default: <code>0</code></li>
 </ul>
 <p>If both <code>count</code> and <code>timeout</code> are specified, then the test is retried
 either until the maximum retry <code>count</code> is reached or <code>timeout</code> is hit - whichever comes first.</p>
@@ -2551,7 +2551,7 @@ for the same test.</p>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
 <li><code>pattern</code> is the test name pattern, default: <code>&quot;&quot;</code> which means the current test</li>
-<li><code>inital_delay</code> initial delay in seconds, default: <code>0</code></li>
+<li><code>initial_delay</code> initial delay in seconds, default: <code>0</code></li>
 </ul>
 <p>If both <code>count</code> and <code>timeout</code> are specified, then the test is retried until
 either the maximum retry <code>count</code> is reached or <code>timeout</code> is hit - whichever comes first.</p>
@@ -2582,7 +2582,7 @@ enough to retry code that includes tests.</p>
 <li><code>backoff</code> delay backoff multiplier, default: <code>1</code></li>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
-<li><code>inital_delay</code> initial delay in seconds, default: <code>0</code></li>
+<li><code>initial_delay</code> initial delay in seconds, default: <code>0</code></li>
 </ul>
 <p>and returns an iterator that can be used in <code>for</code> loop. For each iteration,
 the iterator returns a <code>RetryIteration</code> object that wraps the code that needs to be retried.</p>
@@ -2608,7 +2608,7 @@ including decorated tests.</p>
 <li><code>backoff</code> delay backoff multiplier, default: <code>1</code></li>
 <li><code>jitter</code> tuple of the form <code>(min, max)</code> that specifies delay jitter
 normally distributed between the <code>min</code> and <code>max</code> values, default: <code>None</code></li>
-<li><code>inital_delay</code> initial delay in seconds, default: <code>0</code></li>
+<li><code>initial_delay</code> initial delay in seconds, default: <code>0</code></li>
 </ul>
 <p>that returns a wrapper function, which then can be called with any arguments that are
 passed to the retried <code>func</code> on each retry.</p>
