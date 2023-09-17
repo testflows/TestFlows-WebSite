@@ -2,6 +2,7 @@
 layout: handbook
 p: /handbook
 title: Handbook
+description: TestFlows handbook that provides documentation for its features and functionality
 heading: Your handbook for using the framework
 icon: fas fa-book pt-5 pb-5
 ---

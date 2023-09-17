@@ -1,5 +1,6 @@
 ---
 title: Credits
+description: TestFlows website credits
 heading: Credits and special thanks
 icon: fas fa-id-badge pt-5 pb-5
 ---
