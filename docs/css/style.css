@@ -3,6 +3,10 @@ html, body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
+.sidebar {
+    padding-top: 20px;
+}
+
 .text-primary {
     color: #425066;
 }
@@ -213,7 +217,7 @@ blockquote {
 
 .post-body {
     margin: auto;
-    font-size: 1.2em;
+    font-size: 1.1em;
 }
 .post-body h1,
 .post-body h2,
