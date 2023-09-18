@@ -5,6 +5,7 @@ date: 2019-11-24 08:26:26
 author: Vitaliy Zakaznikov
 image:
    asset: images/test-steps.png
+icon: fas fa-glasses pt-5 pb-5
 ---
 
 Writing tests is not an easy task as it can seem at first glance.
