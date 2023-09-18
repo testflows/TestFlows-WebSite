@@ -310,12 +310,16 @@ blockquote {
     padding: 20vh 0 10vh 0;
     background: black;
     color: white;
-    padding-bottom: 1em;
+    padding-bottom: 3em;
     position: relative !important;
     overflow: hidden;
     transform: translateZ(0);
     backface-visibility: hidden;
     font-weight: 300;
+    background-image: url(/images/wave.png);
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-origin: content-box;
 }
 
 .banner.not-in-view .firefly,
