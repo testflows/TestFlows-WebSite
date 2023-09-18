@@ -457,6 +457,10 @@ code, pre, figure.highlight {
     color: #b3b3b3 !important;
 }
 
+.nav-menu .fas {
+    color: #54e5ae;
+}
+
 .nav-menu {
     text-align: center;
 }
@@ -540,7 +544,7 @@ a.header-anchor {
 }
 
 .navbar-brand > img {
-  height: 42px;
+  height: 52px;
 }
 
 /**
