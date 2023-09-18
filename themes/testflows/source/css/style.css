@@ -176,25 +176,44 @@ blockquote {
 }
 
 .post-header {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.blog .post-header {
     border-bottom: 2px solid #54e5ae;
-    margin-bottom: 2em;
+    padding-bottom: 2em;
+    margin-bottom: 4em;
+}
+
+.post-summary a:hover {
+    text-decoration: none;
 }
 
 .post-summary h1 {
     font-weight: bold;
-    color: #ff8c16;
+    color: #2c3e50;
     text-align: start;
     padding-bottom: 1em;
     font-family: Ubuntu;
+}
+
+.post-summary h1:hover {
+    color: #ff8c16;
 }
 
 .post-summary p {
     display: contents;
 }
 
+.post-footer {
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
 .post-body {
     margin: auto;
-    font-size: 1.1em;
+    font-size: 1.2em;
 }
 .post-body h1,
 .post-body h2,

@@ -16,9 +16,57 @@
     </div>
 </div>
 <div class="container" style="padding-bottom: 2em !important">
-    <div class="row">
-        <div class="col">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;"><%- page.title %></h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name"><%- page.author %></span>
+                    <span class="authored-date text-nowrap"><%= date(page.date, 'MMMM D, YYYY') %></span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a href="https://twitter.com/intent/tweet?url=<%- page.permalink %>">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<%- page.permalink %>">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- page.permalink %>">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="<%- config.root %><%- page.image.asset %>"></img>
+            <span class="post-image-credit"><%- page.image.credit %></span>
+        </div>
+    </div>
+    <div class="post-body row">
+        <div class="col-12">
             <%- page.content %>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer">
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name"><%- page.author %></span>
+                    <span class="authored-date text-nowrap"><%= date(page.date, 'MMMM D, YYYY') %></span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a href="https://twitter.com/intent/tweet?url=<%- page.permalink %>">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=<%- page.permalink %>">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- page.permalink %>">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

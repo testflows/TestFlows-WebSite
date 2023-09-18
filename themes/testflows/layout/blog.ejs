@@ -16,22 +16,26 @@
 </div>
 <div class="container" style="padding-bottom: 2em !important">
 <% site.posts.each(function(item){ %>
-    <div class="post">
+    <div class="blog post">
         <div class="post-header row">
             <div class="post-summary col-lg-6 mt-auto mb-auto">
-                <h1 style="font-weight: bold;"><%- item.title %></h1>
+                <a href=<%- item.permalink %>>
+                    <h1 style="font-weight: bold;"><%- item.title %></h1>
+                </a>
                 <%- item.excerpt %><i class="post-summary-more">...</i>
             </div>
             <div class="post-image col-lg-6 m-auto">
-                <img src="<%- config.root %><%- item.image.asset %>"></img>
-                <span class="post-image-credit"><%- item.image.credit %></span>
+                <a href=<%- item.permalink %>>
+                    <img src="<%- config.root %><%- item.image.asset %>"></img>
+                    <span class="post-image-credit"><%- item.image.credit %></span>
+                </a>
             </div>
             <div class="post-metadata row m-auto">
-                <div class="post-author col-md-6">
-                    <span class="author-title text-nowrap">Written By</span><span class="author-name"><%- item.author %></span>
-                    <span class="authored-date text-nowrap"><%= date(item.date, 'MMMM D, YYYY') %></span>
-                </div>
-                <div class="col-md-6">
+                <div class="col-md-12">
+                    <div class="post-author">
+                        <span class="author-title text-nowrap">Written By</span><span class="author-name"><%- item.author %></span>
+                        <span class="authored-date text-nowrap"><%= date(item.date, 'MMMM D, YYYY') %></span>
+                    </div>
                     <div class="post-share btn-group" role="group" aria-label="share">
                         <span class="caption">Share It</span>
                         <a href="https://twitter.com/intent/tweet?url=<%- item.permalink %>">
@@ -45,24 +49,6 @@
                         </a>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="post-body row">
-            <div class="col-12">
-                <%- item.content %>
-                <div class="post-share btn-group" role="group" aria-label="share">
-                    <span class="caption">Share It</span>
-                    <a href="https://twitter.com/intent/tweet?url=<%- item.permalink %>">
-                        <i class="fab fa-2x fa-twitter"></i>
-                    </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<%- item.permalink %>">
-                        <i class="fab fa-2x fa-facebook"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- item.permalink %>">
-                        <i class="fab fa-2x fa-linkedin"></i>
-                    </a>
-                </div>
-                <div class="col-12 divider"></div>
             </div>
         </div>
     </div>
