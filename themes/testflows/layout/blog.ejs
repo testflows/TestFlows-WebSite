@@ -15,7 +15,7 @@
     </div>
 </div>
 <div class="container" style="padding-bottom: 2em !important">
-<% site.posts.each(function(item){ %>
+<% site.posts.sort('date', 'desc').forEach(function(item) { %>
     <div class="blog post">
         <div class="post-header row">
             <div class="post-summary col-lg-6 mt-auto mb-auto">
