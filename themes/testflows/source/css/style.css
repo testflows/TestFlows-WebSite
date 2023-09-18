@@ -344,8 +344,6 @@ blockquote {
     line-height: 3em;
     font-family: monospace;
     font-size: 1em;
-    padding-left: 10px;
-    padding-right: 10px;
 }
 
 .users-banner h2 {
@@ -382,6 +380,8 @@ blockquote {
     background-color: black;
     border: 1px solid white;
     border-radius: 0px;
+    margin-bottom: 0px;
+    margin-top: 0px;
 }
 
 .command figure.highlight pre {
@@ -411,9 +411,6 @@ blockquote {
     font-family: monospace;
     font-size: 0.8em;
     color: white;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 10px;
     display: inline-block;
 }
 
