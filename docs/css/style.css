@@ -489,7 +489,8 @@ code, pre, figure.highlight {
 .nav-link {
     font-size: 1.1em;
     padding-left: 1.5rem !important;
-    color: inherit !important;
+    color: #25283d;
+    font-weight: bold;
 }
 
 .nav-link:hover > i,
