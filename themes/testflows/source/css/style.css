@@ -451,7 +451,7 @@ code, pre, figure.highlight {
 }
 
 .text-success {
-    color: #77bd87 !important;
+    color: #54e5ae !important;
 }
 
 .text-muted {
@@ -554,7 +554,8 @@ a.header-anchor {
  */
 body {
   position: relative;
-  color: #2c3e50;
+  color: #25283d;
+  font-size: 18px;
 }
 
 /**
