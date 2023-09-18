@@ -1,0 +1,316 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Making Your Tests Better or How to Break Your Tests Into Steps | TestFlows</title>
+  <meta name="description" content="An article about how tests can be broken up into steps using TestFlows">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+  
+  <link href="/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1695047289443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1695047289443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1695047289443" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+    <div class="banner in-view-watcher">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <h1>Making Your Tests Better or How to Break Your Tests Into Steps</h1>
+        <h2></h2>
+        <i class="fa-5x pt-3 "></i>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Making Your Tests Better or How to Break Your Tests Into Steps</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">November 24, 2019</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/test-steps/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/test-steps/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/test-steps/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/test-steps.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="post-body row">
+        <div class="col-12">
+            <p>Writing tests is not an easy task as it can seem at first glance.
+In many cases, writing a good test can be as hard as writing
+a good application code.
+While in the application code the readability and maintainability are both
+ <span id="more"></span> desirable features, it is not an absolute requirement in all cases.
+For tests, on the other hand, readability and maintainability is a must.
+This article will explore a simple approach to make your tests better
+and show how you can improve your tests by breaking them into steps.
+Because there are different types, we will specifically focus
+on the writing of a functional test.</p>
+<h1 id="Something-to-Test"><a href="#Something-to-Test" class="headerlink" title="Something to Test"></a>Something to Test</h1><p>To explore a manner in which we can make a test better, we need to write one. For this
+we need something to test. What could it be? After much thought and for no
+obvious reason a simple <code>ls</code> utility found on all Unix-like systems comes to mind.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> foo</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span>: cannot access <span class="string">&#x27;foo&#x27;</span>: No such file or directory</span><br></pre></td></tr></table></figure>
+
+<h2 id="What-Will-We-Test"><a href="#What-Will-We-Test" class="headerlink" title="What Will We Test?"></a>What Will We Test?</h2><p>Any good test that is worth the memory in which it is stored, needs to verify one or more requirements. Having picked
+the <code>ls</code> utility, we need to come up with a simple requirement
+that we can verify. Let’s pick the following requirement:</p>
+<blockquote>
+<p>When a file or a directory does not exist then an error message should
+be printed in <code>stderr</code> and the exit code should be <code>2</code>.</p>
+</blockquote>
+<p>Having the requirement ready we can proceed to create a test.
+We want to get things done as we will use the <em>ad-hoc</em> method.</p>
+<h1 id="First-Step"><a href="#First-Step" class="headerlink" title="First Step"></a>First Step</h1><p>There are plenty of test frameworks which we can use to write a test but
+of course, we will use <span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> for this purpose as it
+has a convenient <strong>Connect</strong> module that provides <strong>Shell</strong> class
+which will allow us to test <code>ls</code> utility in an intuitive way.</p>
+<p>Let’s throw a few lines together to get us going into <code>test.py</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Test</span><br><span class="line"><span class="keyword">from</span> testflows.connect <span class="keyword">import</span> Shell</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;Check &#x27;ls&#x27; behaviour when file or directory does not exist&quot;</span>):</span><br><span class="line">     <span class="keyword">with</span> Shell() <span class="keyword">as</span> bash:</span><br><span class="line">        bash(<span class="string">&#x27;ls foo&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>And, run it.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./test.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Nov 25,2019 18:42:19   ⟥  Test Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br><span class="line">               215ms        [bash] bash<span class="comment"># ls foo</span></span><br><span class="line">               216ms        [bash] <span class="built_in">ls</span>: cannot access <span class="string">&#x27;foo&#x27;</span>: No such file or directory</span><br><span class="line">               217ms        [bash] bash<span class="comment"># echo $?</span></span><br><span class="line">               217ms        [bash] 2</span><br><span class="line">               217ms        [bash] bash<span class="comment">#</span></span><br><span class="line">               232ms        [bash]</span><br><span class="line">               233ms   ⟥⟤ OK Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist, /Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br><span class="line"></span><br><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br><span class="line"></span><br><span class="line">1 <span class="built_in">test</span> (1 ok)</span><br><span class="line"></span><br><span class="line">Total time 233ms</span><br></pre></td></tr></table></figure>
+
+<p>The output is very much the same as you would see in a terminal window.
+The result of the test is <code>OK</code> as no exception has been raised. However,
+we have not asserted anything inside the test. Now is the time to add two
+assertions to verify the requirement.
+One to check the error message and another to check the exit code.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Test</span><br><span class="line"><span class="keyword">from</span> testflows.connect <span class="keyword">import</span> Shell</span><br><span class="line"><span class="keyword">from</span> testflows.asserts <span class="keyword">import</span> error</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;Check &#x27;ls&#x27; behaviour when file or directory does not exist&quot;</span>):</span><br><span class="line">     <span class="keyword">with</span> Shell() <span class="keyword">as</span> bash:</span><br><span class="line">        cmd = bash(<span class="string">&#x27;ls foo&#x27;</span>)</span><br><span class="line">        <span class="keyword">assert</span> <span class="string">&quot;ls: cannot access &#x27;foo&#x27;: No such file or directory&quot;</span> <span class="keyword">in</span> cmd.output, error()</span><br><span class="line">        <span class="keyword">assert</span> cmd.exitcode == <span class="number">2</span>, error()</span><br></pre></td></tr></table></figure>
+
+<p>The code is short and sweet. We have added two assertions and used Python’s default <strong>assert</strong>
+statement and did not need to use any special assertion libraries. However, we did use the <strong>Asserts</strong>
+module to provide us a useful <strong>error()</strong> function. This function prints detailed debugging
+information when the assertion fails. The assertion did not fail for me and hopefully,
+it did not fail for you too. If it did then the <strong>error()</strong> function should have provided you with
+details about what went wrong. Hey, make it fail and see what happens!</p>
+<h1 id="Taking-the-Next-Step"><a href="#Taking-the-Next-Step" class="headerlink" title="Taking the Next Step"></a>Taking the Next Step</h1><p>Are we done with the test? We could be, but we also could think about what would happen if our
+test was much more complex. Have we covered all the important cases? No, only one.
+What else can be tested? In truth, many more cases exist that we could and should check.
+For example, we could also check what happens if a path that we pass to the <code>ls</code> differs only
+by one last character from a valid one. Maybe there is a bug and then it will fail?</p>
+<p>We will leave the test as this to keep it simple. But will start thinking about
+a test as nothing but an implementation of a test procedure. For a simple test,
+the procedure is simple and for a complex test, the procedure helps
+understand what the test is doing. The test procedure should be
+formally defined in a test specification but who has time to write one?
+Unless you work on a project where it is required, you probably don’t have the time.</p>
+<p>Nevertheless, whether or not we identify the test procedure beforehand in the form of a formal
+test specification, or just throwing a test together on the go, the procedure
+is always there. Therefore, we can identify it.
+So let’s revisit the test and add some comments to identify the procedure.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;Check &#x27;ls&#x27; behaviour when file or directory does not exist&quot;</span>):</span><br><span class="line">     <span class="keyword">with</span> Shell() <span class="keyword">as</span> bash:</span><br><span class="line">        <span class="comment">#  execute &#x27;ls&#x27; with an invalid path&quot;</span></span><br><span class="line">        cmd = bash(<span class="string">&#x27;ls foo&#x27;</span>)</span><br><span class="line">        <span class="comment">#  check error message and exit code&quot;):</span></span><br><span class="line">        <span class="keyword">assert</span> <span class="string">&quot;ls: cannot access &#x27;foo&#x27;: No such file or directory&quot;</span> <span class="keyword">in</span> cmd.output, error()</span><br><span class="line">        <span class="keyword">assert</span> cmd.exitcode == <span class="number">2</span>, error()</span><br></pre></td></tr></table></figure>
+
+<p>The test has a simple procedure which is made out of at least two steps.
+Step one, execute <code>ls</code> with an invalid path. Step two, check the error message and exit code.
+Right, now we have test procedure added to the test as comments but could we do better?
+Yes, we can. We can add explicit steps to the test by using a <strong>Step</strong>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Test, Step</span><br><span class="line"><span class="keyword">from</span> testflows.connect <span class="keyword">import</span> Shell</span><br><span class="line"><span class="keyword">from</span> testflows.asserts <span class="keyword">import</span> error</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;Check &#x27;ls&#x27; behaviour when file or directory does not exist&quot;</span>):</span><br><span class="line">     <span class="keyword">with</span> Shell() <span class="keyword">as</span> bash:</span><br><span class="line">        <span class="keyword">with</span> Step(<span class="string">&quot;execute &#x27;ls&#x27; with an invalid path&quot;</span>):</span><br><span class="line">            cmd = bash(<span class="string">&#x27;ls foo&#x27;</span>)</span><br><span class="line">        <span class="keyword">with</span> Step(<span class="string">&quot;check error message and exit code&quot;</span>):</span><br><span class="line">            <span class="keyword">assert</span> <span class="string">&quot;ls: cannot access &#x27;foo&#x27;: No such file or directory&quot;</span> <span class="keyword">in</span> cmd.output, error()</span><br><span class="line">            <span class="keyword">assert</span> cmd.exitcode == <span class="number">2</span>, error()</span><br></pre></td></tr></table></figure>
+
+<p>When executed with <span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span>, the test above produces the output that includes
+the test steps.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Nov 26,2019 17:57:25   ⟥  Test Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br><span class="line">Nov 26,2019 17:57:25     ⟥  Step execute <span class="string">&#x27;ls&#x27;</span> with an invalid path</span><br><span class="line">               174ms          [bash] bash<span class="comment"># ls foo</span></span><br><span class="line">               178ms          [bash] <span class="built_in">ls</span>: cannot access <span class="string">&#x27;foo&#x27;</span>: No such file or directory</span><br><span class="line">               179ms          [bash] bash<span class="comment"># echo $?</span></span><br><span class="line">               179ms          [bash] 2</span><br><span class="line">               179ms          [bash] bash<span class="comment">#</span></span><br><span class="line">               179ms     ⟥⟤ OK execute <span class="string">&#x27;ls&#x27;</span> with an invalid path, /Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist/execute <span class="string">&#x27;ls&#x27;</span> with an invalid path</span><br><span class="line">Nov 26,2019 17:57:25     ⟥  Step check error message and <span class="built_in">exit</span> code</span><br><span class="line">                 2ms     ⟥⟤ OK check error message and <span class="built_in">exit</span> code, /Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist/check error message and <span class="built_in">exit</span> code</span><br><span class="line">               193ms          [bash]</span><br><span class="line">               196ms   ⟥⟤ OK Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist, /Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br></pre></td></tr></table></figure>
+
+<p>The test steps are even more apparent if we use the <strong>short</strong> output format.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./test.py -o short</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Test Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br><span class="line">  Step execute <span class="string">&#x27;ls&#x27;</span> with an invalid path</span><br><span class="line">  OK</span><br><span class="line">  Step check error message and <span class="built_in">exit</span> code</span><br><span class="line">  OK</span><br><span class="line">OK</span><br><span class="line"></span><br><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Check <span class="string">&#x27;ls&#x27;</span> behaviour when file or directory does not exist</span><br><span class="line"></span><br><span class="line">1 <span class="built_in">test</span> (1 ok)</span><br><span class="line">2 steps (2 ok)</span><br><span class="line"></span><br><span class="line">Total time 206ms</span><br></pre></td></tr></table></figure>
+
+<p>Read through the output and the code. By adding steps we have added documentation to our test code
+and the test output at the same time. Did we just kill two birds with one stone?
+Figuratively speaking, yes, we did.
+This is no small feat. For nontrivial tests, having test procedure explicitly
+documented in the code and be present in the output is a big advantage.
+It not only helps to analyze test results by looking at the output but also
+helps to understand the test code itself.</p>
+<h1 id="Taking-a-Step-in-The-Right-Direction"><a href="#Taking-a-Step-in-The-Right-Direction" class="headerlink" title="Taking a Step in The Right Direction"></a>Taking a Step in The Right Direction</h1><p>Take a look at your tests and see how a simple idea of breaking your tests into steps
+can help make your tests more readable and easier to debug.
+The cost of test maintenance far outweighs a few additional lines
+that can be added to make your tests better. Unfortunately, there a plethora
+of test frameworks out there that do not provide any support for defining steps
+ inside a test. They simply ignore the importance of explicitly identifying
+test procedure. Well, that’s a mistake, breaking tests into steps
+is literally a step in the right direction.</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer">
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">November 24, 2019</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/test-steps/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/test-steps/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/test-steps/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+  </div>
+  <div class="container-footer">
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener" href="https://t.me/testflows">
+                        <span class="fab fa-2x fa-telegram-plane"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2022 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
+</script>
+
+</body>
+</html>
+
+
