@@ -374,6 +374,33 @@ blockquote {
     padding-left: 0;
 }
 
+.command figure.highlight {
+    background-color: black;
+    border: 1px solid white;
+    border-radius: 0px;
+}
+
+.command figure.highlight pre {
+    background-color: black;
+}
+
+.command figure.highlight .code {
+    background-color: black;
+    border: none;
+    padding-left: 0px;
+    padding-right: 25px;
+}
+
+.command figure.highlight .code .line {
+    color: white;
+    font-weight: bold;
+    background-color: black;
+}
+
+.command .btn.codeblock-copy {
+    color: #54e5ae;
+}
+
 .command {
     background: #383d41;
     line-height: 3em;
