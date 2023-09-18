@@ -35,14 +35,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
   transform-origin: -10vw;
 }
 .firefly::before {
-  background: white;
-  opacity: 0.25;
+  background: rgb(117, 255, 75);
+  opacity: 0.5;
   animation: drift ease alternate infinite;
 }
 .firefly::after {
-  background: white;
+  background: rgb(117, 255, 75);
   opacity: 0;
-  box-shadow: 0 0 0vw 0vw yellow;
+  box-shadow: 0 0 0vw 0vw rgb(117, 255, 75);
   animation: drift ease alternate infinite, flash ease infinite;
 }
 
@@ -1356,10 +1356,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
 @keyframes flash {
   0%, 30%, 100% {
     opacity: 0;
-    box-shadow: 0 0 0vw 0vw white;
+    box-shadow: 0 0 0vw 0vw rgb(117, 255, 75);
   }
   5% {
     opacity: 1;
-    box-shadow: 0 0 2vw 0.4vw white;
+    box-shadow: 0 0 2vw 1.5vw rgb(117, 255, 75);
   }
 }

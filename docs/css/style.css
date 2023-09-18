@@ -50,7 +50,7 @@ html, body {
 }
 
 footer {
-    background: #163550;
+    background: black;
     color: white;
     padding-top: 20px;
     padding-bottom: 20px;
@@ -304,7 +304,7 @@ blockquote {
 .banner {
     min-height: 40vh;
     padding: 20vh 0 10vh 0;
-    background: #163551;
+    background: black;
     color: white;
     padding-bottom: 1em;
     position: relative !important;
@@ -327,11 +327,12 @@ blockquote {
 }
 
 .banner h1 {
-    color: #7bb9c8;
+    color: white;
+    font-weight: 400;
 }
 
 .banner .command {
-    background: #0000005e;
+    background: black;
     line-height: 3em;
     font-family: monospace;
     font-size: 1em;
