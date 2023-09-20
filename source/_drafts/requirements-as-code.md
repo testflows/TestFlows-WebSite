@@ -14,7 +14,7 @@ We are developing too fast and it seems like there is no time to think about the
 much less write it down <!-- more -->.
 
 Do requirements apply to software development and testing? The answer is definitely "yes" as the requirements are the starting point
-of **any design**. It is universal principle across any field of engineering. It does not matter if you are designing a building,
+of *any design*. It is universal principle across any field of engineering. It does not matter if you are designing a building,
 designing an aircraft, developing software for nuclear reactors, trains, or even a simple hello world program.
 Whether we like it or not requirements have to be handled one way or another as the saying goes “you can run but you can’t hide from them”.
 When we don’t work with requirements we do pay the price, as skipping them does not come with zero-cost but actually
