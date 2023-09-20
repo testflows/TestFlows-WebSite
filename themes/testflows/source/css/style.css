@@ -71,17 +71,18 @@ blockquote {
 }
 
 .blog.post-body blockquote {
-    font-size: 1.3em;
+    font-size: 1.1em;
     font-style: italic;
     color: #25283d;
     padding-left: 2em;
     border: none;
-    margin-top: 2em;
-    margin-bottom: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background: #dbfffc;
 }
 
 .blog.post-body blockquote footer {
-    background: white;
+    background: #dbfffc;
     color: gray;
     font-size: 0.6em;
     font-weight: 200;
