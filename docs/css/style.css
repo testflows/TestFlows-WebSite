@@ -70,6 +70,25 @@ blockquote {
     font-weight: 300;
 }
 
+.blog.post-body blockquote {
+    font-size: 1.3em;
+    font-style: italic;
+    color: #25283d;
+    padding-left: 2em;
+    border: none;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.blog.post-body blockquote footer {
+    background: white;
+    color: gray;
+    font-size: 0.6em;
+    font-weight: 200;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
 #sidebar {
     padding-left: 15px;
     z-index: 999;
