@@ -71,17 +71,18 @@ blockquote {
 }
 
 .blog.post-body blockquote {
-    font-size: 1.3em;
+    font-size: 1.1em;
     font-style: italic;
     color: #25283d;
     padding-left: 2em;
     border: none;
-    margin-top: 2em;
-    margin-bottom: 2em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background: #dbfffc;
 }
 
 .blog.post-body blockquote footer {
-    background: white;
+    background: #dbfffc;
     color: gray;
     font-size: 0.6em;
     font-weight: 200;
@@ -114,9 +115,10 @@ blockquote {
     position: fixed;
     bottom: 0.5em;
     right: 1em;
-    color: orange !important;
+    color: #54e5ae !important;
     font-size: 2.5em;
     cursor: pointer;
+    z-index: 1000;
 }
 
 .jump:active,

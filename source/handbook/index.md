@@ -28,26 +28,26 @@ and could be executed in a hive mode on multi-node clusters.
 **{% testflows %}** has the following differentiating features that makes
 it stand out from a plenty of other open and closed source test frameworks.
 
-**Use what you need design**
+## Use what you need design
 
-**{% testflows %}** has many advanced features but it allows you to use only
+The framework has many advanced features but it allows you to use only
 the pieces that you need. For example, if you don't want to use requirements
 you don't have to or if you don't want to break your tests into steps or
 using behavior driven step keywords that is perfectly fine.
-At the heart, **{% testflows %}** is just a collection of Python modules so you are always
+At the heart, it is just a collection of Python modules so you are always
 in control and you are not forced to use anything that you don't need.
 
-**Supports requirements oriented quality assurance process**
+## Requirements oriented quality assurance process
 
 An enterprise quality assurance process must always revolve around ***requirements***.
 However, requirements are most often ignored in software development groups even at
-large companies. **{% testflows %}** is designed to break that trend
+large companies. The framework is designed to break that trend
 and allows to write and work with requirements just like you work with code.
 However, if you are not ready to use requirements then you don't have to.
 
-Whether you realize it or not the only true purpose of writing any test is
-_to verify one or more requirements_ and it does not really matter if you have
-clearly identified these requirements or not. _Tests verify requirements_ and
+Whether you realize it or not the only **true purpose of writing any test is
+to verify one or more requirements** and it does not really matter if you have
+clearly identified these requirements or not. Tests verify requirements and
 each requirement must be verified by either fully automated, semi-automated or
 manual test. If you don't have any tests to verify some requirement
 then you can't be sure that requirement is met or that the next version
@@ -62,15 +62,15 @@ which you can easily link with your tests. To match the complexities of real wor
 **{% testflows %}** allows one-to-one, one-to-many, many-to-one, or many-to-many test-to-requirement
 relationships.
 
-**Allows to write test programs and not just tests**
+## Write test programs and not just tests
 
-**{% testflows %}** allows you to write Python _test programs_ and not just tests. A _test program_
+Write [Python] **test programs** and not just tests. A test program
 can execute any number of tests. This provides the unrivalled flexibility to meet the needs of any project.
 Tests are not decoupled from test flow where the flow defines a precise order of
 how tests are executed. However, you can write many kinds of test runners
-using the framework if you need them. For example, you can write _test programs_
+using the framework if you need them. For example, you can write test programs
 that read test cases from databases, API endpoints, or file systems and trigger
-your test cases based on any condition. By writing a _test program_ you are in total control
+your test cases based on any condition. By writing a test program you are in total control
 of how you want to structure and approach the testing of a given project.
 
 Through its flexibility, **{% testflows %}** helps to avoid test tool fragmentation
@@ -78,14 +78,14 @@ where each project in a company eventually starts to use their own test framewor
 and nobody knows how to run tests written by other groups and reporting accross
 groups become inconsistent and difficult to follow.
 
-**Supports writing self-documenting tests with clearly defined test procedures**
+## Write self-documenting tests with clearly defined test procedures
 
-**{% testflows %}** provides tools for test authors to break tests into test [Step]s and
+Provides tools for test authors to break tests into test [Step]s and
 use behavior driven step keywords such as [Given], [When], [Then] and others to make
 tests and test procedures pleasantly readable. Breaking tests into steps brings an advantage
 of test code becoming self-documenting, it provides an easy way to auto-generate
 formal documentation such as a test specification without doing any extra work,
-produces detailed test logs and test failure debugging.
+produces detailed test logs and facilitates test failure debugging.
 
 Test steps can also be made reusable, allowing test authors to create reusable
 steps modules that greatly simplify writing new test scenarios. Just
@@ -94,35 +94,44 @@ modularize tests by using reusable test steps. Using reusable steps
 produces clean test code and greatly improves readability and maintainability
 of tests.
 
-**Allows to write asynchronous tests**
-
-Writing asynchronous tests is as easy as writing regular tests.
-**{% testflows %}** even allows you to run asynchronous and synchronous test code
-in the same test program.
-
-**Allows to auto-generate test specifications**
+## Auto-generate test specifications
 
 If your test process or your manager requires you to produce formal test
 specifications that must describe the procedure of each test, then you can easily
-auto-generate these documents using **{% testflows %}**.
+auto-generate them.
 
-**Supports writing semi-automated and manual tests**
+## Asynchronous tests
+
+Writing asynchronous tests is as easy as writing regular tests.
+The framework even allows you to run asynchronous and synchronous test code
+in the same test program.
+
+## Semi-automated and manual tests
 
 Testing real-world applications is usually not done only with fully automated test scenarios.
 Most often, verification requires a mix of automated, semi-automated, and manual tests.
 
-**{% testflows %}** allows you to unify your testing and provides uniform test reporting
+The framework allows you to unify your testing and provides uniform test reporting
 no matter what type of tests you need for your project by natively supporting the
 authoring of automated, semi-automated, and manual tests.
 
-**Supports authoring parallel tests and executing tests in parallel**
+## Parallel tests and execution
 
-**{% testflows %}** natively supports authoring parallel tests and
+Native support for authoring parallel tests and
 executing them in parallel, with fine-grain control over what and where runs in parallel.
 Asynchronous tests are also supported and allow for thousands of concurrent
 tests to be run at the same time. Mixing parallel and asynchronous tests is also supported.
 
-**Uses everything-is-a-test approach**
+## Combinatorial tests and covering arrays
+
+Combinatorial tests are supported by allowing you to define tests and steps that can take arguments,
+as well as allowing to easily and naturally define tests that check different combinations using [TestSketch]es
+without writing any nested for-loops or calculating combinations beforehand.
+
+In addition, a convenient collection of tools used for combinatorial testing is provided
+including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
+
+## Everything-is-a-test approach
 
 It uses everything-is-a-test approach that allows unified treatment
 of any code that is executed during testing. There is no second class test code.
@@ -130,27 +139,27 @@ If test fails during setup, teardown or execution of one of its actions,
 the failure is handled identically. This avoids mixing analysis of why the test failed
 with test execution and results in a clean and uniform approach to testing.
 
-**Uses a message-based protocol**
+## Message-based protocol
 
 It is built on top of a messaging protocol. This brings
 many benefits, including the ability to transform test output and logs into a variety of
 different formats as well as enable advanced parallel testing.
 
-**Supports test log storage and test data analytics using ClickHouse**
+## Test log storage and analytics using ClickHouse
 
-**{% testflows %}** test logs were designed to be easily stored in [ClickHouse].
+Test logs were designed to be easily stored in [ClickHouse].
 Given that testing produces huge amounts of data, this integration
 brings test data analytics right to your fingertips.
 
-**Test data visualization using Grafana**
+## Visualization using Grafana
 
 Standard [Grafana] dashboards are available to visualize your test data
 stored in [ClickHouse]. Additional dashboards can be easily created in [Grafana]
 to highlight test results that are the most important for your project.
 
-**Avoids unnecessary abstraction layers**
+## Avoid unnecessary abstraction layers
 
-**{% testflows %}** tries to avoid unnecessary abstraction layers, such
+Avoid unnecessary abstraction layers, such
 as when test runners are decoupled from tests or the usage of behavior driven
 (BDD) keywords is always tied to Gherkin specifications. These abstractions,
 while providing some benefit, in most cases lead to more problems than
@@ -253,18 +262,15 @@ or its flavours [Critical], [Major] or [Minor].
 > your tests and test procedures.
 
 Given the variety of test definition classes above, fundamentally,
-there are only four core [Types] of tests in {% testflows %} and three special types,
-giving us seven [Types] in total. The core [Types] are
+there are only four core [Types] of tests in {% testflows %}.
+The core [Types] are
 
   * [Module]
   * [Suite]
   * [Test]
-  * [Outline] (special)
-  * [Iteration] (special)
-  * [RetryIteration] (special)
   * [Step]
 
-and all other types are just a naming variation of one of the above with the following mapping
+and all other types are just a naming variation of one of the above with the following mapping or are special types
 
 * [Module]
 * [Suite]
@@ -276,9 +282,6 @@ and all other types are just a naming variation of one of the above with the fol
   * [Major]
   * [Minor]
   * [Example]
-* [Outline] (special)
-* [Iteration] (special)
-* [RetryIteration] (special)
 * [Step]
   * [Given]
   * [When]
@@ -288,6 +291,11 @@ and all other types are just a naming variation of one of the above with the fol
   * [Finally]
   * [Background]
   * [And] (special)
+* [Sketch] (special)
+* [Combination] (special)
+* [Outline] (special)
+* [Iteration] (special)
+* [RetryIteration] (special)
 
 see [Types] for more information.
 
@@ -321,7 +329,7 @@ with Module("My test module"):
 
 For re-usability, you can also define tests using the
 [TestStep], [TestBackground], [TestCase], [TestCheck], [TestCritical], [TestMajor], [TestMinor],
-[TestSuite], [TestFeature], [TestModule], and [TestOutline] test function decorators.
+[TestSuite], [TestFeature], [TestModule], [TestOutline], and [TestSketch] test function decorators.
 
 For example,
 
@@ -3827,8 +3835,8 @@ with Scenario("My scenario"):
 ## Outline
 
 An [Outline] can be defined using [Outline] test definition class or [TestOutline] decorator.
-An [Outline] has its own test [Type] but can be made specific when defined using [TestOutline]
-decorator by passing it a specific [Type] or a [Sub-Type] such as [Scenario] or [Suite] etc.
+An [Outline] is a sub-type of a [Test] type but can you can change the type
+by passing it another [Type] or a [Sub-Type] such as [Scenario] or [Suite] etc.
 
 However, because [Outline]s are meant to be called from other tests or used with [Examples]
 it is best to define an [Outline] using [TestOutline] decorator as follows.
@@ -3895,42 +3903,68 @@ Jul 05,2020 18:23:02   ⟥  Scenario My scenario
                  2ms   ⟥⟤ OK My scenario, /My scenario
 ```
 
-### Setting Parameters
+## Combination
 
-#### **For an Example**
+A [Combination] is not meant to be used explicitly, and in most cases it is only used
+internally to represent each combination of a [Sketch].
 
-You can set parameters for an individual example by specifying them right after the values for the example row.
+## Sketch
 
-> **{% attention %}** Any test parameters that are specified for the example will override any common parameter values.
+A [Sketch] is defined using the [TestSketch] decorator. In most cases you should not
+use [Sketch] test definition class directly as it will not execute its [Combination]s.
+A [Sketch] is a sub-type of a type [Test] but you can specify a different type. For example,
+you can pass a specific [Type] or a [Sub-Type] such as [Scenario], [Suite], or [Feature] etc. when defining a [TestSketch].
+
+Because [Sketch]s are designed to execute different [Combination]s, one for each [Combination]
+defined by the [either() function], it is best to define a [Sketch] only using a [TestSketch] decorator.
+
+> **{% attention %}** [TestSketch] is designed to work with [either() function]
+> that is used to define combination variables and their possible values.
 
 For example,
 
 ```python
-@TestOutline(Scenario)
-@Examples("greeting name", [
-    ("Hello", "John", {"tags": ("tag0", "tag1"), "attributes": [("attr0", "value0")]}),
-    ("Goodbye", "Eric")
-])
-def outline(self, greeting, name):
-    note(f"{greeting} {name}!")
+def add(a, b):
+    return a + b
+
+@TestSketch(Scenario)
+def my_sketch(self):
+    a = either(1,2)
+    b = either(2,3)
+    r = add(a, b)
+    note(f"{a} + {b} = {r}")
+    assert r == a + b
 ```
 
-#### **For All Examples**
+The [TestSketch] above calls the `add()` function with different combinations of its `a` and `b` parameters.
+The [Sketch] checks combinations when `a` argument is either `1` or `2`, and `b` argument is either `2` or `3`.
+Therefore, the following combination patterns are covered:
 
-You can set common parameter values for all the examples specified by the [Examples] table using the `args` parameter
-and passing it a `dict` with parameter values as the argument.
+> * `pattern #0`: add(1,2)
+> * `pattern #1`: add(1,3)
+> * `pattern #2`: add(2,2)
+> * `pattern #3`: add(2,3)
 
-> **{% attention %}** Note that parameters set for a specific example override any common values.
+You can see this from the output of the test.
 
-```python
-@TestOutline(Scenario)
-@Examples("greeting name", [
-    ("Hello", "John", {"tags": ("tag0", "tag1"), "attributes":[("attr0", "value0")]}),
-    ("Goodbye", "Eric")
-], args={"tags": ("common_tag0", "common_tag1")})
-def outline(self, greeting, name):
-    note(f"{greeting} {name}!")
+```bash
+Sep 21,2023 13:42:38   ⟥  Scenario my sketch
+Sep 21,2023 13:42:38     ⟥  Combination pattern #0
+               264us     ⟥    [note] 1 + 2 = 3
+               332us     ⟥⟤ OK pattern #0, /my sketch/pattern #0
+Sep 21,2023 13:42:38     ⟥  Combination pattern #1
+               264us     ⟥    [note] 1 + 3 = 4
+               324us     ⟥⟤ OK pattern #1, /my sketch/pattern #1
+Sep 21,2023 13:42:38     ⟥  Combination pattern #2
+               186us     ⟥    [note] 2 + 2 = 4
+               236us     ⟥⟤ OK pattern #2, /my sketch/pattern #2
+Sep 21,2023 13:42:38     ⟥  Combination pattern #3
+               171us     ⟥    [note] 2 + 3 = 5
+               218us     ⟥⟤ OK pattern #3, /my sketch/pattern #3
+                 4ms   ⟥⟤ OK my sketch, /my sketch
 ```
+
+See [Using Sketches] for more details.
 
 ## Iteration
 
@@ -4215,13 +4249,9 @@ The framework divides tests into the following [Types] from highest to the lowes
 * [Module]
 * [Suite]
 * [Test]
-* [Outline]
-* [Iteration]
-* [RetryIteration]
 * [Step]
 
-Children of each [Type] usually must be of the same [Type] or lower, with the only notable exception
-being an [Iteration] that is used to implement test repetitions.
+Children of each [Type] must be of the same [Type] or lower.
 
 # Sub-Types
 
@@ -4242,10 +4272,15 @@ The framework uses the following [Sub-Types] in order to provide more flexibilit
 * [But]
 * [By]
 * [Finally]
+* [Sketch] (special)
+* [Combination] (special)
+* [Outline] (special)
+* [Iteration] (special)
+* [RetryIteration] (special)
 
 # Sub-Types Mapping
 
-The [Sub-Types] have the following mapping to the core six [Types]
+The [Sub-Types] have the following mapping to the core four [Types]
 
 * [Module]
 * [Suite]
@@ -4257,8 +4292,6 @@ The [Sub-Types] have the following mapping to the core six [Types]
   * [Major]
   * [Minor]
   * [Example]
-* [Outline]
-* [Iteration]
 * [Step]
   * [Given]
   * [When]
@@ -4267,6 +4300,14 @@ The [Sub-Types] have the following mapping to the core six [Types]
   * [By]
   * [Finally]
   * [Background]
+
+The following special types can be applied to any of the core four [Types]
+
+* [Outline] (special)
+* [Sketch] (special)
+* [Combination] (special)
+* [Iteration] (special)
+* [RetryIteration] (special)
 
 # Pausing Tests
 
@@ -6008,6 +6049,593 @@ Sep 24,2021 21:48:47   ⟥  Scenario my test
                                 hello there
                  4ms   ⟥⟤ OK my test, /my test
 ```
+
+# Combinatorial Tests
+
+> **{% attention %}** Available in version >= `2.1.2`
+
+Combinatorial testing is supported by allowing to define tests that can take arguments,
+as well as allowing to easily define tests that check different combinations using [TestSketch]es.
+
+In addition, a convenient collection of tools used for combinatorial testing is provided
+including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
+
+## Example Pressure Switch
+
+Let's see basic application of combinatorial tests to testing a simple pressure switch
+defined by the `pressure_switch` function below where it has a fault when
+`pressure < 10` or `pressure > 30`, and `volume > 250`.
+
+```python
+def pressure_switch(pressure, volume):
+    """Pressure switch.
+
+    `pressure` levels: 0, 20, 40
+    `volume` levels: 0, 100, 200, 300
+    """
+    if (pressure < 10 or pressure > 30):
+       if (volume > 250):
+           assert False, "boom!"
+       else:
+           note("ok, no problem")
+    else:
+        note("ok")
+```
+
+## Simple Approach (Nested For-loops)
+
+We can check all the combinations including some extra values using the following
+[TestScenario] that uses nested for-loops to iterate over each combination of
+`pressure` and `volume` values to check our [Example Pressure Switch].
+
+```python
+@TestScenario
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume."""
+    pressures = [0, 10, 20, 30, 40]
+    volumes = [0, 100, 200, 300, 400]
+
+    for pressure in pressures:
+        for volume in volumes:
+            with Check(f"pressure={pressure},volume={volume}", flags=TE):
+                pressure_switch(pressure=pressure, volume=volume)
+```
+
+As expected it will catch the fault with the following combinations.
+
+```bash
+Failing
+
+✘ [ Fail ] /check pressure switch/pressure=0,volume=300 (732us)
+✘ [ Fail ] /check pressure switch/pressure=0,volume=400 (448us)
+✘ [ Fail ] /check pressure switch/pressure=40,volume=300 (411us)
+✘ [ Fail ] /check pressure switch/pressure=40,volume=400 (345us)
+```
+
+## Computed Combinations (Cartesian Product)
+
+Another approach to using [nested for-loops] is to compute all the combinations
+using the [Cartesian Product] function. Here is the
+[TestScenario] that uses `product(*iterables, repeat=1)` function
+to compute all combinations of `pressure` and `volume` values to check our [Example Pressure Switch].
+
+The advantage of using the cartesian product function is that it avoids writing nested for-loops
+and is much more scalable when number of variables is large.
+
+```python
+from testflows.combinatorics import product
+
+@TestScenario
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume
+    using cartesian product."""
+    pressures = [0, 10, 20, 30, 40]
+    volumes = [0, 100, 200, 300, 400]
+
+    for combination in product(pressures, volumes):
+        pressure, volume = combination
+        with Check(f"pressure={pressure},volume={volume}", flags=TE):
+            pressure_switch(pressure=pressure, volume=volume)
+```
+
+## Using Sketches
+
+A better approach to check all possible combinations is to use a [TestSketch].
+
+A [TestSketch] allows to check all possible combinations where each combination
+variable and its values is defined by the [either() function].
+[TestSketch] with [either() function] makes writing combinatorial tests
+as simple as writing a simple test that would check one combination.
+
+> ✋ if you call [either() function] multiple times on the same line of code
+> or you have a call to [either() function] inside a `for-loop` or `while-loop`
+> then unique identifier `i` must be specified explicitly.
+
+For the [Example Pressure Switch], our [TestSketch] would be as follows:
+
+```python
+@TestSketch(Scenario)
+@Flags(TE)
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume using a TestSketch."""
+    pressure = either(0, 10, 20, 30, 40)
+    volume = either(0, 100, 200, 300, 400)
+
+    with Check(f"pressure={pressure},volume={volume}"):
+        pressure_switch(pressure=pressure, volume=volume)
+```
+
+Each [either() function] defines a new combination variable and its possible values
+and then {% testflows %} automatically loops through all the combinations
+when a [TestSketch] is called.
+
+Running the [TestSketch] above results in the following output.
+
+```bash
+Sep 22,2023 16:29:07   ⟥  Scenario check pressure switch, flags:TE
+Sep 22,2023 16:29:07     ⟥  Combination pattern #0, flags:TE
+Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=0
+               181us       ⟥    [note] ok, no problem
+               255us       ⟥⟤ OK pressure=0,volume=0, /check pressure switch/pattern #0/pressure=0,volume=0
+               705us     ⟥⟤ OK pattern #0, /check pressure switch/pattern #0
+Sep 22,2023 16:29:07     ⟥  Combination pattern #1, flags:TE
+Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=100
+               175us       ⟥    [note] ok, no problem
+               222us       ⟥⟤ OK pressure=0,volume=100, /check pressure switch/pattern #1/pressure=0,volume=100
+               705us     ⟥⟤ OK pattern #0, /check pressure switch/pattern #1
+...
+```
+
+Fails reported as below.
+
+```bash
+Failing
+
+✘ [ Fail ] /check pressure switch/pattern #3/pressure=0,volume=300 (541us)
+✘ [ Fail ] /check pressure switch/pattern #4/pressure=0,volume=400 (360us)
+✘ [ Fail ] /check pressure switch/pattern #23/pressure=40,volume=300 (519us)
+✘ [ Fail ] /check pressure switch/pattern #24/pressure=40,volume=400 (340us)
+```
+
+A [TestSketch] allows for advanced and intuitive definition of combinatorial tests
+especially when number of combination variables grows.
+
+Here is an example of testing a few combinations of a calculator's
+`+`, `-`, `*`, and `/` operations when user enters some positive or negative numbers,
+and presses `=` sign to get the results.
+
+```python
+@TestSketch(Scenario)
+def check_basic_operations(self):
+    """Check basic operations `+`, `-`, `*`, `/`
+    with some one digit positive or negative numbers including `0`.
+    """
+    try:
+        with When("I enter either positive or negative 0,1,2"):
+            if either(True, False):
+                By(test=press_minus)()
+            By(test=either(press_0, press_1, press_2))()
+
+        with And("then I press either +, -, *, / operation"):
+            By(test=either(press_plus, press_minus, press_multiply, press_divide))()
+
+        with And("I enter second argument either positive or negative 0,1,2"):
+            if either(True, False):
+                By(test=press_minus)()
+            By(test=either(press_0, press_1, press_2))()
+
+        with And("I press equals to calculate the result"):
+            By(test=press_equal)()
+
+        with Then("I check calculator state"):
+            By(test=check_state)()
+    finally:
+        with Finally("I reset calculator back to 0"):
+            By(test=reset_calculator)()
+```
+
+> Try to implement the [TestSketch] above using [nested for-loops] or the `product() function`
+> and you will straightway appreciate the beauty and power of [TestSketch]es!
+
+Each call to the [either() function] must be unique or unique identifier `i` must be specified.
+By default, the unique identifier of the [either() function] is the source code line number,
+therefore if you call [either() function] multiple times on the same line of code
+or you have a call to [either() function] inside a `for-loop` or `while-loop`
+then the unique identifier `i` must be specified explicitly.
+
+For example, let's assume we have a function `add(a, b, c)` that we want to test.
+
+```python
+def add(a, b, c):
+    note(f"{a} + {b} + {c}")
+```
+
+We could write a [TestSketch] that calls the [either() function] inside a `for-loop`
+on the same line multiple times.
+
+```python
+@TestSketch(Scenario)
+def check_add(self):
+    for i in range(either(value=range(1, 2))):
+        add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
+```
+
+Note that we had to pass unique identifier `i` for each [either() function] call that defined possible
+values of `a`, `b`, and `c`. Also, note that the unique identifier was a combination of the variable name
+and the loop variable `i`
+
+```python
+add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
+```
+
+The [TestSketch] above results in generation of eight combinations. This is because
+`range(1,2)` is `[1]` and therefore the `for-loop`
+
+```python
+    for i in range(either(value=range(1, 2))):
+```
+
+has only one iteration.
+
+```bash
+Sep 22,2023 17:00:48   ⟥  Scenario check add
+Sep 22,2023 17:00:48     ⟥  Combination pattern #0
+               371us     ⟥    [note] 1 + 3 + 5
+               444us     ⟥⟤ OK pattern #0, /check add/pattern #0
+Sep 22,2023 17:00:48     ⟥  Combination pattern #1
+               216us     ⟥    [note] 1 + 3 + 6
+               270us     ⟥⟤ OK pattern #1, /check add/pattern #1
+Sep 22,2023 17:00:48     ⟥  Combination pattern #2
+               190us     ⟥    [note] 1 + 4 + 5
+               238us     ⟥⟤ OK pattern #2, /check add/pattern #2
+Sep 22,2023 17:00:48     ⟥  Combination pattern #3
+               184us     ⟥    [note] 1 + 4 + 6
+               231us     ⟥⟤ OK pattern #3, /check add/pattern #3
+Sep 22,2023 17:00:48     ⟥  Combination pattern #4
+               174us     ⟥    [note] 2 + 3 + 5
+               220us     ⟥⟤ OK pattern #4, /check add/pattern #4
+Sep 22,2023 17:00:48     ⟥  Combination pattern #5
+               186us     ⟥    [note] 2 + 3 + 6
+               234us     ⟥⟤ OK pattern #5, /check add/pattern #5
+Sep 22,2023 17:00:48     ⟥  Combination pattern #6
+               232us     ⟥    [note] 2 + 4 + 5
+               279us     ⟥⟤ OK pattern #6, /check add/pattern #6
+Sep 22,2023 17:00:48     ⟥  Combination pattern #7
+               168us     ⟥    [note] 2 + 4 + 6
+               214us     ⟥⟤ OK pattern #7, /check add/pattern #7
+                 5ms   ⟥⟤ OK check add, /check add
+```
+
+Let's change the `for-loop` so that it can iterate either one or two times.
+
+```python
+@TestSketch(Scenario)
+def check_add(self):
+    for i in range(either(value=range(1, 3))):
+        add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
+```
+
+Then the number of combinations will be `72` and it will not be that intuitive what each combination is.
+The first run of the `for-loop` where it iterates only once will produce the same `8` combinations
+as before. However, the second run of the `for-loop` when it iterates twice will
+create combinations similar to the ones below. Where the combination `1 + 3 + 5`
+is followed by each of the `8` possibilities including itself and this done for each
+combination of `a + b + c`, and thus resulting in {% katex %}8 * 8 + 8 = 72 {% endkatex%} combinations total.
+
+```
+Sep 22,2023 17:08:13     ⟥  Combination pattern #8
+               155us     ⟥    [note] 1 + 3 + 5
+               181us     ⟥    [note] 1 + 3 + 5
+               220us     ⟥⟤ OK pattern #8, /check add/pattern #8
+Sep 22,2023 17:08:13     ⟥  Combination pattern #9
+               156us     ⟥    [note] 1 + 3 + 5
+               183us     ⟥    [note] 1 + 3 + 6
+               222us     ⟥⟤ OK pattern #9, /check add/pattern #9
+Sep 22,2023 17:08:13     ⟥  Combination pattern #10
+               161us     ⟥    [note] 1 + 3 + 5
+               189us     ⟥    [note] 1 + 4 + 5
+               231us     ⟥⟤ OK pattern #10, /check add/pattern #10
+Sep 22,2023 17:08:13     ⟥  Combination pattern #11
+               166us     ⟥    [note] 1 + 3 + 5
+               195us     ⟥    [note] 1 + 4 + 6
+               235us     ⟥⟤ OK pattern #11, /check add/pattern #11
+Sep 22,2023 17:08:13     ⟥  Combination pattern #12
+               163us     ⟥    [note] 1 + 3 + 5
+               190us     ⟥    [note] 2 + 3 + 5
+               230us     ⟥⟤ OK pattern #12, /check add/pattern #12
+Sep 22,2023 17:08:13     ⟥  Combination pattern #13
+               225us     ⟥    [note] 1 + 3 + 5
+               252us     ⟥    [note] 2 + 3 + 6
+               292us     ⟥⟤ OK pattern #13, /check add/pattern #13
+Sep 22,2023 17:08:13     ⟥  Combination pattern #14
+               156us     ⟥    [note] 1 + 3 + 5
+               183us     ⟥    [note] 2 + 4 + 5
+               225us     ⟥⟤ OK pattern #14, /check add/pattern #14
+Sep 22,2023 17:08:13     ⟥  Combination pattern #15
+               155us     ⟥    [note] 1 + 3 + 5
+               182us     ⟥    [note] 2 + 4 + 6
+...
+```
+
+### Using `either()`
+
+The [either() function] select values for a combination variable one at a time until all values are consumed.
+
+> ✋ It is used in [TestSketch]es to check all possible combinations. See [Using Sketches].
+
+Values can be specified either using `*values` or by passing an iterator or generator
+as `value`.
+
+If neither `*values`, or `value` is explicitly specified then `*values`
+is set to a `(True, False)` tuple.
+
+This function must be called only once for each line of code in the same source file or
+a unique identifier `i` must be specified.
+
+If `random` is `True`, then all values will be shuffled using a default shuffle function.
+
+Optionally, you can pass a custom `shuffle` function that takes values as an argument
+and modifies the sequence in-place. By default, `random.shuffle()` is used.
+
+You can use `limit` to limit number of values to choose.
+
+```python
+either(*values, value=None, i=None, random=False, shuffle=random.shuffle, limit=None)
+```
+
+where
+
+* `*values` zero or more of values to choose from
+* `value` iterator or generator of values
+* `random` (optional) randomize order of values (values must fit into memory), default: `False`
+* `shuffle` (optional) custom function to shuffle the values
+* `limit` (optional) limit number of values (integer `> 0`), default: `None`
+* `i` (optional) unique identifier, default: `None`
+
+
+## Covering Arrays - (Pairwise, N-wise) Testing
+
+The [CoveringArray class] allows you to calculate a covering array
+for some `k` parameters having the same or different number of possible values.
+
+The class uses [IPOG], an in-parameter-order, algorithm as described in [IPOG: A General Strategy for T-Way Software Testing] paper by Yu Lei et al.
+
+For any non-trivial number of parameters, exhaustively testing all possibilities is not feasible.
+For example, if we have `10` parameters (`k=10`) that each has `10` possible values (`v=10`), the
+number of all possibilities is {% katex %}v^k=10^{10} = {10}_{billion}{% endkatex %} thus requiring 10 billion tests for complete coverage.
+
+Given that exhaustive testing might not be practical, a covering array could give us a much smaller
+number of tests if we choose to check all possible interactions only between some fixed number
+of parameters at least once, where an interaction is some specific combination, where order does not matter,
+of some `t` number of parameters, covering all possible values that each selected parameter could have.
+
+> **{% attention %}** You can find out more about covering arrays by visiting the US National Institute of Standards and Technology's (NIST) [Introduction to Covering Arrays](https://math.nist.gov/coveringarrays/coveringarray.html) page.
+
+The `CoveringArray(parameters, strength=2)` takes the following arguments
+
+where
+
+* `parameters` specifies parameter names and their possible values and
+   is specified as a `dict[str, list[value]]`, where *key* is the parameter name and
+   *value* is a list of possible values for a given parameter.
+* `strength` specifies the strength `t` of the covering array that indicates the number of parameters
+   in each combination, for which all possible interactions will be checked.
+   If `strength` equals the number of parameters, then you get the exhaustive case.
+
+The return value of the `CoveringArray(parameters, strength=2)` is a `CoveringArray` object that is an iterable
+of tests, where each test is a dictionary, with each key being the parameter name and its value
+being the parameter value.
+
+For example,
+
+```python
+from testflows.combinatorics import CoveringArray
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(CoveringArray(parameters, strength=2))
+```
+
+Gives the following output:
+
+```bash
+CoveringArray({'a': [0, 1], 'b': ['a', 'b'], 'c': [0, 1, 2], 'd': ['d0', 'd1']},2)[
+6
+a b c d
+-------
+0 b 2 d1
+0 a 1 d0
+1 b 1 d1
+1 a 2 d0
+0 b 0 d0
+1 a 0 d1
+]
+```
+
+Given that in the example above, the `strength=2`, all possible 2-way (pairwise)
+combinations of parameters `a`, `b`, `c`, and `d` are the following:
+
+```python
+[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
+```
+
+The six tests that make up the covering array cover all the possible interactions
+between the values of each of these parameter combinations. For example, the `('a', 'b')`
+parameter combination covers all possible combinations of the values that
+parameters `a` and `b` can take.
+
+Given that parameter `a` can have values `[0, 1]`, and parameter `b` can have values `['a', 'b']`
+all possible interactions are the following:
+
+```python
+[(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
+```
+
+where the first element of each tuple corresponds to the value of the parameter `a`, and the second
+element corresponds to the value of the parameter `b`.
+
+Examining the covering array above, we can see that all possible interactions of parameters
+`a` and `b` are indeed covered at least once. The same check can be done for other parameter combinations.
+
+### Checking Covering Array
+
+The [CoveringArray.check() function] can be used to verify that the tests
+inside the covering array cover all possible `t-way` interactions at least once, and thus
+meet the definition of a covering array.
+
+For example,
+
+```python
+from testflows.combinatorics import CoveringArray
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+tests = CoveringArray(parameters, strength=2)
+
+print(tests.check())
+```
+
+### Dumping Covering Array
+
+The `CoveringArray` object implements a custom `__str__` method, and therefore it can be easily converted into
+a string representation similar to the format used in the [NIST covering array tables](https://math.nist.gov/coveringarrays/ipof/ipof-results.html).
+
+For example,
+
+```python
+   print(CoveringArray(parameters, strength=2))
+```
+
+```bash
+CoveringArray({'a': [0, 1], 'b': ['a', 'b'], 'c': [0, 1, 2], 'd': ['d0', 'd1']},2)[
+6
+a b c d
+-------
+0 b 2 d1
+0 a 1 d0
+1 b 1 d1
+1 a 2 d0
+0 b 0 d0
+1 a 0 d1
+]
+```
+
+## Combinations
+
+The `combinations(iterable, r, with_replacement=False)` function can be used to calculate
+all `r-length` combinations of elements in a specified iterable.
+
+For example,
+
+```python
+from testflows.combinatorics import combinations
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(combinations(parameters.keys(), 2)))
+```
+
+```python
+[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
+```
+
+> This function is equivalent to the standard library's [itertools.combinations](https://docs.python.org/3/library/itertools.html#itertools.combinations).
+
+### With Replacement
+
+You can calculate all combinations with replacement by setting the `with_replacement` argument to `True`.
+
+For example,
+
+```python
+from testflows.combinatorics import combinations
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(combinations(parameters.keys(), 2, with_replacement=True)))
+```
+
+```python
+[('a', 'a'), ('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'b'), ('b', 'c'), ('b', 'd'), ('c', 'c'), ('c', 'd'), ('d', 'd')]
+```
+
+> The `with_replacement=True` option is equivalent to the standard library's [itertools.combinations_with_replacement](https://docs.python.org/3/library/itertools.html#itertools.combinations_with_replacement).
+
+
+## Cartesian Product
+
+You can calculate all possible combinations of elements from different iterables using
+the cartesian `product(*iterables, repeat=1)` function.
+
+For example,
+
+```python
+from testflows.combinatorics import *
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(product(parameters["a"], parameters["b"])))
+```
+
+
+```python
+[(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
+```
+
+> This function is equivalent to the standard library's [itertools.product](https://docs.python.org/3/library/itertools.html#itertools.product).
+
+## Permutations
+
+The `permutations(iterable, r=None)` function can be used to calculate
+the `r-length` permutations of elements for a given iterable.
+
+> **{% attention %}** Permutations are different from `combinations`.
+> In a combination, the elements don't have any order, but in a permutation, the order of elements is important.
+
+For example,
+
+```python
+from testflows.combinatorics import *
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(permutations(parameters.keys(), 2)))
+```
+
+
+```python
+('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'a'), ('b', 'c'), ('b', 'd'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('d', 'a'), ('d', 'b'), ('d', 'c')]
+```
+
+and as we can see, both `('a', 'b')` and `('b', 'a')` elements are present.
+
+> This function is equivalent to the standard library's [itertools.permutations](https://docs.python.org/3/library/itertools.html#itertools.permutations).
+
+## Binomial Coefficients
+
+You can calculate the binomial coefficient, which is the same as
+the number of ways to choose `k` items from `n` items without repetition and without order.
+
+Binomial coefficient is defined as
+
+> {% katex %}\binom{n}{k} = \frac{n!}{k!(n-k)!}{% endkatex %}
+
+when {% katex %}k <= n{% endkatex %}, and is zero when {% katex %}k > n{% endkatex %}.
+
+For example,
+
+```python
+from testflows.combinatorics import *
+
+print(binomial(4,2))
+```
+
+```python
+6
+```
+
+which means that there are `6` ways to choose `2` elements out of `4`.
+
+> This function is equivalent to the standard library's [math.comb](https://docs.python.org/3/library/math.html#math.comb).
 
 # Adding Messages
 
@@ -7860,6 +8488,9 @@ TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc
 [TestFeature]: #Feature
 [Outline]: #Outline
 [TestOutline]: #Outline
+[Combination]: #Combination
+[Sketch]: #Sketch
+[TestSketch]: #Sketch
 [Iteration]: #Iteration
 [RetryIteration]: #RetryIteration
 [Background]: #Background
@@ -7905,337 +8536,367 @@ TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc
 [sys.exc_info()]: https://docs.python.org/3/library/sys.html#sys.exc_info
 [getattr()]: https://docs.python.org/3/library/functions.html#getattr
 [setattr()]: https://docs.python.org/3/library/functions.html#setattr
+[IPOG]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
+[IPOG: A General Strategy for T-Way Software Testing]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
+[Covering Arrays]: #Covering-Arrays-Pairwise-N-wise-Testing
+[Example Pressure Switch]: #Example-Pressure-Switch
+[Cartesian Product]: #Cartesian-Product
+[nested for-loops]: #Simple-Approach-Nested-For-loops
+[Using Sketches]: #Using-Sketches
 
-[And class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2432
-[Args class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L938
-[Argument class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L193
-[ArgumentParser class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L987
-[ArgumentParser.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[AsyncPool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/asyncio.py#L113
-[AsyncPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
-[AsyncPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/asyncio.py#L206
-[AsyncPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/asyncio.py#L150
-[Attribute class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L208
-[Attributes class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L948
-[Attributes.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Background class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2420
-[But class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2435
-[By class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2438
-[Check class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2400
-[Cleanup class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2444
-[Context class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L132
-[Context.cleanup() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L144
-[Critical class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2405
-[Description class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L996
-[Description.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Error class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L133
-[Error.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[Error.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L136
-[Example class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2371
-[Examples class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L999
-[Examples.default_row_format() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/baseobject.py#L120
-[Examples.from_table() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/baseobject.py#L147
-[Executor class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L981
-[Executor.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[FFails class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L739
-[FFails.add() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L757
-[FFails.items() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L754
-[FFails.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Fail class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L118
-[Fail.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[Fail.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L121
-[Failed class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L791
-[Failed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Feature class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2390
-[Finally class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2441
-[Flags class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/flags.py#L101
-[Flags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/flags.py#L176
-[Given class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2423
-[Major class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2410
-[Maps class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L1008
-[Maps.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Metric class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L252
-[Minor class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2415
-[Module class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2317
-[Name class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L993
-[Name.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Node class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L162
-[Node.get_uid() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L176
-[Null class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L145
-[Null.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[Null.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L148
-[NullStep class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2447
-[OK class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L108
-[OK.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[OK.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L111
-[Okayed class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L809
-[Okayed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[OnlyTags class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L682
-[OnlyTags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Onlys class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L638
-[Onlys.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Outline class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2333
-[Parallel class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L975
-[Parallel.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Pool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L57
-[Pool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
-[Pool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L140
-[Pool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L84
-[ProcessPool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L259
-[ProcessPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L289
-[ProcessPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L377
-[ProcessPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L292
-[RSASecret class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L486
-[RSASecret.clear() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L442
-[RSASecret.is_set() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L458
-[Repeat class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L863
-[Repeat.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Repeats class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L848
-[Repeats.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Requirement class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L223
-[Requirements class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L954
-[Requirements.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Retries class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L891
-[Retries.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Retry class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L906
-[Retry.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Scenario class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2395
-[Secret class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L409
-[Secret.clear() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L442
-[Secret.is_set() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L458
-[Setup class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L710
-[Setup.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[SharedAsyncPool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/asyncio.py#L241
-[SharedAsyncPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
-[SharedAsyncPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/asyncio.py#L206
-[SharedAsyncPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/asyncio.py#L253
-[SharedContext class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L266
-[SharedContext.cleanup() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L144
-[SharedProcessPool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L400
-[SharedProcessPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L289
-[SharedProcessPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L377
-[SharedProcessPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/process.py#L412
-[SharedThreadPool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L158
-[SharedThreadPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
-[SharedThreadPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L140
-[SharedThreadPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L170
-[Skip class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L130
-[Skip.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[Skip.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L88
-[SkipTags class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L696
-[SkipTags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Skipped class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L785
-[Skipped.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Skips class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L653
-[Skips.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Specification class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L299
-[Specifications class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L960
-[Specifications.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Step class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2379
-[Suite class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2325
-[Table class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/baseobject.py#L81
-[Table.default_row_format() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/baseobject.py#L120
-[Table.from_table() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/baseobject.py#L147
-[Tag class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L182
-[Tags class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L966
-[Tags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L626
-[Test class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2341
-[TestBackground class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2696
-[TestBackground.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2420
-[TestCase class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2669
-[TestCase.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2341
-[TestCheck class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2675
-[TestCheck.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2400
-[TestFeature class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2690
-[TestFeature.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2390
-[TestModule class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2693
-[TestModule.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2317
-[TestOutline class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2640
-[TestOutline.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2333
-[TestScenario class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2672
-[TestScenario.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2395
-[TestStep class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2615
-[TestStep.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2379
-[TestSuite class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2687
-[TestSuite.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2325
-[The class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/filters.py#L20
-[The.at() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/filters.py#L32
-[The.match() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/filters.py#L41
-[The.set() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/filters.py#L38
-[Then class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2429
-[ThreadPool class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L57
-[ThreadPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
-[ThreadPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L140
-[ThreadPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/executor/thread.py#L84
-[Ticket class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L283
-[Uid class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L972
-[Uid.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[Value class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L268
-[When class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2426
-[XError class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L142
-[XError.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[XError.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L88
-[XErrored class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L803
-[XErrored.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[XFail class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L127
-[XFail.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[XFail.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L88
-[XFailed class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L797
-[XFailed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[XFails class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L713
-[XFails.add() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L729
-[XFails.items() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L726
-[XFails.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[XFlags class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L821
-[XFlags.add() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L837
-[XFlags.items() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L834
-[XFlags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[XNull class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L154
-[XNull.Type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L39
-[XNull.xout() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L88
-[XOkayed class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L815
-[XOkayed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/objects.py#L604
-[append_path() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L86
-[args class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L115
-[aslice() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L426
-[attribute() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L118
-[chunks() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L445
-[cleanup() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L245
-[current() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/__init__.py#L94
-[current_dir() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L33
-[current_module() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L40
-[current_time() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L415
-[debug() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L206
-[define() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2974
-[err() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L277
-[exception() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L221
-[fail() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L258
-[getsattr() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L408
-[has class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L87
-[has.attribute class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L115
-[has.attribute.BaseFilter class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L118
-[has.attribute.BaseFilter.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.attribute.BaseFilter.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.attribute.BaseFilter.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.attribute.BaseFilter.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.attribute.BaseFilter.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.attribute.group class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L141
-[has.attribute.group.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.attribute.group.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.attribute.group.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.attribute.group.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.attribute.group.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.attribute.name class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L121
-[has.attribute.name.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.attribute.name.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.attribute.name.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.attribute.name.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.attribute.name.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.attribute.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L136
-[has.attribute.type.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.attribute.type.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.attribute.type.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.attribute.type.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.attribute.type.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.attribute.uid class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L126
-[has.attribute.uid.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.attribute.uid.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.attribute.uid.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.attribute.uid.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.attribute.uid.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.attribute.value class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L131
-[has.attribute.value.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.attribute.value.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.attribute.value.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.attribute.value.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.attribute.value.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.flag class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L106
-[has.name class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L99
-[has.name.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.name.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.name.getattr() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L102
-[has.name.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.name.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L146
-[has.requirement.BaseFilter class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L150
-[has.requirement.BaseFilter.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.BaseFilter.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.BaseFilter.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.BaseFilter.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.BaseFilter.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement.group class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L178
-[has.requirement.group.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.group.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.group.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.group.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.group.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement.name class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L153
-[has.requirement.name.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.name.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.name.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.name.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.name.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement.priority class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L168
-[has.requirement.priority.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.priority.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.priority.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.priority.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.priority.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement.type class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L173
-[has.requirement.type.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.type.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.type.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.type.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.type.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement.uid class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L158
-[has.requirement.uid.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.uid.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.uid.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.uid.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.uid.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.requirement.version class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L163
-[has.requirement.version.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.requirement.version.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.requirement.version.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L54
-[has.requirement.version.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.requirement.version.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[has.tag class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L92
-[has.tag.containing() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L70
-[has.tag.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L64
-[has.tag.getattr() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L95
-[has.tag.matching() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L76
-[has.tag.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/has.py#L58
-[input() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L325
-[join() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/__init__.py#L108
-[load() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L61
-[load_module() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L47
-[load_submodules() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L52
-[loads() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2708
-[main() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L106
-[message() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L216
-[metric() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L145
-[note() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L201
-[null() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L283
-[ok() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L252
-[ordered() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2699
-[pause() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L313
-[previous() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/__init__.py#L101
-[private_key() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L167
-[process_service() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/service.py#L499
-[repeat() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2928
-[repeats class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2853
-[requirement() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L127
-[result() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L226
-[retries class]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2740
-[retry() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/test.py#L2819
-[skip() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L271
-[tag() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L138
-[text() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L176
-[ticket() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L152
-[top() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/parallel/__init__.py#L87
-[trace() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L211
-[value() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L159
-[xerr() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L301
-[xfail() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L295
-[xnull() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L307
-[xok() function]: https://github.com/testflows/TestFlows-Core/blob/858037b74c8ad9ed36096d1d222d22d6b2072938/testflows/_core/funcs.py#L289
+[And class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3223
+[Args class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1140
+[Argument class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L232
+[ArgumentParser class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1199
+[ArgumentParser.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[AsyncPool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/asyncio.py#L121
+[AsyncPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
+[AsyncPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/asyncio.py#L235
+[AsyncPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/asyncio.py#L167
+[Attribute class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L248
+[Attributes class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1151
+[Attributes.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Background class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3207
+[But class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3227
+[By class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3231
+[Check class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3175
+[Cleanup class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3239
+[Combination class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3071
+[Context class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L229
+[Context.cleanup() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L241
+[Critical class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3183
+[Description class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1210
+[Description.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Error class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L165
+[Error.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[Error.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L168
+[Example class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3116
+[Examples class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1214
+[Examples.default_row_format() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/baseobject.py#L126
+[Examples.from_table() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/baseobject.py#L152
+[Executor class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1192
+[Executor.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[FFails class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L880
+[FFails.add() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L899
+[FFails.items() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L896
+[FFails.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Fail class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L147
+[Fail.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[Fail.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L150
+[Failed class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L938
+[Failed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Feature class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3158
+[Finally class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3235
+[Flags class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/flags.py#L113
+[Flags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/flags.py#L247
+[Given class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3211
+[Major class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3191
+[Maps class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1225
+[Maps.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Metric class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L317
+[Minor class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3199
+[Module class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3004
+[Name class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1206
+[Name.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Node class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L199
+[Node.get_uid() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L213
+[Null class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L179
+[Null.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[Null.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L182
+[NullStep class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3243
+[OK class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L136
+[OK.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[OK.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L139
+[Okayed class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L965
+[Okayed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[OnlyTags class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L816
+[OnlyTags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Onlys class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L765
+[Onlys.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Outline class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3024
+[Parallel class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1185
+[Parallel.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Pool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L58
+[Pool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
+[Pool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L152
+[Pool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L92
+[ProcessPool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L291
+[ProcessPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L330
+[ProcessPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L445
+[ProcessPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L333
+[RSASecret class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L596
+[RSASecret.clear() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L554
+[RSASecret.is_set() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L570
+[Repeat class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1029
+[Repeat.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Repeats class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1012
+[Repeats.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Requirement class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L264
+[Requirements class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1158
+[Requirements.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Retries class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1070
+[Retries.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Retry class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1087
+[Retry.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Scenario class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3167
+[Secret class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L519
+[Secret.clear() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L554
+[Secret.is_set() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L570
+[Setup class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L848
+[Setup.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[SharedAsyncPool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/asyncio.py#L277
+[SharedAsyncPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
+[SharedAsyncPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/asyncio.py#L235
+[SharedAsyncPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/asyncio.py#L292
+[SharedContext class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L375
+[SharedContext.cleanup() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L241
+[SharedProcessPool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L474
+[SharedProcessPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L330
+[SharedProcessPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L445
+[SharedProcessPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/process.py#L489
+[SharedThreadPool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L176
+[SharedThreadPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
+[SharedThreadPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L152
+[SharedThreadPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L191
+[Sketch class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3054
+[Skip class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L161
+[Skip.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[Skip.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L114
+[SkipTags class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L832
+[SkipTags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Skipped class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L929
+[Skipped.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Skips class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L782
+[Skips.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Specification class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L367
+[Specifications class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1165
+[Specifications.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Step class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3133
+[Suite class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3014
+[Table class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/baseobject.py#L87
+[Table.default_row_format() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/baseobject.py#L126
+[Table.from_table() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/baseobject.py#L152
+[Tag class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L220
+[Tags class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1174
+[Tags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L752
+[Test class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3044
+[TestBackground class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3617
+[TestBackground.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3207
+[TestCase class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3581
+[TestCase.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3044
+[TestCheck class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3589
+[TestCheck.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3175
+[TestFeature class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3609
+[TestFeature.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3158
+[TestModule class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3613
+[TestModule.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3004
+[TestOutline class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3515
+[TestOutline.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3024
+[TestScenario class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3585
+[TestScenario.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3167
+[TestSketch class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3545
+[TestSketch.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3044
+[TestStep class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3489
+[TestStep.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3133
+[TestSuite class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3605
+[TestSuite.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3014
+[The class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/filters.py#L21
+[The.at() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/filters.py#L33
+[The.match() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/filters.py#L41
+[The.set() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/filters.py#L38
+[Then class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3219
+[ThreadPool class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L58
+[ThreadPool.map() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/usr/lib/python3.10/concurrent/futures/_base.py#L585
+[ThreadPool.shutdown() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L152
+[ThreadPool.submit() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/executor/thread.py#L92
+[Ticket class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L350
+[Uid class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1181
+[Uid.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[Value class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L334
+[When class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3215
+[XError class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L175
+[XError.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[XError.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L114
+[XErrored class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L956
+[XErrored.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[XFail class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L157
+[XFail.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[XFail.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L114
+[XFailed class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L947
+[XFailed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[XFails class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L852
+[XFails.add() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L869
+[XFails.items() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L866
+[XFails.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[XFlags class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L983
+[XFlags.add() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1000
+[XFlags.items() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L997
+[XFlags.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[XNull class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L189
+[XNull.Type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L40
+[XNull.xout() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L114
+[XOkayed class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L974
+[XOkayed.keys() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L728
+[always() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L530
+[append_path() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L93
+[args class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L126
+[aslice() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L493
+[attribute() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L130
+[choose() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3957
+[chunks() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L513
+[cleanup() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L298
+[current() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/__init__.py#L98
+[current_dir() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L35
+[current_module() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L42
+[current_time() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L482
+[debug() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L254
+[define() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3943
+[either() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3971
+[err() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L334
+[exception() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L272
+[fail() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L313
+[getsattr() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L475
+[has class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L97
+[has.attribute class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L126
+[has.attribute.BaseFilter class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L129
+[has.attribute.BaseFilter.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.attribute.BaseFilter.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.attribute.BaseFilter.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.attribute.BaseFilter.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.attribute.BaseFilter.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.attribute.group class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L152
+[has.attribute.group.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.attribute.group.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.attribute.group.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.attribute.group.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.attribute.group.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.attribute.name class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L132
+[has.attribute.name.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.attribute.name.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.attribute.name.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.attribute.name.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.attribute.name.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.attribute.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L147
+[has.attribute.type.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.attribute.type.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.attribute.type.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.attribute.type.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.attribute.type.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.attribute.uid class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L137
+[has.attribute.uid.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.attribute.uid.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.attribute.uid.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.attribute.uid.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.attribute.uid.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.attribute.value class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L142
+[has.attribute.value.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.attribute.value.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.attribute.value.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.attribute.value.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.attribute.value.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.flag class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L117
+[has.name class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L110
+[has.name.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.name.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.name.getattr() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L113
+[has.name.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.name.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L157
+[has.requirement.BaseFilter class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L160
+[has.requirement.BaseFilter.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.BaseFilter.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.BaseFilter.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.BaseFilter.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.BaseFilter.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement.group class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L188
+[has.requirement.group.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.group.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.group.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.group.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.group.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement.name class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L163
+[has.requirement.name.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.name.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.name.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.name.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.name.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement.priority class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L178
+[has.requirement.priority.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.priority.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.priority.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.priority.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.priority.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement.type class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L183
+[has.requirement.type.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.type.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.type.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.type.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.type.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement.uid class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L168
+[has.requirement.uid.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.uid.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.uid.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.uid.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.uid.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.requirement.version class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L173
+[has.requirement.version.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.requirement.version.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.requirement.version.getattr() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L59
+[has.requirement.version.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.requirement.version.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[has.tag class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L103
+[has.tag.containing() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L77
+[has.tag.endingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L70
+[has.tag.getattr() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L106
+[has.tag.matching() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L84
+[has.tag.startingwith() method]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/has.py#L63
+[input() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L389
+[join() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/__init__.py#L112
+[load() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L67
+[load_module() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L49
+[load_submodules() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L54
+[loads() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3633
+[main() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L116
+[message() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L266
+[metric() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L178
+[note() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L248
+[null() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L341
+[ok() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L306
+[ordered() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3621
+[pause() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L376
+[previous() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/__init__.py#L105
+[private_key() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L203
+[process_service() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/service.py#L606
+[repeat() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3891
+[repeats class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3809
+[requirement() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L140
+[result() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L278
+[retries class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3669
+[retry() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3757
+[skip() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L327
+[tag() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L170
+[text() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L213
+[ticket() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L186
+[top() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/parallel/__init__.py#L91
+[trace() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L260
+[value() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L194
+[xerr() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L362
+[xfail() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L355
+[xnull() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L369
+[xok() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/funcs.py#L348
+[CoveringArray class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L43
+[CoveringArray.bitmap_index_combination_values() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L138
+[CoveringArray.calculate_coverage() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L314
+[CoveringArray.check() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L361
+[CoveringArray.combination_index() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L91
+[CoveringArray.combination_values() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L300
+[CoveringArray.combination_values_bitmap_index() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L112
+[CoveringArray.construct_π() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L169
+[CoveringArray.convert_tests_to_covering_array() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L276
+[CoveringArray.generate() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L338
+[CoveringArray.horizontal_extension() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L193
+[CoveringArray.prepare() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L66
+[CoveringArray.set_combination_values() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L309
+[CoveringArray.vertical_extension() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L214
+[CoveringArrayError class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/covering_array.py#L22
+[combinations() function]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/combinatorics/__init__.py#L25

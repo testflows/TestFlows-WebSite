@@ -115,9 +115,10 @@ blockquote {
     position: fixed;
     bottom: 0.5em;
     right: 1em;
-    color: orange !important;
+    color: #54e5ae !important;
     font-size: 2.5em;
     cursor: pointer;
+    z-index: 1000;
 }
 
 .jump:active,

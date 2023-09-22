@@ -2,6 +2,7 @@
 import sys
 import inspect
 import testflows.core
+import testflows._core.combinatorics
 from testflows._core import __repository__, __commit__
 
 
@@ -50,5 +51,6 @@ def generate(obj, writer, prefix=""):
 writer = sys.stdout
 try:
     generate(obj=testflows.core, writer=writer)
+    generate(obj=testflows._core.combinatorics, writer=writer)
 finally:
     writer.flush()
