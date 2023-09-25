@@ -13,7 +13,7 @@ will agree with the quote above, somehow it is not applied or scarcely applied t
 We are developing too fast, and it seems like there is no time to think about the functionality that we are developing,
 much less write it down <!-- more -->.
 
-Do requirements apply to software development and testing? The answer is definitely "yes", as the requirements are the starting point of any design. It is a universal principle across any field of engineering. It does not matter if you are designing a building, designing an aircraft, developing software for nuclear reactors, trains, or even a simple hello world program.
+Do requirements apply to software development and testing? The answer is definitely "yes", as requirements are the starting point of any design. It is a universal principle across any field of engineering. It does not matter if you are designing a building, designing an aircraft, developing software for nuclear reactors, trains, or even a simple hello world program.
 Whether we like it or not, requirements have to be handled one way or another. As the saying goes “you can run, but you can’t hide" from them.
 When we don’t work with requirements, we do pay the price, as skipping them does not come with zero-cost but actually
 creates a drag on the whole software development process, irrespective of the software’s functionality.
@@ -29,24 +29,23 @@ Can we find a relationship between testers and requirements? Is there such a rel
 Where do requirements come into play when we are testing software? I’ve taken some definitions from [ISTQB](https://www.istqb.org/) (International Software
 Testing Qualifications Board) [glossary](https://glossary.istqb.org/en_US/search) to help us get started.
 
-First, let’s see the how term tester is defined. ISTQB defines a [tester](https://glossary.istqb.org/en_US/search?term=tester%20&exact_matches_first=true) as "a person who
+First, let’s see how the term tester is defined. ISTQB defines a [tester](https://glossary.istqb.org/en_US/search?term=tester%20&exact_matches_first=true) as "a person who
 performs testing". Where [testing](https://glossary.istqb.org/en_US/search?term=testing&exact_matches_first=true) is defined as "the process within the software development lifecycle that evaluates the quality of
-a component or a system". The key part of the definition there,is that testing is related to evaluating “quality”, what is quality?
+a component or a system". The key part of the definition, is that testing is related to evaluating “quality”. What is quality?
 [Quality](https://glossary.istqb.org/en_US/term/quality-4) is defined as "a degree to which a work product satisfies
 stated and implied needs of its stakeholders". No direct mention of
-requirements so far; how does ISTQB define a requirement? Well, it says that [a requirement](https://glossary.istqb.org/en_US/term/requirement-4-2) is "a provision that contains criteria to be fulfilled".
+requirements so far. So, how does ISTQB defines a requirement? Well, it says that [a requirement](https://glossary.istqb.org/en_US/term/requirement-4-2) is "a provision that contains criteria to be fulfilled".
 
-Well, interesting,thre is no straight path from tester to requirements here on the surface. This is maybe one of the problems,requirements
-are not highlighted enough, and the connection between what you are doing and the requirements might not be obvious, as it should be given,
-remember what Nicolas D. Kefalas said: *“Requirements are the starting point of any design”*, so if requirements are at the starting
-point surely they should be given their place at the end of the design implementation process, where testing is performed
-testing, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
+Well, that's interesting, there is no straight path from tester to requirements here on the surface. This is maybe one of the problems, requirements
+are not highlighted enough, and the connection between what you are doing and the requirements might not be obvious as it should be, given
+that remember what Nicolas D. Kefalas said: *“Requirements are the starting point of any design”*, so if requirements are at the starting
+point surely they should be given their place at the end of the design implementation process, where testing is performed, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
 in the process? We all know that in most cases, requirements are lost and are not clearly present or driving either design,
-development or testing.
+development, or testing.
 
 Let's take the liberty of redefining these terms close to how {% testflows %} uses them to fully implement enterprise-level software quality assurance process. First of all, a tester for me at the beginning of my career was not a person but a multi-millionaire
 large piece of advanced test equipment sitting on a factory production floor. So with this in mind, a more general definition of a tester
-is anything that performs testing, and a person would be a special case of that.It's not a big deal. What about
+is anything that performs testing, and a person would be a special case of that. It's not a big deal. What about
 testing that a tester performs? We can shorten it and simply define testing as an act of evaluating quality, where the key part is quality.
 The definition of testing is similar to the ISTQB's definition if you remove the secondary information. Where the real difference is,
 is in the definition of quality itself.
@@ -56,14 +55,14 @@ want to guess what the implied needs are. Why guess? If there are implied needs,
 implicit is permitted. Only clearly stated requirements. We also usually think of quality as either
 being there or not being there. Where quality is found when all requirements are satisfied. So definitely not the same. ISTQB uses the word
 *need* in the definition of quality, but *need* in their glossary is not defined. Do I need it, or don’t I? How do I know? One could say
-that stated and implied needs of its stakeholders” means requirements; however the definition of what a requirement is is also not very clear.
+that "stated and implied needs of its stakeholders" means requirements; however the definition of what a requirement is is also not very clear.
 Instead, the definition that we use for a requirement is that a requirement is a description of a behavior.
 
 {% blockquote %}
  "Requirement is a definition of a behavior."
 {% endblockquote %}
 
-We use these definitions in our implementing software quality assurance process, and it allows us to
+We use these definitions in our software quality assurance process, and it allows us to
 relate testing in general and tester activities specifically to requirements in a very straightforward way.
 The key part is that testing is the act of evaluating if a product satisfies requirements. Simple and to the point.
 We can take it further and come closer to mathematical formalism by looking closer at what a requirement actually is.
