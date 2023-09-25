@@ -1,0 +1,616 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Working With Requirements Just Like With Code | TestFlows</title>
+  <meta name="description" content="Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+  
+  <link href="/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1695666891006" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1695666891006" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1695666891006" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+    <div class="banner in-view-watcher">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <h1>Working With Requirements Just Like With Code</h1>
+        <h2></h2>
+        <i class="fa-5x pt-3 fas fa-glasses pt-5 pb-5"></i>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Working With Requirements Just Like With Code</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">September 25, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=http://localhost:4000/blog/working_with_requirements_just_like_with_code/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/blog/working_with_requirements_just_like_with_code/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/blog/working_with_requirements_just_like_with_code/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/requirements-as-code.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>“Requirements are the starting point of any design”, this is a quote from the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=3afHlAwBudM">presentation given by Nicholas D. Kefalas</a>, who is a senior technical officer at Sikorsky Aircraft&#x2F;Lockheed Martin. In this article, we’ll explore how you can work with requirements just like with code and look at a simple example of specifying <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/TestFlows-Core/blob/master/tests/examples/calculator/requirements/requirements.md">requirements for a Google Calculator web application</a>. While most people
+will agree with the quote above, somehow it is not applied or scarcely applied to the commercial software development process.
+We are developing too fast, and it seems like there is no time to think about the functionality that we are developing,
+much less write it down <span id="more"></span>.</p>
+<p>Do requirements apply to software development and testing? The answer is definitely “yes”, as requirements are the starting point of any design. It is a universal principle across any field of engineering. It does not matter if you are designing a building, designing an aircraft, developing software for nuclear reactors, trains, or even a simple hello world program.
+Whether we like it or not, requirements have to be handled one way or another. As the saying goes “you can run, but you can’t hide” from them.
+When we don’t work with requirements, we do pay the price, as skipping them does not come with zero-cost but actually
+creates a drag on the whole software development process, irrespective of the software’s functionality.
+So, why work with requirements? Because by definition of testing and quality, it is all about the requirements.</p>
+<blockquote><p>“Requirements are the starting point of any design.”</p>
+<footer><strong>Nicholas D. Kefalas, Senior Technical Officer at Sikorsky Aircraft/Lockheed Martin -</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=3afHlAwBudM">System Engineering Requirements</a></cite></footer></blockquote>
+
+<h1 id="Relationship-between-requirements-and-testers"><a href="#Relationship-between-requirements-and-testers" class="headerlink" title="Relationship between requirements and testers"></a>Relationship between requirements and testers</h1><p>Can we find a relationship between testers and requirements? Is there such a relationship?
+Where do requirements come into play when we are testing software? I’ve taken some definitions from <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.istqb.org/">ISTQB</a> (International Software
+Testing Qualifications Board) <a target="_blank" rel="noopener external nofollow noreferrer" href="https://glossary.istqb.org/en_US/search">glossary</a> to help us get started.</p>
+<p>First, let’s see how the term tester is defined. ISTQB defines a <a target="_blank" rel="noopener external nofollow noreferrer" href="https://glossary.istqb.org/en_US/search?term=tester%20&exact_matches_first=true">tester</a> as “a person who
+performs testing”. Where <a target="_blank" rel="noopener external nofollow noreferrer" href="https://glossary.istqb.org/en_US/search?term=testing&exact_matches_first=true">testing</a> is defined as “the process within the software development lifecycle that evaluates the quality of
+a component or a system”. The key part of the definition, is that testing is related to evaluating quality. What is quality?
+<a target="_blank" rel="noopener external nofollow noreferrer" href="https://glossary.istqb.org/en_US/term/quality-4">Quality</a> is defined as “a degree to which a work product satisfies
+stated and implied needs of its stakeholders”. No direct mention of
+requirements so far. So, how does ISTQB defines a requirement? Well, it says that <a target="_blank" rel="noopener external nofollow noreferrer" href="https://glossary.istqb.org/en_US/term/requirement-4-2">a requirement</a> is “a provision that contains criteria to be fulfilled”.</p>
+<p>Well, that’s interesting, there is no straight path from tester to requirements here on the surface. This may be one of the problems. Requirements are not highlighted enough, and the connection between what you are doing and the requirements might not be as obvious as it should be, given that remember what Nicolas D. Kefalas said: “Requirements are the starting point of any design”. If requirements are at the starting
+point, surely they should be given their place at the end of the design implementation process, where testing is performed, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
+in the process? We all know that in most cases, requirements are lost and are not clearly present or driving either design,
+development, or testing.</p>
+<p>Let’s take the liberty of redefining these terms close to how <span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.svg"></span> uses them to fully implement enterprise-level software quality assurance process. First of all, a tester for me at the beginning of my career was not a person but a multi-millionaire
+large piece of advanced test equipment sitting on a factory production floor. So with this in mind, a more general definition of a tester
+is anything that performs testing, and a person would be a special case of that. It’s not a big deal. What about
+testing that a tester performs? We can shorten it and simply define testing as an act of evaluating quality, where the key part is quality.
+The definition of testing is similar to the ISTQB’s definition if you remove the secondary information. Where the real difference is,
+is in the definition of quality itself.</p>
+<p>We define quality as satisfying requirements, definitely not some needs, especially needs that could be stated or implied. I surely don’t
+want to guess what the implied needs are. Why guess? If there are implied needs, you might as well discuss and state them explicitly. So nothing
+implicit is permitted. Only clearly stated requirements. We also usually think of quality as either
+being there or not being there. Where quality is found when all requirements are satisfied. So definitely not the same. ISTQB uses the word
+<em>need</em> in the definition of quality, but <em>need</em> in their glossary is not defined. Do I need it, or I don’t? How do I know? One could say that “stated and implied needs of its stakeholders” means requirements; however, the definition of a requirement is also unclear. Instead, the definition that we use for a requirement is that a requirement is a description of a behavior.</p>
+<blockquote><p>“Quality is satisfying requirements and <br>
+requirement is a description of a behavior.”</p>
+</blockquote>
+
+<p>We use these definitions in our software quality assurance process, allowing us to relate testing in general and tester activities specifically to requirements in a very straightforward way.
+The critical part is that testing is the act of evaluating if a product satisfies requirements. Simple and to the point. We can take it further and come closer to mathematical formalism by looking at what a requirement actually is.</p>
+<h1 id="Defining-a-requirement-more-precisely"><a href="#Defining-a-requirement-more-precisely" class="headerlink" title="Defining a requirement more precisely"></a>Defining a requirement more precisely</h1><p>Given that we’ve already defined a requirement as a description of a behavior, we can take a step further and define
+precisely what behavior is. For this, we can leverage definitions provided by Leslie Lamport
+in his book <a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">Specifying Systems for TLA+</a> where he defines a behavior as “an infinite sequence of states” and a state as “an assignment of values to variables”. For those of you who have never heard of TLA+ or Leslie Lamport
+I encourage you to look him up. TLA stands for Temporal Logic of Actions which, is a formal specification language designed by Leslie Lamport
+for specifying system behavior. He has an excellent <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/@tlavideocourse8540/videos">video course</a>
+that provides an introduction to TLA+.</p>
+<blockquote><p>“Behavior is an infinite sequence of states.”<br>
+“State is an assignment of values to variables.”</p>
+<footer><strong>Leslie Lamport, TLA+ -</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">Specifying Systems</a></cite></footer></blockquote>
+
+<p>We already tied requirements to behaviors, and definition of a behavior and a state has taken us to formal
+specifications. If you look back at our definitions, we went from defining what a tester is to formal specifications.
+I find it elegant and powerful, and that’s why we use these definitions instead of what ISTQB uses.</p>
+<p>The tester performs testing; testing evaluates quality; quality is defined as satisfying requirements; requirements are descriptions of behaviors; behaviors are infinite sequences of states, where a state is an assignment of values to variables. It is beautiful, and precise. We went from tester to state, and
+funny enough <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html">Carnegie Mellon School of Computer Science</a> defines a software system as a “very, very complicated state machine”.</p>
+<blockquote><p>“A software system is a very, very complicated state machine.”</p>
+<footer><strong>Norman Papernick</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html">, Carnegie Mellon School of Computer Science</a></cite></footer></blockquote>
+
+<h2 id="Looking-closer-at-the-definitions"><a href="#Looking-closer-at-the-definitions" class="headerlink" title="Looking closer at the definitions"></a>Looking closer at the definitions</h2><blockquote><p>“Behavior is an infinite sequence of states.”<br>
+“State is an assignment of values to variables.”</p>
+<footer><strong>Leslie Lamport, TLA+ -</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">Specifying Systems</a></cite></footer></blockquote>
+
+<p>Let’s try to apply the definitions given above to a simple requirement for a web application. For example,</p>
+<blockquote>
+<p>The login button SHALL have a blue color.</p>
+</blockquote>
+<p>Given that a requirement is a description of a behavior, and a behavior is an infinite sequence of states, we can precisely
+define the requirement above as follows</p>
+<blockquote>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>b</mi><mi>u</mi><mi>t</mi><mi>t</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi>o</mi><mi>r</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi><mi>b</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>→</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>b</mi><mi>u</mi><mi>t</mi><mi>t</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi>o</mi><mi>r</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi><mi>b</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo>→</mo><mo>…</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
+   login\_button\_color = &quot;blue&quot; \\
+\end{bmatrix}
+\to
+\begin{bmatrix}
+   login\_button\_color = &quot;blue&quot; \\
+\end{bmatrix}
+\to
+\dots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8500000000000001em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">b</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">&quot;</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord">&quot;</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000000000000003em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">]</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8500000000000001em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">b</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">&quot;</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord">&quot;</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000000000000003em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">]</span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">→</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.12em;vertical-align:0em;"></span><span class="minner">…</span></span></span></span>
+</blockquote>
+<p>where each</p>
+<blockquote>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>b</mi><mi>u</mi><mi>t</mi><mi>t</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi>o</mi><mi>r</mi><mo>=</mo><mi mathvariant="normal">&quot;</mi><mi>b</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
+   login\_button\_color = &quot;blue&quot;
+\end{bmatrix}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">[</span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8500000000000001em;"><span style="top:-3.01em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">b</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">&quot;</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord">&quot;</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.35000000000000003em;"><span></span></span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">]</span></span></span></span></span></span>
+</blockquote>
+<p>defines a state. In this case, each state has one variable, the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>b</mi><mi>u</mi><mi>t</mi><mi>t</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi>o</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">login\_button\_color</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">b</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span></span></span></span>, and that variable
+can be assigned a value of any color. However, in our case, based on the requirement definition, each valid state
+must have variable <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>l</mi><mi>o</mi><mi>g</mi><mi>i</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>b</mi><mi>u</mi><mi>t</mi><mi>t</mi><mi>o</mi><mi>n</mi><mi mathvariant="normal">_</mi><mi>c</mi><mi>o</mi><mi>l</mi><mi>o</mi><mi>r</mi></mrow><annotation encoding="application/x-tex">login\_button\_color</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.00444em;vertical-align:-0.31em;"></span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">b</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mord mathnormal">t</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord" style="margin-right:0.02778em;">_</span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span></span></span></span> be assigned the value <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">&quot;</mi><mi>b</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi mathvariant="normal">&quot;</mi></mrow><annotation encoding="application/x-tex">&quot;blue&quot;</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord">&quot;</span><span class="mord mathnormal">b</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord">&quot;</span></span></span></span>.</p>
+<p>It is also important to note that the requirement implies that the color of the login button stays blue.
+That’s the infinite part of the definition of the behavior. This
+means that to verify this requirement using a test, the test will have to continuously
+check the color property of the login button to make sure it is blue and stays blue. Of course, this is not
+practical, nonetheless, if your users notice that your login button starts changing colors after a few seconds
+once the login page is loaded, they will definitely consider that to be a bug in your web application.
+Therefore, the definition of a behavior as an infinite sequence of states has very practical implications
+and puts a limit on what a test can actually verify.</p>
+<p>Another example could be a requirement about a function that should return a sum of the two arguments that it is passed.</p>
+<blockquote>
+<p>The function <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mi>d</mi><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">add(a,b)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mord mathnormal">d</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">b</span><span class="mclose">)</span></span></span></span> SHALL return the value of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mo>+</mo><mi>b</mi></mrow><annotation encoding="application/x-tex">a + b</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">b</span></span></span></span>.</p>
+</blockquote>
+<p>This requirement means that only the following states form part of a valid behavior</p>
+<blockquote>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo>=</mo><mn>4</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mo>=</mo><mo>−</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo>=</mo><mn>0</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mo>=</mo><mn>3</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo>=</mo><mn>5</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mo>…</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
+   a = 2 \\
+   b = 2 \\
+   result = 4
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = -2 \\
+   b = 2 \\
+   result = 0
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = 3 \\
+   b = 2 \\
+   result = 5
+\end{bmatrix}
+,
+\dots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.6010299999999997em;vertical-align:-1.55002em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-3.0099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-1.8099999999999994em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">4</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.5500000000000007em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">−</span><span class="mord">2</span></span></span><span style="top:-3.0099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-1.8099999999999994em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.5500000000000007em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">3</span></span></span><span style="top:-3.0099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-1.8099999999999994em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">5</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.5500000000000007em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">…</span></span></span></span>
+</blockquote>
+<p>but states such as</p>
+<blockquote>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo>=</mo><mn>3</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mo>=</mo><mo>−</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mrow><mo fence="true">[</mo><mtable rowspacing="0.15999999999999992em" columnspacing="1em"><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>a</mi><mo>=</mo><mn>3</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>b</mi><mo>=</mo><mn>2</mn></mrow></mstyle></mtd></mtr><mtr><mtd><mstyle scriptlevel="0" displaystyle="false"><mrow><mi>r</mi><mi>e</mi><mi>s</mi><mi>u</mi><mi>l</mi><mi>t</mi><mo>=</mo><mn>4</mn></mrow></mstyle></mtd></mtr></mtable><mo fence="true">]</mo></mrow><mo separator="true">,</mo><mo>…</mo></mrow><annotation encoding="application/x-tex">\begin{bmatrix}
+   a = 2 \\
+   b = 2 \\
+   result = 3
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = -2 \\
+   b = 2 \\
+   result = 2
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = 3 \\
+   b = 2 \\
+   result = 4
+\end{bmatrix}
+,
+\dots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:3.6010299999999997em;vertical-align:-1.55002em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-3.0099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-1.8099999999999994em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">3</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.5500000000000007em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">−</span><span class="mord">2</span></span></span><span style="top:-3.0099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-1.8099999999999994em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.5500000000000007em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner"><span class="mopen"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎣</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎢</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎡</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span><span class="mord"><span class="mtable"><span class="col-align-c"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.05em;"><span style="top:-4.21em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">a</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">3</span></span></span><span style="top:-3.0099999999999993em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">b</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">2</span></span></span><span style="top:-1.8099999999999994em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span><span class="mord mathnormal">u</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mord">4</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.5500000000000007em;"><span></span></span></span></span></span></span></span><span class="mclose"><span class="delimsizing mult"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:2.0510099999999998em;"><span style="top:-2.2500000000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎦</span></span></span><span style="top:-2.8099900000000004em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎥</span></span></span><span style="top:-4.05101em;"><span class="pstrut" style="height:3.1550000000000002em;"></span><span class="delimsizinginner delim-size4"><span>⎤</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55002em;"><span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="minner">…</span></span></span></span>
+</blockquote>
+<p>are not allowed and would indicate that a requirement is not met and the function <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mi>d</mi><mi>d</mi><mo stretchy="false">(</mo><mi>a</mi><mo separator="true">,</mo><mi>b</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">add(a,b)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">a</span><span class="mord mathnormal">d</span><span class="mord mathnormal">d</span><span class="mopen">(</span><span class="mord mathnormal">a</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal">b</span><span class="mclose">)</span></span></span></span> has a bug.</p>
+<p>Most software developers and testers do not think of a software system under test as a state machine; however,
+as the two simple examples above show, thinking of requirements and the system as a whole in terms of infinite state sequences
+helps understand what a requirement is and what the system actually must do at a deeper and much more precise level.</p>
+<p>Here is the quote that Leslie Lamport gives in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://youtu.be/p54W-XOIEF8?list=PLWAv2Etpa7AOAwkreYImYt0gIpOdWQevD&t=491">first video in his “Introduction to TLA+” video series</a> that emphasizes the benefits of thinking about a software system as a state machine.</p>
+<blockquote><p>We witnessed first hand the brain washing done by years of C programming.</p>
+<footer><strong>Eric Verhulst</strong></footer></blockquote>
+
+<p>Thinking about a software system as a state machine is not only useful at the design stage; it is critical
+to understand what testing a software system actually means and implies.</p>
+<h1 id="Requirements-for-a-requirement"><a href="#Requirements-for-a-requirement" class="headerlink" title="Requirements for a requirement"></a>Requirements for a requirement</h1><p>Let’s now look at some main requirements for a requirement. There are six of them:</p>
+<blockquote>
+<ul>
+<li>requirement SHALL be <strong>unique</strong></li>
+<li>requirement SHALL have a <strong>unique identifier</strong></li>
+<li>requirement by convention SHALL use <strong>SHALL</strong></li>
+<li>requirement SHALL be <strong>versioned</strong></li>
+<li>requirement SHALL have <strong>traceable origin and modifications</strong></li>
+<li>requirement SHALL be written to be <strong>testable</strong></li>
+</ul>
+</blockquote>
+<p>I’ve introduced you to the SHALL notation and basic requirements. Again, remember that a requirement is a description of a behavior,
+where a behavior is an infinite sequence of states, and a state is an assignment of values to variables. So given that I claim that these six statements are requirements, then you should now be able to see the behavior, the infinite sequence of states, and the assignment of values to variables. They are all there; you just have to get used to them to be able to see them. One way to see it is to use your object-oriented skills and define a requirement as an object,
+where unique, unique identifier, has-SHALL, versioned, traceable, and testable are boolean attributes of this object, where each can either
+be <em>true</em> or <em>false</em>.</p>
+<p>The last part, where requirements must be testable, is critical; this establishes a connection between testing and requirements.
+When you are writing requirements, you should think about how they will be tested, and when you are writing a test, you should
+think about the requirements that you are testing. Next time you are writing a test, think about which requirement is being
+tested and how that requirement is defined. Was it a JIRA, the developer told you, a customer, and was even written down?</p>
+<p>Ideally, we want to have a one-to-one relationship between requirements and tests. However, in general, a requirement can be
+verified by one or more tests, and a test can verify one or more requirements. For example, some requirements are generic and
+are verified by a suite of tests, and some tests are written in such a way that they can verify more than one requirement.
+In general, if you find that your test verifies more than one requirement, it should serve as a hint that most likely those
+requirements should be collapsed into one. Remember, ideally, we want to have a one-to-one relationship.</p>
+<p>The important part of understanding requirements is that they live above the implementation, above the code level.
+It is hard to convince some developers that code is not documenting the behavior - it is implementing it.
+This is evident from the standard Hello World program.
+The requirements for the Hello World program can be implemented in many programming languages.
+Therefore, requirements force you to think above the code level. This is very useful; senior software developers understand it beacuse they’ve been bitten
+by experience dealing with errors from trying to do something before thinking about it. Either measure seven times and cut one time, or don’t measure and
+cut seven times. Which one do you prefer?</p>
+<h1 id="Why-work-with-requirements"><a href="#Why-work-with-requirements" class="headerlink" title="Why work with requirements?"></a>Why work with requirements?</h1><p>One would generally find requirements being formalized in regulated industries where, by law, you are forced to structure your software
+development process around them. There are good reasons for it, would you want the airplane to fly with the software you have written or tested?
+Is it good enough? Most likely not. So why do we find that working with requirements is useful? Again, first by definition of
+testing and quality. If you want to get rid of requirements, you most likely have to live in a different universe. This one needs them for
+any design. Remember, <em>“requirements are the starting point of any design”</em>.</p>
+<p>The first step to making them practical is to trim anything that we don’t need. I have shown you an example when I provided alternative definitions
+of key concepts that were short and precise. Given that we know that requirements are at the core of testing and quality, we have no
+choice but to deal with them. We found that, funny enough, having requirements for a given feature makes “context switching” between features
+a much less painlful process. I can bring a new engineer and throw them at the task and the requirements will provide a guide for them.
+They organize the whole quality assurance process. What needs to be done is easy to know and simple, what is the next requirement that needs to be covered?
+Requirements improve communication, as you can share requirements with developers, customers, and management to precisely communicate expected functionality.</p>
+<p>Quality assurance team can now actually provide meaningful reports. The most important report is not how many tests have passed or failed, or lines of code
+that have been hit by tests, or any other indirect metrics. The most important report is the <strong>requirements coverage report</strong> which tells us which
+functionality works and which doesn’t. I don’t care if it takes ten tests or one million tests. If ten tests pass or one million tests pass,
+this is meaningless; what customers care about is what works and what does not. Knowing what was not tested is even more important than knowing
+what was tested. You can only know what functionality was tested if you tie your tests to requirements.
+So if you do the right thing and incorporate requirements into your workflow, then you will make your life easier and you’ll move faster,
+and this is what we want: easier and faster.</p>
+<h1 id="Working-with-requirements"><a href="#Working-with-requirements" class="headerlink" title="Working with requirements"></a>Working with requirements</h1><p>How can we work with requirements that match software development as closely as possible? Simple, work with requirements just like with code.
+Before we can work with requirements just like with code, we need to understand two core concepts.</p>
+<p>First, the requirements must be written down. It sounds obvious, but most of the software requirements are not written down. Most of the requirements sit in someone’s head and are never written down. Therefore, you constantly have to ask questions, and you constantly forget part of the functionality. It is hard for us to keep all the details of even simple programs in our heads, so it is impossible to keep track of all of the functionality for any non-trivial project.</p>
+<p>Second, written-down requirements are grouped into a software requirements specification (SRS) document. Have you seen a software requirements
+specification for the project that you are working on? Have you written one? Most likely, no. The key part here is that, as originally done,
+one of the best ways to keep track of requirements is by defining them in a document. Documents were used well before computers were invented,
+and they actually work really well! Even today, most of the information that is shared is shared using documents.</p>
+<h1 id="Writing-software-requirements-specification-documents"><a href="#Writing-software-requirements-specification-documents" class="headerlink" title="Writing software requirements specification documents"></a>Writing software requirements specification documents</h1><p>Now, the most important question is: who writes the software requirements specification documents? Well, at the end, the quality assurance team ends up writing them, given that it is usually not done by other teams. Again, remember, <em>“requirements are the starting point of any design”</em>, yes, but in most
+projects, this is not followed. However, a professional quality assurance team that understands what needs to be done can’t function without requirements,
+so if they are not given, we need to write them. At the end of the day, each one of us is responsible for keeping things organized; if the
+functionality is not organized then we have to do it ourselves. Why? To make our lives easier.</p>
+<p>Now, how do we write these specifications that contain requirements? The first stage is discovery, like a sponge, we need to suck in all the
+information that is available for a given feature and put it all into the SRS. The SRS itself is written in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax">Markdown</a> and wait Markdown is
+code! So working with requirements just like with code means that by defining requirements in a document written in Markdown, we are working with
+requirements just like with code. We use the same tools, like our favorite integrated development environment (IDE) and git repositories
+on GitHub or GitLab. We get full traceability of origin and modifications, and it naturally ties in with automated test development. Add or modify a requirement, then commit. Diff, blame, history, you get it all for free!</p>
+<h1 id="Example-Google-Calculator"><a href="#Example-Google-Calculator" class="headerlink" title="Example - Google Calculator"></a>Example - Google Calculator</h1><p>Requirements are a fundamental concept, so they apply to any software project. Really. Anything that you can think of.
+Let’s look at a simple example. You know Google, and you know that if you type “calculator” in the search box, you will get a calculator web application? Funny enough, it is actually not documented; at least I could not find any official documentation for it. Who needs it?
+I <em>know</em> how to use a calculator; I <em>know</em> how it works, but do you really? Can you keep track of all the possible behaviors and corner cases?</p>
+<p>Let’s see what a software requirement specification for a Google calculator can look like.
+It took me about a day to write it, but I already have more than average experience
+documenting functionality. Actually, documenting functionality is a very important skill that you should practice too.
+Software requirements specification is a document; a book is also a very long document, so like any document, it will have a title and a table
+of contents to help us navigate it. Here is an example of the first part of the table of contents.</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># SRS001 Google.com Calculator</span></span><br><span class="line"><span class="section"># Software Requirements Specification</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Table of Contents</span></span><br><span class="line"></span><br><span class="line"><span class="bullet">*</span> 1 [<span class="string">Introduction</span>](<span class="link">#introduction</span>)</span><br><span class="line"><span class="bullet">*</span> 2 [<span class="string">Opening The Calculator</span>](<span class="link">#opening-the-calculator</span>)</span><br><span class="line"><span class="bullet">    *</span> 2.1 [<span class="string">RQ.Google.Calculator.Open</span>](<span class="link">#rqgooglecalculatoropen</span>)</span><br><span class="line"><span class="bullet">*</span> 3 [<span class="string">User Interface</span>](<span class="link">#user-interface</span>)</span><br><span class="line"><span class="bullet">    *</span> 3.1 [<span class="string">Normal View</span>](<span class="link">#normal-view</span>)</span><br><span class="line"><span class="bullet">        *</span> 3.1.1 [<span class="string">RQ.Google.Calculator.UI.NormalView</span>](<span class="link">#rqgooglecalculatoruinormalview</span>)</span><br><span class="line"><span class="bullet">    *</span> 3.2 [<span class="string">Inverse View</span>](<span class="link">#inverse-view</span>)</span><br><span class="line"><span class="bullet">        *</span> 3.2.1 [<span class="string">RQ.Google.Calculator.UI.InverseView</span>](<span class="link">#rqgooglecalculatoruiinverseview</span>)</span><br><span class="line"><span class="bullet">    *</span> 3.3 [<span class="string">Keyboard Input</span>](<span class="link">#keyboard-input</span>)</span><br><span class="line"><span class="bullet">        *</span> 3.3.1 [<span class="string">RQ.Google.Calculator.UI.KeyboardInput</span>](<span class="link">#rqgooglecalculatoruikeyboardinput</span>)</span><br><span class="line"><span class="bullet">    *</span> 3.4 [<span class="string">Mixed Input</span>](<span class="link">#mixed-input</span>)</span><br><span class="line"><span class="bullet">        *</span> 3.4.1 [<span class="string">RQ.Google.Calculator.UI.MixedInput</span>](<span class="link">#rqgooglecalculatoruimixedinput</span>)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>Given that it is a document, we can add any information to it as we like.
+Introduction, references with links to relevant resources, pictures, and charts, anything that
+is relevant to the functionality; we put it all here. It is more than a dry list of requirements; it is a document that, after reading
+should fully describe the functionality of the feature or product at hand. In this case, Google Calculator. There is <em>Introduction</em>,
+and sections that group different functionality together, such <em>Opening The Calculator</em>, and <em>User Interface</em>, as well as many others.
+There is a lot of similarity with user documentation, but the requirements are
+usually much more detailed and meet their own requirements, like being unique, having a unique identifier and a version, using SHALL, and being testable.</p>
+<p>Markdown source code should be familiar to most developers and testers. If you have used GitHub
+or GitLab and written a README for your project, then you know what Markdown source code looks like. Nothing special, just a markup language.
+Markdown is not the only one; reStructuredText and LaTeX would be other examples. However, Markdown is natively supported by GitHub and GitLab,
+so while it has its own limitations, most developers are familiar with it.</p>
+<p>Here is an example of the first two requirements in this SRS.</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## Introduction</span></span><br><span class="line"></span><br><span class="line">This software requirements specification covers requirements related to the functionality of the Google.com Calculator.</span><br><span class="line"></span><br><span class="line"><span class="section">## Opening The Calculator</span></span><br><span class="line"></span><br><span class="line"><span class="section">### RQ.Google.Calculator.Open</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The calculator SHALL open when the user searches for <span class="code">`calculator`</span> or similar terms in the search box.</span><br><span class="line"></span><br><span class="line"><span class="section">## User Interface</span></span><br><span class="line"></span><br><span class="line"><span class="section">### Normal View</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### RQ.Google.Calculator.UI.NormalView</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The calculator SHALL have the following graphical user interface.</span><br><span class="line"></span><br><span class="line">![<span class="string">Calculator</span>](<span class="link">calculator.png</span>)</span><br></pre></td></tr></table></figure>
+
+<p>The first thing to note is that each requirement has a unique identifier.
+The identifier is specified by a heading starting with <strong>RQ</strong>. Each requirement has at least one attribute, which is its version.
+The initial version of a requirement by convention is “1.0”. Any material changes to a requirement would require us to increase
+the version so that tests can be updated as needed. Also, note that we prefer not to use numbers as unique identifiers for our requirements.
+Instead, the dot notation is used. The dot notation also defines hierarchy. Using dot notation instead of numbers facilitates moving requirements
+around as needed. Also, renaming requirement prefixes using search and replace is convenient when the structure needs to be updated.</p>
+<p>The first requirement talks about when calculator application should be displayed to the user. In this case, it says if you search for the “calculator”
+or similar terms. If you work with requirements, you will  immediately notice that “similar terms” is not defined. This means this requirement
+will have to be updated, and “similar terms” will have to be defined as it will be needed for testing. We can add a table with example search terms.</p>
+<p>The next requirement defines the user interface. In this case, Google Calculator has two views, what I called a normal view and an inverse view.
+The inverse view is displayed when you click the “Inv” button. It is not shown here, but you can try it yourself the next time you use the Google calculator.</p>
+<p>Headings are defined with pound signs and pretty much nothing special if you are familiar with Markdown.
+The only special thing to worry about is remembering that to define a requirement, you must define a heading that starts with <strong>RQ</strong> and give it a version.
+Anything else becomes the description of the requirement. The description can contain anything you want, but not another section.
+Again, this Markdown source code is diffable, and Markdown syntax is familiar to most developers.</p>
+<p>Let’s now look at some functionality that one would initially find trivial - the addition operation. It sounds easy, but is it?
+It turns out not to be so simple.</p>
+<blockquote>
+<h3 id="Addition"><a href="#Addition" class="headerlink" title="Addition"></a>Addition</h3><h4 id="RQ-Google-Calculator-Addition"><a href="#RQ-Google-Calculator-Addition" class="headerlink" title="RQ.Google.Calculator.Addition"></a>RQ.Google.Calculator.Addition</h4><p>version: 1.0</p>
+<p>The calculator SHALL support adding integers and decimal numbers using the <code>+</code> button, which SHALL add the addition operator to the display.</p>
+<p>For example,</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2 + 2</span><br><span class="line">-9 + 4</span><br><span class="line">2.3 + 1.33</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>For example, handling <code>Infinity</code> is a special case, the behavior is not intuitive!</p>
+<blockquote>
+<p>The <code>+</code> operator SHALL handle <code>Infinity</code> as one of its arguments as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Infinity</code> + X</td>
+<td><code>Infinity</code></td>
+</tr>
+<tr>
+<td><code>-Infinity</code> + X</td>
+<td><code>-Infinity</code></td>
+</tr>
+<tr>
+<td><code>Infinity</code> + <code>Infinity</code></td>
+<td><code>Infinity</code></td>
+</tr>
+<tr>
+<td><code>Infinity</code> - <code>Infinity</code></td>
+<td><code>Error</code></td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>Another corner case is what happens when you add something to an expression that results in an <code>Error</code>? What about incomplete expressions?
+What about pressing the addition operator <code>+</code> when it is not allowed, like just after opening parenthesis?</p>
+<blockquote>
+<p>The result of the addition operation when either argument is an <code>Error</code> SHALL be <code>Error</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Operation</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 + .</td>
+<td><code>Error</code></td>
+</tr>
+<tr>
+<td>. + .</td>
+<td><code>Error</code></td>
+</tr>
+</tbody></table>
+<p>An incomplete expression SHALL not be evaluated.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 + = 1 +</span><br></pre></td></tr></table></figure>
+
+<p>Clicking <code>+</code> button SHALL be ignored when the expression does not contain a left argument.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(+</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>What about the cases where you’ve pressed something like <code>2+</code> and then instead of a number or expression you have pressed a button for
+another operation. In some cases, the <code>+</code> operator will be overwritten. In some cases it will not.</p>
+<blockquote>
+<p>Incomplete <code>+</code> operation SHALL be overwritable by the following operators:</p>
+<table>
+<thead>
+<tr>
+<th>Operator</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>*</code></td>
+<td>multiplication</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>subtraction</td>
+</tr>
+<tr>
+<td><code>/</code></td>
+<td>division</td>
+</tr>
+<tr>
+<td><code>!</code></td>
+<td>factorial</td>
+</tr>
+<tr>
+<td><code>x<sup>2</sup></code></td>
+<td>X squared</td>
+</tr>
+<tr>
+<td><code>x<sup>y</sup></code></td>
+<td>X to the power of Y</td>
+</tr>
+<tr>
+<td><code>y√x</code></td>
+<td>nth root</td>
+</tr>
+</tbody></table>
+</blockquote>
+<p>Do we really want to keep this only in our heads, or is it easier to write this down once and then reference it when needed?</p>
+<h1 id="Converting-requirements-in-Markdown-to-Python-objects"><a href="#Converting-requirements-in-Markdown-to-Python-objects" class="headerlink" title="Converting requirements in Markdown to Python objects"></a>Converting requirements in Markdown to Python objects</h1><p>Once we have written the requirements in our structured Markdown, <span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.svg"></span> can parse it, extract all the requirements,
+and create corresponding requirement objects that we can link against our tests.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> requirements.md | tfs requirements generate &gt; requirements.py</span><br></pre></td></tr></table></figure>
+
+<p>Here is an example of auto-generated requirements objects in <code>requirements.py</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># These requirements were auto generated</span></span><br><span class="line"><span class="comment"># from software requirements specification (SRS)</span></span><br><span class="line"><span class="comment"># document by TestFlows v1.9.230815.1123444.</span></span><br><span class="line"><span class="comment"># Do not edit by hand but re-generate instead</span></span><br><span class="line"><span class="comment"># using &#x27;tfs requirements generate&#x27; command.</span></span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Specification</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Requirement</span><br><span class="line"></span><br><span class="line">Heading = Specification.Heading</span><br><span class="line"></span><br><span class="line">RQ_Google_Calculator_Open = Requirement(</span><br><span class="line">    name=<span class="string">&quot;RQ.Google.Calculator.Open&quot;</span>,</span><br><span class="line">    version=<span class="string">&quot;1.0&quot;</span>,</span><br><span class="line">    priority=<span class="literal">None</span>,</span><br><span class="line">    group=<span class="literal">None</span>,</span><br><span class="line">    <span class="built_in">type</span>=<span class="literal">None</span>,</span><br><span class="line">    uid=<span class="literal">None</span>,</span><br><span class="line">    description=(</span><br><span class="line">        <span class="string">&quot;The calculator SHALL open when the user searches for `calculator` or similar terms in the search box.\n&quot;</span></span><br><span class="line">        <span class="string">&quot;\n&quot;</span></span><br><span class="line">    ),</span><br><span class="line">    link=<span class="literal">None</span>,</span><br><span class="line">    level=<span class="number">2</span>,</span><br><span class="line">    num=<span class="string">&quot;2.1&quot;</span>,</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>When writing tests, we can import requirements objects as needed, and the IDE will
+actually provide auto-completion. Very easy!</p>
+<p>You can find a complete software requirements specification document <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/TestFlows-Core/blob/master/tests/examples/calculator/requirements/requirements.md">here</a> and corresponding Python objects <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/TestFlows-Core/blob/master/tests/examples/calculator/requirements/requirements.py">here</a>.</p>
+<p>If you would like to see more examples of real-world software requirement specifications, go to <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/altinity/clickhouse-regression">https://github.com/altinity/clickhouse-regression</a>
+and browse different features that we’ve tested for <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/docs/en/intro">ClickHouse</a> such as <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Altinity/clickhouse-regression/blob/main/window_functions/requirements/requirements.md">window functions</a>, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/Altinity/clickhouse-regression/blob/main/aes_encryption/requirements/requirements.md">AES encryption functions</a>, and many others.</p>
+<blockquote><p>“Tester performs testing; testing evaluates quality; quality is defined as satisfying requirements; requirements are descriptions of behaviors; behaviors are infinite sequences of states, where a state is an assignment of values to variables. It is beautiful and precise.”</p>
+</blockquote>
+
+<h1 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h1><p>Once we have written down all the requirements in our structured Markdown document, the fun starts. Our quality assurance process
+becomes professional and easy. Also, it is important to note that the quality assurance team does not need all of the requirements at once; we just need one!
+As long as we have a requirement, we can work on verifying it using tests. Tests can be manual, semi-automated, or automated.
+For us, the process is exactly the same. As soon as we have requirements, the fun starts. Requirements fundamentally are not a hindrance
+to the speed of software development, they are actually required to get it right!</p>
+<p>I’ll end by again providing my favorite quotes by Leslie Lamport from his book on Specifying Systems, as requirements in software requirements specification documents are just a less formal way of specifying the behavior of software systems.</p>
+<blockquote><p>“Behavior is an infinite sequence of states.”<br>
+“State is an assignment of value to variables.”</p>
+<footer><strong>Leslie Lamport, TLA+ -</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">Specifying Systems</a></cite></footer></blockquote>
+
+<p>And remember,</p>
+<blockquote><p>“Quality is satisfying requirements and requirement is a description of a behavior.”</p>
+</blockquote>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer">
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">September 25, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=http://localhost:4000/blog/working_with_requirements_just_like_with_code/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=http://localhost:4000/blog/working_with_requirements_just_like_with_code/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/blog/working_with_requirements_just_like_with_code/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+  </div>
+  <div class="container-footer">
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/testflows">
+                        <span class="fab fa-2x fa-telegram-plane"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2022 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
+</script>
+
+</body>
+</html>
+
+
