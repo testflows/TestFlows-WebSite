@@ -1,7 +1,7 @@
 ---
 title: Working With Requirements Just Like With Code
 description: Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown
-date: 2023-09-18
+date: 2023-09-25
 author: Vitaliy Zakaznikov
 image:
    asset: images/requirements-as-code.png
@@ -31,15 +31,13 @@ Testing Qualifications Board) [glossary](https://glossary.istqb.org/en_US/search
 
 First, let’s see how the term tester is defined. ISTQB defines a [tester](https://glossary.istqb.org/en_US/search?term=tester%20&exact_matches_first=true) as "a person who
 performs testing". Where [testing](https://glossary.istqb.org/en_US/search?term=testing&exact_matches_first=true) is defined as "the process within the software development lifecycle that evaluates the quality of
-a component or a system". The key part of the definition, is that testing is related to evaluating “quality”. What is quality?
+a component or a system". The key part of the definition, is that testing is related to evaluating quality. What is quality?
 [Quality](https://glossary.istqb.org/en_US/term/quality-4) is defined as "a degree to which a work product satisfies
 stated and implied needs of its stakeholders". No direct mention of
 requirements so far. So, how does ISTQB defines a requirement? Well, it says that [a requirement](https://glossary.istqb.org/en_US/term/requirement-4-2) is "a provision that contains criteria to be fulfilled".
 
-Well, that's interesting, there is no straight path from tester to requirements here on the surface. This is maybe one of the problems, requirements
-are not highlighted enough, and the connection between what you are doing and the requirements might not be obvious as it should be, given
-that remember what Nicolas D. Kefalas said: *“Requirements are the starting point of any design”*, so if requirements are at the starting
-point surely they should be given their place at the end of the design implementation process, where testing is performed, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
+Well, that's interesting, there is no straight path from tester to requirements here on the surface. This may be one of the problems. Requirements are not highlighted enough, and the connection between what you are doing and the requirements might not be as obvious as it should be, given that remember what Nicolas D. Kefalas said: “Requirements are the starting point of any design”. If requirements are at the starting
+point, surely they should be given their place at the end of the design implementation process, where testing is performed, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
 in the process? We all know that in most cases, requirements are lost and are not clearly present or driving either design,
 development, or testing.
 
@@ -54,18 +52,15 @@ We define quality as satisfying requirements, definitely not some needs, especia
 want to guess what the implied needs are. Why guess? If there are implied needs, you might as well discuss and state them explicitly. So nothing
 implicit is permitted. Only clearly stated requirements. We also usually think of quality as either
 being there or not being there. Where quality is found when all requirements are satisfied. So definitely not the same. ISTQB uses the word
-*need* in the definition of quality, but *need* in their glossary is not defined. Do I need it, or don’t I? How do I know? One could say
-that "stated and implied needs of its stakeholders" means requirements; however the definition of what a requirement is is also not very clear.
-Instead, the definition that we use for a requirement is that a requirement is a description of a behavior.
+*need* in the definition of quality, but *need* in their glossary is not defined. Do I need it, or I don't? How do I know? One could say that "stated and implied needs of its stakeholders" means requirements; however, the definition of a requirement is also unclear. Instead, the definition that we use for a requirement is that a requirement is a description of a behavior.
 
 {% blockquote %}
- "Requirement is a definition of a behavior."
+"Quality is satisfying requirements and <br>
+requirement is a description of a behavior."
 {% endblockquote %}
 
-We use these definitions in our software quality assurance process, and it allows us to
-relate testing in general and tester activities specifically to requirements in a very straightforward way.
-The key part is that testing is the act of evaluating if a product satisfies requirements. Simple and to the point.
-We can take it further and come closer to mathematical formalism by looking closer at what a requirement actually is.
+We use these definitions in our software quality assurance process, allowing us to relate testing in general and tester activities specifically to requirements in a very straightforward way.
+The critical part is that testing is the act of evaluating if a product satisfies requirements. Simple and to the point. We can take it further and come closer to mathematical formalism by looking at what a requirement actually is.
 
 # Defining a requirement more precisely
 
@@ -73,8 +68,8 @@ Given that we've already defined a requirement as a description of a behavior, w
 precisely what behavior is. For this, we can leverage definitions provided by Leslie Lamport
 in his book [Specifying Systems for TLA+](https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book) where he defines a behavior as "an infinite sequence of states” and a state as "an assignment of values to variables". For those of you who have never heard of TLA+ or Leslie Lamport
 I encourage you to look him up. TLA stands for Temporal Logic of Actions which, is a formal specification language designed by Leslie Lamport
-for specifying system behavior. He has an excellent introductory [TLA+ video course](https://www.youtube.com/@tlavideocourse8540/videos)
-that provides an excellent introduction to TLA+.
+for specifying system behavior. He has an excellent [video course](https://www.youtube.com/@tlavideocourse8540/videos)
+that provides an introduction to TLA+.
 
 {% blockquote Leslie Lamport, TLA+ - https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book Specifying Systems %}
 "Behavior is an infinite sequence of states."<br>
@@ -216,17 +211,17 @@ Let’s now look at some main requirements for a requirement. There are six of t
 > * requirement by convention SHALL use **SHALL**
 > * requirement SHALL be **versioned**
 > * requirement SHALL have **traceable origin and modifications**
-> * requirement SHALL be written to be **testable or verifiable**
+> * requirement SHALL be written to be **testable**
 
 I’ve introduced you to the SHALL notation and basic requirements. Again, remember that a requirement is a description of a behavior,
 where a behavior is an infinite sequence of states, and a state is an assignment of values to variables. So given that I claim that these six statements are requirements, then you should now be able to see the behavior, the infinite sequence of states, and the assignment of values to variables. They are all there; you just have to get used to them to be able to see them. One way to see it is to use your object-oriented skills and define a requirement as an object,
-where unique, unique identifier, has-SHALL, versioned, traceable,and testable are boolean attributes of this object, where each can either
-be either *true* or *false*.
+where unique, unique identifier, has-SHALL, versioned, traceable, and testable are boolean attributes of this object, where each can either
+be *true* or *false*.
 
 The last part, where requirements must be testable, is critical; this establishes a connection between testing and requirements.
 When you are writing requirements, you should think about how they will be tested, and when you are writing a test, you should
 think about the requirements that you are testing. Next time you are writing a test, think about which requirement is being
-tested and how that requirement is defined. Wasit a JIRA that the developer told you, customer, was even written down?
+tested and how that requirement is defined. Was it a JIRA, the developer told you, a customer, and was even written down?
 
 Ideally, we want to have a one-to-one relationship between requirements and tests. However, in general, a requirement can be
 verified by one or more tests, and a test can verify one or more requirements. For example, some requirements are generic and
@@ -234,7 +229,7 @@ are verified by a suite of tests, and some tests are written in such a way that 
 In general, if you find that your test verifies more than one requirement, it should serve as a hint that most likely those
 requirements should be collapsed into one. Remember, ideally, we want to have a one-to-one relationship.
 
-The critical part of understanding requirements is that they live **above** the implementation, above the code level.
+The important part of understanding requirements is that they live above the implementation, above the code level.
 It is hard to convince some developers that code is not documenting the behavior - it is implementing it.
 This is evident from the standard Hello World program.
 The requirements for the Hello World program can be implemented in many programming languages.
@@ -248,16 +243,16 @@ One would generally find requirements being formalized in regulated industries w
 development process around them. There are good reasons for it, would you want the airplane to fly with the software you have written or tested?
 Is it good enough? Most likely not. So why do we find that working with requirements is useful? Again, first by definition of
 testing and quality. If you want to get rid of requirements, you most likely have to live in a different universe. This one needs them for
-any design. Remember, *"requirements, are the starting point of any design"*.
+any design. Remember, *"requirements are the starting point of any design"*.
 
-The first step to making them practical is to trim any “fat” that we don’t need, I have shown you an example when I provided alternative definitions
+The first step to making them practical is to trim anything that we don’t need. I have shown you an example when I provided alternative definitions
 of key concepts that were short and precise. Given that we know that requirements are at the core of testing and quality, we have no
-choice but to deal with them. We found that,funny enough, having requirements for a given feature makes “context switching” between features
+choice but to deal with them. We found that, funny enough, having requirements for a given feature makes “context switching” between features
 a much less painlful process. I can bring a new engineer and throw them at the task and the requirements will provide a guide for them.
 They organize the whole quality assurance process. What needs to be done is easy to know and simple, what is the next requirement that needs to be covered?
 Requirements improve communication, as you can share requirements with developers, customers, and management to precisely communicate expected functionality.
 
-Quality assurance team can now actually provide meaningful reports.The most important report is not how many tests have passed or failed, or lines or code
+Quality assurance team can now actually provide meaningful reports. The most important report is not how many tests have passed or failed, or lines of code
 that have been hit by tests, or any other indirect metrics. The most important report is the **requirements coverage report** which tells us which
 functionality works and which doesn’t. I don’t care if it takes ten tests or one million tests. If ten tests pass or one million tests pass,
 this is meaningless; what customers care about is what works and what does not. Knowing what was not tested is even more important than knowing
@@ -268,25 +263,24 @@ and this is what we want: easier and faster.
 # Working with requirements
 
 How can we work with requirements that match software development as closely as possible? Simple, work with requirements just like with code.
-Before we can work with requirements, just like with code, we need to understand two core concepts.
+Before we can work with requirements just like with code, we need to understand two core concepts.
 
-First, the requirements must be written down.It sounds obvious, but most of the software requirements are not written down. Most of the requirements sit in someone’s head and are never written down. Therefore, you constantly have to ask questions, and you constantly forget part of the functionality. It is hard for us to keep all the details of even simple programs in our heads, so it is impossible to keep track of all of the functionality for any non-trivial project.
+First, the requirements must be written down. It sounds obvious, but most of the software requirements are not written down. Most of the requirements sit in someone’s head and are never written down. Therefore, you constantly have to ask questions, and you constantly forget part of the functionality. It is hard for us to keep all the details of even simple programs in our heads, so it is impossible to keep track of all of the functionality for any non-trivial project.
 
 Second, written-down requirements are grouped into a software requirements specification (SRS) document. Have you seen a software requirements
 specification for the project that you are working on? Have you written one? Most likely, no. The key part here is that, as originally done,
-one of the best ways to keep track of requirements is by defining them in a *document*. Documents were used well before computers were invented,
+one of the best ways to keep track of requirements is by defining them in a document. Documents were used well before computers were invented,
 and they actually work really well! Even today, most of the information that is shared is shared using documents.
 
-# Writing software requirements specifications
+# Writing software requirements specification documents
 
-Now, the most important question is: who writes the software requirements specification documents? Well, at the end,the quality assurance team ends up writing
-them, given that it is usually not done by other teams. Again, remember, *"requirements are the starting point of any design"*, Yeah, but in most
+Now, the most important question is: who writes the software requirements specification documents? Well, at the end, the quality assurance team ends up writing them, given that it is usually not done by other teams. Again, remember, *"requirements are the starting point of any design"*, yes, but in most
 projects, this is not followed. However, a professional quality assurance team that understands what needs to be done can’t function without requirements,
 so if they are not given, we need to write them. At the end of the day, each one of us is responsible for keeping things organized; if the
 functionality is not organized then we have to do it ourselves. Why? To make our lives easier.
 
 Now, how do we write these specifications that contain requirements? The first stage is discovery, like a sponge, we need to suck in all the
-information that is available for a given feature and put it all into the SRS. The SRS itself is written in [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) and wait **Markdown** is
+information that is available for a given feature and put it all into the SRS. The SRS itself is written in [Markdown](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) and wait Markdown is
 code! So working with requirements just like with code means that by defining requirements in a document written in Markdown, we are working with
 requirements just like with code. We use the same tools, like our favorite integrated development environment (IDE) and git repositories
 on GitHub or GitLab. We get full traceability of origin and modifications, and it naturally ties in with automated test development. Add or modify a requirement, then commit. Diff, blame, history, you get it all for free!
@@ -294,7 +288,7 @@ on GitHub or GitLab. We get full traceability of origin and modifications, and i
 # Example - Google Calculator
 
 Requirements are a fundamental concept, so they apply to any software project. Really. Anything that you can think of.
-Let’s look at a simple example. You know Google, and you know that if you type “calculator” in the search box, you will get a calculator web application? Funny enough, it is actually not documented; at least I could not find any official documentation for it. Who needs it?
+Let’s look at a simple example. You know Google, and you know that if you type "calculator" in the search box, you will get a calculator web application? Funny enough, it is actually not documented; at least I could not find any official documentation for it. Who needs it?
 I *know* how to use a calculator; I *know* how it works, but do you really? Can you keep track of all the possible behaviors and corner cases?
 
 Let’s see what a software requirement specification for a Google calculator can look like.
@@ -330,7 +324,7 @@ is relevant to the functionality; we put it all here. It is more than a dry list
 should fully describe the functionality of the feature or product at hand. In this case, Google Calculator. There is *Introduction*,
 and sections that group different functionality together, such *Opening The Calculator*, and *User Interface*, as well as many others.
 There is a lot of similarity with user documentation, but the requirements are
-usually much more detailed and meet their own requirements, like being unique, having a unique identifier version, using SHALL, and being testable.
+usually much more detailed and meet their own requirements, like being unique, having a unique identifier and a version, using SHALL, and being testable.
 
 Markdown source code should be familiar to most developers and testers. If you have used GitHub
 or GitLab and written a README for your project, then you know what Markdown source code looks like. Nothing special, just a markup language.
@@ -365,24 +359,24 @@ The calculator SHALL have the following graphical user interface.
 
 The first thing to note is that each requirement has a unique identifier.
 The identifier is specified by a heading starting with **RQ**. Each requirement has at least one attribute, which is its version.
-The initial version of a requirement by convention is *1.0*. Any material changes to a requirement would require us to increase
+The initial version of a requirement by convention is "1.0". Any material changes to a requirement would require us to increase
 the version so that tests can be updated as needed. Also, note that we prefer not to use numbers as unique identifiers for our requirements.
 Instead, the dot notation is used. The dot notation also defines hierarchy. Using dot notation instead of numbers facilitates moving requirements
 around as needed. Also, renaming requirement prefixes using search and replace is convenient when the structure needs to be updated.
 
-The first requirement talks about when calculator applications should be displayed to the user. In this case, it says if you search for the “calculator”
-or similar terms. If you work with requirements, you will  immediately notice that “similar terms” are not defined. This means this requirement
-will have to be updated, and “similar terms” will have to be defined as they will be needed for testing. We can add a table with example search terms.
+The first requirement talks about when calculator application should be displayed to the user. In this case, it says if you search for the "calculator"
+or similar terms. If you work with requirements, you will  immediately notice that “similar terms” is not defined. This means this requirement
+will have to be updated, and “similar terms” will have to be defined as it will be needed for testing. We can add a table with example search terms.
 
-The next requirement defines the user interface. In this case, Google Calculator has two views, what I called a *Normal View* and an *Inverse View*.
+The next requirement defines the user interface. In this case, Google Calculator has two views, what I called a normal view and an inverse view.
 The inverse view is displayed when you click the “Inv” button. It is not shown here, but you can try it yourself the next time you use the Google calculator.
 
-Headings are defined with pound signs and are pretty much nothing special if you are familiar with Markdown.
+Headings are defined with pound signs and pretty much nothing special if you are familiar with Markdown.
 The only special thing to worry about is remembering that to define a requirement, you must define a heading that starts with **RQ** and give it a version.
 Anything else becomes the description of the requirement. The description can contain anything you want, but not another section.
 Again, this Markdown source code is diffable, and Markdown syntax is familiar to most developers.
 
-Let’s now look at some functionality that one would initially find trivial. The addition operation.It sounds easy, but is it?
+Let’s now look at some functionality that one would initially find trivial - the addition operation. It sounds easy, but is it?
 It turns out not to be so simple.
 
 > ### Addition
@@ -411,7 +405,7 @@ For example, handling `Infinity` is a special case, the behavior is not intuitiv
 > | `Infinity` + `Infinity` | `Infinity` |
 > | `Infinity` - `Infinity` | `Error` |
 
-Another corner case is what happens when you add something to an expression that results in an Error? What about incomplete expressions?
+Another corner case is what happens when you add something to an expression that results in an `Error`? What about incomplete expressions?
 What about pressing the addition operator `+` when it is not allowed, like just after opening parenthesis?
 
 > The result of the addition operation when either argument is an `Error` SHALL be `Error`.
@@ -432,7 +426,7 @@ What about pressing the addition operator `+` when it is not allowed, like just 
 > ```
 
 What about the cases where you’ve pressed something like `2+` and then instead of a number or expression you have pressed a button for
-another operation.In some cases, the + operator will be overwritten. In some cases it will not.
+another operation. In some cases, the `+` operator will be overwritten. In some cases it will not.
 
 
 > Incomplete `+` operation SHALL be overwritable by the following operators:
@@ -451,7 +445,7 @@ Do we really want to keep this only in our heads, or is it easier to write this 
 
 # Converting requirements in Markdown to Python objects
 
-Once we have written the requirements in our structured Markdown, {% testflows %}, can parse it and extract all the requirements,
+Once we have written the requirements in our structured Markdown, {% testflows %} can parse it, extract all the requirements,
 and create corresponding requirement objects that we can link against our tests.
 
 ```bash
@@ -508,7 +502,7 @@ As long as we have a requirement, we can work on verifying it using tests. Tests
 For us, the process is exactly the same. As soon as we have requirements, the fun starts. Requirements fundamentally are not a hindrance
 to the speed of software development, they are actually required to get it right!
 
-I'll end by again providing my favorite quotes by Leslie Lamport from his book on Specifying Systems, as requirements in software requirements specifications are really just a less formal way of specifying software systems.
+I'll end by again providing my favorite quotes by Leslie Lamport from his book on Specifying Systems, as requirements in software requirements specification documents are just a less formal way of specifying the behavior of software systems.
 
 {% blockquote Leslie Lamport, TLA+ - https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book Specifying Systems %}
 "Behavior is an infinite sequence of states."<br>
@@ -517,4 +511,6 @@ I'll end by again providing my favorite quotes by Leslie Lamport from his book o
 
 And remember,
 
-> Requirement is a description of a behavior.
+{% blockquote %}
+"Quality is satisfying requirements and requirement is a description of a behavior."
+{% endblockquote %}
