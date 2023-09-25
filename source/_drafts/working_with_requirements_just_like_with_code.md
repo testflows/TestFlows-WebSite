@@ -71,13 +71,14 @@ We can take it further and come closer to mathematical formalism by looking clos
 
 Given that we've already defined a requirement as a description of a behavior, we can take a step further and define
 precisely what behavior is. For this, we can leverage definitions provided by Leslie Lamport
-in this book [Specifying Systems for TLA+](https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book) where he defines a behavior as "an infinite sequence of states” and a state as "an assignment of values to variables". For those of you who have never heard of TLA+ or Leslie Lamport
-I encourage you to look him up.TLA stands for Temporal Logic of Actions which, is a formal specification language designed by Leslie Lamport
-for the specifying system behavior and he has an excellent introductory [TLA+ video course](https://www.youtube.com/@tlavideocourse8540/videos).
+in his book [Specifying Systems for TLA+](https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book) where he defines a behavior as "an infinite sequence of states” and a state as "an assignment of values to variables". For those of you who have never heard of TLA+ or Leslie Lamport
+I encourage you to look him up. TLA stands for Temporal Logic of Actions which, is a formal specification language designed by Leslie Lamport
+for specifying system behavior. He has an excellent introductory [TLA+ video course](https://www.youtube.com/@tlavideocourse8540/videos)
+that provides an excellent introduction to TLA+.
 
 {% blockquote Leslie Lamport, TLA+ - https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book Specifying Systems %}
 "Behavior is an infinite sequence of states."<br>
-"State is an assignment of value to variables."
+"State is an assignment of values to variables."
 {% endblockquote %}
 
 We already tied requirements to behaviors, and definition of a behavior and a state has taken us to formal
@@ -85,7 +86,7 @@ specifications. If you look back at our definitions, we went from defining what 
 I find it elegant and powerful, and that’s why we use these definitions instead of what ISTQB uses.
 
 The tester performs testing; testing evaluates quality; quality is defined as satisfying requirements; requirements are descriptions of behaviors; behaviors are infinite sequences of states, where a state is an assignment of values to variables. It is beautiful, and precise. We went from tester to state, and
-funny enough [Carnegie Mellon School of Computer Science](https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html) defines a software system as a "very,very complicated state machine".
+funny enough [Carnegie Mellon School of Computer Science](https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html) defines a software system as a "very, very complicated state machine".
 
 {% blockquote Norman Papernick https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html , Carnegie Mellon School of Computer Science  %}
 "A software system is a very, very complicated state machine."
@@ -95,7 +96,7 @@ funny enough [Carnegie Mellon School of Computer Science](https://www.cs.cmu.edu
 
 {% blockquote Leslie Lamport, TLA+ - https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book Specifying Systems %}
 "Behavior is an infinite sequence of states."<br>
-"State is an assignment of value to variables."
+"State is an assignment of values to variables."
 {% endblockquote %}
 
 Let's try to apply the definitions given above to a simple requirement for a web application. For example,
