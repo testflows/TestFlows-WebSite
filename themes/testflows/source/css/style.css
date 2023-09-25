@@ -179,11 +179,11 @@ blockquote {
     color:lightgrey;
 }
 
-.blog.post-body h1
-.blog.post-body h2
-.blog.post-body h3
-.blog.post-body h4
-.blog.post-body h5
+.blog.post-body h1,
+.blog.post-body h2,
+.blog.post-body h3,
+.blog.post-body h4,
+.blog.post-body h5,
 .blog.post-body h6 {
     cursor: pointer;
 }
