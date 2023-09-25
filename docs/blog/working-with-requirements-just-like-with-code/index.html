@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1695667237367" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1695667237367" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1695683868042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1695683868042" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1695667237367" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1695683868042" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -168,7 +168,7 @@ funny enough <a target="_blank" rel="noopener external nofollow noreferrer" href
 <blockquote><p>“A software system is a very, very complicated state machine.”</p>
 <footer><strong>Norman Papernick</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html">, Carnegie Mellon School of Computer Science</a></cite></footer></blockquote>
 
-<h2 id="Looking-closer-at-the-definitions"><a href="#Looking-closer-at-the-definitions" class="headerlink" title="Looking closer at the definitions"></a>Looking closer at the definitions</h2><blockquote><p>“Behavior is an infinite sequence of states.”<br>
+<h1 id="Looking-closer-at-the-definitions"><a href="#Looking-closer-at-the-definitions" class="headerlink" title="Looking closer at the definitions"></a>Looking closer at the definitions</h1><blockquote><p>“Behavior is an infinite sequence of states.”<br>
 “State is an assignment of values to variables.”</p>
 <footer><strong>Leslie Lamport, TLA+ -</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">Specifying Systems</a></cite></footer></blockquote>
 
@@ -524,6 +524,19 @@ to the speed of software development, they are actually required to get it right
         </div>
     </div>
 </div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+</script>
 
     </div>
   </div>

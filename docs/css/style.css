@@ -160,7 +160,12 @@ blockquote {
     color: #dc3545;
 }
 
-.handbook h1,h2,h3,h4,h5,h6 {
+.handbook h1,
+.handbook h2,
+.handbook h3,
+.handbook h4,
+.handbook h5,
+.handbook h6 {
     cursor: pointer;
 }
 
@@ -170,6 +175,25 @@ blockquote {
 .handbook h4:hover::after,
 .handbook h5:hover::after,
 .handbook h6:hover::after {
+    content: " §";
+    color:lightgrey;
+}
+
+.blog.post-body h1
+.blog.post-body h2
+.blog.post-body h3
+.blog.post-body h4
+.blog.post-body h5
+.blog.post-body h6 {
+    cursor: pointer;
+}
+
+.blog.post-body h1:hover::after,
+.blog.post-body h2:hover::after,
+.blog.post-body h3:hover::after,
+.blog.post-body h4:hover::after,
+.blog.post-body h5:hover::after,
+.blog.post-body h6:hover::after {
     content: " §";
     color:lightgrey;
 }

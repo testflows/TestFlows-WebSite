@@ -87,7 +87,7 @@ funny enough [Carnegie Mellon School of Computer Science](https://www.cs.cmu.edu
 "A software system is a very, very complicated state machine."
 {% endblockquote %}
 
-## Looking closer at the definitions
+# Looking closer at the definitions
 
 {% blockquote Leslie Lamport, TLA+ - https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book Specifying Systems %}
 "Behavior is an infinite sequence of states."<br>
