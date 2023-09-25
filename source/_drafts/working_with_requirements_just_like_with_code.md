@@ -8,19 +8,16 @@ image:
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-*"Requirements are the starting point of any design"*, this is a quote from the [presentation given by Nicholas D. Kefalas](https://www.youtube.com/watch?v=3afHlAwBudM), who is a senior technical officer at Sikorsky Aircraft - Lockheed Martin. A very innocent quote that most people
-will agree with, but somehow it is not applied or scarcely applied to the commercial software development process.
+"Requirements are the starting point of any design", this is a quote from the [presentation given by Nicholas D. Kefalas](https://www.youtube.com/watch?v=3afHlAwBudM), who is a senior technical officer at Sikorsky Aircraft/Lockheed Martin. In this article, we'll explore how you can work with requirements just like with code and look at a simple example of specifying [requirements for a Google Calculator web application](https://github.com/testflows/TestFlows-Core/blob/master/tests/examples/calculator/requirements/requirements.md). While most people
+will agree with the quote above, somehow it is not applied or scarcely applied to the commercial software development process.
 We are developing too fast, and it seems like there is no time to think about the functionality that we are developing,
 much less write it down <!-- more -->.
 
-Do requirements apply to software development and testing? The answer is definitely "yes", as the requirements are the starting point
-of *any design*. It is a universal principle across any field of engineering. It does not matter if you are designing a building,
-designing an aircraft, developing software for nuclear reactors, trains, or even a simple hello world program.
-Whether we like it or not, requirements have to be handled one way or another. As the saying goes “you can run, but you can’t hide from them”.
+Do requirements apply to software development and testing? The answer is definitely "yes", as the requirements are the starting point of any design. It is a universal principle across any field of engineering. It does not matter if you are designing a building, designing an aircraft, developing software for nuclear reactors, trains, or even a simple hello world program.
+Whether we like it or not, requirements have to be handled one way or another. As the saying goes “you can run, but you can’t hide" from them.
 When we don’t work with requirements, we do pay the price, as skipping them does not come with zero-cost but actually
 creates a drag on the whole software development process, irrespective of the software’s functionality.
-So, why work with requirements? Because by definition of testing and quality, it is all about the requirements!
-Therefore, in this article, we'll explore how {% testflows %} enables you to working with requirements just like with code.
+So, why work with requirements? Because by definition of testing and quality, it is all about the requirements.
 
 {% blockquote Nicholas D. Kefalas, Senior Technical Officer at Sikorsky Aircraft/Lockheed Martin - https://www.youtube.com/watch?v=3afHlAwBudM System Engineering Requirements %}
  “Requirements are the starting point of any design.”
@@ -28,7 +25,7 @@ Therefore, in this article, we'll explore how {% testflows %} enables you to wor
 
 # Relationship between requirements and testers
 
-Can we find a relationship between “testers” and “requirements”? Is there such a relationship?
+Can we find a relationship between testers and requirements? Is there such a relationship?
 Where do requirements come into play when we are testing software? I’ve taken some definitions from [ISTQB](https://www.istqb.org/) (International Software
 Testing Qualifications Board) [glossary](https://glossary.istqb.org/en_US/search) to help us get started.
 
@@ -41,7 +38,7 @@ requirements so far; how does ISTQB define a requirement? Well, it says that [a 
 
 Well, interesting,thre is no straight path from tester to requirements here on the surface. This is maybe one of the problems,requirements
 are not highlighted enough, and the connection between what you are doing and the requirements might not be obvious, as it should be given,
-remember what Nicolas D. Kefalas said: “Requirements are the starting point of any design”, so if requirements are at the starting
+remember what Nicolas D. Kefalas said: *“Requirements are the starting point of any design”*, so if requirements are at the starting
 point surely they should be given their place at the end of the design implementation process, where testing is performed
 testing, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
 in the process? We all know that in most cases, requirements are lost and are not clearly present or driving either design,
@@ -95,6 +92,121 @@ funny enough [Carnegie Mellon School of Computer Science](https://www.cs.cmu.edu
 "A software system is a very, very complicated state machine."
 {% endblockquote %}
 
+## Looking closer at the definitions
+
+{% blockquote Leslie Lamport, TLA+ - https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book Specifying Systems %}
+"Behavior is an infinite sequence of states."<br>
+"State is an assignment of value to variables."
+{% endblockquote %}
+
+Let's try to apply the definitions given above to a simple requirement for a web application. For example,
+
+> The login button SHALL have blue color.
+
+Given that a requirement is a description of a behavior, and a behavior is an infinite sequence of states, we can precisely
+define the requirement above as follows
+
+> {%katex%}
+\begin{bmatrix}
+   login\_button\_color = "blue" \\
+\end{bmatrix}
+\to
+\begin{bmatrix}
+   login\_button\_color = "blue" \\
+\end{bmatrix}
+\to
+\dots
+{%endkatex%}
+
+where each
+
+> {%katex%}
+\begin{bmatrix}
+   login\_button\_color = "blue"
+\end{bmatrix}
+{%endkatex%}
+
+defines a state. In this case, each state has one variable, the {%katex%}login\_button\_color{%endkatex%}, and that variable
+can be assigned a value of any color. However, in our case, based on the requirement definition, each valid state
+must have variable {%katex%}login\_button\_color{%endkatex%} be assigned the value {%katex%}"blue"{%endkatex%}.
+
+It is also important to note that the requirement implies that the color of the login button stays blue.
+That's the infinite part in the definition of the behavior. This
+means that to verify this requirement using a test, the test will have to continuously
+check the color property of the login button to make sure it is blue and it stays blue. Of course, this is not
+practical, nonetheless, if your users notice that your login button starts changing colors after a few seconds
+once the login page is loaded, they will definitely consider that to be a bug in your web application.
+Therefore, the definition of a behavior being an infinite sequence of states has very practical implications
+and puts a limit on what a test can actually verify.
+
+Another example could be a requirement about a function that should return a sum of the two arguments that it is passed.
+
+
+> The function {%katex%}add(a,b){%endkatex%} SHALL return the value of {%katex%}a + b{%endkatex%}.
+
+This requirement means that only the following states form part of a valid behavior
+
+> {%katex%}
+\begin{bmatrix}
+   a = 2 \\
+   b = 2 \\
+   result = 4
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = -2 \\
+   b = 2 \\
+   result = 0
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = 3 \\
+   b = 2 \\
+   result = 5
+\end{bmatrix}
+,
+\dots
+{%endkatex%}
+
+but states such as
+
+> {%katex%}
+\begin{bmatrix}
+   a = 2 \\
+   b = 2 \\
+   result = 3
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = -2 \\
+   b = 2 \\
+   result = 2
+\end{bmatrix}
+,
+\begin{bmatrix}
+   a = 3 \\
+   b = 2 \\
+   result = 4
+\end{bmatrix}
+,
+\dots
+{%endkatex%}
+
+are not allowed and would indicate that a requirement is not met and the function {%katex%}add(a,b){%endkatex%} has a bug.
+
+Most software developers and testers do not think of a software system under test as a state machine, however,
+as two simples examples above show, thinking of requirements and as system as whole in terms of infinite state sequences
+helps understand what a requirement is and what system actually must do at a deeper and much more precise level.
+
+Here is the quote that Leslie Lamport gives in the [first video in his "Introduction to TLA+" video series](https://youtu.be/p54W-XOIEF8?list=PLWAv2Etpa7AOAwkreYImYt0gIpOdWQevD&t=491) that emphasizes the benefits of thinking about a software system as a state machine.
+
+{% blockquote Eric Verhulst %}
+We witnessed first hand the brain washing done by years of C programming.
+{% endblockquote %}
+
+Thinking about a software system as a state machine is not only useful at design stage, it is critical
+to understanding what testing a software system actually means and implies.
+
 # Requirements for a requirement
 
 Let’s now look at some main requirements for a requirement. There are six of them:
@@ -106,10 +218,10 @@ Let’s now look at some main requirements for a requirement. There are six of t
 > * requirement SHALL have **traceable origin and modifications**
 > * requirement SHALL be written to be **testable or verifiable**
 
-I’ve introduced you to the SHALL notation and basic requirements. Remember that a requirement is a description of a behavior,
-where a behavior is an infinite sequence of states, and a state is an assignment of values to variables. So given that I claim that these six statements are requirements, then you should be able to see the behavior, the infinite sequence of states and the assignment of values to variables. Do you? They are all there; you just have to get used to them to be able to see them. One way to see it is to use your object-oriented skills and define a requirement as an object,
+I’ve introduced you to the SHALL notation and basic requirements. Again, remember that a requirement is a description of a behavior,
+where a behavior is an infinite sequence of states, and a state is an assignment of values to variables. So given that I claim that these six statements are requirements, then you should now be able to see the behavior, the infinite sequence of states, and the assignment of values to variables. They are all there; you just have to get used to them to be able to see them. One way to see it is to use your object-oriented skills and define a requirement as an object,
 where unique, unique identifier, has-SHALL, versioned, traceable,and testable are boolean attributes of this object, where each can either
-be either *true* or *false*. State is assignment of values to variables. Don’t objects have a state?
+be either *true* or *false*.
 
 The last part, where requirements must be testable, is critical; this establishes a connection between testing and requirements.
 When you are writing requirements, you should think about how they will be tested, and when you are writing a test, you should
@@ -139,7 +251,7 @@ testing and quality. If you want to get rid of requirements, you most likely hav
 any design. Remember, *"requirements, are the starting point of any design"*.
 
 The first step to making them practical is to trim any “fat” that we don’t need, I have shown you an example when I provided alternative definitions
-of key concepts that were short and precise. Given that we know that requirements are at the core of testing and quality, we have no 
+of key concepts that were short and precise. Given that we know that requirements are at the core of testing and quality, we have no
 choice but to deal with them. We found that,funny enough, having requirements for a given feature makes “context switching” between features
 a much less painlful process. I can bring a new engineer and throw them at the task and the requirements will provide a guide for them.
 They organize the whole quality assurance process. What needs to be done is easy to know and simple, what is the next requirement that needs to be covered?
@@ -402,3 +514,7 @@ I'll end by again providing my favorite quotes by Leslie Lamport from his book o
 "Behavior is an infinite sequence of states."<br>
 "State is an assignment of value to variables."
 {% endblockquote %}
+
+And remember,
+
+> Requirement is a description of a behavior.
