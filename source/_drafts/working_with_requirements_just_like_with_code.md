@@ -101,7 +101,7 @@ funny enough [Carnegie Mellon School of Computer Science](https://www.cs.cmu.edu
 
 Let's try to apply the definitions given above to a simple requirement for a web application. For example,
 
-> The login button SHALL have blue color.
+> The login button SHALL have a blue color.
 
 Given that a requirement is a description of a behavior, and a behavior is an infinite sequence of states, we can precisely
 define the requirement above as follows
@@ -131,12 +131,12 @@ can be assigned a value of any color. However, in our case, based on the require
 must have variable {%katex%}login\_button\_color{%endkatex%} be assigned the value {%katex%}"blue"{%endkatex%}.
 
 It is also important to note that the requirement implies that the color of the login button stays blue.
-That's the infinite part in the definition of the behavior. This
+That's the infinite part of the definition of the behavior. This
 means that to verify this requirement using a test, the test will have to continuously
-check the color property of the login button to make sure it is blue and it stays blue. Of course, this is not
+check the color property of the login button to make sure it is blue and stays blue. Of course, this is not
 practical, nonetheless, if your users notice that your login button starts changing colors after a few seconds
 once the login page is loaded, they will definitely consider that to be a bug in your web application.
-Therefore, the definition of a behavior being an infinite sequence of states has very practical implications
+Therefore, the definition of a behavior as an infinite sequence of states has very practical implications
 and puts a limit on what a test can actually verify.
 
 Another example could be a requirement about a function that should return a sum of the two arguments that it is passed.
@@ -194,9 +194,9 @@ but states such as
 
 are not allowed and would indicate that a requirement is not met and the function {%katex%}add(a,b){%endkatex%} has a bug.
 
-Most software developers and testers do not think of a software system under test as a state machine, however,
-as two simples examples above show, thinking of requirements and as system as whole in terms of infinite state sequences
-helps understand what a requirement is and what system actually must do at a deeper and much more precise level.
+Most software developers and testers do not think of a software system under test as a state machine; however,
+as the two simple examples above show, thinking of requirements and the system as a whole in terms of infinite state sequences
+helps understand what a requirement is and what the system actually must do at a deeper and much more precise level.
 
 Here is the quote that Leslie Lamport gives in the [first video in his "Introduction to TLA+" video series](https://youtu.be/p54W-XOIEF8?list=PLWAv2Etpa7AOAwkreYImYt0gIpOdWQevD&t=491) that emphasizes the benefits of thinking about a software system as a state machine.
 
@@ -204,8 +204,8 @@ Here is the quote that Leslie Lamport gives in the [first video in his "Introduc
 We witnessed first hand the brain washing done by years of C programming.
 {% endblockquote %}
 
-Thinking about a software system as a state machine is not only useful at design stage, it is critical
-to understanding what testing a software system actually means and implies.
+Thinking about a software system as a state machine is not only useful at the design stage; it is critical
+to understand what testing a software system actually means and implies.
 
 # Requirements for a requirement
 
