@@ -1077,7 +1077,7 @@ Nov 12,2021 10:58:02     ⟥  When I do something
 > However, this allows for the failure to be examined just by looking at the result of the
 > [Top Level Test].
 
-### Auto Generation Of Test Specifications
+### Auto Generation of Test Specifications
 
 When tests are broken up into [Step]s generating test specifications is very easy.
 
