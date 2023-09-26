@@ -28,7 +28,7 @@ and could be executed in a hive mode on multi-node clusters.
 **{% testflows %}** has the following differentiating features that makes
 it stand out from a plenty of other open and closed source test frameworks.
 
-## Use what you need design
+<div class="heading-h2">Flexible</div>
 
 The framework has many advanced features but it allows you to use only
 the pieces that you need. For example, if you don't want to use requirements
@@ -37,7 +37,7 @@ using behavior driven step keywords that is perfectly fine.
 At the heart, it is just a collection of Python modules so you are always
 in control and you are not forced to use anything that you don't need.
 
-## Requirements oriented quality assurance process
+<div class="heading-h2">Requirements oriented</div>
 
 An enterprise quality assurance process must always revolve around ***requirements***.
 However, requirements are most often ignored in software development groups even at
@@ -62,7 +62,7 @@ which you can easily link with your tests. To match the complexities of real wor
 **{% testflows %}** allows one-to-one, one-to-many, many-to-one, or many-to-many test-to-requirement
 relationships.
 
-## Write test programs and not just tests
+<div class="heading-h2">Programs and not just tests</div>
 
 Write [Python] **test programs** and not just tests. A test program
 can execute any number of tests. This provides the unrivalled flexibility to meet the needs of any project.
@@ -78,7 +78,7 @@ where each project in a company eventually starts to use their own test framewor
 and nobody knows how to run tests written by other groups and reporting accross
 groups become inconsistent and difficult to follow.
 
-## Write self-documenting tests with clearly defined test procedures
+<div class="heading-h2">Self-documenting tests</div>
 
 Provides tools for test authors to break tests into test [Step]s and
 use behavior driven step keywords such as [Given], [When], [Then] and others to make
@@ -94,19 +94,19 @@ modularize tests by using reusable test steps. Using reusable steps
 produces clean test code and greatly improves readability and maintainability
 of tests.
 
-## Auto-generate test specifications
+<div class="heading-h2">Auto-generate test specifications</div>
 
 If your test process or your manager requires you to produce formal test
 specifications that must describe the procedure of each test, then you can easily
 auto-generate them.
 
-## Asynchronous tests
+<div class="heading-h2">Asynchronous tests</div>
 
 Writing asynchronous tests is as easy as writing regular tests.
 The framework even allows you to run asynchronous and synchronous test code
 in the same test program.
 
-## Semi-automated and manual tests
+<div class="heading-h2">Semi-automated and manual tests</div>
 
 Testing real-world applications is usually not done only with fully automated test scenarios.
 Most often, verification requires a mix of automated, semi-automated, and manual tests.
@@ -115,14 +115,14 @@ The framework allows you to unify your testing and provides uniform test reporti
 no matter what type of tests you need for your project by natively supporting the
 authoring of automated, semi-automated, and manual tests.
 
-## Parallel tests and execution
+<div class="heading-h2">Parallel tests and execution</div>
 
 Native support for authoring parallel tests and
 executing them in parallel, with fine-grain control over what and where runs in parallel.
 Asynchronous tests are also supported and allow for thousands of concurrent
 tests to be run at the same time. Mixing parallel and asynchronous tests is also supported.
 
-## Combinatorial tests and covering arrays
+<div class="heading-h2">Combinatorial tests and covering arrays</div>
 
 Combinatorial tests are supported by allowing you to define tests and steps that can take arguments,
 as well as allowing to easily and naturally define tests that check different combinations using [TestSketch]es
@@ -131,7 +131,7 @@ without writing any nested for-loops or calculating combinations beforehand.
 In addition, a convenient collection of tools used for combinatorial testing is provided
 including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
 
-## Everything-is-a-test approach
+<div class="heading-h2">Everything-is-a-test</div>
 
 It uses everything-is-a-test approach that allows unified treatment
 of any code that is executed during testing. There is no second class test code.
@@ -139,27 +139,27 @@ If test fails during setup, teardown or execution of one of its actions,
 the failure is handled identically. This avoids mixing analysis of why the test failed
 with test execution and results in a clean and uniform approach to testing.
 
-## Message-based protocol
+<div class="heading-h2">Message-based protocol</div>
 
 It is built on top of a messaging protocol. This brings
 many benefits, including the ability to transform test output and logs into a variety of
 different formats as well as enable advanced parallel testing.
 
-## Test log storage and analytics using ClickHouse
+<div class="heading-h2">Log storage and analytics</div>
 
 Test logs were designed to be easily stored in [ClickHouse].
 Given that testing produces huge amounts of data, this integration
 brings test data analytics right to your fingertips.
 
-## Visualization using Grafana
+<div class="heading-h2">Visualization</div>
 
 Standard [Grafana] dashboards are available to visualize your test data
 stored in [ClickHouse]. Additional dashboards can be easily created in [Grafana]
 to highlight test results that are the most important for your project.
 
-## Avoid unnecessary abstraction layers
+<div class="heading-h2">No unnecessary abstractions</div>
 
-Avoid unnecessary abstraction layers, such
+Avoids unnecessary abstraction layers, such
 as when test runners are decoupled from tests or the usage of behavior driven
 (BDD) keywords is always tied to Gherkin specifications. These abstractions,
 while providing some benefit, in most cases lead to more problems than
@@ -5051,6 +5051,729 @@ def feature(self):
         scenario()
 ```
 
+# Combinatorial Tests
+
+> **{% attention %}** Available in version >= `2.1.2`
+
+Combinatorial testing is supported by allowing to define tests that can take arguments,
+as well as allowing to easily define tests that check different combinations using [TestSketch]es.
+
+In addition, a convenient collection of tools used for combinatorial testing is provided
+including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
+
+<figure id="Example-Pressure-Switch" class="example">Example: Pressure Switch</figure>
+
+Let's see basic application of combinatorial tests to testing a simple pressure switch
+defined by the `pressure_switch` function below where it has a fault when
+`pressure < 10` or `pressure > 30`, and `volume > 250`.
+
+```python
+def pressure_switch(pressure, volume):
+    """Pressure switch.
+
+    `pressure` levels: 0, 20, 40
+    `volume` levels: 0, 100, 200, 300
+    """
+    if (pressure < 10 or pressure > 30):
+       if (volume > 250):
+           assert False, "boom!"
+       else:
+           note("ok, no problem")
+    else:
+        note("ok")
+```
+
+## Simple Approach (Nested For-loops)
+
+We can check all the combinations including some extra values using the following
+[TestScenario] that uses nested for-loops to iterate over each combination of
+`pressure` and `volume` values to check our [Example: Pressure Switch].
+
+```python
+@TestScenario
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume."""
+    pressures = [0, 10, 20, 30, 40]
+    volumes = [0, 100, 200, 300, 400]
+
+    for pressure in pressures:
+        for volume in volumes:
+            with Check(f"pressure={pressure},volume={volume}", flags=TE):
+                pressure_switch(pressure=pressure, volume=volume)
+```
+
+As expected it will catch the fault with the following combinations.
+
+```bash
+Failing
+
+✘ [ Fail ] /check pressure switch/pressure=0,volume=300 (732us)
+✘ [ Fail ] /check pressure switch/pressure=0,volume=400 (448us)
+✘ [ Fail ] /check pressure switch/pressure=40,volume=300 (411us)
+✘ [ Fail ] /check pressure switch/pressure=40,volume=400 (345us)
+```
+
+## Computed Combinations (Cartesian Product)
+
+Another approach to using [nested for-loops] is to compute all the combinations
+using the [Cartesian Product] function. Here is the
+[TestScenario] that uses `product(*iterables, repeat=1)` function
+to compute all combinations of `pressure` and `volume` values to check our [Example: Pressure Switch].
+
+The advantage of using the cartesian product function is that it avoids writing nested for-loops
+and is much more scalable when number of variables is large.
+
+```python
+from testflows.combinatorics import product
+
+@TestScenario
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume
+    using cartesian product."""
+    pressures = [0, 10, 20, 30, 40]
+    volumes = [0, 100, 200, 300, 400]
+
+    for combination in product(pressures, volumes):
+        pressure, volume = combination
+        with Check(f"pressure={pressure},volume={volume}", flags=TE):
+            pressure_switch(pressure=pressure, volume=volume)
+```
+
+## Using Sketches
+
+A simple approach to check all possible combinations is to use a [TestSketch].
+
+> ✋ [Sketch]es currently do not support filtering or [Covering Arrays].
+> See [Filtering Combinations] and [Covering Array Combinations] for more details.
+
+A [TestSketch] allows to check all possible combinations where each combination
+variable and its values is defined by the [either() function].
+[TestSketch] with [either() function] makes writing combinatorial tests
+as simple as writing a simple test that would check one combination.
+
+> ✋ if you call [either() function] multiple times on the same line of code
+> or you have a call to [either() function] inside a `for-loop` or `while-loop`
+> then unique identifier `i` must be specified explicitly.
+
+For the [Example: Pressure Switch], our [TestSketch] would be as follows:
+
+```python
+@TestSketch(Scenario)
+@Flags(TE)
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume using a TestSketch."""
+    pressure = either(0, 10, 20, 30, 40)
+    volume = either(0, 100, 200, 300, 400)
+
+    with Check(f"pressure={pressure},volume={volume}"):
+        pressure_switch(pressure=pressure, volume=volume)
+```
+
+Each [either() function] defines a new combination variable and its possible values
+and then {% testflows %} automatically loops through all the combinations
+when a [TestSketch] is called.
+
+Running the [TestSketch] above results in the following output.
+
+```bash
+Sep 22,2023 16:29:07   ⟥  Scenario check pressure switch, flags:TE
+Sep 22,2023 16:29:07     ⟥  Combination pattern #0, flags:TE
+Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=0
+               181us       ⟥    [note] ok, no problem
+               255us       ⟥⟤ OK pressure=0,volume=0, /check pressure switch/pattern #0/pressure=0,volume=0
+               705us     ⟥⟤ OK pattern #0, /check pressure switch/pattern #0
+Sep 22,2023 16:29:07     ⟥  Combination pattern #1, flags:TE
+Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=100
+               175us       ⟥    [note] ok, no problem
+               222us       ⟥⟤ OK pressure=0,volume=100, /check pressure switch/pattern #1/pressure=0,volume=100
+               705us     ⟥⟤ OK pattern #0, /check pressure switch/pattern #1
+...
+```
+
+Fails reported as below.
+
+```bash
+Failing
+
+✘ [ Fail ] /check pressure switch/pattern #3/pressure=0,volume=300 (541us)
+✘ [ Fail ] /check pressure switch/pattern #4/pressure=0,volume=400 (360us)
+✘ [ Fail ] /check pressure switch/pattern #23/pressure=40,volume=300 (519us)
+✘ [ Fail ] /check pressure switch/pattern #24/pressure=40,volume=400 (340us)
+```
+
+A [TestSketch] allows for advanced and intuitive definition of combinatorial tests
+especially when number of combination variables grows.
+
+
+Each call to the [either() function] must be unique or unique identifier `i` must be specified.
+By default, the unique identifier of the [either() function] is the source code line number,
+therefore if you call [either() function] multiple times on the same line of code
+or you have a call to [either() function] inside a `for-loop` or `while-loop`
+then the unique identifier `i` must be specified explicitly.
+
+For example, let's assume we have a function `add(a, b, c)` that we want to test.
+
+```python
+def add(a, b, c):
+    note(f"{a} + {b} + {c}")
+```
+
+We could write a [TestSketch] that calls the [either() function] inside a `for-loop`
+on the same line multiple times.
+
+```python
+@TestSketch(Scenario)
+def check_add(self):
+    for i in range(either(value=range(1, 2))):
+        add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
+```
+
+Note that we had to pass unique identifier `i` for each [either() function] call that defined possible
+values of `a`, `b`, and `c`. Also, note that the unique identifier was a combination of the variable name
+and the loop variable `i`
+
+```python
+add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
+```
+
+The [TestSketch] above results in generation of eight combinations. This is because
+`range(1,2)` is `[1]` and therefore the `for-loop`
+
+```python
+    for i in range(either(value=range(1, 2))):
+```
+
+has only one iteration.
+
+```bash
+Sep 22,2023 17:00:48   ⟥  Scenario check add
+Sep 22,2023 17:00:48     ⟥  Combination pattern #0
+               371us     ⟥    [note] 1 + 3 + 5
+               444us     ⟥⟤ OK pattern #0, /check add/pattern #0
+Sep 22,2023 17:00:48     ⟥  Combination pattern #1
+               216us     ⟥    [note] 1 + 3 + 6
+               270us     ⟥⟤ OK pattern #1, /check add/pattern #1
+Sep 22,2023 17:00:48     ⟥  Combination pattern #2
+               190us     ⟥    [note] 1 + 4 + 5
+               238us     ⟥⟤ OK pattern #2, /check add/pattern #2
+Sep 22,2023 17:00:48     ⟥  Combination pattern #3
+               184us     ⟥    [note] 1 + 4 + 6
+               231us     ⟥⟤ OK pattern #3, /check add/pattern #3
+Sep 22,2023 17:00:48     ⟥  Combination pattern #4
+               174us     ⟥    [note] 2 + 3 + 5
+               220us     ⟥⟤ OK pattern #4, /check add/pattern #4
+Sep 22,2023 17:00:48     ⟥  Combination pattern #5
+               186us     ⟥    [note] 2 + 3 + 6
+               234us     ⟥⟤ OK pattern #5, /check add/pattern #5
+Sep 22,2023 17:00:48     ⟥  Combination pattern #6
+               232us     ⟥    [note] 2 + 4 + 5
+               279us     ⟥⟤ OK pattern #6, /check add/pattern #6
+Sep 22,2023 17:00:48     ⟥  Combination pattern #7
+               168us     ⟥    [note] 2 + 4 + 6
+               214us     ⟥⟤ OK pattern #7, /check add/pattern #7
+                 5ms   ⟥⟤ OK check add, /check add
+```
+
+Let's change the `for-loop` so that it can iterate either one or two times.
+
+```python
+@TestSketch(Scenario)
+def check_add(self):
+    for i in range(either(value=range(1, 3))):
+        add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
+```
+
+Then the number of combinations will be `72` and it will not be that intuitive what each combination is.
+The first run of the `for-loop` where it iterates only once will produce the same `8` combinations
+as before. However, the second run of the `for-loop` when it iterates twice will
+create combinations similar to the ones below. Where the combination `1 + 3 + 5`
+is followed by each of the `8` possibilities including itself and this done for each
+combination of `a + b + c`, and thus resulting in `8 * 8 + 8 = 72` total combinations.
+
+```
+Sep 22,2023 17:08:13     ⟥  Combination pattern #8
+               155us     ⟥    [note] 1 + 3 + 5
+               181us     ⟥    [note] 1 + 3 + 5
+               220us     ⟥⟤ OK pattern #8, /check add/pattern #8
+Sep 22,2023 17:08:13     ⟥  Combination pattern #9
+               156us     ⟥    [note] 1 + 3 + 5
+               183us     ⟥    [note] 1 + 3 + 6
+               222us     ⟥⟤ OK pattern #9, /check add/pattern #9
+Sep 22,2023 17:08:13     ⟥  Combination pattern #10
+               161us     ⟥    [note] 1 + 3 + 5
+               189us     ⟥    [note] 1 + 4 + 5
+               231us     ⟥⟤ OK pattern #10, /check add/pattern #10
+Sep 22,2023 17:08:13     ⟥  Combination pattern #11
+               166us     ⟥    [note] 1 + 3 + 5
+               195us     ⟥    [note] 1 + 4 + 6
+               235us     ⟥⟤ OK pattern #11, /check add/pattern #11
+Sep 22,2023 17:08:13     ⟥  Combination pattern #12
+               163us     ⟥    [note] 1 + 3 + 5
+               190us     ⟥    [note] 2 + 3 + 5
+               230us     ⟥⟤ OK pattern #12, /check add/pattern #12
+Sep 22,2023 17:08:13     ⟥  Combination pattern #13
+               225us     ⟥    [note] 1 + 3 + 5
+               252us     ⟥    [note] 2 + 3 + 6
+               292us     ⟥⟤ OK pattern #13, /check add/pattern #13
+Sep 22,2023 17:08:13     ⟥  Combination pattern #14
+               156us     ⟥    [note] 1 + 3 + 5
+               183us     ⟥    [note] 2 + 4 + 5
+               225us     ⟥⟤ OK pattern #14, /check add/pattern #14
+Sep 22,2023 17:08:13     ⟥  Combination pattern #15
+               155us     ⟥    [note] 1 + 3 + 5
+               182us     ⟥    [note] 2 + 4 + 6
+...
+```
+
+## Using `either()`
+
+The [either() function] select values for a combination variable one at a time until all values are consumed.
+
+> ✋ It is used in [TestSketch]es to check all possible combinations. See [Using Sketches].
+
+Values can be specified either using `*values` or by passing an iterator or generator
+as `value`.
+
+If neither `*values`, or `value` is explicitly specified then `*values`
+is set to a `(True, False)` tuple.
+
+This function must be called only once for each line of code in the same source file or
+a unique identifier `i` must be specified.
+
+If `random` is `True`, then all values will be shuffled using a default shuffle function.
+
+Optionally, you can pass a custom `shuffle` function that takes values as an argument
+and modifies the sequence in-place. By default, `random.shuffle()` is used.
+
+You can use `limit` to limit number of values to choose.
+
+```python
+either(*values, value=None, i=None, random=False, shuffle=random.shuffle, limit=None)
+```
+
+where
+
+* `*values` zero or more of values to choose from
+* `value` iterator or generator of values
+* `random` (optional) randomize order of values (values must fit into memory), default: `False`
+* `shuffle` (optional) custom function to shuffle the values
+* `limit` (optional) limit number of values (integer `> 0`), default: `None`
+* `i` (optional) unique identifier, default: `None`
+
+## Using Combination Outlines
+
+[TestSketch] provides a very easy way to define a combinatorial test. However,
+[Sketch]es do have their limitations and sometimes using a combination [Outline]
+is necessary.
+
+Here is an example of using [TestSketch] for testing a few combinations of a calculator's
+`+`, `-`, `*`, and `/` operations when user enters some positive or negative numbers,
+and presses `=` sign to get the results.
+
+```python
+@TestSketch(Scenario)
+def check_basic_operations(self):
+    """Check basic operations `+`, `-`, `*`, `/`
+    with some one digit positive or negative numbers including `0`.
+    """
+    try:
+        with When("I enter either positive or negative 0,1,2"):
+            if either(True, False):
+                By(test=press_minus)()
+            By(test=either(press_0, press_1, press_2))()
+
+        with And("then I press either +, -, *, / operation"):
+            By(test=either(press_plus, press_minus, press_multiply, press_divide))()
+
+        with And("I enter second argument either positive or negative 0,1,2"):
+            if either(True, False):
+                By(test=press_minus)()
+            By(test=either(press_0, press_1, press_2))()
+
+        with And("I press equals to calculate the result"):
+            By(test=press_equal)()
+
+        with Then("I check calculator state"):
+            By(test=check_state)()
+    finally:
+        with Finally("I reset calculator back to 0"):
+            By(test=reset_calculator)()
+```
+
+Let's now implement the [TestSketch] above using a combination [Outline] and the `product() function`
+to see the difference between them.
+
+```python
+@TestOutline(Combination)
+def check_basic_operations_outline(self, combination):
+    """Check basic operation that takes two arguments `a` and `b`
+    that can either be positive or negative.
+    """
+    is_a_negative, press_a, press_operation, is_b_negative, press_b = combination
+
+    try:
+        with When("I enter either a positive or negative number as the first argument `a`"):
+            if is_a_negative:
+                By(test=press_minus)()
+            By(test=press_a)()
+
+        with And("I enter arithmetic operation"):
+            By(test=press_operation)()
+
+        with And("I enter either a positive or negative number as the second argument `b`"):
+            if is_b_negative:
+                By(test=press_minus)()
+            By(test=press_b)()
+
+        with And("I press equal sign to calculate the result"):
+            By(test=press_equal)()
+
+        with Then("I check calculator state"):
+            By(test=check_state)()
+    finally:
+        with Finally("I reset calculator back to 0"):
+            By(test=reset_calculator)()
+
+
+@TestScenario
+def check_basic_operations(self):
+    """Check basic operations `+`, `-`, `*`, `/`
+    with some one digit positive or negative numbers including `0`.
+    """
+    for i, combination in enumerate(
+        product(
+            [True, False], #is_a_negative
+            [press_0, press_1, press_2], #press_a
+            [press_plus, press_minus, press_multiply, press_divide], # operations
+            [True, False], # is_b_negative
+            [press_0, press_1, press_2], #press_b
+        )
+    ):
+        with Combination(f"pattern #{i}"):
+            check_basic_operations_outline(combination=combination)
+```
+
+As can be seen above, using an [Outline] is more involved and forces us to create a named variable
+for each combination variable and compute each combination explicitly using the cartesian `product() function`
+that produces combinations that need to be passed to the [Outline] that then has
+to unpack the combination into its individual combination variables to be used in its test procedure.
+However, a combination [Outline] can provide more control of how a test iterates over each combination
+allowing the possibility of filtering invalid combinations as well as provide ability
+to use them with [Covering Arrays].
+
+{% html div class="styled-table" %}
+
+| Feature | Sketch    | Combination Outline |
+| ------- | --------- | ------- |
+| Ease of use  | ✓ Easy | ✗ Moderate  |
+| Combination Filtering | ✗ No | ✓ Yes |
+| Covering Arrays | ✗ No | ✓ Yes |
+
+{% endhtml %}
+
+## Filtering Combinations
+
+To filter invalid combinations you need to use a [Combination Outline].
+
+For example,
+
+```python
+@TestScenario
+def check_basic_operations(self):
+    """Check basic operations `+`, `-`, `*`, `/`
+    with some one digit positive or negative numbers including `0`.
+    """
+    for i, combination in enumerate(
+        product(
+            [True, False], #is_a_negative
+            [press_0, press_1, press_2], #press_a
+            [press_plus, press_minus, press_multiply, press_divide], # operations
+            [True, False], # is_b_negative
+            [press_0, press_1, press_2], #press_b
+        )
+    ):
+        # explicitly filter out `-2 * 1` combination
+        if combination == (True, press_2, press_multiply, False, press_1):
+            continue
+
+        with Combination(f"pattern #{i}"):
+            check_basic_operations_outline(combination=combination)
+```
+
+## Covering Array Combinations
+
+Use a [Combination Outline] to generate limited number of combinations using a [Covering Array].
+
+For example, with a `CoveringArray(strength=3)`, we will have to only check `37` combinations
+instead of all the `144 (2*3*4*2*3)` combinations if we did not use a [Covering Array], and instead did exhaustive testing.
+
+```python
+@TestScenario
+def check_basic_operations(self):
+    """Check basic operations `+`, `-`, `*`, `/`
+    with some one digit positive or negative numbers including `0`
+    using a covering array of strength `3`.
+    """
+    for i, combination in enumerate(
+        CoveringArray(
+            {
+                "is_a_negative": [True, False],
+                "press_a": [press_0, press_1, press_2],
+                "operation": [press_plus, press_minus, press_multiply, press_divide],
+                "is_b_negative": [True, False],
+                "press_b": [press_0, press_1, press_2],
+            },
+            strength=2,
+        )
+    ):
+        with Combination(f"pattern #{i}"):
+            check_basic_operations_outline(combination=combination.values())
+```
+
+## Covering Arrays - (Pairwise, N-wise) Testing
+
+The [CoveringArray class] allows you to calculate a covering array
+for some `k` parameters having the same or different number of possible values.
+
+The class uses [IPOG], an in-parameter-order, algorithm as described in [IPOG: A General Strategy for T-Way Software Testing] paper by Yu Lei et al.
+
+For any non-trivial number of parameters, exhaustively testing all possibilities is not feasible.
+For example, if we have `10` parameters (`k=10`) that each has `10` possible values (`v=10`), the
+number of all possibilities is {% katex %}v^k=10^{10} = {10}_{billion}{% endkatex %} thus requiring 10 billion tests for complete coverage.
+
+Given that exhaustive testing might not be practical, a covering array could give us a much smaller
+number of tests if we choose to check all possible interactions only between some fixed number
+of parameters at least once, where an interaction is some specific combination, where order does not matter,
+of some `t` number of parameters, covering all possible values that each selected parameter could have.
+
+> **{% attention %}** You can find out more about covering arrays by visiting the US National Institute of Standards and Technology's (NIST) [Introduction to Covering Arrays](https://math.nist.gov/coveringarrays/coveringarray.html) page.
+
+The `CoveringArray(parameters, strength=2)` takes the following arguments
+
+where
+
+* `parameters` specifies parameter names and their possible values and
+   is specified as a `dict[str, list[value]]`, where *key* is the parameter name and
+   *value* is a list of possible values for a given parameter.
+* `strength` specifies the strength `t` of the covering array that indicates the number of parameters
+   in each combination, for which all possible interactions will be checked.
+   If `strength` equals the number of parameters, then you get the exhaustive case.
+
+The return value of the `CoveringArray(parameters, strength=2)` is a `CoveringArray` object that is an iterable
+of tests, where each test is a dictionary, with each key being the parameter name and its value
+being the parameter value.
+
+For example,
+
+```python
+from testflows.combinatorics import CoveringArray
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(CoveringArray(parameters, strength=2))
+```
+
+Gives the following output:
+
+```bash
+CoveringArray({'a': [0, 1], 'b': ['a', 'b'], 'c': [0, 1, 2], 'd': ['d0', 'd1']},2)[
+6
+a b c d
+-------
+0 b 2 d1
+0 a 1 d0
+1 b 1 d1
+1 a 2 d0
+0 b 0 d0
+1 a 0 d1
+]
+```
+
+Given that in the example above, the `strength=2`, all possible 2-way (pairwise)
+combinations of parameters `a`, `b`, `c`, and `d` are the following:
+
+```python
+[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
+```
+
+The six tests that make up the covering array cover all the possible interactions
+between the values of each of these parameter combinations. For example, the `('a', 'b')`
+parameter combination covers all possible combinations of the values that
+parameters `a` and `b` can take.
+
+Given that parameter `a` can have values `[0, 1]`, and parameter `b` can have values `['a', 'b']`
+all possible interactions are the following:
+
+```python
+[(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
+```
+
+where the first element of each tuple corresponds to the value of the parameter `a`, and the second
+element corresponds to the value of the parameter `b`.
+
+Examining the covering array above, we can see that all possible interactions of parameters
+`a` and `b` are indeed covered at least once. The same check can be done for other parameter combinations.
+
+## Checking Covering Array
+
+The [CoveringArray.check() function] can be used to verify that the tests
+inside the covering array cover all possible `t-way` interactions at least once, and thus
+meet the definition of a covering array.
+
+For example,
+
+```python
+from testflows.combinatorics import CoveringArray
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+tests = CoveringArray(parameters, strength=2)
+
+print(tests.check())
+```
+
+## Dumping Covering Array
+
+The `CoveringArray` object implements a custom `__str__` method, and therefore it can be easily converted into
+a string representation similar to the format used in the [NIST covering array tables](https://math.nist.gov/coveringarrays/ipof/ipof-results.html).
+
+For example,
+
+```python
+   print(CoveringArray(parameters, strength=2))
+```
+
+```bash
+CoveringArray({'a': [0, 1], 'b': ['a', 'b'], 'c': [0, 1, 2], 'd': ['d0', 'd1']},2)[
+6
+a b c d
+-------
+0 b 2 d1
+0 a 1 d0
+1 b 1 d1
+1 a 2 d0
+0 b 0 d0
+1 a 0 d1
+]
+```
+
+## Combinations
+
+The `combinations(iterable, r, with_replacement=False)` function can be used to calculate
+all `r-length` combinations of elements in a specified iterable.
+
+For example,
+
+```python
+from testflows.combinatorics import combinations
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(combinations(parameters.keys(), 2)))
+```
+
+```python
+[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
+```
+
+> This function is equivalent to the standard library's [itertools.combinations](https://docs.python.org/3/library/itertools.html#itertools.combinations).
+
+## Combinations With Replacement
+
+You can calculate all combinations with replacement by setting the `with_replacement` argument to `True`.
+
+For example,
+
+```python
+from testflows.combinatorics import combinations
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(combinations(parameters.keys(), 2, with_replacement=True)))
+```
+
+```python
+[('a', 'a'), ('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'b'), ('b', 'c'), ('b', 'd'), ('c', 'c'), ('c', 'd'), ('d', 'd')]
+```
+
+> The `with_replacement=True` option is equivalent to the standard library's [itertools.combinations_with_replacement](https://docs.python.org/3/library/itertools.html#itertools.combinations_with_replacement).
+
+
+## Cartesian Product
+
+You can calculate all possible combinations of elements from different iterables using
+the cartesian `product(*iterables, repeat=1)` function.
+
+For example,
+
+```python
+from testflows.combinatorics import *
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(product(parameters["a"], parameters["b"])))
+```
+
+
+```python
+[(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
+```
+
+> This function is equivalent to the standard library's [itertools.product](https://docs.python.org/3/library/itertools.html#itertools.product).
+
+## Permutations
+
+The `permutations(iterable, r=None)` function can be used to calculate
+the `r-length` permutations of elements for a given iterable.
+
+> **{% attention %}** Permutations are different from `combinations`.
+> In a combination, the elements don't have any order, but in a permutation, the order of elements is important.
+
+For example,
+
+```python
+from testflows.combinatorics import *
+
+parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
+
+print(list(permutations(parameters.keys(), 2)))
+```
+
+
+```python
+('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'a'), ('b', 'c'), ('b', 'd'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('d', 'a'), ('d', 'b'), ('d', 'c')]
+```
+
+and as we can see, both `('a', 'b')` and `('b', 'a')` elements are present.
+
+> This function is equivalent to the standard library's [itertools.permutations](https://docs.python.org/3/library/itertools.html#itertools.permutations).
+
+## Binomial Coefficients
+
+You can calculate the binomial coefficient, which is the same as
+the number of ways to choose `k` items from `n` items without repetition and without order.
+
+Binomial coefficient is defined as
+
+> {% katex %}\binom{n}{k} = \frac{n!}{k!(n-k)!}{% endkatex %}
+
+when {% katex %}k <= n{% endkatex %}, and is zero when {% katex %}k > n{% endkatex %}.
+
+For example,
+
+```python
+from testflows.combinatorics import *
+
+print(binomial(4,2))
+```
+
+```python
+6
+```
+
+which means that there are `6` ways to choose `2` elements out of `4`.
+
+> This function is equivalent to the standard library's [math.comb](https://docs.python.org/3/library/math.html#math.comb).
+
 # Async Tests
 
 Asynchronous tests are natively supported.
@@ -6049,593 +6772,6 @@ Sep 24,2021 21:48:47   ⟥  Scenario my test
                                 hello there
                  4ms   ⟥⟤ OK my test, /my test
 ```
-
-# Combinatorial Tests
-
-> **{% attention %}** Available in version >= `2.1.2`
-
-Combinatorial testing is supported by allowing to define tests that can take arguments,
-as well as allowing to easily define tests that check different combinations using [TestSketch]es.
-
-In addition, a convenient collection of tools used for combinatorial testing is provided
-including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
-
-## Example Pressure Switch
-
-Let's see basic application of combinatorial tests to testing a simple pressure switch
-defined by the `pressure_switch` function below where it has a fault when
-`pressure < 10` or `pressure > 30`, and `volume > 250`.
-
-```python
-def pressure_switch(pressure, volume):
-    """Pressure switch.
-
-    `pressure` levels: 0, 20, 40
-    `volume` levels: 0, 100, 200, 300
-    """
-    if (pressure < 10 or pressure > 30):
-       if (volume > 250):
-           assert False, "boom!"
-       else:
-           note("ok, no problem")
-    else:
-        note("ok")
-```
-
-## Simple Approach (Nested For-loops)
-
-We can check all the combinations including some extra values using the following
-[TestScenario] that uses nested for-loops to iterate over each combination of
-`pressure` and `volume` values to check our [Example Pressure Switch].
-
-```python
-@TestScenario
-def check_pressure_switch(self):
-    """Check all combinations of pressure and volume."""
-    pressures = [0, 10, 20, 30, 40]
-    volumes = [0, 100, 200, 300, 400]
-
-    for pressure in pressures:
-        for volume in volumes:
-            with Check(f"pressure={pressure},volume={volume}", flags=TE):
-                pressure_switch(pressure=pressure, volume=volume)
-```
-
-As expected it will catch the fault with the following combinations.
-
-```bash
-Failing
-
-✘ [ Fail ] /check pressure switch/pressure=0,volume=300 (732us)
-✘ [ Fail ] /check pressure switch/pressure=0,volume=400 (448us)
-✘ [ Fail ] /check pressure switch/pressure=40,volume=300 (411us)
-✘ [ Fail ] /check pressure switch/pressure=40,volume=400 (345us)
-```
-
-## Computed Combinations (Cartesian Product)
-
-Another approach to using [nested for-loops] is to compute all the combinations
-using the [Cartesian Product] function. Here is the
-[TestScenario] that uses `product(*iterables, repeat=1)` function
-to compute all combinations of `pressure` and `volume` values to check our [Example Pressure Switch].
-
-The advantage of using the cartesian product function is that it avoids writing nested for-loops
-and is much more scalable when number of variables is large.
-
-```python
-from testflows.combinatorics import product
-
-@TestScenario
-def check_pressure_switch(self):
-    """Check all combinations of pressure and volume
-    using cartesian product."""
-    pressures = [0, 10, 20, 30, 40]
-    volumes = [0, 100, 200, 300, 400]
-
-    for combination in product(pressures, volumes):
-        pressure, volume = combination
-        with Check(f"pressure={pressure},volume={volume}", flags=TE):
-            pressure_switch(pressure=pressure, volume=volume)
-```
-
-## Using Sketches
-
-A better approach to check all possible combinations is to use a [TestSketch].
-
-A [TestSketch] allows to check all possible combinations where each combination
-variable and its values is defined by the [either() function].
-[TestSketch] with [either() function] makes writing combinatorial tests
-as simple as writing a simple test that would check one combination.
-
-> ✋ if you call [either() function] multiple times on the same line of code
-> or you have a call to [either() function] inside a `for-loop` or `while-loop`
-> then unique identifier `i` must be specified explicitly.
-
-For the [Example Pressure Switch], our [TestSketch] would be as follows:
-
-```python
-@TestSketch(Scenario)
-@Flags(TE)
-def check_pressure_switch(self):
-    """Check all combinations of pressure and volume using a TestSketch."""
-    pressure = either(0, 10, 20, 30, 40)
-    volume = either(0, 100, 200, 300, 400)
-
-    with Check(f"pressure={pressure},volume={volume}"):
-        pressure_switch(pressure=pressure, volume=volume)
-```
-
-Each [either() function] defines a new combination variable and its possible values
-and then {% testflows %} automatically loops through all the combinations
-when a [TestSketch] is called.
-
-Running the [TestSketch] above results in the following output.
-
-```bash
-Sep 22,2023 16:29:07   ⟥  Scenario check pressure switch, flags:TE
-Sep 22,2023 16:29:07     ⟥  Combination pattern #0, flags:TE
-Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=0
-               181us       ⟥    [note] ok, no problem
-               255us       ⟥⟤ OK pressure=0,volume=0, /check pressure switch/pattern #0/pressure=0,volume=0
-               705us     ⟥⟤ OK pattern #0, /check pressure switch/pattern #0
-Sep 22,2023 16:29:07     ⟥  Combination pattern #1, flags:TE
-Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=100
-               175us       ⟥    [note] ok, no problem
-               222us       ⟥⟤ OK pressure=0,volume=100, /check pressure switch/pattern #1/pressure=0,volume=100
-               705us     ⟥⟤ OK pattern #0, /check pressure switch/pattern #1
-...
-```
-
-Fails reported as below.
-
-```bash
-Failing
-
-✘ [ Fail ] /check pressure switch/pattern #3/pressure=0,volume=300 (541us)
-✘ [ Fail ] /check pressure switch/pattern #4/pressure=0,volume=400 (360us)
-✘ [ Fail ] /check pressure switch/pattern #23/pressure=40,volume=300 (519us)
-✘ [ Fail ] /check pressure switch/pattern #24/pressure=40,volume=400 (340us)
-```
-
-A [TestSketch] allows for advanced and intuitive definition of combinatorial tests
-especially when number of combination variables grows.
-
-Here is an example of testing a few combinations of a calculator's
-`+`, `-`, `*`, and `/` operations when user enters some positive or negative numbers,
-and presses `=` sign to get the results.
-
-```python
-@TestSketch(Scenario)
-def check_basic_operations(self):
-    """Check basic operations `+`, `-`, `*`, `/`
-    with some one digit positive or negative numbers including `0`.
-    """
-    try:
-        with When("I enter either positive or negative 0,1,2"):
-            if either(True, False):
-                By(test=press_minus)()
-            By(test=either(press_0, press_1, press_2))()
-
-        with And("then I press either +, -, *, / operation"):
-            By(test=either(press_plus, press_minus, press_multiply, press_divide))()
-
-        with And("I enter second argument either positive or negative 0,1,2"):
-            if either(True, False):
-                By(test=press_minus)()
-            By(test=either(press_0, press_1, press_2))()
-
-        with And("I press equals to calculate the result"):
-            By(test=press_equal)()
-
-        with Then("I check calculator state"):
-            By(test=check_state)()
-    finally:
-        with Finally("I reset calculator back to 0"):
-            By(test=reset_calculator)()
-```
-
-> Try to implement the [TestSketch] above using [nested for-loops] or the `product() function`
-> and you will straightway appreciate the beauty and power of [TestSketch]es!
-
-Each call to the [either() function] must be unique or unique identifier `i` must be specified.
-By default, the unique identifier of the [either() function] is the source code line number,
-therefore if you call [either() function] multiple times on the same line of code
-or you have a call to [either() function] inside a `for-loop` or `while-loop`
-then the unique identifier `i` must be specified explicitly.
-
-For example, let's assume we have a function `add(a, b, c)` that we want to test.
-
-```python
-def add(a, b, c):
-    note(f"{a} + {b} + {c}")
-```
-
-We could write a [TestSketch] that calls the [either() function] inside a `for-loop`
-on the same line multiple times.
-
-```python
-@TestSketch(Scenario)
-def check_add(self):
-    for i in range(either(value=range(1, 2))):
-        add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
-```
-
-Note that we had to pass unique identifier `i` for each [either() function] call that defined possible
-values of `a`, `b`, and `c`. Also, note that the unique identifier was a combination of the variable name
-and the loop variable `i`
-
-```python
-add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
-```
-
-The [TestSketch] above results in generation of eight combinations. This is because
-`range(1,2)` is `[1]` and therefore the `for-loop`
-
-```python
-    for i in range(either(value=range(1, 2))):
-```
-
-has only one iteration.
-
-```bash
-Sep 22,2023 17:00:48   ⟥  Scenario check add
-Sep 22,2023 17:00:48     ⟥  Combination pattern #0
-               371us     ⟥    [note] 1 + 3 + 5
-               444us     ⟥⟤ OK pattern #0, /check add/pattern #0
-Sep 22,2023 17:00:48     ⟥  Combination pattern #1
-               216us     ⟥    [note] 1 + 3 + 6
-               270us     ⟥⟤ OK pattern #1, /check add/pattern #1
-Sep 22,2023 17:00:48     ⟥  Combination pattern #2
-               190us     ⟥    [note] 1 + 4 + 5
-               238us     ⟥⟤ OK pattern #2, /check add/pattern #2
-Sep 22,2023 17:00:48     ⟥  Combination pattern #3
-               184us     ⟥    [note] 1 + 4 + 6
-               231us     ⟥⟤ OK pattern #3, /check add/pattern #3
-Sep 22,2023 17:00:48     ⟥  Combination pattern #4
-               174us     ⟥    [note] 2 + 3 + 5
-               220us     ⟥⟤ OK pattern #4, /check add/pattern #4
-Sep 22,2023 17:00:48     ⟥  Combination pattern #5
-               186us     ⟥    [note] 2 + 3 + 6
-               234us     ⟥⟤ OK pattern #5, /check add/pattern #5
-Sep 22,2023 17:00:48     ⟥  Combination pattern #6
-               232us     ⟥    [note] 2 + 4 + 5
-               279us     ⟥⟤ OK pattern #6, /check add/pattern #6
-Sep 22,2023 17:00:48     ⟥  Combination pattern #7
-               168us     ⟥    [note] 2 + 4 + 6
-               214us     ⟥⟤ OK pattern #7, /check add/pattern #7
-                 5ms   ⟥⟤ OK check add, /check add
-```
-
-Let's change the `for-loop` so that it can iterate either one or two times.
-
-```python
-@TestSketch(Scenario)
-def check_add(self):
-    for i in range(either(value=range(1, 3))):
-        add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
-```
-
-Then the number of combinations will be `72` and it will not be that intuitive what each combination is.
-The first run of the `for-loop` where it iterates only once will produce the same `8` combinations
-as before. However, the second run of the `for-loop` when it iterates twice will
-create combinations similar to the ones below. Where the combination `1 + 3 + 5`
-is followed by each of the `8` possibilities including itself and this done for each
-combination of `a + b + c`, and thus resulting in {% katex %}8 * 8 + 8 = 72 {% endkatex%} combinations total.
-
-```
-Sep 22,2023 17:08:13     ⟥  Combination pattern #8
-               155us     ⟥    [note] 1 + 3 + 5
-               181us     ⟥    [note] 1 + 3 + 5
-               220us     ⟥⟤ OK pattern #8, /check add/pattern #8
-Sep 22,2023 17:08:13     ⟥  Combination pattern #9
-               156us     ⟥    [note] 1 + 3 + 5
-               183us     ⟥    [note] 1 + 3 + 6
-               222us     ⟥⟤ OK pattern #9, /check add/pattern #9
-Sep 22,2023 17:08:13     ⟥  Combination pattern #10
-               161us     ⟥    [note] 1 + 3 + 5
-               189us     ⟥    [note] 1 + 4 + 5
-               231us     ⟥⟤ OK pattern #10, /check add/pattern #10
-Sep 22,2023 17:08:13     ⟥  Combination pattern #11
-               166us     ⟥    [note] 1 + 3 + 5
-               195us     ⟥    [note] 1 + 4 + 6
-               235us     ⟥⟤ OK pattern #11, /check add/pattern #11
-Sep 22,2023 17:08:13     ⟥  Combination pattern #12
-               163us     ⟥    [note] 1 + 3 + 5
-               190us     ⟥    [note] 2 + 3 + 5
-               230us     ⟥⟤ OK pattern #12, /check add/pattern #12
-Sep 22,2023 17:08:13     ⟥  Combination pattern #13
-               225us     ⟥    [note] 1 + 3 + 5
-               252us     ⟥    [note] 2 + 3 + 6
-               292us     ⟥⟤ OK pattern #13, /check add/pattern #13
-Sep 22,2023 17:08:13     ⟥  Combination pattern #14
-               156us     ⟥    [note] 1 + 3 + 5
-               183us     ⟥    [note] 2 + 4 + 5
-               225us     ⟥⟤ OK pattern #14, /check add/pattern #14
-Sep 22,2023 17:08:13     ⟥  Combination pattern #15
-               155us     ⟥    [note] 1 + 3 + 5
-               182us     ⟥    [note] 2 + 4 + 6
-...
-```
-
-### Using `either()`
-
-The [either() function] select values for a combination variable one at a time until all values are consumed.
-
-> ✋ It is used in [TestSketch]es to check all possible combinations. See [Using Sketches].
-
-Values can be specified either using `*values` or by passing an iterator or generator
-as `value`.
-
-If neither `*values`, or `value` is explicitly specified then `*values`
-is set to a `(True, False)` tuple.
-
-This function must be called only once for each line of code in the same source file or
-a unique identifier `i` must be specified.
-
-If `random` is `True`, then all values will be shuffled using a default shuffle function.
-
-Optionally, you can pass a custom `shuffle` function that takes values as an argument
-and modifies the sequence in-place. By default, `random.shuffle()` is used.
-
-You can use `limit` to limit number of values to choose.
-
-```python
-either(*values, value=None, i=None, random=False, shuffle=random.shuffle, limit=None)
-```
-
-where
-
-* `*values` zero or more of values to choose from
-* `value` iterator or generator of values
-* `random` (optional) randomize order of values (values must fit into memory), default: `False`
-* `shuffle` (optional) custom function to shuffle the values
-* `limit` (optional) limit number of values (integer `> 0`), default: `None`
-* `i` (optional) unique identifier, default: `None`
-
-
-## Covering Arrays - (Pairwise, N-wise) Testing
-
-The [CoveringArray class] allows you to calculate a covering array
-for some `k` parameters having the same or different number of possible values.
-
-The class uses [IPOG], an in-parameter-order, algorithm as described in [IPOG: A General Strategy for T-Way Software Testing] paper by Yu Lei et al.
-
-For any non-trivial number of parameters, exhaustively testing all possibilities is not feasible.
-For example, if we have `10` parameters (`k=10`) that each has `10` possible values (`v=10`), the
-number of all possibilities is {% katex %}v^k=10^{10} = {10}_{billion}{% endkatex %} thus requiring 10 billion tests for complete coverage.
-
-Given that exhaustive testing might not be practical, a covering array could give us a much smaller
-number of tests if we choose to check all possible interactions only between some fixed number
-of parameters at least once, where an interaction is some specific combination, where order does not matter,
-of some `t` number of parameters, covering all possible values that each selected parameter could have.
-
-> **{% attention %}** You can find out more about covering arrays by visiting the US National Institute of Standards and Technology's (NIST) [Introduction to Covering Arrays](https://math.nist.gov/coveringarrays/coveringarray.html) page.
-
-The `CoveringArray(parameters, strength=2)` takes the following arguments
-
-where
-
-* `parameters` specifies parameter names and their possible values and
-   is specified as a `dict[str, list[value]]`, where *key* is the parameter name and
-   *value* is a list of possible values for a given parameter.
-* `strength` specifies the strength `t` of the covering array that indicates the number of parameters
-   in each combination, for which all possible interactions will be checked.
-   If `strength` equals the number of parameters, then you get the exhaustive case.
-
-The return value of the `CoveringArray(parameters, strength=2)` is a `CoveringArray` object that is an iterable
-of tests, where each test is a dictionary, with each key being the parameter name and its value
-being the parameter value.
-
-For example,
-
-```python
-from testflows.combinatorics import CoveringArray
-
-parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
-
-print(CoveringArray(parameters, strength=2))
-```
-
-Gives the following output:
-
-```bash
-CoveringArray({'a': [0, 1], 'b': ['a', 'b'], 'c': [0, 1, 2], 'd': ['d0', 'd1']},2)[
-6
-a b c d
--------
-0 b 2 d1
-0 a 1 d0
-1 b 1 d1
-1 a 2 d0
-0 b 0 d0
-1 a 0 d1
-]
-```
-
-Given that in the example above, the `strength=2`, all possible 2-way (pairwise)
-combinations of parameters `a`, `b`, `c`, and `d` are the following:
-
-```python
-[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
-```
-
-The six tests that make up the covering array cover all the possible interactions
-between the values of each of these parameter combinations. For example, the `('a', 'b')`
-parameter combination covers all possible combinations of the values that
-parameters `a` and `b` can take.
-
-Given that parameter `a` can have values `[0, 1]`, and parameter `b` can have values `['a', 'b']`
-all possible interactions are the following:
-
-```python
-[(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
-```
-
-where the first element of each tuple corresponds to the value of the parameter `a`, and the second
-element corresponds to the value of the parameter `b`.
-
-Examining the covering array above, we can see that all possible interactions of parameters
-`a` and `b` are indeed covered at least once. The same check can be done for other parameter combinations.
-
-### Checking Covering Array
-
-The [CoveringArray.check() function] can be used to verify that the tests
-inside the covering array cover all possible `t-way` interactions at least once, and thus
-meet the definition of a covering array.
-
-For example,
-
-```python
-from testflows.combinatorics import CoveringArray
-
-parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
-tests = CoveringArray(parameters, strength=2)
-
-print(tests.check())
-```
-
-### Dumping Covering Array
-
-The `CoveringArray` object implements a custom `__str__` method, and therefore it can be easily converted into
-a string representation similar to the format used in the [NIST covering array tables](https://math.nist.gov/coveringarrays/ipof/ipof-results.html).
-
-For example,
-
-```python
-   print(CoveringArray(parameters, strength=2))
-```
-
-```bash
-CoveringArray({'a': [0, 1], 'b': ['a', 'b'], 'c': [0, 1, 2], 'd': ['d0', 'd1']},2)[
-6
-a b c d
--------
-0 b 2 d1
-0 a 1 d0
-1 b 1 d1
-1 a 2 d0
-0 b 0 d0
-1 a 0 d1
-]
-```
-
-## Combinations
-
-The `combinations(iterable, r, with_replacement=False)` function can be used to calculate
-all `r-length` combinations of elements in a specified iterable.
-
-For example,
-
-```python
-from testflows.combinatorics import combinations
-
-parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
-
-print(list(combinations(parameters.keys(), 2)))
-```
-
-```python
-[('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'c'), ('b', 'd'), ('c', 'd')]
-```
-
-> This function is equivalent to the standard library's [itertools.combinations](https://docs.python.org/3/library/itertools.html#itertools.combinations).
-
-### With Replacement
-
-You can calculate all combinations with replacement by setting the `with_replacement` argument to `True`.
-
-For example,
-
-```python
-from testflows.combinatorics import combinations
-
-parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
-
-print(list(combinations(parameters.keys(), 2, with_replacement=True)))
-```
-
-```python
-[('a', 'a'), ('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'b'), ('b', 'c'), ('b', 'd'), ('c', 'c'), ('c', 'd'), ('d', 'd')]
-```
-
-> The `with_replacement=True` option is equivalent to the standard library's [itertools.combinations_with_replacement](https://docs.python.org/3/library/itertools.html#itertools.combinations_with_replacement).
-
-
-## Cartesian Product
-
-You can calculate all possible combinations of elements from different iterables using
-the cartesian `product(*iterables, repeat=1)` function.
-
-For example,
-
-```python
-from testflows.combinatorics import *
-
-parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
-
-print(list(product(parameters["a"], parameters["b"])))
-```
-
-
-```python
-[(0, 'a'), (0, 'b'), (1, 'a'), (1, 'b')]
-```
-
-> This function is equivalent to the standard library's [itertools.product](https://docs.python.org/3/library/itertools.html#itertools.product).
-
-## Permutations
-
-The `permutations(iterable, r=None)` function can be used to calculate
-the `r-length` permutations of elements for a given iterable.
-
-> **{% attention %}** Permutations are different from `combinations`.
-> In a combination, the elements don't have any order, but in a permutation, the order of elements is important.
-
-For example,
-
-```python
-from testflows.combinatorics import *
-
-parameters = {"a": [0, 1], "b": ["a", "b"], "c": [0, 1, 2], "d": ["d0", "d1"]}
-
-print(list(permutations(parameters.keys(), 2)))
-```
-
-
-```python
-('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'a'), ('b', 'c'), ('b', 'd'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('d', 'a'), ('d', 'b'), ('d', 'c')]
-```
-
-and as we can see, both `('a', 'b')` and `('b', 'a')` elements are present.
-
-> This function is equivalent to the standard library's [itertools.permutations](https://docs.python.org/3/library/itertools.html#itertools.permutations).
-
-## Binomial Coefficients
-
-You can calculate the binomial coefficient, which is the same as
-the number of ways to choose `k` items from `n` items without repetition and without order.
-
-Binomial coefficient is defined as
-
-> {% katex %}\binom{n}{k} = \frac{n!}{k!(n-k)!}{% endkatex %}
-
-when {% katex %}k <= n{% endkatex %}, and is zero when {% katex %}k > n{% endkatex %}.
-
-For example,
-
-```python
-from testflows.combinatorics import *
-
-print(binomial(4,2))
-```
-
-```python
-6
-```
-
-which means that there are `6` ways to choose `2` elements out of `4`.
-
-> This function is equivalent to the standard library's [math.comb](https://docs.python.org/3/library/math.html#math.comb).
 
 # Adding Messages
 
@@ -8539,10 +8675,14 @@ TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc
 [IPOG]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
 [IPOG: A General Strategy for T-Way Software Testing]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
 [Covering Arrays]: #Covering-Arrays-Pairwise-N-wise-Testing
-[Example Pressure Switch]: #Example-Pressure-Switch
+[Covering Array]: #Covering-Arrays-Pairwise-N-wise-Testing
+[Example: Pressure Switch]: #Example-Pressure-Switch
 [Cartesian Product]: #Cartesian-Product
 [nested for-loops]: #Simple-Approach-Nested-For-loops
 [Using Sketches]: #Using-Sketches
+[Combination Outline]: #Using-Combination-Outlines
+[Covering Array Combinations]: #Covering-Array-Combinations
+[Filtering Combinations]: #Filtering-Combinations
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3223
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1140
