@@ -2357,6 +2357,10 @@ Test was skipped.
 Test parameters can be used to set attributes of a test. Here is a list of most common
 parameters for a test:
 
+> **{% attention %}** Test parameters are used to set attributes of a test.
+> Not to be confused with the [attributes] which is just one of the attributes of the test (object),
+> that can be specified using the `attributes` parameter when calling or creating a test.
+
 * [name]
 * [flags]
 * uid
@@ -2374,13 +2378,16 @@ parameters for a test:
 * end
 * only_tags
 * skip_tags
-* args
+* [args](#Args-Parameter)
 
 > **{% attention %}** Most parameter names match the names of the attributes of the test which they set.
-> For example, [name] parameter sets the name attribute of the test.
+> For example, [name] parameter sets the `name` attribute of the test.
 
-When test is defined inline then parameters can be specified right when test definition class is instantiated.
-The first parameter is always `name` that sets the name of the test. The other parameters are usually
+> **{% attention %}** Note that the [Args] decorator can be used to set values of any parameter of the test. However,
+> many parameters have corresponding dedicated decorators available to be used instead.
+
+When test is defined inline then parameters can be set right when a test definition class is instantiated.
+The first parameter is always `name` which sets the name of the test. The other parameters are usually
 specified using keyword arguments.
 
 For example,
@@ -2388,6 +2395,50 @@ For example,
 ```python
 with Scenario("My test", description="This is a description of an inline test"):
     pass
+```
+
+# Args Parameter
+
+The `args` parameter is used to set the arguments of the test.
+
+> **{% attention %}** Do not confuse the `args` parameter with the [Args] decorator. See the [Args] decorator for more details.
+
+```python
+@Args(args={"arg0": 1, "arg1": 2})
+def scenario(self, arg0, arg1):
+    note(f"Hello from my test! You passed arg0={arg0}, arg1={arg1}")
+```
+
+# Args Decorator
+
+The [Args class] can be used as a decorator to set any parameters of the test.
+This is especially useful when there is no dedicated decorator available for the
+parameter.
+
+Each test parameter can be specified using a corresponding keyword argument.
+
+```python
+@Args(name=..., tags=..., flags=..., ...)
+```
+
+For example, the [Name] decorator can be used to set the [name] parameter of the test,
+however, the same can be done using the [Args] decorator.
+
+```python
+@TestScenario
+@Args(name="custom test name")
+def scenario(self):
+    note("Hello from my test!")
+```
+
+It can also be used to specify default values of test arguments by setting the `args` parameter
+to a dictionary where the `key` is the argument name and the `value` is the argument's value.
+
+```python
+@TestScenario
+@Args(args={"number": 2})
+def scenario(self, number):
+    note(f"Hello from my test! You passed me number {number}")
 ```
 
 # Naming Tests
@@ -5322,6 +5373,95 @@ Sep 22,2023 17:08:13     ⟥  Combination pattern #15
                155us     ⟥    [note] 1 + 3 + 5
                182us     ⟥    [note] 2 + 4 + 6
 ...
+```
+
+### Randomizing Combinations
+
+Use the `random` test attribute of the [TestSketch] to randomize order of combinations.
+
+For example,
+
+```python
+@TestSketch(Scenario)
+@Flags(TE)
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume using a TestSketch."""
+    pressure = either(0, 10, 20, 30, 40)
+    volume = either(0, 100, 200, 300, 400)
+
+    with Check(f"pressure={pressure},volume={volume}"):
+        pressure_switch(pressure=pressure, volume=volume)
+
+# Run the sketch using random combinations order
+Sketch(test=check_pressure_switch, random=True)()
+```
+
+> ✋ See [Using either()] for how to randomize order for a given combination variable.
+
+You can combine `random` with the `limit` test attribute. See [Limiting Number of Combinations] below.
+Also use [Args] decorator to specify default value of the `random` test attribute.
+
+For example,
+
+```python
+@TestSketch(Scenario)
+@Flags(TE)
+@Args(random=True, limit=3)
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume using TestSketch."""
+    pressure = either(0, 10, 20, 30, 40)
+    volume = either(0, 100, 200, 300, 400)
+
+    with Check(f"pressure={pressure},volume={volume}"):
+        pressure_switch(pressure=pressure, volume=volume)
+```
+
+### Limiting Number of Combinations
+
+Use the `limit` test attribute of the [TestSketch] to limit the number of combinations.
+
+For example,
+
+```python
+@TestSketch(Scenario)
+@Flags(TE)
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume using a TestSketch."""
+    pressure = either(0, 10, 20, 30, 40)
+    volume = either(0, 100, 200, 300, 400)
+
+    with Check(f"pressure={pressure},volume={volume}"):
+        pressure_switch(pressure=pressure, volume=volume)
+
+# Run the sketch only for the first 5 combinations
+Sketch(test=check_pressure_switch, limit=5)()
+```
+
+> ✋ See [Using either()] for how to limit the number of values for a given combination variable.
+
+Use both `random` and `limit` attributes of the [TestSketch] to execute a limited number of random
+combinations.
+
+For example,
+
+```python
+# Run the sketch only for the first 5 random combinations
+Sketch(test=check_pressure_switch, random=True, limit=5)()
+```
+
+You can also use [Args] decorator to specify default value of the `limit` test attribute.
+
+```python
+@TestSketch(Scenario)
+@Flags(TE)
+@Args(limit=3)
+def check_pressure_switch(self):
+    """Check all combinations of pressure and volume using TestSketch."""
+    pressure = either(0, 10, 20, 30, 40)
+    volume = either(0, 100, 200, 300, 400)
+
+    with Check(f"pressure={pressure},volume={volume}"):
+        pressure_switch(pressure=pressure, volume=volume)
 ```
 
 ### Using `either()`
@@ -8559,6 +8699,8 @@ TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc
 [XFlags]: #XFlags
 [ffails]: #ffails
 [FFails]: #FFails
+[args parameter]: #Args-Parameter
+[Args]: #Args-Decorator
 [name]: #name
 [Name]: #Name
 [examples]: #examples
@@ -8677,6 +8819,8 @@ TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc
 [Combination Outline]: #Using-Combination-Outlines
 [Covering Array Combinations]: #Covering-Array-Combinations
 [Filtering Combinations]: #Filtering-Combinations
+[Using either()]: #Using-either
+[Limiting Number of Combinations]: #Limiting-Number-of-Combinations
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/test.py#L3223
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/3a36b16f34189bcea5170b4423914805c191bd29/testflows/_core/objects.py#L1140
