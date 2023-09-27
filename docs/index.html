@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1695843314094" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1695843314094" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1695854668889" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1695854668889" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1695843314094" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1695854668889" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -127,21 +127,64 @@ Then execute it.</div>
 <div class="col-md-8"><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 ./test.py</span></span><br><span class="line">Nov 20,2019 16:42:00   ⟥  Scenario Hello TestFlows</span><br><span class="line">                 2ms   ⟥⟤ OK Hello TestFlows, /Hello TestFlows</span><br><span class="line"></span><br><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Hello TestFlows</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br><span class="line"></span><br><span class="line">Total time 2ms</span><br><span class="line"></span><br><span class="line">Executed on Nov 20,2019 16:42</span><br><span class="line">TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833</span><br></pre></td></tr></table></figure></div></div>
 
 <h1 id=""><a href="#" class="headerlink" title=""></a><br></h1><hr>
-<h1 id="-1"><a href="#-1" class="headerlink" title=""></a><br></h1><h1 id="Asynchronous-Tests"><a href="#Asynchronous-Tests" class="headerlink" title="Asynchronous Tests"></a><strong>Asynchronous Tests</strong></h1><h2 id="take-advantage-of-asynchronous-programming"><a href="#take-advantage-of-asynchronous-programming" class="headerlink" title="take advantage of asynchronous programming"></a>take advantage of asynchronous programming</h2><h2 id="-2"><a href="#-2" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-1"><a href="#-1" class="headerlink" title=""></a><br></h1><h1 id="Tests-Programs-Not-Just-Tests"><a href="#Tests-Programs-Not-Just-Tests" class="headerlink" title="Tests Programs Not Just Tests"></a><strong>Tests Programs Not Just Tests</strong></h1><h2 id="write-full-test-programs-that"><a href="#write-full-test-programs-that" class="headerlink" title="write full test programs that"></a>write full test programs that</h2><h2 id="combine-tests-with-their-flow"><a href="#combine-tests-with-their-flow" class="headerlink" title="combine tests with their flow"></a>combine tests with their flow</h2><h2 id="-2"><a href="#-2" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
-<div class="row""><div class="col-md-4 text-center"><h2 id="using-asyncio-with-async-def-and-async-with">Using <code>asyncio</code> with <code>async def</code> and <code>async with</code></h2>
+<div class="row""><div class="col-md-4 text-center"><h2 id="use-if-for-or-while-statements-for-ultimate-test-flow-flexibility">Use <code>if</code>, <code>for</code>, or <code>while</code> statements for ultimate test flow flexibility</h2>
 <h1 id=""><br></h1>
 </div>
-<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">module</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> Test(<span class="string">&quot;my async test&quot;</span>):</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> Step(<span class="string">&quot;my async test step&quot;</span>):</span><br><span class="line">            note(<span class="string">&quot;Hello from asyncio!&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">asyncio.run(module())</span><br></pre></td></tr></table></figure>
+<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">if</span> (condition):</span><br><span class="line">        Test(run=test_1)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">        Test(<span class="string">f&quot;test_2-<span class="subst">&#123;i&#125;</span>&quot;</span>, run=test_2)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> Test(run=test_3) != OK:</span><br><span class="line">            <span class="keyword">continue</span></span><br></pre></td></tr></table></figure>
 </div></div>
 
 <br>
 <br>
 
 <hr>
-<h1 id="-3"><a href="#-3" class="headerlink" title=""></a><br></h1><h1 id="Parallel-Tests"><a href="#Parallel-Tests" class="headerlink" title="Parallel Tests"></a><strong>Parallel Tests</strong></h1><h2 id="easily-run-tests-in-parallel"><a href="#easily-run-tests-in-parallel" class="headerlink" title="easily run tests in parallel"></a>easily run tests in parallel</h2><h2 id="-4"><a href="#-4" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-3"><a href="#-3" class="headerlink" title=""></a><br></h1><h1 id="Self-Documenting-Tests"><a href="#Self-Documenting-Tests" class="headerlink" title="Self-Documenting Tests"></a><strong>Self-Documenting Tests</strong></h1><h2 id="break-your-tests-into-steps"><a href="#break-your-tests-into-steps" class="headerlink" title="break your tests into steps"></a>break your tests into steps</h2><h2 id="without-leaving-Python"><a href="#without-leaving-Python" class="headerlink" title="without leaving Python"></a>without leaving Python</h2><h2 id="-4"><a href="#-4" class="headerlink" title=""></a><br></h2><hr>
+<br>
+<br>
+
+<div class="row""><div class="col-md-4 text-center"><h2 id="use-given-when-then-and-more-when-and-where-you-need-it">Use <code>Given</code>, <code>When</code>, <code>Then</code>, and more when and where you need it</h2>
+<h1 id=""><br></h1>
+</div>
+<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;I have something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I do something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;I expect something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</div></div>
+
+<br>
+<br>
+
+<hr>
+<h1 id="-5"><a href="#-5" class="headerlink" title=""></a><br></h1><h1 id="Combinatorial-Tests"><a href="#Combinatorial-Tests" class="headerlink" title="Combinatorial Tests"></a><strong>Combinatorial Tests</strong></h1><h2 id="exhaustive-testing-or-get-covered-with-covering-arrays"><a href="#exhaustive-testing-or-get-covered-with-covering-arrays" class="headerlink" title="exhaustive testing or get covered with covering arrays"></a>exhaustive testing or get covered with covering arrays</h2><h2 id="all-pairs-n-wise-and-pairwise-testing-made-easy"><a href="#all-pairs-n-wise-and-pairwise-testing-made-easy" class="headerlink" title="all-pairs, n-wise, and pairwise testing made easy"></a>all-pairs, n-wise, and pairwise testing made easy</h2><h2 id="-6"><a href="#-6" class="headerlink" title=""></a><br></h2><hr>
+<br>
+<br>
+
+<div class="row""><div class="col-md-4 text-center"><h2 id="using-a-coveringarray-with-strength2-or-more">Using a <code>CoveringArray</code> with <code>strength=2</code> or more</h2>
+<h2 id="for-pairwise-or-greater-coverage">for pairwise or greater coverage</h2>
+<h1 id=""><br></h1>
+</div>
+<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.combinatorics <span class="keyword">import</span> CoveringArray</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_basic_operations</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> i, combination <span class="keyword">in</span> <span class="built_in">enumerate</span>(</span><br><span class="line">        CoveringArray(&#123;</span><br><span class="line">            <span class="string">&quot;press_a&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">2</span>],</span><br><span class="line">            <span class="string">&quot;operation&quot;</span>: [<span class="string">&#x27;+&#x27;</span>,<span class="string">&#x27;-&#x27;</span>,<span class="string">&#x27;*&#x27;</span>,<span class="string">&#x27;/&#x27;</span>],</span><br><span class="line">            <span class="string">&quot;press_b&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">2</span>],</span><br><span class="line">        &#125;, strength=<span class="number">2</span>)</span><br><span class="line">    ):</span><br><span class="line">        <span class="keyword">with</span> Combination(<span class="string">f&quot;pattern #<span class="subst">&#123;i&#125;</span>&quot;</span>):</span><br><span class="line">            check_basic_operation(combination=combination.values())</span><br></pre></td></tr></table></figure>
+</div></div>
+
+<br>
+<br>
+
+<hr>
+<h1 id="-7"><a href="#-7" class="headerlink" title=""></a><br></h1><h1 id="Asynchronous-Tests"><a href="#Asynchronous-Tests" class="headerlink" title="Asynchronous Tests"></a><strong>Asynchronous Tests</strong></h1><h2 id="take-advantage-of-asynchronous-programming"><a href="#take-advantage-of-asynchronous-programming" class="headerlink" title="take advantage of asynchronous programming"></a>take advantage of asynchronous programming</h2><h2 id="-8"><a href="#-8" class="headerlink" title=""></a><br></h2><hr>
+<br>
+<br>
+
+<div class="row""><div class="col-md-4 text-center"><h2 id="using-asyncio-with-async-def-and-async-with">Using <code>asyncio</code> with <code>async def</code> and <code>async with</code></h2>
+<h1 id=""><br></h1>
+</div>
+<div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">with</span> Test(<span class="string">&quot;my async test&quot;</span>):</span><br><span class="line">        <span class="keyword">async</span> <span class="keyword">with</span> Step(<span class="string">&quot;my async test step&quot;</span>):</span><br><span class="line">            note(<span class="string">&quot;Hello from asyncio!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>):</span><br><span class="line">    Suite(run=suite)</span><br></pre></td></tr></table></figure>
+</div></div>
+
+<br>
+<br>
+
+<hr>
+<h1 id="-9"><a href="#-9" class="headerlink" title=""></a><br></h1><h1 id="Parallel-Tests"><a href="#Parallel-Tests" class="headerlink" title="Parallel Tests"></a><strong>Parallel Tests</strong></h1><h2 id="easily-author-parallel-tests"><a href="#easily-author-parallel-tests" class="headerlink" title="easily author parallel tests"></a>easily author parallel tests</h2><h2 id="or-run-your-tests-in-parallel"><a href="#or-run-your-tests-in-parallel" class="headerlink" title="or run your tests in parallel"></a>or run your tests in parallel</h2><h2 id="-10"><a href="#-10" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
@@ -155,7 +198,7 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-5"><a href="#-5" class="headerlink" title=""></a><br></h1><h1 id="Semi-Automated-and-Manual-Tests"><a href="#Semi-Automated-and-Manual-Tests" class="headerlink" title="Semi-Automated and Manual Tests"></a><strong>Semi-Automated and Manual Tests</strong></h1><h2 id="seamlessly-work-with-automated-semi-automated-and-manual-tests"><a href="#seamlessly-work-with-automated-semi-automated-and-manual-tests" class="headerlink" title="seamlessly work with automated, semi-automated, and manual tests"></a>seamlessly work with automated, semi-automated, and manual tests</h2><h2 id="-6"><a href="#-6" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-11"><a href="#-11" class="headerlink" title=""></a><br></h1><h1 id="Semi-Automated-and-Manual-Tests"><a href="#Semi-Automated-and-Manual-Tests" class="headerlink" title="Semi-Automated and Manual Tests"></a><strong>Semi-Automated and Manual Tests</strong></h1><h2 id="seamlessly-work-with-automated"><a href="#seamlessly-work-with-automated" class="headerlink" title="seamlessly work with automated"></a>seamlessly work with automated</h2><h2 id="semi-automated-and-manual-tests"><a href="#semi-automated-and-manual-tests" class="headerlink" title="semi-automated and manual tests"></a>semi-automated and manual tests</h2><h2 id="-12"><a href="#-12" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
@@ -169,7 +212,7 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-7"><a href="#-7" class="headerlink" title=""></a><br></h1><h1 id="Testing-Documentation"><a href="#Testing-Documentation" class="headerlink" title="Testing Documentation"></a><strong>Testing Documentation</strong></h1><h2 id="you-can-easily-automate-your-documentation"><a href="#you-can-easily-automate-your-documentation" class="headerlink" title="you can easily automate your documentation"></a>you can easily automate your documentation</h2><h2 id="and-keep-it-up-to-date"><a href="#and-keep-it-up-to-date" class="headerlink" title="and keep it up to date"></a>and keep it up to date</h2><h2 id="-8"><a href="#-8" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-13"><a href="#-13" class="headerlink" title=""></a><br></h1><h1 id="Testing-Documentation"><a href="#Testing-Documentation" class="headerlink" title="Testing Documentation"></a><strong>Testing Documentation</strong></h1><h2 id="automate-your-documentation"><a href="#automate-your-documentation" class="headerlink" title="automate your documentation"></a>automate your documentation</h2><h2 id="and-keep-it-up-to-date"><a href="#and-keep-it-up-to-date" class="headerlink" title="and keep it up to date"></a>and keep it up to date</h2><h2 id="-14"><a href="#-14" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
@@ -189,7 +232,7 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-9"><a href="#-9" class="headerlink" title=""></a><br></h1><h1 id="Professional-Reports"><a href="#Professional-Reports" class="headerlink" title="Professional Reports"></a><strong>Professional Reports</strong></h1><h2 id="right-at-your-fingertips"><a href="#right-at-your-fingertips" class="headerlink" title="right at your fingertips"></a>right at your fingertips</h2><h2 id="-10"><a href="#-10" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-15"><a href="#-15" class="headerlink" title=""></a><br></h1><h1 id="Professional-Reports"><a href="#Professional-Reports" class="headerlink" title="Professional Reports"></a><strong>Professional Reports</strong></h1><h2 id="right-at-your-fingertips"><a href="#right-at-your-fingertips" class="headerlink" title="right at your fingertips"></a>right at your fingertips</h2><h2 id="-16"><a href="#-16" class="headerlink" title=""></a><br></h2><hr>
 <div class="row""><div class="col-md-6"><h2 id=""><br></h2>
 <h2 id="requirements-coverage-report">Requirements Coverage Report</h2>
 <div style="text-align: center; padding-bottom: 1em;">
@@ -249,8 +292,8 @@ Then execute it.</div>
 </div>
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-metrics.png" alt="ScreenShot" style="width: 100%;"></div></div></div>
 
-<h1 id="-11"><a href="#-11" class="headerlink" title=""></a><br></h1><hr>
-<h1 id="-12"><a href="#-12" class="headerlink" title=""></a><br></h1><h1 id="Write-and-Work-with-Requirements"><a href="#Write-and-Work-with-Requirements" class="headerlink" title="Write and Work with Requirements"></a><strong>Write and Work with Requirements</strong></h1><h2 id="in-a-straightforward-and-convenient-way"><a href="#in-a-straightforward-and-convenient-way" class="headerlink" title="in a straightforward and convenient way"></a>in a straightforward and convenient way</h2><h2 id="-13"><a href="#-13" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-17"><a href="#-17" class="headerlink" title=""></a><br></h1><hr>
+<h1 id="-18"><a href="#-18" class="headerlink" title=""></a><br></h1><h1 id="Write-and-Work-with-Requirements"><a href="#Write-and-Work-with-Requirements" class="headerlink" title="Write and Work with Requirements"></a><strong>Write and Work with Requirements</strong></h1><h2 id="in-a-straightforward-and-convenient-way"><a href="#in-a-straightforward-and-convenient-way" class="headerlink" title="in a straightforward and convenient way"></a>in a straightforward and convenient way</h2><h2 id="-19"><a href="#-19" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 <div class="row""><div class="col-md-4 text-center"><h2 id="write-requirements-in-markdown-document">Write requirements in Markdown document</h2>
@@ -302,7 +345,7 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-14"><a href="#-14" class="headerlink" title=""></a><br></h1><h1 id="Results-Analytics"><a href="#Results-Analytics" class="headerlink" title="Results Analytics"></a><strong>Results Analytics</strong></h1><h2 id="designed-to-provide-analytics"><a href="#designed-to-provide-analytics" class="headerlink" title="designed to provide analytics"></a>designed to provide analytics</h2><h2 id="using-ClickHouse-and-Grafana"><a href="#using-ClickHouse-and-Grafana" class="headerlink" title="using ClickHouse and Grafana"></a>using ClickHouse and Grafana</h2><h2 id="-15"><a href="#-15" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-20"><a href="#-20" class="headerlink" title=""></a><br></h1><h1 id="Results-Analytics"><a href="#Results-Analytics" class="headerlink" title="Results Analytics"></a><strong>Results Analytics</strong></h1><h2 id="designed-to-provide-analytics"><a href="#designed-to-provide-analytics" class="headerlink" title="designed to provide analytics"></a>designed to provide analytics</h2><h2 id="using-ClickHouse-and-Grafana"><a href="#using-ClickHouse-and-Grafana" class="headerlink" title="using ClickHouse and Grafana"></a>using ClickHouse and Grafana</h2><h2 id="-21"><a href="#-21" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
@@ -330,7 +373,7 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-16"><a href="#-16" class="headerlink" title=""></a><br></h1><h1 id="More-Than-Just-a-Framework"><a href="#More-Than-Just-a-Framework" class="headerlink" title="More Than Just a Framework"></a><strong>More Than Just a Framework</strong></h1><h2 id="build-on-top-of-a-messaging-protocol"><a href="#build-on-top-of-a-messaging-protocol" class="headerlink" title="build on top of a messaging protocol"></a>build on top of a messaging protocol</h2><h2 id="for-robustness-and-advanced-applications"><a href="#for-robustness-and-advanced-applications" class="headerlink" title="for robustness and advanced applications"></a>for robustness and advanced applications</h2><h2 id="-17"><a href="#-17" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-22"><a href="#-22" class="headerlink" title=""></a><br></h1><h1 id="More-Than-Just-a-Framework"><a href="#More-Than-Just-a-Framework" class="headerlink" title="More Than Just a Framework"></a><strong>More Than Just a Framework</strong></h1><h2 id="build-on-top-of-a-messaging-protocol"><a href="#build-on-top-of-a-messaging-protocol" class="headerlink" title="build on top of a messaging protocol"></a>build on top of a messaging protocol</h2><h2 id="for-robustness-and-advanced-applications"><a href="#for-robustness-and-advanced-applications" class="headerlink" title="for robustness and advanced applications"></a>for robustness and advanced applications</h2><h2 id="-23"><a href="#-23" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 
@@ -362,7 +405,7 @@ Then execute it.</div>
 <br>
 
 <hr>
-<h1 id="-18"><a href="#-18" class="headerlink" title=""></a><br></h1><h1 id="Actively-Developed"><a href="#Actively-Developed" class="headerlink" title="Actively Developed"></a><strong>Actively Developed</strong></h1><h2 id="become-part-of-the-team"><a href="#become-part-of-the-team" class="headerlink" title="become part of the team"></a>become part of the team</h2><h2 id="and-join-us-on-GitHub"><a href="#and-join-us-on-GitHub" class="headerlink" title="and join us on GitHub"></a>and join us on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></h2><h2 id="or-follow-us-to-get-the-latest-updates"><a href="#or-follow-us-to-get-the-latest-updates" class="headerlink" title="or follow us to get the latest updates"></a>or follow us to get the latest updates</h2><h2 id="-19"><a href="#-19" class="headerlink" title=""></a><br></h2><hr>
+<h1 id="-24"><a href="#-24" class="headerlink" title=""></a><br></h1><h1 id="Actively-Developed"><a href="#Actively-Developed" class="headerlink" title="Actively Developed"></a><strong>Actively Developed</strong></h1><h2 id="become-part-of-the-team"><a href="#become-part-of-the-team" class="headerlink" title="become part of the team"></a>become part of the team</h2><h2 id="and-join-us-on-GitHub"><a href="#and-join-us-on-GitHub" class="headerlink" title="and join us on GitHub"></a>and join us on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></h2><h2 id="or-follow-us-to-get-the-latest-updates"><a href="#or-follow-us-to-get-the-latest-updates" class="headerlink" title="or follow us to get the latest updates"></a>or follow us to get the latest updates</h2><h2 id="-25"><a href="#-25" class="headerlink" title=""></a><br></h2><hr>
 <br>
 <br>
 </div>

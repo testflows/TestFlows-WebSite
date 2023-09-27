@@ -129,6 +129,124 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ---
 
 # <br>
+# **Tests Programs Not Just Tests**
+## write full test programs that
+## combine tests with their flow
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Use `if`, `for`, or `while` statements for ultimate test flow flexibility
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+@TestSuite
+def suite(self):
+    if (condition):
+        Test(run=test_1)
+    for i in range(3):
+        Test(f"test_2-{i}", run=test_2)
+    while True:
+        if Test(run=test_3) != OK:
+            continue
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
+# **Self-Documenting Tests**
+## break your tests into steps
+## without leaving Python
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Use `Given`, `When`, `Then`, and more when and where you need it
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+@TestScenario
+def scenario(self):
+    with Given("I have something"):
+        pass
+    with When("I do something"):
+        pass
+    with Then("I expect something"):
+        pass
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
+# **Combinatorial Tests**
+## exhaustive testing or get covered with covering arrays
+## all-pairs, n-wise, and pairwise testing made easy
+
+## <br>
+---
+
+<br>
+<br>
+
+{% html div class=row" %}
+{% html div class="col-md-4 text-center" %}
+
+## Using a `CoveringArray` with `strength=2` or more
+## for pairwise or greater coverage
+# <br>
+{% endhtml %}
+{% html div class="col-md-8 codeblock-image" %}
+{% codeblock lang:python line_number:true highlight:true first_line:1 %}
+from testflows.combinatorics import CoveringArray
+
+@TestScenario
+def check_basic_operations(self):
+    for i, combination in enumerate(
+        CoveringArray({
+            "press_a": [0, 1, 2, -1, -2],
+            "operation": ['+','-','*','/'],
+            "press_b": [0, 1, 2, -1, -2],
+        }, strength=2)
+    ):
+        with Combination(f"pattern #{i}"):
+            check_basic_operation(combination=combination.values())
+{% endcodeblock %}
+
+{% endhtml %}
+{% endhtml %}
+
+<br>
+<br>
+
+---
+
+# <br>
 # **Asynchronous Tests**
 ## take advantage of asynchronous programming
 
@@ -149,14 +267,14 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 import asyncio
 from testflows.core import *
 
-@TestModule
-async def module(self):
+@TestSuite
+async def suite(self):
     async with Test("my async test"):
         async with Step("my async test step"):
             note("Hello from asyncio!")
 
-
-asyncio.run(module())
+with Module("regression"):
+    Suite(run=suite)
 {% endcodeblock %}
 
 {% endhtml %}
@@ -169,7 +287,8 @@ asyncio.run(module())
 
 # <br>
 # **Parallel Tests**
-## easily run tests in parallel
+## easily author parallel tests
+## or run your tests in parallel
 
 ## <br>
 ---
@@ -202,7 +321,8 @@ with Feature("my feature"):
 
 # <br>
 # **Semi-Automated and Manual Tests**
-## seamlessly work with automated, semi-automated, and manual tests
+## seamlessly work with automated
+## semi-automated and manual tests
 
 ## <br>
 ---
@@ -241,7 +361,7 @@ with Scenario("manual scenario", flags=MANUAL):
 
 # <br>
 # **Testing Documentation**
-## you can easily automate your documentation
+## automate your documentation
 ## and keep it up to date
 
 ## <br>
