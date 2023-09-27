@@ -2378,6 +2378,8 @@ parameters for a test:
 * end
 * only_tags
 * skip_tags
+* random
+* limit
 * [args](#Args-Parameter)
 
 > **{% attention %}** Most parameter names match the names of the attributes of the test which they set.
@@ -5114,8 +5116,8 @@ including calculation of [Covering Arrays] for pairwise and n-wise testing using
 
 <figure id="Example-Pressure-Switch" class="example">Example: Pressure Switch</figure>
 
-Let's see basic application of combinatorial tests to testing a simple pressure switch
-defined by the `pressure_switch` function below where it has a fault when
+Let's see the basic application of combinatorial tests to testing a simple pressure switch
+defined by the `pressure_switch` function below, where it has a fault when
 `pressure < 10` or `pressure > 30`, and `volume > 250`.
 
 ```python
@@ -5136,7 +5138,7 @@ def pressure_switch(pressure, volume):
 
 ## Simple Approach (Nested For-loops)
 
-We can check all the combinations including some extra values using the following
+We can check all the combinations, including some extra values, using the following
 [TestScenario] that uses nested for-loops to iterate over each combination of
 `pressure` and `volume` values to check our [Example: Pressure Switch].
 
@@ -5153,7 +5155,7 @@ def check_pressure_switch(self):
                 pressure_switch(pressure=pressure, volume=volume)
 ```
 
-As expected it will catch the fault with the following combinations.
+As expected it will catch the fault in the following combinations:
 
 ```bash
 Failing
@@ -5168,11 +5170,11 @@ Failing
 
 Another approach to using [nested for-loops] is to compute all the combinations
 using the [Cartesian Product] function. Here is the
-[TestScenario] that uses `product(*iterables, repeat=1)` function
+[TestScenario] that uses the `product(*iterables, repeat=1)` function
 to compute all combinations of `pressure` and `volume` values to check our [Example: Pressure Switch].
 
 The advantage of using the cartesian product function is that it avoids writing nested for-loops
-and is much more scalable when number of variables is large.
+and is much more scalable when the number of variables is large.
 
 ```python
 from testflows.combinatorics import product
@@ -5197,13 +5199,13 @@ A simple approach to check all possible combinations is to use a [TestSketch].
 > ✋ [Sketch]es currently do not support filtering or [Covering Arrays].
 > See [Filtering Combinations] and [Covering Array Combinations] for more details.
 
-A [TestSketch] allows to check all possible combinations where each combination
-variable and its values is defined by the [either() function].
+A [TestSketch] allow you to check all possible combinations, where each combination
+variable and its values are defined by the [either() function].
 [TestSketch] with [either() function] makes writing combinatorial tests
 as simple as writing a simple test that would check one combination.
 
-> ✋ If you call [either() function] multiple times on the same line of code
-> or you have a call to [either() function] inside a `for-loop` or `while-loop`
+> ✋ If you call the [either() function] multiple times on the same line of code
+> or you have a call to the [either() function] inside a `for-loop` or `while-loop`,
 > then unique identifier `i` must be specified explicitly.
 
 For the [Example: Pressure Switch], our [TestSketch] would be as follows:
@@ -5220,11 +5222,11 @@ def check_pressure_switch(self):
         pressure_switch(pressure=pressure, volume=volume)
 ```
 
-Each [either() function] defines a new combination variable and its possible values
+Each [either() function] defines a new combination variable and its possible values,
 and then {% testflows %} automatically loops through all the combinations
 when a [TestSketch] is called.
 
-Running the [TestSketch] above results in the following output.
+Running the [TestSketch] above results in the following output:
 
 ```bash
 Sep 22,2023 16:29:07   ⟥  Scenario check pressure switch, flags:TE
@@ -5241,7 +5243,7 @@ Sep 22,2023 16:29:07       ⟥  Check pressure=0,volume=100
 ...
 ```
 
-Fails reported as below.
+Fails are reported as below.
 
 ```bash
 Failing
@@ -5252,13 +5254,13 @@ Failing
 ✘ [ Fail ] /check pressure switch/pattern #24/pressure=40,volume=400 (340us)
 ```
 
-A [TestSketch] allows for advanced and intuitive definition of combinatorial tests
-especially when number of combination variables grows.
+A [TestSketch] allows for an advanced and intuitive definition of combinatorial tests
+especially when the number of combination variables grows.
 
-Each call to the [either() function] must be unique or unique identifier `i` must be specified.
-By default, the unique identifier of the [either() function] is the source code line number,
-therefore if you call [either() function] multiple times on the same line of code
-or you have a call to [either() function] inside a `for-loop` or `while-loop`
+Each call to the [either() function] must be unique, or a unique identifier `i` must be specified.
+By default, the unique identifier of the [either() function] is the source code line number;
+therefore, if you call the [either() function] multiple times on the same line of code
+or you have a call to the [either() function] inside a `for-loop` or `while-loop`,
 then the unique identifier `i` must be specified explicitly.
 
 For example, let's assume we have a function `add(a, b, c)` that we want to test.
@@ -5269,7 +5271,7 @@ def add(a, b, c):
 ```
 
 We could write a [TestSketch] that calls the [either() function] inside a `for-loop`
-on the same line multiple times.
+on the same line multiple times as follows:
 
 ```python
 @TestSketch(Scenario)
@@ -5278,22 +5280,20 @@ def check_add(self):
         add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
 ```
 
-Note that we had to pass unique identifier `i` for each [either() function] call that defined possible
+Note that we had to pass a unique identifier `i` for each [either() function] call that defined possible
 values of `a`, `b`, and `c`. Also, note that the unique identifier was a combination of the variable name
-and the loop variable `i`
+and the loop variable `i`.
 
 ```python
 add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
 ```
 
-The [TestSketch] above results in generation of eight combinations. This is because
-`range(1,2)` is `[1]` and therefore the `for-loop`
+The [TestSketch] above results in the generation of eight combinations. This is because
+`range(1,2)` is `[1]`, and therefore the `for-loop` has only one iteration.
 
 ```python
     for i in range(either(value=range(1, 2))):
 ```
-
-has only one iteration.
 
 ```bash
 Sep 22,2023 17:00:48   ⟥  Scenario check add
@@ -5333,11 +5333,11 @@ def check_add(self):
         add(a=either(1, 2, i=f"a{i}"), b=either(3, 4, i=f"b{i}"), c=either(5, 6, i=f"c{i}"))
 ```
 
-Then the number of combinations will be `72` and it will not be that intuitive what each combination is.
-The first run of the `for-loop` where it iterates only once will produce the same `8` combinations
-as before. However, the second run of the `for-loop` when it iterates twice will
-create combinations similar to the ones below. Where the combination `1 + 3 + 5`
-is followed by each of the `8` possibilities including itself and this done for each
+Then the number of combinations will be `72`, and it will not be that intuitive what each combination is.
+The first run of the `for-loop`, where it iterates only once, will produce the same `8` combinations
+as before. However, the second run of the `for-loop`, when it iterates twice, will
+create combinations similar to the ones below. The combination `1 + 3 + 5`
+is followed by each of the `8` possibilities, including itself, and this is done for each
 combination of `a + b + c`, and thus resulting in `8 * 8 + 8 = 72` total combinations.
 
 ```
@@ -5377,7 +5377,7 @@ Sep 22,2023 17:08:13     ⟥  Combination pattern #15
 
 ### Randomizing Combinations
 
-Use the `random` test attribute of the [TestSketch] to randomize order of combinations.
+Use the `random` test attribute of the [TestSketch] to randomize the order of combinations.
 
 For example,
 
@@ -5392,14 +5392,14 @@ def check_pressure_switch(self):
     with Check(f"pressure={pressure},volume={volume}"):
         pressure_switch(pressure=pressure, volume=volume)
 
-# Run the sketch using random combinations order
+# Run the sketch in random combination order
 Sketch(test=check_pressure_switch, random=True)()
 ```
 
 > ✋ See [Using either()] for how to randomize order for a given combination variable.
 
-You can combine `random` with the `limit` test attribute. See [Limiting Number of Combinations] below.
-Also use [Args] decorator to specify default value of the `random` test attribute.
+You can combine `random` with the `limit` test attribute. See the [Limiting Number of Combinations] section below.
+Also, you can use the [Args] decorator to specify the default value of the `random` test attribute.
 
 For example,
 
@@ -5408,7 +5408,7 @@ For example,
 @Flags(TE)
 @Args(random=True, limit=3)
 def check_pressure_switch(self):
-    """Check all combinations of pressure and volume using TestSketch."""
+    """Check all the combinations of pressure and volume using TestSketch."""
     pressure = either(0, 10, 20, 30, 40)
     volume = either(0, 100, 200, 300, 400)
 
@@ -5416,7 +5416,7 @@ def check_pressure_switch(self):
         pressure_switch(pressure=pressure, volume=volume)
 ```
 
-### Limiting Number of Combinations
+### Limiting the Number of Combinations
 
 Use the `limit` test attribute of the [TestSketch] to limit the number of combinations.
 
@@ -5439,7 +5439,7 @@ Sketch(test=check_pressure_switch, limit=5)()
 
 > ✋ See [Using either()] for how to limit the number of values for a given combination variable.
 
-Use both `random` and `limit` attributes of the [TestSketch] to execute a limited number of random
+Use both the `random` and `limit` attributes of the [TestSketch] to execute a limited number of random
 combinations.
 
 For example,
@@ -5449,7 +5449,7 @@ For example,
 Sketch(test=check_pressure_switch, random=True, limit=5)()
 ```
 
-You can also use [Args] decorator to specify default value of the `limit` test attribute.
+You can also use the [Args] decorator to specify the default value of the `limit` test attribute.
 
 ```python
 @TestSketch(Scenario)
