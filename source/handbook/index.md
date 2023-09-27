@@ -5466,25 +5466,25 @@ def check_pressure_switch(self):
 
 ### Using `either()`
 
-The [either() function] select values for a combination variable one at a time until all values are consumed.
+The [either() function] selects values for a combination variable one at a time until all values are consumed.
 
 > ✋ It is used in [TestSketch]es to check all possible combinations. See [Using Sketches].
 
 Values can be specified either using `*values` or by passing an iterator or generator
-as `value`.
+as a `value`.
 
-If neither `*values`, or `value` is explicitly specified then `*values`
+If neither `*values` nor `value` is explicitly specified, then `*values`
 is set to a `(True, False)` tuple.
 
-This function must be called only once for each line of code in the same source file or
+This function must be called only once for each line of code in the same source file, or
 a unique identifier `i` must be specified.
 
-If `random` is `True`, then all values will be shuffled using a default shuffle function.
+If `random` is `True`, then all values will be shuffled using the default shuffle function.
 
 Optionally, you can pass a custom `shuffle` function that takes values as an argument
-and modifies the sequence in-place. By default, `random.shuffle()` is used.
+and modifies the sequence in place. By default, `random.shuffle()` is used.
 
-You can use `limit` to limit number of values to choose.
+You can use `limit` to limit the number of values to choose.
 
 ```python
 either(*values, value=None, i=None, random=False, shuffle=random.shuffle, limit=None)
@@ -5502,12 +5502,16 @@ where
 ## Using Combination Outlines
 
 [TestSketch] provides a very easy way to define a combinatorial test. However,
-[Sketch]es do have their limitations and sometimes using a combination [Outline]
+[Sketch]es do have their limitations, and sometimes using a [Combination] [Outline]
 is necessary.
 
+```python
+@TestOutline(Combination)
+```
+
 Here is an example of using [TestSketch] for testing a few combinations of a calculator's
-`+`, `-`, `*`, and `/` operations when user enters some positive or negative numbers,
-and presses `=` sign to get the results.
+`+`, `-`, `*`, and `/` operations when the user enters some positive or negative numbers,
+and presses the `=` sign to get the results.
 
 ```python
 @TestSketch(Scenario)
@@ -5539,7 +5543,7 @@ def check_basic_operations(self):
             By(test=reset_calculator)()
 ```
 
-Let's now implement the [TestSketch] above using a combination [Outline] and the `product() function`
+Let's now implement the [TestSketch] above using a [Combination] [Outline] and the `product() function`
 to see the difference between them.
 
 ```python
@@ -5599,9 +5603,9 @@ However, a combination outline can provide more control over how a test iterates
 
 | Feature | Sketch    | Combination Outline |
 | ------- | --------- | ------- |
-| Ease of use  | ✓ Easy | ✗ Moderate  |
-| Combination Filtering | ✗ No | ✓ Yes |
-| Covering Arrays | ✗ No | ✓ Yes |
+| Ease of use  | Easy | Moderate  |
+| Combination Filtering | No | Yes |
+| Covering Arrays | No | Yes |
 
 {% endhtml %}
 
@@ -5636,10 +5640,10 @@ def check_basic_operations(self):
 
 ## Covering Array Combinations
 
-Use a [Combination Outline] to generate limited number of combinations using a [Covering Array].
+Use a [Combination Outline] to generate a limited number of combinations using a [Covering Array].
 
 For example, with a `CoveringArray(strength=3)`, we will have to only check `37` combinations
-instead of all the `144 (2*3*4*2*3)` combinations if we did not use a [Covering Array], and instead did exhaustive testing.
+instead of all the `144 (2*3*4*2*3)` combinations if we do not use a [Covering Array], and instead do exhaustive testing.
 
 ```python
 @TestScenario
@@ -5657,7 +5661,7 @@ def check_basic_operations(self):
                 "is_b_negative": [True, False],
                 "press_b": [press_0, press_1, press_2],
             },
-            strength=2,
+            strength=3,
         )
     ):
         with Combination(f"pattern #{i}"):
@@ -5669,11 +5673,11 @@ def check_basic_operations(self):
 The [CoveringArray class] allows you to calculate a covering array
 for some `k` parameters having the same or different number of possible values.
 
-The class uses [IPOG], an in-parameter-order, algorithm as described in [IPOG: A General Strategy for T-Way Software Testing] paper by Yu Lei et al.
+The class uses [IPOG], an in-parameter-order algorithm as described in [IPOG: A General Strategy for T-Way Software Testing] by Yu Lei et al.
 
 For any non-trivial number of parameters, exhaustively testing all possibilities is not feasible.
-For example, if we have `10` parameters (`k=10`) that each has `10` possible values (`v=10`), the
-number of all possibilities is {% katex %}v^k=10^{10} = {10}_{billion}{% endkatex %} thus requiring 10 billion tests for complete coverage.
+For example, if we have `10` parameters (`k=10`) that each have `10` possible values (`v=10`), the
+number of all possibilities is {% katex %}v^k=10^{10} = {10}_{billion}{% endkatex %}, thus requiring 10 billion tests for complete coverage.
 
 Given that exhaustive testing might not be practical, a covering array could give us a much smaller
 number of tests if we choose to check all possible interactions only between some fixed number
@@ -5682,9 +5686,9 @@ of some `t` number of parameters, covering all possible values that each selecte
 
 > **{% attention %}** You can find out more about covering arrays by visiting the US National Institute of Standards and Technology's (NIST) [Introduction to Covering Arrays](https://math.nist.gov/coveringarrays/coveringarray.html) page.
 
-The `CoveringArray(parameters, strength=2)` takes the following arguments
+The `CoveringArray(parameters, strength=2)` takes the following arguments:
 
-where
+where,
 
 * `parameters` specifies parameter names and their possible values and
    is specified as a `dict[str, list[value]]`, where *key* is the parameter name and
@@ -5751,7 +5755,7 @@ Examining the covering array above, we can see that all possible interactions of
 ## Checking Covering Array
 
 The [CoveringArray.check() function] can be used to verify that the tests
-inside the covering array cover all possible `t-way` interactions at least once, and thus
+inside the covering array cover all possible `t-way` interactions at least once and thus
 meet the definition of a covering array.
 
 For example,
@@ -5793,7 +5797,7 @@ a b c d
 ## Combinations
 
 The `combinations(iterable, r, with_replacement=False)` function can be used to calculate
-all `r-length` combinations of elements in a specified iterable.
+all the `r-length` combinations of elements in a specified iterable.
 
 For example,
 
@@ -5877,7 +5881,7 @@ print(list(permutations(parameters.keys(), 2)))
 ('a', 'b'), ('a', 'c'), ('a', 'd'), ('b', 'a'), ('b', 'c'), ('b', 'd'), ('c', 'a'), ('c', 'b'), ('c', 'd'), ('d', 'a'), ('d', 'b'), ('d', 'c')]
 ```
 
-and as we can see, both `('a', 'b')` and `('b', 'a')` elements are present.
+As we can see, both `('a', 'b')` and `('b', 'a')` elements are present.
 
 > This function is equivalent to the standard library's [itertools.permutations](https://docs.python.org/3/library/itertools.html#itertools.permutations).
 
