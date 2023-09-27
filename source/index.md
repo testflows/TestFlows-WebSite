@@ -287,8 +287,8 @@ with Module("regression"):
 
 # <br>
 # **Parallel Tests**
-## easily author parallel tests
-## or run your tests in parallel
+## author parallel tests or
+## run your tests in parallel
 
 ## <br>
 ---
