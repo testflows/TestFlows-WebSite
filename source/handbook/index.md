@@ -567,7 +567,7 @@ Nov 03,2021 17:14:10   ⟥  Scenario Hello World!
                          RuntimeError: boom!
 ```
 
-## Flexibility In Writing Tests
+## Flexibility in Writing Tests
 
 {% testflows %} provides unmatched flexibility in how you can author your tests, and
 this is what makes it adaptable to your testing projects at hand.
@@ -1372,9 +1372,9 @@ process that helps better align requirements to tests and vice versa.
 > _Writing requirements is hard, but developing enterprise software without requirements
 > is even harder._
 
-## Requirements As Code
+## Requirement Documents
 
-Working with requirements as code is very convenient, but it does not necessarily mean
+Working with requirements just like with code is very convenient, but it does not necessarily mean
 that we need to write requirements as [Python] code.
 
 Requirements form documents such as SRS (Software Requirements Specification)
@@ -1479,7 +1479,7 @@ version: 1.0
 > **{% attention %}** Names are usually preferred over numbers to facilitate the movement of requirements between
 > different parts of the document.
 
-## Generating Requirements Objects
+## Generating Requirement Objects
 
 [Requirement class] objects can be auto generated from the [Markdown] requirements source files
 using `tfs requirements generate` command.
@@ -1673,7 +1673,7 @@ from requirements import SRS001_ls_Unix_Command_Utility
 def regression(self):
     note(self.specifications)
 ```
-# Attributes Of Decorated Tests
+# Attributes of Decorated Tests
 
 You can set attributes for decorated tests using different decorator classes
 such as [Flags class] to set test `flags`, [Name class] to set test `name`, [Examples class]
@@ -2787,7 +2787,7 @@ As you can see from the output above the `Suite B` gets started but all its test
 as `Test B` did not match the [pattern] specified to the [--only]
 and `Test A` was skipped by the [--skip].
 
-## Filtering Tests In Code
+## Filtering Tests in Code
 
 In your test program you can filter child tests to control what tests are included or skipped
 by setting `only` and `skip` test attributes.
@@ -2980,7 +2980,7 @@ You can skip all tests with [Test Type] that must have either `tag A` **OR** (`t
 python3 test.py --skip-tags test:"tag A" test:"tag A","tag B"
 ```
 
-## Filtering By Tags In Code
+## Filtering by Tags in Code
 
 In your test program, you can filter child tests by tags to control which tests are included or skipped
 by setting `only_tags` and `skip_tags` test attributes.
@@ -3521,7 +3521,7 @@ The specialized keywords map to core [Step], [Test], [Suite], and [Module] test 
   * [But](#But) is used to define a step for negative assertion
   * [Finally](#Finally) is used to define a cleanup step
 
-# Semi-Automated And Manual Tests
+# Semi-Automated and Manual Tests
 
 Tests can be semi-automated and include one or more manual steps, or
 be fully manual.
@@ -3529,7 +3529,7 @@ be fully manual.
 > **{% attention %}** It is often common to use [input() function] to prompt
 > for input during execution of semi-automated or manual tests. See [Reading Input](#Reading-Input).
 
-## Semi-Automated
+## Semi-Automated Tests
 
 Semi-automated tests are tests that have one or more steps with the [MANUAL] flag set.
 
@@ -3561,7 +3561,7 @@ Sep 06,2021 18:39:00     ⟥  Step manual step, flags:MANUAL
             3s 212ms   ⟥⟤ OK my mixed scenario, /my mixed scenario
 ```
 
-## Manual
+## Manual Tests
 
 A manual test is just a test that has [MANUAL] flag set at the test level.
 Any sub-tests, such as steps, inherit [MANUAL] flag from the parent test.
@@ -4552,7 +4552,7 @@ with Test("my test") as test:
     note(getattr(test.context, "my long variable with spaces"))
 ```
 
-# Setups And Teardowns
+# Setups and Teardowns
 
 Test setup and teardown could be explicitly specified using [Given] and [Finally] steps.
 
@@ -4582,7 +4582,7 @@ def my_scenario(self):
 > **{% attention %}** [Finally] steps must be located within `finally` blocks
 > to ensure their execution.
 
-## Common Setup And Teardown
+## Common Setup and Teardown
 
 If multiple tests require the same setup and teardown and the result of the setup
 can be shared between these tests, then the common setup and teardown
@@ -5151,7 +5151,7 @@ variable and its values is defined by the [either() function].
 [TestSketch] with [either() function] makes writing combinatorial tests
 as simple as writing a simple test that would check one combination.
 
-> ✋ if you call [either() function] multiple times on the same line of code
+> ✋ If you call [either() function] multiple times on the same line of code
 > or you have a call to [either() function] inside a `for-loop` or `while-loop`
 > then unique identifier `i` must be specified explicitly.
 
@@ -5203,7 +5203,6 @@ Failing
 
 A [TestSketch] allows for advanced and intuitive definition of combinatorial tests
 especially when number of combination variables grows.
-
 
 Each call to the [either() function] must be unique or unique identifier `i` must be specified.
 By default, the unique identifier of the [either() function] is the source code line number,
@@ -5325,7 +5324,7 @@ Sep 22,2023 17:08:13     ⟥  Combination pattern #15
 ...
 ```
 
-## Using `either()`
+### Using `either()`
 
 The [either() function] select values for a combination variable one at a time until all values are consumed.
 
@@ -5453,13 +5452,8 @@ def check_basic_operations(self):
             check_basic_operations_outline(combination=combination)
 ```
 
-As can be seen above, using an [Outline] is more involved and forces us to create a named variable
-for each combination variable and compute each combination explicitly using the cartesian `product() function`
-that produces combinations that need to be passed to the [Outline] that then has
-to unpack the combination into its individual combination variables to be used in its test procedure.
-However, a combination [Outline] can provide more control of how a test iterates over each combination
-allowing the possibility of filtering invalid combinations as well as provide ability
-to use them with [Covering Arrays].
+As can be seen above, using an [Outline] is more involved and forces us to create a named variable for each combination variable and compute each combination explicitly using the cartesian `product() function` that produces combinations that need to be passed to the [Outline], which then has to unpack the combination into its individual combination variables to be used in its test procedure.
+However, a combination outline can provide more control over how a test iterates over each combination, allowing the possibility of filtering invalid combinations as well as the ability to use them with [Covering Arrays].
 
 {% html div class="styled-table" %}
 
@@ -5473,7 +5467,7 @@ to use them with [Covering Arrays].
 
 ## Filtering Combinations
 
-To filter invalid combinations you need to use a [Combination Outline].
+Use a [Combination Outline] to filter invalid combinations.
 
 For example,
 
@@ -5785,7 +5779,7 @@ If you try to run an asynchronous test as the top level test, you will get an er
 
 > `error: top level test was not started in main thread`
 
-## Inline
+## Inline Async Tests
 
 An inline asynchronous test can be defined using [async with] statement as follows.
 
@@ -5802,7 +5796,7 @@ with Module("module"):
     suite()
 ```
 
-## Decorated
+## Decorated Async Tests
 
 A decorated asynchronous test can be defined in a similar way as a non-asynchronous test.
 The only difference is that the decorated function must be asynchronous
@@ -5828,7 +5822,7 @@ with Module("module"):
 
 # Parallel Tests
 
-## Running
+## Running Parallel Tests
 
 Tests can be executed in parallel either using threads
 or an asynchronous executor defined using [ThreadPool class] or [AsyncPool class] respectively.
@@ -7769,7 +7763,7 @@ with Test("my test"):
         debug("do something when terminal colors are turned off")
 ```
 
-# Forcing To Abort On First Fail
+# Forcing To Abort on First Fail
 
 You can force a test program to abort on first failure irrespective
 of the presence of [TE] flags by using [--first-fail]
@@ -7781,7 +7775,7 @@ For example,
 python3 test.py --first-fail
 ```
 
-# Forcing To Continue On Fail
+# Forcing To Continue on Fail
 
 You can force the test program to continue running if any of the tests fail
 irrespective of the presence of [TE] flags by using [--test-to-end]
@@ -8113,7 +8107,7 @@ of `python:testflows` code blocks that contain executable Python code.
 ...
 ```
 
-## Tutorial
+## Testing Documentation Tutorial
 
 Here a simple tutorial to introduce you to using [testflows.texts].
 
