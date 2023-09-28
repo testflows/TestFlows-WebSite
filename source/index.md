@@ -129,7 +129,7 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 ---
 
 # <br>
-# **Tests Programs Not Just Tests**
+# **Test Programs Not Just Tests**
 ## write full test programs that
 ## combine tests with their flow
 
