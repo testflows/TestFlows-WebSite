@@ -76,6 +76,11 @@ blockquote {
     padding-left: 2em;
     border-left: 5px solid #0bcfff;
     font-weight: 300;
+    overflow-x: auto;
+}
+
+blockquote::-webkit-scrollbar {
+    display: none;
 }
 
 .blog.post-body blockquote {
@@ -383,6 +388,7 @@ blockquote {
     background-repeat: no-repeat;
     background-position: bottom;
     background-origin: content-box;
+    background-size: 75vw;
 }
 
 .banner.not-in-view .firefly,
