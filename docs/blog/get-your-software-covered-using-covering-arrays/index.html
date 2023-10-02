@@ -1,0 +1,311 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Get Your Software Covered Using Covering Arrays | TestFlows</title>
+  <meta name="description" content="Article about how TestFlows enables using covering arrays as part of combinatorial testing">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+  
+  <link href="/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1696287800525" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1696287800525" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1696287800525" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+    <div class="banner in-view-watcher">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <h1>Get Your Software Covered Using Covering Arrays</h1>
+        <h2></h2>
+        <i class="fa-5x pt-3 fas fa-glasses pt-5 pb-5"></i>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Get Your Software Covered Using Covering Arrays</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">October 2, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/covering-arrays.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>For software systems with any non-trivial number of parameters, exhaustively testing all possible combinations of parameter values is not feasible.
+For example, if we have <code>10</code> parameters (<code>k = 10</code>) that each have <code>10</code> possible values (<code>v = 10</code>), the
+number of all possibilities is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mi>k</mi></msup><mo>=</mo><mn>1</mn><msup><mn>0</mn><mn>10</mn></msup><mo>=</mo><msub><mn>10</mn><mrow><mi>b</mi><mi>i</mi><mi>l</mi><mi>l</mi><mi>i</mi><mi>o</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">v^k=10^{10} = {10}_{billion}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.849108em;vertical-align:0em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.849108em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.8141079999999999em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">1</span><span class="mord mtight">0</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.79444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord">1</span><span class="mord">0</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">b</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight" style="margin-right:0.01968em;">l</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, thus requiring 10 billion tests for complete coverage. <span id="more"></span></p>
+<p>Given that exhaustive testing might not be practical, a covering array (CA) could give us a much smaller
+number of tests if we choose to check all possible interactions only between some fixed number
+of parameters at least once, where an interaction is some specific combination, where order does not matter,
+of some <code>t</code> number of parameters, covering all possible values that each selected parameter could have.</p>
+<p>The US National Institute of Standards and Technology’s (NIST) has an excellent <a target="_blank" rel="noopener external nofollow noreferrer" href="https://math.nist.gov/coveringarrays/coveringarray.html">Introduction to Covering Arrays</a> page, if you are not familiar with them. Note that in the literature,
+a covering array is usually defined as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>A</mi><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>k</mi><mo separator="true">,</mo><mi>v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">CA(t,k,v) </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.07153em;">C</span><span class="mord mathnormal">A</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mclose">)</span></span></span></span>,
+where <code>t</code> is the strength of the array, <code>k</code> is the number of parameters, and <code>v</code>
+is the number of values. In most cases, it is assumed that each parameter
+has the same number of values, <code>v</code>, and such arrays are referred to
+as uniform covering arrays.</p>
+<p>The NIST, upon request, provides a tool called <a target="_blank" rel="noopener external nofollow noreferrer" href="https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software">Advanced Combinatorial Testing System (ACTS)</a>, which runs on Java platforms and can be used to generate covering arrays to ensure t-way coverage of input parameter values using advanced algorithms such as <a target="_blank" rel="noopener external nofollow noreferrer" href="https://math.nist.gov/coveringarrays/ipof/ipof-abstract.html">IPOG-F</a>. However, for tests developed in Python, a pure Python implementation would be preferred if the number of parameters is not too large. If the number of parameters is large, then you can use ACTS or check
+if one of the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://math.nist.gov/coveringarrays/ipof/ipof-results.html">NIST-provided precomputed covering arrays generated by IPOG-F</a> can be applied.</p>
+<p><strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>, starting with version <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/2.1.5/">2.1.5</a>, provides a <code>CoveringArray</code> class to allow you to calculate a covering array
+for some <code>k</code> parameters having the same or different number of possible values. Therefore, it allows you to generate both uniform and non-uniform covering arrays. The class uses <a target="_blank" rel="noopener external nofollow noreferrer" href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a">IPOG</a>, a pure Python implementation of an in-parameter-order algorithm as described in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a">IPOG: A General Strategy for T-Way Software Testing</a> by Yu Lei et al.</p>
+<p>The <code>CoveringArray(parameters, strength=2)</code> class is provided by the <code>testflows.combinatorics</code> module and takes the following arguments:</p>
+<ul>
+<li><code>parameters</code> specifies parameter names and their possible values as a <code>dict[str, list[value]]</code>, where <em>key</em> is the parameter name and
+ <em>value</em> is a list of possible values for a given parameter.</li>
+<li><code>strength</code> specifies the strength <code>t</code> of the covering array that indicates the number of parameters
+ in each combination, for which all possible interactions will be checked.
+ If <code>strength</code> equals the number of parameters, then you get the exhaustive case.</li>
+</ul>
+<p>The return value of the <code>CoveringArray(parameters, strength=2)</code> is a <code>CoveringArray</code> object that is an iterable
+of tests, where each test is a dictionary, with each <code>key</code> being the parameter name and its <code>value</code> being the parameter value.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.combinatorics <span class="keyword">import</span> CoveringArray</span><br><span class="line"></span><br><span class="line">parameters = &#123;<span class="string">&quot;a&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>], <span class="string">&quot;b&quot;</span>: [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>], <span class="string">&quot;c&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], <span class="string">&quot;d&quot;</span>: [<span class="string">&quot;d0&quot;</span>, <span class="string">&quot;d1&quot;</span>]&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(CoveringArray(parameters, strength=<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+
+<p>Gives the following output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CoveringArray(&#123;<span class="string">&#x27;a&#x27;</span>: [0, 1], <span class="string">&#x27;b&#x27;</span>: [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>], <span class="string">&#x27;c&#x27;</span>: [0, 1, 2], <span class="string">&#x27;d&#x27;</span>: [<span class="string">&#x27;d0&#x27;</span>, <span class="string">&#x27;d1&#x27;</span>]&#125;,2)[</span><br><span class="line">6</span><br><span class="line">a b c d</span><br><span class="line">-------</span><br><span class="line">0 b 2 d1</span><br><span class="line">0 a 1 d0</span><br><span class="line">1 b 1 d1</span><br><span class="line">1 a 2 d0</span><br><span class="line">0 b 0 d0</span><br><span class="line">1 a 0 d1</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>Given that in the example above, the <code>strength = 2</code>, all possible 2-way (pairwise)
+combinations of parameters <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code> are the following:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[(<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>), (<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;c&#x27;</span>), (<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;d&#x27;</span>), (<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>), (<span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;d&#x27;</span>), (<span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>The six tests that make up the covering array cover all the possible interactions
+between the values of each of these parameter combinations. For example, the <code>(&#39;a&#39;, &#39;b&#39;)</code>
+parameter combination covers all possible combinations of the values that
+parameters <code>a</code> and <code>b</code> can take.</p>
+<p>Given that parameter <code>a</code> can have values <code>[0, 1]</code> and parameter <code>b</code> can have values <code>[&#39;a&#39;, &#39;b&#39;]</code>, all possible interactions are the following:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[(<span class="number">0</span>, <span class="string">&#x27;a&#x27;</span>), (<span class="number">0</span>, <span class="string">&#x27;b&#x27;</span>), (<span class="number">1</span>, <span class="string">&#x27;a&#x27;</span>), (<span class="number">1</span>, <span class="string">&#x27;b&#x27;</span>)]</span><br></pre></td></tr></table></figure>
+
+<p>where the first element of each tuple corresponds to the value of the parameter <code>a</code>, and the second
+element corresponds to the value of the parameter <code>b</code>.</p>
+<p>Examining the covering array above, we can see that all possible combinations, also referred to as interactions, of parameters <code>a</code> and <code>b</code> are indeed covered at least once. The same check can be done for other parameter combinations.</p>
+<h1 id="Checking-the-Covering-Array"><a href="#Checking-the-Covering-Array" class="headerlink" title="Checking the Covering Array"></a>Checking the Covering Array</h1><p>The <code>CoveringArray.check()</code> method can be used to verify that the tests
+inside the covering array cover all possible <code>t-way</code> interactions at least once and thus
+meet the definition of a covering array.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.combinatorics <span class="keyword">import</span> CoveringArray</span><br><span class="line"></span><br><span class="line">parameters = &#123;<span class="string">&quot;a&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>], <span class="string">&quot;b&quot;</span>: [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>], <span class="string">&quot;c&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], <span class="string">&quot;d&quot;</span>: [<span class="string">&quot;d0&quot;</span>, <span class="string">&quot;d1&quot;</span>]&#125;</span><br><span class="line">tests = CoveringArray(parameters, strength=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(tests.check())</span><br></pre></td></tr></table></figure>
+
+<p>This is handy to confirm that the covering array that was calculated is valid.</p>
+<h1 id="Dumping-the-Covering-Array"><a href="#Dumping-the-Covering-Array" class="headerlink" title="Dumping the Covering Array"></a>Dumping the Covering Array</h1><p>The <code>CoveringArray</code> object implements a custom <code>__str__</code> method, and therefore it can be easily converted into
+a string representation similar to the format used in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://math.nist.gov/coveringarrays/ipof/ipof-results.html">NIST covering array tables</a>.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(CoveringArray(parameters, strength=<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CoveringArray(&#123;<span class="string">&#x27;a&#x27;</span>: [0, 1], <span class="string">&#x27;b&#x27;</span>: [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>], <span class="string">&#x27;c&#x27;</span>: [0, 1, 2], <span class="string">&#x27;d&#x27;</span>: [<span class="string">&#x27;d0&#x27;</span>, <span class="string">&#x27;d1&#x27;</span>]&#125;,2)[</span><br><span class="line">6</span><br><span class="line">a b c d</span><br><span class="line">-------</span><br><span class="line">0 b 2 d1</span><br><span class="line">0 a 1 d0</span><br><span class="line">1 b 1 d1</span><br><span class="line">1 a 2 d0</span><br><span class="line">0 b 0 d0</span><br><span class="line">1 a 0 d1</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>Dumping covering arrays is useful for debugging and to get a general understanding, and the NIST-like format allows you to share it easily with your colleagues.</p>
+<h1 id="Wrapping-Up"><a href="#Wrapping-Up" class="headerlink" title="Wrapping Up"></a>Wrapping Up</h1><p>Combinatorial testing is an exciting topic, and in this article, I
+have introduced you to covering arrays and shown you
+how the new <a href="https://testflows.com/handbook/#Covering-Arrays-Pairwise-N-wise-Testing">CoveringArray class</a> allows you to
+calculate covering arrays for your tests. We have looked at how you can
+generate, check, and dump covering arrays. Covering arrays
+are critical for combinatorial testing, and <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> now brings
+them to your test programs without using any third-party libraries.</p>
+<p>If you are interested in seeing how you can implement your combinatorial tests
+with the TestFlows.com open-source testing framework, check out the <a href="https://testflows.com/handbook/#Combinatorial-Tests">Combinatorial Tests</a>
+section in the <a href="https://testflows.com/handbook/">Handbook</a>. Until next time,
+happy combinatorial testing using covering arrays!</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer">
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">October 2, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+</script>
+
+    </div>
+  </div>
+  <div class="container-footer">
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/testflows">
+                        <span class="fab fa-2x fa-telegram-plane"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2022 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
+</script>
+
+</body>
+</html>
+
+
