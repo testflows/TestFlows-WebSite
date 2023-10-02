@@ -17,7 +17,7 @@ number of tests if we choose to check all possible interactions only between som
 of parameters at least once, where an interaction is some specific combination, where order does not matter,
 of some `t` number of parameters, covering all possible values that each selected parameter could have.
 
-The US National Institute of Standards and Technology's (NIST) has an excellent [Introduction to Covering Arrays](https://math.nist.gov/coveringarrays/coveringarray.html) page, if you are not familiar with them. Note that in the literature,
+The US National Institute of Standards and Technology (NIST) has an excellent [Introduction to Covering Arrays](https://math.nist.gov/coveringarrays/coveringarray.html) page, if you are not familiar with them. Note that in the literature,
 a covering array is usually defined as {% katex %} CA(t,k,v) {% endkatex %},
 where `t` is the strength of the array, `k` is the number of parameters, and `v`
 is the number of values. In most cases, it is assumed that each parameter
