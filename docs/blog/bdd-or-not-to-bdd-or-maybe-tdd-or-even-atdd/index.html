@@ -1,0 +1,285 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team? | TestFlows</title>
+  <meta name="description" content="Article discussing how the choice of a software development process affects quality assurance team">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+  
+  <link href="/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1696369935114" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1696369935114" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1696369935114" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+    <div class="banner in-view-watcher">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <h1>BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h1>
+        <h2></h2>
+        <i class="fa-5x pt-3 fas fa-glasses pt-5 pb-5"></i>
+    </div>
+</div>
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">October 3, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/bdd-or-not-to-bdd.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>How do software development processes such as behavior-driven development (BDD), test-driven development (TDD), or even acceptance-test-driven development (ATDD) affect quality assurance team? To answer this question, we need to first note that all these terms end with “development” and not with “quality assurance”. But could we define behavior-driven quality assurance (BDQA), test-driven quality assurance (TDQA), or even acceptance-test-driven quality assurance (ATDQA)? If so, what would be the difference between them? Well, it would depend on the definitions of a behavior, a test, and an acceptance test.<span id="more"></span></p>
+<p>A few days ago, I came across a thread on Reddit titled <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/QualityAssurance/comments/16pis7x/how_is_bdd_used_in_your_team/?utm_campaign=Software+Testing+Weekly&utm_medium=web&utm_source=Software_Testing_Weekly_188">How is BDD used in your team?</a> that mentioned BDD, TDD, and ATDD in the discussion. While quite a few people had negative comments regarding the BDD approach, I asked myself a single question. How can developers and testers make better decisions, and could there be less controversy around these different software development processes and how a quality assurance team participates in them?</p>
+<p>Unfortunately, I concluded that most developers and testers lack precise definitions of the key concepts
+that are related to software development and quality assurance. People pick trendy tools or processes instead of basing their decisions on a fundamental understanding of the underlying concepts.</p>
+<p>The fundamental understanding of the underlying concepts lies in the precise definition of the following terms:</p>
+<ul>
+<li><strong>software system</strong></li>
+<li><strong>quality</strong></li>
+<li><strong>behavior</strong></li>
+<li><strong>test</strong></li>
+</ul>
+<p>If you have read our recent blog on <a href="https://testflows.com/blog/working-with-requirements-just-like-with-code/">Working With Requirements Just Like With Code</a>, you already have the answers, but for those who did not, let’s quickly define these terms precisely and then see if we can talk about BDD, TDD, and ATDD in a more constructive manner.</p>
+<h4 id="Software-system"><a href="#Software-system" class="headerlink" title="Software system?"></a>Software system?</h4><p>A good definition can be taken from Norman Papernick at the Carnegie Mellon School of Computer Science.</p>
+<blockquote><p>“A software system is a very, very complicated state machine.”</p>
+<footer><strong>Norman Papernick</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cs.cmu.edu/afs/cs/academic/class/15671-f95/www/handouts/sm-basics/node1.html">, Carnegie Mellon School of Computer Science</a></cite></footer></blockquote>
+
+<h4 id="What-is-quality"><a href="#What-is-quality" class="headerlink" title="What is quality?"></a>What is quality?</h4><p>Here is the definition that I prefer.</p>
+<blockquote>
+<p>“Quality is satisfying requirements, and a requirement is a description of a behavior.”</p>
+</blockquote>
+<h4 id="What-is-behavior"><a href="#What-is-behavior" class="headerlink" title="What is behavior?"></a>What is behavior?</h4><p>A behavior can be precisely defined by using Leslie Laport’s definition from his
+<a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">TLA+, Specifying Systems</a>.</p>
+<blockquote><p>“Behavior is an infinite sequence of states.”<br>
+“State is an assignment of values to variables.”</p>
+<footer><strong>Leslie Lamport, TLA+ -</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://lamport.azurewebsites.net/tla/book.html?back-link=learning.html#book">Specifying Systems</a></cite></footer></blockquote>
+
+<p>Note that in our definitions, we have come from defining what a software system is to what a state is.</p>
+<h4 id="What-is-a-test"><a href="#What-is-a-test" class="headerlink" title="What is a test?"></a>What is a test?</h4><blockquote>
+<p>A test is a sequence of steps that attempts to verify one or more behaviors.</p>
+</blockquote>
+<p>It should be noted that a sequence of steps in a test is usually referred to as a test procedure.</p>
+<h1 id="What-is-the-difference-between-BDD-TDD-and-ATDD"><a href="#What-is-the-difference-between-BDD-TDD-and-ATDD" class="headerlink" title="What is the difference between BDD, TDD, and ATDD?"></a>What is the difference between BDD, TDD, and ATDD?</h1><p>The answer is that if you use the definitions above, they are actually pretty much talking about tightly related things. Why? Because a test is a sequence of steps that verifies a behavior, BDD and TDD are related. However, the definition of a test depends on the behavior, and therefore, a test exists only because there is some behavior that needs to be verified. Therefore, by definition, BDD is actually using a higher concept than TDD. Again, because a behavior exists above a test. The other way to think about it is that a behavior does not really need a test, but a test needs a behavior.</p>
+<blockquote>
+<p>Tests exist only because there is some behavior that needs to be verified.</p>
+</blockquote>
+<p>What about ATDD? What does “acceptance” mean? It refers to acceptance criteria that need to be tested. What are the acceptance criteria? Whatever definition you’ve seen, you should convince yourself that an acceptance criteria is nothing but a requirement, which is a description of behavior. Therefore, acceptance criteria are just behaviors.</p>
+<p>Putting this together, we have that BDD and ATDD are at the same conceptual level, and TDD is using a lower-level concept but is related to BDD. Therefore, purely looking at the words used in these abbreviations, we can conclude that while BDD is more general than TDD, it is pretty close to ATDD. If I were to put them in order, I would have BDD, ATDD, and TDD.
+Nonetheless, conceptually, they are highly related.</p>
+<h1 id="How-does-it-affect-your-QA-team"><a href="#How-does-it-affect-your-QA-team" class="headerlink" title="How does it affect your QA team?"></a>How does it affect your QA team?</h1><p>Irrespective of the software development process, the quality assurance team must ensure product quality.
+Therefore, it really depends on how your QA team defines quality.</p>
+<p>For me, quality is satisfying requirements, where requirements are a description of a behavior.
+Thus, irrespective of the BDD, TDD, or ATDD, the quality assurance team needs descriptions of product behaviors, also known as requirements, in order to verify if a product meets them, has quality, or not, which means it does not have quality. Where and how these requirements are defined is secondary, as the most important part is that they are actually defined and written down!</p>
+<p>It all makes sense if you use clear definitions and have a fundamental understanding of the underlying concepts.
+Software system, quality, behavior, and test. Define them precisely, and you will discover the beauty and challenges that developers and testers face every day implementing and testing real-world software systems.
+Indeed, if behavior is an infinite sequence of states, we do have a challenging problem to solve!</p>
+<h1 id="So-should-your-team-use-BDD"><a href="#So-should-your-team-use-BDD" class="headerlink" title="So should your team use BDD?"></a>So should your team use BDD?</h1><p>Yes, and no. BDD gets many things right, starting with putting the concept of a behavior right up front of the development process as it should be. If the development team uses BDD, then the QA team inherits at least some form of formalization of the product behavior.
+This is definitely better than not having product behavior clearly defined. It also supports explicit and clear test procedures. However, one needs to decouple BDD as a concept from its implementations that are tied to Gherkin, but this is a topic for another article.</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer">
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">October 3, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+</script>
+
+    </div>
+  </div>
+  <div class="container-footer">
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/testflows">
+                        <span class="fab fa-2x fa-telegram-plane"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2022 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
+</script>
+
+</body>
+</html>
+
+

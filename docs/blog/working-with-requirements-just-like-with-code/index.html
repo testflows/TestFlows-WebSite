@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1696288273746" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1696288273746" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1696369935115" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1696369935115" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1696288273746" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1696369935115" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -133,7 +133,7 @@ requirements so far. So, how does ISTQB defines a requirement? Well, it says tha
 point, surely they should be given their place at the end of the design implementation process, where testing is performed, but testing can only be performed after implementation, and implementation follows after the design. Did we lose it somehow
 in the process? We all know that in most cases, requirements are lost and are not clearly present or driving either design,
 development, or testing.</p>
-<p>Let’s take the liberty of redefining these terms close to how <span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.svg"></span> uses them to fully implement enterprise-level software quality assurance process. First of all, a tester for me at the beginning of my career was not a person but a multi-millionaire
+<p>Let’s take the liberty of redefining these terms close to how <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> uses them to fully implement enterprise-level software quality assurance process. First of all, a tester for me at the beginning of my career was not a person but a multi-millionaire
 large piece of advanced test equipment sitting on a factory production floor. So with this in mind, a more general definition of a tester
 is anything that performs testing, and a person would be a special case of that. It’s not a big deal. What about
 testing that a tester performs? We can shorten it and simply define testing as an act of evaluating quality, where the key part is quality.
@@ -472,7 +472,7 @@ another operation. In some cases, the <code>+</code> operator will be overwritte
 </tbody></table>
 </blockquote>
 <p>Do we really want to keep this only in our heads, or is it easier to write this down once and then reference it when needed?</p>
-<h1 id="Converting-requirements-in-Markdown-to-Python-objects"><a href="#Converting-requirements-in-Markdown-to-Python-objects" class="headerlink" title="Converting requirements in Markdown to Python objects"></a>Converting requirements in Markdown to Python objects</h1><p>Once we have written the requirements in our structured Markdown, <span><img style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.svg"></span> can parse it, extract all the requirements,
+<h1 id="Converting-requirements-in-Markdown-to-Python-objects"><a href="#Converting-requirements-in-Markdown-to-Python-objects" class="headerlink" title="Converting requirements in Markdown to Python objects"></a>Converting requirements in Markdown to Python objects</h1><p>Once we have written the requirements in our structured Markdown, <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> can parse it, extract all the requirements,
 and create corresponding requirement objects that we can link against our tests.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> requirements.md | tfs requirements generate &gt; requirements.py</span><br></pre></td></tr></table></figure>
 
