@@ -19,8 +19,6 @@ and show how you can improve your tests by breaking them into steps.
 Because there are different types, we will specifically focus
 on the writing of a functional test.
 
-
-
 # Something to Test
 
 To explore a manner in which we can make a test better, we need to write one. For this
@@ -34,7 +32,7 @@ ls foo
 ls: cannot access 'foo': No such file or directory
 ```
 
-## What Will We Test?
+# What Will We Test?
 
 Any good test that is worth the memory in which it is stored, needs to verify one or more requirements. Having picked
 the `ls` utility, we need to come up with a simple requirement
@@ -121,7 +119,7 @@ What else can be tested? In truth, many more cases exist that we could and shoul
 For example, we could also check what happens if a path that we pass to the `ls` differs only
 by one last character from a valid one. Maybe there is a bug and then it will fail?
 
-We will leave the test as this to keep it simple. But will start thinking about
+We will leave the test as is to keep it simple. But will start thinking about
 a test as nothing but an implementation of a test procedure. For a simple test,
 the procedure is simple and for a complex test, the procedure helps
 understand what the test is doing. The test procedure should be
@@ -138,7 +136,7 @@ with Test("Check 'ls' behaviour when file or directory does not exist"):
      with Shell() as bash:
         #  execute 'ls' with an invalid path"
         cmd = bash('ls foo')
-        #  check error message and exit code"):
+        #  check error message and exit code"
         assert "ls: cannot access 'foo': No such file or directory" in cmd.output, error()
         assert cmd.exitcode == 2, error()
 ```
@@ -223,7 +221,7 @@ test procedure. Well, that's a mistake, breaking tests into steps
 is literally a step in the right direction.
 
 
-
+> Any good test that is worth the memory in which it is stored, needs to verify one or more requirements.
 
 
 
