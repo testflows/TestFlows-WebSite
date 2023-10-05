@@ -253,10 +253,14 @@ blockquote::-webkit-scrollbar {
     padding-top: 100px;
 }
 
+.blog .post-summary {
+    margin-top: 0 !important;
+}
+
 .blog .post-header {
-    border-bottom: 2px solid #54e5ae;
     padding-bottom: 2em;
-    margin-bottom: 4em;
+    margin-bottom: 2em;
+    padding-top: 1em;
 }
 
 .post-summary a:hover {
@@ -354,9 +358,9 @@ blockquote::-webkit-scrollbar {
 
 .post-author .author-name,
 .post-author .authored-date {
-    font-weight: bold;
-    color: #adadad;
+
 }
+
 .post-author .author-name {
     padding-right: 2em;
 }
