@@ -393,7 +393,6 @@ blockquote::-webkit-scrollbar {
     background-repeat: no-repeat;
     background-position: bottom;
     background-origin: content-box;
-    background-size: 75vw;
 }
 
 .banner.not-in-view .firefly,
