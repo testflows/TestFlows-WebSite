@@ -578,7 +578,7 @@ code, pre, figure.highlight {
 }
 
 .navbar {
-    background: white;
+    background: black;
     font-weight: 300;
 }
 
@@ -601,7 +601,7 @@ code, pre, figure.highlight {
 .nav-link {
     font-size: 1.1em;
     padding-left: 1.5rem !important;
-    color: rgb(4, 13, 28);
+    color: white;
     font-weight: bold;
 }
 
@@ -609,6 +609,12 @@ code, pre, figure.highlight {
 .nav-link:focus > i,
 .nav-link:active > i {
     color: #77bd87;
+}
+
+.nav-link:hover,
+.nav-link:focus,
+.nav-link:active {
+    color: orange;
 }
 
 .navbar-toggler-icon:hover,
