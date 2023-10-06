@@ -1,5 +1,5 @@
 html, body {
-    font-family: 'Source Sans Pro', 'Open Sans', sans-serif;
+    font-family: 'Poppins', 'Source Sans Pro', 'Open Sans', sans-serif;
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
@@ -269,7 +269,7 @@ blockquote::-webkit-scrollbar {
 
 .post-summary h1 {
     font-weight: bold;
-    color: #2c3e50;
+    color: rgb(4, 13, 28);
     text-align: start;
     padding-bottom: 1em;
     font-family: Ubuntu;
@@ -533,7 +533,7 @@ figure.highlight {
     position: relative;
     margin-bottom: 1em;
     margin-top: 1em;
-    border: 1px solid #2c3e506b;
+    border: 1px solid rgb(4, 13, 28);
     padding: 10px;
 }
 
@@ -595,7 +595,7 @@ code, pre, figure.highlight {
 .nav-link {
     font-size: 1.1em;
     padding-left: 1.5rem !important;
-    color: #25283d;
+    color: rgb(4, 13, 28);
     font-weight: bold;
 }
 
@@ -659,7 +659,7 @@ a.header-anchor {
  */
 body {
   position: relative;
-  color: #25283d;
+  color: rgb(4, 13, 28);
   font-size: 18px;
 }
 
