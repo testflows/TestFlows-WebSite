@@ -250,7 +250,8 @@ blockquote::-webkit-scrollbar {
 .post-header {
     padding-left: 15px;
     padding-right: 15px;
-    padding-top: 100px;
+    padding-top: 70px;
+    background-color: black;
 }
 
 .blog .post-summary {
@@ -269,7 +270,7 @@ blockquote::-webkit-scrollbar {
 
 .post-summary h1 {
     font-weight: bold;
-    color: rgb(4, 13, 28);
+    color: white;
     text-align: start;
     padding-bottom: 1em;
     font-family: Ubuntu;
@@ -291,6 +292,7 @@ blockquote::-webkit-scrollbar {
 .post-body {
     margin: auto;
     font-size: 1.1em;
+    padding-top: 2em;
 }
 .post-body h1,
 .post-body h2,
@@ -311,10 +313,13 @@ blockquote::-webkit-scrollbar {
 
 .post-summary {
     text-align: start;
+    padding: 3em;
+    color: white;
 }
 
 .post-image {
     position: relative;
+    text-align: center;
 }
 
 .post-image img {
@@ -346,6 +351,7 @@ blockquote::-webkit-scrollbar {
 .post-metadata.row {
    width: 100%;
    font-size: 1em;
+   color: white;
 }
 
 .post-author {
