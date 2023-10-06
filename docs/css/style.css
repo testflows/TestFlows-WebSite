@@ -29,13 +29,13 @@ figure.example {
 }
 
 .codeblock-image.dark figure.highlight {
-   background: #495057;
+   background: black;
 }
 
-.codeblock-image.dark figure.highlight pre ,
+.codeblock-image.dark figure.highlight pre,
 .codeblock-image.dark figure.highlight code {
     color: white;
-    background: #495057;
+    background: black;
 }
 
 .btn.codeblock-copy {
@@ -384,8 +384,19 @@ blockquote::-webkit-scrollbar {
     margin-top: 2em;
 }
 
+.section-header {
+    background: black;
+    padding: 3em;
+    color: white;
+}
+
+.section-body {
+    padding-top:3em;
+    padding-bottom: 3em;
+}
+
 .banner {
-    min-height: 40vh;
+    min-height: 100vh;
     padding: 20vh 0 10vh 0;
     background: black;
     color: white;
@@ -399,6 +410,10 @@ blockquote::-webkit-scrollbar {
     background-repeat: no-repeat;
     background-position: bottom;
     background-origin: content-box;
+}
+
+.banner button:hover > a {
+    color:#54e5ae;
 }
 
 .banner.not-in-view .firefly,
@@ -419,14 +434,20 @@ blockquote::-webkit-scrollbar {
 }
 
 .banner .command {
-    background: black;
+    background: transparent;
     line-height: 3em;
     font-family: monospace;
     font-size: 1em;
 }
 
+.users-banner {
+    background: black;
+    color: white;
+    padding-top: 2em;
+}
+
 .users-banner h2 {
-    font-size: 1.6em;
+    font-weight: bolder;
 }
 
 .users-banner h5 {
@@ -434,7 +455,6 @@ blockquote::-webkit-scrollbar {
     font-weight: 200;
     text-align: center;
 }
-
 
 .users-banner .row {
     padding-top: 0px;
@@ -455,42 +475,62 @@ blockquote::-webkit-scrollbar {
     padding-left: 0;
 }
 
+.banner .command figure.highlight {
+    background-color: transparent;
+}
+
 .command figure.highlight {
     background-color: black;
-    border: 1px solid white;
     border-radius: 0px;
     margin-bottom: 0px;
     margin-top: 0px;
+    border: none;
+}
+
+.banner .command figure.highlight pre {
+    background: transparent;
 }
 
 .command figure.highlight pre {
-    background-color: black;
+    background: black;
+}
+
+.banner .command figure.highlight .code {
+    background: transparent;
 }
 
 .command figure.highlight .code {
-    background-color: black;
+    background: black;
     border: none;
-    padding-left: 0px;
-    padding-right: 25px;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+}
+
+.banner .command figure.highlight .code .line {
+    background: transparent;
 }
 
 .command figure.highlight .code .line {
+    background: black;
     color: white;
     font-weight: bold;
-    background-color: black;
+    font-size: 1.5em;
 }
 
 .command .btn.codeblock-copy {
     color: #54e5ae;
+    vertical-align: middle;
 }
 
 .command {
-    background: #383d41;
+    background-color: black;
     line-height: 3em;
     font-family: monospace;
     font-size: 0.8em;
     color: white;
     display: inline-block;
+    padding-left: 2em;
+    padding-right: 2em;
 }
 
 .links {

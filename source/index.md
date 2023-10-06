@@ -2,7 +2,7 @@
 layout: index
 ---
 
-{% html div class="container-fluid text-center p-0" style="padding-bottom: 1em !important" %}
+{% html div class="container-fluid text-center p-0" style="overflow-x: clip; padding-bottom: 1em !important" %}
 
 {% html div class="banner in-view-watcher" %}
 <div class="firefly"></div>
@@ -16,7 +16,7 @@ layout: index
 <div class="firefly"></div>
 <div class="firefly"></div>
 <p>
-<img src="/img/logo-white.png" alt="Logo" style= "width: 70vw; max-width: 400px;">
+<img src="/img/logo-white.png" alt="Logo" style= "width: 70vw; max-width: 400px; padding-bottom: 2em;">
 </p>
 
 ### enterprise quality open-source test framework
@@ -50,9 +50,6 @@ pip3 install testflows
     </div>
 </div>
 {% endhtml %}
-{% endhtml %}
-
-{% html div class="container" style="padding-bottom:2em !important" %}
 
 {% html div class="users-banner" %}
 
@@ -73,8 +70,10 @@ Altinity empowers developers to add high-performance analytics to any applicatio
 {% endhtml %}
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
----
+{% html div class="container" style="padding-bottom:2em !important" %}
+
 
 ## Write
 
@@ -123,27 +122,17 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% endcodeblock %}
 {% endhtml %}
 {% endhtml %}
-
-# <br>
-
----
-
-# <br>
+<br>
+{% html section %}
+{% html div class="section-header" %}
 # **Test Programs Not Just Tests**
 ## write full test programs that
 ## combine tests with their flow
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Use `if`, `for`, or `while` statements for ultimate test flow flexibility
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
@@ -157,31 +146,20 @@ def suite(self):
         if Test(run=test_3) != OK:
             continue
 {% endcodeblock %}
-
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Self-Documenting Tests**
 ## break your tests into steps
 ## without leaving Python
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Use `Given`, `When`, `Then`, and more when and where you need it
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
@@ -194,32 +172,21 @@ def scenario(self):
     with Then("I expect something"):
         pass
 {% endcodeblock %}
-
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Combinatorial Tests**
 ## exhaustive testing or get covered with covering arrays
 ## all-pairs, n-wise, and pairwise testing made easy
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Using a `CoveringArray` with `strength=2` or more
 ## for pairwise or greater coverage
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
@@ -237,30 +204,19 @@ def check_basic_operations(self):
         with Combination(f"pattern #{i}"):
             check_basic_operation(combination=combination.values())
 {% endcodeblock %}
-
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Asynchronous Tests**
 ## take advantage of asynchronous programming
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Using `asyncio` with `async def` and `async with`
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
@@ -276,31 +232,20 @@ async def suite(self):
 with Module("regression"):
     Suite(run=suite)
 {% endcodeblock %}
-
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Parallel Tests**
 ## author parallel tests or
 ## run your tests in parallel
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Specify `parallel` and sync with `join`
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
@@ -310,31 +255,20 @@ with Feature("my feature"):
     join()
     Scenario(run=my_test3, parallel=True)
 {% endcodeblock %}
-
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Semi-Automated and Manual Tests**
 ## seamlessly work with automated
 ## semi-automated and manual tests
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Mix and match different test types in the same test flow
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 {% codeblock lang:python line_number:true highlight:true first_line:1 %}
@@ -350,31 +284,20 @@ with Scenario("manual scenario", flags=MANUAL):
     with When("manual action"):
         pass
 {% endcodeblock %}
-
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Testing Documentation**
 ## automate your documentation
 ## and keep it up to date
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
-
 ## Write executable documentation by mixing Markdown and Python code using `testflows.texts`
-# <br>
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
 <div>
@@ -387,19 +310,15 @@ with Scenario("manual scenario", flags=MANUAL):
 </div>
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Professional Reports**
 ## right at your fingertips
+{% endhtml %}
 
-## <br>
----
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-6" %}
 ## <br>
 ## Requirements Coverage Report
@@ -423,9 +342,7 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="secion-body row" %}
 ## <br>
 {% html div class="col-md-6" %}
 ## <br>
@@ -450,9 +367,7 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-6" %}
 ## <br>
 ## Results Comparison Report
@@ -475,21 +390,15 @@ with Scenario("manual scenario", flags=MANUAL):
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/compare-metrics.png" alt="ScreenShot" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-# <br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Write and Work with Requirements**
 ## in a straightforward and convenient way
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Write requirements in Markdown document
 # <br>
@@ -511,10 +420,7 @@ The [ls](#ls) utility SHALL list the contents of a directory.
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Convert & use in tests
 # <br>
@@ -524,7 +430,6 @@ The [ls](#ls) utility SHALL list the contents of a directory.
         <span class="prompt">$</span>cat requirements.md | tfs requirements generate > requirements.py
     </div>
 </div>
-
 
 {% endhtml %}
 {% html div class="col-md-8 codeblock-image" %}
@@ -548,9 +453,7 @@ def list_current_working_directory(self, shell):
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Track your test coverage
 # <br>
@@ -567,9 +470,7 @@ def list_current_working_directory(self, shell):
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Impress and share requirements with your team and customers
 # <br>
@@ -585,24 +486,16 @@ def list_current_working_directory(self, shell):
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/requirements.png" alt="Requirements" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Results Analytics**
 ## designed to provide analytics
 ## using ClickHouse and Grafana
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## On-the-fly loading of logs
 ## into ClickHouse
@@ -644,38 +537,26 @@ user-node :)
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Dashboards
 ## available in Grafana
-# <br>
-
 {% endhtml %}
 
 {% html div class="col-md-8" %}
 <div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/grafana-testruns.png" alt="Dashboards" style="width: 100%;"></div>
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **More Than Just a Framework**
 ## build on top of a messaging protocol
 ## for robustness and advanced applications
+{% endhtml %}
 
-## <br>
----
-
-<br>
-<br>
-
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Messages
 ## use JSON objects
@@ -711,10 +592,9 @@ user-node :)
 {% endcodeblock %}
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 
-<br>
-<br>
-{% html div class=row" %}
+{% html div class="section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Compressed
 ## using LZMA compression
@@ -752,21 +632,12 @@ user-node :)
 {% endhtml %}
 {% endhtml %}
 
-<br>
-<br>
-
----
-
-# <br>
+{% html section %}
+{% html div class="section-header" %}
 # **Actively Developed**
 ## become part of the team
 ## and join us on <a href="https://github.com/testflows">GitHub</a>
 ## or follow us to get the latest updates
-
-## <br>
----
-
-<br>
-<br>
-
+{% endhtml %}
+{% endhtml %}
 {% endhtml %}
