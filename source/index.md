@@ -122,15 +122,16 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 {% endcodeblock %}
 {% endhtml %}
 {% endhtml %}
+{% endhtml %}
 <br>
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Test Programs Not Just Tests**
 ## write full test programs that
 ## combine tests with their flow
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Use `if`, `for`, or `while` statements for ultimate test flow flexibility
 {% endhtml %}
@@ -151,13 +152,13 @@ def suite(self):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Self-Documenting Tests**
 ## break your tests into steps
 ## without leaving Python
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Use `Given`, `When`, `Then`, and more when and where you need it
 {% endhtml %}
@@ -177,13 +178,13 @@ def scenario(self):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Combinatorial Tests**
 ## exhaustive testing or get covered with covering arrays
 ## all-pairs, n-wise, and pairwise testing made easy
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Using a `CoveringArray` with `strength=2` or more
 ## for pairwise or greater coverage
@@ -209,12 +210,12 @@ def check_basic_operations(self):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Asynchronous Tests**
 ## take advantage of asynchronous programming
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Using `asyncio` with `async def` and `async with`
 {% endhtml %}
@@ -237,13 +238,13 @@ with Module("regression"):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Parallel Tests**
 ## author parallel tests or
 ## run your tests in parallel
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Specify `parallel` and sync with `join`
 {% endhtml %}
@@ -260,13 +261,13 @@ with Feature("my feature"):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Semi-Automated and Manual Tests**
 ## seamlessly work with automated
 ## semi-automated and manual tests
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Mix and match different test types in the same test flow
 {% endhtml %}
@@ -289,13 +290,13 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Testing Documentation**
 ## automate your documentation
 ## and keep it up to date
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Write executable documentation by mixing Markdown and Python code using `testflows.texts`
 {% endhtml %}
@@ -313,12 +314,12 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Professional Reports**
 ## right at your fingertips
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-6" %}
 ## <br>
 ## Requirements Coverage Report
@@ -342,7 +343,7 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="secion-body row" %}
+{% html div class="container section-body row" %}
 ## <br>
 {% html div class="col-md-6" %}
 ## <br>
@@ -367,7 +368,7 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-6" %}
 ## <br>
 ## Results Comparison Report
@@ -393,12 +394,12 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Write and Work with Requirements**
 ## in a straightforward and convenient way
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Write requirements in Markdown document
 # <br>
@@ -420,7 +421,7 @@ The [ls](#ls) utility SHALL list the contents of a directory.
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Convert & use in tests
 # <br>
@@ -453,7 +454,7 @@ def list_current_working_directory(self, shell):
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Track your test coverage
 # <br>
@@ -470,7 +471,7 @@ def list_current_working_directory(self, shell):
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Impress and share requirements with your team and customers
 # <br>
@@ -489,13 +490,13 @@ def list_current_working_directory(self, shell):
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Results Analytics**
 ## designed to provide analytics
 ## using ClickHouse and Grafana
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## On-the-fly loading of logs
 ## into ClickHouse
@@ -537,7 +538,7 @@ user-node :)
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Dashboards
 ## available in Grafana
@@ -550,13 +551,13 @@ user-node :)
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **More Than Just a Framework**
 ## build on top of a messaging protocol
 ## for robustness and advanced applications
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Messages
 ## use JSON objects
@@ -594,7 +595,7 @@ user-node :)
 {% endhtml %}
 {% endhtml %}
 
-{% html div class="section-body row" %}
+{% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Compressed
 ## using LZMA compression
@@ -633,11 +634,11 @@ user-node :)
 {% endhtml %}
 
 {% html section %}
-{% html div class="section-header" %}
+{% html div class="container-fluid section-header" %}
 # **Actively Developed**
 ## become part of the team
 ## and join us on <a href="https://github.com/testflows">GitHub</a>
 ## or follow us to get the latest updates
 {% endhtml %}
 {% endhtml %}
-{% endhtml %}
+
