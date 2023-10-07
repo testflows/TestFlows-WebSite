@@ -129,8 +129,11 @@ TestFlows.com Open-Source Software Testing Framework v1.3.191112.1234833
 # **Test Programs Not Just Tests**
 ## write full test programs that
 ## combine tests with their flow
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg" %}
 {% endhtml %}
-
+{% endhtml %}
+{% endhtml %}
 {% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Use `if`, `for`, or `while` statements for ultimate test flow flexibility
@@ -152,7 +155,11 @@ def suite(self):
 {% endhtml %}
 
 {% html section %}
-{% html div class="container-fluid section-header" %}
+{% html div class="container-fluid section-header section-header-top" %}
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg section-bg-top" %}
+{% endhtml %}
+{% endhtml %}
 # **Self-Documenting Tests**
 ## break your tests into steps
 ## without leaving Python
@@ -182,8 +189,11 @@ def scenario(self):
 # **Combinatorial Tests**
 ## exhaustive testing or get covered with covering arrays
 ## all-pairs, n-wise, and pairwise testing made easy
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg" %}
 {% endhtml %}
-
+{% endhtml %}
+{% endhtml %}
 {% html div class="container section-body row" %}
 {% html div class="col-md-4 text-center" %}
 ## Using a `CoveringArray` with `strength=2` or more
@@ -210,7 +220,11 @@ def check_basic_operations(self):
 {% endhtml %}
 
 {% html section %}
-{% html div class="container-fluid section-header" %}
+{% html div class="container-fluid section-header section-header-top" %}
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg section-bg-top" %}
+{% endhtml %}
+{% endhtml %}
 # **Asynchronous Tests**
 ## take advantage of asynchronous programming
 {% endhtml %}
@@ -242,6 +256,10 @@ with Module("regression"):
 # **Parallel Tests**
 ## author parallel tests or
 ## run your tests in parallel
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg" %}
+{% endhtml %}
+{% endhtml %}
 {% endhtml %}
 
 {% html div class="container section-body row" %}
@@ -261,7 +279,11 @@ with Feature("my feature"):
 {% endhtml %}
 
 {% html section %}
-{% html div class="container-fluid section-header" %}
+{% html div class="container-fluid section-header section-header-top" %}
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg section-bg-top" %}
+{% endhtml %}
+{% endhtml %}
 # **Semi-Automated and Manual Tests**
 ## seamlessly work with automated
 ## semi-automated and manual tests
@@ -294,6 +316,10 @@ with Scenario("manual scenario", flags=MANUAL):
 # **Testing Documentation**
 ## automate your documentation
 ## and keep it up to date
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg" %}
+{% endhtml %}
+{% endhtml %}
 {% endhtml %}
 
 {% html div class="container section-body row" %}
@@ -314,7 +340,11 @@ with Scenario("manual scenario", flags=MANUAL):
 {% endhtml %}
 
 {% html section %}
-{% html div class="container-fluid section-header" %}
+{% html div class="container-fluid section-header section-header-top" %}
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg section-bg-top" %}
+{% endhtml %}
+{% endhtml %}
 # **Professional Reports**
 ## right at your fingertips
 {% endhtml %}
@@ -397,6 +427,10 @@ with Scenario("manual scenario", flags=MANUAL):
 {% html div class="container-fluid section-header" %}
 # **Write and Work with Requirements**
 ## in a straightforward and convenient way
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg" %}
+{% endhtml %}
+{% endhtml %}
 {% endhtml %}
 
 {% html div class="container section-body row" %}
@@ -490,7 +524,11 @@ def list_current_working_directory(self, shell):
 {% endhtml %}
 
 {% html section %}
-{% html div class="container-fluid section-header" %}
+{% html div class="container-fluid section-header section-header-top" %}
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg section-bg-top" %}
+{% endhtml %}
+{% endhtml %}
 # **Results Analytics**
 ## designed to provide analytics
 ## using ClickHouse and Grafana
@@ -555,6 +593,10 @@ user-node :)
 # **More Than Just a Framework**
 ## build on top of a messaging protocol
 ## for robustness and advanced applications
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg" %}
+{% endhtml %}
+{% endhtml %}
 {% endhtml %}
 
 {% html div class="container section-body row" %}
@@ -634,7 +676,11 @@ user-node :)
 {% endhtml %}
 
 {% html section %}
-{% html div class="container-fluid section-header" %}
+{% html div class="container-fluid section-header section-header-top" %}
+{% html div class="section-bg-wrapper" %}
+{% html div class="section-bg section-bg-top" %}
+{% endhtml %}
+{% endhtml %}
 # **Actively Developed**
 ## become part of the team
 ## and join us on <a href="https://github.com/testflows">GitHub</a>

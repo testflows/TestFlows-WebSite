@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1696647394094" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1696647394094" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1696692452259" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1696692452259" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1696647394094" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1696692452259" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -129,16 +129,13 @@ Then execute it.</div>
 <section ><div class="container-fluid section-header"><h1 id="test-programs-not-just-tests"><strong>Test Programs Not Just Tests</strong></h1>
 <h2 id="write-full-test-programs-that">write full test programs that</h2>
 <h2 id="combine-tests-with-their-flow">combine tests with their flow</h2>
-</div>
-
+<div class="section-bg-wrapper"><div class="section-bg"></div></div></div>
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="use-if-for-or-while-statements-for-ultimate-test-flow-flexibility">Use <code>if</code>, <code>for</code>, or <code>while</code> statements for ultimate test flow flexibility</h2>
 </div>
 <div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">if</span> (condition):</span><br><span class="line">        Test(run=test_1)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">3</span>):</span><br><span class="line">        Test(<span class="string">f&quot;test_2-<span class="subst">&#123;i&#125;</span>&quot;</span>, run=test_2)</span><br><span class="line">    <span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">        <span class="keyword">if</span> Test(run=test_3) != OK:</span><br><span class="line">            <span class="keyword">continue</span></span><br></pre></td></tr></table></figure></div></div></section>
 
-<section ><div class="container-fluid section-header"><h1 id="self-documenting-tests"><strong>Self-Documenting Tests</strong></h1>
-<h2 id="break-your-tests-into-steps">break your tests into steps</h2>
-<h2 id="without-leaving-python">without leaving Python</h2>
-</div>
+<section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
+<h1 id="Self-Documenting-Tests"><a href="#Self-Documenting-Tests" class="headerlink" title="Self-Documenting Tests"></a><strong>Self-Documenting Tests</strong></h1><h2 id="break-your-tests-into-steps"><a href="#break-your-tests-into-steps" class="headerlink" title="break your tests into steps"></a>break your tests into steps</h2><h2 id="without-leaving-Python"><a href="#without-leaving-Python" class="headerlink" title="without leaving Python"></a>without leaving Python</h2></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="use-given-when-then-and-more-when-and-where-you-need-it">Use <code>Given</code>, <code>When</code>, <code>Then</code>, and more when and where you need it</h2>
 </div>
@@ -147,16 +144,14 @@ Then execute it.</div>
 <section ><div class="container-fluid section-header"><h1 id="combinatorial-tests"><strong>Combinatorial Tests</strong></h1>
 <h2 id="exhaustive-testing-or-get-covered-with-covering-arrays">exhaustive testing or get covered with covering arrays</h2>
 <h2 id="all-pairs-n-wise-and-pairwise-testing-made-easy">all-pairs, n-wise, and pairwise testing made easy</h2>
-</div>
-
+<div class="section-bg-wrapper"><div class="section-bg"></div></div></div>
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="using-a-coveringarray-with-strength2-or-more">Using a <code>CoveringArray</code> with <code>strength=2</code> or more</h2>
 <h2 id="for-pairwise-or-greater-coverage">for pairwise or greater coverage</h2>
 </div>
 <div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.combinatorics <span class="keyword">import</span> CoveringArray</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_basic_operations</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> i, combination <span class="keyword">in</span> <span class="built_in">enumerate</span>(</span><br><span class="line">        CoveringArray(&#123;</span><br><span class="line">            <span class="string">&quot;press_a&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">2</span>],</span><br><span class="line">            <span class="string">&quot;operation&quot;</span>: [<span class="string">&#x27;+&#x27;</span>,<span class="string">&#x27;-&#x27;</span>,<span class="string">&#x27;*&#x27;</span>,<span class="string">&#x27;/&#x27;</span>],</span><br><span class="line">            <span class="string">&quot;press_b&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, -<span class="number">1</span>, -<span class="number">2</span>],</span><br><span class="line">        &#125;, strength=<span class="number">2</span>)</span><br><span class="line">    ):</span><br><span class="line">        <span class="keyword">with</span> Combination(<span class="string">f&quot;pattern #<span class="subst">&#123;i&#125;</span>&quot;</span>):</span><br><span class="line">            check_basic_operation(combination=combination.values())</span><br></pre></td></tr></table></figure></div></div></section>
 
-<section ><div class="container-fluid section-header"><h1 id="asynchronous-tests"><strong>Asynchronous Tests</strong></h1>
-<h2 id="take-advantage-of-asynchronous-programming">take advantage of asynchronous programming</h2>
-</div>
+<section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
+<h1 id="Asynchronous-Tests"><a href="#Asynchronous-Tests" class="headerlink" title="Asynchronous Tests"></a><strong>Asynchronous Tests</strong></h1><h2 id="take-advantage-of-asynchronous-programming"><a href="#take-advantage-of-asynchronous-programming" class="headerlink" title="take advantage of asynchronous programming"></a>take advantage of asynchronous programming</h2></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="using-asyncio-with-async-def-and-async-with">Using <code>asyncio</code> with <code>async def</code> and <code>async with</code></h2>
 </div>
@@ -165,16 +160,14 @@ Then execute it.</div>
 <section ><div class="container-fluid section-header"><h1 id="parallel-tests"><strong>Parallel Tests</strong></h1>
 <h2 id="author-parallel-tests-or">author parallel tests or</h2>
 <h2 id="run-your-tests-in-parallel">run your tests in parallel</h2>
-</div>
+<div class="section-bg-wrapper"><div class="section-bg"></div></div></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="specify-parallel-and-sync-with-join">Specify <code>parallel</code> and sync with <code>join</code></h2>
 </div>
 <div class="col-md-8 codeblock-image"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Feature(<span class="string">&quot;my feature&quot;</span>):</span><br><span class="line">    Scenario(run=my_test1, parallel=<span class="literal">True</span>)</span><br><span class="line">    Scenario(run=my_test2, parallel=<span class="literal">True</span>)</span><br><span class="line">    join()</span><br><span class="line">    Scenario(run=my_test3, parallel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure></div></div></section>
 
-<section ><div class="container-fluid section-header"><h1 id="semi-automated-and-manual-tests"><strong>Semi-Automated and Manual Tests</strong></h1>
-<h2 id="seamlessly-work-with-automated">seamlessly work with automated</h2>
-<h2 id="semi-automated-and-manual-tests-1">semi-automated and manual tests</h2>
-</div>
+<section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
+<h1 id="Semi-Automated-and-Manual-Tests"><a href="#Semi-Automated-and-Manual-Tests" class="headerlink" title="Semi-Automated and Manual Tests"></a><strong>Semi-Automated and Manual Tests</strong></h1><h2 id="seamlessly-work-with-automated"><a href="#seamlessly-work-with-automated" class="headerlink" title="seamlessly work with automated"></a>seamlessly work with automated</h2><h2 id="semi-automated-and-manual-tests"><a href="#semi-automated-and-manual-tests" class="headerlink" title="semi-automated and manual tests"></a>semi-automated and manual tests</h2></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="mix-and-match-different-test-types-in-the-same-test-flow">Mix and match different test types in the same test flow</h2>
 </div>
@@ -183,7 +176,7 @@ Then execute it.</div>
 <section ><div class="container-fluid section-header"><h1 id="testing-documentation"><strong>Testing Documentation</strong></h1>
 <h2 id="automate-your-documentation">automate your documentation</h2>
 <h2 id="and-keep-it-up-to-date">and keep it up to date</h2>
-</div>
+<div class="section-bg-wrapper"><div class="section-bg"></div></div></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="write-executable-documentation-by-mixing-markdown-and-python-code-using-testflowstexts">Write executable documentation by mixing Markdown and Python code using <code>testflows.texts</code></h2>
 </div>
@@ -196,9 +189,8 @@ Then execute it.</div>
 ```</pre>
 </div></div></div></section>
 
-<section ><div class="container-fluid section-header"><h1 id="professional-reports"><strong>Professional Reports</strong></h1>
-<h2 id="right-at-your-fingertips">right at your fingertips</h2>
-</div>
+<section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
+<h1 id="Professional-Reports"><a href="#Professional-Reports" class="headerlink" title="Professional Reports"></a><strong>Professional Reports</strong></h1><h2 id="right-at-your-fingertips"><a href="#right-at-your-fingertips" class="headerlink" title="right at your fingertips"></a>right at your fingertips</h2></div>
 
 <div class="container section-body row"><div class="col-md-6"><h2 id=""><br></h2>
 <h2 id="requirements-coverage-report">Requirements Coverage Report</h2>
@@ -257,7 +249,7 @@ Then execute it.</div>
 
 <section ><div class="container-fluid section-header"><h1 id="write-and-work-with-requirements"><strong>Write and Work with Requirements</strong></h1>
 <h2 id="in-a-straightforward-and-convenient-way">in a straightforward and convenient way</h2>
-</div>
+<div class="section-bg-wrapper"><div class="section-bg"></div></div></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="write-requirements-in-markdown-document">Write requirements in Markdown document</h2>
 <h1 id=""><br></h1>
@@ -296,10 +288,8 @@ Then execute it.</div>
 </div>
 <div class="col-md-8"><div style="margin: auto; box-shadow: 10px 10px 20px #192f38; max-height: 540px; overflow: hidden;"><img src="/assets/requirements.png" alt="Requirements" style="width: 100%;"></div></div></div></section>
 
-<section ><div class="container-fluid section-header"><h1 id="results-analytics"><strong>Results Analytics</strong></h1>
-<h2 id="designed-to-provide-analytics">designed to provide analytics</h2>
-<h2 id="using-clickhouse-and-grafana">using ClickHouse and Grafana</h2>
-</div>
+<section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
+<h1 id="Results-Analytics"><a href="#Results-Analytics" class="headerlink" title="Results Analytics"></a><strong>Results Analytics</strong></h1><h2 id="designed-to-provide-analytics"><a href="#designed-to-provide-analytics" class="headerlink" title="designed to provide analytics"></a>designed to provide analytics</h2><h2 id="using-ClickHouse-and-Grafana"><a href="#using-ClickHouse-and-Grafana" class="headerlink" title="using ClickHouse and Grafana"></a>using ClickHouse and Grafana</h2></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="on-the-fly-loading-of-logs">On-the-fly loading of logs</h2>
 <h2 id="into-clickhouse">into ClickHouse</h2>
@@ -321,7 +311,7 @@ Then execute it.</div>
 <section ><div class="container-fluid section-header"><h1 id="more-than-just-a-framework"><strong>More Than Just a Framework</strong></h1>
 <h2 id="build-on-top-of-a-messaging-protocol">build on top of a messaging protocol</h2>
 <h2 id="for-robustness-and-advanced-applications">for robustness and advanced applications</h2>
-</div>
+<div class="section-bg-wrapper"><div class="section-bg"></div></div></div>
 
 <div class="container section-body row"><div class="col-md-4 text-center"><h2 id="messages">Messages</h2>
 <h2 id="use-json-objects">use JSON objects</h2>
@@ -345,11 +335,8 @@ Then execute it.</div>
 
 <div class="col-md-8 codeblock-image dark"><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">00000000  fd 37 7a 58 5a 00 00 04  e6 d6 b4 46 02 00 21 01  |.7zXZ......F..!.|</span><br><span class="line">00000010  16 00 00 00 74 2f e5 a3  e0 29 89 05 03 5d 00 3d  |....t/...)...].=|</span><br><span class="line">00000020  88 89 a6 94 60 d9 bd bf  72 0c 7c b5 f6 <span class="built_in">cd</span> 99 04  |....`...r.|.....|</span><br><span class="line">00000030  c8 be 8f 34 f6 48 3f f5  48 <span class="built_in">cd</span> aa 7d 4b e4 05 14  |...4.H?.H..&#125;K...|</span><br><span class="line">00000040  fb 14 0e 7f ef 43 d8 77  43 bc d1 61 1c 7c a7 e9  |.....C.wC..a.|..|</span><br><span class="line">00000050  12 15 52 86 28 10 be 4b  64 18 ed 7d 39 6d 66 80  |..R.(..Kd..&#125;9mf.|</span><br><span class="line">00000060  ce 5d 8d a3 5b f8 e6 15  78 33 eb d8 39 d4 a7 c7  |.]..[...x3..9...|</span><br><span class="line">00000070  cf 66 70 29 c8 32 15 46  ab 5d 5d 79 01 fb a9 a3  |.fp).2.F.]]y....|</span><br><span class="line">00000080  8d 44 a4 1a 7f <span class="built_in">fc</span> 75 4b  b5 55 0c 37 e1 e2 3e d2  |.D....uK.U.7..&gt;.|</span><br><span class="line">00000090  2d 04 3c 37 e6 7c 48 a7  70 89 8e 32 c7 6c f3 5e  |-.&lt;7.|H.p..2.l.^|</span><br><span class="line">000000a0  3b e6 e3 1f d7 f2 15 06  f0 63 c0 bf 0e e5 04 3c  |;........c.....&lt;|</span><br><span class="line">000000b0  38 3d b6 f2 f4 5a 2a 5d  af e5 a5 b0 04 45 00 cc  |8=...Z*].....E..|</span><br><span class="line">000000c0  0b de 48 56 3d 01 91 61  b8 23 3b 68 a5 72 ce bf  |..HV=..a.<span class="comment">#;h.r..|</span></span><br><span class="line">000000d0  3b 7a ef 83 dc 7a 58 ae  6d d3 3b 3b f9 e6 6d 7c  |;z...zX.m.;;..m||</span><br><span class="line">000000e0  c7 60 d8 17 b1 6a 0e a5  68 a4 3a a1 4f de <span class="built_in">df</span> 1c  |.`...j..h.:.O...|</span><br><span class="line">000000f0  55 4b d2 ba 41 e7 b3 0b  cf f9 c8 f2 45 ee 62 88  |UK..A.......E.b.|</span><br><span class="line">00000100  f6 48 e4 0b 65 9b 6c bd  91 5b 12 13 bf 02 23 1c  |.H..e.l..[....<span class="comment">#.|</span></span><br><span class="line">00000110  ef 98 d4 18 c1 c2 54 a4  9a e9 f8 b4 3a 37 bf fe  |......T.....:7..|</span><br><span class="line">00000120  7d 4a 93 7a d1 27 <span class="built_in">df</span> a1  1b 26 b4 71 d0 14 37 95  |&#125;J.z.<span class="string">&#x27;...&amp;.q..7.|</span></span><br></pre></td></tr></table></figure></div></div>
 
-<section ><div class="container-fluid section-header"><h1 id="actively-developed"><strong>Actively Developed</strong></h1>
-<h2 id="become-part-of-the-team">become part of the team</h2>
-<h2 id="and-join-us-on-github">and join us on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></h2>
-<h2 id="or-follow-us-to-get-the-latest-updates">or follow us to get the latest updates</h2>
-</div></section>
+<section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
+<h1 id="Actively-Developed"><a href="#Actively-Developed" class="headerlink" title="Actively Developed"></a><strong>Actively Developed</strong></h1><h2 id="become-part-of-the-team"><a href="#become-part-of-the-team" class="headerlink" title="become part of the team"></a>become part of the team</h2><h2 id="and-join-us-on-GitHub"><a href="#and-join-us-on-GitHub" class="headerlink" title="and join us on GitHub"></a>and join us on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></h2><h2 id="or-follow-us-to-get-the-latest-updates"><a href="#or-follow-us-to-get-the-latest-updates" class="headerlink" title="or follow us to get the latest updates"></a>or follow us to get the latest updates</h2></div></section>
 
 
 

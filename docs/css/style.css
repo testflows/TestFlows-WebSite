@@ -392,9 +392,48 @@ blockquote::-webkit-scrollbar {
 
 .section-header {
     background: black;
-    padding-top: 15vh;
-    padding-bottom: 15vh;
+    padding-top: 3em;
+    overflow: hidden;
     color: white;
+}
+
+.section-header.section-header-top {
+    padding-top: 0em;
+    padding-bottom: 3em;
+}
+
+.section-bg-wrapper {
+    height: 6em;
+    overflow: hidden;
+    padding-top: 1em;
+}
+
+.section-header-top .section-bg-wrapper {
+    padding-bottom: 1em;
+}
+
+.section-bg {
+    background: url(/images/section.png) left top no-repeat;
+    background-position: center;
+    height: 500px;
+    animation-name: spin;
+    animation-duration: 600s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.section-bg-top {
+    top: -430px;
+    position: relative;
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
 }
 
 .section-body {
@@ -520,9 +559,8 @@ blockquote::-webkit-scrollbar {
 
 .command figure.highlight .code .line {
     background: black;
-    color: white;
-    font-weight: bold;
-    font-size: 1.5em;
+    color: #467474;
+    font-size: 1.2em;
 }
 
 .command .btn.codeblock-copy {
