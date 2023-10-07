@@ -414,8 +414,11 @@ blockquote::-webkit-scrollbar {
 
 .section-bg {
     background: url(/images/section.png) left top no-repeat;
+    background-size: 500px;
     background-position: center;
     height: 500px;
+    width: 508px;
+    margin: auto;
     animation-name: spin;
     animation-duration: 600s;
     animation-iteration-count: infinite;
