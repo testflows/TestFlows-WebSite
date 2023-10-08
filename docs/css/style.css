@@ -420,7 +420,7 @@ blockquote::-webkit-scrollbar {
     width: 508px;
     margin: auto;
     animation-name: spin;
-    animation-duration: 600s;
+    animation-duration: 150s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
