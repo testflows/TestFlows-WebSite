@@ -387,7 +387,6 @@ blockquote::-webkit-scrollbar {
 .container-fluid {
     padding-left: 0px;
     padding-right: 0px;
-    overflow-x: hidden;
 }
 
 .section-header {
