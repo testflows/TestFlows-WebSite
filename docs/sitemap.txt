@@ -1,3 +1,4 @@
+https://testflows.com/blog/combinatorial-testing-the-introduction/
 https://testflows.com/index.html
 https://testflows.com/blog/how-to-break-your-tests-into-steps/
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
