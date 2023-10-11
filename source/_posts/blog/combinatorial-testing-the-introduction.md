@@ -20,13 +20,13 @@ Combinatorial methods can reduce costs for software testing and have significant
 
 # What is combinatorial testing?
 
-Combinatorial testing is a technique that checks all, the exhaustive case, or just some combinations of system inputs. The most common application of combinatorial testing is to check combinations of input parameters or configuration options. Checking combinations of the system’s input parameters is the simplest form of application. A system can either be complex or be as simple as a simple function.
+Combinatorial testing is a technique that checks all, the exhaustive case, or just some combinations of system inputs. The most common application of combinatorial testing is to check combinations of input parameters or configuration options. Checking combinations of the system’s input parameters is the simplest form of application. A system can either be complex or be as simple as a function.
 
 # Applying combinatorial testing
 
 For example, here is a function that defines a pressure switch. This function has bugs for some specific
 combinations of values for the pressure and volume input parameters.
-Combinatorial testing would check the pressure switch functions against all possible combinations of
+Combinatorial testing would check the pressure switch function against all possible combinations of
 pressure and volume.
 
 ```python
@@ -264,8 +264,8 @@ However, it does not scale if the number of parameters is large. In this case, u
 function comes in handy.
 
 The Python standard library provides [itertools.product](https://docs.python.org/3/library/itertools.html#itertools.product)
-function that calculates the Cartesian product of iterables, and we can use it to remove nested for-loops,
-and {% testflows %} conveniently provides it from the [testflows.combinatorics](https://github.com/testflows/TestFlows-Combinatorics) module.
+function that calculates the Cartesian product of iterables, and we can use it to remove nested for-loops.
+The [testflows.combinatorics](https://github.com/testflows/TestFlows-Combinatorics) module conveniently provides it.
 
 > `itertools.product(*iterables, repeat=1)`<br>
 >   Cartesian product of input iterables.
@@ -291,17 +291,16 @@ def check_pressure_switch(self):
 
 As we can see, now we have only one for-loop instead of two, and if the number of combination variables
 was greater than two, then we would not need to add any more nested loops but instead would just pass
-more variables into the Cartesian `product` function.
+more variables into the Cartesian product function.
 
 # Exhaustive testing and the combinatorial explosion problem
 
-Even though we could pass as many iterables as we want into the Cartesian `product` function,
+Even though we could pass as many iterables as we want into the Cartesian product function,
 one for each of our input parameters, the number of combinations will quickly grow,
 and exhaustive testing would become infeasible due to the combinatorial explosion problem.
 
-The combinatorial explosion arises from the fact that the total number of combinations, {%katex%}N{%endkatex%},
-grows very rapidly as either the number of values for each parameter or the number of parameters
-increases.
+The combinatorial explosion arises from the fact that the total number of combinations, {%katex%}N{%endkatex%}, grows very rapidly, exponentially, as the number of parameters
+increases and becomes even worse when the number of values for each parameter is large.
 
 {% blockquote %}
 {% katex %}
@@ -310,17 +309,18 @@ N = v_0 * v_1 *...* v_n
 {% endblockquote %}
 
 For example, if we have `10` parameters (`n = 10`) that each have `10` possible values (`v = 10`), the
-number of all combinations is {% katex %}v^k=10^{10} = {10}_{billion}{% endkatex %}, thus requiring 10 billion
-test combinations for complete coverage.
+number of all combinations is {% katex %}v^n=10^{10} = {10}_{billion}{% endkatex %}, thus requiring 10 billion
+test combinations for complete test coverage.
 
-If we take the case where each parameter has the same number of values, then we will get
-the {%katex%} N = v^n {%endkatex%} case.
+If we take the case where each parameter has the same number of values, then we will get:
+
+> {%katex%} N = v^n {%endkatex%}
 
 If we graph this formula for the {%katex%}v=2{%endkatex%} case, with the x-axis being the
 number of parameters, {%katex%}n{%endkatex%}, and the y-axis being the number of combinations, {%katex%}N{%endkatex%},
 then it will look as follows:
 
-<img src="/images/combinatorial-explosion.png" width="100%" height="400">
+<img src="/images/combinatorial-explosion.png" max-width="100%" height="400" style="display:block; margin:auto">
 
 To make it even worse, the line gets even steeper as we increase the value of {%katex%}v{%endkatex%}!
 
@@ -328,7 +328,7 @@ So, can we conclude that combinatorial testing is a lost cause? Actually, not re
 However, this is a topic for another blog article. So please stay tuned.
 
 > If we take the case where each parameter has the same number of values, then we will get
-> the {%katex%} N = v^n {%endkatex%} case.
+> that {%katex%} N = v^n {%endkatex%}.
 
 # Conclusion
 
@@ -343,8 +343,5 @@ the principles of combinatorial testing were applied successfully. The solution
 to the combinatorial explosion problem is not trivial, but techniques such as using
 covering arrays can help us make combinatorial testing practical.
 
-If you want to know more, read our introductory article on covering arrays titled [Get Your Software Covered Using Covering Arrays](http://localhost:4000/blog/get-your-software-covered-using-covering-arrays/).
-For more a in-depth overview of combinatorial testing, please read an excellent article provided by NIST titled [Practical Combinatorial Testing](https://csrc.nist.gov/pubs/sp/800/142/final).
-
-Also, read the [Combinatorial Tests](http://localhost:4000/handbook/#Combinatorial-Tests) section in the handbook
-to find out more about how {% testflows %} supports combinatorial tests.
+If you want to know more, read our introductory article on covering arrays titled [Get Your Software Covered Using Covering Arrays](/blog/get-your-software-covered-using-covering-arrays/).
+For more in-depth overview of combinatorial testing, please read an excellent article provided by NIST titled [Practical Combinatorial Testing](https://csrc.nist.gov/pubs/sp/800/142/final). Also, read the [Combinatorial Tests](/handbook/#Combinatorial-Tests) section in the [Handbook](/handbook) to find out more about how {% testflows %} supports combinatorial tests.
