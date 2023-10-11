@@ -52,7 +52,7 @@ pressures * volumes = 5 * 7 = 35
 {% endkatex %}
 {% endblockquote %}
 
-We can write a simple test scenario to check all of these combinations using a simple for-loop.
+We can write a simple test scenario to check all of these combinations using a simple nested for-loop.
 
 ```python
 @TestScenario
@@ -259,7 +259,7 @@ TestFlows.com Open-Source Software Testing Framework v2.0.231001.1175523
 
 # Computing combinations using the Cartesian product
 
-A simple for-loop solution only works well when the number of combination variables is small.
+A simple nested for-loop solution only works well when the number of combination variables is small.
 However, it does not scale if the number of parameters is large. In this case, using a Cartesian product
 function comes in handy.
 
@@ -335,13 +335,11 @@ However, this is a topic for another blog article. So please stay tuned.
 This was a brief introduction to combinatorial testing. We've seen a simple example of applying
 the combinatorial testing technique to a simple pressure switch function and explored two solutions
 that checked all possible combinations of its input parameters. The first naive solution using
-the nested for-loop suffered from scalability issues if the number of combination variables increased.
+a nested for-loop suffered from scalability issues if the number of combination variables increased.
 The second solution using the Cartesian product function solved the scalability issue
 but still ran into problems with combinatorial explosion when the number of input parameters in the system increased and
 exhaustive testing of all possible combinations became infeasible. Nonetheless,
-the principles of combinatorial testing were applied successfully. The solution
-to the combinatorial explosion problem is not trivial, but techniques such as using
-covering arrays can help us make combinatorial testing practical.
+the principles of combinatorial testing were applied successfully. Working around the combinatorial explosion problem is not trivial, but techniques such as using covering arrays can help us make combinatorial testing practical.
 
 If you want to know more, read our introductory article on covering arrays titled [Get Your Software Covered Using Covering Arrays](/blog/get-your-software-covered-using-covering-arrays/).
 For more in-depth overview of combinatorial testing, please read an excellent article provided by NIST titled [Practical Combinatorial Testing](https://csrc.nist.gov/pubs/sp/800/142/final). Also, read the [Combinatorial Tests](/handbook/#Combinatorial-Tests) section in the [Handbook](/handbook) to find out more about how {% testflows %} supports combinatorial tests.
