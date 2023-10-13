@@ -23,7 +23,10 @@ variable identification, calculation of combinations, and any explicit loops.
 def test_add(self):
     values = {0, 1, math.inf, math.nan, 1 / 3, 2**-200, 2**200}
     sign = {1, -1}
-    check_add(a=either(*values, i="a") * either(*sign, i="sign_of_a"), b=either(*values,i="b") * either(*sign, i="sign_of_b"))
+    check_add(
+        a=either(*values, i="a") * either(*sign, i="sign_of_a"),
+        b=either(*values,i="b") * either(*sign, i="sign_of_b")
+    )
 ```
 {% endhtml %}
 <!-- more -->
