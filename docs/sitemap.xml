@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://testflows.com/blog/how-to-break-your-tests-into-steps/</loc>
+    
+    <lastmod>2023-10-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/handbook/index.html</loc>
+    
+    <lastmod>2023-10-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://testflows.com/blog/combinatorial-testing-the-introduction/</loc>
     
     <lastmod>2023-10-11</lastmod>
@@ -14,15 +32,6 @@
     <loc>https://testflows.com/index.html</loc>
     
     <lastmod>2023-10-10</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/how-to-break-your-tests-into-steps/</loc>
-    
-    <lastmod>2023-10-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -50,15 +59,6 @@
     <loc>https://testflows.com/blog/get-your-software-covered-using-covering-arrays/</loc>
     
     <lastmod>2023-10-02</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/handbook/index.html</loc>
-    
-    <lastmod>2023-09-27</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -103,7 +103,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2023-10-11</lastmod>
+    <lastmod>2023-10-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

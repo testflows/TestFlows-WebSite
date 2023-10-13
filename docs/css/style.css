@@ -3,6 +3,10 @@ html, body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
+cite {
+    padding-left: 1ch;
+}
+
 .sidebar {
     padding-top: 20px;
 }
