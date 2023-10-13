@@ -8,7 +8,7 @@ image:
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Writing combinatorial tests usually requires that the author of the test plan be upfront.
+Writing combinatorial tests usually requires that the author of the test plans for combinatorial testing upfront.
 This requires that all the combination variables and their values are identified and combined with the code
 that creates possible combinations and loops through each one of them. However, it would be nice to simplify the process and
 enable testers to write combinatorial tests in a manner that is as close as possible to a test that checks
