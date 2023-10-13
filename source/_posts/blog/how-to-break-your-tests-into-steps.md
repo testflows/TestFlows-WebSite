@@ -8,13 +8,13 @@ image:
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Writing tests is not an easy task as it can seem at first glance.
+Writing tests is not as easy task as it may seem at first glance.
 In many cases, writing a good test can be as hard as writing
-a good application code.
-While in the application code the readability and maintainability are both
- <!-- more --> desirable features, it is not an absolute requirement in all cases.
-For tests, on the other hand, readability and maintainability is a must.
-This article will explore a simple approach to make your tests better
+good application code.
+While readability and maintainability are both
+ <!-- more --> desirable features in application code,they are not always required.
+For tests, on the other hand, readability and maintainability are a must.
+This article will explore a simple approach to making your tests better
 and show how you can improve your tests by breaking them into steps.
 Because there are different types, we will specifically focus
 on the writing of a functional test.
