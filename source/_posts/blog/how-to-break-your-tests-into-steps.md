@@ -11,9 +11,8 @@ icon: fas fa-glasses pt-5 pb-5
 Writing tests is not as easy task as it may seem at first glance.
 In many cases, writing a good test can be as hard as writing
 good application code.
-While readability and maintainability are both
- <!-- more --> desirable features in application code,they are not always required.
-For tests, on the other hand, readability and maintainability are a must.
+While readability and maintainability are both desirable features in application code, they are not always required.
+For tests, on the other hand, readability and maintainability are a must.<!-- more --> 
 This article will explore a simple approach to making your tests better
 and show how you can improve your tests by breaking them into steps.
 Because there are different types, we will specifically focus
