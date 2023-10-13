@@ -1,7 +1,7 @@
 ---
 title: "Sketching Combinations For Combinatorial Tests"
 description: Sketching combinations for combinatorial tests using TestFlows
-date: 2023-10-11
+date: 2023-10-13
 author: Vitaliy Zakaznikov
 image:
    asset: images/sketching-combinations.png
@@ -25,13 +25,13 @@ def test_add(self):
     sign = {1, -1}
     check_add(
         a=either(*values, i="a") * either(*sign, i="sign_of_a"),
-        b=either(*values,i="b") * either(*sign, i="sign_of_b")
+        b=either(*values, i="b") * either(*sign, i="sign_of_b")
     )
 ```
 {% endhtml %}
 <!-- more -->
 
-Due to the problem of [combinatorial explosion](/blog/combinatorial-testing-the-introduction/#Exhaustive-testing-and-the-combinatorial-explosion-problem), a practical application of
+Due to the problem with the [combinatorial explosion](/blog/combinatorial-testing-the-introduction/#Exhaustive-testing-and-the-combinatorial-explosion-problem), a practical application of
 combinatorial testing requires narrowing down the number of combinations that each test can explore.
 Combinatorial testing is often even put aside altogether, as testers think that the number of combinations
 is either very large or close to infinite and therefore nothing can be done, and they
@@ -63,7 +63,7 @@ def check_add(self, a, b):
         assert str(result) == expected, f"failed {result} != {expected}"
 ```
 
-Where the `check_add` is a parameterized test that calls the `add(a,b)` function and asserts the validity of the results.
+Where the `check_add` is a parameterized test that calls the `add(a,b)` function and asserts the validity of the result.
 
 # Basic test
 
@@ -166,7 +166,7 @@ def test_add(self):
     sign = {1, -1}
     check_add(
         a=either(*values, i="a") * either(*sign, i="sign_of_a"),
-        b=either(*values,i="b") * either(*sign, i="sign_of_b")
+        b=either(*values, i="b") * either(*sign, i="sign_of_b")
     )
 ```
 
@@ -181,7 +181,10 @@ def test_add(self):
     # possible values of the sign
     sign = {1, -1}
     # call check_add where `a` and `b` are either positive or negative of one of the possible values
-    check_add(a=either(*values, i="a") * either(*sign, i="sign_of_a"), b=either(*values,i="b") * either(*sign, i="sign_of_b"))
+    check_add(
+        a=either(*values, i="a") * either(*sign, i="sign_of_a"),
+        b=either(*values,i="b") * either(*sign, i="sign_of_b")
+    )
 ```
 
 Let's put together a complete test program that we can run.
@@ -245,15 +248,15 @@ Passing
 392 steps (392 ok)
 ```
 
-The six lines of test code all of a sudden converted into the execution of 196 combinations for the `add(a, b)` function under test!
+The six lines of test code all of a sudden converted into the execution of {%katex%}196{%endkatex%} combinations for the `add(a, b)` function under test!
 We actually covered all the possibilities defined by the `values` and `sign` sets.
 
 > {% katex %}
 combinations = 7 * 2 * 7 * 2 = 196
 {% endkatex %}
 
-To emphasize removing the supporting code, all the magic to create 196 combinations
-was done by {% testflows %} and these six lines in the body of the test:
+To emphasize, by removing the supporting code, all the magic to create {%katex%}196{%endkatex%} combinations
+was done by {% testflows %} in these six lines:
 
 ```python
     values = {0, 1, math.inf, math.nan, 1 / 3, 2**-200, 2**200}
@@ -269,7 +272,7 @@ to start seeing the true power of having combinatorial testing at their fingerti
 
 If you read the code carefully, you will notice that it is very intuitive, and the [either()] function defines
 the possibilities, so we don't have to worry about any for-loops or calculations of all the combinations.
-All the magic is done by {% testflows %}.
+All the magic is done by {% testflows %}!
 
 # Wrapping up
 
