@@ -1,0 +1,323 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Sketching Combinations For Combinatorial Tests | TestFlows</title>
+  <meta name="description" content="Sketching combinations for combinatorial tests using TestFlows">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+  
+  <link href="/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1697214707402" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1697214707402" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1697214707402" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo-white.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Sketching Combinations For Combinatorial Tests</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">October 13, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/sketching-combinations.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>Writing combinatorial tests usually requires that the author of the test plans for combinatorial testing upfront.
+This requires that all the combination variables and their values are identified and combined with the code
+that creates possible combinations and loops through each one of them. However, it would be nice to simplify the process and
+enable testers to write combinatorial tests in a manner that is as close as possible to a test that checks
+just one combination. This is where combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>‘es come in. A combinatorial
+sketch allows a tester to write combinatorial tests in an intuitive way without worrying about
+variable identification, calculation of combinations, and any explicit loops.</p>
+<div class="codeblock-image dark"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSketch(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">TE</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">    sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">    check_add(</span><br><span class="line">        a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">        b=either(*values, i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>)</span><br><span class="line">    )</span><br></pre></td></tr></table></figure></div>
+<span id="more"></span>
+
+<p>Due to the problem with the <a href="/blog/combinatorial-testing-the-introduction/#Exhaustive-testing-and-the-combinatorial-explosion-problem">combinatorial explosion</a>, a practical application of
+combinatorial testing requires narrowing down the number of combinations that each test can explore.
+Combinatorial testing is often even put aside altogether, as testers think that the number of combinations
+is either very large or close to infinite and therefore nothing can be done, and they
+only write test cases that only check one or a few of the combinations.</p>
+<h1 id="The-addition-function"><a href="#The-addition-function" class="headerlink" title="The addition function"></a>The addition function</h1><p>Let’s take a simple toy example, the <code>add(a, b)</code> function defined below, and see how we can write
+different tests for it to make sure it works as expected.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> a + b</span><br></pre></td></tr></table></figure>
+
+<h1 id="Typical-check"><a href="#Typical-check" class="headerlink" title="Typical check"></a>Typical check</h1><p>A typical test for checking the behavior of the <code>add(a, b)</code> function could look something like this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestCheck</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_add</span>(<span class="params">self, a, b</span>):</span><br><span class="line">    expected = <span class="built_in">str</span>(a + b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">f&quot;I call the add(<span class="subst">&#123;a&#125;</span>,<span class="subst">&#123;b&#125;</span>)&quot;</span>):</span><br><span class="line">        result = add(a=a, b=b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">f&quot;the result should be <span class="subst">&#123;expected&#125;</span>&quot;</span>):</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">str</span>(result) == expected, <span class="string">f&quot;failed <span class="subst">&#123;result&#125;</span> != <span class="subst">&#123;expected&#125;</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Where the <code>check_add</code> is a parameterized test that calls the <code>add(a,b)</code> function and asserts the validity of the result.</p>
+<h1 id="Basic-test"><a href="#Basic-test" class="headerlink" title="Basic test"></a>Basic test</h1><p>Basic testing of the <code>add(a, b)</code> function could then use a feature
+that calls the <code>check_add</code> test with different values for <code>a</code> and <code>b</code> of the tester’s choosing.
+For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    check_add(<span class="number">0</span>, <span class="number">1</span>)</span><br><span class="line">    check_add(<span class="number">1</span>, math.inf)</span><br><span class="line">    check_add(math.nan, math.nan)</span><br><span class="line">    check_add(<span class="number">1</span>, -<span class="number">1</span>)</span><br><span class="line">    check_add(<span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>)</span><br><span class="line">    check_add(<span class="number">1</span>/<span class="number">3</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="More-advanced-test"><a href="#More-advanced-test" class="headerlink" title="More advanced test"></a>More advanced test</h1><p>Of course, a more advanced tester could also move all the cases into something like a list of tuples data structure,
+and use a for-loop to check each case. Maybe something like this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestFeature</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    examples = [</span><br><span class="line">        (<span class="number">0</span>, <span class="number">1</span>),</span><br><span class="line">        (<span class="number">1</span>, math.inf),</span><br><span class="line">        (math.nan, math.nan),</span><br><span class="line">        (<span class="number">1</span>, -<span class="number">1</span>),</span><br><span class="line">        (<span class="number">2</span>**-<span class="number">200</span>, (<span class="number">2</span>**<span class="number">200</span>),</span><br><span class="line">        (<span class="number">1</span>/<span class="number">3</span>, <span class="number">1</span>),</span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">for</span> example <span class="keyword">in</span> examples:</span><br><span class="line">        a, b = example</span><br><span class="line">        check_add(a=a, b=b)</span><br></pre></td></tr></table></figure>
+
+<p>This version looks ok and seems like it would allow you to easily add more explicit cases as needed. However,
+the two versions are conceptually the same. We are only checking six combinations
+of <code>a</code> and <code>b</code> values. We could add more cases, but the list would become pretty
+long. Is there a better way?</p>
+<h1 id="Combinatorial-sketches-to-the-rescue"><a href="#Combinatorial-sketches-to-the-rescue" class="headerlink" title="Combinatorial sketches to the rescue!"></a>Combinatorial sketches to the rescue!</h1><p>Before sketching any combinations, let’s remember that the most basic test that checks just one combination
+looks like this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    check_add(<span class="number">0</span>, <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>It has no for-loops; it is simple and sweet. Actually, if you compare the basic and more advanced versions of the
+test, one might argue that the basic version is much cleaner than the second. So let’s take the
+simplest test above that checks only one combination and see how we can improve it with combinatorial methods.</p>
+<p>First, it is evident from both tests that the initial set of interesting values for the <code>a</code> and <code>b</code> parameters is the following:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span>/<span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Second, we note that any possible value in the set above could either be positive or negative.
+This can be easily expressed as multiplying a value by either a positive or negative one.
+This gives us another set:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Having the sets above defined, we can express a high-level test logic as follows:</p>
+<ol>
+<li>Let <code>a</code> be either of the possible values in the set of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">values</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span></span></span></span> multiplied by either of the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>g</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">sign</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">n</span></span></span></span> values</li>
+<li>Let <code>b</code> be either of the possible values in the set of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>v</mi><mi>a</mi><mi>l</mi><mi>u</mi><mi>e</mi><mi>s</mi></mrow><annotation encoding="application/x-tex">values</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="mord mathnormal">a</span><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="mord mathnormal">u</span><span class="mord mathnormal">e</span><span class="mord mathnormal">s</span></span></span></span> multiplied by either of the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>s</mi><mi>i</mi><mi>g</mi><mi>n</mi></mrow><annotation encoding="application/x-tex">sign</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.85396em;vertical-align:-0.19444em;"></span><span class="mord mathnormal">s</span><span class="mord mathnormal">i</span><span class="mord mathnormal" style="margin-right:0.03588em;">g</span><span class="mord mathnormal">n</span></span></span></span> values</li>
+<li>Call the <code>check_add</code> with the chosen values of <code>a</code> and <code>b</code></li>
+</ol>
+<p>Reading the three steps above, some might object that we are incorrectly using the word <code>either</code>.
+However, in modern English, the rules about using the word <code>either</code> are not as strict as they used to be
+and <code>either</code> could be used for more than two choices. But for some of you, it might sound weird.
+Here is a quote:</p>
+<blockquote><p>In modern English, it is not unacceptable to use “either” if you are given a choice between more than two items.</p>
+<footer><strong>One Minute English,</strong><cite><a target="_blank" rel="noopener external nofollow noreferrer" href="https://oneminuteenglish.org/en/either-more-than-two-options/">oneminuteenglish.org/en/either-more-than-two-options</a></cite></footer></blockquote>
+
+<h1 id="Let’s-sketch-it-out"><a href="#Let’s-sketch-it-out" class="headerlink" title="Let’s sketch it out"></a>Let’s sketch it out</h1><p>Having accepted the fact that in the modern world we could use the word <code>either</code> to choose from more than two values
+we could translate the three-step test procedure above into a combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>
+supported by <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSketch(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">TE</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">    sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">    check_add(</span><br><span class="line">        a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">        b=either(*values, i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>)</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>Here is the same code, but with comments:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSketch(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">TE</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="comment"># set of possible values for `a` and `b`</span></span><br><span class="line">    values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">    <span class="comment"># possible values of the sign</span></span><br><span class="line">    sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">    <span class="comment"># call check_add where `a` and `b` are either positive or negative of one of the possible values</span></span><br><span class="line">    check_add(</span><br><span class="line">        a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">        b=either(*values,i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>)</span><br><span class="line">    )</span><br></pre></td></tr></table></figure>
+
+<p>Let’s put together a complete test program that we can run.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">a, b</span>):</span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestCheck</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_add</span>(<span class="params">self, a, b</span>):</span><br><span class="line">    expected = <span class="built_in">str</span>(a + b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">f&quot;I call the add(<span class="subst">&#123;a&#125;</span>,<span class="subst">&#123;b&#125;</span>)&quot;</span>):</span><br><span class="line">        result = add(a=a, b=b)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">f&quot;the result should be <span class="subst">&#123;expected&#125;</span>&quot;</span>):</span><br><span class="line">        <span class="keyword">assert</span> <span class="built_in">str</span>(result) == expected, <span class="string">f&quot;failed <span class="subst">&#123;result&#125;</span> != <span class="subst">&#123;expected&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSketch(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">TE</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">    sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">    check_add(</span><br><span class="line">        a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">        b=either(*values, i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>),</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> main():</span><br><span class="line">    test_add()</span><br></pre></td></tr></table></figure>
+
+<p>When executed, the program will produce the following output:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>   ⟥  Scenario test add, flags:TE</span><br><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>     ⟥  Combination pattern <span class="comment">#0, flags:TE</span></span><br><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>       ⟥  When I call the add(<span class="number">0</span>,<span class="number">0</span>)</span><br><span class="line">               279us       ⟥⟤ OK I call the add(<span class="number">0</span>,<span class="number">0</span>), /test add/pattern <span class="comment">#0/I call the add(0,0)</span></span><br><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>       ⟥  Then the result should be <span class="number">0</span></span><br><span class="line">               184us       ⟥⟤ OK the result should be <span class="number">0</span>, /test add/pattern <span class="comment">#0/the result should be 0</span></span><br><span class="line">               944us     ⟥⟤ OK pattern <span class="comment">#0, /test add/pattern #0</span></span><br><span class="line">...</span><br><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>     ⟥  Combination pattern <span class="comment">#195, flags:TE</span></span><br><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>       ⟥  When I call the add(-inf,-inf)</span><br><span class="line">               157us       ⟥⟤ OK I call the add(-inf,-inf), /test add/pattern <span class="comment">#195/I call the add(-inf,-inf)</span></span><br><span class="line">Oct <span class="number">12</span>,<span class="number">2023</span> <span class="number">20</span>:<span class="number">56</span>:<span class="number">21</span>       ⟥  Then the result should be -inf</span><br><span class="line">               157us       ⟥⟤ OK the result should be -inf, /test add/pattern <span class="comment">#195/the result should be -inf</span></span><br><span class="line">               618us     ⟥⟤ OK pattern <span class="comment">#195, /test add/pattern #195</span></span><br><span class="line">               242ms   ⟥⟤ OK test add, /test add</span><br><span class="line"></span><br><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /test add (242ms)</span><br><span class="line"></span><br><span class="line"><span class="number">1</span> scenario (<span class="number">1</span> ok)</span><br><span class="line"><span class="number">196</span> combinations (<span class="number">196</span> ok)</span><br><span class="line"><span class="number">392</span> steps (<span class="number">392</span> ok)</span><br></pre></td></tr></table></figure>
+
+<p>The six lines of test code all of a sudden converted into the execution of <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>196</mn></mrow><annotation encoding="application/x-tex">196</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">9</span><span class="mord">6</span></span></span></span> combinations for the <code>add(a, b)</code> function under test!
+We actually covered all the possibilities defined by the <code>values</code> and <code>sign</code> sets.</p>
+<blockquote>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mi>o</mi><mi>m</mi><mi>b</mi><mi>i</mi><mi>n</mi><mi>a</mi><mi>t</mi><mi>i</mi><mi>o</mi><mi>n</mi><mi>s</mi><mo>=</mo><mn>7</mn><mo>∗</mo><mn>2</mn><mo>∗</mo><mn>7</mn><mo>∗</mo><mn>2</mn><mo>=</mo><mn>196</mn></mrow><annotation encoding="application/x-tex">combinations = 7 * 2 * 7 * 2 = 196</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.69444em;vertical-align:0em;"></span><span class="mord mathnormal">c</span><span class="mord mathnormal">o</span><span class="mord mathnormal">m</span><span class="mord mathnormal">b</span><span class="mord mathnormal">i</span><span class="mord mathnormal">n</span><span class="mord mathnormal">a</span><span class="mord mathnormal">t</span><span class="mord mathnormal">i</span><span class="mord mathnormal">o</span><span class="mord mathnormal">n</span><span class="mord mathnormal">s</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">7</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">9</span><span class="mord">6</span></span></span></span>
+</blockquote>
+<p>To emphasize, by removing the supporting code, all the magic to create <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>196</mn></mrow><annotation encoding="application/x-tex">196</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">9</span><span class="mord">6</span></span></span></span> combinations
+was done by <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> in these six lines:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">check_add(</span><br><span class="line">    a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">    b=either(*values, i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>That is one sweet combinatorial test that takes testing to a whole new level and allows new test engineers
+to start seeing the true power of having combinatorial testing at their fingertips.</p>
+<p>If you read the code carefully, you will notice that it is very intuitive, and the <a href="/handbook/#Using-either">either()</a> function defines
+the possibilities, so we don’t have to worry about any for-loops or calculations of all the combinations.
+All the magic is done by <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span>!</p>
+<h1 id="Wrapping-up"><a href="#Wrapping-up" class="headerlink" title="Wrapping up"></a>Wrapping up</h1><p>With test <a href="/handbook/#Using-Sketches">Sketch</a>es, sketching out combinatorial tests becomes very easy. The use of the <a href="/handbook/#Using-either">either()</a> function
+introduces the possibilities into the test code that otherwise would just check only one combination.
+While the same functionality can be achieved using a standard combinatorial test code that uses either
+nested for-loops or computes all combinations using a <a href="/handbook/#Cartesian-Product">Cartesian product</a> function, the ease and fun
+of using test <a href="/handbook/#Using-Sketches">Sketch</a>es is unbeatable. Sketches allow us to express choices in a very natural way,
+and in more complicated test procedures, they are hard to match in terms of test code expression
+and readability.</p>
+<p>If you want to learn more, I invite you to read the <a href="/handbook/#Combinatorial-Tests">Combinatorial Tests</a> section in the <a href="/handbook">Handbook</a>
+to get a glimpse of how <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> can make your testing flow. Be sure to take <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span>
+combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You will have fun!</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer">
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <span class="authored-date text-nowrap">October 13, 2023</span>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+</script>
+
+    </div>
+  </div>
+  <div class="container-footer">
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://t.me/testflows">
+                        <span class="fab fa-2x fa-telegram-plane"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2022 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<!-- Cloudflare Web Analytics -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<!-- End Cloudflare Web Analytics -->
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+$("figure.highlight").hover( 
+    function() {
+        console.log("here");
+        var figure = $(this);
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
+            function() {
+                var button = $(this);
+                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                    function() {
+                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                    }
+                )
+            }
+        ));
+    }, function() {
+        $( this ).find("button").first().remove();
+    }
+);
+</script>
+
+</body>
+</html>
+
+

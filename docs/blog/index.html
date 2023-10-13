@@ -12,10 +12,10 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1697203228202" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/firefly.css?v=1697203228202" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1697214707402" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/firefly.css?v=1697214707402" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1697203228202" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1697214707402" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -78,6 +78,50 @@
     </div>
 </div>
 <div class="container" style="padding-bottom: 2em !important">
+
+    <div class="blog post">
+        <div class="post-header row">
+            <div class="post-summary col-lg-6 mt-auto mb-auto">
+                <a href=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/>
+                    <h1 style="font-weight: bold;">Sketching Combinations For Combinatorial Tests</h1>
+                </a>
+                <p>Writing combinatorial tests usually requires that the author of the test plans for combinatorial testing upfront.
+This requires that all the combination variables and their values are identified and combined with the code
+that creates possible combinations and loops through each one of them. However, it would be nice to simplify the process and
+enable testers to write combinatorial tests in a manner that is as close as possible to a test that checks
+just one combination. This is where combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>‘es come in. A combinatorial
+sketch allows a tester to write combinatorial tests in an intuitive way without worrying about
+variable identification, calculation of combinations, and any explicit loops.</p>
+<div class="codeblock-image dark"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSketch(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">TE</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">    sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">    check_add(</span><br><span class="line">        a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">        b=either(*values, i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>)</span><br><span class="line">    )</span><br></pre></td></tr></table></figure></div><i class="post-summary-more">...</i>
+            </div>
+            <div class="post-image col-lg-6 m-auto">
+                <a href=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/>
+                    <img src="/images/sketching-combinations.png"></img>
+                    <span class="post-image-credit"></span>
+                </a>
+            </div>
+            <div class="post-metadata row m-auto">
+                <div class="col-md-12">
+                    <div class="post-author">
+                        <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                        <span class="authored-date text-nowrap">October 13, 2023</span>
+                    </div>
+                    <div class="post-share btn-group" role="group" aria-label="share">
+                        <span class="caption">Share It</span>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                            <i class="fab fa-2x fa-twitter"></i>
+                        </a>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                            <i class="fab fa-2x fa-facebook"></i>
+                        </a>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
+                            <i class="fab fa-2x fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="blog post">
         <div class="post-header row">

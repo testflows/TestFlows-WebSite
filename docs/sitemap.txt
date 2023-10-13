@@ -1,3 +1,4 @@
+https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
 https://testflows.com/blog/how-to-break-your-tests-into-steps/
 https://testflows.com/handbook/index.html
 https://testflows.com/blog/combinatorial-testing-the-introduction/
