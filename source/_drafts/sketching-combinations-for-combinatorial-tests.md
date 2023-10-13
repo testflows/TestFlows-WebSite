@@ -8,10 +8,10 @@ image:
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Writing combinatorial tests usually requires that the author of the test plans for combinatorial testing upfront.
+Writing combinatorial tests usually requires that the author of the test plan be upfront.
 This requires that all the combination variables and their values are identified and combined with the code
 that creates possible combinations and loops through each one of them. However, it would be nice to simplify the process and
-enable testers to write combinatorial tests in a manner that is as close as possible to a test the checks
+enable testers to write combinatorial tests in a manner that is as close as possible to a test that checks
 just one combination. This is where combinatorial [Sketch]'es come in. A combinatorial
 sketch allows a tester to write combinatorial tests in an intuitive way without worrying about
 variable identification, calculation of combinations, and any explicit loops.
@@ -30,13 +30,13 @@ def test_add(self):
 
 Due to the problem of [combinatorial explosion](/blog/combinatorial-testing-the-introduction/#Exhaustive-testing-and-the-combinatorial-explosion-problem), a practical application of
 combinatorial testing requires narrowing down the number of combinations that each test can explore.
-Combinatorial testing is often even put aside altogether as testers think that the number of combinations
-is either very large or close to infinite and therefore nothing can be done and they
-only write test cases that only check one or just a few of the combinations.
+Combinatorial testing is often even put aside altogether, as testers think that the number of combinations
+is either very large or close to infinite and therefore nothing can be done, and they
+only write test cases that only check one or a few of the combinations.
 
 # The addition function
 
-Let's take a simple toy example, the `add(a, b)` function defined below and see how we can write
+Let's take a simple toy example, the `add(a, b)` function defined below, and see how we can write
 different tests for it to make sure it works as expected.
 
 ```python
@@ -46,7 +46,7 @@ def add(a, b):
 
 # Typical check
 
-A typical test for checking the behavior of the `add(a, b)` function could look something like this.
+A typical test for checking the behavior of the `add(a, b)` function could look something like this:
 
 ```python
 @TestCheck
@@ -64,8 +64,8 @@ Where the `check_add` is a parameterized test that calls the `add(a,b)` function
 
 # Basic test
 
-Basic testing of the `add(a, b)` function then could use a feature
-that calls the `check_add` test with different values for `a` and `b` of tester's choosing.
+Basic testing of the `add(a, b)` function could then use a feature
+that calls the `check_add` test with different values for `a` and `b` of the tester's choosing.
 For example,
 
 ```python
@@ -81,7 +81,7 @@ def test_add(self):
 
 # More advanced test
 
-Of course a more advanced tester could also move all the cases into something like a list of tuples data structure
+Of course, a more advanced tester could also move all the cases into something like a list of tuples data structure,
 and use a for-loop to check each case. Maybe something like this:
 
 ```python
@@ -100,14 +100,14 @@ def test_add(self):
         check_add(a=a, b=b)
 ```
 
-This version looks ok and seems like it would allow to easily add more explicit cases as needed. However,
-the two version are conceptually the same. We are only checking six combinations
+This version looks ok and seems like it would allow you to easily add more explicit cases as needed. However,
+the two versions are conceptually the same. We are only checking six combinations
 of `a` and `b` values. We could add more cases, but the list would become pretty
 long. Is there a better way?
 
 # Combinatorial sketches to the rescue!
 
-Before sketching any combinations let's remember that the most basic test that checks just one combination
+Before sketching any combinations, let's remember that the most basic test that checks just one combination
 looks like this:
 
 ```python
@@ -116,7 +116,7 @@ def test_add(self):
     check_add(0, 1)
 ```
 
-It has no for-loops, it is simple and sweet. Actually, if you compare the basic and more advanced versions of the
+It has no for-loops; it is simple and sweet. Actually, if you compare the basic and more advanced versions of the
 test, one might argue that the basic version is much cleaner than the second. So let's take the
 simplest test above that checks only one combination and see how we can improve it with combinatorial methods.
 
@@ -127,14 +127,14 @@ values = {0, 1, math.inf, math.nan, 1/3, 2**-200, 2**200}
 ```
 
 Second, we note that any possible value in the set above could either be positive or negative.
-This can easily expressed as multiplying a value by either positive or negative one.
+This can be easily expressed as multiplying a value by either a positive or negative one.
 This gives us another set:
 
 ```python
 sign = {1, -1}
 ```
 
-Having the sets above defined, we can express a high level test logic as follows:
+Having the sets above defined, we can express a high-level test logic as follows:
 
 1. Let `a` be either of the possible values in the set of {% katex %}values{% endkatex %} multiplied by either of the {% katex %}sign{% endkatex %} values
 2. Let `b` be either of the possible values in the set of {% katex %}values{% endkatex %} multiplied by either of the {% katex %}sign{% endkatex %} values
@@ -142,7 +142,7 @@ Having the sets above defined, we can express a high level test logic as follows
 
 Reading the three steps above, some might object that we are incorrectly using the word `either`.
 However, in modern English, the rules about using the word `either` are not as strict as they used to be
-and `either` could be used for more than two choices. But, yet, for some of you it might sound weird.
+and `either` could be used for more than two choices. But for some of you, it might sound weird.
 Here is a quote:
 
 {% blockquote One Minute English, https://oneminuteenglish.org/en/either-more-than-two-options/ %}
@@ -151,7 +151,7 @@ In modern English, it is not unacceptable to use “either” if you are given a
 
 # Let's sketch it out
 
-Having accepted the fact that in the modern world we could use the word `either` to chose from more than two values
+Having accepted the fact that in the modern world we could use the word `either` to choose from more than two values
 we could translate the three-step test procedure above into a combinatorial [Sketch]
 supported by {% testflows %} as follows:
 
@@ -167,7 +167,7 @@ def test_add(self):
     )
 ```
 
-Here is the same code but with comments:
+Here is the same code, but with comments:
 
 ```python
 @TestSketch(Scenario)
@@ -242,14 +242,14 @@ Passing
 392 steps (392 ok)
 ```
 
-The six lines of test code all of the sudden converted into execution of 196 combinations for the `add(a, b)` function under test!
+The six lines of test code all of a sudden converted into the execution of 196 combinations for the `add(a, b)` function under test!
 We actually covered all the possibilities defined by the `values` and `sign` sets.
 
 > {% katex %}
 combinations = 7 * 2 * 7 * 2 = 196
 {% endkatex %}
 
-To emphasize, removing the supporting code, all the magic to create 196 combinations
+To emphasize removing the supporting code, all the magic to create 196 combinations
 was done by {% testflows %} and these six lines in the body of the test:
 
 ```python
@@ -261,11 +261,11 @@ was done by {% testflows %} and these six lines in the body of the test:
     )
 ```
 
-That is one sweet combinatorial test which takes testing to a whole new level and allows new test engineers
-to start seeing the true power of having combinatorial testing at their finger tips.
+That is one sweet combinatorial test that takes testing to a whole new level and allows new test engineers
+to start seeing the true power of having combinatorial testing at their fingertips.
 
-If you read the code carefully, you will notice that it very intuitive and the [either()] function defines
-the possibilities and we don't have to worry about any for-loops or calculation of all the combinations.
+If you read the code carefully, you will notice that it is very intuitive, and the [either()] function defines
+the possibilities, so we don't have to worry about any for-loops or calculations of all the combinations.
 All the magic is done by {% testflows %}.
 
 # Wrapping up
@@ -274,8 +274,8 @@ With test [Sketch]es, sketching out combinatorial tests becomes very easy. The u
 introduces the possibilities into the test code that otherwise would just check only one combination.
 While the same functionality can be achieved using a standard combinatorial test code that uses either
 nested for-loops or computes all combinations using a [Cartesian product] function, the ease and fun
-of using test [Sketch]es is unbeatable. Sketches allow to express choices in very natural way,
-and in more complicated test procedures they are hard to match in terms of test code expression
+of using test [Sketch]es is unbeatable. Sketches allow us to express choices in a very natural way,
+and in more complicated test procedures, they are hard to match in terms of test code expression
 and readability.
 
 If you want to learn more, I invite you to read the [Combinatorial Tests] section in the [Handbook]
