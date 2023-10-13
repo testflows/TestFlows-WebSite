@@ -5199,7 +5199,7 @@ A simple approach to check all possible combinations is to use a [TestSketch].
 > ✋ [Sketch]es currently do not support filtering or [Covering Arrays].
 > See [Filtering Combinations] and [Covering Array Combinations] for more details.
 
-A [TestSketch] allow you to check all possible combinations, where each combination
+A [TestSketch] allows you to check all possible combinations, where each combination
 variable and its values are defined by the [either() function].
 [TestSketch] with [either() function] makes writing combinatorial tests
 as simple as writing a simple test that would check one combination.
