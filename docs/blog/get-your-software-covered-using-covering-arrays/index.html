@@ -12,9 +12,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1697503714763" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1697504711313" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1697503714763" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1697504711313" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -268,20 +268,20 @@ window.addEventListener('scroll', function (event) {
 // codeblock copy
 $("figure.highlight").hover(
     function() {
-        console.log("here");
         var figure = $(this);
-        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
-            function() {
-                var button = $(this);
-                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
-                    function() {
-                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
-                    }
-                )
-            }
-        ));
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
     }, function() {
         $( this ).find("button").first().remove();
+    }
+);
+$("figure.highlight").click(
+    function() {
+        var figure = $(this);
+        navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+            function() {
+                figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+            }
+        )
     }
 );
 // hero graph

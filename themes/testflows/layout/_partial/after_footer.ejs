@@ -24,20 +24,20 @@ window.addEventListener('scroll', function (event) {
 // codeblock copy
 $("figure.highlight").hover(
     function() {
-        console.log("here");
         var figure = $(this);
-        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>").click(
-            function() {
-                var button = $(this);
-                navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
-                    function() {
-                        button.find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
-                    }
-                )
-            }
-        ));
+        $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
     }, function() {
         $( this ).find("button").first().remove();
+    }
+);
+$("figure.highlight").click(
+    function() {
+        var figure = $(this);
+        navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+            function() {
+                figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+            }
+        )
     }
 );
 // hero graph
