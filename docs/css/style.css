@@ -301,7 +301,6 @@ blockquote::-webkit-scrollbar {
     margin: auto;
     font-size: 1.1em;
     padding-top: 2em;
-    overflow-x: auto;
 }
 .post-body h1,
 .post-body h2,
@@ -698,7 +697,6 @@ code, pre, figure.highlight {
 
 .content {
     min-height: 100vh;
-    overflow-x: hidden;
 }
 
 .text-success {
