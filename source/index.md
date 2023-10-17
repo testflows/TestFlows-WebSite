@@ -33,7 +33,7 @@ layout: index
   </a>
 </div>
 <div class="banner-description">
-<h4>enterprise quality open-source<br>software test automation framework</h4>
+<h4>Open-source test automation framework.</h4>
 <h1>Try now.</h1>
 </div>
 <div class="command-shadow"></div>

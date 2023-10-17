@@ -4,7 +4,7 @@
 
 # Site
 title: Enterprise Quality Assurance Testing Framework
-description: TestFlows is a flexible open-source Python software testing framework that implements an enterprise quality assurance process with full requirement traceability
+description: TestFlows is a flexible open-source Python test automation framework that implements an enterprise quality assurance process with full requirement traceability
 keywords:
 author:
 language: en
