@@ -301,7 +301,7 @@ blockquote::-webkit-scrollbar {
     margin: auto;
     font-size: 1.1em;
     padding-top: 2em;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 .post-body h1,
 .post-body h2,
@@ -322,7 +322,7 @@ blockquote::-webkit-scrollbar {
 
 .post-summary {
     text-align: start;
-    overflow-x: scroll;
+    overflow-x: auto;
     color: white;
 }
 
@@ -698,7 +698,7 @@ code, pre, figure.highlight {
 
 .content {
     min-height: 100vh;
-    overflow-x: scroll;
+    overflow-x: hidden;
 }
 
 .text-success {
