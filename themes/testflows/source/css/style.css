@@ -529,7 +529,7 @@ blockquote::-webkit-scrollbar {
 .users-banner {
     background: black;
     color: white;
-    padding-top: 2em;
+    padding: 1em;
 }
 
 .users-banner h2 {
