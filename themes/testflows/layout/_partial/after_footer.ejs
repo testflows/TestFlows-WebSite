@@ -1,9 +1,8 @@
 <script src="<%- config.root %>js/jquery-3.4.1.slim.js"></script>
 <script src="<%- config.root %>js/popper.min.js"></script>
 <script src="<%- config.root %>js/bootstrap/bootstrap.min.js"></script>
-<!-- Cloudflare Web Analytics -->
+<script src="https://unpkg.com/3d-force-graph@1.72.3/dist/3d-force-graph.min.js"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
-<!-- End Cloudflare Web Analytics -->
 <script>
 var isInViewport = function (elem) {
     var bounding = elem.getBoundingClientRect();
@@ -23,7 +22,7 @@ window.addEventListener('scroll', function (event) {
 	}
 }, false);
 // codeblock copy
-$("figure.highlight").hover( 
+$("figure.highlight").hover(
     function() {
         console.log("here");
         var figure = $(this);
@@ -41,4 +40,48 @@ $("figure.highlight").hover(
         $( this ).find("button").first().remove();
     }
 );
+// hero graph
+function heroGraph() {
+    const distance = 1750;
+    const N = 8;
+    const msb = n => Math.max(0, 31 - Math.clz32(n));
+    const gData = {
+        nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
+        links: [...Array(2*((2**(N+1)-2)-2**N)).keys()]
+        .map(id => ({
+            source: Math.floor(id/2),
+            target: id+2
+        }))
+    };
+    start = gData.nodes.length;
+    gData.nodes.push({id:start, group: 2, val:msb(start)});
+    gData.links.push({source: start, target: 0});
+    gData.links.push({source: start, target: 1});
+    window.Graph = ForceGraph3D()
+    //.dagMode('td')
+    //.dagLevelDistance(200)
+    (document.getElementById('banner-graph'))
+	.nodeAutoColorBy('group')
+    .linkAutoColorBy(d => gData.nodes[d.source].group)
+	.onNodeDragEnd(node => {
+        node.fx = node.x;
+        node.fy = node.y;
+        node.fz = node.z;
+    })
+    .linkDirectionalArrowLength(3.5)
+    .linkDirectionalArrowRelPos(1)
+    .graphData(gData);
+    // camera orbit
+    let angle = 0;
+    let isRotationActive = true;
+    window.Graph.cameraPosition({
+        x: distance * Math.sin(angle),
+        z: distance * Math.cos(angle)
+    });
+}
+heroGraph();
+window.addEventListener('resize', () => {
+    window.Graph.height(window.innerHeight);
+    window.Graph.width(window.innerWidth);
+});
 </script>

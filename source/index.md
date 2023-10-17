@@ -5,23 +5,38 @@ layout: index
 {% html div class="container-fluid text-center p-0" style="overflow-x: clip; padding-bottom: 1em !important" %}
 
 {% html div class="banner in-view-watcher" %}
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<div class="firefly"></div>
-<p>
-<img src="/img/logo-white.png" alt="Logo" style= "width: 70vw; max-width: 400px; padding-bottom: 2em;">
-</p>
+<div id="banner-graph" class="banner-graph"></div>
+{% html div class="banner-content" %}
 
-### enterprise quality open-source test framework
-#### that makes testing flow
-<div class="row justify-content-center no-gutters" style="padding-top: 3vh">
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="3000" data-wrap="false">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+        <h1>Testing is exploring.</h1>
+    </div>
+    <div class="carousel-item">
+        <h1>Flexible. Modular. Inspiring.</h1>
+        <h3>Write test programs not just tests. Learn more.</h3>
+    </div>
+    <div class="carousel-item">
+        <h1>Join the mission.</h1>
+        <h3>Start your journey. Start testing.<br>Explore with us.</h3>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+<div class="banner-description">
+<h4>enterprise quality open-source<br>software test automation framework</h4>
+<h1>Try now.</h1>
+</div>
+<div class="command-shadow"></div>
+<div class="row justify-content-center no-gutters">
 <div class="command">
 ```bash
 pip3 install testflows
@@ -49,6 +64,8 @@ pip3 install testflows
         </div>
     </div>
 </div>
+{% endhtml %}
+<div class="banner-wave"><img src="/images/wave.png"></img></div>
 {% endhtml %}
 
 {% html div class="users-banner" %}
