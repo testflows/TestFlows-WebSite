@@ -43,7 +43,7 @@ $("figure.highlight").click(
 // hero graph
 function heroGraph() {
     const distance = 1750;
-    const N = 8;
+    const N = 7;
     const msb = n => Math.max(0, 31 - Math.clz32(n));
     const gData = {
         nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
