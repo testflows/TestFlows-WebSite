@@ -808,6 +808,7 @@ body {
   position: relative;
   color: rgb(4, 13, 28);
   font-size: 18px;
+  text-wrap: balance;
 }
 
 /**
