@@ -8,18 +8,19 @@ layout: index
 <div id="banner-graph" class="banner-graph"></div>
 {% html div class="banner-content" %}
 
-<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="3000" data-wrap="false">
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="4000" data-wrap="false">
   <div class="carousel-inner">
     <div class="carousel-item active">
         <h1>Testing is exploring.</h1>
+        <h3>Exploring is an adventure.</h3>
     </div>
     <div class="carousel-item">
         <h1>Flexible. Modular. Inspiring.</h1>
-        <h3>Write test programs not just tests. Learn more.</h3>
+        <h3>Write test programs, not just tests. Learn more.</h3>
     </div>
     <div class="carousel-item">
         <h1>Join the mission.</h1>
-        <h3>Start your journey. Start testing.<br>Explore with us.</h3>
+        <h3>Start your journey. Start testing with us.</h3>
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -54,6 +55,11 @@ pip3 install testflows
             <button type="button" class="btn btn-secondary">
                 <a href="https://t.me/testflows">
                     <span class="fab fa-3x fa-telegram-plane"></span>
+                </a>
+            </button>
+            <button type="button" class="btn btn-secondary">
+                <a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
+                    <span class="fab fa-3x fa-linkedin"></span>
                 </a>
             </button>
             <button type="button" class="btn btn-secondary">
