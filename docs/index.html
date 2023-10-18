@@ -7,14 +7,19 @@
   <meta name="description" content="TestFlows is a flexible open-source Python test automation framework that implements an enterprise quality assurance process with full requirement traceability">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="TestFlows">
+  <meta name="og:site_name" content="TestFlows">
   
-  <link href="/img/favicon.ico" rel="icon">
+  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1697554964597" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1697660038240" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1697554964597" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1697660038240" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -356,6 +361,23 @@ Then execute it.</div>
 
 <section ><div class="container-fluid section-header section-header-top"><div class="section-bg-wrapper"><div class="section-bg section-bg-top"></div></div>
 <h1 id="Actively-Developed"><a href="#Actively-Developed" class="headerlink" title="Actively Developed"></a><strong>Actively Developed</strong></h1><h2 id="become-part-of-the-team"><a href="#become-part-of-the-team" class="headerlink" title="become part of the team"></a>become part of the team</h2><h2 id="and-join-us-on-GitHub"><a href="#and-join-us-on-GitHub" class="headerlink" title="and join us on GitHub"></a>and join us on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></h2><h2 id="or-follow-us-to-get-the-latest-updates"><a href="#or-follow-us-to-get-the-latest-updates" class="headerlink" title="or follow us to get the latest updates"></a>or follow us to get the latest updates</h2></div></section>
+<script>
+window.onload = function() {
+    heroGraph();
+    window.addEventListener('resize', () => {
+        window.Graph.height(window.innerHeight);
+        window.Graph.width(window.innerWidth);
+    });
+    $(".banner .command").click(
+        function() {
+            window.Graph.dagMode(window.Graph.dagGraphModes[Graph.currentDagMode]);
+            window.Graph.dagLevelDistance(200);
+            window.Graph.currentDagMode = (window.Graph.currentDagMode + 1) % window.Graph.dagGraphModes.length;
+        }
+    );
+}
+</script>
+
 
 
 
@@ -479,12 +501,9 @@ function heroGraph() {
         x: distance * Math.sin(angle),
         z: distance * Math.cos(angle)
     });
+    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
+    window.Graph.currentDagMode = 0;
 }
-heroGraph();
-window.addEventListener('resize', () => {
-    window.Graph.height(window.innerHeight);
-    window.Graph.width(window.innerWidth);
-});
 </script>
 
 </body>

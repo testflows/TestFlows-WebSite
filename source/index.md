@@ -710,4 +710,21 @@ user-node :)
 ## or follow us to get the latest updates
 {% endhtml %}
 {% endhtml %}
+<script>
+window.onload = function() {
+    heroGraph();
+    window.addEventListener('resize', () => {
+        window.Graph.height(window.innerHeight);
+        window.Graph.width(window.innerWidth);
+    });
+    $(".banner .command").click(
+        function() {
+            window.Graph.dagMode(window.Graph.dagGraphModes[Graph.currentDagMode]);
+            window.Graph.dagLevelDistance(200);
+            window.Graph.currentDagMode = (window.Graph.currentDagMode + 1) % window.Graph.dagGraphModes.length;
+        }
+    );
+}
+</script>
+
 

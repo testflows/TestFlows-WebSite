@@ -1,5 +1,5 @@
 favicon: "img/favicon.ico"
-brand: brand.png
+brand: "img/logo.png"
 menu:
   - title: About
     url: about

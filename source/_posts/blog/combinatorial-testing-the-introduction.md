@@ -1,6 +1,7 @@
 ---
+post: true
 title: "Combinatorial Testing: The Introduction"
-description: Introduction to combinatorial testing using TestFlows
+description: Introduction to combinatorial testing using TestFlows.
 date: 2023-10-10
 author: Vitaliy Zakaznikov
 image:

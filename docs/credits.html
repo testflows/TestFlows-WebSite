@@ -7,14 +7,19 @@
   <meta name="description" content="TestFlows website credits">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="TestFlows">
+  <meta name="og:site_name" content="TestFlows">
   
-  <link href="/img/favicon.ico" rel="icon">
+  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1697554964597" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1697660038240" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1697554964597" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1697660038240" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -202,12 +207,9 @@ function heroGraph() {
         x: distance * Math.sin(angle),
         z: distance * Math.cos(angle)
     });
+    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
+    window.Graph.currentDagMode = 0;
 }
-heroGraph();
-window.addEventListener('resize', () => {
-    window.Graph.height(window.innerHeight);
-    window.Graph.width(window.innerWidth);
-});
 </script>
 
 </body>

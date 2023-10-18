@@ -1,6 +1,7 @@
 ---
+post: true
 title: Get Your Software Covered Using Covering Arrays
-description: Article about how TestFlows enables using covering arrays as part of combinatorial testing
+description: Article about how TestFlows enables using covering arrays as part of combinatorial testing.
 date: 2023-10-02
 author: Vitaliy Zakaznikov
 image:

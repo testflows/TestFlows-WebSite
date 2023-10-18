@@ -1,6 +1,7 @@
 ---
+post: true
 title: Making Your Tests Better or How to Break Your Tests Into Steps
-description: An article about how tests can be broken up into steps using TestFlows
+description: An article about how tests can be broken up into steps using TestFlows.
 date: 2019-11-24 08:26:26
 author: Vitaliy Zakaznikov
 image:

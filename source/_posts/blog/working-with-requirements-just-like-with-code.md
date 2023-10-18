@@ -1,6 +1,7 @@
 ---
+post: true
 title: Working With Requirements Just Like With Code
-description: Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown
+description: Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown.
 date: 2023-09-25
 author: Vitaliy Zakaznikov
 image:

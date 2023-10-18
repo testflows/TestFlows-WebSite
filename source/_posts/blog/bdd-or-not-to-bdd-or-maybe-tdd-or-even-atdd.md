@@ -1,6 +1,7 @@
 ---
+post: true
 title: BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?
-description: Article discussing how the choice of a software development process affects quality assurance team
+description: Article discussing how the choice of a software development process affects quality assurance team.
 date: 2023-10-03
 author: Vitaliy Zakaznikov
 image:

@@ -78,10 +78,7 @@ function heroGraph() {
         x: distance * Math.sin(angle),
         z: distance * Math.cos(angle)
     });
+    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
+    window.Graph.currentDagMode = 0;
 }
-heroGraph();
-window.addEventListener('resize', () => {
-    window.Graph.height(window.innerHeight);
-    window.Graph.width(window.innerWidth);
-});
 </script>

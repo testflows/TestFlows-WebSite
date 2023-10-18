@@ -1,6 +1,7 @@
 ---
+post: true
 title: "Sketching Combinations For Combinatorial Tests"
-description: Sketching combinations for combinatorial tests using TestFlows
+description: Sketching combinations for combinatorial tests using TestFlows.
 date: 2023-10-13
 author: Vitaliy Zakaznikov
 image:
