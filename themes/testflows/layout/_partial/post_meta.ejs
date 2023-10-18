@@ -1,6 +1,7 @@
 <meta name="image" property="og:image" content="<%- full_url_for(page.image.asset) %>">
+<meta name="publish_date" property="og:publish_date" content="<%- date(page.date, 'YYYY-MM-DD') %>"
 <meta property="og:type" content="article">
-<meta property="article:published_time" content="<%- new Date(page.date).toJSON().slice(0, 10) %>" />
+<meta property="article:published_time" content="<%- date(page.date, 'YYYY-MM-DD') %>" />
 <meta property="og:title" content="<%- page.title %>">
 <meta property="og:image" content="<%- full_url_for(page.image.asset) %>">
 <meta property="og:description" content="<%- page.description %>">
