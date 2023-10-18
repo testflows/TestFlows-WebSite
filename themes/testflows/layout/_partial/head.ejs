@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="<%- page.author || 'TestFlows'%>">
   <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="<%- full_url_for(config.social_share) %>">
   <% if (config.image) { %>
   <link rel="preload" as="image" href="<%- full_url_for(config.image) %>">
-  <% } %>
+    <% } %>
   <% if (page.post) { %>
   <%- partial('_partial/post_meta') %>
   <% } %>
