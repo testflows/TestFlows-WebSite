@@ -4,8 +4,7 @@ title: "Sketching Combinations For Combinatorial Tests"
 description: Sketching combinations for combinatorial tests using TestFlows.
 date: 2023-10-13
 author: Vitaliy Zakaznikov
-image:
-   asset: images/sketching-combinations.png
+image: images/sketching-combinations.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 

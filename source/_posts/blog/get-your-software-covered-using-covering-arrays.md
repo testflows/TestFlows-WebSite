@@ -4,8 +4,7 @@ title: Get Your Software Covered Using Covering Arrays
 description: Article about how TestFlows enables using covering arrays as part of combinatorial testing.
 date: 2023-10-02
 author: Vitaliy Zakaznikov
-image:
-   asset: images/covering-arrays.png
+image: images/covering-arrays.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 

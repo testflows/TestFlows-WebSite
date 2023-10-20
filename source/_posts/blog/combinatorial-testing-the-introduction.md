@@ -4,8 +4,7 @@ title: "Combinatorial Testing: The Introduction"
 description: Introduction to combinatorial testing using TestFlows.
 date: 2023-10-10
 author: Vitaliy Zakaznikov
-image:
-   asset: images/combinatorial-tests-intro.png
+image: images/combinatorial-tests-intro.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
