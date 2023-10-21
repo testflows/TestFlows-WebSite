@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://testflows.com/index.html</loc>
+    
+    <lastmod>2023-10-21</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://testflows.com/blog/working-with-requirements-just-like-with-code/</loc>
     
     <lastmod>2023-10-20</lastmod>
@@ -56,15 +65,6 @@
   </url>
   
   <url>
-    <loc>https://testflows.com/index.html</loc>
-    
-    <lastmod>2023-10-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://testflows.com/credits.html</loc>
     
     <lastmod>2023-10-16</lastmod>
@@ -112,7 +112,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2023-10-20</lastmod>
+    <lastmod>2023-10-21</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

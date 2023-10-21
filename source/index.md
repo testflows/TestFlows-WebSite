@@ -20,7 +20,7 @@ layout: index
     </div>
     <div class="carousel-item">
         <h1>Join the mission.</h1>
-        <h3>Start your journey. Start testing with us.</h3>
+        <h3>Start testing with us. Start exploring.</h3>
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -34,7 +34,7 @@ layout: index
 </div>
 <div class="banner-description">
 <h4>Open-source test automation framework.</h4>
-<h1>Try now.</h1>
+<h2>Try now.</h1>
 </div>
 <div class="command-shadow"></div>
 <div class="row justify-content-center no-gutters">

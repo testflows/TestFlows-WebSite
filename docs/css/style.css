@@ -126,6 +126,19 @@ blockquote::-webkit-scrollbar {
         max-height: calc(100vh);
         overflow-y: scroll;
     }
+
+    .banner h1 {
+        font-size: 4em !important;
+    }
+
+    .banner h2 {
+        font-size: 3em !important;
+        font-weight: bolder;
+    }
+
+    .banner h3 {
+        font-size: 2.5em !important;
+    }
  }
 
 #sidebar::-webkit-scrollbar {
