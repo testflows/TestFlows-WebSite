@@ -42,7 +42,7 @@ $("figure.highlight").click(
 );
 // hero graph
 function heroGraph() {
-    const distance = 1750;
+    const distance = 2350;
     const N = 7;
     const msb = n => Math.max(0, 31 - Math.clz32(n));
     const gData = {
@@ -58,6 +58,7 @@ function heroGraph() {
     gData.links.push({source: start, target: 0});
     gData.links.push({source: start, target: 1});
     window.Graph = ForceGraph3D()
+    .backgroundColor("black")
     //.dagMode('td')
     //.dagLevelDistance(200)
     (document.getElementById('banner-graph'))

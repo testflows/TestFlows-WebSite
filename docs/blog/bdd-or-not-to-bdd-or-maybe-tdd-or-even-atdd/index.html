@@ -30,9 +30,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1697913761050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1697934429754" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1697913761050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1697934429754" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -278,7 +278,7 @@ $("figure.highlight").click(
 );
 // hero graph
 function heroGraph() {
-    const distance = 1750;
+    const distance = 2350;
     const N = 7;
     const msb = n => Math.max(0, 31 - Math.clz32(n));
     const gData = {
@@ -294,6 +294,7 @@ function heroGraph() {
     gData.links.push({source: start, target: 0});
     gData.links.push({source: start, target: 1});
     window.Graph = ForceGraph3D()
+    .backgroundColor("black")
     //.dagMode('td')
     //.dagLevelDistance(200)
     (document.getElementById('banner-graph'))
