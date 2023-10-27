@@ -133,7 +133,6 @@ blockquote::-webkit-scrollbar {
 
     .banner h2 {
         font-size: 3em !important;
-        font-weight: bolder;
     }
 
     .banner h3 {
@@ -888,4 +887,160 @@ Styled tables
 .styled-table tbody tr.active-row {
     font-weight: bold;
     color: #54e5ae;
+}
+
+/****************************/
+/* Assistant                */
+/****************************/
+
+.assistant .form-control,
+.assistant .form-control:focus,
+.assistant .input-group-text,
+.assistant .input-group-text:focus {
+    border: 1px solid black;
+    border-radius: 0;
+    box-shadow: none;
+    transition: none;
+}
+
+.assistant label {
+    text-align: left;
+    font-weight: 100;
+}
+
+.assistant .input-group-text {
+    background: black;
+    color: white;
+    box-shadow: none !important;
+    transition: none;
+}
+
+.assistant textarea {
+    box-sizing: border-box;
+    padding: 1em;
+    border: 1px solid black;
+}
+
+.assistant textarea::placeholder {
+    color: purple;
+}
+
+.assistant *:focus {
+    outline: none;
+}
+
+.assistant .box-questions
+{
+    background-color: white;
+    color: black;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.assistant #status {
+    font-size: smaller;
+    text-transform: capitalize;
+}
+
+.assistant #history{
+    overflow: auto;
+    height: 60vh;
+  }
+
+.assistant #message-input {
+    display: block;
+    width: 100%;
+    border: none;
+    /*background: #0affd0% ; */
+    color: black;
+  }
+
+.assistant .my-message,
+.assistant .response-message {
+    color: black;
+    margin: 0;
+    padding: 0.5em;
+    border: none;
+    text-wrap: pretty;
+    background-color: white;
+    margin-left: 1.3em;
+}
+
+.assistant .my-message {
+    border-left: 1px solid black;
+}
+
+.assistant .response-message {
+    border-left: 1px solid white;
+    padding-left: 2em;
+    padding-right: 2em;
+}
+
+.assistant .box-response-message,
+.assistant .box-my-message {
+    line-height: 0;
+}
+
+.assistant #history::-webkit-scrollbar,
+.assistant .message-input-box::-webkit-scrollbar {
+    display: none !important;
+}
+
+.assistant .box-response-message .message-icon {
+    background: black;
+    color: lime;
+}
+
+.assistant .box-my-message .message-icon {
+    background: white;
+    color: deepskyblue;
+}
+
+.assistant .box-response-message {
+    background: black;
+}
+
+.assistant .my-message {
+    text-align: left;
+}
+
+.assistant .message-icon {
+    width: 100%;
+    text-align: left;
+    padding-left: 0.5em;
+    padding-top: 0.5em;
+}
+
+.assistant .response-message {
+    text-align: left;
+    background-color: black;
+    color: white;
+}
+
+.assistant .message-input-box {
+    position: relative;
+    border: 1px solid black;
+    max-height: 22vh;
+    overflow-y: auto;
+}
+
+.assistant .message-input-box .btn {
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+}
+
+.assistant .message-input-box .btn.active {
+    color: #02a257;
+}
+
+.assistant .message-input-box .btn:focus,
+.assistant .message-input-box .btn:active {
+    border: none;
+    outline: none !important;
+    box-shadow: none;
 }

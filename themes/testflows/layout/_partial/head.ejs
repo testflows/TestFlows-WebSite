@@ -8,7 +8,7 @@
   <meta property="og:image" content="<%- full_url_for(page.image || config.social_share) %>">
   <% if (config.image) { %>
   <link rel="preload" as="image" href="<%- full_url_for(config.image) %>">
-    <% } %>
+  <% } %>
   <% if (page.post) { %>
   <%- partial('_partial/post_meta') %>
   <% } %>

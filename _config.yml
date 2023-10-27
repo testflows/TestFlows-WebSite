@@ -20,6 +20,9 @@ menu:
   Blog:
     path: /blog
     icon: fas fa-blog
+  Assistant:
+    path: /assistant
+    icon: fas fa-robot
   About:
     path: /about.html
     icon: fas fa-info-circle

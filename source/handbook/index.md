@@ -4503,7 +4503,7 @@ can be accessed as long as the same context variable is not redefined by the cur
 test.
 
 The main use case for using `context` is to avoid passing along common arguments
-to sub-tests, and becuase `context`s enable them to pass_automatically_.
+to sub-tests, and becuase `context`s enable them to pass **automatically**.
 
 Also, test clean up functions can be added to the current test using `context`.
 See [Cleanup Functions](#Cleanup-Functions).
