@@ -1,3 +1,5 @@
+https://testflows.com/assistant/index.html
+https://testflows.com/handbook/index.html
 https://testflows.com/index.html
 https://testflows.com/blog/working-with-requirements-just-like-with-code/
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
@@ -6,7 +8,6 @@ https://testflows.com/blog/get-your-software-covered-using-covering-arrays/
 https://testflows.com/blog/combinatorial-testing-the-introduction/
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
 https://testflows.com/credits.html
-https://testflows.com/handbook/index.html
 https://testflows.com/about.html
 https://testflows.com/blog/index.html
 https://testflows.com/contact.html
