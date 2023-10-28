@@ -950,7 +950,7 @@ Styled tables
     color: black;
     width: 100%;
     text-align: center;
-    height: 60vh;
+    height: 45vh;
     overflow-y: auto;
 }
 
@@ -988,7 +988,8 @@ Styled tables
     text-wrap: pretty;
     background-color: white;
     margin-left: 1.3em;
-    max-width: 125%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 .assistant .my-message {
