@@ -894,7 +894,7 @@ Styled tables
 /****************************/
 
 .assistant {
-    height: calc(100vh - 90px);
+    height: calc(100vh - 68px);
 }
 
 .assistant .form-control,
