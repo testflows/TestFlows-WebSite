@@ -968,6 +968,10 @@ Styled tables
     margin-bottom: 1em;
 }
 
+.assistant #status.text-success {
+    color: purple;
+}
+
 .assistant #history{
     overflow: auto;
 }
