@@ -917,46 +917,66 @@ Styled tables
 
 .assistant textarea {
     box-sizing: border-box;
-    padding: 1em;
+    padding: 0;
     border: 1px solid black;
+    font-family: monospace;
+    font-weight: 0.85em;
 }
 
 .assistant textarea::placeholder {
-    color: purple;
+    color: grey;
+    font-family: monospace;
+    font-size: 0.85em;
 }
 
 .assistant *:focus {
     outline: none;
 }
 
+.assistant figure.highlight {
+    border: none;
+    margin: 0;
+    padding: 0;
+}
+
+.assistant .assistant-control {
+    background-color: white;
+    padding-bottom: 1em;
+}
+
 .assistant .box-questions
 {
     background-color: white;
     color: black;
-    height: 100%;
     width: 100%;
     text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    height: 60vh;
+    overflow-y: auto;
 }
 
 .assistant #status {
     font-size: smaller;
-    text-transform: capitalize;
+    text-align: left;
+    border-bottom: 1px solid black;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
 }
 
 .assistant #history{
     overflow: auto;
-    height: 60vh;
-  }
+}
+
+.assistant .api-key-box {
+    padding-top: 1em;
+}
 
 .assistant #message-input {
     display: block;
     width: 100%;
     border: none;
-    /*background: #0affd0% ; */
     color: black;
+    font-size: 0.75em;
   }
 
 .assistant .my-message,
@@ -968,6 +988,7 @@ Styled tables
     text-wrap: pretty;
     background-color: white;
     margin-left: 1.3em;
+    max-width: 125%;
 }
 
 .assistant .my-message {
@@ -985,7 +1006,8 @@ Styled tables
     line-height: 0;
 }
 
-.assistant #history::-webkit-scrollbar,
+.assistant textarea::-webkit-scrollbar,
+.assistant .box-questions::-webkit-scrollbar,
 .assistant .message-input-box::-webkit-scrollbar {
     display: none !important;
 }
@@ -1023,24 +1045,46 @@ Styled tables
 
 .assistant .message-input-box {
     position: relative;
-    border: 1px solid black;
     max-height: 22vh;
     overflow-y: auto;
+    border-bottom: 1px solid black;
 }
 
-.assistant .message-input-box .btn {
-    position: absolute;
-    bottom: 1em;
+.assistant .message-input-box .btn-group {
+    position: sticky;
+    bottom: 0em;
     right: 1em;
 }
 
-.assistant .message-input-box .btn.active {
-    color: #02a257;
+.assistant .message-input-box .btn-group .btn {
+    padding: 5px !important;
+    margin: 0 !important;
+    font-size: 1.5em !important;
 }
 
-.assistant .message-input-box .btn:focus,
-.assistant .message-input-box .btn:active {
-    border: none;
+.assistant #btn-cancel {
+    position: absolute;
+}
+
+.assistant .message-input-box .btn-group .btn.active {
+    color: #54e5ae;
+}
+
+.assistant .message-input-box .btn-group &:active,
+.assistant .message-input-box .btn-group &:focus,
+.assistant .message-input-box .btn-group &:hover,
+.assistant .message-input-box .btn-group &:active:focus,
+.assistant .message-input-box .btn-group .btn,
+.assistant .message-input-box .btn-group .btn a,
+.assistant .message-input-box .btn-group .btn a:active,
+.assistant .message-input-box .btn-group .btn a:focus,
+.assistant .message-input-box .btn-group .btn a:hover  {
+    border: none !important;
     outline: none !important;
-    box-shadow: none;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+.assistant .btn.codeblock-copy {
+    color: #54e5ae;
 }
