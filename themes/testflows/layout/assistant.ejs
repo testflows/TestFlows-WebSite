@@ -1,4 +1,4 @@
-<div class="page container-fluid text-center p-0" style="padding-bottom: 2em !important">
+<div class="page container-fluid text-center p-0">
     <div class="banner in-view-watcher">
         <h1><%- page.title %></h1>
         <h2><%- page.heading %></h2>
@@ -6,23 +6,30 @@
     </div>
 </div>
 <div class="assistant">
-    <div class="container" style="padding-bottom: 2em !important;">
-        <div class="box-questions">
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon3">Access Key</span>
-                </div>
-                <input type="password" name="password" class="form-control" placeholder="Enter your assistant's access key here" id="api-key" aria-describedby="basic-addon3">
-            </div>
-            <div id="status">Waiting for prompt ...</div>
-            <div class="message-input-box">
-                <textarea id="message-input" name="message-input" rows="5" placeholder="Type your request here. Refer to TestFlows as testflows.core ..."></textarea>
-                <button class="btn" id="btn-submit" onclick="sendMessage()">
-                    <span class="fas fa-2x fa-comment pr-2"></span>
-                </button>
-              </div>
+    <div class="container">
+        <div class="box-questions" id="box-questions">
             <div id="history"></div>
-          </div>
+        </div>
+    </div>
+    <div class="container assistant-control" id="assistant-control">
+        <div id="status" class="text-success"><br></div>
+        <div class="message-input-box">
+            <textarea id="message-input" class="code" name="message-input" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="startMessage()"></textarea>
+            <div class="btn-group float-right" role="group" aria-label="control buttons">
+                <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
+                    <a class="fas fa-comment-slash"></a>
+                </button>
+                <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
+                    <a class="fas fa-keyboard"></a>
+                </button>
+            </div>
+        </div>
+        <div class="api-key-box input-group mb-3" id="api-key-box">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon3">Access Key</span>
+            </div>
+            <input type="password" name="password" class="form-control" placeholder="Enter your assistant's access key here" id="api-key" aria-describedby="basic-addon3">
+        </div>
     </div>
 </div>
 <script>
@@ -81,11 +88,16 @@
                 Authorization: `Bearer ${apiKey}`,
             },
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(response.status);
+        })
         .then((response) => {
             var responseMessage = ''
             console.log(response)
-            status.innerHTML = response.status.toLowerCase().replace('_',' ') + ' ...'
+            status.innerHTML = 'Status: ' + response.status.toLowerCase().replace('_',' ')
             if ('stream' in response) {
                 for (chunk of response.stream) {
                     for (text of chunk.output.text) {
@@ -94,11 +106,85 @@
                 }
             }
             function cb() {
-                if (response.status != "COMPLETED" && response.status != "FAILED") {
+                if (response.status != 'COMPLETED' && response.status != 'FAILED' && response.status != 'CANCELLED') {
                     streamOutput(jobId, updateResponseMessage)
+                }
+                else {
+                    var message = document.getElementById('message-input')
+                    var send = document.getElementById('btn-submit')
+                    var cancel = document.getElementById('btn-cancel')
+                    send.classList.remove('invisible')
+                    cancel.classList.add('invisible')
+                    message.removeAttribute('message-id')
+                    message.disabled = false
+
+                    if (response.status != 'COMPLETED') {
+                        updateResponseMessage(`>>> error: ${response.status} <<<`, function(){})
+                    }
                 }
             }
             updateResponseMessage(responseMessage, cb)
+        })
+        .catch((e) => {
+            console.log(`Error -> ${e}`)
+            status.innerHTML = `${e}`
+            status.classList.add('text-danger')
+            status.classList.remove('text-success')
+        })
+    }
+
+    function startMessage() {
+        var message = document.getElementById('message-input')
+        var send = document.getElementById('btn-submit')
+        if (message.value) {
+            send.classList.remove('disabled')
+            send.classList.add('active')
+        }
+        else {
+            send.classList.add('disabled')
+            send.classList.remove('active')
+        }
+    }
+
+    function cancelMessage() {
+        var message = document.getElementById('message-input')
+        var status = document.getElementById('status')
+        var send = document.getElementById('btn-submit')
+        var cancel = document.getElementById('btn-cancel')
+
+        const message_id = message.getAttribute('message-id')
+        status.classList.remove('text-danger')
+        status.classList.add('text-success')
+        status.innerHTML = "Request: canceling"
+
+        fetch(`${url}/cancel/${message_id}`,{
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            },
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(response.status);
+        })
+        .then((response) => {
+            console.log(response)
+            status.innerHTML = 'Request: ' + response.status.toLowerCase()
+            if (response.status == 'CANCELLED') {
+                message.removeAttribute('message-id')
+                send.classList.remove('invisible')
+                cancel.classList.add('invisible')
+            }
+        })
+        .catch((e) => {
+            console.log(`Error -> ${e}`)
+            status.classList.add('text-danger')
+            status.classList.remove('text-success')
+            status.innerHTML = `${e}`
         })
     }
 
@@ -106,19 +192,29 @@
         var message = document.getElementById('message-input')
         var status = document.getElementById('status')
         var key = document.getElementById('api-key')
+        var send = document.getElementById('btn-submit')
+
+        status.classList.remove('text-danger', 'text-success')
+
+        if (send.classList.contains('disabled')) {
+            return
+        }
 
         if(!message.value) {
-            status.innerText = 'empty prompt ...'
+            status.innerText = 'Empty prompt'
+            status.classList.add('text-danger')
             return
         }
         else if(!key.value) {
-            status.innerText = 'no key ...'
+            status.innerText = 'No access key'
+            status.classList.add('text-danger')
             return
         }
 
         key_parts = key.value.split('|')
         if (key_parts.length < 2) {
-            status.innerText = 'invalid key format ...'
+            status.innerText = 'Invalid access key format'
+            status.classList.add('text-danger')
             return
         }
 
@@ -126,18 +222,25 @@
         apiKey = decrypt(apiKeyCode, key_parts[1])
 
         if (!url.startsWith('https://')) {
-            status.innerText = 'invalid key ...'
+            status.innerText = 'Invalid access key'
+            status.classList.add('text-danger')
             return
         }
 
         var btnSubmit = document.getElementById('btn-submit')
+        var btnCancel = document.getElementById('btn-cancel')
         var responseMessage = ''
 
         status.style.display = 'block'
-        status.innerHTML = 'sending...'
+        status.innerHTML = 'Sending'
+        status.classList.add('text-success')
+        message.disabled = true
         btnSubmit.disabled = true
         btnSubmit.style.cursor = 'not-allowed'
-        message.disabled = true
+        btnSubmit.classList.add('disabled')
+        btnSubmit.classList.add('invisible')
+        btnSubmit.classList.remove('active')
+        btnCancel.classList.remove('invisible')
 
         fetch(`${url}/run`,{
             method: 'POST',
@@ -152,16 +255,26 @@
                 }
             })
         })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(response.status);
+        })
         .then((response) => {
         console.log(response)
             updateMessage(message.value)
-        updateResponseMessage = createResponseMessage('')
+            updateResponseMessage = createResponseMessage('')
+            message.setAttribute('message-id', response.id)
             streamOutput(response.id, updateResponseMessage)
         })
         .catch((e) => {
             console.log(`Error -> ${e}`)
             status.innerHTML = `${e}`
+            status.classList.add('text-danger')
+            status.classList.remove('text-success')
+            btnSubmit.classList.remove('invisible', 'active')
+            btnCancel.classList.add('invisible')
         })
         .finally(() => {
             btnSubmit.disabled = false
@@ -182,56 +295,68 @@
     function updateMessage(message) {
         var historyBox = document.getElementById('history')
 
-        var boxMyMessage = document.createElement('div')
-        boxMyMessage.className = 'box-my-message'
+        var boxMyMessage = document.createElement('figure')
+        boxMyMessage.classList.add('box-my-message','highlight')
 
         var myMessageIcon = document.createElement('div')
         myMessageIcon.className = 'message-icon fas fa-users'
 
         var myMessage = document.createElement('pre')
-        myMessage.className = 'my-message'
+        myMessage.classList.add('my-message','code')
         myMessage.innerText = message
 
         boxMyMessage.appendChild(myMessageIcon)
         boxMyMessage.appendChild(myMessage)
 
         historyBox.appendChild(boxMyMessage)
-
-        historyBox.scrollTop = historyBox.scrollHeight
-        document.getElementsByClassName('box-questions')[0].scrollIntoView()
-        window.scrollBy(0, -70)
+        codeblock_copy()
     }
 
     function createResponseMessage(response) {
+        var questionsBox = document.getElementById('box-questions')
+        var controlBox = document.getElementById('assistant-control')
         var historyBox = document.getElementById('history')
 
-        var boxResponseMessage = document.createElement('div')
-        boxResponseMessage.className = 'box-response-message'
+        var boxResponseMessage = document.createElement('figure')
+        boxResponseMessage.classList.add('box-response-message', 'highlight')
 
         var chatResponseIcon = document.createElement('div')
         chatResponseIcon.className = 'message-icon fas fa-robot'
 
         var chatResponse = document.createElement('pre')
-        chatResponse.className = 'response-message'
+        chatResponse.classList.add('response-message','code')
         chatResponse.innerText = response
 
         boxResponseMessage.appendChild(chatResponseIcon)
         boxResponseMessage.appendChild(chatResponse)
 
         historyBox.appendChild(boxResponseMessage)
-        historyBox.scrollTop = historyBox.scrollHeight
+        codeblock_copy()
+
+        console.log("scrolling to the bottom")
+        questionsBox.scrollTop = questionsBox.scrollHeight
 
         function typeText(i, delay, text, element, cb) {
             text = text.replace('\r','')
+
+            at_the_bottom = false
+            if (questionsBox.scrollTop + 1 > (questionsBox.scrollHeight - questionsBox.offsetHeight)) {
+                at_the_bottom = true
+            }
+
             element.innerText += text.charAt(i)
-            historyBox.scrollTop = historyBox.scrollHeight
+
+            if (at_the_bottom) {
+                questionsBox.scrollTop = questionsBox.scrollHeight
+            }
+
             setTimeout(function(){
                 ((i < text.length - 1) ? typeText(i+1, delay, text, element, cb) : cb())
             }, delay)
         }
 
         function updateResponseMessage(chunk, cb) {
-            typeText(0, 20, chunk, chatResponse, cb)
+            typeText(0, 10, chunk, chatResponse, cb)
         }
 
         return updateResponseMessage

@@ -9,8 +9,10 @@
       <%- body %>
     </div>
   </div>
-  <div class="container-footer">
+  <div class="container-footer" id="container-footer">
+    <% if (!page.path.startsWith("assistant")) { %>
     <footer> <%- partial('_partial/footer') %> </footer>
+    <% } %>
   </div>
   <%- partial('_partial/after_footer') %>
 </body>
