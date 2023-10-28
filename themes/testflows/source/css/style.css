@@ -893,6 +893,10 @@ Styled tables
 /* Assistant                */
 /****************************/
 
+.assistant {
+    height: calc(100vh - 90px);
+}
+
 .assistant .form-control,
 .assistant .form-control:focus,
 .assistant .input-group-text,
@@ -942,6 +946,7 @@ Styled tables
 .assistant .assistant-control {
     background-color: white;
     padding-bottom: 1em;
+    height: 35%;
 }
 
 .assistant .box-questions
@@ -950,7 +955,7 @@ Styled tables
     color: black;
     width: 100%;
     text-align: center;
-    height: 45vh;
+    height: 65%;
     overflow-y: auto;
 }
 
