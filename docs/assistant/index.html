@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1698558232816" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1698558521163" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1698558232816" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1698558521163" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -280,10 +280,16 @@
     function moveDownMessage() {
         var message = document.getElementById('message-input')
         var history = document.getElementById('history')
-        historyPos = Math.max(historyPos - 1, 0)
-        var requests = history.querySelectorAll('.my-message')
-        message.value = requests[requests.length -1 - historyPos].innerText
-        message.dispatchEvent(new Event("input"))
+        historyPos = historyPos - 1
+        if (historyPos >= 0) {
+            var requests = history.querySelectorAll('.my-message')
+            message.value = requests[requests.length -1 - historyPos].innerText
+            message.dispatchEvent(new Event("input"))
+        }
+        else {
+            message.value = ''
+            historyPos = -1
+        }
     }
 
     function startMessage() {

@@ -200,10 +200,16 @@
     function moveDownMessage() {
         var message = document.getElementById('message-input')
         var history = document.getElementById('history')
-        historyPos = Math.max(historyPos - 1, 0)
-        var requests = history.querySelectorAll('.my-message')
-        message.value = requests[requests.length -1 - historyPos].innerText
-        message.dispatchEvent(new Event("input"))
+        historyPos = historyPos - 1
+        if (historyPos >= 0) {
+            var requests = history.querySelectorAll('.my-message')
+            message.value = requests[requests.length -1 - historyPos].innerText
+            message.dispatchEvent(new Event("input"))
+        }
+        else {
+            message.value = ''
+            historyPos = -1
+        }
     }
 
     function startMessage() {
