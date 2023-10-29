@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1698544106567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1698552454723" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1698544106567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1698552454723" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -72,15 +72,16 @@
     <div class="content">
       <div class="page container-fluid text-center p-0" id="welcome-banner">
     <div class="banner in-view-watcher">
+        <div id="banner-graph" class="banner-graph"></div>
         <h1>Assistant</h1>
         <h2>Helps you write your tests faster</h2>
-        <i class="fa-5x pt-3 fas fa-robot pt-5 pb-5"></i>
+        <i class="fa-5x pt-3 fas fa-robot pt-5 pb-5" style="color: lime"></i>
         <div id="api-key-status" class="text-success"><br></div>
-        <div class="api-key-box input-group mb-3" id="api-key-box">
-            <div class="input-group-prepend">
+        <div class="api-key-box input-group mb-3 col-sm-8" id="api-key-box">
+            <div class="input-group-prepend d-none d-sm-block">
               <span class="input-group-text" id="basic-addon3">Access Key</span>
             </div>
-            <input type="password" name="password" class="form-control" placeholder="Enter your assistant's access key here" id="api-key" aria-describedby="basic-addon3" oninput="checkApiKey()">
+            <input type="password" name="password" class="form-control text-center" placeholder="Enter access key here" id="api-key" aria-describedby="basic-addon3" oninput="checkApiKey()">
         </div>
     </div>
 </div>
@@ -105,6 +106,15 @@
         </div>
     </div>
 </div>
+<script>
+    window.onload = function() {
+        heroGraph();
+        window.addEventListener('resize', () => {
+            window.Graph.height(window.innerHeight);
+            window.Graph.width(window.innerWidth);
+        });
+    }
+</script>
 <script>
     const apiKeyCode = '69d2245ecf1e4049893c4327dfcaf5fdb795e548de43724ba8bfd4e01233891f3552fffa33ec7969'
     const urlCode = '2f31be98e988461fac622fed4fbe63a7298007609dd071c927ecb1475d25fb6f17433514b59a2e'

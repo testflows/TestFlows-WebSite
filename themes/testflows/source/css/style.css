@@ -980,15 +980,13 @@ Styled tables
 
 .api-key-box {
     padding-top: 1em;
-    max-width: 30em;
-    width: 50%;
     margin: auto;
 }
 
 .api-key-box .input-group-text {
     font-size: 1.2em;
     background: black;
-    color: lime;
+    color: deepskyblue;
 }
 
 .api-key-box input.form-control {
@@ -1014,10 +1012,17 @@ Styled tables
     padding: 0.5em;
     border: none;
     text-wrap: pretty;
-    margin-left: 2.2em;
+    margin-left: 0em;
     max-width: 100%;
     overflow-x: auto;
     font-size: 1em;
+}
+
+@media (min-width: 576px) {
+    .assistant .my-message,
+    .assistant .response-message {
+        margin-left: 2.2em;
+    }
 }
 
 .assistant .my-message {
@@ -1028,7 +1033,7 @@ Styled tables
     border-left: 1px solid white;
     padding-left: 2em;
     padding-right: 2em;
-    color: #52d4ff !important;
+    color: #fb69ff !important;
 }
 
 .assistant .box-response-message,

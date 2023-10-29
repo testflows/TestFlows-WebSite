@@ -1,0 +1,9 @@
+<script>
+    window.onload = function() {
+        heroGraph();
+        window.addEventListener('resize', () => {
+            window.Graph.height(window.innerHeight);
+            window.Graph.width(window.innerWidth);
+        });
+    }
+</script>

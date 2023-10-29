@@ -1,14 +1,15 @@
 <div class="page container-fluid text-center p-0" id="welcome-banner">
     <div class="banner in-view-watcher">
+        <div id="banner-graph" class="banner-graph"></div>
         <h1><%- page.title %></h1>
         <h2><%- page.heading %></h2>
-        <i class="fa-5x pt-3 <%- page.icon %>"></i>
+        <i class="fa-5x pt-3 <%- page.icon %>" style="color: lime"></i>
         <div id="api-key-status" class="text-success"><br></div>
-        <div class="api-key-box input-group mb-3" id="api-key-box">
-            <div class="input-group-prepend">
+        <div class="api-key-box input-group mb-3 col-sm-8" id="api-key-box">
+            <div class="input-group-prepend d-none d-sm-block">
               <span class="input-group-text" id="basic-addon3">Access Key</span>
             </div>
-            <input type="password" name="password" class="form-control" placeholder="Enter your assistant's access key here" id="api-key" aria-describedby="basic-addon3" oninput="checkApiKey()">
+            <input type="password" name="password" class="form-control text-center" placeholder="Enter access key here" id="api-key" aria-describedby="basic-addon3" oninput="checkApiKey()">
         </div>
     </div>
 </div>
@@ -33,6 +34,7 @@
         </div>
     </div>
 </div>
+<%- partial('_partial/hero_graph') %>
 <script>
     const apiKeyCode = '69d2245ecf1e4049893c4327dfcaf5fdb795e548de43724ba8bfd4e01233891f3552fffa33ec7969'
     const urlCode = '2f31be98e988461fac622fed4fbe63a7298007609dd071c927ecb1475d25fb6f17433514b59a2e'
