@@ -984,15 +984,6 @@ Styled tables
     font-size: 0.65em;
 }
 
-@media (min-width: 300px) {
-    .assistant #message-input::placeholder {
-        font-size: 1em;
-    }
-    .assistant #message-input {
-        font-weight: 1em;
-    }
-}
-
 .assistant #message-input {
     display: block;
     width: 100%;
@@ -1006,7 +997,25 @@ Styled tables
     border: 0px;
     font-family: monospace;
     font-weight: 0.75em;
-  }
+}
+
+@media (min-width: 300px) {
+    .assistant #message-input::placeholder {
+        font-size: 1em;
+    }
+    .assistant #message-input {
+        font-size: 1em;
+    }
+}
+
+@media (min-width: 576px) {
+    .assistant #message-input::placeholder {
+        font-size: 1.2em;
+    }
+    .assistant #message-input {
+        font-size: 1.2em;
+    }
+}
 
 .assistant .my-message,
 .assistant .response-message {
