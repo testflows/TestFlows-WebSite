@@ -834,7 +834,7 @@ a.header-anchor {
 body {
   position: relative;
   color: rgb(4, 13, 28);
-  font-size: 18px;
+  font-size: 1em;
   text-wrap: balance;
 }
 
