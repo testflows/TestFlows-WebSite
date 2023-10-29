@@ -899,26 +899,9 @@ Styled tables
     height: 100%;
 }
 
-.assistant .form-control,
-.assistant .form-control:focus,
-.assistant .input-group-text,
-.assistant .input-group-text:focus {
-    border: 1px solid black;
-    border-radius: 0;
-    box-shadow: none;
-    transition: none;
-}
-
 .assistant label {
     text-align: left;
     font-weight: 100;
-}
-
-.assistant .input-group-text {
-    background: black;
-    color: white;
-    box-shadow: none !important;
-    transition: none;
 }
 
 .assistant textarea {
@@ -983,15 +966,10 @@ Styled tables
     margin: auto;
 }
 
-.api-key-box .input-group-text {
-    font-size: 1.2em;
-    background: black;
-    color: deepskyblue;
-}
-
 .api-key-box input.form-control {
     font-size: 1.2em;
     background: black;
+    border: none;
 }
 
 .assistant #message-input {
