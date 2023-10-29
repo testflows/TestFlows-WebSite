@@ -24,18 +24,32 @@
                 <textarea id="message-input" class="code" name="message-input" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="startMessage()"></textarea>
                 <div class="message-filler"></div>
             </div>
-            <div class="btn-group-vertical float-right" role="group" aria-label="control buttons">
-                <button class="btn disabled" type="move-up" id="btn-move-up" onclick="moveUpMessage()">
-                    <a class="fas fa-arrow-up"></a>
-                </button>
+            <div class="btn-group" role="group" aria-label="control buttons">
+                <span class="btn-overlap-group">
+                    <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
+                        <a class="btn-icon fas fa-keyboard"></a>
+                        <span class="btn-text">Start</span>
+                    </button>
+                    <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
+                        <a class="btn-icon fas fa-comment-slash"></a>
+                        <span class="btn-text">Cancel</span>
+                    </button>
+                </span>
                 <button class="btn disabled" type="move-down" id="btn-move-down" onclick="moveDownMessage()">
-                    <a class="fas fa-arrow-down"></a>
+                    <a class="btn-icon fas fa-arrow-down"></a>
+                    <span class="btn-text">Down</span>
                 </button>
-                <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
-                    <a class="fas fa-comment-slash"></a>
+                <button class="btn disabled" type="reset" id="btn-reset" onclick="">
+                    <a class="btn-icon fas fa-redo"></a>
+                    <span class="btn-text">Reset</span>
                 </button>
-                <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
-                    <a class="fas fa-keyboard"></a>
+                <button class="btn disabled" type="move-up" id="btn-move-up" onclick="moveUpMessage()">
+                    <a class="btn-icon fas fa-arrow-up"></a>
+                    <span class="btn-text">Up</span>
+                </button>
+                <button class="btn disabled" type="submit" id="btn-submit-continue" onclick="">
+                    <a class="btn-icon fas fa-comment"></a>
+                    <span class="btn-text">Continue</span>
                 </button>
             </div>
         </div>

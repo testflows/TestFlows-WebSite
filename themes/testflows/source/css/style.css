@@ -1007,7 +1007,7 @@ Styled tables
 .assistant .my-message,
 .assistant .response-message {
     color: white;
-    background: black;
+    background: transparent;
     margin: 0;
     padding: 0.5em;
     border: none;
@@ -1016,6 +1016,7 @@ Styled tables
     max-width: 100%;
     overflow-x: auto;
     font-size: 1em;
+    padding-bottom: 1em;
 }
 
 @media (min-width: 576px) {
@@ -1026,11 +1027,11 @@ Styled tables
 }
 
 .assistant .my-message {
-    border-left: 1px solid white;
+    border-left: none
 }
 
 .assistant .response-message {
-    border-left: 1px solid white;
+    border-left: none;
     padding-left: 2em;
     padding-right: 2em;
     color: #fb69ff !important;
@@ -1049,7 +1050,7 @@ Styled tables
 }
 
 .assistant .box-response-message .message-icon {
-    background: black;
+    background: transparent;
     color: lime;
 }
 
@@ -1059,7 +1060,7 @@ Styled tables
 }
 
 .assistant .box-response-message {
-    background: black;
+    background: #21212d;
 }
 
 .assistant .my-message {
@@ -1076,7 +1077,7 @@ Styled tables
 
 .assistant .response-message {
     text-align: left;
-    background-color: black;
+    background: transparent;
     color: white;
 }
 
@@ -1089,19 +1090,39 @@ Styled tables
     position: relative;
 }
 
-.assistant-control .btn-group-vertical {
+.assistant-control .btn-group {
     position: absolute;
     bottom: 0em;
-    right: 1em;
+    width: 100%;
 }
 
-.assistant-control .btn-group-vertical .btn {
-    padding: 1px !important;
-    margin: 0 !important;
-    font-size: 2em !important;
+.assistant .btn-overlap-group {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
 }
 
-.assistant-control .btn-group-vertical .btn.disabled {
+.assistant-control .btn-group .btn {
+    padding: 1px;
+    padding-right: 0.5em;
+    padding-left: 0.5em;
+    margin: 0;
+    font-size: 1.5em;
+    display: -moz-inline-grid;
+    display: -ms-inline-grid;
+    display: inline-grid;
+}
+
+@media (min-width: 576px) {
+    .assistant-control .btn-group .btn {
+        font-size: 2em;
+    }
+}
+
+.assistant-control .btn-group .btn-text {
+    font-size: 0.5em;
+}
+
+.assistant-control .btn-group .btn.disabled {
     color: purple;
     cursor: not-allowed;
     pointer-events: none;
@@ -1109,22 +1130,22 @@ Styled tables
 
 .assistant-control #btn-cancel {
     position: absolute;
-    bottom: 0;
+    left: 0;
 }
 
-.assistant-control .btn-group-vertical .btn.active {
+.assistant-control .btn-group .btn.active {
     color: #54e5ae;
 }
 
-.assistant-control .btn-group-vertical &:active,
-.assistant-control .btn-group-vertical &:focus,
-.assistant-control .btn-group-vertical &:hover,
-.assistant-control .btn-group-vertical &:active:focus,
-.assistant-control .btn-group-vertical .btn,
-.assistant-control .btn-group-vertical .btn a,
-.assistant-control .btn-group-vertical .btn a:active,
-.assistant-control .btn-group-vertical .btn a:focus,
-.assistant-control .btn-group-vertical .btn a:hover  {
+.assistant-control .btn-group &:active,
+.assistant-control .btn-group &:focus,
+.assistant-control .btn-group &:hover,
+.assistant-control .btn-group &:active:focus,
+.assistant-control .btn-group .btn,
+.assistant-control .btn-group .btn a,
+.assistant-control .btn-group .btn a:active,
+.assistant-control .btn-group .btn a:focus,
+.assistant-control .btn-group .btn a:hover  {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
