@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1698535649356" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1698544106567" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1698535649356" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1698544106567" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -70,35 +70,38 @@
 
   <div class="container-fluid p-0">
     <div class="content">
-      <div class="page container-fluid text-center p-0">
+      <div class="page container-fluid text-center p-0" id="welcome-banner">
     <div class="banner in-view-watcher">
         <h1>Assistant</h1>
         <h2>Helps you write your tests faster</h2>
         <i class="fa-5x pt-3 fas fa-robot pt-5 pb-5"></i>
-    </div>
-</div>
-<div class="assistant container">
-    <div class="box-questions" id="box-questions">
-        <div id="history"></div>
-    </div>
-    <div class="container assistant-control" id="assistant-control">
-        <div id="status" class="text-success"><br></div>
-        <div class="message-input-box">
-            <textarea id="message-input" class="code" name="message-input" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="startMessage()"></textarea>
-            <div class="btn-group float-right" role="group" aria-label="control buttons">
-                <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
-                    <a class="fas fa-comment-slash"></a>
-                </button>
-                <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
-                    <a class="fas fa-keyboard"></a>
-                </button>
-            </div>
-        </div>
+        <div id="api-key-status" class="text-success"><br></div>
         <div class="api-key-box input-group mb-3" id="api-key-box">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon3">Access Key</span>
             </div>
-            <input type="password" name="password" class="form-control" placeholder="Enter your assistant's access key here" id="api-key" aria-describedby="basic-addon3">
+            <input type="password" name="password" class="form-control" placeholder="Enter your assistant's access key here" id="api-key" aria-describedby="basic-addon3" oninput="checkApiKey()">
+        </div>
+    </div>
+</div>
+<div class="assistant container-fluid d-none" id="assistant">
+    <div class="container">
+        <div class="box-questions" id="box-questions">
+            <div id="history"></div>
+        </div>
+        <div class="container assistant-control" id="assistant-control">
+            <div id="status" class="text-success"><br></div>
+            <div class="message-input-box">
+                <textarea id="message-input" class="code" name="message-input" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="startMessage()"></textarea>
+                <div class="btn-group float-right" role="group" aria-label="control buttons">
+                    <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
+                        <a class="fas fa-comment-slash"></a>
+                    </button>
+                    <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
+                        <a class="fas fa-keyboard"></a>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -145,6 +148,50 @@
         key = hex2array(key)
         code = hex2array(code)
         return new TextDecoder().decode(code.map((c,i) => c ^ key[i]))
+    }
+
+    function checkApiKey() {
+        var key = document.getElementById('api-key')
+        var status = document.getElementById('api-key-status')
+        var banner = document.getElementById('welcome-banner')
+        var assistant = document.getElementById('assistant')
+
+        if(!key.value) {
+            status.innerText = 'No access key'
+            return
+        }
+
+        key_parts = key.value.split('|')
+        if (key_parts.length < 2) {
+            status.innerText = 'Invalid access key format'
+            return
+        }
+
+        url = decrypt(urlCode, key_parts[0])
+        apiKey = decrypt(apiKeyCode, key_parts[1])
+
+        if (!url.startsWith('https://')) {
+            status.innerText = 'Invalid access key'
+            return
+        }
+
+        fetch(`${url}/status/1`,{
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            },
+        })
+        .then((response) => {
+            status.innerText = 'Access key is valid. Welcome!'
+            banner.classList.add('d-none')
+            assistant.classList.remove('d-none')
+        })
+        .catch((e) => {
+            console.log(`Error -> ${e}`)
+            status.innerHTML = 'Invalid access key'
+        })
     }
 
     function streamOutput(jobId, updateResponseMessage) {
@@ -275,34 +322,13 @@
             status.classList.add('text-danger')
             return
         }
-        else if(!key.value) {
-            status.innerText = 'No access key'
-            status.classList.add('text-danger')
-            return
-        }
-
-        key_parts = key.value.split('|')
-        if (key_parts.length < 2) {
-            status.innerText = 'Invalid access key format'
-            status.classList.add('text-danger')
-            return
-        }
-
-        url = decrypt(urlCode, key_parts[0])
-        apiKey = decrypt(apiKeyCode, key_parts[1])
-
-        if (!url.startsWith('https://')) {
-            status.innerText = 'Invalid access key'
-            status.classList.add('text-danger')
-            return
-        }
 
         var btnSubmit = document.getElementById('btn-submit')
         var btnCancel = document.getElementById('btn-cancel')
         var responseMessage = ''
 
         status.style.display = 'block'
-        status.innerHTML = 'Sending'
+        status.innerHTML = 'Status: sending'
         status.classList.add('text-success')
         message.disabled = true
         btnSubmit.disabled = true
