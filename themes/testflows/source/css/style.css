@@ -404,6 +404,18 @@ blockquote::-webkit-scrollbar {
     margin-top: 2em;
 }
 
+.container {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+@media (min-width: 576px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
 .container-fluid {
     padding-left: 0px;
     padding-right: 0px;
@@ -904,20 +916,6 @@ Styled tables
     font-weight: 100;
 }
 
-.assistant textarea {
-    box-sizing: border-box;
-    padding: 0;
-    border: 1px solid black;
-    font-family: monospace;
-    font-weight: 0.85em;
-}
-
-.assistant textarea::placeholder {
-    color: grey;
-    font-family: monospace;
-    font-size: 1em;
-}
-
 .assistant *:focus {
     outline: none;
 }
@@ -948,8 +946,7 @@ Styled tables
     font-size: smaller;
     text-align: left;
     border-bottom: 1px solid purple;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding: 1em;
     margin-bottom: 1em;
 }
 
@@ -972,14 +969,34 @@ Styled tables
     border: none;
 }
 
+.assistant #message-input::placeholder {
+    color: grey;
+    font-family: monospace;
+    font-size: 0.65em;
+}
+
+@media (min-width: 300px) {
+    .assistant #message-input::placeholder {
+        font-size: 1em;
+    }
+    .assistant #message-input {
+        font-weight: 1em;
+    }
+}
+
 .assistant #message-input {
     display: block;
     width: 100%;
     border: none;
     background: transparent;
     color: lime;
-    font-size: 1em;
+    font-size: 0.85em;
     resize: none;
+    box-sizing: border-box;
+    padding: 0;
+    border: 0px;
+    font-family: monospace;
+    font-weight: 0.75em;
   }
 
 .assistant .my-message,
@@ -1000,7 +1017,7 @@ Styled tables
 @media (min-width: 576px) {
     .assistant .my-message,
     .assistant .response-message {
-        margin-left: 2.2em;
+        margin-left: 3em;
     }
 }
 
@@ -1062,6 +1079,8 @@ Styled tables
 .assistant .message-input-box {
     position: relative;
     overflow-y: auto;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 .assistant-control {
@@ -1072,27 +1091,41 @@ Styled tables
     position: absolute;
     bottom: 0em;
     width: 100%;
+    padding-left:1em;
+    padding-right: 1em;
 }
 
 .assistant .btn-overlap-group {
-    padding-left: 0.5em;
+    padding-left: 0em;
     padding-right: 0.5em;
 }
 
 .assistant-control .btn-group .btn {
     padding: 1px;
-    padding-right: 0.5em;
-    padding-left: 0.5em;
+    padding-right: 0em;
+    padding-left: 0em;
     margin: 0;
-    font-size: 1.5em;
+    font-size: 1.2em;
     display: -moz-inline-grid;
     display: -ms-inline-grid;
     display: inline-grid;
 }
 
+@media (min-width: 300px) {
+    .assistant-control .btn-group .btn {
+        font-size: 1.8em;
+    }
+}
+
 @media (min-width: 576px) {
     .assistant-control .btn-group .btn {
         font-size: 2em;
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+    }
+    .assistant .btn-overlap-group {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
     }
 }
 
