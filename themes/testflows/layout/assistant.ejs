@@ -246,8 +246,20 @@
         })
         .then((response) => {
             console.log(response)
-            status.innerHTML = 'Request: ' + response.status.toLowerCase()
-            if (response.status == 'CANCELLED') {
+            cancelled = false
+            if (response.hasOwnProperty('status')) {
+                status.innerHTML = 'Request: ' + response.status.toLowerCase()
+                if (response.status == 'CANCELLED') {
+                    cancelled = true
+                }
+            }
+            if (response.hasOwnProperty('error')) {
+                status.innerHTML = 'Request: ' + response.error
+                if (response.error == 'job is already completed') {
+                    cancelled = true
+                }
+            }
+            if (cancelled) {
                 message.removeAttribute('message-id')
                 send.classList.remove('invisible')
                 cancel.classList.add('invisible')

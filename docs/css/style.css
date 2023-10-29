@@ -1011,7 +1011,7 @@ Styled tables
     margin: 0;
     padding: 0.5em;
     border: none;
-    text-wrap: pretty;
+    text-wrap: balance;
     margin-left: 0em;
     max-width: 100%;
     overflow-x: auto;
