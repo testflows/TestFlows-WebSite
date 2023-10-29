@@ -404,6 +404,11 @@ blockquote::-webkit-scrollbar {
     margin-top: 2em;
 }
 
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
 .container {
     padding-left: 0px;
     padding-right: 0px;
@@ -690,6 +695,10 @@ blockquote::-webkit-scrollbar {
 h1,h2,h3,h4 {
     text-align: center;
     font-weight: 300;
+}
+
+h1, .h1 {
+    font-size: 2em;
 }
 
 h2 {
