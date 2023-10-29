@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1698552619956" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1698557507258" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1698552619956" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1698557507258" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -94,14 +94,21 @@
             <div id="status" class="text-success"><br></div>
             <div class="message-input-box">
                 <textarea id="message-input" class="code" name="message-input" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="startMessage()"></textarea>
-                <div class="btn-group float-right" role="group" aria-label="control buttons">
-                    <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
-                        <a class="fas fa-comment-slash"></a>
-                    </button>
-                    <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
-                        <a class="fas fa-keyboard"></a>
-                    </button>
-                </div>
+                <div class="message-filler"></div>
+            </div>
+            <div class="btn-group-vertical float-right" role="group" aria-label="control buttons">
+                <button class="btn disabled" type="move-up" id="btn-move-up" onclick="moveUpMessage()">
+                    <a class="fas fa-arrow-up"></a>
+                </button>
+                <button class="btn disabled" type="move-down" id="btn-move-down" onclick="moveDownMessage()">
+                    <a class="fas fa-arrow-down"></a>
+                </button>
+                <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
+                    <a class="fas fa-comment-slash"></a>
+                </button>
+                <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
+                    <a class="fas fa-keyboard"></a>
+                </button>
             </div>
         </div>
     </div>
@@ -119,6 +126,7 @@
     const apiKeyCode = '69d2245ecf1e4049893c4327dfcaf5fdb795e548de43724ba8bfd4e01233891f3552fffa33ec7969'
     const urlCode = '2f31be98e988461fac622fed4fbe63a7298007609dd071c927ecb1475d25fb6f17433514b59a2e'
     var apiKey, url
+    var historyPos = -1
 
     function array2hex(array) {
         str = []
@@ -260,6 +268,24 @@
         })
     }
 
+    function moveUpMessage() {
+        var message = document.getElementById('message-input')
+        var history = document.getElementById('history')
+        historyPos = Math.min(historyPos + 1, history.querySelectorAll('.my-message').length-1)
+        var requests = history.querySelectorAll('.my-message')
+        message.value = requests[requests.length - 1 - historyPos].innerText
+        message.dispatchEvent(new Event("input"))
+    }
+
+    function moveDownMessage() {
+        var message = document.getElementById('message-input')
+        var history = document.getElementById('history')
+        historyPos = Math.max(historyPos - 1, 0)
+        var requests = history.querySelectorAll('.my-message')
+        message.value = requests[requests.length -1 - historyPos].innerText
+        message.dispatchEvent(new Event("input"))
+    }
+
     function startMessage() {
         var message = document.getElementById('message-input')
         var send = document.getElementById('btn-submit')
@@ -320,6 +346,9 @@
         var status = document.getElementById('status')
         var key = document.getElementById('api-key')
         var send = document.getElementById('btn-submit')
+        var cancel = document.getElementById('btn-cancel')
+        var move_up = document.getElementById('btn-move-up')
+        var move_down = document.getElementById('btn-move-down')
 
         status.classList.remove('text-danger', 'text-success')
 
@@ -333,20 +362,23 @@
             return
         }
 
-        var btnSubmit = document.getElementById('btn-submit')
-        var btnCancel = document.getElementById('btn-cancel')
         var responseMessage = ''
 
         status.style.display = 'block'
         status.innerHTML = 'Status: sending'
         status.classList.add('text-success')
         message.disabled = true
-        btnSubmit.disabled = true
-        btnSubmit.style.cursor = 'not-allowed'
-        btnSubmit.classList.add('disabled')
-        btnSubmit.classList.add('invisible')
-        btnSubmit.classList.remove('active')
-        btnCancel.classList.remove('invisible')
+        send.disabled = true
+        send.style.cursor = 'not-allowed'
+        send.classList.add('disabled')
+        send.classList.add('invisible')
+        send.classList.remove('active')
+        cancel.classList.remove('invisible')
+        move_up.classList.add('active')
+        move_up.classList.remove('disabled')
+        move_down.classList.add('active')
+        move_down.classList.remove('disabled')
+        historyPos = -1
 
         fetch(`${url}/run`,{
             method: 'POST',
@@ -379,12 +411,12 @@
             status.innerHTML = `${e}`
             status.classList.add('text-danger')
             status.classList.remove('text-success')
-            btnSubmit.classList.remove('invisible', 'active')
-            btnCancel.classList.add('invisible')
+            send.classList.remove('invisible', 'active')
+            cancel.classList.add('invisible')
         })
         .finally(() => {
-            btnSubmit.disabled = false
-            btnSubmit.style.cursor = 'pointer'
+            send.disabled = false
+            send.style.cursor = 'pointer'
             message.disabled = false
             message.value = ''
         })

@@ -1085,39 +1085,46 @@ Styled tables
     overflow-y: auto;
 }
 
-.assistant .message-input-box .btn-group {
-    position: sticky;
+.assistant-control {
+    position: relative;
+}
+
+.assistant-control .btn-group-vertical {
+    position: absolute;
     bottom: 0em;
     right: 1em;
 }
 
-.assistant .message-input-box .btn-group .btn {
-    padding: 5px !important;
+.assistant-control .btn-group-vertical .btn {
+    padding: 1px !important;
     margin: 0 !important;
     font-size: 2em !important;
 }
 
-.assistant .message-input-box .btn-group .btn.disabled {
+.assistant-control .btn-group-vertical .btn.disabled {
     color: purple;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
-.assistant #btn-cancel {
+.assistant-control #btn-cancel {
     position: absolute;
+    bottom: 0;
 }
 
-.assistant .message-input-box .btn-group .btn.active {
+.assistant-control .btn-group-vertical .btn.active {
     color: #54e5ae;
 }
 
-.assistant .message-input-box .btn-group &:active,
-.assistant .message-input-box .btn-group &:focus,
-.assistant .message-input-box .btn-group &:hover,
-.assistant .message-input-box .btn-group &:active:focus,
-.assistant .message-input-box .btn-group .btn,
-.assistant .message-input-box .btn-group .btn a,
-.assistant .message-input-box .btn-group .btn a:active,
-.assistant .message-input-box .btn-group .btn a:focus,
-.assistant .message-input-box .btn-group .btn a:hover  {
+.assistant-control .btn-group-vertical &:active,
+.assistant-control .btn-group-vertical &:focus,
+.assistant-control .btn-group-vertical &:hover,
+.assistant-control .btn-group-vertical &:active:focus,
+.assistant-control .btn-group-vertical .btn,
+.assistant-control .btn-group-vertical .btn a,
+.assistant-control .btn-group-vertical .btn a:active,
+.assistant-control .btn-group-vertical .btn a:focus,
+.assistant-control .btn-group-vertical .btn a:hover  {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
