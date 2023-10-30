@@ -2577,7 +2577,7 @@ def regression(self, arg0, arg1):
     note(arg1)
 ```
 
-When custom command line argument parser is defined then the help messages obtained using `-h` or `--help` option will include
+When custom command line argument parser is defined then the help gitmessages obtained using `-h` or `--help` option will include
 the description of the custom arguments. For example,
 
 ```bash
@@ -3888,7 +3888,7 @@ with Scenario("My scenario"):
 ## Outline
 
 An [Outline] can be defined using [Outline] test definition class or [TestOutline] decorator.
-An [Outline] is a sub-type of a [Test] type but can you can change the type
+An [Outline] is a sub-type of a [Test] type but you can change the type
 by passing it another [Type] or a [Sub-Type] such as [Scenario] or [Suite] etc.
 
 However, because [Outline]s are meant to be called from other tests or used with [Examples]
