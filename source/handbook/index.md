@@ -1736,7 +1736,7 @@ If we also want to set custom `examples`, you could do it as follows:
 Scenario(name="my new name", flags=PAUSE_BEFORE,
          examples=Examples("x y result", [
             (1,2,3), (2,2,4)
-         ], test=test)(x=1, y=1, result=2)
+         ]), test=test)(x=1, y=1, result=2)
 ```
 
 Similarly, any other attribute of the scenario can be set. If the same attribute
@@ -2581,7 +2581,7 @@ When custom command line argument parser is defined then the help messages obtai
 the description of the custom arguments. For example,
 
 ```bash
-python3 ./test.py
+python3 ./test.py --help
 ```
 ```bash
 ...
