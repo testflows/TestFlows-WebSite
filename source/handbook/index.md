@@ -2577,7 +2577,7 @@ def regression(self, arg0, arg1):
     note(arg1)
 ```
 
-When custom command line argument parser is defined then the help gitmessages obtained using `-h` or `--help` option will include
+When custom command line argument parser is defined then the help messages obtained using `-h` or `--help` option will include
 the description of the custom arguments. For example,
 
 ```bash
