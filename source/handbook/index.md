@@ -3910,7 +3910,7 @@ outline()
 
 When [Examples] are defined for the [Outline] and an outline is called with no arguments from a test
 that is of a higher [Type] than the [Type] of outline itself, then when called, the outline will iterate over all
-the examples defined in the [Examples] table. For example,if you run the example above that executes the outline
+the examples defined in the [Examples] table. For example, if you run the example above that executes the outline
 with no arguments, you will see that the outline iterates over all the examples in the [Examples] table, where
 each example, a row in the examples table, defines the values of the arguments for the outline.
 
