@@ -13,7 +13,13 @@
 <div class="assistant container-fluid d-none" id="assistant">
     <div class="container">
         <div class="box-questions" id="box-questions">
-            <div id="history"></div>
+            <div id="history">
+                <div class="btn-group" role="group" aria-label="control buttons">
+                    <button class="btn disabled" type="submit" id="btn-copy" onclick="copyMessages()">
+                        <a class="btn-icon far fa-copy"></a>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="container assistant-control" id="assistant-control">
             <div id="status" class="text-success"><br></div>
@@ -32,6 +38,10 @@
                         <span class="btn-text">Cancel</span>
                     </button>
                 </span>
+                <button class="btn disabled" type="submit" id="btn-submit-change" onclick="changeMessage()">
+                    <a class="btn-icon fas fa-comment-medical"></a>
+                    <span class="btn-text">Change</span>
+                </button>
                 <button class="btn disabled" type="move-down" id="btn-move-down" onclick="moveDownMessage()">
                     <a class="btn-icon fas fa-arrow-down"></a>
                     <span class="btn-text">Down</span>
@@ -145,6 +155,45 @@
         })
     }
 
+    function copyMessages() {
+        var history = document.getElementById('history')
+        var messages = history.querySelectorAll('.my-message')
+        var copy = document.getElementById('btn-copy')
+        var copy_icon = copy.querySelector('a')
+
+        var message = messages[messages.length-1-historyPos]
+        var response = document.getElementById(message.getAttribute('response-id'))
+        var context = messageContexts[message.getAttribute('id')]
+
+        console.log("copy", context)
+
+        navigator.clipboard.writeText(
+            function() {
+                var conversation = []
+                if (context != emptyContext) {
+                    conversation.push('### Context')
+                    conversation.push(context.trimStart().trimEnd())
+                }
+                conversation.push('### Instruction')
+                conversation.push(message.innerText.trimEnd())
+                conversation.push('### Response')
+                conversation.push(response.innerText.trimEnd())
+                return conversation.join('\n\n')
+            }()
+        ).then(
+            function() {
+                copy_icon.classList.remove('far')
+                copy_icon.classList.add('fas')
+                copy.classList.add('active')
+                setTimeout(function() {
+                    copy.classList.remove('active')
+                    copy_icon.classList.remove('fas')
+                    copy_icon.classList.add('far')
+                }, 1000);
+            }
+        )
+    }
+
     function scrollMessageIntoView(element) {
         element.scrollIntoView({
             behavior: 'auto',
@@ -219,11 +268,15 @@
         const send_reply = document.getElementById('btn-submit-reply')
 
         while (history.firstChild) {
-          history.removeChild(history.lastChild);
+            if (!history.lastChild.classList.contains('btn-group')) {
+                history.removeChild(history.lastChild);
+            }
         }
+
         messageContexts = {}
         message.setAttribute('data-message-id', '0')
         message.value = ''
+        historyPos = -1
 
         move_up.classList.add('disabled')
         move_down.classList.add('disabled')
@@ -237,6 +290,8 @@
         var history = document.getElementById('history')
         var move_down = document.getElementById('btn-move-down')
         var move_up = document.getElementById('btn-move-up')
+        var copy = document.getElementById('btn-copy')
+        copy.classList.remove('disabled')
 
         historyPos = Math.min(historyPos + 1, history.querySelectorAll('.my-message').length-1)
 
@@ -264,6 +319,7 @@
         var my_messages = history.querySelectorAll('.my-message')
         var move_up = document.getElementById('btn-move-up')
         var move_down = document.getElementById('btn-move-down')
+        var copy = document.getElementById('btn-copy')
 
         historyPos = historyPos - 1
         move_up.classList.remove('disabled')
@@ -280,6 +336,7 @@
 
             message.value = selected_message.innerText
             message.dispatchEvent(new Event("input"))
+            copy.classList.remove('disabled')
         }
         else {
             var prev_message = my_messages[my_messages.length -1]
@@ -288,6 +345,7 @@
             message.dispatchEvent(new Event("input"))
             historyPos = -1
             move_down.classList.add('disabled')
+            copy.classList.add('disabled')
         }
     }
 
@@ -379,7 +437,7 @@
             sendMessage()
             return
         }
-        // find the last message
+        // find selected message
         var last_message = messages[messages.length-1-(historyPos+1)]
         var last_message_response = document.getElementById(last_message.getAttribute('response-id'))
         // create context
@@ -522,8 +580,8 @@
         boxMyMessage.appendChild(myMessage)
 
         historyBox.appendChild(boxMyMessage)
-        codeblock_copy()
 
+        codeblock_copy()
 
         return myMessage
     }
