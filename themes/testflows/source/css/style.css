@@ -1054,6 +1054,11 @@ Styled tables
 .assistant .box-my-message {
     line-height: 0;
     background: black;
+    border: 3px solid black !important;
+}
+
+.assistant .box-my-message.active {
+    border: 3px solid deepskyblue !important;
 }
 
 .assistant textarea::-webkit-scrollbar,
@@ -1080,12 +1085,27 @@ Styled tables
     text-align: left;
 }
 
+.assistant .message-type-icon {
+    padding-right: 2em;
+    font-size: 0.75em;
+}
+
+.assistant .message-type-icon.fa-keyboard {
+    color: white;
+}
+
+.assistant .message-type-icon.fa-comment {
+    color: deepskyblue;
+}
+
 .assistant .message-icon {
     width: 100%;
     text-align: left;
     padding-left: 0.5em;
     padding-top: 0.5em;
     font-size: 2em;
+    display: flex;
+    justify-content: space-between;
 }
 
 .assistant .response-message {
@@ -1127,11 +1147,21 @@ Styled tables
     display: -moz-inline-grid;
     display: -ms-inline-grid;
     display: inline-grid;
+    color: #54e5ae;
+}
+
+.assistant-control #btn-cancel {
+    position: absolute;
+    left: 0;
+    padding-left: 0.6em;
 }
 
 @media (min-width: 300px) {
     .assistant-control .btn-group .btn {
         font-size: 1.8em;
+    }
+    .assistant-control #btn-cancel {
+        padding-left: 0.4em;
     }
 }
 
@@ -1145,6 +1175,9 @@ Styled tables
         padding-left: 0.5em;
         padding-right: 0.5em;
     }
+    .assistant-control #btn-cancel {
+        padding-left: 1.1em;
+    }
 }
 
 .assistant-control .btn-group .btn-text {
@@ -1155,15 +1188,7 @@ Styled tables
     color: purple;
     cursor: not-allowed;
     pointer-events: none;
-}
-
-.assistant-control #btn-cancel {
-    position: absolute;
-    left: 0;
-}
-
-.assistant-control .btn-group .btn.active {
-    color: #54e5ae;
+    cursor: not-allowed;
 }
 
 .assistant-control .btn-group &:active,

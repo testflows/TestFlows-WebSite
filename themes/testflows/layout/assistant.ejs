@@ -18,7 +18,7 @@
         <div class="container assistant-control" id="assistant-control">
             <div id="status" class="text-success"><br></div>
             <div class="message-input-box">
-                <textarea id="message-input" class="code" name="message-input" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="startMessage()"></textarea>
+                <textarea id="message-input" class="code" name="message-input" data-message-id="0" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="inputMessage()"></textarea>
                 <div class="message-filler"></div>
             </div>
             <div class="btn-group" role="group" aria-label="control buttons">
@@ -28,7 +28,7 @@
                         <span class="btn-text">Start</span>
                     </button>
                     <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
-                        <a class="btn-icon fas fa-comment-slash"></a>
+                        <a class="btn-icon fas fa-ban"></a>
                         <span class="btn-text">Cancel</span>
                     </button>
                 </span>
@@ -36,17 +36,17 @@
                     <a class="btn-icon fas fa-arrow-down"></a>
                     <span class="btn-text">Down</span>
                 </button>
-                <button class="btn disabled" type="reset" id="btn-reset" onclick="">
+                <button class="btn disabled" type="reset" id="btn-clean" onclick="cleanMessages()">
                     <a class="btn-icon fas fa-redo"></a>
-                    <span class="btn-text">Reset</span>
+                    <span class="btn-text">Clean</span>
                 </button>
                 <button class="btn disabled" type="move-up" id="btn-move-up" onclick="moveUpMessage()">
                     <a class="btn-icon fas fa-arrow-up"></a>
                     <span class="btn-text">Up</span>
                 </button>
-                <button class="btn disabled" type="submit" id="btn-submit-continue" onclick="">
+                <button class="btn disabled" type="submit" id="btn-submit-reply" onclick="replyMessage()">
                     <a class="btn-icon fas fa-comment"></a>
-                    <span class="btn-text">Continue</span>
+                    <span class="btn-text">Reply</span>
                 </button>
             </div>
         </div>
@@ -54,10 +54,12 @@
 </div>
 <%- partial('_partial/hero_graph') %>
 <script>
+    const emptyContext = '\n\n'
     const apiKeyCode = '69d2245ecf1e4049893c4327dfcaf5fdb795e548de43724ba8bfd4e01233891f3552fffa33ec7969'
     const urlCode = '2f31be98e988461fac622fed4fbe63a7298007609dd071c927ecb1475d25fb6f17433514b59a2e'
     var apiKey, url
     var historyPos = -1
+    var messageContexts = {}
 
     function array2hex(array) {
         str = []
@@ -143,6 +145,14 @@
         })
     }
 
+    function scrollMessageIntoView(element) {
+        element.scrollIntoView({
+            behavior: 'auto',
+            block: 'center',
+            inline: 'center'
+        });
+    }
+
     function streamOutput(jobId, updateResponseMessage) {
         var status = document.getElementById('status')
 
@@ -155,6 +165,7 @@
             },
         })
         .then((response) => {
+            console.log(response)
             if (response.ok) {
                 return response.json();
             }
@@ -162,7 +173,6 @@
         })
         .then((response) => {
             var responseMessage = ''
-            console.log(response)
             status.innerHTML = 'Status: ' + response.status.toLowerCase().replace('_',' ')
             if ('stream' in response) {
                 for (chunk of response.stream) {
@@ -179,10 +189,10 @@
                     var message = document.getElementById('message-input')
                     var send = document.getElementById('btn-submit')
                     var cancel = document.getElementById('btn-cancel')
+                    var clean = document.getElementById('btn-clean')
                     send.classList.remove('invisible')
+                    clean.classList.remove('disabled')
                     cancel.classList.add('invisible')
-                    message.removeAttribute('message-id')
-                    message.disabled = false
 
                     if (response.status != 'COMPLETED') {
                         updateResponseMessage(`>>> error: ${response.status} <<<`, function(){})
@@ -199,55 +209,123 @@
         })
     }
 
+    function cleanMessages() {
+        const history = document.getElementById('history')
+        const message = document.getElementById('message-input')
+        const move_up = document.getElementById('btn-move-up')
+        const move_down = document.getElementById('btn-move-down')
+        const clean = document.getElementById('btn-clean')
+        const send = document.getElementById('btn-submit')
+        const send_reply = document.getElementById('btn-submit-reply')
+
+        while (history.firstChild) {
+          history.removeChild(history.lastChild);
+        }
+        messageContexts = {}
+        message.setAttribute('data-message-id', '0')
+        message.value = ''
+
+        move_up.classList.add('disabled')
+        move_down.classList.add('disabled')
+        clean.classList.add('disabled')
+        send.classList.add('disabled')
+        send_reply.classList.add('disabled')
+    }
+
     function moveUpMessage() {
         var message = document.getElementById('message-input')
         var history = document.getElementById('history')
+        var move_down = document.getElementById('btn-move-down')
+        var move_up = document.getElementById('btn-move-up')
+
         historyPos = Math.min(historyPos + 1, history.querySelectorAll('.my-message').length-1)
-        var requests = history.querySelectorAll('.my-message')
-        message.value = requests[requests.length - 1 - historyPos].innerText
+
+        var my_messages = history.querySelectorAll('.my-message')
+        var selected_message = my_messages[my_messages.length - 1 - historyPos]
+
+        if (historyPos > 0) {
+            var prev_message = my_messages[my_messages.length - 1 - (historyPos-1)]
+            prev_message.parentNode.classList.remove('active')
+        }
+        if (historyPos + 1 >= my_messages.length) {
+            move_up.classList.add('disabled')
+        }
+        selected_message.parentNode.classList.add('active')
+        scrollMessageIntoView(selected_message)
+        move_down.classList.remove('disabled')
+
+        message.value = selected_message.innerText
         message.dispatchEvent(new Event("input"))
     }
 
     function moveDownMessage() {
         var message = document.getElementById('message-input')
         var history = document.getElementById('history')
+        var my_messages = history.querySelectorAll('.my-message')
+        var move_up = document.getElementById('btn-move-up')
+        var move_down = document.getElementById('btn-move-down')
+
         historyPos = historyPos - 1
+        move_up.classList.remove('disabled')
+
         if (historyPos >= 0) {
-            var requests = history.querySelectorAll('.my-message')
-            message.value = requests[requests.length -1 - historyPos].innerText
+            var selected_message = my_messages[my_messages.length -1 - historyPos]
+            selected_message.parentNode.classList.add('active')
+            scrollMessageIntoView(selected_message)
+
+            if (historyPos + 1 < my_messages.length) {
+                var prev_message = my_messages[my_messages.length - 1 - (historyPos+1)]
+                prev_message.parentNode.classList.remove('active')
+            }
+
+            message.value = selected_message.innerText
             message.dispatchEvent(new Event("input"))
         }
         else {
+            var prev_message = my_messages[my_messages.length -1]
+            prev_message.parentNode.classList.remove('active')
             message.value = ''
+            message.dispatchEvent(new Event("input"))
             historyPos = -1
+            move_down.classList.add('disabled')
         }
     }
 
-    function startMessage() {
+    function inputMessage() {
+        var history = document.getElementById('history')
         var message = document.getElementById('message-input')
+        var my_messages = history.querySelectorAll('.my-message')
         var send = document.getElementById('btn-submit')
+        var send_reply = document.getElementById('btn-submit-reply')
+
         if (message.value) {
             send.classList.remove('disabled')
-            send.classList.add('active')
+            if (my_messages.length > 0) {
+                if (!send.classList.contains('invisible')) {
+                    send_reply.classList.remove('disabled')
+                }
+            }
         }
         else {
             send.classList.add('disabled')
-            send.classList.remove('active')
+            send_reply.classList.add('disabled')
         }
     }
 
     function cancelMessage() {
+        var history = document.getElementById('history')
         var message = document.getElementById('message-input')
         var status = document.getElementById('status')
         var send = document.getElementById('btn-submit')
         var cancel = document.getElementById('btn-cancel')
+        var messages = history.querySelectorAll('.my-message')
+        const response_id = messages[messages.length-1].getAttribute('response-id')
 
-        const message_id = message.getAttribute('message-id')
         status.classList.remove('text-danger')
         status.classList.add('text-success')
         status.innerHTML = "Request: canceling"
 
-        fetch(`${url}/cancel/${message_id}`,{
+        fetch(`${url}/cancel/${response_id}`,{
             method: 'POST',
             headers: {
                 Accept: "application/json",
@@ -256,7 +334,7 @@
             },
         })
         .then((response) => {
-            if (response.ok) {
+            if (response.ok || response.status == 404) {
                 return response.json();
             }
             throw new Error(response.status);
@@ -272,12 +350,13 @@
             }
             if (response.hasOwnProperty('error')) {
                 status.innerHTML = 'Request: ' + response.error
-                if (response.error == 'job is already completed') {
-                    cancelled = true
+                switch (response.error) {
+                    case 'job is already completed':
+                    case 'id not found':
+                        cancelled = true
                 }
             }
             if (cancelled) {
-                message.removeAttribute('message-id')
                 send.classList.remove('invisible')
                 cancel.classList.add('invisible')
             }
@@ -290,14 +369,38 @@
         })
     }
 
-    function sendMessage(){
+    function replyMessage() {
+        var history = document.getElementById('history')
+        var messages = history.querySelectorAll('.my-message')
+
+        // if there are no messages or the very first message is selected
+        // the just call startMessage
+        if ( (history.querySelectorAll('.my-message').length < 1) || (historyPos + 1 >= messages.length)) {
+            sendMessage()
+            return
+        }
+        // find the last message
+        var last_message = messages[messages.length-1-(historyPos+1)]
+        var last_message_response = document.getElementById(last_message.getAttribute('response-id'))
+        // create context
+        var context = messageContexts[last_message.getAttribute('id')]
+        context = `${context}${last_message.innerText}\n\n${last_message_response.innerText}\n\n`
+        // send message
+        sendMessage(context)
+    }
+
+    function sendMessage(context=emptyContext){
         var message = document.getElementById('message-input')
         var status = document.getElementById('status')
         var key = document.getElementById('api-key')
         var send = document.getElementById('btn-submit')
+        var send_reply = document.getElementById('btn-submit-reply')
         var cancel = document.getElementById('btn-cancel')
         var move_up = document.getElementById('btn-move-up')
         var move_down = document.getElementById('btn-move-down')
+        var clean = document.getElementById('btn-clean')
+        var history = document.getElementById('history')
+        var my_messages = history.querySelectorAll('.my-message')
 
         status.classList.remove('text-danger', 'text-success')
 
@@ -316,18 +419,25 @@
         status.style.display = 'block'
         status.innerHTML = 'Status: sending'
         status.classList.add('text-success')
-        message.disabled = true
-        send.disabled = true
-        send.style.cursor = 'not-allowed'
-        send.classList.add('disabled')
+
         send.classList.add('invisible')
-        send.classList.remove('active')
         cancel.classList.remove('invisible')
-        move_up.classList.add('active')
+
+        send.classList.add('disabled')
+        send_reply.classList.add('disabled')
+        clean.classList.add('disabled')
         move_up.classList.remove('disabled')
-        move_down.classList.add('active')
-        move_down.classList.remove('disabled')
+        move_down.classList.add('disabled')
+
+        // deselect any currently selected message and enable move down
+        if (historyPos > -1) {
+            const selected_message = my_messages[my_messages.length -1 - historyPos]
+            selected_message.parentNode.classList.remove('active')
+        }
+
         historyPos = -1
+
+        const prompt = `\nBelow is an instruction that describes a task. Write a response that appropriately completes the request.${context}### Instruction:\n${message.value}\n\n### Response:\n`
 
         fetch(`${url}/run`,{
             method: 'POST',
@@ -338,7 +448,7 @@
             },
             body: JSON.stringify({
                 input: {
-                    "prompt": `\nBelow is an instruction that describes a task. Write a response that appropriately completes the request.\n\n### Instruction:\n${message.value}\n\n### Response:\n`,
+                    "prompt": prompt
                 }
             })
         })
@@ -349,10 +459,10 @@
             throw new Error(response.status);
         })
         .then((response) => {
-        console.log(response)
-            updateMessage(message.value)
-            updateResponseMessage = createResponseMessage('')
-            message.setAttribute('message-id', response.id)
+            console.log(response)
+            var myMessage = createMessage(message, context)
+            myMessage.setAttribute('response-id', response.id)
+            updateResponseMessage = createResponseMessage(response.id)
             streamOutput(response.id, updateResponseMessage)
         })
         .catch((e) => {
@@ -360,14 +470,12 @@
             status.innerHTML = `${e}`
             status.classList.add('text-danger')
             status.classList.remove('text-success')
-            send.classList.remove('invisible', 'active')
+            send.classList.remove('invisible')
             cancel.classList.add('invisible')
         })
         .finally(() => {
-            send.disabled = false
-            send.style.cursor = 'pointer'
-            message.disabled = false
             message.value = ''
+            message.setAttribute('data-message-id', parseInt(message.getAttribute('data-message-id')) + 1)
         })
     }
 
@@ -379,27 +487,48 @@
         }, delay);
     }
 
-    function updateMessage(message) {
+    function createMessage(message, context) {
+        var message_id = message.getAttribute('data-message-id')
         var historyBox = document.getElementById('history')
 
         var boxMyMessage = document.createElement('figure')
         boxMyMessage.classList.add('box-my-message','highlight')
 
-        var myMessageIcon = document.createElement('div')
-        myMessageIcon.className = 'message-icon fas fa-users'
+        var myMessageIcons = document.createElement('div')
+        myMessageIcons.className = 'message-icon'
+
+        var myMessageAvatarIcon = document.createElement('i')
+        myMessageAvatarIcon.className = 'message-avatar-icon fas fa-users'
+
+        var myMessageTypeIcon = document.createElement('i')
+        if (context == emptyContext) {
+            myMessageTypeIcon.className = 'message-type-icon fas fa-keyboard'
+        }
+        else {
+            myMessageTypeIcon.className = 'message-type-icon fas fa-comment'
+        }
+
+        myMessageIcons.appendChild(myMessageAvatarIcon)
+        myMessageIcons.appendChild(myMessageTypeIcon)
 
         var myMessage = document.createElement('pre')
         myMessage.classList.add('my-message','code')
-        myMessage.innerText = message
+        myMessage.setAttribute('id', `my-message-${message_id}`)
+        myMessage.innerText = message.value
 
-        boxMyMessage.appendChild(myMessageIcon)
+        messageContexts[myMessage.getAttribute('id')] = context
+
+        boxMyMessage.appendChild(myMessageIcons)
         boxMyMessage.appendChild(myMessage)
 
         historyBox.appendChild(boxMyMessage)
         codeblock_copy()
+
+
+        return myMessage
     }
 
-    function createResponseMessage(response) {
+    function createResponseMessage(response_id, response='') {
         var questionsBox = document.getElementById('box-questions')
         var controlBox = document.getElementById('assistant-control')
         var historyBox = document.getElementById('history')
@@ -412,6 +541,7 @@
 
         var chatResponse = document.createElement('pre')
         chatResponse.classList.add('response-message','code')
+        chatResponse.setAttribute('id', response_id)
         chatResponse.innerText = response
 
         boxResponseMessage.appendChild(chatResponseIcon)
@@ -420,7 +550,6 @@
         historyBox.appendChild(boxResponseMessage)
         codeblock_copy()
 
-        console.log("scrolling to the bottom")
         questionsBox.scrollTop = questionsBox.scrollHeight
 
         function typeText(i, delay, text, element, cb) {

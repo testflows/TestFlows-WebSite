@@ -404,6 +404,23 @@ blockquote::-webkit-scrollbar {
     margin-top: 2em;
 }
 
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.container {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+@media (min-width: 576px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
 .container-fluid {
     padding-left: 0px;
     padding-right: 0px;
@@ -680,6 +697,10 @@ h1,h2,h3,h4 {
     font-weight: 300;
 }
 
+h1, .h1 {
+    font-size: 2em;
+}
+
 h2 {
     font-size: 1.8em;
 }
@@ -813,7 +834,7 @@ a.header-anchor {
 body {
   position: relative;
   color: rgb(4, 13, 28);
-  font-size: 18px;
+  font-size: 1em;
   text-wrap: balance;
 }
 
@@ -899,40 +920,9 @@ Styled tables
     height: 100%;
 }
 
-.assistant .form-control,
-.assistant .form-control:focus,
-.assistant .input-group-text,
-.assistant .input-group-text:focus {
-    border: 1px solid black;
-    border-radius: 0;
-    box-shadow: none;
-    transition: none;
-}
-
 .assistant label {
     text-align: left;
     font-weight: 100;
-}
-
-.assistant .input-group-text {
-    background: black;
-    color: white;
-    box-shadow: none !important;
-    transition: none;
-}
-
-.assistant textarea {
-    box-sizing: border-box;
-    padding: 0;
-    border: 1px solid black;
-    font-family: monospace;
-    font-weight: 0.85em;
-}
-
-.assistant textarea::placeholder {
-    color: grey;
-    font-family: monospace;
-    font-size: 1em;
 }
 
 .assistant *:focus {
@@ -965,8 +955,7 @@ Styled tables
     font-size: smaller;
     text-align: left;
     border-bottom: 1px solid purple;
-    padding-top: 1em;
-    padding-bottom: 1em;
+    padding: 1em;
     margin-bottom: 1em;
 }
 
@@ -983,15 +972,16 @@ Styled tables
     margin: auto;
 }
 
-.api-key-box .input-group-text {
-    font-size: 1.2em;
-    background: black;
-    color: deepskyblue;
-}
-
 .api-key-box input.form-control {
     font-size: 1.2em;
     background: black;
+    border: none;
+}
+
+.assistant #message-input::placeholder {
+    color: grey;
+    font-family: monospace;
+    font-size: 0.65em;
 }
 
 .assistant #message-input {
@@ -1000,14 +990,37 @@ Styled tables
     border: none;
     background: transparent;
     color: lime;
-    font-size: 1em;
+    font-size: 0.85em;
     resize: none;
-  }
+    box-sizing: border-box;
+    padding: 0;
+    border: 0px;
+    font-family: monospace;
+    font-weight: 0.75em;
+}
+
+@media (min-width: 300px) {
+    .assistant #message-input::placeholder {
+        font-size: 1em;
+    }
+    .assistant #message-input {
+        font-size: 1em;
+    }
+}
+
+@media (min-width: 576px) {
+    .assistant #message-input::placeholder {
+        font-size: 1.2em;
+    }
+    .assistant #message-input {
+        font-size: 1.2em;
+    }
+}
 
 .assistant .my-message,
 .assistant .response-message {
     color: white;
-    background: black;
+    background: transparent;
     margin: 0;
     padding: 0.5em;
     border: none;
@@ -1016,21 +1029,22 @@ Styled tables
     max-width: 100%;
     overflow-x: auto;
     font-size: 1em;
+    padding-bottom: 1em;
 }
 
 @media (min-width: 576px) {
     .assistant .my-message,
     .assistant .response-message {
-        margin-left: 2.2em;
+        margin-left: 3em;
     }
 }
 
 .assistant .my-message {
-    border-left: 1px solid white;
+    border-left: none
 }
 
 .assistant .response-message {
-    border-left: 1px solid white;
+    border-left: none;
     padding-left: 2em;
     padding-right: 2em;
     color: #fb69ff !important;
@@ -1040,6 +1054,11 @@ Styled tables
 .assistant .box-my-message {
     line-height: 0;
     background: black;
+    border: 3px solid black !important;
+}
+
+.assistant .box-my-message.active {
+    border: 3px solid deepskyblue !important;
 }
 
 .assistant textarea::-webkit-scrollbar,
@@ -1049,7 +1068,7 @@ Styled tables
 }
 
 .assistant .box-response-message .message-icon {
-    background: black;
+    background: transparent;
     color: lime;
 }
 
@@ -1059,11 +1078,24 @@ Styled tables
 }
 
 .assistant .box-response-message {
-    background: black;
+    background: #21212d;
 }
 
 .assistant .my-message {
     text-align: left;
+}
+
+.assistant .message-type-icon {
+    padding-right: 2em;
+    font-size: 0.75em;
+}
+
+.assistant .message-type-icon.fa-keyboard {
+    color: white;
+}
+
+.assistant .message-type-icon.fa-comment {
+    color: deepskyblue;
 }
 
 .assistant .message-icon {
@@ -1072,59 +1104,102 @@ Styled tables
     padding-left: 0.5em;
     padding-top: 0.5em;
     font-size: 2em;
+    display: flex;
+    justify-content: space-between;
 }
 
 .assistant .response-message {
     text-align: left;
-    background-color: black;
+    background: transparent;
     color: white;
 }
 
 .assistant .message-input-box {
     position: relative;
     overflow-y: auto;
+    padding-left: 1em;
+    padding-right: 1em;
 }
 
 .assistant-control {
     position: relative;
 }
 
-.assistant-control .btn-group-vertical {
+.assistant-control .btn-group {
     position: absolute;
     bottom: 0em;
-    right: 1em;
+    width: 100%;
+    padding-left:1em;
+    padding-right: 1em;
 }
 
-.assistant-control .btn-group-vertical .btn {
-    padding: 1px !important;
-    margin: 0 !important;
-    font-size: 2em !important;
+.assistant .btn-overlap-group {
+    padding-left: 0em;
+    padding-right: 0.5em;
 }
 
-.assistant-control .btn-group-vertical .btn.disabled {
-    color: purple;
-    cursor: not-allowed;
-    pointer-events: none;
+.assistant-control .btn-group .btn {
+    padding: 1px;
+    padding-right: 0em;
+    padding-left: 0em;
+    margin: 0;
+    font-size: 1.2em;
+    display: -moz-inline-grid;
+    display: -ms-inline-grid;
+    display: inline-grid;
+    color: #54e5ae;
 }
 
 .assistant-control #btn-cancel {
     position: absolute;
-    bottom: 0;
+    left: 0;
+    padding-left: 0.6em;
 }
 
-.assistant-control .btn-group-vertical .btn.active {
-    color: #54e5ae;
+@media (min-width: 300px) {
+    .assistant-control .btn-group .btn {
+        font-size: 1.8em;
+    }
+    .assistant-control #btn-cancel {
+        padding-left: 0.4em;
+    }
 }
 
-.assistant-control .btn-group-vertical &:active,
-.assistant-control .btn-group-vertical &:focus,
-.assistant-control .btn-group-vertical &:hover,
-.assistant-control .btn-group-vertical &:active:focus,
-.assistant-control .btn-group-vertical .btn,
-.assistant-control .btn-group-vertical .btn a,
-.assistant-control .btn-group-vertical .btn a:active,
-.assistant-control .btn-group-vertical .btn a:focus,
-.assistant-control .btn-group-vertical .btn a:hover  {
+@media (min-width: 576px) {
+    .assistant-control .btn-group .btn {
+        font-size: 2em;
+        padding-right: 0.5em;
+        padding-left: 0.5em;
+    }
+    .assistant .btn-overlap-group {
+        padding-left: 0.5em;
+        padding-right: 0.5em;
+    }
+    .assistant-control #btn-cancel {
+        padding-left: 1.1em;
+    }
+}
+
+.assistant-control .btn-group .btn-text {
+    font-size: 0.5em;
+}
+
+.assistant-control .btn-group .btn.disabled {
+    color: purple;
+    cursor: not-allowed;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.assistant-control .btn-group &:active,
+.assistant-control .btn-group &:focus,
+.assistant-control .btn-group &:hover,
+.assistant-control .btn-group &:active:focus,
+.assistant-control .btn-group .btn,
+.assistant-control .btn-group .btn a,
+.assistant-control .btn-group .btn a:active,
+.assistant-control .btn-group .btn a:focus,
+.assistant-control .btn-group .btn a:hover  {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
