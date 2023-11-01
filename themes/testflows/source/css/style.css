@@ -972,12 +972,26 @@ Styled tables
     }
 }
 
+.assistant .status-bar {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid purple;
+    margin-bottom: 1em;
+}
+
+.assistant .status-bar .btn-group {
+    width: auto;
+    font-size: 0.6em;
+}
+
+.assistant .status-bar .btn {
+    padding-right: 15px;
+}
+
 .assistant #status {
     font-size: smaller;
     text-align: left;
-    border-bottom: 1px solid purple;
     padding: 1em;
-    margin-bottom: 1em;
 }
 
 .assistant #status.text-success {
@@ -995,7 +1009,11 @@ Styled tables
     border: none;
 }
 
-.assistant #message-input::placeholder {
+.api-key-box input.form-control::placeholder {
+    color: grey;
+}
+
+.assistant textarea::placeholder {
     color: grey;
     font-family: monospace;
     font-size: 0.65em;
@@ -1005,7 +1023,7 @@ Styled tables
     height: 100%;
 }
 
-.assistant #message-input {
+.assistant textarea {
     display: block;
     width: 100%;
     height: 100%;
@@ -1023,19 +1041,19 @@ Styled tables
 }
 
 @media (min-width: 300px) {
-    .assistant #message-input::placeholder {
+    .assistant textarea::placeholder {
         font-size: 1em;
     }
-    .assistant #message-input {
+    .assistant textarea {
         font-size: 1em;
     }
 }
 
 @media (min-width: 576px) {
-    .assistant #message-input::placeholder {
+    .assistant textarea::placeholder {
         font-size: 1.2em;
     }
-    .assistant #message-input {
+    .assistant textarea {
         font-size: 1.2em;
     }
 }
@@ -1254,12 +1272,12 @@ Styled tables
     color: white;
     box-shadow: 0px 0px 10px springgreen;
     border-radius: 0px;
+    top: 3.5em;
 }
 
 .assistant .modal-title {
     font-weight: 500;
 }
-
 
 .assistant .modal-body::-webkit-scrollbar {
     display: none;
@@ -1280,3 +1298,19 @@ Styled tables
     text-align: left;
 }
 
+.assistant .modal-footer {
+    border-color: springgreen;
+}
+
+.assistant .modal-footer .btn {
+    font-size: 1.2em;
+    margin-right: 1em;
+}
+
+/************************/
+/* System Message Modal */
+/************************/
+.assistant .modal-body textarea {
+    border: 1px solid purple;
+    padding: 1em;
+}

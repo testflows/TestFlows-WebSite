@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1698872165061" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1698882537187" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1698872165061" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1698882537187" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -101,7 +101,17 @@
                 </div>
             </div>
             <div class="container assistant-control col-lg-6" id="assistant-control">
-                <div id="status" class="text-success"><br></div>
+                <div class="status-bar">
+                    <div id="status" class="text-success"><br></div>
+                    <div class="btn-group" role="group" aria-label="status control buttons">
+                        <button class="btn" type="submit" id="btn-edit-system" onclick="openEditSystemMessageModal()">
+                            <a class="btn-icon fas fa-pencil-ruler"></a>
+                        </button>
+                        <button class="btn" type="submit" id="btn-edit-context" onclick="openEditMessageContextModal()">
+                            <a class="btn-icon fas fa-pencil-alt"></a>
+                        </button>
+                    </div>
+                </div>
                 <div class="message-input-box">
                     <textarea id="message-input" class="code" name="message-input" data-message-id="0" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="inputMessage()"></textarea>
                     <div class="message-filler"></div>
@@ -130,18 +140,45 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title" id="help-modal-title">Assistant Reference</h1>
+                  <h1 class="modal-title" id="help-modal-title">Reference</h1>
                   <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
                     <a class="btn-icon fas fa-times" aria-hidden="true"></a>
                   </button>
                 </div>
                 <div class="modal-body">
-                    <p>The Assistant uses an advanced AI model to help testers write tests faster.</p>
+                    <p>The assistant uses an advanced AI model to help testers write tests faster.</p>
+                    <p>When sending messages to an AI model, each message has a specific structure.
+                        That structure includes a system message and context that is tied to each message.
+                    </p>
+                    <h2>System message</h2>
+                    <p>A system message is a set of instructions that are added at the top of the context for a new conversation.</p>
+                    <h2>Message context</h2>
+                    <p>The message context consists of the system message followed by any previous questions and responses in
+                        the current conversation. New replies in the same conversation inherit the context of the previous
+                        message and include its question and response in their own context.
+                        Therefore, the context for each message is unique and defines the state of
+                        the conversation at a particular point.</p>
+                    <p>You can examine the context of the message by selecting it and using the <a class="btn-icon far fa-copy"></a> button
+                    to copy the message and its context to the clipboard.</p>
+                    <h2>Message structure</h2>
+                    <p>Messages have the following format:
+                        <ul>
+                            <li>Context</li>
+                            <li>Message</li>
+                            <li>Response</li>
+                        </ul>
+                    </p>
+                    <p>The default context is:
+                        <ul>
+                            <li>System message</li>
+                        </ul>
+                    </p>
                     <h2>Message controls</h2>
                     <p><ul>
                         <li>Use the <a class="btn-icon fas fa-keyboard"></a> button to start a new conversation.</li>
-                        <li>Use the <a class="btn-icon fas fa-comment"></a> button to reply to the last message to continue the current conversation.</li>
+                        <li>Use the <a class="btn-icon fas fa-ban"></a> button to cancel current pending message.</li>
                         <li>Use the <a class="btn-icon fas fa-redo"></a> button to clear all messages.</li>
+                        <li>Use the <a class="btn-icon fas fa-comment"></a> button to reply to the selected or the last message to continue the conversation.</li>
                     </ul></p>
                     <h2>Questions box menu</h2>
                     <p>The questions box has the following buttons:
@@ -150,16 +187,17 @@
                             If no messages are selected, then the <a class="btn-icon far fa-square"></a> disabled button is shown.
                             </li>
                             <li>Use the <a class="btn-icon far fa-copy"></a>
-                            button to copy the currently selected message to the clipboard.
-                            The copied message will include the currently selected message and its response,
-                            including the system message and any previous messages in the conversation at the top,
-                            which form the context of the current message.button to copy currently
-                            selected message into the clipboard.
+                            button to copy the currently selected message and its response to the clipboard including its context.
+                            The context includes the system message and any previous messages in the conversation.
                             </li>
                             <li>Use the <a class="btn-icon far fa-question-circle"></a> button to open assistant's reference.</li>
                         </ul>
                     </p>
-                    <h2>Status Bar</h2>
+                    <h2>Changing system message</h2>
+                    <p>Use the <a class="btn-icon fas fa-pencil-ruler"></a> button in the status bar to change the system message for any new conversations started with the <a class="btn-icon fas fa-keyboard"></a> button.</p>
+                    <h2>Changing message context</h2>
+                    <p>Use the <a class="btn-icon fas fa-pencil-alt"></a> button in the status bar to change the context for the next message that is either a reply or a start of new conversation.</p>
+                    <h2>Status bar</h2>
                     <p>The status of the message is shown at the top of the message input box in the status bar.</p>
                     <p>The following status messages can be expected:
                         <ul>
@@ -168,15 +206,64 @@
                             <li><code>Status: completed</code> - message has been processed, and response has been completed.</li>
                         </ul>
                     </p>
+                    <p>Status bar menu buttons:</p>
+                        <ul>
+                            <li><a class="btn-icon fas fa-pencil-ruler"></a> - change system message</li>
+                            <li><a class="btn-icon fas fa-pencil-alt"></a> - change next message context</li>
+                        </ul>
                     <h2>Layout</h2>
-                    <p>On large screens, the assistant is broken up into the left and right columns to provide
-                    a convenient way to work with long questions and answers.</p>
+                    <p>On large screens, the assistant is broken up into the left and right panes to provide
+                    a convenient way to work with long messages and responses. The questions box is on the left and
+                    the message controls is on the right.</p>
                     <p>On mobile devices, the message controls are at the bottom, and a questions box with messages
                     and responses is shown at the top.</p>
                 </div>
               </div>
             </div>
-          </div>
+        </div>
+        <div class="modal fade" id="editSystemMessageModal" tabindex="-1" role="dialog" aria-labelledby="edit-system-message-modal-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title" id="edit-system-message-modal-title">System Message</h1>
+                  <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+                    <a class="btn-icon fas fa-times" aria-hidden="true"></a>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <p>Here is the system message. This system message will be applied to all future new conversations started with the <a class="btn-icon fas fa-keyboard"></a> button.</p>
+                    <p><span class="text-warning">System message will not be changed for the replies to existing conversations.
+                    If you want to change system message for replies to existing conversations, edit the message context instead using the <a class="btn-icon fas fa-pencil-alt"></a> button.</span>
+                    </p>
+                    <textarea id="system-message" class="code" name="system-message" rows="5" placeholder="Enter system message here."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveSystemMessage()">Save</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal fade" id="editMessageContextModal" tabindex="-1" role="dialog" aria-labelledby="edit-message-context-modal-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title" id="edit-message-context-modal-title">Message Context</h1>
+                  <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+                    <a class="btn-icon fas fa-times" aria-hidden="true"></a>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <p>Here is the current message context. This context will be applied to the next message.</p>
+                    <textarea id="message-context" class="code" name="message-context" rows="5" placeholder="Edit message context here."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveMessageContext()">Save</button>
+                </div>
+              </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -194,7 +281,11 @@
     const urlCode = '2f31be98e988461fac622fed4fbe63a7298007609dd071c927ecb1475d25fb6f17433514b59a2e'
     var apiKey, url
     var selectedMessage
+    var systemMessage = 'Below is an instruction that describes a task. Write a response that appropriately completes the request.'
     var messageContexts = {}
+    var nextMessageContext = null
+    var systemModal
+    var contextModal
 
     function array2hex(array) {
         str = []
@@ -280,8 +371,15 @@
         })
     }
 
+    function defaultContext() {
+        if (nextMessageContext !== null) {
+            return nextMessageContext
+        }
+        return `${systemMessage}\n\n`
+    }
+
     function buildPrompt(context, message) {
-        return `Below is an instruction that describes a task. Write a response that appropriately completes the request.${context}### Instruction:\n\n${message}\n\n### Response:\n\n`
+        return `${context}### Instruction:\n\n${message}\n\n### Response:\n\n`
     }
 
     function copyMessages() {
@@ -289,7 +387,6 @@
         var messages = history.querySelectorAll('.my-message')
         var copy = document.getElementById('btn-copy')
         var copy_icon = copy.querySelector('a')
-
         var message = selectedMessage ? selectedMessage.querySelector('.my-message') : messages[messages.length-1]
         var response = document.getElementById(message.getAttribute('response-id'))
         var context = messageContexts[message.getAttribute('id')]
@@ -530,6 +627,7 @@
     function replyMessage() {
         var history = document.getElementById('history')
         var messages = history.querySelectorAll('.my-message')
+        var context = null
 
         // if there are no messages then just call sendMessage
         if ( history.querySelectorAll('.my-message').length < 1) {
@@ -540,14 +638,20 @@
         // find selected message
         var message = selectedMessage ? selectedMessage.querySelector('.my-message') : messages[messages.length-1]
         var response = document.getElementById(message.getAttribute('response-id'))
-        // create context
-        var context = messageContexts[message.getAttribute('id')]
-        context = `${context}${message.innerText}\n\n${response.innerText}\n\n`
+        // get context
+        if (nextMessageContext !== null) {
+            context = nextMessageContext
+            nextMessageContext = null
+        }
+        else {
+            context = messageContexts[message.getAttribute('id')]
+            context = `${context}${message.innerText}\n\n${response.innerText}\n\n`
+        }
         // send message
         sendMessage(context)
     }
 
-    function sendMessage(context=emptyContext){
+    function sendMessage(context=null){
         var message = document.getElementById('message-input')
         var status = document.getElementById('status')
         var key = document.getElementById('api-key')
@@ -557,6 +661,7 @@
         var clear = document.getElementById('btn-clear')
         var history = document.getElementById('history')
         var my_messages = history.querySelectorAll('.my-message')
+        var start = (context === null) ? true : false
 
         status.classList.remove('text-danger', 'text-success')
 
@@ -586,6 +691,11 @@
         // deselect any currently selected message
         deselectMessage()
 
+        if (context === null) {
+            context = defaultContext()
+            nextMessageContext = null
+        }
+
         const prompt = buildPrompt(context, message.value)
 
         fetch(`${url}/run`,{
@@ -608,7 +718,7 @@
             throw new Error(response.status);
         })
         .then((response) => {
-            var myMessage = createMessage(message, context)
+            var myMessage = createMessage(message, context, start)
             myMessage.setAttribute('response-id', response.id)
             updateResponseMessage = createResponseMessage(response.id)
             streamOutput(response.id, updateResponseMessage)
@@ -634,7 +744,7 @@
         }, delay);
     }
 
-    function createMessage(message, context) {
+    function createMessage(message, context, start=false) {
         var message_id = message.getAttribute('data-message-id')
         var historyBox = document.getElementById('history')
 
@@ -649,7 +759,7 @@
         myMessageAvatarIcon.className = 'message-avatar-icon fas fa-users'
 
         var myMessageTypeIcon = document.createElement('i')
-        if (context == emptyContext) {
+        if (start) {
             myMessageTypeIcon.className = 'message-type-icon fas fa-keyboard'
         }
         else {
@@ -725,6 +835,63 @@
 
         return updateResponseMessage
     }
+
+    function openEditSystemMessageModal() {
+        systemModal = new bootstrap.Modal(document.getElementById('editSystemMessageModal'));
+        var system_message = document.getElementById('system-message')
+
+        system_message.value = systemMessage
+        systemModal.toggle()
+    }
+
+    function saveSystemMessage() {
+        if (!systemModal) {
+            return
+        }
+        var system_message = document.getElementById('system-message')
+        var status = document.getElementById('status')
+
+        systemMessage = system_message.value.trimStart().trimEnd()
+
+        status.innerHTML = 'System message: updated'
+        status.classList.add('text-success')
+        systemModal.hide()
+        systemModal = null
+    }
+
+    function openEditMessageContextModal() {
+        contextModal = new bootstrap.Modal(document.getElementById('editMessageContextModal'));
+        var message_context = document.getElementById('message-context')
+        var history = document.getElementById('history')
+        var messages = history.querySelectorAll('.my-message')
+        var context = defaultContext()
+
+        if (messages.length > 0) {
+            var message = selectedMessage ? selectedMessage.querySelector('.my-message') : messages[messages.length-1]
+            var response = document.getElementById(message.getAttribute('response-id'))
+            context = messageContexts[message.getAttribute('id')]
+            context = `${context}${message.innerText}\n\n${response.innerText}\n\n`
+        }
+
+        message_context.value = context
+        contextModal.toggle()
+    }
+
+    function saveMessageContext() {
+        if (!contextModal) {
+            return
+        }
+        var message_context = document.getElementById('message-context')
+        var status = document.getElementById('status')
+
+        nextMessageContext = message_context.value
+
+        status.innerHTML = 'Message context: updated'
+        status.classList.add('text-success')
+        contextModal.hide()
+        contextModal = null
+    }
+
 </script>
 
     </div>
