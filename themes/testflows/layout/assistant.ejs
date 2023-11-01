@@ -12,52 +12,54 @@
 </div>
 <div class="assistant container-fluid d-none" id="assistant">
     <div class="container">
-        <div class="box-questions" id="box-questions">
-            <div id="history">
-                <div class="btn-group" role="group" aria-label="control buttons">
-                    <button class="btn disabled" type="submit" id="btn-copy" onclick="copyMessages()">
-                        <a class="btn-icon far fa-copy"></a>
-                    </button>
+        <div class="row">
+            <div class="box-questions col-lg-6" id="box-questions">
+                <div id="history">
+                    <div class="btn-group" role="group" aria-label="control buttons">
+                        <button class="btn disabled" type="submit" id="btn-copy" onclick="copyMessages()">
+                            <a class="btn-icon far fa-copy"></a>
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="container assistant-control" id="assistant-control">
-            <div id="status" class="text-success"><br></div>
-            <div class="message-input-box">
-                <textarea id="message-input" class="code" name="message-input" data-message-id="0" rows="3" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="inputMessage()"></textarea>
-                <div class="message-filler"></div>
-            </div>
-            <div class="btn-group" role="group" aria-label="control buttons">
-                <span class="btn-overlap-group">
-                    <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
-                        <a class="btn-icon fas fa-keyboard"></a>
-                        <span class="btn-text">Start</span>
+            <div class="container assistant-control col-lg-6" id="assistant-control">
+                <div id="status" class="text-success"><br></div>
+                <div class="message-input-box">
+                    <textarea id="message-input" class="code" name="message-input" data-message-id="0" placeholder="Type your request here and refer to TestFlows as testflows.core" oninput="inputMessage()"></textarea>
+                    <div class="message-filler"></div>
+                </div>
+                <div class="btn-group" role="group" aria-label="control buttons">
+                    <span class="btn-overlap-group">
+                        <button class="btn disabled" type="submit" id="btn-submit" onclick="sendMessage()">
+                            <a class="btn-icon fas fa-keyboard"></a>
+                            <span class="btn-text">Start</span>
+                        </button>
+                        <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
+                            <a class="btn-icon fas fa-ban"></a>
+                            <span class="btn-text">Cancel</span>
+                        </button>
+                    </span>
+                    <button class="btn disabled" type="submit" id="btn-submit-change" onclick="changeMessage()">
+                        <a class="btn-icon fas fa-comment-medical"></a>
+                        <span class="btn-text">Change</span>
                     </button>
-                    <button class="btn text-danger invisible" type="cancel" id="btn-cancel" onclick="cancelMessage()">
-                        <a class="btn-icon fas fa-ban"></a>
-                        <span class="btn-text">Cancel</span>
+                    <button class="btn disabled" type="move-down" id="btn-move-down" onclick="moveDownMessage()">
+                        <a class="btn-icon fas fa-arrow-down"></a>
+                        <span class="btn-text">Down</span>
                     </button>
-                </span>
-                <button class="btn disabled" type="submit" id="btn-submit-change" onclick="changeMessage()">
-                    <a class="btn-icon fas fa-comment-medical"></a>
-                    <span class="btn-text">Change</span>
-                </button>
-                <button class="btn disabled" type="move-down" id="btn-move-down" onclick="moveDownMessage()">
-                    <a class="btn-icon fas fa-arrow-down"></a>
-                    <span class="btn-text">Down</span>
-                </button>
-                <button class="btn disabled" type="reset" id="btn-clean" onclick="cleanMessages()">
-                    <a class="btn-icon fas fa-redo"></a>
-                    <span class="btn-text">Clean</span>
-                </button>
-                <button class="btn disabled" type="move-up" id="btn-move-up" onclick="moveUpMessage()">
-                    <a class="btn-icon fas fa-arrow-up"></a>
-                    <span class="btn-text">Up</span>
-                </button>
-                <button class="btn disabled" type="submit" id="btn-submit-reply" onclick="replyMessage()">
-                    <a class="btn-icon fas fa-comment"></a>
-                    <span class="btn-text">Reply</span>
-                </button>
+                    <button class="btn disabled" type="reset" id="btn-clear" onclick="clearMessages()">
+                        <a class="btn-icon fas fa-redo"></a>
+                        <span class="btn-text">Clear</span>
+                    </button>
+                    <button class="btn disabled" type="move-up" id="btn-move-up" onclick="moveUpMessage()">
+                        <a class="btn-icon fas fa-arrow-up"></a>
+                        <span class="btn-text">Up</span>
+                    </button>
+                    <button class="btn disabled" type="submit" id="btn-submit-reply" onclick="replyMessage()">
+                        <a class="btn-icon fas fa-comment"></a>
+                        <span class="btn-text">Reply</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -155,6 +157,10 @@
         })
     }
 
+    function buildPrompt(context, message) {
+        return `Below is an instruction that describes a task. Write a response that appropriately completes the request.${context}### Instruction:\n\n${message}\n\n### Response:\n\n`
+    }
+
     function copyMessages() {
         var history = document.getElementById('history')
         var messages = history.querySelectorAll('.my-message')
@@ -169,16 +175,9 @@
 
         navigator.clipboard.writeText(
             function() {
-                var conversation = []
-                if (context != emptyContext) {
-                    conversation.push('### Context')
-                    conversation.push(context.trimStart().trimEnd())
-                }
-                conversation.push('### Instruction')
-                conversation.push(message.innerText.trimEnd())
-                conversation.push('### Response')
-                conversation.push(response.innerText.trimEnd())
-                return conversation.join('\n\n')
+                var conversation = buildPrompt(context, message.innerText.trimEnd())
+                conversation += response.innerText.trimEnd()
+                return conversation
             }()
         ).then(
             function() {
@@ -238,9 +237,9 @@
                     var message = document.getElementById('message-input')
                     var send = document.getElementById('btn-submit')
                     var cancel = document.getElementById('btn-cancel')
-                    var clean = document.getElementById('btn-clean')
+                    var clear = document.getElementById('btn-clear')
                     send.classList.remove('invisible')
-                    clean.classList.remove('disabled')
+                    clear.classList.remove('disabled')
                     cancel.classList.add('invisible')
 
                     if (response.status != 'COMPLETED') {
@@ -258,12 +257,12 @@
         })
     }
 
-    function cleanMessages() {
+    function clearMessages() {
         const history = document.getElementById('history')
         const message = document.getElementById('message-input')
         const move_up = document.getElementById('btn-move-up')
         const move_down = document.getElementById('btn-move-down')
-        const clean = document.getElementById('btn-clean')
+        const clear = document.getElementById('btn-clear')
         const send = document.getElementById('btn-submit')
         const send_reply = document.getElementById('btn-submit-reply')
         const send_change = document.getElementById('btn-submit-change')
@@ -291,7 +290,7 @@
 
         move_up.classList.add('disabled')
         move_down.classList.add('disabled')
-        clean.classList.add('disabled')
+        clear.classList.add('disabled')
         send.classList.add('disabled')
         send_reply.classList.add('disabled')
         send_change.classList.add('disabled')
@@ -492,7 +491,7 @@
         var cancel = document.getElementById('btn-cancel')
         var move_up = document.getElementById('btn-move-up')
         var move_down = document.getElementById('btn-move-down')
-        var clean = document.getElementById('btn-clean')
+        var clear = document.getElementById('btn-clear')
         var history = document.getElementById('history')
         var my_messages = history.querySelectorAll('.my-message')
 
@@ -520,7 +519,7 @@
         send.classList.add('disabled')
         send_reply.classList.add('disabled')
         send_change.classList.add('disabled')
-        clean.classList.add('disabled')
+        clear.classList.add('disabled')
         move_up.classList.remove('disabled')
         move_down.classList.add('disabled')
 
@@ -532,7 +531,7 @@
 
         historyPos = -1
 
-        const prompt = `\nBelow is an instruction that describes a task. Write a response that appropriately completes the request.${context}### Instruction:\n${message.value}\n\n### Response:\n`
+        const prompt = buildPrompt(context, message.value)
 
         fetch(`${url}/run`,{
             method: 'POST',

@@ -920,6 +920,12 @@ Styled tables
     height: 100%;
 }
 
+@media (min-width: 1200px) {
+    .assistant .container {
+        max-width: 95%;
+    }
+}
+
 .assistant label {
     text-align: left;
     font-weight: 100;
@@ -927,6 +933,10 @@ Styled tables
 
 .assistant *:focus {
     outline: none;
+}
+
+.assistant .container .row {
+    height: 100%;
 }
 
 .assistant figure.highlight {
@@ -939,6 +949,8 @@ Styled tables
     background-color: #18111b;
     height: 30%;
     border-radius: 15px 15px 0 0;
+    display: flex;
+    flex-direction: column;
 }
 
 .assistant .box-questions
@@ -949,6 +961,15 @@ Styled tables
     text-align: center;
     height: 70%;
     overflow-y: auto;
+}
+
+@media (min-width: 992px) {
+    .assistant .assistant-control {
+        height: calc(100vh - 96px);
+    }
+    .assistant .box-questions {
+        height: calc(100vh - 96px);
+    }
 }
 
 .assistant #status {
@@ -980,9 +1001,14 @@ Styled tables
     font-size: 0.65em;
 }
 
+.assistant .message-input-box {
+    height: 100%;
+}
+
 .assistant #message-input {
     display: block;
     width: 100%;
+    height: 100%;
     border: none;
     background: transparent;
     color: lime;
@@ -993,6 +1019,7 @@ Styled tables
     border: 0px;
     font-family: monospace;
     font-weight: 0.75em;
+    overflow-y: auto;
 }
 
 @media (min-width: 300px) {
@@ -1139,11 +1166,8 @@ Styled tables
 }
 
 .assistant-control .btn-group {
-    position: absolute;
-    bottom: 0em;
     width: 100%;
-    padding-left:1em;
-    padding-right: 1em;
+    padding: 1em;
 }
 
 .assistant .btn-overlap-group {
