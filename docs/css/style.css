@@ -1080,6 +1080,10 @@ Styled tables
     border: 1px solid black !important;
 }
 
+.assistant .box-my-message {
+    cursor: pointer;
+}
+
 .assistant .box-my-message.active {
     border: 1px solid deeppink !important;
 }
@@ -1190,18 +1194,9 @@ Styled tables
     color: #54e5ae;
 }
 
-.assistant #btn-cancel {
-    position: absolute;
-    left: 0;
-    padding-left: 0.6em;
-}
-
 @media (min-width: 300px) {
     .assistant .btn-group .btn {
         font-size: 1.8em;
-    }
-    .assistant #btn-cancel {
-        padding-left: 0.4em;
     }
 }
 
@@ -1214,9 +1209,6 @@ Styled tables
     .assistant .btn-overlap-group {
         padding-left: 0.5em;
         padding-right: 0.5em;
-    }
-    .assistant #btn-cancel {
-        padding-left: 1.1em;
     }
 }
 
