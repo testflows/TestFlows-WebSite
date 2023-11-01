@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1698785853849" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1698798284172" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1698785853849" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1698798284172" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -85,7 +85,13 @@
 <div class="assistant container-fluid d-none" id="assistant">
     <div class="container">
         <div class="box-questions" id="box-questions">
-            <div id="history"></div>
+            <div id="history">
+                <div class="btn-group" role="group" aria-label="control buttons">
+                    <button class="btn disabled" type="submit" id="btn-copy" onclick="copyMessages()">
+                        <a class="btn-icon far fa-copy"></a>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="container assistant-control" id="assistant-control">
             <div id="status" class="text-success"><br></div>
@@ -104,6 +110,10 @@
                         <span class="btn-text">Cancel</span>
                     </button>
                 </span>
+                <button class="btn disabled" type="submit" id="btn-submit-change" onclick="changeMessage()">
+                    <a class="btn-icon fas fa-comment-medical"></a>
+                    <span class="btn-text">Change</span>
+                </button>
                 <button class="btn disabled" type="move-down" id="btn-move-down" onclick="moveDownMessage()">
                     <a class="btn-icon fas fa-arrow-down"></a>
                     <span class="btn-text">Down</span>
@@ -225,6 +235,45 @@
         })
     }
 
+    function copyMessages() {
+        var history = document.getElementById('history')
+        var messages = history.querySelectorAll('.my-message')
+        var copy = document.getElementById('btn-copy')
+        var copy_icon = copy.querySelector('a')
+
+        var message = messages[messages.length-1-historyPos]
+        var response = document.getElementById(message.getAttribute('response-id'))
+        var context = messageContexts[message.getAttribute('id')]
+
+        console.log("copy", context)
+
+        navigator.clipboard.writeText(
+            function() {
+                var conversation = []
+                if (context != emptyContext) {
+                    conversation.push('### Context')
+                    conversation.push(context.trimStart().trimEnd())
+                }
+                conversation.push('### Instruction')
+                conversation.push(message.innerText.trimEnd())
+                conversation.push('### Response')
+                conversation.push(response.innerText.trimEnd())
+                return conversation.join('\n\n')
+            }()
+        ).then(
+            function() {
+                copy_icon.classList.remove('far')
+                copy_icon.classList.add('fas')
+                copy.classList.add('active')
+                setTimeout(function() {
+                    copy.classList.remove('active')
+                    copy_icon.classList.remove('fas')
+                    copy_icon.classList.add('far')
+                }, 1000);
+            }
+        )
+    }
+
     function scrollMessageIntoView(element) {
         element.scrollIntoView({
             behavior: 'auto',
@@ -297,19 +346,35 @@
         const clean = document.getElementById('btn-clean')
         const send = document.getElementById('btn-submit')
         const send_reply = document.getElementById('btn-submit-reply')
+        const send_change = document.getElementById('btn-submit-change')
 
         while (history.firstChild) {
-          history.removeChild(history.lastChild);
+            if (history.lastChild) {
+                if (history.lastChild.classList) {
+                    if (!history.lastChild.classList.contains('btn-group')) {
+                        history.removeChild(history.lastChild)
+                    }
+                    else {
+                        break
+                    }
+                }
+                else {
+                    history.removeChild(history.lastChild)
+                }
+            }
         }
+
         messageContexts = {}
         message.setAttribute('data-message-id', '0')
         message.value = ''
+        historyPos = -1
 
         move_up.classList.add('disabled')
         move_down.classList.add('disabled')
         clean.classList.add('disabled')
         send.classList.add('disabled')
         send_reply.classList.add('disabled')
+        send_change.classList.add('disabled')
     }
 
     function moveUpMessage() {
@@ -317,6 +382,8 @@
         var history = document.getElementById('history')
         var move_down = document.getElementById('btn-move-down')
         var move_up = document.getElementById('btn-move-up')
+        var copy = document.getElementById('btn-copy')
+        copy.classList.remove('disabled')
 
         historyPos = Math.min(historyPos + 1, history.querySelectorAll('.my-message').length-1)
 
@@ -333,9 +400,6 @@
         selected_message.parentNode.classList.add('active')
         scrollMessageIntoView(selected_message)
         move_down.classList.remove('disabled')
-
-        message.value = selected_message.innerText
-        message.dispatchEvent(new Event("input"))
     }
 
     function moveDownMessage() {
@@ -344,6 +408,7 @@
         var my_messages = history.querySelectorAll('.my-message')
         var move_up = document.getElementById('btn-move-up')
         var move_down = document.getElementById('btn-move-down')
+        var copy = document.getElementById('btn-copy')
 
         historyPos = historyPos - 1
         move_up.classList.remove('disabled')
@@ -358,8 +423,7 @@
                 prev_message.parentNode.classList.remove('active')
             }
 
-            message.value = selected_message.innerText
-            message.dispatchEvent(new Event("input"))
+            copy.classList.remove('disabled')
         }
         else {
             var prev_message = my_messages[my_messages.length -1]
@@ -368,6 +432,7 @@
             message.dispatchEvent(new Event("input"))
             historyPos = -1
             move_down.classList.add('disabled')
+            copy.classList.add('disabled')
         }
     }
 
@@ -377,6 +442,7 @@
         var my_messages = history.querySelectorAll('.my-message')
         var send = document.getElementById('btn-submit')
         var send_reply = document.getElementById('btn-submit-reply')
+        var send_change = document.getElementById('btn-submit-change')
 
         if (message.value) {
             send.classList.remove('disabled')
@@ -385,10 +451,14 @@
                     send_reply.classList.remove('disabled')
                 }
             }
+            if (historyPos > -1) {
+                send_change.classList.remove('disabled')
+            }
         }
         else {
             send.classList.add('disabled')
             send_reply.classList.add('disabled')
+            send_change.classList.add('disabled')
         }
     }
 
@@ -449,7 +519,7 @@
         })
     }
 
-    function replyMessage() {
+    function changeMessage() {
         var history = document.getElementById('history')
         var messages = history.querySelectorAll('.my-message')
 
@@ -459,12 +529,35 @@
             sendMessage()
             return
         }
-        // find the last message
-        var last_message = messages[messages.length-1-(historyPos+1)]
-        var last_message_response = document.getElementById(last_message.getAttribute('response-id'))
+        // find selected message
+        var message = messages[messages.length-1-(historyPos+1)]
+        var response = document.getElementById(message.getAttribute('response-id'))
         // create context
-        var context = messageContexts[last_message.getAttribute('id')]
-        context = `${context}${last_message.innerText}\n\n${last_message_response.innerText}\n\n`
+        var context = messageContexts[message.getAttribute('id')]
+        context = `${context}${message.innerText}\n\n${response.innerText}\n\n`
+        // send message
+        sendMessage(context)
+    }
+
+    function replyMessage() {
+        var history = document.getElementById('history')
+        var messages = history.querySelectorAll('.my-message')
+
+        // if there are no messages then just call sendMessage
+        if ( history.querySelectorAll('.my-message').length < 1) {
+            sendMessage()
+            return
+        }
+        pos = historyPos
+        if (pos == -1) {
+            pos = 0
+        }
+        // find selected message
+        var message = messages[messages.length-1-(pos)]
+        var response = document.getElementById(message.getAttribute('response-id'))
+        // create context
+        var context = messageContexts[message.getAttribute('id')]
+        context = `${context}${message.innerText}\n\n${response.innerText}\n\n`
         // send message
         sendMessage(context)
     }
@@ -475,6 +568,7 @@
         var key = document.getElementById('api-key')
         var send = document.getElementById('btn-submit')
         var send_reply = document.getElementById('btn-submit-reply')
+        var send_change = document.getElementById('btn-submit-change')
         var cancel = document.getElementById('btn-cancel')
         var move_up = document.getElementById('btn-move-up')
         var move_down = document.getElementById('btn-move-down')
@@ -505,6 +599,7 @@
 
         send.classList.add('disabled')
         send_reply.classList.add('disabled')
+        send_change.classList.add('disabled')
         clean.classList.add('disabled')
         move_up.classList.remove('disabled')
         move_down.classList.add('disabled')
@@ -602,8 +697,8 @@
         boxMyMessage.appendChild(myMessage)
 
         historyBox.appendChild(boxMyMessage)
-        codeblock_copy()
 
+        codeblock_copy()
 
         return myMessage
     }

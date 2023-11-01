@@ -963,10 +963,6 @@ Styled tables
     color: purple;
 }
 
-.assistant #history{
-    overflow: auto;
-}
-
 .api-key-box {
     padding-top: 1em;
     margin: auto;
@@ -1054,11 +1050,11 @@ Styled tables
 .assistant .box-my-message {
     line-height: 0;
     background: black;
-    border: 3px solid black !important;
+    border: 1px solid black !important;
 }
 
 .assistant .box-my-message.active {
-    border: 3px solid deepskyblue !important;
+    border: 1px solid deeppink !important;
 }
 
 .assistant textarea::-webkit-scrollbar,
@@ -1125,6 +1121,23 @@ Styled tables
     position: relative;
 }
 
+.box-questions .btn-group {
+    width: 100%;
+    display: block;
+    text-align: right;
+    padding-left: 1em;
+    padding-right: 1em;
+    position: sticky;
+    top: 0;
+    background: black;
+    z-index: 1;
+    padding-bottom: 1em;
+}
+
+.box-questions #btn-copy.active {
+    color: lime;
+}
+
 .assistant-control .btn-group {
     position: absolute;
     bottom: 0em;
@@ -1138,7 +1151,7 @@ Styled tables
     padding-right: 0.5em;
 }
 
-.assistant-control .btn-group .btn {
+.assistant .btn-group .btn {
     padding: 1px;
     padding-right: 0em;
     padding-left: 0em;
@@ -1150,23 +1163,23 @@ Styled tables
     color: #54e5ae;
 }
 
-.assistant-control #btn-cancel {
+.assistant #btn-cancel {
     position: absolute;
     left: 0;
     padding-left: 0.6em;
 }
 
 @media (min-width: 300px) {
-    .assistant-control .btn-group .btn {
+    .assistant .btn-group .btn {
         font-size: 1.8em;
     }
-    .assistant-control #btn-cancel {
+    .assistant #btn-cancel {
         padding-left: 0.4em;
     }
 }
 
 @media (min-width: 576px) {
-    .assistant-control .btn-group .btn {
+    .assistant .btn-group .btn {
         font-size: 2em;
         padding-right: 0.5em;
         padding-left: 0.5em;
@@ -1175,31 +1188,31 @@ Styled tables
         padding-left: 0.5em;
         padding-right: 0.5em;
     }
-    .assistant-control #btn-cancel {
+    .assistant #btn-cancel {
         padding-left: 1.1em;
     }
 }
 
-.assistant-control .btn-group .btn-text {
+.assistant .btn-group .btn-text {
     font-size: 0.5em;
 }
 
-.assistant-control .btn-group .btn.disabled {
+.assistant .btn-group .btn.disabled {
     color: purple;
     cursor: not-allowed;
     pointer-events: none;
     cursor: not-allowed;
 }
 
-.assistant-control .btn-group &:active,
-.assistant-control .btn-group &:focus,
-.assistant-control .btn-group &:hover,
-.assistant-control .btn-group &:active:focus,
-.assistant-control .btn-group .btn,
-.assistant-control .btn-group .btn a,
-.assistant-control .btn-group .btn a:active,
-.assistant-control .btn-group .btn a:focus,
-.assistant-control .btn-group .btn a:hover  {
+.assistant .btn-group &:active,
+.assistant .btn-group &:focus,
+.assistant .btn-group &:hover,
+.assistant .btn-group &:active:focus,
+.assistant .btn-group .btn,
+.assistant .btn-group .btn a,
+.assistant .btn-group .btn a:active,
+.assistant .btn-group .btn a:focus,
+.assistant .btn-group .btn a:hover  {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
