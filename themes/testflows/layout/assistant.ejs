@@ -19,6 +19,9 @@
                         <button class="btn disabled" type="submit" id="btn-copy" onclick="copyMessages()">
                             <a class="btn-icon far fa-copy"></a>
                         </button>
+                        <button class="btn" type="submit" id="btn-help" data-toggle="modal" data-target="#helpModal">
+                            <a class="btn-icon far fa-question-circle"></a>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -62,6 +65,54 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="helpModal" tabindex="-1" role="dialog" aria-labelledby="help-modal-title" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title" id="help-modal-title">Assistant Reference</h1>
+                  <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+                    <a class="btn-icon fas fa-times" aria-hidden="true"></a>
+                  </button>
+                </div>
+                <div class="modal-body">
+                    <p>The Assistant uses an advanced AI model to help testers write tests faster.</p>
+                    <h2>Message controls</h2>
+                    <p><ul>
+                        <li>Use the <a class="btn-icon fas fa-keyboard"></a> button to start a new conversation.</li>
+                        <li>Use the <a class="btn-icon fas fa-comment"></a> button to reply to the last message to continue the current conversation.</li>
+                        <li>Use the <a class="btn-icon fas fa-redo"></a> button to clear all messages.</li>
+                    </ul></p>
+                    <h2>Questions box menu</h2>
+                    <p>The questions box has the following buttons:
+                        <ul>
+                            <li>Use the <a class="btn-icon far fa-copy"></a>
+                            button to copy the currently selected message to the clipboard.
+                            The copied message will include the currently selected message and its response,
+                            including the system message and any previous messages in the conversation at the top,
+                            which form the context of the current message.button to copy currently
+                            selected message into the clipboard.
+                            </li>
+                            <li>Use the <a class="btn-icon far fa-question-circle"></a> button to open assistant's reference.</li>
+                        </ul>
+                    </p>
+                    <h2>Status Bar</h2>
+                    <p>The status of the message is shown at the top of the message input box in the status bar.</p>
+                    <p>The following status messages can be expected:
+                        <ul>
+                            <li><code>Status: sending</code> - message is being sent.</li>
+                            <li><code>Status: in queue</code> - message has been queued for processing.</li>
+                            <li><code>Status: completed</code> - message has been processed, and response has been completed.</li>
+                        </ul>
+                    </p>
+                    <h2>Layout</h2>
+                    <p>On large screens, the assistant is broken up into the left and right columns to provide
+                    a convenient way to work with long questions and answers.</p>
+                    <p>On mobile devices, the message controls are at the bottom, and a questions box with messages
+                    and responses is shown at the top.</p>
+                </div>
+              </div>
+            </div>
+          </div>
     </div>
 </div>
 <%- partial('_partial/hero_graph') %>

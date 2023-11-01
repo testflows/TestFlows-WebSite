@@ -1148,12 +1148,15 @@ Styled tables
     position: relative;
 }
 
-.box-questions .btn-group {
+.assistant .box-questions .btn {
+    padding-right: 15px;
+    padding-left: 0px;
+}
+
+.assistant .box-questions .btn-group {
     width: 100%;
     display: block;
     text-align: right;
-    padding-left: 1em;
-    padding-right: 1em;
     position: sticky;
     top: 0;
     background: black;
@@ -1161,7 +1164,7 @@ Styled tables
     padding-bottom: 1em;
 }
 
-.box-questions #btn-copy.active {
+.assistant .box-questions #btn-copy.active {
     color: lime;
 }
 
@@ -1175,7 +1178,7 @@ Styled tables
     padding-right: 0.5em;
 }
 
-.assistant .btn-group .btn {
+.assistant .btn {
     padding: 1px;
     padding-right: 0em;
     padding-left: 0em;
@@ -1203,7 +1206,7 @@ Styled tables
 }
 
 @media (min-width: 576px) {
-    .assistant .btn-group .btn {
+    .assistant .btn {
         font-size: 2em;
         padding-right: 0.5em;
         padding-left: 0.5em;
@@ -1217,26 +1220,26 @@ Styled tables
     }
 }
 
-.assistant .btn-group .btn-text {
+.assistant .btn-text {
     font-size: 0.5em;
 }
 
-.assistant .btn-group .btn.disabled {
+.assistant .btn.disabled {
     color: purple;
     cursor: not-allowed;
     pointer-events: none;
     cursor: not-allowed;
 }
 
-.assistant .btn-group &:active,
-.assistant .btn-group &:focus,
-.assistant .btn-group &:hover,
-.assistant .btn-group &:active:focus,
-.assistant .btn-group .btn,
-.assistant .btn-group .btn a,
-.assistant .btn-group .btn a:active,
-.assistant .btn-group .btn a:focus,
-.assistant .btn-group .btn a:hover  {
+.assistant &:active,
+.assistant &:focus,
+.assistant &:hover,
+.assistant &:active:focus,
+.assistant .btn,
+.assistant .btn a,
+.assistant .btn a:active,
+.assistant .btn a:focus,
+.assistant .btn a:hover  {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
@@ -1246,3 +1249,42 @@ Styled tables
 .assistant .btn.codeblock-copy {
     color: #54e5ae;
 }
+
+/*******************/
+/* Assistant Modal */
+/*******************/
+.assistant .modal-header {
+    border-color: springgreen;
+}
+
+.assistant .modal-content {
+    background: #18111b;
+    color: white;
+    box-shadow: 0px 0px 10px springgreen;
+    border-radius: 0px;
+}
+
+.assistant .modal-title {
+    font-weight: 500;
+}
+
+
+.assistant .modal-body::-webkit-scrollbar {
+    display: none;
+}
+
+.assistant .modal-body {
+    text-wrap: pretty;
+    max-height: 70vh;
+    overflow: auto;
+}
+
+.assistant .modal-body h1,
+.assistant .modal-body h2,
+.assistant .modal-body h3,
+.assistant .modal-body h4,
+.assistant .modal-body h5,
+.assistant .modal-body h6 {
+    text-align: left;
+}
+
