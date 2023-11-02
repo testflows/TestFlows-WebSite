@@ -918,6 +918,7 @@ Styled tables
 
 .assistant .container {
     height: 100%;
+    overflow-y: auto;
 }
 
 @media (min-width: 1200px) {
@@ -947,9 +948,9 @@ Styled tables
 
 .assistant .assistant-control {
     background-color: #18111b;
-    height: 30%;
     border-radius: 15px 15px 0 0;
     display: flex;
+    height: 200px;
     flex-direction: column;
 }
 
@@ -958,9 +959,19 @@ Styled tables
     background: black;
     color: white;
     width: 100%;
+    height: calc(100% - 200px);
     text-align: center;
-    height: 70%;
     overflow-y: auto;
+}
+
+@media (min-height: 500px) {
+    .assistant .assistant-control {
+        height: 300px;
+    }
+
+    .assistant .box-questions {
+        height: calc(100% - 300px);
+    }
 }
 
 @media (min-width: 992px) {
