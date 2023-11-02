@@ -1284,6 +1284,7 @@ Styled tables
     box-shadow: 0px 0px 10px springgreen;
     border-radius: 0px;
     top: 3.5em;
+    position: static;
 }
 
 .assistant .modal-title {
