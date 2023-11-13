@@ -1736,7 +1736,7 @@ If we also want to set custom `examples`, you could do it as follows:
 Scenario(name="my new name", flags=PAUSE_BEFORE,
          examples=Examples("x y result", [
             (1,2,3), (2,2,4)
-         ], test=test)(x=1, y=1, result=2)
+         ]), test=test)(x=1, y=1, result=2)
 ```
 
 Similarly, any other attribute of the scenario can be set. If the same attribute
@@ -2581,7 +2581,7 @@ When custom command line argument parser is defined then the help messages obtai
 the description of the custom arguments. For example,
 
 ```bash
-python3 ./test.py
+python3 ./test.py --help
 ```
 ```bash
 ...
@@ -3888,7 +3888,7 @@ with Scenario("My scenario"):
 ## Outline
 
 An [Outline] can be defined using [Outline] test definition class or [TestOutline] decorator.
-An [Outline] is a sub-type of a [Test] type but can you can change the type
+An [Outline] is a sub-type of a [Test] type but you can change the type
 by passing it another [Type] or a [Sub-Type] such as [Scenario] or [Suite] etc.
 
 However, because [Outline]s are meant to be called from other tests or used with [Examples]
@@ -3910,7 +3910,7 @@ outline()
 
 When [Examples] are defined for the [Outline] and an outline is called with no arguments from a test
 that is of a higher [Type] than the [Type] of outline itself, then when called, the outline will iterate over all
-the examples defined in the [Examples] table. For example,if you run the example above that executes the outline
+the examples defined in the [Examples] table. For example, if you run the example above that executes the outline
 with no arguments, you will see that the outline iterates over all the examples in the [Examples] table, where
 each example, a row in the examples table, defines the values of the arguments for the outline.
 
