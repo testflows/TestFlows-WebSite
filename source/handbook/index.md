@@ -3873,7 +3873,7 @@ These classes are usually used for the classification of checks during reporting
 ## Example
 
 An [Example] can only be defined inline using [Example] test definition class. There is no decorator
-to define it outside of existing test. An [Example] is of a [Test Type] and is used to define
+to define it outside of existing test. An [Example] is a sub-type of a [Test Type] and is used to define
 one or more sub-tests. Usually, [Example]s are created automatically using [Outline]s.
 
 ```python
