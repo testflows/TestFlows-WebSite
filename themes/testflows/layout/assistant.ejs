@@ -197,8 +197,7 @@
 <%- partial('_partial/hero_graph') %>
 <script>
     const emptyContext = '\n\n'
-    const apiKeyCode = '69d2245ecf1e4049893c4327dfcaf5fdb795e548de43724ba8bfd4e01233891f3552fffa33ec7969'
-    const urlCode = '2f31be98e988461fac622fed4fbe63a7298007609dd071c927ecb1475d25fb6f17433514b59a2e'
+    const urlCode = '7b4a871d267aad7f5b927f0f54db61efc94a6ade57ef5f30c5ecaf296726edd9c231b4ffd71fcbbf'
     var apiKey, url
     var selectedMessage
     var systemMessage = 'Below is an instruction that describes a task. Write a response that appropriately completes the request.'
@@ -247,6 +246,14 @@
         return new TextDecoder().decode(code.map((c,i) => c ^ key[i]))
     }
 
+    function split(s, separator='|') {
+        var i = s.indexOf(separator);
+        if (i > 0) {
+            return [s.slice(0, i), s.slice(i+1)];
+        }
+        return [s];
+    }
+
     function checkApiKey() {
         var key = document.getElementById('api-key')
         var status = document.getElementById('api-key-status')
@@ -258,21 +265,21 @@
             return
         }
 
-        key_parts = key.value.split('|')
+        key_parts = split(key.value)
         if (key_parts.length < 2) {
             status.innerText = 'Invalid access key format'
             return
         }
 
         url = decrypt(urlCode, key_parts[0])
-        apiKey = decrypt(apiKeyCode, key_parts[1])
+        apiKey = key_parts[1]
 
         if (!url.startsWith('https://')) {
             status.innerText = 'Invalid access key'
             return
         }
 
-        fetch(`${url}/status/1`,{
+        fetch(`${url}/v1/assistant/status/1`,{
             method: 'POST',
             headers: {
                 Accept: "application/json",
@@ -342,7 +349,7 @@
     function streamOutput(jobId, updateResponseMessage) {
         var status = document.getElementById('status')
 
-        fetch(`${url}/stream/${jobId}`,{
+        fetch(`${url}/v1/assistant/stream/${jobId}`,{
             method: 'POST',
             headers: {
                 Accept: "application/json",
@@ -501,7 +508,7 @@
         status.classList.add('text-success')
         status.innerHTML = "Request: canceling"
 
-        fetch(`${url}/cancel/${response_id}`,{
+        fetch(`${url}/v1/assistant/cancel/${response_id}`,{
             method: 'POST',
             headers: {
                 Accept: "application/json",
@@ -618,7 +625,7 @@
 
         const prompt = buildPrompt(context, message.value)
 
-        fetch(`${url}/run`,{
+        fetch(`${url}/v1/assistant/run`,{
             method: 'POST',
             headers: {
                 Accept: "application/json",
