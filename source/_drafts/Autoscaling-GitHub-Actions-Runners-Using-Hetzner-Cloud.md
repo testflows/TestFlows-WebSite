@@ -23,5 +23,14 @@ GitHub Actions Runners presents a specific operational limitations and requireme
 
 # Implementing Autoscaling GitHub Actions with Hetzner Runners
 
-Using github-hetzner-runners program provides autoscaling GitHub Actions runners for a GitHub repository in conjunction with a Hetzner Cloud project. The process,it is designed to be completed in about 5 minutes, involves a few straightforward steps.
+The installation process for TestFlows GitHub Runners begins with installing the **testflows.github.hetzner.runners** Python package using the pip3 command. After installation, it’s crucial to verify that **github-hetzner-runners** utility has been correctly installed by executing the **github-hetzner-runners -v** command.Github-hetzner-runners is typically installed in the ~/.local/bin/ directory, and users must ensure that this directory is part of their system's PATH environment variable. For Ubuntu users, this might require updating the ~/.profile file to include the directory. Additionally, for launching **github-hetzner-runners** program, it’s necessary to specify the GitHub repository along with GitHub and Hetzner Cloud tokens, which need to be created and securely stored.
+
+
+
+
+
+
+
+
+
 
