@@ -18,4 +18,10 @@ This service offers an innovative solution for GitHub Actions workflows by provi
 
 # Understanding the Hetzner Cloud Utility's Requirements and Installation
 
-GitHub Actions Runners presents a specific operational limitations and requirements, that are crucial for its successful implementation and use.It does not support group runners, It requires a separate Hetzner Cloud projects for individual services per repository. This approach, while limiting concurrent repository management, facilitates cost tracking for each project.To utilize this utility, users must have Python version 3.7 or higher, a Hetzner Cloud account, and a GitHub API token with administrative rights. Installation is straightforward: GitHub Actions Runners can be installed via pip and requires confirmation of correct installation. It's important to ensure that the utility's installation directory, ~/.local/bin/, is included in the system's PATH. For Ubuntu users, this might involve modifying the ~/.profile to append the directory to the PATH, guaranteeing the utility's seamless integration into the user’s environment
+GitHub Actions Runners presents a specific operational limitations and requirements, that are crucial for its successful implementation and use.It does not support group runners and it requires a separate Hetzner Cloud projects for individual services per repository. This approach, while limiting concurrent repository management, facilitates cost tracking for each project.To utilize this utility, users must have Python version 3.7 or higher, a Hetzner Cloud account, and a GitHub API token with administrative rights. Installation is straightforward: GitHub Actions Runners can be installed via pip and requires confirmation of correct installation. It's important to ensure that the  installation directory, ~/.local/bin/, is included in the system's PATH. For Ubuntu users, this might involve modifying the ~/.profile to append the directory to the PATH, guaranteeing the utility's seamless integration into the user’s environment.
+
+
+# Implementing Autoscaling GitHub Actions with Hetzner Runners
+
+Using github-hetzner-runners program provides autoscaling GitHub Actions runners for a GitHub repository in conjunction with a Hetzner Cloud project. The process,it is designed to be completed in about 5 minutes, involves a few straightforward steps.
+
