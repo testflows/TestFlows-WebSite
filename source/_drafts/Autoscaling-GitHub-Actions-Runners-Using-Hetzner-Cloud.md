@@ -127,7 +127,7 @@ The **github-hetzner-runners** sets a default maximum limit of 10 runners, but t
 The **github-hetzner-runners** can recycles servers that have finished a job, instead of just deleting them. This helps save money because Hetzner Cloud charges by hour.Therefore, if a server only did a job for a few minutes, instead of getting rid of it, the program turns it off and then refreshes it for a new job. This means the server is like new for the next job. These servers are renamed with "recycle" in their name and are kept for almost an hour. For example, if a server is used for 2 hours and 50 minutes, it will be deleted because it has only *10* minutes or less of useful life, but if it's only used for 2 hours and 30 minutes, it can be used again. The program picks which server to delete based on cost and how much time it has left. If a new job comes in and doesn't match any recyclable servers and all the runners are busy, the program will delete the least costly server to make space. This process checks the server type, location, and SSH keys to match them with the job's needs. You can also turn off this recycling feature if you want.
 
 
-
+# What Github-Hetzner-Runners supports?
 
 
 
