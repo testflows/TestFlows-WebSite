@@ -133,8 +133,12 @@ You can install **github-hetzner-runners** straight from the source. Just copy t
 
 For ARM64 runners, the default server on github-hetzner-runners is an Intel-based cx11 instance, not suitable for ARM64 tasks. To use ARM64 runners, you need to specify the ARM64 server type with a type-{name} label, where {name} is a Hetzner Cloud ARM64 server type like cax11 or cax21. These types offer different configurations of CPUs and RAM, tailored for ARM64 architecture. Additionally, you must choose an appropriate ARM image using the image-arm-{type}-{name} label. For instance, if you want to use an Ampere Altra ARM64 server with 4 vCPUs and 8GB RAM running the ubuntu-22.04 image, your job's runs-on section should be defined as [self-hosted, type-cax21, image-arm-system-ubuntu-22.04]. This setup ensures that your job runs on a server with the specific ARM64 configuration you require.
 
+In **github-hetzner-runners**, the default server location for runners isn't set automatically. But, you can set a specific default location using the --default-location option. This is handy if you always want your servers in a certain place. For jobs that need to run in a specific location, use the in-{name} label, where {name} is one of the Hetzner Cloud locations like ash for Ashburn, VA in the US, or fsn1 for Falkenstein in Germany. This way, you can tailor where each job runs. For instance, if you want a job to run on a cx11 server type in Ashburn, you would set your job’s runs-on to [self-hosted, type-cx11, in-ash]. This ensures your job runs exactly where you need it to.
 
 
+# Conclusion
+
+**github-hetzner-runners** service is a versatile and efficient tool for anyone using GitHub Actions. It simplifies the process of running GitHub workflows by automatically setting up and managing servers in Hetzner Cloud, which can significantly cut down costs and improve efficiency. With its user-friendly setup and ability to handle both x64 and arm64 runners, it provides a wide range of project requirements. This service not only manages of starting and shutting down servers as needed but also recycles them to maximize cost-effectiveness. Its flexibility in customizing server types, images, and locations, along with its straightforward installation process, makes it an excellent choice for developers and teams looking to enhance their CI/CD pipelines with a reliable, cloud-based solution.
 
 
 
