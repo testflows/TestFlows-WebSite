@@ -108,7 +108,7 @@ See these steps in action:
    :width: 625px
    :alt: Deploying Cloud Service
 
-Once the **github-hetzner-runners** cloud service is activated, the process becomes effortlessly manageable. You can now relax and observe as **github-hetzner-runners** efficiently handles the workload, automatically spinning up new runners as needed. These runners are tasked with executing the queued GitHub Actions jobs in your repository. 
+Once the **github-hetzner-runners** cloud service is activated, the process becomes easy to manage. You can see how efficiently handles the workload, automatically spinning up new runners as needed.These runners are in charge of doing the job lined up in your GitHub Actions jobs repository.
 
 See this step in action:
 
