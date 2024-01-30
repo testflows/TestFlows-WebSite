@@ -1082,6 +1082,7 @@ Styled tables
     overflow-x: auto;
     font-size: 1em;
     padding-bottom: 1em;
+    white-space: pre-wrap;
 }
 
 @media (min-width: 576px) {
