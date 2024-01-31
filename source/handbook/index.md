@@ -7494,7 +7494,8 @@ When sending messages to an AI model, each message has a specific structure. Tha
 For example, let's ask the [Assistant] to write a simple test.
 
 ```
-Write a simple test using testflows.core. Please use @TestScenario and split test into Given, When, Then steps.
+Write a simple test using testflows.core. Please use @TestScenario and
+split test into Given, When, Then steps.
 ```
 
 A reply similar to the following will be produced:
