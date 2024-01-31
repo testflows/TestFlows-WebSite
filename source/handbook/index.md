@@ -5616,6 +5616,9 @@ def check_pressure_switch(self):
 
 The [either() function] selects values for a combination variable one at a time until all values are consumed.
 
+> **{% attention %}** This function must be called only once for each line of code in the same source file,
+> or a unique identifier `i` must be specified.
+
 > ✋ It is used in [TestSketch]es to check all possible combinations. See [Using Sketches].
 
 Values can be specified either using `*values` or by passing an iterator or generator
@@ -5623,9 +5626,6 @@ as a `value`.
 
 If neither `*values` nor `value` is explicitly specified, then `*values`
 is set to a `(True, False)` tuple.
-
-This function must be called only once for each line of code in the same source file, or
-a unique identifier `i` must be specified.
 
 If `random` is `True`, then all values will be shuffled using the default shuffle function.
 
@@ -6990,7 +6990,7 @@ where
 * `message` custom timeout error message, default: `None`
 * `started` start time, default: `None` (set to current time)
 
-The object has an `elapsed` attribute to get the current elapsed time, 
+The object has an `elapsed` attribute to get the current elapsed time,
 which is the difference between the current and the `started` time.
 
 The [Timer] object can be used for checking for a timeout if the `timeout` parameter is set.
@@ -7474,6 +7474,181 @@ Nov 15,2021 17:22:26   ⟥  Scenario my scenario
 ✍  Is this correct [Y/n]?
             3s 198ms   ⟥⟤ OK my scenario, /my scenario, success
 ```
+
+# Using the Assistant
+
+The [Assistant] uses an advanced AI model to help testers write tests faster.
+
+> **{% attention %}** You must refer to the {% testflows %} as the `testflows.core`.
+
+> **{% attention %}** The [Assistant] model can produce invalid answers. Trying different prompts sometimes helps guide the model to produce the expected result.
+
+![Assistant](/handbook/assets/assistant/assistant.png)
+
+When sending messages to an AI model, each message has a specific structure. That structure includes a system message and context that is tied to each message. You can enter your messages in the questionx box.
+
+![Assistant Chatbox](/handbook/assets/assistant/assistant-chatbox.png)
+
+## Writing Simple Test
+
+For example, let's ask the [Assistant] to write a simple test.
+
+```
+Write a simple test using testflows.core. Please use @TestScenario and split test into Given, When, Then steps.
+```
+
+A reply similar to the following will be produced:
+
+````markdown
+```python
+from testflows.core import *
+
+@TestScenario
+@Name("Simple test")
+def simple_test(self):
+    with Given("I have a number"):
+        number = 5
+
+    with When("I add 2 to it"):
+        result = number + 2
+
+    with Then("The result should be 7"):
+        assert result == 7
+```
+
+This is a simple test using testflows.core. It defines a test scenario with three steps:
+
+1. Given: I have a number 5.
+2. When: I add 2 to it.
+3. Then: The result should be 7.
+````
+
+## Writing Requirements
+
+You can also ask the [Assistant] to help you write requirements.
+
+For example,
+
+````markdown
+Write a requirement for ClickHouse server related to GRANT statement for one of the privileges. Use the following example:
+
+```
+##### RQ.SRS-006.RBAC.User.Create
+version: 1.0
+
+[ClickHouse] SHALL support creating **user** accounts using `CREATE USER` statement.
+```
+
+Provide an example SQL query in the requirement. You must use the example as the template.
+````
+
+A reply similar to the following will be produced:
+
+````markdown
+##### RQ.SRS-006.RBAC.Grant.Privilege.GrantSelect
+version: 1.0
+
+[ClickHouse] SHALL support granting the `SELECT` privilege to a user using the `GRANT` statement.
+
+Example:
+
+```sql
+GRANT SELECT ON my_table TO user1;
+```
+````
+
+## Other Questions
+
+Given that the [Assistant] uses a model that was trained on general knowledge, you can ask it
+questions that are not related to testing.
+
+```
+What is the meaning of life?
+```
+
+A reply similar to the following will be produced:
+
+```
+The meaning of life is a philosophical question that has been debated throughout history.
+There are many different answers to this question, but one common answer is that the purpose
+of life is to be happy and to find fulfillment in our lives. Some people believe that the purpose
+of life is to achieve a certain goal or to make a positive contribution to the world.
+Others believe that the purpose of life is to find spiritual or religious fulfillment.
+Some people believe that the purpose of life is to simply exist and experience all that life has to offer,
+while others believe that the purpose of life is to find meaning in our existence.
+There is no one correct answer to this question, as it is a deeply personal and subjective
+question that each person must answer for themselves.
+```
+
+## System Message
+A system message is a set of instructions that are added at the top of the context for a new conversation.
+
+## Message Context
+The message context consists of the system message followed by any previous questions and responses in the current conversation. New replies in the same conversation inherit the context of the previous message and include its question and response in their own context. Therefore, the context for each message is unique and defines the state of the conversation at a particular point.
+
+You can examine the context of the message by selecting it and using the ![Copy](/handbook/assets/assistant/copy.png) button to copy the message and its context to the clipboard.
+
+## Message Structure
+
+Messages have the following format:
+
+> * `Context`
+> * `Message`
+> * `Response`
+
+The default context is:
+
+> * `System message`
+
+## Message Controls
+
+* Use the ![Keyboard](/handbook/assets/assistant/keyboard.png) button to start a new conversation.
+* Use the ![Cancel](/handbook/assets/assistant/cancel.png) button to cancel current pending message.
+* Use the ![Clearn](/handbook/assets/assistant/clear.png) button to clear all messages.
+* Use the ![Reply](/handbook/assets/assistant/reply.png) button to reply to the selected or the last message to continue the conversation.
+
+## Questions Box Menu
+
+The questions box has the following buttons:
+
+* Use the ![Box Checked](/handbook/assets/assistant/box-checked.png) to deselect currently selected message.
+  If no messages are selected, then the ![Box](/handbook/assets/assistant/box.png) disabled button is shown.
+* Use the ![Copy](/handbook/assets/assistant/copy.png) button to copy the currently selected message and its
+  response to the clipboard including its context. The context includes the system
+  message and any previous messages in the conversation.
+* Use the ![Information](/handbook/assets/assistant/info.png) button to open assistant's reference.
+
+## Changing System Message
+
+Use the ![Pencil With Ruler](/handbook/assets/assistant/pencil-ruler.png) button in the status bar to change the system message for any new conversations started with the ![Keyboard](/handbook/assets/assistant/keyboard.png) button.
+
+## Changing Message Context
+
+Use the ![Pencil](/handbook/assets/assistant/pencil.png) button in the status bar to change the context for the next message that is either a reply or a start of new conversation.
+
+## Status bar
+
+The status of the message is shown at the top of the message input box in the status bar.
+
+The following status messages can be expected:
+
+* `Status: sending` message is being sent
+* `Status: in queue` message has been queued for processing
+* `Status: completed` message has been processed, and response has been completed
+
+Status bar menu buttons:
+
+*  change ![Pencil With Ruler](/handbook/assets/assistant/pencil-ruler.png)system message
+*  change ![Pencil](/handbook/assets/assistant/pencil.png) next message context
+
+## Layout
+
+On large screens, the assistant is broken up into the left and right panes
+to provide a convenient way to work with long messages and responses.
+The questions box is on the left and the message controls is on the right.
+
+On mobile devices, the message controls are at the bottom, and a
+questions box with messages and responses is shown at the top.
 
 # Test Program Options
 
@@ -8889,6 +9064,7 @@ optional arguments:
 TestFlows.com Open-Source Software Testing Framework. Copyright 2021 Katteli Inc.
 ````
 
+[Assistant]: https://testflows.com/assistant/
 [Using Timer]: #Using-Timer
 [Test Program Tree]: #Test-Program-Tree
 [Timer]: #timer

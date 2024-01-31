@@ -1,4 +1,5 @@
 https://testflows.com/handbook/index.html
+https://testflows.com/handbook/assets/assistant/index.html
 https://testflows.com/assistant/index.html
 https://testflows.com/index.html
 https://testflows.com/blog/working-with-requirements-just-like-with-code/

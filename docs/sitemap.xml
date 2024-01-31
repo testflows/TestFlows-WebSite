@@ -4,7 +4,16 @@
   <url>
     <loc>https://testflows.com/handbook/index.html</loc>
     
-    <lastmod>2024-01-16</lastmod>
+    <lastmod>2024-01-31</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/handbook/assets/assistant/index.html</loc>
+    
+    <lastmod>2024-01-31</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -121,7 +130,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2024-01-30</lastmod>
+    <lastmod>2024-01-31</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
