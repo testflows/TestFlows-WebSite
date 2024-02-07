@@ -375,7 +375,7 @@
                 }
             }
             function cb() {
-                if (response.status != 'COMPLETED' && response.status != 'FAILED' && response.status != 'CANCELLED') {
+                if ( !(response.status == 'COMPLETED' && responseMessage == '') && response.status != 'FAILED' && response.status != 'CANCELLED') {
                     streamOutput(jobId, updateResponseMessage)
                 }
                 else {

@@ -1,3 +1,4 @@
+https://testflows.com/contact.html
 https://testflows.com/handbook/index.html
 https://testflows.com/handbook/assets/assistant/index.html
 https://testflows.com/assistant/index.html
@@ -11,6 +12,5 @@ https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
 https://testflows.com/credits.html
 https://testflows.com/about.html
 https://testflows.com/blog/index.html
-https://testflows.com/contact.html
 https://testflows.com/
 
