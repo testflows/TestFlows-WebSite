@@ -376,7 +376,9 @@
             }
             function cb() {
                 if ( !(response.status == 'COMPLETED' && responseMessage == '') && response.status != 'FAILED' && response.status != 'CANCELLED') {
-                    streamOutput(jobId, updateResponseMessage)
+                    setTimeout(function() {
+                        streamOutput(jobId, updateResponseMessage)
+                    }, 1500)
                 }
                 else {
                     var message = document.getElementById('message-input')
