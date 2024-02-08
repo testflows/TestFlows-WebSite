@@ -378,7 +378,7 @@
                 if ( !(response.status == 'COMPLETED' && responseMessage == '') && response.status != 'FAILED' && response.status != 'CANCELLED') {
                     setTimeout(function() {
                         streamOutput(jobId, updateResponseMessage)
-                    }, 1500)
+                    }, 200)
                 }
                 else {
                     var message = document.getElementById('message-input')
