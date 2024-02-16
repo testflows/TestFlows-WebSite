@@ -906,6 +906,67 @@ Styled tables
     color: #54e5ae;
 }
 
+hr {
+    padding-top: 2em;
+    padding-bottom: 2em;
+    border: none;
+}
+
+.text-small {
+    font-size: 0.9em;
+}
+
+/****************************/
+/* Forms                    */
+/****************************/
+form.contact-us {
+   padding-bottom: 5em;
+}
+
+form.contact-us input,
+form.contact-us textarea {
+    border-color: black;
+}
+
+
+form.contact-us input:focus,
+form.contact-us textarea:focus {
+    outline: none;
+}
+
+.successful-submission {
+    background: black;
+    border: 1px solid black;
+    margin: 2em;
+    padding: 2em;
+}
+
+.failed-submission {
+    text-wrap: balance;
+}
+
+.was-validated .form-control:valid, .form-control.is-valid {
+    border-color: #54e5ae;
+}
+
+.contact-us button {
+    width: 100%;
+    height: 3em;
+    background-color: black;
+    border-color: black;
+    color: white;
+    font-weight: bold;
+}
+
+.contact-us button:hover,
+.contact-us button:focus,
+.contact-us button:active {
+    background-color: #54e5ae;
+    border: 2px solid #54e5ae;
+    color: black;
+    outline: none;
+}
+
 /****************************/
 /* Assistant                */
 /****************************/
