@@ -923,6 +923,11 @@ form.contact-us {
    padding-bottom: 5em;
 }
 
+.form-header {
+    padding-top: 3em;
+    padding-bottom: 3em;
+}
+
 form.contact-us input,
 form.contact-us textarea {
     border-color: black;

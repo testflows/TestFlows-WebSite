@@ -8,7 +8,7 @@ date: 2019-11-23 10:41:21
 
 <div class="row">
   <form class="needs-validation contact-us" novalidate onsubmit="return submitContactUs(this);">
-    <div class="row">
+    <div class="row form-header">
       <div class="col-md-2"></div>
       <div class="col-md-8">
         <h3>Contact the TestFlows team now and we'll be happy to support all your testing needs.</h4>
