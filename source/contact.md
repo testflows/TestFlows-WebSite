@@ -78,7 +78,7 @@ date: 2019-11-23 10:41:21
               <span role="error-message">Error: something went wrong while trying to submit the contact information</span>. Please try again or contact us directly by writing to <strong>contact@testflows.com</strong>.
             </label>
             <button class="btn" id="submit">
-              <label role="submit"><i class="fas fa-envelope-open-text pr-2"></i>Submit</label>
+              <label role="submit"><span>Submit</span><i class="fas fa-envelope-open-text pl-2"></i></label>
               <label role="processing" class="d-none">
                 <i class="pr-2">
                   <span class="spinner-border text-light" style="width: 1.2em; height: 1.2em;" role="status">
