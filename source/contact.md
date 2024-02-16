@@ -131,7 +131,7 @@ function submitContactUs(form) {
         "usecase": form.querySelector("#usecase").value,
         "created": (new Date()).toISOString().replace("Z", "000Z")
     })
-    console.log(body)
+
     public_token = "j23345d234dsksjfdsl23afsdfFA234"
     public_magic_number = "d2343fe3342242324abfec12"
     signature = MD5(public_magic_number + unescape(encodeURIComponent(body)))
@@ -141,7 +141,7 @@ function submitContactUs(form) {
     form.querySelector(".failed-submission").classList.add("d-none")
 
     response = null
-    fetch(`http://api.testflows.com/public/v1/form/contact/${signature}`, {
+    fetch(`https://api.testflows.com/public/v1/form/contact/${signature}`, {
         method: 'POST',
         headers: {
             Accept: "application/json",
@@ -151,7 +151,6 @@ function submitContactUs(form) {
         body: body
     })
     .then((resp) => {
-        console.log(resp)
         response = resp
         return response.text()
     })

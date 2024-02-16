@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1708092927159" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1708093179065" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1708092927159" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1708093179065" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -205,7 +205,7 @@ function submitContactUs(form) {
         "usecase": form.querySelector("#usecase").value,
         "created": (new Date()).toISOString().replace("Z", "000Z")
     })
-    console.log(body)
+
     public_token = "j23345d234dsksjfdsl23afsdfFA234"
     public_magic_number = "d2343fe3342242324abfec12"
     signature = MD5(public_magic_number + unescape(encodeURIComponent(body)))
@@ -215,7 +215,7 @@ function submitContactUs(form) {
     form.querySelector(".failed-submission").classList.add("d-none")
 
     response = null
-    fetch(`http://api.testflows.com/public/v1/form/contact/${signature}`, {
+    fetch(`https://api.testflows.com/public/v1/form/contact/${signature}`, {
         method: 'POST',
         headers: {
             Accept: "application/json",
@@ -225,7 +225,6 @@ function submitContactUs(form) {
         body: body
     })
     .then((resp) => {
-        console.log(resp)
         response = resp
         return response.text()
     })
