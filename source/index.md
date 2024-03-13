@@ -36,7 +36,6 @@ layout: index
 <h4>Open-source test automation framework.</h4>
 <h2>Try now.</h1>
 </div>
-<div class="command-shadow"></div>
 <div class="row justify-content-center no-gutters">
 <div class="command">
 ```bash

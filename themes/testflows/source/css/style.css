@@ -624,18 +624,6 @@ blockquote::-webkit-scrollbar {
     background: transparent;
 }
 
-.banner .command-shadow {
-    height: 0.5em;
-    width: 35ch;
-    background: transparent;
-    border-radius: 0px;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    box-shadow: 0 2em 2em #00d9ff;
-    border: none;
-    margin: auto;
-}
-
 .command figure.highlight .code .line {
     background: black;
     color: white;
@@ -655,8 +643,6 @@ blockquote::-webkit-scrollbar {
     font-size: 0.8em;
     color: white;
     display: inline-block;
-    padding-left: 2em;
-    padding-right: 2em;
 }
 
 .links {
@@ -680,6 +666,11 @@ blockquote::-webkit-scrollbar {
     border: none;
     outline: none !important;
     box-shadow: none;
+}
+
+.banner .command {
+    border: 1px solid #54e5ae;
+    border-radius: 15px;
 }
 
 .banner .command .prompt {

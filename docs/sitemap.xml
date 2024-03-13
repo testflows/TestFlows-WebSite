@@ -11,6 +11,51 @@
   </url>
   
   <url>
+    <loc>https://testflows.com/handbook/index.html</loc>
+    
+    <lastmod>2024-03-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/contact.html</loc>
+    
+    <lastmod>2024-03-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/credits.html</loc>
+    
+    <lastmod>2024-03-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/assistant/index.html</loc>
+    
+    <lastmod>2024-03-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/index.html</loc>
+    
+    <lastmod>2024-03-13</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/</loc>
     
     <lastmod>2024-03-13</lastmod>
@@ -66,51 +111,6 @@
   
   <url>
     <loc>https://testflows.com/about.html</loc>
-    
-    <lastmod>2024-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/contact.html</loc>
-    
-    <lastmod>2024-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/credits.html</loc>
-    
-    <lastmod>2024-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/assistant/index.html</loc>
-    
-    <lastmod>2024-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/index.html</loc>
-    
-    <lastmod>2024-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/handbook/index.html</loc>
     
     <lastmod>2024-03-13</lastmod>
     
