@@ -289,11 +289,11 @@ blockquote::-webkit-scrollbar {
 }
 
 .post-summary h1 {
+    font-size: 3em;
     font-weight: bold;
     color: white;
     text-align: start;
     padding-bottom: 1em;
-    font-family: Ubuntu;
 }
 
 .post-summary h1:hover {
