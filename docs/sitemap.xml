@@ -2,27 +2,18 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://testflows.com/index.html</loc>
-    
-    <lastmod>2024-03-13</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://testflows.com/handbook/index.html</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-06-27</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/contact.html</loc>
+    <loc>https://testflows.com/index.html</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -31,7 +22,16 @@
   <url>
     <loc>https://testflows.com/credits.html</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/contact.html</loc>
+    
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -40,7 +40,7 @@
   <url>
     <loc>https://testflows.com/assistant/index.html</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,7 +49,7 @@
   <url>
     <loc>https://testflows.com/blog/index.html</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,7 +58,7 @@
   <url>
     <loc>https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -67,7 +67,7 @@
   <url>
     <loc>https://testflows.com/blog/combinatorial-testing-the-introduction/</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -76,7 +76,7 @@
   <url>
     <loc>https://testflows.com/blog/get-your-software-covered-using-covering-arrays/</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -85,7 +85,7 @@
   <url>
     <loc>https://testflows.com/blog/how-to-break-your-tests-into-steps/</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -94,7 +94,7 @@
   <url>
     <loc>https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -103,7 +103,7 @@
   <url>
     <loc>https://testflows.com/blog/working-with-requirements-just-like-with-code/</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -112,7 +112,7 @@
   <url>
     <loc>https://testflows.com/about.html</loc>
     
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-03-14</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -121,7 +121,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2024-03-13</lastmod>
+    <lastmod>2024-06-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

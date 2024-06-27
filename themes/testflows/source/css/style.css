@@ -860,6 +860,20 @@ body {
 /**
 Styled tables
 */
+
+.styled-table.compact table {
+    font-weight: 200;
+    font-family: inherit;
+}
+
+.styled-table.compact td {
+    padding: 5px 5px;
+}
+
+.styled-table th {
+    text-align: center;
+}
+
 .styled-table {
     overflow-x: auto;
 }
