@@ -977,6 +977,17 @@ form.contact-us textarea:focus {
     outline: none;
 }
 
+/***************************/
+/* Handbook Assistant      */
+/***************************/
+.handbook .assistant .modal-dialog {
+    min-width: 50vw;
+}
+
+.handbook .assistant .box-questions {
+    height: auto;
+}
+
 /****************************/
 /* Assistant                */
 /****************************/

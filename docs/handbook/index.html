@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1719532634970" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1721863165368" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1719532634970" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1721863165368" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -81,6 +81,35 @@
     <div class="container" style="padding-bottom: 2em !important;">
         <div class="post">
             <div class="post-body row">
+                <div class="assistant">
+                    <div class="modal fade" id="docsAssistantModal" tabindex="-1" role="dialog" aria-labelledby="docs-assistant-modal-title" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h1 class="modal-title" id="docs-assistant-modal-title">Handbook AI Assistant</h1>
+                            <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+                                <a class="btn-icon fas fa-times" aria-hidden="true"></a>
+                            </button>
+                            </div>
+                            <div class="modal-body" id="docs-assistant-body">
+                                <p>This is an AI-powered TestFlows Handbook assistant that can answer your questions using the contents found in this book.<br>
+                                <span class="text-warning">💡 Note that the generated answers might not always be accurate and should be verified manually.</span></p>
+                                <div class="box-questions" id="box-questions">
+                                    <div id="history"></div>
+                                </div>
+                                <div class="status-bar">
+                                    <div id="docs-assistant-status" class="text-success"></div>
+                                </div>
+                                <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="Type here your question about TestFlows."></textarea>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="askQuestion();">Ask</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
                 <nav id="sidebar" class="col-lg-4 sidebar">
                     <div id="Contents" class="sidebar-header pt-4">
                         <h3 class="d-none d-md-block">Contents</h3>
@@ -4114,27 +4143,151 @@ then you will see an error.</p>
                         
                     </div>
                 </div>
-                <div class="jump fas fa-chevron-circle-up" onclick="window.scrollTo(0, 500); document.getElementById('sidebar').scrollTo(0, 0)"></div>
+                <div class="jump btn-group" role="group" aria-label="Control Buttons">
+                    <div class="fas fa-question-circle" onclick="openDocsAssistantModal();"></div>
+                    <div class="fas fa-chevron-circle-up" onclick="window.scrollTo(0, 500); document.getElementById('sidebar').scrollTo(0, 0)"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-window.addEventListener("load", function(){
-    // add support to go back to TOC by clicking any header
-    document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
-        element.addEventListener("click", function(event){
-            element_id = element.getAttribute("id");
-            toc_element = document.querySelector(".toc .toc-item .toc-link[href=\"#" + encodeURI(element_id) + "\"]");
-            toc_element.scrollIntoView({block: 'center'})
-            toc_element.classList.add("active");
-            // remove active class after timeout
-            setTimeout(function(){
-                toc_element.classList.remove("active");
-            }, 1000);
-        }, true);
+    window.addEventListener("load", function(){
+        // add support to go back to TOC by clicking any header
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                toc_element = document.querySelector(".toc .toc-item .toc-link[href=\"#" + encodeURI(element_id) + "\"]");
+                toc_element.scrollIntoView({block: 'center'})
+                toc_element.classList.add("active");
+                // remove active class after timeout
+                setTimeout(function(){
+                    toc_element.classList.remove("active");
+                }, 1000);
+            }, true);
+        });
     });
-});
+
+    function openDocsAssistantModal() {
+        docsAssistantModal = new bootstrap.Modal(document.getElementById('docsAssistantModal'));
+        docsAssistantModal.toggle();
+    }
+
+    function addQuestion(question) {
+        var assistantBody = document.getElementById('docs-assistant-body');
+        var historyBox = document.getElementById('history');
+    
+        var boxMyMessage = document.createElement('figure');
+        boxMyMessage.setAttribute('onclick', 'selectMessage(event)');
+        boxMyMessage.classList.add('box-my-message','highlight');
+
+        var myMessageIcons = document.createElement('div');
+        myMessageIcons.className = 'message-icon';
+
+        var myMessageAvatarIcon = document.createElement('i');
+        myMessageAvatarIcon.className = 'message-avatar-icon fas fa-users';
+
+        var myMessageTypeIcon = document.createElement('i');
+        myMessageTypeIcon.className = 'message-type-icon fas fa-keyboard';
+ 
+        myMessageIcons.appendChild(myMessageAvatarIcon);
+        myMessageIcons.appendChild(myMessageTypeIcon);
+
+        var myMessage = document.createElement('pre');
+        myMessage.classList.add('my-message','code');
+        myMessage.innerText = question.value;
+
+        boxMyMessage.appendChild(myMessageIcons);
+        boxMyMessage.appendChild(myMessage);
+
+        historyBox.appendChild(boxMyMessage);
+
+         // scroll to the bottom
+         assistantBody.scrollTop = assistantBody.scrollHeight;
+         question.value = '';
+    }
+
+    function addAnswer(response) {
+        var assistantBody = document.getElementById('docs-assistant-body');
+        var historyBox = document.getElementById('history');
+
+        var boxResponseMessage = document.createElement('figure');
+        boxResponseMessage.classList.add('box-response-message', 'highlight');
+
+        var chatResponseIcon = document.createElement('div');
+        chatResponseIcon.className = 'message-icon fas fa-robot';
+
+        var chatResponse = document.createElement('pre');
+        chatResponse.classList.add('response-message','code');
+        chatResponse.innerText = '';
+
+        boxResponseMessage.appendChild(chatResponseIcon);
+        boxResponseMessage.appendChild(chatResponse);
+
+        historyBox.appendChild(boxResponseMessage);
+
+        function typeText(i, delay, text, element, done_callback) {
+            text = text.replace('\r','')
+
+            element.innerText += text.charAt(i)
+            // scroll to the bottom
+            assistantBody.scrollTop = assistantBody.scrollHeight;
+
+            setTimeout(function(){
+                ((i < text.length - 1) ? typeText(i+1, delay, text, element, done_callback) : done_callback())
+            }, delay)
+        }
+
+        typeText(0, 10, response.answer, chatResponse, function(){});
+
+    }
+
+    function askQuestion(){
+        var question = document.getElementById('docs-assistant-question');
+        var status = document.getElementById('docs-assistant-status');
+        var public_token = "j23345d234dsksjfdsl23afsdfFA234"
+
+        status.innerHTML = '⏳ Let me find the answer';
+        processing = 0;
+        processingStatus = setInterval(function(){status.innerHTML = '⏳ Let me find the answer' + '.'.repeat(processing); processing += 1; processing = processing % 4}, 500);
+
+        addQuestion(question);
+
+        fetch(`https://api.testflows.com/public/v1/docsassistant/question`, {
+            method: 'POST',
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${public_token}`,
+            },
+            body: JSON.stringify({
+                input: {
+                    "prompt": question.value,
+                }
+            })
+        })
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error(response.status);
+        })
+        .then((response) => {
+            console.log(response);
+            status.innerHTML = '✓ Found the answer';
+            addAnswer(response);
+        })
+        .catch((e) => {
+            console.log(`Error -> ${e}`)
+            status.innerHTML = `❌ ${e}`;
+            status.classList.add('text-danger');
+            status.classList.remove('text-success');
+        })
+        .finally(() => {
+            clearInterval(processingStatus);
+            question.setAttribute('data-question-id', parseInt(question.getAttribute('data-question-id')) + 1);
+        })
+    }
 </script>
 
     </div>
