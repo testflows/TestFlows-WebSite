@@ -175,6 +175,7 @@
         processing = 0;
         processingStatus = setInterval(function(){status.innerHTML = '⏳ Let me find the answer' + '.'.repeat(processing); processing += 1; processing = processing % 4}, 500);
 
+        prompt = question.value
         addQuestion(question);
 
         fetch(`https://api.testflows.com/public/v1/docsassistant/question`, {
@@ -186,7 +187,7 @@
             },
             body: JSON.stringify({
                 input: {
-                    "prompt": question.value,
+                    "prompt": prompt,
                 }
             })
         })

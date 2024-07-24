@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1721863165368" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1721864852020" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1721863165368" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1721864852020" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -4251,6 +4251,7 @@ then you will see an error.</p>
         processing = 0;
         processingStatus = setInterval(function(){status.innerHTML = '⏳ Let me find the answer' + '.'.repeat(processing); processing += 1; processing = processing % 4}, 500);
 
+        prompt = question.value
         addQuestion(question);
 
         fetch(`https://api.testflows.com/public/v1/docsassistant/question`, {
@@ -4262,7 +4263,7 @@ then you will see an error.</p>
             },
             body: JSON.stringify({
                 input: {
-                    "prompt": question.value,
+                    "prompt": prompt,
                 }
             })
         })
