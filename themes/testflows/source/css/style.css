@@ -147,11 +147,18 @@ blockquote::-webkit-scrollbar {
 .jump {
     position: fixed;
     bottom: 0.5em;
-    right: 1em;
+    right: 0.2em;
     color: #54e5ae !important;
     font-size: 2.5em;
     cursor: pointer;
     z-index: 1000;
+}
+
+
+@media (min-width: 576px) {
+    .jump {
+        right: 1em;
+    }
 }
 
 .jump:active,
@@ -159,6 +166,10 @@ blockquote::-webkit-scrollbar {
 .jump:hover {
     color: #49c19d;
     text-decoration: none;
+}
+
+.handbook img {
+    max-width: 100%;
 }
 
 .handbook .toc-number {
@@ -424,6 +435,7 @@ blockquote::-webkit-scrollbar {
 .container-fluid {
     padding-left: 0px;
     padding-right: 0px;
+    overflow-x: auto;
 }
 
 .section-header {
