@@ -1000,6 +1000,10 @@ form.contact-us textarea:focus {
     height: auto;
 }
 
+.handbook .assistant .btn {
+    display: inline-block;
+}
+
 /****************************/
 /* Assistant                */
 /****************************/

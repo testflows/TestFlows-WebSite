@@ -14,7 +14,7 @@
                         <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h1 class="modal-title" id="docs-assistant-modal-title">Handbook Assistant</h1>
+                            <h1 class="modal-title" id="docs-assistant-modal-title"><i class="fas fa-book pr-3"></i>Handbook Assistant</h1>
                             <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
                                 <a class="btn-icon fas fa-times" aria-hidden="true"></a>
                             </button>
@@ -28,11 +28,11 @@
                                 <div class="status-bar">
                                     <div id="docs-assistant-status" class="text-success"></div>
                                 </div>
-                                <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="Type here your question about TestFlows."></textarea>
+                                <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="What is your question?"></textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="askQuestion();">Ask</button>
+                                <button type="button" class="btn btn-primary" onclick="askQuestion();"><i class="btn-icon pr-3 fas fa-paper-plane"></i>Ask</button>
                             </div>
                         </div>
                         </div>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="jump btn-group" role="group" aria-label="Control Buttons">
-                    <div class="fas fa-question-circle" onclick="openDocsAssistantModal();"></div>
+                    <div class="fas fa-question-circle pr-1" onclick="openDocsAssistantModal();"></div>
                     <div class="fas fa-chevron-circle-up" onclick="window.scrollTo(0, 500); document.getElementById('sidebar').scrollTo(0, 0)"></div>
                 </div>
             </div>

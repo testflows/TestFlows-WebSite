@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1721866715356" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1721873041666" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1721866715356" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1721873041666" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -86,7 +86,7 @@
                         <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                            <h1 class="modal-title" id="docs-assistant-modal-title">Handbook Assistant</h1>
+                            <h1 class="modal-title" id="docs-assistant-modal-title"><i class="fas fa-book pr-3"></i>Handbook Assistant</h1>
                             <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
                                 <a class="btn-icon fas fa-times" aria-hidden="true"></a>
                             </button>
@@ -100,11 +100,11 @@
                                 <div class="status-bar">
                                     <div id="docs-assistant-status" class="text-success"></div>
                                 </div>
-                                <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="Type here your question about TestFlows."></textarea>
+                                <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="What is your question?"></textarea>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="askQuestion();">Ask</button>
+                                <button type="button" class="btn btn-primary" onclick="askQuestion();"><i class="btn-icon pr-3 fas fa-paper-plane"></i>Ask</button>
                             </div>
                         </div>
                         </div>
@@ -4144,7 +4144,7 @@ then you will see an error.</p>
                     </div>
                 </div>
                 <div class="jump btn-group" role="group" aria-label="Control Buttons">
-                    <div class="fas fa-question-circle" onclick="openDocsAssistantModal();"></div>
+                    <div class="fas fa-question-circle pr-1" onclick="openDocsAssistantModal();"></div>
                     <div class="fas fa-chevron-circle-up" onclick="window.scrollTo(0, 500); document.getElementById('sidebar').scrollTo(0, 0)"></div>
                 </div>
             </div>
