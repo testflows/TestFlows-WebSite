@@ -150,12 +150,22 @@
 
         historyBox.appendChild(boxResponseMessage);
 
-        function typeText(i, delay, text, element, done_callback) {
-            text = text.replace('\r','')
+        assistantBody.scrollTop = assistantBody.scrollHeight;
 
-            element.innerText += text.charAt(i)
-            // scroll to the bottom
-            assistantBody.scrollTop = assistantBody.scrollHeight;
+        function typeText(i, delay, text, element, done_callback) {
+            text = text.replace('\r','');
+
+            at_the_bottom = false;
+
+            if (assistantBody.scrollTop + 10 > (assistantBody.scrollHeight - assistantBody.offsetHeight)) {
+                at_the_bottom = true;
+            }
+
+            element.innerText += text.charAt(i);
+
+            if (at_the_bottom) {
+                assistantBody.scrollTop = assistantBody.scrollHeight;
+            }
 
             setTimeout(function(){
                 ((i < text.length - 1) ? typeText(i+1, delay, text, element, done_callback) : done_callback())
