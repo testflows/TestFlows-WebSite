@@ -1322,8 +1322,8 @@ form.contact-us textarea:focus {
 
 .assistant .btn {
     padding: 1px;
-    padding-right: 0em;
-    padding-left: 0em;
+    padding-right: 0.3em;
+    padding-left: 0.3em;
     margin: 0;
     font-size: 1.2em;
     display: -moz-inline-grid;
