@@ -154,6 +154,16 @@ blockquote::-webkit-scrollbar {
     z-index: 1000;
 }
 
+.jump .action {
+    font-size: 0.45em;
+    padding-top: 0.4em;
+    padding-left: 1em;
+    padding-right: 1em;
+    margin-right: 0.5em;
+    color: #212529;
+    background-color: #54e5ae;
+    border-radius: 10px;
+}
 
 @media (min-width: 576px) {
     .jump {
@@ -1125,7 +1135,7 @@ form.contact-us textarea:focus {
 .assistant textarea::placeholder {
     color: grey;
     font-family: monospace;
-    font-size: 0.65em;
+    font-size: 1.1em;
 }
 
 .assistant .message-input-box {
@@ -1151,19 +1161,19 @@ form.contact-us textarea:focus {
 
 @media (min-width: 300px) {
     .assistant textarea::placeholder {
-        font-size: 1em;
+        font-size: 1.1em;
     }
     .assistant textarea {
-        font-size: 1em;
+        font-size: 1.1em;
     }
 }
 
 @media (min-width: 576px) {
     .assistant textarea::placeholder {
-        font-size: 1.2em;
+        font-size: 1.1em;
     }
     .assistant textarea {
-        font-size: 1.2em;
+        font-size: 1.1em;
     }
 }
 

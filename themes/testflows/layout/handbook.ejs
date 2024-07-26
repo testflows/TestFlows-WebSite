@@ -12,29 +12,29 @@
                 <div class="assistant">
                     <div class="modal fade" id="docsAssistantModal" tabindex="-1" role="dialog" aria-labelledby="docs-assistant-modal-title" aria-hidden="true">
                         <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                            <h1 class="modal-title" id="docs-assistant-modal-title"><i class="fas fa-book pr-3"></i>Handbook Assistant</h1>
-                            <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
-                                <a class="btn-icon fas fa-times" aria-hidden="true"></a>
-                            </button>
-                            </div>
-                            <div class="modal-body" id="docs-assistant-body">
-                                <p>This is an AI-powered TestFlows Handbook assistant that can answer your questions using the contents found in this book.<br>
-                                <span class="text-warning">💡 Note that the generated answers might not always be accurate and should be verified manually.</span></p>
-                                <div class="box-questions" id="box-questions">
-                                    <div id="history"></div>
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h1 class="modal-title" id="docs-assistant-modal-title"><i class="fas fa-book pr-3"></i>Handbook Assistant</h1>
+                                <button type="button" class="btn" data-dismiss="modal" aria-label="Close">
+                                    <a class="btn-icon fas fa-times" aria-hidden="true"></a>
+                                </button>
                                 </div>
-                                <div class="status-bar">
-                                    <div id="docs-assistant-status" class="text-success"></div>
+                                <div class="modal-body" id="docs-assistant-body">
+                                    <p>This is an AI-powered TestFlows Handbook assistant that can answer your questions using the contents found in this book.<br>
+                                    <span class="text-warning">💡 Note that the generated answers might not always be accurate and should be verified manually.</span></p>
+                                    <div class="box-questions" id="box-questions">
+                                        <div id="history"></div>
+                                    </div>
+                                    <div class="status-bar">
+                                        <div id="docs-assistant-status" class="text-success"></div>
+                                    </div>
+                                    <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="What is your question?"></textarea>
                                 </div>
-                                <textarea id="docs-assistant-question" class="code" name="message-context" rows="5" data-question-id="0" placeholder="What is your question?"></textarea>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" onclick="askQuestion();"><i class="btn-icon pr-3 fas fa-paper-plane"></i>Ask</button>
+                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="askQuestion();"><i class="btn-icon pr-3 fas fa-paper-plane"></i>Ask</button>
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="jump btn-group" role="group" aria-label="Control Buttons">
-                    <div class="fas fa-question-circle pr-1" onclick="openDocsAssistantModal();"></div>
+                    <div class="action" onclick="openDocsAssistantModal();">Ask Me?</div>
                     <div class="fas fa-chevron-circle-up" onclick="window.scrollTo(0, 500); document.getElementById('sidebar').scrollTo(0, 0)"></div>
                 </div>
             </div>
