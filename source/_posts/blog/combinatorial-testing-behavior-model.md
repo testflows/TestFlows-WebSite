@@ -827,3 +827,11 @@ The log messages show debug information that provides insight into the behavior 
 The output confirms that the behavior model accurately predicted the expected results for all `3` memory operations in this combination. The model's predictions align perfectly with the actual outcomes, as evidenced by the `OK` status for each test step.
 
 By executing `175616` combinations, we thoroughly validated the memory function across a wide range of input sequences, ensuring that all possible behaviors are correctly handled. This approach provides comprehensive coverage and confidence in the correctness of the implementation.
+
+# Conclusion
+
+Combinatorial testing is a powerful method for exhaustively verifying the behavior of systems. By building a behavior model, we addressed the "oracle problem"—the challenge of determining correct outcomes for every possible combination of inputs. By focusing on representative values and abstract states, we were able to reduce the number of combinations and limit the maximum length of memory function calls, while still ensuring comprehensive coverage of the system’s behavior.
+
+The behavior model, designed to compute the correct outcomes for a sequence of operations, was invaluable for testing a stateful system like the memory function. It allowed us to verify the correct behavior for 175,616 combinations of three consecutive memory function calls. Although demonstrated with a simple system, this approach is scalable and adaptable to far more complex, real-world scenarios.
+
+Ultimately, the combination of combinatorial testing and behavior models provides an efficient and systematic way to verify stateful systems, offering a level of test coverage and thoroughness that surpasses and can't be achieved using traditional methods.
