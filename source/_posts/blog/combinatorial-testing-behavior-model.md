@@ -155,7 +155,7 @@ This results in the following list of possible `mode` values:
 ['r', 'w', 'e', 'rw', 're', 'we', 'rwe']
 ```
 
-This list is derived from {%katex%}C(3,1) + C(3,2) + C(3,3){%endkatex%}, where {%katex%}C(n, k){%endkatex%} represents the number of ways to choose `k` unordered elements from `n` elements. In our case, `n` is `3`, corresponding to the valid flags (`r`, `w`, `e`), and we are choosing up to `3` elements.
+This list is derived from {%katex%}C(3,1) + C(3,2) + C(3,3){%endkatex%}, where {%katex%}C(n, k){%endkatex%} represents the number of ways to choose {%katex%}k{%endkatex%} unordered elements from {%katex%}n{%endkatex%} elements. In our case, {%katex%}n{%endkatex%} is {%katex%}3{%endkatex%}, corresponding to the valid flags (`r`, `w`, `e`), and we are choosing up to {%katex%}3{%endkatex%} elements.
 
 The {%katex%}C(n, k){%endkatex%} calculation can be done using the `combinations` function from Python's `itertools` standard module, or alternatively, you can import it from the `testflows.combinatorics` module for convenience.
 
@@ -163,7 +163,7 @@ The number of possible valid values for the `mode` argument is `7`, resulting in
 
 - `addr`: Any hashable object.
 - `value`: Any object.
-- `mode`: One of 7 possible values (`'r'`, `'w'`, `'e'`, `'rw'`, `'re'`, `'we'`, `'rwe'`).
+- `mode`: One of {%katex%}7{%endkatex%} possible values (`'r'`, `'w'`, `'e'`, `'rw'`, `'re'`, `'we'`, `'rwe'`).
 - `default`: Any object.
 
 There are also numerous invalid `mode` values or values that are partially valid, such as the string `'write me a letter'`, which would be treated as `'rwe'` due to containing all the valid flags. However, for simplicity, we will focus only on the valid values.
@@ -328,7 +328,7 @@ Passing
 Total time 49ms
 ```
 
-The output indicates that all `56` combinations were successfully executed without any failures.
+The output indicates that all {%katex%}56{%endkatex%} combinations were successfully executed without any failures.
 
 The detailed test log for the first combination is below:
 
@@ -345,15 +345,15 @@ Oct 07,2024 13:30:11         ⟥  Then check sequence of 1 memory calls
 
 In this output:
 
-* Combination pattern #0 represents the first of the 56 test combinations.
+* Combination pattern #0 represents the first of the {%katex%}56{%endkatex%} test combinations.
 * The test starts by erasing the memory to ensure a clean state before proceeding.
 * It then executes the memory call `memory(addr=1000, value=hello, mode=r, default=0)` and confirms the result is `(0, None)`— meaning the default value of 0 is returned, and no exception occurs.
 
-The full log illustrates how each combination is executed in sequence, and provides a clear view of the memory operations and their outcomes. By exploring all `56` combinations, we ensure comprehensive coverage of different input scenarios for the memory function using our selected representative values.
+The full log illustrates how each combination is executed in sequence, and provides a clear view of the memory operations and their outcomes. By exploring all {%katex%}56{%endkatex%} combinations, we ensure comprehensive coverage of different input scenarios for the memory function using our selected representative values.
 
 # Increasing number of calls
 
-To demonstrate how easy it is to extend our test program, we can increase the number of memory function calls to `2` by modifying the feature that calls the `check_memory` combinatorial sketch and passing `number_of_calls=2`:
+To demonstrate how easy it is to extend our test program, we can increase the number of memory function calls to {%katex%}2{%endkatex%} by modifying the feature that calls the `check_memory` combinatorial sketch and passing `number_of_calls=2`:
 
 ```python
 @TestFeature
@@ -362,9 +362,9 @@ def feature(self):
     check_memory(number_of_calls=2)
 ```
 
-By executing this modified test program, we will observe that it now results in {%katex%}3136{%endkatex%} combinations being covered! This is calculated as `56` combinations for the first memory call multiplied by `56` combinations for the second memory call, giving us a total of:
+By executing this modified test program, we will observe that it now results in {%katex%}3136{%endkatex%} combinations being covered! This is calculated as {%katex%}56{%endkatex%} combinations for the first memory call multiplied by {%katex%}56{%endkatex%} combinations for the second memory call, giving us a total of:
 
-{%katex%}56 \times 56 = 3136{%endkatex%} total combinations.
+> {%katex%}56 \times 56 = 3136{%endkatex%} combinations
 
 ```bash
 Passing
@@ -380,7 +380,7 @@ Passing
 Total time 4s 217ms
 ```
 
-This output demonstrates that increasing the number of sequential memory calls results in an exponential increase in the number of combinations covered, ensuring even more comprehensive test coverage. In this case, the test program executed `3136` different combinations, and all combinations passed successfully, giving us greater confidence in the correctness of the memory function for longer sequences of calls.
+This output demonstrates that increasing the number of sequential memory calls results in an exponential increase in the number of combinations covered, ensuring even more comprehensive test coverage. In this case, the test program executed {%katex%}3136{%endkatex%} different combinations giving us greater confidence in the correctness of the memory function for longer sequences of calls.
 
 [TestSketch]: https://testflows.com/handbook/#Sketch
 [either()]: https://testflows.com/handbook/#Using-either
@@ -401,22 +401,26 @@ With these assumptions, we can represent the system in terms of **abstract state
 2. **State 1 (Initialized without Overwrites)**: At least one write operation has been performed to an uninitialized address, but no overwrites have occurred.
 3. **State 2 (Initialized with Overwrites)**: At least one overwrite operation has occurred (i.e., writing to an address that has already been written to).
 
-Mathematically, we represent the set of possible system abstract states as \{%katex%} S = \{ s_0, s_1, s_2 \} {%endkatex%}, where each {%katex%} s_i {%endkatex%} corresponds to one of the abstract states above.
+Mathematically, we represent the set of possible system abstract states as:
+
+> {%katex%} S = \{ s_0, s_1, s_2 \} {%endkatex%}
+
+where each {%katex%} s_i {%endkatex%} corresponds to one of the abstract states above.
 
 By applying the [Pigeonhole Principle](https://en.wikipedia.org/wiki/Pigeonhole_principle)—which states that if {%katex%} n {%endkatex%} items are placed into {%katex%} k {%endkatex%} containers, and {%katex%} n > k {%endkatex%}, then at least one container must contain more than one item—we conclude that after {%katex%} n = 3 {%endkatex%} operations (the number of unique abstract states {%katex%} |S| = 3 {%endkatex%}), any subsequent operation ({%katex%} n > 3 {%endkatex%}) must result in an abstract state that has already occurred, causing a repetition. Formally, since {%katex%} n_{\text{operations}} > |S| {%endkatex%}, an abstract state must repeat.
 
 Thus, the minimum number of operations before the system abstract state repeats is:
 
-{%katex%}
-n_{\text{min}} = |S| = 3
+> {%katex%}
+ n_{\text{min}} = |S| = 3
 {%endkatex%}
-
+  
 This understanding is crucial for effective testing and allows us to ensure that all possible combinations of representative values are tested using the fewest necessary operations. By ensuring that the number of operations {%katex%} n \geq n_{\text{min}} {%endkatex%}, we guarantee comprehensive coverage of all system abstract states, facilitating thorough verification and validation of the `memory` function's behavior.
 
 The analysis shows that we need to set *number_of_calls* to `3`
 and the total number of combinations using our chosen values is:
 
-{%katex%}56 * 56 * 56 = 175616 {%endkatex%}.
+> {%katex%}56 * 56 * 56 = 175616 {%endkatex%}
 
 # Introducing the behavior model
 
@@ -520,7 +524,7 @@ The order of methods in the expect method is important:
 1. `expect_error`: The model first checks if an error should be expected for the current state, such as when an address is unhashable.
 2. `expect_stored_value`: If no error is expected, the model then checks if a stored value should be returned based on prior operations.
 3. `expect_default_value`: If no error or stored value applies, the model defaults to expecting the predefined default value.
-The or expression ensures that the first applicable outcome is returned, which makes the model efficient and deterministic.
+The **or** expression ensures that the first applicable outcome is returned, which makes the model efficient and deterministic.
 
 ## Model Methods vs. User Actions
 
@@ -779,7 +783,7 @@ Total time 5m 4s
 
 This output shows that we executed {%katex%}56 \times 56 \times 56 = 175616 {%endkatex%} combinations, covering all possible ways to execute a sequence of 3 memory function calls. Each combination is verified against the expected behavior as defined by the behavior model.
 
-As an example, the detailed test log for the 189th combination is shown below:
+As an example, the detailed test log for the {%katex%}189th{%endkatex%} combination is shown below:
 
 ```bash
 Oct 07,2024 17:30:44       ⟥  Combination pattern #189
@@ -802,7 +806,7 @@ Oct 07,2024 17:30:44       ⟥  Combination pattern #190
 
 ```
 
-The log shows that we called the memory function 3 times as specified by the number_of_calls argument:
+The log shows that we called the memory function {%katex%}3{%endkatex%} times as specified by the `number_of_calls` argument:
 
 1. First Memory Call:
 
@@ -832,6 +836,6 @@ By executing `175616` combinations, we thoroughly validated the memory function 
 
 Combinatorial testing is a powerful method for exhaustively verifying the behavior of systems. By building a behavior model, we addressed the "oracle problem"—the challenge of determining correct outcomes for every possible combination of inputs. By focusing on representative values and abstract states, we were able to reduce the number of combinations and limit the maximum length of memory function calls, while still ensuring comprehensive coverage of the system’s behavior.
 
-The behavior model, designed to compute the correct outcomes for a sequence of operations, was invaluable for testing a stateful system like the memory function. It allowed us to verify the correct behavior for 175,616 combinations of three consecutive memory function calls. Although demonstrated with a simple system, this approach is scalable and adaptable to far more complex, real-world scenarios.
+The behavior model, designed to compute the correct outcomes for a sequence of operations, was invaluable for testing a stateful system like the memory function. It allowed us to verify the correct behavior for {%katex%}175,616{%endkatex%} combinations of three consecutive memory function calls. Although demonstrated with a simple system, this approach is scalable and adaptable to far more complex, real-world scenarios.
 
 Ultimately, the combination of combinatorial testing and behavior models provides an efficient and systematic way to verify stateful systems, offering a level of test coverage and thoroughness that surpasses and can't be achieved using traditional methods.
