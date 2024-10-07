@@ -2,7 +2,7 @@
 post: true
 title: "Combinatorial Testing: Writing Behavior Model"
 description: An article about how to write a simple behavior model to verify expected results of combinatorial tests for a memory function.
-date: 2024-08-06
+date: 2024-10-07
 author: Vitaliy Zakaznikov
 image: images/combinatorial-tests-writing-behavior-model.png
 icon: fas fa-glasses pt-5 pb-5
