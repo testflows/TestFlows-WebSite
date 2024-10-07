@@ -4,11 +4,11 @@ title: "Autoscale GitHub Actions Runners Using Hetzner Cloud"
 description: FIXME
 date: 2024-01-10
 author: Vitaliy Zakaznikov
-image: FIXME
+image: images/autoscaling-github-actions-runners-using-hetzner-cloud.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Discover how you can autoscale GitHub Actions runners using Hetzner Cloud, the github-hetzner-runners service, a practical tool designed to get your GitHub Actions workflow jobs running on your own servers. This service automatically starts servers in Hetzner Cloud when new GitHub Actions jobs are queued, providing dedicated ephemeral runners for each job. Once a job is completed, the service takes care of shutting down and reusing the server when possible, ensuring a cost-effective and streamlined process. This article will cover how you can use the github-hetzner-runners project for both x64 and arm64 runners, its straightforward setup, and how it manages costs effectively, making it a smart choice for any of your GitHub repository.
+Discover how you can autoscale GitHub Actions runners using Hetzner Cloud, the github-hetzner-runners service, a practical tool designed to get your GitHub Actions workflow jobs running on your own servers. This service automatically starts servers in Hetzner Cloud when new GitHub Actions jobs are queued, providing dedicated ephemeral runners for each job. Once a job is completed, the service takes care of shutting down and reusing the server when possible, ensuring a cost-effective and streamlined process. This article will cover how you can use the github-hetzner-runners project for both x64 and arm64 runners, its straightforward setup, and how it manages costs effectively, making it a smart choice for any of your GitHub repository.<!-- more -->
 
 
 # How does GitHub Actions runners transform GitHub Actions workflows?
