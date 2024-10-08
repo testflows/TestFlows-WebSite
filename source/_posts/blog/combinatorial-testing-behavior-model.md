@@ -174,6 +174,11 @@ How do we handle the fact that the number of ways a user can call the `memory` f
 
 A "representative" value can be informally defined as a value that will produce the same behavior as other values sharing the same characteristics. For example, we can use the number `1000` as a representative value for `addr`, assuming that other integers used as `addr` will behave similarly. Furthermore, since `1000` is hashable, we can assume that other hashable objects will behave the same way.
 
+A formal definition connects the concept of a "representative" value to equivalence classes as follows:
+
+> A representative value is an element {%katex%}v{%endkatex%} within a set {%katex%}S{%endkatex%} that belongs to an equivalence class {%katex%}[v]{%endkatex%} under a defined equivalence relation {%katex%}\sim{%endkatex%}, such that for any other element {%katex%}w \in [v]{%endkatex%}, the behavior of a function {%katex%}f{%endkatex%} or system when applied to {%katex%}v{%endkatex%} is equivalent to its behavior when applied to {%katex%}w{%endkatex%}. This means {%katex%}f(v) \equiv f(w){%endkatex%} for all {%katex%}w \in [v]{%endkatex%}, where {%katex%}\equiv{%endkatex%} denotes behavioral equivalence.
+
+
 Of course, these assumptions may or may not hold true. We could even test these assumptions by keeping all other arguments fixed while iterating over different values for a given argument assumed to belong to the same representation class. However, the number of representation classes depends on the number of potential failure modes, which we might not know in advance. Therefore, choosing the "right" representative values is not trivial, but we can start with some reasonable choices.
 
 For example, we can select the following values:
@@ -184,6 +189,7 @@ For example, we can select the following values:
 - `default`: Either `0` or `None`.
 
 Using these representative values, we can write a combinatorial test to explore all possible ways to execute the `memory` function. Additionally, we will go further and check all possible sequences of such calls, up to a specified `number_of_calls`.
+
 
 # Sketching the test
 
