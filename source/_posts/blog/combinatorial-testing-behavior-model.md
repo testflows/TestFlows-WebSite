@@ -436,7 +436,7 @@ Conceptually, the behavior model needs to implement only the `expect` method, wh
 
 To implement the behavior model, we need to define two key classes: `State` and `Model`.
 
-## State class
+## The `State` class
 
 The `State` class must represent the state of the system at a given point in time and
 is defined as follows:
@@ -457,17 +457,23 @@ class State:
 
 Each `State` object captures the relevant parameters of a memory operation, including the address (`addr`), value (`value`), mode (`mode`), default value (`default`), and any error (`error`). These state objects are used to represent the sequence of operations that have been performed, forming the current system **behavior**.
 
-## Model class
+Notably, the state does not include the output value directly, as it is computed by the model. It captures all input variables (`addr`, `value`, `mode`, `default`) and one output variable (`error`). While the `error` variable could be excluded to maintain purity and focus solely on inputs, including it simplifies the model's logic. It allows easier computation of the expected result in the `expect_stored_value` method, which will be implemented in the model’s class. Therefore, it’s part of the state representation.
 
-The `Model` class implements the behavior model of the memory function. It is responsible for determining the expected outcome of a memory operation based on the history of operations (i.e., the sequence of states). The class contains several methods to determine what should happen during the next memory operation based on the accumulated behavior.
+For more complex systems, the `State` class could include all input and output variables. However, extra care must be taken when computing the expected result of the system's behavior to avoid improperly using the actual output in the calculation, as this could mask potential errors. Therefore, when practical, restricting the `State` attributes to only inputs acts as a safeguard against such mistakes, ensuring the integrity of the behavior model.
 
-* **`expect_error` Method**: This method checks if an error is expected based on the current state. For example, if the address is not hashable (e.g., a list), this method will predict that an error should be raised.
+## The `Model` class
+
+The `Model` class implements the behavior model of the memory function. Its primary responsibility is to determine the expected outcome of each memory operation based on the sequence of states, which defines the system's behavior. The class includes methods that analyze this behavior to predict the correct outcome in the current state, which is always the last state in the sequence.
+
+* **`expect_error` Method**: This is method checks if an error is expected based on the current state. For example, if the address is not hashable (e.g., a list), this method will predict that an error should be raised.
 
 * **`expect_default_value` Method**: This method returns the default value if no write operation has modified the value at the specified address. It helps determine the expected output when a read operation is performed on an uninitialized memory address.
 
 * **`expect_stored_value` Method**: This method checks if a previously stored value should be returned. It considers the impact of previous write operations and whether there have been any erase operations that would have cleared the memory.
 
-* **`expect` Method**: This method determines the correct expectation by invoking one of the above methods, based on the current behavior. It uses an **or** expression to select the first valid expected outcome.
+* **`expect` Method**: This is the **main method** of the model which calculates the correct expectation by invoking one of the above methods, based on the current behavior. It uses an `or` expression to select the first valid expected outcome.
+
+The `Model` class is defined as follows:
 
 ```python
 class Model:
@@ -523,23 +529,157 @@ class Model:
         )
 ```
 
-## Understanding the Expectation Methods
+## The `expect` method
 
-The order of methods in the expect method is important:
+The `expect_error` is the main method and the order of methods in the `or` expression defined within this method is important:
+
+```python
+    def expect(self, behavior):
+        return (
+            self.expect_error(behavior)
+            or self.expect_stored_value(behavior)
+            or self.expect_default_value(behavior)
+        )
+```
 
 1. `expect_error`: The model first checks if an error should be expected for the current state, such as when an address is unhashable.
 2. `expect_stored_value`: If no error is expected, the model then checks if a stored value should be returned based on prior operations.
 3. `expect_default_value`: If no error or stored value applies, the model defaults to expecting the predefined default value.
+
 The **or** expression ensures that the first applicable outcome is returned, which makes the model efficient and deterministic.
 
-## Model Methods vs. User Actions
-
-There is a clear distinction between the model's expect methods and the user actions that take place during testing:
+Note that there is a clear distinction between the model's expect methods and the user actions that take place during testing:
 
 The model's `expect_*` methods predict what should happen based on the sequence of operations. The corresponding user actions (test steps) are then used to verify that the actual behavior of the memory function matches the predicted behavior.
 For example, the model's `expect_stored_value` method returns a partial `expect_stored_value` user action, which will be called later in the `check_result` action to assert that the observed behavior matches the expected behavior.
 
-## Adding model to the test
+It’s important to note that the expect method is built iteratively as you model the system's actual behavior and check if it aligns with the desired behavior. For instance, the first version of the expect method could be as simple as the following, where we initially expect only the default value to be returned for any behavior:
+
+```python
+    # the first incorrect version
+    def expect(self, behavior):
+        return (
+            self.expect_default_value(behavior)
+        )
+```
+
+This initial implementation is obviously incorrect but serves as a stepping stone in the model’s development. Running tests will reveal failing combinations where this expectation is invalid. If all combinations pass, it indicates a mistake in the test code, as we expect some combinations to return a stored value and others to return the default value.
+
+## The `expect_default_value` method
+
+Since the `expect_default_value` method is called last in the `expect` method, it is the simplest to implement. This is because it serves as the default expectation. It becomes the default because it is the final part of the `or` expression, meaning that if no other expectations are met, the model will return its result as the default expectation.
+
+```python
+    def expect_default_value(self, behavior):
+        """Expect default value."""
+        current_state = behavior[-1]
+
+        return partial(expect_default_value, default=current_state.default)
+```
+
+The method just needs to retrieve the current state, which is the last element in the `behavior` list, and return a partial `expect_default_value` action where the `default` value is set to the `current_state.default` value — where `current_state.default` is the `default` value passed by the user in the last memory function call.
+
+## The `expect_error` method
+
+The next method in terms of complexity is the `expect_error` method. This method implements
+the behavior where we expect an error only if the `addr` value is unhashable.
+
+```python
+    def expect_error(self, behavior):
+        """Expect error."""
+        current_state = behavior[-1]
+
+        if not ("w" in current_state.mode or "r" in current_state.mode):
+            return
+        try:
+            hash(current_state.addr)
+        except BaseException as err:
+            return partial(expect_error, error=err)
+```
+
+To determine if an error should be expected, we only need to examine the current state, which is the last element in the `behavior` list. This list stores the sequence of states that fully describes the system’s behavior at this point.
+
+We know that an error should only be returned if we are trying to write or read, which means checking for the presence of the `w` or `r` flags in the `mode` attribute of the current state. If neither flag is present, the method should just return, which effectively means returning `None`. This results in a `False` value in a boolean context, allowing the `or` expression inside the expect method to check the next expectation.
+
+We then check if the `addr` value is hashable by attempting to get a hash using the `hash` function. If an exception is raised, we return a partial `expect_error` action with the `error` argument set to the raised exception.
+
+# The `expect_stored_value` method
+
+The most complex expectation method is `expect_stored_value`. This method computes the expected value stored at the given `addr`, accounting for operations such as uninitialized values, memory erasure, and overwrites. To achieve this, it iterates through all states except the current one in the behavior sequence.
+
+A more efficient implementation could start from the state immediately before the current one and move backward, which would be optimal for longer sequences. However, since the behavior list is expected to be short, we prioritize intuitive logic over premature optimization.
+
+```python
+    def expect_stored_value(self, behavior):
+        """Expect stored value."""
+        current_state = behavior[-1]
+        default_value = current_state.default
+        stored_value = default_value
+
+        if not "r" in current_state.mode:
+            return
+
+        for state in behavior[:-1]:
+            if "e" in state.mode and not (
+                "r" in state.mode and state.error is not None
+            ):
+                stored_value = default_value
+            if (
+                "w" in state.mode
+                and state.addr == current_state.addr
+                and state.error is None
+            ):
+                stored_value = state.value
+
+        if stored_value != default_value:
+            return partial(expect_stored_value, stored_value=stored_value)
+```
+
+The current state, default value, and expected stored value are set, where the default stored value is simply the default value for the current state. This logic is managed by the initial lines:
+
+```python
+        current_state = behavior[-1]
+        default_value = current_state.default
+        stored_value = default_value
+```
+
+Next, we short-circuit and return `None` if we are not reading the memory in the current state. There's no need to compute a stored value if no read operation is occurring:
+
+```python
+        if not "r" in current_state.mode:
+            return
+```
+
+If we are reading, we loop through each state in the behavior, except for the current state, to determine what the stored value should be:
+
+```python
+        for state in behavior[:-1]:
+            if "e" in state.mode and not (
+                "r" in state.mode and state.error is not None
+            ):
+                stored_value = default_value
+            if (
+                "w" in state.mode
+                and state.addr == current_state.addr
+                and state.error is None
+            ):
+                stored_value = state.value
+```
+
+Inside the loop, we handle two cases: when memory is erased and when a new value is written to the address.
+
+Memory Erasure: If the e flag is set and no error occurs during a read operation, the memory is considered erased, and we set the stored value to the default value. This ensures that failed reads (with both r and e flags) don't overwrite memory erasure.
+
+Memory Write: If a write (w) occurs at the same address without error, we set the stored value to the value written in that state. If both r and w flags are set, reading is prioritized, and we check for a failing read via the error attribute.
+
+```python
+        if stored_value != default_value:
+            return partial(expect_stored_value, stored_value=stored_value)
+```
+
+Finally, after iterating through the previous states, if the stored value differs from the default, we return a partial `expect_stored_value` action with the computed stored value. Otherwise, we return `None` and let the `expect` method proceed to check the next expectation.
+
+# Using the model in the test
 
 Here is the modified version of the test that now uses the behavior model defined above. This version integrates the behavior model to automatically determine the expected results of each memory operation:
 
