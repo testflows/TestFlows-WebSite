@@ -10,7 +10,7 @@ icon: fas fa-glasses pt-5 pb-5
 
 Atomic propositions and equivalence classes offer a practical solution for making testing manageable when dealing with large or infinite input domains. While these concepts are widely used in formal verification—such as in [Exhaustive Model-Based Equivalence Class Testing by W. Huang and J. Peleska, 2013](https://link.springer.com/chapter/10.1007/978-3-642-41707-8_4), from which we'll borrow the formal definition of equivalence classes—they are extremely useful in everyday testing tasks.
 
-In this post, we'll explore how atomic propositions and equivalence classes help us choose "representative values" when input spaces are large. These values represent groups of inputs that behave equivalently, allowing us to ensure the system is thoroughly tested without needing to cover every possible input within each group. Given that atomic propositions and equivalence classes are commonly used in formal verification, we'll also delve into the formal mathematical notation that defines these concepts.
+In this two-part post, we explore how atomic propositions and equivalence classes help us select "representative values" when input spaces are large. These representative values group inputs that behave equivalently, enabling thorough system testing without needing to cover every possible input within each group. Given that atomic propositions and equivalence classes are commonly used in formal verification, we also delve into the formal mathematical notation that defines these concepts.
 
 <!-- more -->
 
