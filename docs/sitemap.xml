@@ -11,6 +11,15 @@
   </url>
   
   <url>
+    <loc>https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/</loc>
+    
+    <lastmod>2024-11-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/</loc>
     
     <lastmod>2024-10-29</lastmod>

@@ -1,7 +1,7 @@
 ---
 post: true
 title: "Decoding Formal Description of a Simple Train Control System"
-description: An article about how to read formal mathematical descriptions to test a simple train control system.
+description: An article about how to read formal mathematical descriptions of a simple train control system.
 date: 2024-10-30
 author: Vitaliy Zakaznikov
 image: images/decoding-formal-description-simple-train-control-system.png
