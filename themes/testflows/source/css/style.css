@@ -15,6 +15,10 @@ cite {
     padding-left: 1ch;
 }
 
+.sidebar ol > li {
+    padding-top: 0em;
+}
+
 .sidebar {
     padding-top: 20px;
 }
