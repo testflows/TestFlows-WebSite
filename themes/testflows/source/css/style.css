@@ -3,6 +3,14 @@ html, body {
     -webkit-font-smoothing: subpixel-antialiased;
 }
 
+li > p {
+    margin-bottom: 0;
+}
+
+ol > li {
+    padding-top: 0.5em;
+}
+
 cite {
     padding-left: 1ch;
 }
