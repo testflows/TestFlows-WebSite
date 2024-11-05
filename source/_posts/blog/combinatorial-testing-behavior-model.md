@@ -18,7 +18,7 @@ To demystify behavior models, we will explore the development of such a model fo
 
 To illustrate the approach, we’ll use a memory function as our system under test. This system is straightforward to understand, yet the technique is easily adaptable to more complex, real-world systems.
 
-<img src="/images/memory-function-diagram.png" max-width="100%" height="500px" style="display:block; margin:auto">
+<img class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
 
 In Python, we'll define the `memory` function as follows:
 

@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://testflows.com/blog/combinatorial-testing-the-introduction/</loc>
+    
+    <lastmod>2024-11-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/combinatorial-testing-behavior-model/</loc>
+    
+    <lastmod>2024-11-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/</loc>
+    
+    <lastmod>2024-11-05</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/</loc>
     
     <lastmod>2024-11-05</lastmod>
@@ -20,27 +47,9 @@
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/</loc>
-    
-    <lastmod>2024-10-29</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/</loc>
     
     <lastmod>2024-10-29</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/combinatorial-testing-behavior-model/</loc>
-    
-    <lastmod>2024-10-15</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -102,15 +111,6 @@
   
   <url>
     <loc>https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/</loc>
-    
-    <lastmod>2024-03-14</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/combinatorial-testing-the-introduction/</loc>
     
     <lastmod>2024-03-14</lastmod>
     

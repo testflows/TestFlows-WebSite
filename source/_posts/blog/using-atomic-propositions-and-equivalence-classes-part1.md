@@ -209,7 +209,7 @@ This Cartesian product represents all possible subsets {%katex%} M \subseteq AP_
 Let's use a simple memory function as an example to demonstrate the application of atomic propositions and equivalence classes in a practical context. This memory function will allow us to see how these concepts work together in organizing and testing input scenarios based on expected behaviors.
 
 
-<img src="/images/memory-function-diagram.png" max-width="100%" height="500px" style="display:block; margin:auto">
+<img class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
 
 In Python, we'll define the `memory` function as follows:
 
@@ -513,8 +513,5 @@ In this first part, we've introduced formal definitions for atomic propositions 
 
 Next, in Part 2, we’ll explore how to take internal states into account, select specific input values, and use a combinatorial sketch to cover all equivalence classes effectively.
 
-<div align="center">
+[Continue to Part 2](../using-atomic-propositions-and-equivalence-classes-part2/)
 
-### 👉 [Continue to Part 2 🛸](../using-atomic-propositions-and-equivalence-classes-part2/)
-
-</div>

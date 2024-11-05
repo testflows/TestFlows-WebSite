@@ -1,8 +1,9 @@
+https://testflows.com/blog/combinatorial-testing-the-introduction/
+https://testflows.com/blog/combinatorial-testing-behavior-model/
+https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/
 https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/
 https://testflows.com/blog/decoding-formal-description-simple-train-control-system/
-https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/
-https://testflows.com/blog/combinatorial-testing-behavior-model/
 https://testflows.com/index.html
 https://testflows.com/handbook/index.html
 https://testflows.com/contact.html
@@ -10,7 +11,6 @@ https://testflows.com/credits.html
 https://testflows.com/assistant/index.html
 https://testflows.com/blog/index.html
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
-https://testflows.com/blog/combinatorial-testing-the-introduction/
 https://testflows.com/blog/get-your-software-covered-using-covering-arrays/
 https://testflows.com/blog/how-to-break-your-tests-into-steps/
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/

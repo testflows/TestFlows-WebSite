@@ -320,7 +320,7 @@ If we graph this formula for the {%katex%}v=2{%endkatex%} case, with the x-axis 
 number of parameters, {%katex%}n{%endkatex%}, and the y-axis being the number of combinations, {%katex%}N{%endkatex%},
 then it will look as follows:
 
-<img src="/images/combinatorial-explosion.png" max-width="100%" height="400" style="display:block; margin:auto">
+<img class="img-fluid" src="/images/combinatorial-explosion.png" height="400" style="display:block; margin:auto">
 
 To make it even worse, the line gets even steeper as we increase the value of {%katex%}v{%endkatex%}!
 
