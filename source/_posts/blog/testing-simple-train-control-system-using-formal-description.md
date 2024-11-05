@@ -353,16 +353,15 @@ def expect_emergency_brake_status(self, state, W, EB):
 
 # The behavior model
 
-Because we will need to check many different combinations of inputs, the actual number is in the hundreds, we need to create a behavior model that will correctly
-compute the expected state.
+To check the numerous combinations of inputs—potentially hundreds—we need a behavior model that can accurately compute the expected state of the system for each case.
 
 {% html div class="classic-quote" %}
 
-> See [Combinatorial Testing: Writing Behavior Model](https://testflows.com/blog/combinatorial-testing-behavior-model/) for an introduction of how to write a behavior model.
+> Refer to [Combinatorial Testing: Writing Behavior Model](https://testflows.com/blog/combinatorial-testing-behavior-model/) for an introduction to writing a behavior model.
 
 {% endhtml %}
 
-The behavior model is created based on the transition relation {%katex%}R{%endkatex%} of the system. Here it is again so that you can easily use it to compare with the code:
+This behavior model is derived from the system’s transition relation {%katex%} R {%endkatex%}. Here it is again for easy reference, allowing you to compare it directly with the code implementation:
 
 > {%katex%}
 R((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MRSP}}, \ell', W', EB')) \equiv \\
@@ -445,9 +444,7 @@ class Model:
         )
 ```
 
-To use this model, we will define a new `check_result` action that
-will take a given `behavior` and use the model to get the expected
-state of the controller.
+To use this model, we’ll define a new `check_result` action that takes a specified `behavior` and uses the model to determine the expected state of the controller.
 
 ```python
 @TestStep(Then)
@@ -462,19 +459,12 @@ def check_result(self, behavior, model):
 
 # Writing the test to check all equivalence classes
 
-We have the inputs to cover each equivalence class selected. Now, we can write
-the actual test. However, because the system is stateful, we need to take
-into account the transitions that the system can make from one state to another.
-Given that the system has only 3 internal states, we can apply the [Pigeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle) just like we did 
-in [Determining the minimum number of calls](https://testflows.com/blog/combinatorial-testing-behavior-model/#Determining-the-minimum-number-of-calls) section
-when we tested the memory function in the previous article.
+With the inputs selected to cover each equivalence class, we can now write the actual test. Since the system is stateful, we need to account for transitions between states as the system progresses. Given that the system has only three internal states, we can apply the [Pigeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle), just as we did in the [Determining the minimum number of calls](https://testflows.com/blog/combinatorial-testing-behavior-model/#Determining-the-minimum-number-of-calls) section when testing the memory function in the previous article.
 
-The actual test will consist from two parts, first the `TestOutline` which will
-define the outline of the test that will check specific combination
-with selected {%katex%}V_{MRSP}{%endkatex%}, thresholds, and a sequence of estimated
-speed readings.
+The test itself will consist of two parts: the `TestOutline`, which defines the overall structure of the test, and individual checks for specific combinations of {%katex%} V_{\text{MRSP}} {%endkatex%}, threshold values, and sequences of estimated speed readings.
 
 Here is the outline:
+
 
 ```python
 @TestOutline(Scenario)
@@ -503,10 +493,7 @@ def check_combination(self, v_mrsp, g_ebi1_threshold, g_ebi2_threshold, speed_se
             check_result(behavior=behavior, model=model)
 ```
 
-The above outline will be used in the `check_all_combinations` test
-that will create all the combinations that we need to check for each
-value of {%katex%}V_{MRSP}{%endkatex%}, thresholds, and the estimated
-speeds that correspond for a given value of the {%katex%}V_{MRSP}{%endkatex%}.
+The outline above will be used in the `check_all_combinations` test, which will generate all the necessary combinations to test each value of {%katex%} V_{\text{MRSP}} {%endkatex%}, threshold settings, and estimated speed values corresponding to each selected {%katex%} V_{\text{MRSP}} {%endkatex%}.
 
 ```python
 @TestFeature
@@ -534,12 +521,11 @@ def check_all_combinations(self):
             i += 1
 ```
 
-With all of the pieces in place, we are ready to put the full test program together.
+With all the pieces in place, we’re ready to assemble the full test program.
 
 # The full test program
 
-Here is the full test program that we can use to check if the reference implementation
-produced by the ChatGPT is correct.
+Here is the complete test program, which we can use to verify the accuracy of the reference implementation produced by ChatGPT.
 
 `test_train_control_system.py`
 ```python
@@ -785,14 +771,15 @@ if main():
 
 # Running the test program
 
-The time of truth has come! Is the ChatGPT's implementation of the controller correct?
-Let's run our fancy test program:
+The moment of truth has arrived! Is ChatGPT’s implementation of the controller correct? Let’s run our comprehensive test program:
 
 ```
 python3 test_train_control_system.py -o slick
 ```
 
-And unfortunately, or fortunately for our test program, we catch the first bug!
+## First bug
+
+And, either unfortunately or fortunately for our test program, we catch the first bug!
 
 ```python
 ➤ Module regression
@@ -805,11 +792,9 @@ And unfortunately, or fortunately for our test program, we catch the first bug!
   AssertionError: expected state IS but got WS
 ```
 
-The output says that we've found the case where we expected the controller to enter
-the emergency braking (intervention) status (IS) state but instead
-the controller was in the warning status (WS) state. Not good!
+The output indicates that we’ve found a case where we expected the controller to enter the emergency braking (intervention) status (IS) state, but instead, it was in the warning status (WS) state. Not good!
 
-After, reading the code we find an issue:
+After reviewing the code, we identify the issue:
 
 ```python
         # Apply transition rules based on the current state
@@ -823,11 +808,13 @@ After, reading the code we find an issue:
                 self.state, self.EB = "IS", 1  # phi_2
 ```
 
-The code checks for `gebi1 or gebi2` condition after `self.V_est > self.V_MRSP`
-which is incorrect! Instead, it needs to check for `gebi1 or gebi2` first.
+The code checks the `gebi1 or gebi2` condition *after* `self.V_est > self.V_MRSP`, which is incorrect! It should first check for `gebi1 or gebi2`.
 
-Let's push the fix to the `train_control_system.py` and try again.
-But we hit another issue!
+## Second bug
+
+Let’s apply the fix to `train_control_system.py` and try again.
+
+But we encounter another issue!
 
 ```python
 ➤ Module regression
@@ -840,12 +827,9 @@ But we hit another issue!
   AssertionError: expected W=1 but got 0
 ```
 
-This time the test program tells us that the warning signal (W) was not set
-when it was expected. Upon further investigation we see that the
-controller entered the emergency braking (intervention) status state
-without setting the warning signal (W) to alert the driver. 
+This time, the test program reveals that the warning signal (W) was not set when expected. Upon further investigation, we find that the controller entered the emergency braking (intervention) status state (IS) without setting the warning signal (W) to alert the driver.
 
-It turns out the same block of code is to blame. It had 2 bugs!
+It turns out the same block of code is to blame again—it had two bugs!
 
 ```python
         # Apply transition rules based on the current state
@@ -860,7 +844,9 @@ It turns out the same block of code is to blame. It had 2 bugs!
                 self.state, self.EB = "IS", 1  # phi_2
 ```
 
-Applying both fixes to the above code we finally get this:
+## Fixing both bugs
+
+After applying both fixes to the code, we finally get the following:
 
 ```python
         # Apply transition rules based on the current state
@@ -873,8 +859,7 @@ Applying both fixes to the above code we finally get this:
                 self.state, self.W = "WS", 1  # phi_1
 ```
 
-Running the test program again we see that now it does not fail straight away.
-It actually completes successfully!
+Running the test program again, we see that it no longer fails immediately. This time, it actually completes successfully!
 
 ```python
 $ python3 test_train_control_system.py -o slick
@@ -899,18 +884,12 @@ $ python3 test_train_control_system.py -o slick
 Total time 20s 195ms
 ```
 
-The test program checked all the {%katex%}2 \times 6^3 = 432{%endkatex%} input combinations.
+The test program successfully checked all {%katex%} 2 \times 6^3 = 432 {%endkatex%} input combinations.
 
 # Conclusion
 
-In this post we've written a comprehensive test that uses the formal description of the
-Ceiling Speed Monitoring Controller (CSMC) that we've discussed in the
-[Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/) article.
-We saw that by using the set of atomic propositions from the Kripke structure
-and deriving input equivalence class partitions from it our test coverage
-was able to catch two critical bugs in the reference implementation written by the AI model.
-Both bugs were subtle and would be very hard to spot using visual code review.
-Nonetheless, by using rigorous testing technique derived from formal methods
-we were successful in catching both the bugs. This does not mean that the test program
-would catch all possible bugs that can be found in a possible implementation of the controller. This is because the test program will only be exhaustive only if the set of atomic propositions matches the model. But we can't know what the actual atomic propositions for a given implementation can be and therefore further testing techniques must be applied to look for unknown atomic propositions that may exist
-in the implementation. This is what makes testing fun! 
+In this post, we created a comprehensive test based on the formal description of the Ceiling Speed Monitoring Controller (CSMC) discussed in the [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/) article. By using the set of atomic propositions derived from the Kripke structure and creating input equivalence class partitions from it, our test successfully caught two critical bugs in the AI-generated reference implementation.
+
+These bugs were subtle and would have been challenging to identify through visual code review alone. However, by employing rigorous testing techniques rooted in formal methods, we effectively identified both issues. That said, this test program does not guarantee the discovery of all possible bugs in any given implementation of the controller. The test program achieves thorough coverage only when the set of atomic propositions aligns perfectly with the model. Since we cannot always know the actual atomic propositions for a specific implementation, additional testing techniques are necessary to uncover any hidden atomic propositions that might exist in the code.
+
+This is what makes testing both challenging and rewarding!
