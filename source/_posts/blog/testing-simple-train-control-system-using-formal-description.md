@@ -1,24 +1,24 @@
 ---
 post: true
 title: "Testing Simple Train Control System Using Its Formal Description"
-description: An article about testing a simple train control system using its formal mathematical description.
+description: Testing a simple train control system using its formal mathematical description.
 date: 2024-11-03
 author: Vitaliy Zakaznikov
 image: images/testing-simple-train-control-system-using-formal-description.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-In our previous post, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/), we explored how to interpret a formal description defined using a [Kripke structure](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#What-is-a-Kripke-structure) for a simple train control system, specifically the Ceiling Speed Monitoring Controller (CSMC). In this article, we’ll take a practical approach by using that formal description to design a test suite that systematically verifies an AI generated implementation of the controller in Python.
+In our previous post, [**Decoding Formal Description of a Simple Train Control System**](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/), we explored how to interpret a formal description defined using a [Kripke structure](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#What-is-a-Kripke-structure) for a simple train control system, specifically the Ceiling Speed Monitoring Controller (CSMC). In this article, we take a practical approach by using that formal description to design a test suite that systematically verifies an AI-generated implementation of the controller in Python.
 
-Given the increasing role of AI tools like ChatGPT in coding, testing generated code is more important than ever. Here, we’ll see how the formal model of the SPMC can be used to construct a rigorous test suite to validate that an AI-generated implementation meets the specified requirements. So, let’s dive in and start testing!
+With the growing role of AI tools like ChatGPT in coding, testing generated code is more important than ever. Here, we demonstrate how the formal model of the SPMC can be used to construct a rigorous test suite to validate that an AI-generated implementation meets the specified requirements. So, let’s dive in and start testing!
 
 <!-- more -->
 
 # Reference implementation
 
-Before we can start testing, we need a concrete implementation. Taking the modern approach, we will ask an AI tool, [ChatGPT](https://chatgpt.com/?model=gpt-4o), to provide us with a reference implementation in Python.
+Before we can start testing, we need a concrete implementation of the system. Taking a modern approach, we’ll use an AI tool, [ChatGPT](https://chatgpt.com/?model=gpt-4o), to provide us with a reference implementation in Python.
 
-We'll provide the ChatGPT 4o model with the original article, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#The-transition-relation), so it knows what we are talking about, and restate the transition relation {%katex%}R{%endkatex%} of the system, which is as follows:
+We’ll give the ChatGPT 4o model access to the original article, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#The-transition-relation), to provide context. Specifically, we will restate the transition relation, {%katex%} R {%endkatex%}, which defines the system's behavior as follows:
 
 > {%katex%}
 R((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MRSP}}, \ell', W', EB')) \equiv \\
@@ -32,17 +32,17 @@ R((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MR
 \quad \varphi_7: (\ell = \text{IS} \land V_{\text{est}} = 0 \land \ell' = \text{NS} \land W' = 0 \land EB' = 0)
 {%endkatex%}
 
-See [Transition relation {%katex%}R{%endkatex%}](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#The-transition-relation) section in the previous blog if the transition relation does not make sense.
+Refer to the [**Transition relation {%katex%} R {%endkatex%}**](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#The-transition-relation) section in the previous blog if the transition relation is unclear.
 
-Then, give it the following prompt to ask it to generate a Python implementation:
+Next, we provided ChatGPT with the following prompt to generate a Python implementation:
 
 {% html div class="classic-quote" %}
 
-> "Can you write a Python program that will simulate the behavior of the system described by this transition relation? Make it a CLI utility that allows the user to set initial V_MRSP and guards, then prompts the user for V_est, shows the state of the system, and exits cleanly when CTRL-C is pressed."
+> "Can you write a Python program that will simulate the behavior of the system described by this transition relation? Make it a CLI utility that allows the user to set initial `V_MRSP` and guards, then prompts the user for `V_est`, shows the state of the system, and exits cleanly when CTRL-C is pressed."
 
 {% endhtml %}
 
-Here is the first version of the Python program that we got and now need to test.
+Below is the initial version of the Python program generated by ChatGPT, which we will now test.
 
 `train_control_system.py`
 ```python
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     main()
 ```
 
-When you run the program, it will prompt you to enter `V_MRSP` and the two thresholds that determine when emergency braking should be applied. After that, it will ask you to enter the estimated current speed of the train, `V_est`, display the system's current state, and then wait for you to provide another `V_est` reading. You can stop the program at any time by pressing `CTRL-C`.
+When you run the program, it will prompt you to enter `V_MRSP` and two thresholds used to determine when emergency braking should be applied. Afterward, it will ask for the estimated current speed of the train, `V_est`, display the system’s current state, and then wait for the next `V_est` reading. You can stop the program at any time by pressing `CTRL-C`.
 
 ```bash
 $ python train_control_system.py
@@ -146,46 +146,37 @@ Enter the estimated speed (V_est):
 
 # Building test input sequences
 
-With the reference implementation in hand, we are ready to proceed to check
-that the implementation meets the requirements of system's behavior.
-We are in luck here, given that we have a formal definition of the system
-there requirements are as precise as we can have. 
+With the reference implementation in hand, we’re ready to verify that it meets the system’s behavioral requirements. Fortunately, since we have a formal definition of the system, these requirements are as precise as they can be.
 
 {% html div class="classic-quote" %}
 
-> Again, see ["Decoding Formal Description of a Simple Train Control System"](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/) for the actual formal model.
+> Refer to ["Decoding Formal Description of a Simple Train Control System"](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/) for the full formal model.
 
 {% endhtml %}
 
-What shall we use from the formal definition to build out test sequences?
-The answer is simple, what we need is set of atomic propositions {%katex%}AP{%endkatex%} from which we'll create input equivalence class partitions (IECP).
+What should we use from the formal definition to build our test sequences? The answer is straightforward: we need the set of atomic propositions {%katex%} AP {%endkatex%} to create input equivalence class partitions (IECP).
 
 {% html div class="classic-quote" %}
 
-> We've learned how to create input equivalence class partitions in [Using Atomic Propositions and Equivalence Classes (Part 1)](..using-atomic-propositions-and-equivalence-classes-part1/) and [Using Atomic Propositions and Equivalence Classes (Part 2)](..using-atomic-propositions-and-equivalence-classes-part2/).
+> For a guide on creating input equivalence class partitions, see [Using Atomic Propositions and Equivalence Classes (Part 1)](..using-atomic-propositions-and-equivalence-classes-part1/) and [Using Atomic Propositions and Equivalence Classes (Part 2)](..using-atomic-propositions-and-equivalence-classes-part2/).
 
 {% endhtml %}
 
-Here is our set of atomic propositions:
-
+Below is our set of atomic propositions:
 > {%katex%}
 AP = \{ V_{\text{est}} = 0, V_{\text{est}} > V_{\text{MRSP}}, V_{\text{MRSP}} > 110, V_{\text{est}} > V_{\text{MRSP}} + 7.5, V_{\text{est}} > V_{\text{MRSP}} + 15, \\
 \quad \ell = \text{NS}, \ell = \text{WS}, \ell = \text{IS}, W, EB \}
 {%endkatex%}
 
-For building input equivalence class partitions, we'll only need
-to focus on the propositions related to the inputs {%katex%}V_{est}, V_{MRSP}{%endkatex%}. Therefore, our set is:
+To construct input equivalence class partitions, we only need to focus on the propositions directly related to the inputs {%katex%} V_{\text{est}} {%endkatex%} and {%katex%} V_{\text{MRSP}} {%endkatex%}. Therefore, our input set becomes:
 
 > {%katex%}
 AP_I = \{ V_{\text{est}} = 0, V_{\text{est}} > V_{\text{MRSP}}, V_{\text{MRSP}} > 110, V_{\text{est}} > V_{\text{MRSP}} + 7.5, V_{\text{est}} > V_{\text{MRSP}} + 15 \}
 {%endkatex%}
 
-Let's build the initial table of input equivalence class partitions (IECP).
-Remember, it is easy to build one. This table has every combination
-of each atomic proposition related to the input being either true or false.
-Another way to think about it, it is a Cartesian product.
+Let’s construct the initial table of input equivalence class partitions (IECP). This table includes every combination of each atomic proposition related to the inputs being either true or false, representing the Cartesian product of all possible input states.
 
-Like so,
+For example,
 
 > {%katex%}
 IECP = \{ V_{\text{est}} = 0, \neg(V_{\text{est}} = 0) \} \times \\
@@ -195,27 +186,24 @@ IECP = \{ V_{\text{est}} = 0, \neg(V_{\text{est}} = 0) \} \times \\
 \quad \{ V_{\text{est}} > V_{\text{MRSP}} + 15, \neg(V_{\text{est}} > V_{\text{MRSP}} + 15) \}
 {%endkatex%}
 
-Now, we can build a table explicitly that will contain all {%katex%}2^5=32{%endkatex%}
-classes from which we can later filter out which combinations have conflicts and then pick values for  {%katex%}V_{est}, V_{MRSP}{%endkatex%} that satisfy each class
-or we can just use a graphical representation as below.
+Now, we can construct a table explicitly listing all {%katex%} 2^5 = 32 {%endkatex%} possible classes. From this set, we can then filter out combinations that have logical conflicts and select specific values for {%katex%} V_{\text{est}} {%endkatex%} and {%katex%} V_{\text{MRSP}} {%endkatex%} that satisfy each class. Alternatively, we could visualize these combinations graphically, as shown below.
 
-<img src="/images/testing-simple-train-control-system-v_est.png" style="display:block; margin:auto">
+<img class="img-fluid" src="/images/testing-simple-train-control-system-v_est.png">
 
 <br>
+For {%katex%} V_{\text{MRSP}} > 110 {%endkatex%}, we can use the following values:
 
-For, {%katex%}V_{MRSP} > 110{%endkatex%}, we can pick the following values:
+* {%katex%} V_{\text{MRSP}} = 120, V_{\text{est}} = \{0, 50, 115, 123, 132, 140\} {%endkatex%}
 
-* {%katex%}V_{MRSP}=120,V_{est}=\{0,50,115,123,132,140\}{%endkatex%}
+For {%katex%} V_{\text{MRSP}} \leq 110 {%endkatex%}, we can use the following values:
 
-For, {%katex%}V_{MRSP} <= 110{%endkatex%}, we can pick the following values:
+* {%katex%} V_{\text{MRSP}} = 100, V_{\text{est}} = \{0, 50, 105, 109, 113, 120\} {%endkatex%}
 
-* {%katex%}V_{MRSP}=100,V_{est}=\{0,50,105,109,113,120\}{%endkatex%}
-
-The values are picked to fall into each region. Given that speed can't be in two separate regions at the same time it means that most of the {%katex%}2^5=32{%endkatex%} are invalid and only {%katex%}12{%endkatex%} classes are valid.
+These values are chosen to cover each region of interest. Since the estimated speed cannot simultaneously fall into multiple regions, most of the {%katex%} 2^5 = 32 {%endkatex%} combinations are invalid. Only {%katex%} 12 {%endkatex%} classes remain as valid combinations.
 
 ## Another way to work this out
 
-If we give each atomic proposition a short {%katex%} p_i {%endkatex%} name as follows:
+If we assign each atomic proposition a short {%katex%} p_i {%endkatex%} name, we get the following definitions:
 
 - **{%katex%} p_0 {%endkatex%}**: {%katex%} V_{\text{est}} = 0 {%endkatex%} — The estimated speed of the train is zero.
 - **{%katex%} p_1 {%endkatex%}**: {%katex%} V_{\text{est}} > V_{\text{MRSP}} {%endkatex%} — The estimated speed exceeds the maximum restricted speed (MRSP).
@@ -223,8 +211,7 @@ If we give each atomic proposition a short {%katex%} p_i {%endkatex%} name as fo
 - **{%katex%} p_3 {%endkatex%}**: {%katex%} V_{\text{est}} > V_{\text{MRSP}} + 7.5 {%endkatex%} — The estimated speed exceeds the MRSP by more than 7.5.
 - **{%katex%} p_4 {%endkatex%}**: {%katex%} V_{\text{est}} > V_{\text{MRSP}} + 15 {%endkatex%} — The estimated speed exceeds the MRSP by more than 15.
 
-From the table that would include all {%katex%}32{%endkatex%} classes, only the
-following would be left:
+From the table that includes all {%katex%} 32 {%endkatex%} classes, only the following valid combinations remain:
 
 {% html div class="styled-table compact" %}
 
@@ -245,27 +232,22 @@ following would be left:
 
 {% endhtml %}
 
-Then, you would just pick values to satisfy each input equivalence class partition.
+Then, you simply select values for each input that satisfy the conditions of each input equivalence class partition.
 
 # Coding up user actions
 
-After having test input values defined, we can start writing the test code
-that will automate all possible user actions such as:
+With our test input values defined, we can start writing the test code to automate all possible user actions, including:
 
-* starting and stopping the program
-* setting V_MRSP and threshold values
-* entering estimated speed
-* expecting normal status state
-* expecting warning status state
-* expecting emergency braking (intervention) status state
+* Starting and stopping the program
+* Setting `V_MRSP` and threshold values
+* Entering estimated speed values
+* Verifying the system's normal status state
+* Verifying the warning status state
+* Verifying the emergency braking (intervention) status state
 
-Because we are dealing with a command line (CLI) program, we'll use `testflows.connect` module to control it using the `send` and `expect` methods. We'll also define a `State` class to wrap
-all the elements of state of the controller into one object. We will need
-it when we implement the behavior model of the controller that will be used
-as a test oracle to give us the expected state of the system for any
-combination of controller's behavior. 
+Since we're working with a command-line interface (CLI) program, we’ll use the `testflows.connect` module to control it with the `send` and `expect` methods. Additionally, we’ll define a `State` class to encapsulate all elements of the controller’s state into a single object. This class will be crucial when we implement the controller's behavior model, which will serve as a test oracle to provide the expected state for any combination of controller behavior.
 
-Here are all the actions, including the `State` class, implemented in Python:
+Here is the implementation of all actions, including the `State` class, in Python:
 
 ```python
 import re
