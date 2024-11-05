@@ -110,6 +110,16 @@ blockquote::-webkit-scrollbar {
     background: none;
 }
 
+.blog.post-body .classic-quote blockquote {
+    padding-left: 2em;
+    border-left: 5px solid #0bcfff;
+    border-radius: 0;
+    font-style: normal;
+    font-weight: 300;
+    color: inherit;
+    overflow-x: auto;
+}
+
 .blog.post-body blockquote footer {
     background: none;
     font-size: 0.6em;
