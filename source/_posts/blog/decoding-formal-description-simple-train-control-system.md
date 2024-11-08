@@ -477,3 +477,9 @@ With the set of atomic propositions in hand, we can easily create equivalence cl
 We've successfully decoded the formal description of a simple train control system, the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller), as described in [*Exhaustive Model-Based Equivalence Class Testing* by W. Huang and J. Peleska, 2013](https://link.springer.com/chapter/10.1007/978-3-642-41707-8_4). In the paper, the system was formally described using a Kripke structure. We’ve explored what a Kripke structure is, examined each component used to define it, and saw how it applies to the controller. We closely analyzed how a transition relation can be specified as a predicate—a mathematical formula—and how, from it, we can extract a set of atomic propositions that allow for the construction of equivalence classes to implement test cases.
 
 When a complete list of atomic propositions is known for a given implementation, the set of test cases constructed from equivalence classes can result in an exhaustive test suite. This level of rigor is hard to achieve without a clear understanding and application of formal mathematics. While tackling formal definitions can be challenging at first, I hope this article, where I aimed to explain the math in as much detail as possible, will inspire more test engineers to embrace it. Formal concepts provide a strong foundation for thinking about systems we test in an abstract and structured way—a critical skill when testing real-world software systems.
+
+{% html div class="classic-quote" %}
+
+> 🛸 Continue to **[Testing Simple Train Control System Using Its Formal Description](../testing-simple-train-control-system-using-formal-description/)**
+
+{% endhtml %}

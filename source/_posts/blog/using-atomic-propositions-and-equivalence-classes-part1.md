@@ -513,5 +513,8 @@ In this first part, we've introduced formal definitions for atomic propositions 
 
 Next, in Part 2, we’ll explore how to take internal states into account, select specific input values, and use a combinatorial sketch to cover all equivalence classes effectively.
 
-[Continue to Part 2](../using-atomic-propositions-and-equivalence-classes-part2/)
+{% html div class="classic-quote" %}
 
+> 🛸 Continue to **[Using Atomic Propositions and Equivalence Classes (Part 2)](../using-atomic-propositions-and-equivalence-classes-part2/)**
+
+{% endhtml %}
