@@ -92,7 +92,7 @@
   </url>
   
   <url>
-    <loc>https://testflows.com/assistant/index.html</loc>
+    <loc>https://testflows.com/blog/index.html</loc>
     
     <lastmod>2024-03-14</lastmod>
     
@@ -101,7 +101,7 @@
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/index.html</loc>
+    <loc>https://testflows.com/assistant/index.html</loc>
     
     <lastmod>2024-03-14</lastmod>
     
@@ -166,7 +166,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2024-11-05</lastmod>
+    <lastmod>2024-11-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

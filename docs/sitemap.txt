@@ -8,8 +8,8 @@ https://testflows.com/index.html
 https://testflows.com/handbook/index.html
 https://testflows.com/contact.html
 https://testflows.com/credits.html
-https://testflows.com/assistant/index.html
 https://testflows.com/blog/index.html
+https://testflows.com/assistant/index.html
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
 https://testflows.com/blog/get-your-software-covered-using-covering-arrays/
 https://testflows.com/blog/how-to-break-your-tests-into-steps/
