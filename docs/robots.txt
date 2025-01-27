@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://testflows.com/sitemap.xml
