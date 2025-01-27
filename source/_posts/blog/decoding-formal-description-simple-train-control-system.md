@@ -470,7 +470,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} > V_{\text{MRSP}}, V_{\text{MRSP}} > 
 \quad \ell = \text{NS}, \ell = \text{WS}, \ell = \text{IS}, W, EB \}
 {%endkatex%}
 
-With the set of atomic propositions in hand, we can easily create equivalence classes that can be used in testing as described in [Using Atomic Propositions and Equivalence Classes (Part 1)](..using-atomic-propositions-and-equivalence-classes-part1/) and [Using Atomic Propositions and Equivalence Classes (Part 2)](..using-atomic-propositions-and-equivalence-classes-part2/).
+With the set of atomic propositions in hand, we can easily create equivalence classes that can be used in testing as described in [Using Atomic Propositions and Equivalence Classes (Part 1)](../using-atomic-propositions-and-equivalence-classes-part1/) and [Using Atomic Propositions and Equivalence Classes (Part 2)](../using-atomic-propositions-and-equivalence-classes-part2/).
 
 # Conclusion
 
