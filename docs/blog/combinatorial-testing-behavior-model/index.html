@@ -30,9 +30,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1738021433634" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1738021913962" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1738021433634" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1738021913962" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -113,7 +113,7 @@
     <div class="blog post-body row">
         <div class="col-12">
             <p>Combinatorial testing significantly increases the test coverage of software systems, achieving levels of thoroughness that are unattainable with traditional test suites focusing on individual scenarios or limited combinations of user actions. However, combinatorial testing introduces the notorious test oracle problem—how to determine or compute the expected behavior for every possible combination of user actions.</p>
-<p>The survey <a target="_blank" rel="noopener external nofollow noreferrer" href="https://web.eecs.umich.edu/~weimerw/481/readings/testoracles.pdf">“The Oracle Problem in Software Testing: A Survey”</a> provides an excellent overview of this issue, highlighting that deriving or even knowing the correct outcomes for complex combinations is often not straightforward. A common approach to solve this is by developing a behavior model that can compute expected outcomes for given system behaviors. Yet, many testers have never encountered the oracle problem, as they primarily deal with single combination tests. Fewer still have created or even understand what a behavior model entails.</p>
+<p>The survey <a target="_blank" rel="noopener external nofollow noreferrer" href="https://ieeexplore.ieee.org/document/6963470">“The Oracle Problem in Software Testing: A Survey”</a> provides an excellent overview of this issue, highlighting that deriving or even knowing the correct outcomes for complex combinations is often not straightforward. A common approach to solve this is by developing a behavior model that can compute expected outcomes for given system behaviors. Yet, many testers have never encountered the oracle problem, as they primarily deal with single combination tests. Fewer still have created or even understand what a behavior model entails.</p>
 <p>To demystify behavior models, we will explore the development of such a model for a simple stateful system: a memory function that allows users to write, read, or erase data. We’ll illustrate how to apply combinatorial testing to this function and develop a behavior model from scratch to verify expected results.<span id="more"></span></p>
 <h1 id="The-memory-function"><a href="#The-memory-function" class="headerlink" title="The memory function"></a>The memory function</h1><p>To illustrate the approach, we’ll use a memory function as our system under test. This system is straightforward to understand, yet the technique is easily adaptable to more complex, real-world systems.</p>
 <img class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
