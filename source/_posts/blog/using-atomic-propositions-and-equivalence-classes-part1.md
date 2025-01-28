@@ -55,7 +55,7 @@ Equivalence classes defined by atomic propositions partition the input space int
 
 > "Therefore, **equivalence classes** allow for the **reduction of the number of combinations** that need to be checked."
 
-To illustrate how we can use atomic propositions and equivalence classes, we’ll again use a memory function as our system under test, which we explored in the [Combinatorial Testing: Writing Behavior Model](../combinatorial-testing-behavior-model) post.
+To illustrate how we can use atomic propositions and equivalence classes, we’ll again use a memory function as our system under test, which we explored in the [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model) post.
 
 However, before we start applying atomic propositions and equivalence classes to a real system under test, let's take a more formal approach and define these concepts more precisely using the formal mathematical notation commonly found in scientific papers related to formal methods.
 
@@ -515,6 +515,6 @@ Next, in Part 2, we’ll explore how to take internal states into account, selec
 
 {% html div class="classic-quote" %}
 
-> 🛸 Continue to **[Using Atomic Propositions and Equivalence Classes (Part 2)](../using-atomic-propositions-and-equivalence-classes-part2/)**
+> 🛸 Continue to **[Using Atomic Propositions and Equivalence Classes (Part 2)](/blog/using-atomic-propositions-and-equivalence-classes-part2/)**
 
 {% endhtml %}

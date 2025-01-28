@@ -10,7 +10,7 @@ icon: fas fa-glasses pt-5 pb-5
 
 Most software systems do not come with formal models. However, formal models are invaluable for constructing comprehensive test suites based on atomic propositions and for verifying the correctness of a system's behavior using tools like [TLA+](https://en.wikipedia.org/wiki/TLA%2B).
 
-In the previous article, [Testing Simple Train Control System Using Its Formal Description](../testing-simple-train-control-system-using-formal-description/), we explored how a formal model can be used to create a behavior model, which, in turn, was leveraged to calculate expected results for tests. However, in real-world applications, the inverse process—deriving a formal model from a behavior model developed during testing—is even more powerful.
+In the previous article, [Testing Simple Train Control System Using Its Formal Description](/blog/testing-simple-train-control-system-using-formal-description/), we explored how a formal model can be used to create a behavior model, which, in turn, was leveraged to calculate expected results for tests. However, in real-world applications, the inverse process—deriving a formal model from a behavior model developed during testing—is even more powerful.
 
 In this article, we'll explore exactly that process: how a testing behavior model can be transformed into a formal model. This approach opens up another dimension in understanding and testing software systems, offering a deeper level of rigor and insight.<!-- more -->
 
@@ -51,7 +51,7 @@ class Model:
 ```
 
 A more detailed introduction to behavior models, along with a specific example, can be found in
-the article [Combinatorial Testing Using a Behavior Model](../combinatorial-testing-behavior-model).
+the article [Combinatorial Testing Using a Behavior Model](/blog/combinatorial-testing-behavior-model).
 
 In summary:
 
@@ -109,7 +109,7 @@ def R(s, s_prime):
 
 The key point is that the state transitions defined in the behavior model align with the predicates (logical conditions) in the transition relation {% katex %}R{% endkatex %}. This alignment creates a seamless link between the practical behavior model and the formal Kripke structure.
 
-> For a deeper understanding of formal models, refer to [Decoding Formal Description of a Simple Train Control System](../decoding-formal-description-simple-train-control-system/), which explores the process of decoding a simple formal model.
+> For a deeper understanding of formal models, refer to [Decoding Formal Description of a Simple Train Control System](/blog/decoding-formal-description-simple-train-control-system/), which explores the process of decoding a simple formal model.
 
 ### How they complement each other
 
@@ -121,13 +121,13 @@ Since both models represent the same system, there is naturally significant over
 
 ## Demonstrating transformation using an example
 
-As an example of transforming a testing behavior model into a formal model, we'll revisit the Ceiling Speed Monitoring Controller (CSMC) introduced in the previous articles: [Decoding Formal Description of a Simple Train Control System](../decoding-formal-description-simple-train-control-system/) and [Testing Simple Train Control System Using Its Formal Description](../testing-simple-train-control-system-using-formal-description/). 
+As an example of transforming a testing behavior model into a formal model, we'll revisit the Ceiling Speed Monitoring Controller (CSMC) introduced in the previous articles: [Decoding Formal Description of a Simple Train Control System](/blog/decoding-formal-description-simple-train-control-system/) and [Testing Simple Train Control System Using Its Formal Description](/blog/testing-simple-train-control-system-using-formal-description/).
 
 While this is a contrived example, given that we already know the formal model for the controller, it serves as a clear and practical demonstration of the procedure, highlighting the relationship between the two models.
 
 The testing behavior model for this system was implemented in Python using the following `Model` class. While many engineers may find abstract mathematical definitions challenging, reading and understanding the code is relatively straightforward and intuitive.
 
-Creating behavior models like this from scratch is also not particularly difficult. For an example of how to write such models, refer to the article [Combinatorial Testing: Writing Behavior Model](../combinatorial-testing-behavior-model/).
+Creating behavior models like this from scratch is also not particularly difficult. For an example of how to write such models, refer to the article [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model/).
 
 Now, let's return to our train control model. Here it is:
 
@@ -462,7 +462,7 @@ Where:
 
 With the transition relation {% katex %}R{% endkatex %} expressed as a predicate derived from the testing behavior model, we can now complete the rest of the Kripke structure {% katex %}(S, S_0, R, L, AP){% endkatex %}.
 
-The most challenging aspect is deriving the set of atomic propositions. Fortunately, since we have worked with this formal model before, the full procedure is detailed in the article [Decoding Formal Description of a Simple Train Control System](../decoding-formal-description-simple-train-control-system/#The-atomic-propositions).
+The most challenging aspect is deriving the set of atomic propositions. Fortunately, since we have worked with this formal model before, the full procedure is detailed in the article [Decoding Formal Description of a Simple Train Control System](/blog/decoding-formal-description-simple-train-control-system/#The-atomic-propositions).
 
 From that procedure, the set of atomic propositions for this model is:
 
@@ -475,7 +475,7 @@ The set of states {% katex %}S{% endkatex %} is theoretically infinite since eac
 
 Similarly, the set of initial states {% katex %}S_0{% endkatex %} is also infinite because the system could restart in the middle of the train's movement, leading to a dependency on {% katex %}V_{\text{est}}{% endkatex %}.
 
-Finally, the labeling function ({% katex %}L{% endkatex %}) maps each state to the set of atomic propositions that are true for that state. While the set of states {% katex %}S{% endkatex %} is infinite, the labeling function can be defined piecewise using equivalence classes derived from the set of atomic propositions. For more details on deriving equivalence classes, refer to [Building test input sequences](../testing-simple-train-control-system-using-formal-description/#Building-test-input-sequences), where this process is explained in depth.
+Finally, the labeling function ({% katex %}L{% endkatex %}) maps each state to the set of atomic propositions that are true for that state. While the set of states {% katex %}S{% endkatex %} is infinite, the labeling function can be defined piecewise using equivalence classes derived from the set of atomic propositions. For more details on deriving equivalence classes, refer to [Building test input sequences](/blog/testing-simple-train-control-system-using-formal-description/#Building-test-input-sequences), where this process is explained in depth.
 
 ### Conclusion
 

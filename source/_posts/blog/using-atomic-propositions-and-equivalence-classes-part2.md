@@ -8,7 +8,7 @@ image: images/using-atomic-propositions-and-equivalence-classes-part2.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Building on the foundations from [Part 1 🛸](../using-atomic-propositions-and-equivalence-classes-part1), where we introduced atomic propositions and equivalence classes as mathematically rigorous techniques, this section will dive into applying these concepts in practice. Here, we’ll explore how to account for internal states, carefully select specific input values, and utilize a combinatorial sketch to cover all equivalence classes effectively.
+Building on the foundations from [Part 1 🛸](/blog/using-atomic-propositions-and-equivalence-classes-part1), where we introduced atomic propositions and equivalence classes as mathematically rigorous techniques, this section will dive into applying these concepts in practice. Here, we’ll explore how to account for internal states, carefully select specific input values, and utilize a combinatorial sketch to cover all equivalence classes effectively.
 
 Ready to dive deeper? Let’s continue our journey into advanced testing strategies!
 
@@ -16,9 +16,9 @@ Ready to dive deeper? Let’s continue our journey into advanced testing strateg
 
 # Taking into account system's internal states
 
-The original definition of [input equivalence class partitions {%katex%} \mathcal{I} {%endkatex%}](../using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes) (IECP) does not explicitly consider system state. This may seem counterintuitive, as one might expect a system in different states to respond differently to inputs within the same equivalence class. In other words, the behavior of some class {%katex%}EC_1{%endkatex%} when the system is in state {%katex%}s_1{%endkatex%} may not be the same as when {%katex%}EC_1{%endkatex%} is applied in {%katex%}s_2{%endkatex%}.
+The original definition of [input equivalence class partitions {%katex%} \mathcal{I} {%endkatex%}](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes) (IECP) does not explicitly consider system state. This may seem counterintuitive, as one might expect a system in different states to respond differently to inputs within the same equivalence class. In other words, the behavior of some class {%katex%}EC_1{%endkatex%} when the system is in state {%katex%}s_1{%endkatex%} may not be the same as when {%katex%}EC_1{%endkatex%} is applied in {%katex%}s_2{%endkatex%}.
 
-For example, let’s consider **Class 47** from the [table of equivalence classes](../using-atomic-propositions-and-equivalence-classes-part1/#Table-of-equivalence-classes) for the memory function, represented as a logical conjunction of the propositions:
+For example, let’s consider **Class 47** from the [table of equivalence classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Table-of-equivalence-classes) for the memory function, represented as a logical conjunction of the propositions:
 
 > {%katex%}
 p_1 \land p_{1a} \land p_2 \land p_{2a} \land p_3 \land p_{3a} \land \lnot p_{3b} \land \lnot p_{3c} \land p_4
@@ -59,7 +59,7 @@ In this modified definition:
 
 This modified IECP definition creates equivalence classes that group state-input pairs {%katex%} (s, c) {%endkatex%} based on their combined behavior, ensuring that inputs leading to different outcomes in different states are handled correctly.
 
-However, modifying the original [equivalence class {%katex%} \mathcal{I} {%endkatex%}](../using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes) definition may not be necessary, as equivalence classes should ideally focus on partitioning the input space independently of the system's internal states. This independence allows us to create equivalence classes that describe all possible input conditions without being specific to any internal state. Here are the main reasons why:
+However, modifying the original [equivalence class {%katex%} \mathcal{I} {%endkatex%}](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes) definition may not be necessary, as equivalence classes should ideally focus on partitioning the input space independently of the system's internal states. This independence allows us to create equivalence classes that describe all possible input conditions without being specific to any internal state. Here are the main reasons why:
 
 1. **State Independence**: Traditional IECP is designed to provide a global partition of inputs that applies universally, regardless of the internal state. This approach simplifies testing by focusing solely on the inputs and ensuring coverage of all possible input conditions without needing to consider internal behavior.
 
@@ -92,7 +92,7 @@ Then:
 \text{Total\,States} = (V+1)^A = 257^{100}
 {%endkatex%}
 
-This result is astronomically large, making the total number of states practically infinite for testing purposes. We cannot reasonably test such a vast number of states, so an abstraction is necessary to focus on the core behavior. This is achieved by defining **abstract states** — broad states that summarize the essential conditions of the system, as we did in [Combinatorial Testing: Writing Behavior Model](../combinatorial-testing-behavior-model/#Determining-the-minimum-number-of-calls).
+This result is astronomically large, making the total number of states practically infinite for testing purposes. We cannot reasonably test such a vast number of states, so an abstraction is necessary to focus on the core behavior. This is achieved by defining **abstract states** — broad states that summarize the essential conditions of the system, as we did in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model/#Determining-the-minimum-number-of-calls).
 
 Our simplified model of the memory function, based on the following assumptions, reduces the complexity:
 
@@ -114,9 +114,9 @@ Thus, we abstract the memory function to have only {%katex%} 3 {%endkatex%} inte
 
 # Selecting input values to build concrete equivalence classes
 
-Before we can use the equivalence classes defined in the [Table: Equivalent Classes](../using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes), we need to define each atomic proposition concretely by assigning actual input values.
+Before we can use the equivalence classes defined in the [Table: Equivalent Classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes), we need to define each atomic proposition concretely by assigning actual input values.
 
-This involves reviewing combinations of [refined propositions](../using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes-from-refined-propositions) and specifying them with precise input values.
+This involves reviewing combinations of [refined propositions](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes-from-refined-propositions) and specifying them with precise input values.
 
 ## Concrete values for `addr` (address) input
 
@@ -181,7 +181,7 @@ With these concrete input values assigned to combinations of atomic propositions
 
 # Implementing equivalence class testing using combinatorial sketch
 
-With our selected input values forming concrete equivalence classes, we’re now ready to apply them to comprehensively test the memory function. How do we achieve this? By creating all possible combinations of these input values, we can generate test inputs that cover every equivalence class defined in the [Table: Equivalent Classes](../using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes).
+With our selected input values forming concrete equivalence classes, we’re now ready to apply them to comprehensively test the memory function. How do we achieve this? By creating all possible combinations of these input values, we can generate test inputs that cover every equivalence class defined in the [Table: Equivalent Classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes).
 
 The value sets for each variable — `addr`, `value`, `mode`, and `default` — are as follows:
 
@@ -221,7 +221,7 @@ The total number of combinations in {%katex%} \mathcal{I_{inputs}} {%endkatex%}:
 |\mathcal{I_{inputs}}| = 3 \times 2 \times 9 \times 1 = 54
 {%endkatex%}
 
-This yields 54 unique input combinations, as expected. Each tuple in {%katex%} \mathcal{I_{inputs}} {%endkatex%} represents an input vector that satisfies exactly one equivalence class in the [Table: Equivalent Classes](../using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes).
+This yields 54 unique input combinations, as expected. Each tuple in {%katex%} \mathcal{I_{inputs}} {%endkatex%} represents an input vector that satisfies exactly one equivalence class in the [Table: Equivalent Classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes).
 
 ## Mapping input vectors back to equivalent classes
 
@@ -278,7 +278,7 @@ Our inputs are:
 > {%katex%} V_{mode} = \{"r", "w", "e", "rw", "re", "we", "rwe", "", \text{None}\} \\ {%endkatex%}  
 > {%katex%} V_{default} = \{0\} \\ {%endkatex%}  
 
-Using these inputs, we can easily implement a test to cover every equivalence class by employing [TestSketch](https://testflows.com/handbook/#Using-Sketches) and the [either() function](https://testflows.com/handbook/#Using-either), similar to our approach in [Combinatorial Testing: Writing Behavior Model](../combinatorial-testing-behavior-model). The only difference is that our equivalence classes compel us to include a few additional input values that may have been overlooked before. Other than that, the test implementation remains nearly identical.
+Using these inputs, we can easily implement a test to cover every equivalence class by employing [TestSketch](https://testflows.com/handbook/#Using-Sketches) and the [either() function](https://testflows.com/handbook/#Using-either), similar to our approach in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model). The only difference is that our equivalence classes compel us to include a few additional input values that may have been overlooked before. Other than that, the test implementation remains nearly identical.
 
 The modified test is as follows:
 
@@ -323,7 +323,7 @@ This matches our selected values to build the equivalence classes defined using 
 
 Here, the `valid_modes()` function simply computes all possible combinations of flags `r`, `w`, `e` and returns `['r', 'w', 'e', 'rw', 're', 'we', 'rwe']`. We then add "" (empty string) to cover the case where no flags are set, and None to cover the case when mode is invalid (non-iterable).
 
-Let’s take the test program from [Combinatorial Testing: Writing Behavior Model](../combinatorial-testing-behavior-model) and update to execute our modified
+Let’s take the test program from [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model) and update to execute our modified
 `check_memory` test:
 
 ```python
@@ -783,7 +783,7 @@ This confirms that all {%katex%} 54 \times 54 \times 54 = 54^3 = 157,464 {%endka
 
 # Conclusion
 
-Using atomic propositions and equivalence classes has brought us closer to formal methods and introduced the mathematical rigor needed to elevate our testing to the next level. We examined formal mathematical notation and a formal definition of input equivalence class partitions (IECP), applying them to our memory function and bringing theory into practice. Leveraging our previous work in [Combinatorial Testing: Writing Behavior Model](../combinatorial-testing-behavior-model), we reused much of the code, including the behavior model. This approach shows that combinatorial testing aligns naturally with equivalence class testing, both requiring a model to compute expected results across thousands of combinations, providing near-exhaustive test coverage.
+Using atomic propositions and equivalence classes has brought us closer to formal methods and introduced the mathematical rigor needed to elevate our testing to the next level. We examined formal mathematical notation and a formal definition of input equivalence class partitions (IECP), applying them to our memory function and bringing theory into practice. Leveraging our previous work in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model), we reused much of the code, including the behavior model. This approach shows that combinatorial testing aligns naturally with equivalence class testing, both requiring a model to compute expected results across thousands of combinations, providing near-exhaustive test coverage.
 
 Achieving this level of rigor is no small feat, underscoring that testing and formal mathematics go hand-in-hand. Concepts from formal methods are essential knowledge for every tester dedicated to mastering their craft.
 
