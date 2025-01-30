@@ -3,8 +3,8 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Enterprise Quality Assurance Testing Framework
-description: TestFlows is a flexible open-source Python test automation framework that implements an enterprise quality assurance process with full requirement traceability
+title: TestFlows - Python Testing Framework
+description: TestFlows is a Python testing framework with support for behavior-driven testing, combinatorial testing, AI auto-steps, and requirement traceability"
 keywords:
 author: TestFlows
 language: en
