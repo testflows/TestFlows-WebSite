@@ -158,7 +158,7 @@ What should we use from the formal definition to build our test sequences? The a
 
 {% html div class="classic-quote" %}
 
-> For a guide on creating input equivalence class partitions, see [Using Atomic Propositions and Equivalence Classes (Part 1)](..using-atomic-propositions-and-equivalence-classes-part1/) and [Using Atomic Propositions and Equivalence Classes (Part 2)](..using-atomic-propositions-and-equivalence-classes-part2/).
+> For a guide on creating input equivalence class partitions, see [Using Atomic Propositions and Equivalence Classes (Part 1)](/blog/using-atomic-propositions-and-equivalence-classes-part1/) and [Using Atomic Propositions and Equivalence Classes (Part 2)](/blog/using-atomic-propositions-and-equivalence-classes-part2/).
 
 {% endhtml %}
 

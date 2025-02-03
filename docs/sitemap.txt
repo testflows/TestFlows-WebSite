@@ -1,11 +1,11 @@
+https://testflows.com/blog/decoding-formal-description-simple-train-control-system/
+https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/
 https://testflows.com/index.html
 https://testflows.com/blog/transforming-testing-behavior-models-into-formal-models/
-https://testflows.com/blog/decoding-formal-description-simple-train-control-system/
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/
 https://testflows.com/blog/combinatorial-testing-behavior-model/
 https://testflows.com/blog/combinatorial-testing-the-introduction/
-https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/
 https://testflows.com/handbook/index.html
 https://testflows.com/contact.html
 https://testflows.com/credits.html
