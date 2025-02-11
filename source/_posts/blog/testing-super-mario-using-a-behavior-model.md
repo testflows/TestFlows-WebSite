@@ -71,3 +71,95 @@ python3 main.py
 <img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Playing the game manually</div>
 </div><br>
+
+## Understanding the game architecture
+
+Before we can integrate *PythonSuperMario* for testing, we need a basic understanding of its architecture. The game's execution starts in [source/main.py](https://github.com/marblexu/PythonSuperMario/blob/master/source/main.py), where the [main()](https://github.com/marblexu/PythonSuperMario/blob/master/source/main.py#L8) function initializes the game structure:
+
+```python
+def main():
+    game = tools.Control()
+    state_dict = {c.MAIN_MENU: main_menu.Menu(),
+                  c.LOAD_SCREEN: load_screen.LoadScreen(),
+                  c.LEVEL: level.Level(),
+                  c.GAME_OVER: load_screen.GameOver(),
+                  c.TIME_OUT: load_screen.TimeOut()}
+    game.setup_states(state_dict, c.MAIN_MENU)
+    game.main()
+```
+
+### Game as a state machine
+
+The game is implemented as an explicit **state-driven system**, where different **states** represent major phases of execution. These include:
+
+- **[MAIN_MENU](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/main_menu.py#L9)** – The game's main menu.
+- **[LOAD_SCREEN](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/load_screen.py#L7)** – The load screen.
+- **[LEVEL](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/level.py#L11)** – The active gameplay state where the player interacts with the game world.
+- **[GAME_OVER](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/load_screen.py#L39)** – The state when the player loses all lives.
+- **[TIME_OUT](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/load_screen.py#L50)** – The state when the level timer runs out (a type of load screen).
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
+<div class="text-secondary text-bold"><br>Super Mario: State Classes</div>
+</div><br>
+
+
+Each of these is a subclass of the [State class](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L15), which implements the state machine architecture. The transitions between states are managed using the [`next` attribute](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L20), which determines the upcoming game state.
+
+### The actual game states
+
+However, these states are actually not states but represent clusters of **states**, each of which contains its own **actual states**. These **actual states** are defined by the specific values of the attributes of these `State` classes. You can think of them like shown in the following diagram. However, the transition edges between states are relative. In the real system, we don't really know which transitions are possible. Some of these transitions might be a bug!
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
+<div class="text-secondary text-bold"><br>Super Mario: Clusters of States (transition lines are random)</div>
+</div><br>
+
+
+For example, the **[MAIN_MENU](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/main_menu.py#L9)** `State class` defines many states, determined by its attributes, such as:
+
+- **`persist`** – Stores persistent game information that is [passed between states](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L62) during transitions. It contains:
+  - `COIN_TOTAL`, `SCORE`, `LIVES`, `TOP_SCORE`, `CURRENT_TIME`, `LEVEL_NUM`, `PLAYER_NAME`
+- **`game_info`** – Holds the current game's information (set equal to `persist`).
+- **`overhead_info`** – Manages the display of overhead game information, initialized as an instance of the `Info` class with `game_info` and `MAIN_MENU` as parameters.
+- **`viewport`** – Manages the visible portion of the game world in the main menu.
+- **`background`** – Handles the background setup for the main menu; initialized in the `setup_background()` method.
+- **`player_list` and `player_index`** – Represent the selectable player characters in the main menu; initialized in the `setup_player()` method.
+- **`cursor`** – Manages the menu selection cursor; initialized in the `setup_cursor()` method.
+
+These attributes are primarily initialized in the [`startup()` method](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/main_menu.py#L21), which is called when the `Menu` class is instantiated.
+
+A crucial detail to note is that **the game does not have just five states**! In reality, the number of possible states is far greater because each `State` class has multiple attributes whose values define distinct actual states. 
+
+> Don't be misled by the class name `State`, which can create confusion—it does not represent a singular game state but rather a structure that implements multiple possible states through its attributes.
+
+Understanding this distinction is key to bridging the gap between the code and the state machine representation of the system under test. Effective testing relies on exploring as many states and transitions of this state machine as possible to ensure comprehensive coverage.
+
+The game's state-driven code architecture also aligns seamlessly with **behavior model-based testing**, where **behavior** is defined as a sequence of states. Our model will compute the expected values in the **current state** based on the sequence of **previous states** (the system’s history). By leveraging this structure, we can systematically validate that the game behaves as intended as the game transitions between states.
+Note that state machine representation applies in general to any software even when the implementation
+is not explicitly defined using state-driven code.
+
+### The game loop and state transitions
+
+The transition of game states is handled by the [`Control` class](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L35), which defines the frames per second (FPS) — the theoretical [frequency](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L78) at which the game loop executes.
+
+The [game loop](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L73) itself is very simple as shown below:
+
+```python
+    def main(self):
+        while not self.done:
+            self.event_loop()
+            self.update()
+            pg.display.update()
+            self.clock.tick(self.fps)
+```
+
+The game loop operates in discrete time steps, where each tick of the clock produces a new frame. The FPS value determines the number of frames generated per second, with each frame representing the game's state at a specific point in time. While the game might appear to run continuously, it is actually discrete, advancing in small, well-defined steps. Here is a graphical representation of the loop’s actions along with their descriptions:
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
+<div class="text-secondary text-bold"><br>Super Mario: Game Loop</div>
+</div><br>
+
+This is crucial for testing because the game’s behavior at any moment is fully determined by the current frame state. Therefore, testing must account for the fact that all animations, inputs, and events are processed frame-by-frame, and a **behavior model** must accurately observe and validate the correctness of the state for each frame.
+
