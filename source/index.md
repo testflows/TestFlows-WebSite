@@ -8,19 +8,19 @@ layout: index
 <div id="banner-graph" class="banner-graph"></div>
 {% html div class="banner-content" %}
 
-<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="4000" data-wrap="false">
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="6000" data-wrap="false">
   <div class="carousel-inner">
     <div class="carousel-item active">
-        <h1>Testing is exploring.</h1>
-        <h3>Exploring is an adventure.</h3>
+        <h1>Unmatched flexibility</h1>
+        <h1>Total control</h1>
     </div>
     <div class="carousel-item">
-        <h1>Flexible. Modular. Inspiring.</h1>
-        <h3>Write test programs, not just tests. Learn more.</h3>
+        <h1>Powerful. Modular. Inspiring</h1>
+        <h1>Write test programs, not just tests</h1>
     </div>
     <div class="carousel-item">
-        <h1>Join the mission.</h1>
-        <h3>Start testing with us. Start exploring.</h3>
+        <h1>Feel the difference</h1>
+        <h1>Start exploring</h1>
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -33,8 +33,8 @@ layout: index
   </a>
 </div>
 <div class="banner-description">
-<h4>Python open-source testing framework.</h4>
-<h2>Try now.</h1>
+<h4>Python testing framework for any project</h4>
+<h2>Try now</h1>
 </div>
 <div class="row justify-content-center no-gutters">
 <div class="command">
