@@ -226,3 +226,246 @@ The game loop operates in discrete time steps, where each tick of the clock prod
 This is crucial for testing because the game’s behavior at any moment is fully determined by the current frame state. Therefore, testing must account for the fact that all animations, inputs, and events are processed frame-by-frame, and a **behavior model** must accurately observe and validate the correctness of the state for each frame.
 
 ## Wiring up test actions
+
+Now, having good understanding of the underlying game code architecture,
+we are ready to wire up test actions that we'll enable us to test the game.
+Let's compile a list of actions that we need for testing!
+
+### Starting and stopping the game
+
+For obvious reasons the first test action is to be able to start and stop the game.
+When we start the game, we also want to be able to wait for the game
+to be ready to play which means that we want to pass the `MAIN_MENU` states and
+enter the first `LEVEL` state. It also makes sense to always cleanly
+stop the game using `pygame.quit()` call, so we'll define this action as
+a [Given with yield](https://testflows.com/handbook/#Given-With-yield) step that supports combining setup and clean up in one step.  
+
+Most of the code to implement this action will be similar to the game's [main() function found in source/main.py](https://github.com/marblexu/PythonSuperMario/blob/master/source/main.py#L8). We'll just add `yield`ing the game's object, clean up using `pygame.quit()` call and call to `wait_ready(game)` to enter playable state with the default Mario player selected. The stubs for the `start()` and `wait_ready()` actions will be the following: 
+
+```python
+@TestStep(When)
+def wait_ready(self, game, seconds=3):
+    """Wait for game to be loaded and ready."""
+    pass
+
+@TestStep(Given)
+def start(self, ready=True):
+    """Start the game and wait for it to be ready."""
+    pass
+```
+
+### Controlling the game
+
+When we actually try implementing the above actions, we'll quickly come to a realization that the default game's [**`Control` class**](https://github.com/marblexu/PythonSuperMario/blob/master/source/tools.py#L35) will need to be modified to allow testing the game
+at frame by frame level. This is because we need the ability to do the following:
+
+- Control and capture **frame-by-frame game states**, advancing and storing states for validation.
+- Manage **keypress events**, allowing programmatic as well as manual control of the player.
+- Detect **objects** visible on the screen as well as overlay custom graphics for easy debugging.
+
+We'll accomplish this using the custom **`Control` class** that will use the original class as the base, and create the new **`Vision` class** (from `vision.py`) to handle graphical object detection and overlaying on the screen.
+
+Here is shortened version of custom **`Control` class** `__init__` method that adds extra attributes:
+
+- **`fps`** ability to set custom frame rate
+- **`keys`** set to our custom **`Keys` class** to store and look up pressed keys
+- **`vision`** instance of the **`Vision` class** to detect objects draw on the screen
+- **`behavior`** list of frame states, previous and current, that tests and **behavior model** can use
+- **`play`** handle to the generator function that allows to control game advancement at the frame level
+- **`manual`** flag to enable manual game play inside a test that we'll use to allow manual testing of the **behavior model**
+
+```python
+class Control(tools.Control):
+    def __init__(self, fps=60, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fps = fps
+        self.keys = Keys()
+        self.vision = Vision(self)
+        self.behavior = []
+        self.play = None
+        self.manual = False
+```
+
+The other important part is the customized **`main()` method**
+that is converted to a generator to control the game loop and
+advance it step by step using the **[next](https://docs.python.org/3/library/functions.html#next)** function applied
+to the **`play`** attribute that stores the generator object.
+Therefore, **`next(game.play)`** will allow us move the game to the next frame.
+It also calls the **`Vision` class** instance's **`detect()` method** to detect
+currently visible game objects as well as creates and appends the new **`BehaviorState`** to the **`behavior` list** to store previous
+and current frame states. 
+
+```python
+    def main(self):
+        """Main game loop."""
+        def _main():
+            while not self.done:
+                self.event_loop()
+                self.update()
+                self.vision.detect()
+                self.behavior.append(
+                    BehaviorState(self.keys, self.vision.boxes, self.vision.viewport)
+                )
+                yield self
+                pg.display.update()
+                self.clock.tick(self.fps)
+        self.play = _main()
+```
+
+The above **`Control` class** allows us to implement the **`play()` action** below
+where we can advance the game either by specifying time in seconds
+or the number of frames.
+
+```python
+def play(game, seconds=1, frames=None):
+    """Play the game for the specified number seconds or frames."""
+    if frames is None:
+        frames = seconds * game.fps
+
+    for i in range(frames):
+        next(game.play)
+```
+
+### Detecting game objects and drawing boxes around them
+
+Ability to detect game objects and their positions is critical to game testing. To make games interesting they have quite a variety of them and *Super Mario Bros.* is no exception. We've already seen that in the **`Control` class** we've added **`vision` attribute** set to an instance of the **`Vision` class**. The **`Vision` class** is exactly what implements object detection as well as ability to draw on a screen that can be used in debugging our tests. 
+
+Here is the **`__init__` method** of the class: 
+
+```python
+class Vision:
+    """Gave vision."""
+    def __init__(self, game):
+        self.game = game
+        self.boxes = {}
+        self.viewport = pg.Rect(0, 0, 0, 0)
+```
+
+It only has three attributes:
+
+- **`game`** - a handle to the game's **`Control` object** (used for convenience)
+- **`boxes`** - stores the detected game objects. It is called *boxes* because the bounds of each object in the game is defined by a rectangular box or specifically **[pygame.Rect](https://www.pygame.org/docs/ref/rect.html)** object which defines the position of the object in the game.
+- **`viewport`** - stores an object that defines the chunk of the game level that can be currently seen on the screen
+
+The method that is responsible for object detects is called the **`detect()`**.
+
+```python
+   def detect(self):
+        """Detect visible game elements."""
+        self.boxes = self.get_visible()
+        if self.boxes:
+            self.viewport = self.game.state.viewport
+        return self
+```
+
+It is very simple as the heavy lifting is done in the **`get_visible()` method**
+which returns a list of visible elements in the current viewport. If any object
+was detected then the **`viewport`** attribute is set to the current viewport.
+
+In order to obtain the list of visible objects, the **`get_visible()` method**
+introspects the **`self.game.state`** and pull out any attribute
+that is of **[pygame.sprite.Sprite](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite)** or **[pygame.sprite.Group](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group)** type. Where in PyGame, the **sprite.Sprite** is used for visible game objects and **sprite.Group** is used for holding and managing a group of Sprite objects.
+
+The detected objects are saved in **`boxes`** attribute of the **`BehaviorState` objects** which are added to the **`game.behavior` attribute** which holds a list of them.
+
+All this machinery is used to implement the **`get_elements`** and **`get_element`**
+actions. 
+
+```python
+def get_elements(game, name, frame=-1):
+    """Get elements by name in the specified frame, default: -1 (current frame)."""
+    return game.behavior[frame].boxes[name]
+```
+
+```python
+def get_element(game, name, frame=-1):
+    """Get element by name in the specified frame, default: -1 (current frame)."""
+    return get_elements(game, name, frame)[0]
+```
+
+For easier visual debugging, the **`Vision` class** also provides the **`overlay()` method** that can be used to draw boxes around elements. For example,
+we can draw a colored box around Mario to visually mark its detected position in the test. The **`overlay`** action then just provides a convenient wrapper
+around calling this method.
+
+```python
+def overlay(game, elements, color=Vision.color["red"]):
+    """Overlay boxes around elements on the screen."""
+    game.vision.overlay(boxes=[element.box for element in elements], color=color)
+```
+
+
+### Simulating keypresses
+
+The last set of actions are for controlling keypresses supported by the game.
+A single key press consists of posting `KEYDOWN` and `KEYUP` events.
+We also need the ability to keep the key down for some period of time and
+therefore the low-level **`simulate_keypress`** is implemented as context manager. 
+
+```python
+@contextmanager
+def simulate_keypress(key):
+    """Simulate a key press and release event for the given key."""
+    keydown_event = pg.event.Event(pg.KEYDOWN, key=key)
+    pg.event.post(keydown_event)
+    yield
+    keyup_event = pg.event.Event(pg.KEYUP, key=key)
+    pg.event.post(keyup_event)
+```
+
+Using the **`simulate_keypress`** low-level action we can implement all necessary
+player actions such as pressing:
+
+- **Enter** key (activate selection like when selecting a player type)
+
+  ```python
+  def press_enter():
+     """Press the enter key."""
+     return simulate_keypress(key=keys["enter"])
+  ```
+
+- **`→` (right)** key (move right)
+
+  ```python
+  def press_right():
+      """Press the right arrow key."""
+      return simulate_keypress(key=keys["right"])
+  ```
+
+- **`←` (left)** key (move left)
+
+  ```python
+  def press_left():
+      """Press the left arrow key."""
+      return simulate_keypress(key=keys["left"])
+  ```
+
+- **`↓` (down)** key (move down like when entering a pipe)
+
+  ```python
+  def press_down():
+      """Press the down arrow key."""
+      return simulate_keypress(key=keys["down"])
+  ```
+
+- **`a` (up)** key (short or, if pressed continously, long jump)
+
+  ```python
+  def press_jump():
+      """Press the jump key."""
+      return simulate_keypress(key=keys["jump"])
+  ```
+
+- **`s` (action)** key - (perform an action like running or throwing a fireball)
+
+  ```python
+  def press_action():
+      """Press the action key."""
+      return simulate_keypress(keys["action"])
+  ```
+
+With all these test actions in hand we are ready to start testing.
+First, we can write a few simple classic tests and then off we go to developing
+a **behavior model** that we can use with manual, semi-automated, or any sort of automated testing.
+
+## Checking basic movements using classical auto tests
+
