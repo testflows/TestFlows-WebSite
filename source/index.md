@@ -20,7 +20,7 @@ layout: index
     </div>
     <div class="carousel-item">
         <h1>Feel the difference</h1>
-        <h1>Start exploring</h1>
+        <h1>Start testing</h1>
     </div>
   </div>
   <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
@@ -96,8 +96,7 @@ Altinity empowers developers to add high-performance analytics to any applicatio
 
 {% html div class="container" style="padding-bottom:2em !important" %}
 
-
-## Write
+<h2>Write your first test program</h2>
 
 {% html div class=row" %}
 
@@ -116,7 +115,7 @@ with Scenario("Hello TestFlows"):
 {% endhtml %}
 {% endhtml %}
 
-## Execute
+<h2>Then execute it</h2>
 
 {% html div class=row" %}
 

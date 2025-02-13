@@ -1,6 +1,6 @@
 ---
 post: true
-title: "Testing Super Mario Using a Behavior Model"
+title: "Testing Super Mario Bros. Using a Behavior Model"
 description: An article about testing Super Mario game using a behavior model. 
 date: 2025-02-07
 author: Vitaliy Zakaznikov
@@ -115,6 +115,7 @@ However, these states are actually not states but represent clusters of **states
 <div class="text-secondary text-bold"><br>Super Mario: Clusters of States (transition lines are random)</div>
 </div><br>
 
+#### The MAIN_MENU state class
 
 For example, the **[MAIN_MENU](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/main_menu.py#L9)** `State class` defines many states, determined by its attributes, such as:
 
@@ -135,8 +136,69 @@ A crucial detail to note is that **the game does not have just five states**! In
 
 Understanding this distinction is key to bridging the gap between the code and the state machine representation of the system under test. Effective testing relies on exploring as many states and transitions of this state machine as possible to ensure comprehensive coverage.
 
-The game's state-driven code architecture also aligns seamlessly with **behavior model-based testing**, where **behavior** is defined as a sequence of states. Our model will compute the expected values in the **current state** based on the sequence of **previous states** (the system’s history). By leveraging this structure, we can systematically validate that the game behaves as intended as the game transitions between states.
-Note that state machine representation applies in general to any software even when the implementation
+
+#### The LEVEL state class
+
+The **MAIN_MENU** `State class` has a lot of attributes, but as expected the **[LEVEL](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/level.py#L11)** `State class` that implements the actual
+gameplay is even more complex as can be judged by its [startup() method](https://github.com/marblexu/PythonSuperMario/blob/master/source/states/level.py#L16) which initializes this class and sets the attributes that implements possible state that this class implements.
+
+```python
+ def startup(self, current_time, persist):
+    self.game_info = persist
+    self.persist = self.game_info
+    self.game_info[c.CURRENT_TIME] = current_time
+    self.death_timer = 0
+    self.castle_timer = 0
+    
+    self.moving_score_list = []
+    self.overhead_info = info.Info(self.game_info, c.LEVEL)
+    self.load_map()
+    self.setup_background()
+    self.setup_maps()
+    self.ground_group = self.setup_collide(c.MAP_GROUND)
+    self.step_group = self.setup_collide(c.MAP_STEP)
+    self.setup_pipe()
+    self.setup_slider()
+    self.setup_static_coin()
+    self.setup_brick_and_box()
+    self.setup_player()
+    self.setup_enemies()
+    self.setup_checkpoints()
+    self.setup_flagpole()
+    self.setup_sprite_groups()
+```
+
+Here's a brief overview of its key functions:
+
+* **Initialize Game Information**: It assigns the `persist` dictionary to both `self.game_info` and `self.persist`, ensuring that persistent game data is maintained and can be passed across states.
+
+* **Reset Timers**: Adds and initializes `death_timer` and `castle_timer` to `0`, preparing these timers for the level.
+
+* **Initialize Overhead Display Information**: Sets up the overhead display information for the level.
+
+* **Load Level Assets**: It calls several setup methods to load and initialize various level components, including:
+
+    * `load_map()`: Loads the level map data.
+    * `setup_background()`: Prepares the background graphics.
+    * `setup_maps()`: Configures additional map settings.
+    * `setup_collide()`: Sets up collision detection for ground and steps.
+    * `setup_pipe()`: Initializes pipes within the level.
+    * `setup_slider()`: Sets up sliding platforms or elements.
+    * `setup_static_coin()`: Places static coins in the level.
+    * `setup_brick_and_box()`: Configures bricks and boxes.
+    * `setup_player()`: Initializes the player character.
+    * `setup_enemies()`: Spawns enemies in the level.
+    * `setup_checkpoints()`: Establishes checkpoints for progress tracking.
+    * `setup_flagpole()`: Sets up the flagpole at the end of the level.
+    * `setup_sprite_groups()`: Organizes sprites into groups for efficient management. Where a **sprite** is a 2D image or animation used in video games to represent characters, objects, and other visual elements. 
+
+By executing these steps, the startup method ensures that all necessary components and settings are properly initialized defining the initial state, allowing the level to function correctly within the game.
+The large number of possible states allowed by the **LEVEL** `State class` is what makes testing
+the game a challenge. Nonetheless, the state-driven architecture of the game is clearly evident. 
+
+The game's state-driven code architecture is well-aligned with **behavior model-based testing**, where **behavior** is defined as a sequence of states. Our model will compute the expected values in the **current state** based on the sequence of **previous states** (the system’s history). By leveraging this structure, we can systematically validate that the game behaves as intended as the game transitions between states.
+
+> Note that state machine representation applies in general to any software even when the implementation
 is not explicitly defined using state-driven code.
 
 ### The game loop and state transitions
@@ -163,3 +225,4 @@ The game loop operates in discrete time steps, where each tick of the clock prod
 
 This is crucial for testing because the game’s behavior at any moment is fully determined by the current frame state. Therefore, testing must account for the fact that all animations, inputs, and events are processed frame-by-frame, and a **behavior model** must accurately observe and validate the correctness of the state for each frame.
 
+## Wiring up test actions
