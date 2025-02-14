@@ -405,11 +405,9 @@ therefore the low-level **`simulate_keypress`** is implemented as context manage
 @contextmanager
 def simulate_keypress(key):
     """Simulate a key press and release event for the given key."""
-    keydown_event = pg.event.Event(pg.KEYDOWN, key=key)
-    pg.event.post(keydown_event)
+    pg.event.post(pg.event.Event(pg.KEYDOWN, key=key))
     yield
-    keyup_event = pg.event.Event(pg.KEYUP, key=key)
-    pg.event.post(keyup_event)
+    pg.event.post(pg.event.Event(pg.KEYUP, key=key))
 ```
 
 Using the **`simulate_keypress`** low-level action we can implement all necessary
@@ -463,9 +461,171 @@ player actions such as pressing:
       return simulate_keypress(keys["action"])
   ```
 
+
+## Checking basic movements using classical auto tests
+
 With all these test actions in hand we are ready to start testing.
 First, we can write a few simple classic tests and then off we go to developing
 a **behavior model** that we can use with manual, semi-automated, or any sort of automated testing.
 
-## Checking basic movements using classical auto tests
+### Moving right test
 
+Alright, let’s kick things off with a simple but essential test: checking if Mario — called the **`player`** element in the game — actually moves **right** when we press the right key. Because let’s be honest, if Mario can’t move right, "Houston we got a problem"!
+
+Here is our simple plan for the test:
+
+1. **Start the game** – Enter the level starting state.
+2. **Get Mario’s starting position** – Where is he standing before we do anything?
+3. **Press the right key** – Hold it for **one second**.
+4. **Check where Mario ended up** – Where is Mario standing now?
+5. **Verify the result** – If his **x-coordinate increased**, he did moved right! 🎉
+
+Here is the test code that uses our handy test actions:
+
+```python
+@TestScenario
+def scenario(self):
+    """Check Mario can move right."""
+
+    with Given("start the game"):
+        game = actions.game.start()
+
+    with And("get Mario's start position"):
+        mario_start = actions.game.get_element(game, "player")
+
+    with When("press the right key for 1 second"):
+        with actions.game.press_right():
+            actions.game.play(game, seconds=1)
+
+    with And("get Mario's end position"):
+        mario_end = actions.game.get_element(game, "player")
+
+    with Then("check Mario moves right"):
+        assert mario_end.box.x > mario_start.box.x, error()
+```
+
+If Mario **doesn’t move**, we’ll know something’s off. But if everything works, our test passes. Here's a video of this test in action with the red boxes added to Mario's start and end positions for visual confirmation.
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Move Right Classic Test</div>
+</div><br>
+
+### Moving left test
+
+Similarly, we can easily implement a test to check if Mario moves **left** when
+we press the left key. However, before we add another test, I'll update my main
+**`Feature`** module and move starting the game step there so that we don't have
+to start and stop the game for each test. My feature will now look like this:
+
+```python
+@TestFeature
+def regression(self):
+    """Run tests for the Super Mario Bros. game."""
+
+    with Given("start the game"):
+        self.context.game = actions.game.start()
+
+    Scenario(run=load("tests.move_right", "scenario"))
+    Scenario(run=load("tests.move_left", "scenario"))
+```
+
+Again, the important part is that I'll share the game between my two tests.
+As expected, the moves **left** test is similar to the moves **right** test as shown below.
+
+```python
+@TestScenario
+def scenario(self):
+    """Check Mario can move left in the game."""
+    game = self.context.game
+
+    with Given("get Mario's start position"):
+        mario_start = actions.game.get_element(game, "player")
+
+    with When("press the left key for 1 second"):
+        with actions.game.press_left():
+            actions.game.play(game, seconds=1)
+
+    with And("get Mario's end position"):
+        mario_end = actions.game.get_element(game, "player")
+
+    with Then("check Mario moves left"):
+        assert mario_end.box.x < mario_start.box.x, error()
+```
+
+Here is a video of the test:
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Move Left Classic Test</div>
+</div><br>
+
+However, now that we share the game between two tests we see that while
+move **left** test is working and passing, Mario does not move to the left the same
+distance as he did in our moves **right** test. Why? Well, because the game is not
+in the starting state and Mario has some velocity given by the moves **right** test before we press the left key in our move **left** test! So, this is interesting
+and shows that by adding optimization of sharing the same instance of the game between tests our tests have different initial states. Therefore, our moves **left** test is actually a **moves-left-after-moving-right** test. The only reason why our
+assertion is passing is that it tests for a very broad proposition of the **x-coordinate** being larger or smaller based on the direction of the movement.
+
+### Jumping test
+
+By now you get the idea of how classical tests can be written. But for fun, I can't resist, so let's quickly look at the **jump** test. We'd love to see Mario jump!
+
+Here is the test when we press the jump key for 1 second and then assert
+that the end **y-coordinate** is smaller that the start **y-coordinate**.
+Why? Because screen's **y-coordinates** start at 0 on the top and increase going down. 
+
+```python
+@TestScenario
+def scenario(self):
+    """Check Mario can jump in the game."""
+    game = self.context.game
+
+    with Given("get Mario's start position"):
+        mario_start = actions.game.get_element(game, "player")
+
+    with When("press the jump key for 1 second"):
+        with actions.game.press_jump():
+            actions.game.play(game, seconds=1)
+
+    with And("get Mario's end position"):
+        mario_end = actions.game.get_element(game, "player")
+
+    with Then("check Mario moves up"):
+        assert mario_end.box.y < mario_start.box.y, error()
+```
+
+Here is the video of the test:
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Jump For 1 Second Classic Test</div>
+</div><br>
+
+Wait, but the Mario's end position looks like is a ground level because he
+hits the left level boundary because he had an initial left velocity (because of the previous move **left** test) and moreover the jump movement does not mean that
+Mario will stay up in the air if we press the jump key for some time.
+Press it long enough and Mario will be pulled by the game's physics (the gravity)
+back down! So why does the test pass? It just happens that the end position
+is 2 y-pixels off from the starting position. This means that testing the jump move is tricky! The behavior is actually more complex. Also, note that Mario is jumping to the left because of the velocity in the left direction given by the previous move **left**
+test. This means that there is x or y velocity that needs to be considered, and the gravity pull causes Mario's position in the air to change. This behavior is more complex that one would initially would think.
+
+Having identified these issues, but still wanting to keep our assertion simple,
+we modify test's action to hold the jump key for 0.2 seconds instead of 1.
+
+```python
+        with When("press the jump key for 0.2 seconds"):
+            with actions.game.press_jump():
+                actions.game.play(game, seconds=0.2)
+```
+
+Here is what we have now:
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Jump For 0.2 Seconds Classic Test</div>
+</div><br>
+
+Our simple assertion will now pass with confidence! However, checking the complexity of
+the full jumping move is non-trivial. Actually, if we think about the moves **right** and moves **left** tests they also did not account for initial position and velocity as well as any obstacles we could have run into or even being killed by the enemy!
+This is what makes game testing so fun. The behavior is very interesting. Nonetheless, we've shown that we could make simple assertions work, and they are useful but are not precise enough to capture the game's physics of the movements.
