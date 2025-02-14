@@ -629,3 +629,89 @@ Here is what we have now:
 Our simple assertion will now pass with confidence! However, checking the complexity of
 the full jumping move is non-trivial. Actually, if we think about the moves **right** and moves **left** tests they also did not account for initial position and velocity as well as any obstacles we could have run into or even being killed by the enemy!
 This is what makes game testing so fun. The behavior is very interesting. Nonetheless, we've shown that we could make simple assertions work, and they are useful but are not precise enough to capture the game's physics of the movements.
+
+## Underlying theory behind behavior models
+
+Before we start writing our **behavior model** we need to understand its power and properties so knowing underlying theory will help to understand why it works and why it works well.
+At its core, a **behavior model** is a practical method of describing how a system should behave using a programming language. The behavior that the model can model :) consists of two fundamental parts:
+
+1. Assertions about expected transitions from one state to another
+2. Assertions that some temporal properties hold 
+
+The first part directly maps to the *transition relation* in formal state machine theory, which is typically expressed as a **predicate**. By the way, expressing state machines as a predicate-based transition relation is the foundation of tools like [TLA+](https://lamport.azurewebsites.net/tla/tla.html).
+
+ The second part allows the model to assert that the system's behavior adheres to **time-dependent constraints**, meaning that certain properties must hold over a sequence of states rather than just in one state. The reason why a **behavior model** can also cover temporal properties is because it has access to a sequence of previous states (the history) and  unlike simple state transitions, which only check if the system moves correctly from one state to the next, **temporal properties** require considering the **history of states** leading up to the current moment.
+
+### Expressing transition relations
+
+The first key component of the model is the ability to define the **transition relation** {% katex %}R{% endkatex %}, which describes how the system moves from one state to the next. This relation can be **expressed as a predicate**.
+
+> A **predicate** is a logical statement that contains variables and **becomes a proposition** when specific values are assigned to those variables.
+
+In mathematical terms, the transition relation is defined as:
+
+> {%katex%} R(s, s') \equiv \bigvee_{i=0}^n \varphi_i(s, s') {%endkatex%}
+
+This means that the transition relation {%katex%}R{%endkatex%} is a **logical OR** of different predicate functions
+
+> {% katex %}\varphi_i(s, s'){% endkatex %}
+
+where each predicate function specifies how the system transitions from a given state {%katex%}s{%endkatex%} to the next state {%katex%}s'{%endkatex%}. 
+
+If mathematical notation feels intimidating, this can be understood in Python as a collection of independent transition rules:
+
+```python
+def R(s, s_prime):
+    return phi_0(s, s_prime) or phi_1(s, s_prime) or ... or phi_n(s, s_prime)
+```
+
+### Expressing temporal properties
+
+The second key feature of behavior models is that they have access to the **full sequence of previous states**, not just the current state. This allows them to express **temporal properties**—rules that depend not only on the present state but also on **how the system arrived at that state**.
+
+For example, a behavior model can assert properties such as:
+
+* *"Mario must have collected a mushroom before transforming into Super Mario."*
+* *"If Mario has invincibility, it should last for exactly 10 seconds."*
+* *"An enemy must first appear on-screen before it can interact with Mario."*
+
+These properties go beyond simple state-to-state transitions and encode **history-dependent behaviors**, which are essential in real-world systems.
+
+### Behavior models are scalable!
+
+Composability of transition relations and temporal properties allows partial models.
+A key advantage of the transition relation {% katex %}R{% endkatex %} is that **behavior models can be built incrementally**! Since the transition relation is expressed as a **disjunction (OR) of multiple predicates**, each individual {% katex %}\varphi_i(s, s'){% endkatex %} can be modeled **separately**, without needing the full system behavior upfront.
+
+Additionally, each predicate {% katex %}\varphi_i(s, s'){% endkatex %} is itself composed of **smaller conjunctive conditions** (logical AND statements), which describe:
+
+* **Preconditions** – What must be true before the transition.
+* **State updates** – How variables change in the next state.
+
+This means that:
+
+> * The behavior model can partially capture some predicates and still remain valid.
+> * The model’s accuracy can be incrementally improved by adding or refining transition predicates.
+> * Even an **incomplete model** can still detect deviations, allowing for **flexible testing**.
+
+The same applies to **temporal properties**, which can also be combined using **disjunction (OR)**. This means we can incrementally add temporal constraints as needed, without requiring a complete specification upfront. For example:
+We may initially check that *Mario becomes invincible after touching a star*.
+Later, we can refine the model by adding a time constraint that ensures invincibility *lasts exactly 10 seconds*. Further refinements could add a rule that *Mario must flash before invincibility wears off*.
+
+By refining the model over time, we can **improve its accuracy incrementally**, without requiring a complete specification upfront. This **makes behavior-model-based testing scalable**, allowing the model to be as simple or as complex as needed to match the system’s actual behavior.
+
+## Finally, let's write the behavior model
+
+## Modeling movement
+
+## Plugging the model into our classic tests
+
+## Testing the model using manual test
+
+## Modeling collision detection
+
+## Modeling enemy interaction
+
+## So, is the autonomous state exploration enough?
+
+## Conclusion
+
