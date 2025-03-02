@@ -630,17 +630,19 @@ Our simple assertion will now pass with confidence! However, checking the comple
 the full jumping move is non-trivial. Actually, if we think about the moves **right** and moves **left** tests they also did not account for initial position and velocity as well as any obstacles we could have run into or even being killed by the enemy!
 This is what makes game testing so fun. The behavior is very interesting. Nonetheless, we've shown that we could make simple assertions work, and they are useful but are not precise enough to capture the game's physics of the movements.
 
-## Underlying theory behind behavior models
+## The theory behind behavior models
 
-Before we start writing our **behavior model** we need to understand its power and properties so knowing underlying theory will help to understand why it works and why it works well.
-At its core, a **behavior model** is a practical method of describing how a system should behave using a programming language. The behavior that the model can model :) consists of two fundamental parts:
+Before we start writing our **behavior model** we need to understand its power and properties so knowing the underlying theory will help to understand why it works and why it works well.
 
-1. Assertions about expected transitions from one state to another
-2. Assertions that some temporal properties hold 
+At its core, a **behavior model** is a practical method of describing how a system should behave using a programming language. The behavior consists of two fundamental parts:
 
-The first part directly maps to the *transition relation* in formal state machine theory, which is typically expressed as a **predicate**. By the way, expressing state machines as a predicate-based transition relation is the foundation of tools like [TLA+](https://lamport.azurewebsites.net/tla/tla.html).
+1. Assertions about expected state transitions
+2. Assertions about expected temporal properties
 
- The second part allows the model to assert that the system's behavior adheres to **time-dependent constraints**, meaning that certain properties must hold over a sequence of states rather than just in one state. The reason why a **behavior model** can also cover temporal properties is because it has access to a sequence of previous states (the history) and  unlike simple state transitions, which only check if the system moves correctly from one state to the next, **temporal properties** require considering the **history of states** leading up to the current moment.
+The first part directly maps to the *transition relation* in formal state machine theory, which is typically expressed as a **predicate**. 
+State machines expressed as a predicate-based transition relation is the foundation of tools like [TLA+](https://lamport.azurewebsites.net/tla/tla.html).
+
+The second part allows the model to assert that the system's behavior adheres to **time-dependent constraints**, meaning that certain properties must hold over a sequence of states rather than just in one state. The reason why a **behavior model** can also cover temporal properties is because it has access to a sequence of previous states (the history) and  unlike simple state transitions, which only check if the system moves correctly from one state to the next, **temporal properties** require considering the **history of states** leading up to the current moment.
 
 ### Expressing transition relations
 
@@ -699,7 +701,7 @@ Later, we can refine the model by adding a time constraint that ensures invincib
 
 By refining the model over time, we can **improve its accuracy incrementally**, without requiring a complete specification upfront. This **makes behavior-model-based testing scalable**, allowing the model to be as simple or as complex as needed to match the system’s actual behavior.
 
-## Finally, let's write the behavior model
+## The behavior model
 
 ## Modeling movement
 
