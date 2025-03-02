@@ -49,9 +49,11 @@ can measure 0, 1, 2, 3, 4, or 5 gallons of water.
 ## What's a state?
 
 A **state** is defined as **assignment of values to variables** and this means that any state is defined by its variables
-and the values that those variables have. Therefore, for any system there are only two questions you really need to ask:
+and the values that those variables have.
 
 > A **state** is an assignment of values to variables.
+
+Therefore, for any system there are only two questions you really need to ask:
 
 * **What are the variables that define the state of the system?**
 * **What possible values each state variable can have?**
@@ -120,7 +122,7 @@ big=\textcolor{green}{4}
 \end{bmatrix}
 {%endkatex%}
 
-<br>Do you see that each state is indeed **an assignment of values to variables** and nothing else! Easy.
+<br>Do you see that each state is indeed **an assignment of values to variables** and nothing else!
 
 {%katex%}
 \begin{bmatrix} 
@@ -135,16 +137,13 @@ big=\textcolor{green}{4}
 \end{bmatrix}
 {%endkatex%}
 
-<br>Easy! And this is universal and applies to any system whatsoever and therefore to any program that you will ever test.
-Programs will have states, those states will be made up of variables and those variables will have some values and
-each state will be defined by a specific combination of values assigned to the state variables.
+<br>This principle is universal—it applies to any system and, therefore, to every program you will ever test. Programs have states, and these states are composed of variables that hold specific values. In essence, each state is defined by the unique combination of values assigned to its variables.
 
 ## What's a sequence of states?
 
-Knowing exactly what a **state** is can now help us clearly understand what a **sequence of states** is.
-Actually, it is what it sounds like, just a sequence of states.
+Knowing exactly what a **state** is helps us clearly understand what a **sequence of states** is—essentially, it's just a series of states.
 
-For example, one solution the *Die Hard water jug problem* is the following sequence:
+For example, one solution to the *Die Hard water jug problem* is the following sequence:
 
 {%katex%}
 \begin{bmatrix} \text{small} = 0 \\ \text{big} = 0 \end{bmatrix} 
@@ -166,8 +165,7 @@ For example, one solution the *Die Hard water jug problem* is the following sequ
 
 ## What's an action?
 
-In the *Die Hard water jug problem* we saw that there are 6 unique actions that you can perform
-to solve the challenge.
+In the *Die Hard water jug problem*, we observed that there are six unique actions you can perform to solve the challenge.
 
 * **Filling a Jug**: Pouring water in until it's full.
 
@@ -184,13 +182,13 @@ to solve the challenge.
    5. Pour from 5-gallon into 3-gallon
    6. Pour from 3-gallon into 5-gallon
 
-However, what precisely is an **action**?
+However, what exactly is an **action**?
 
-It turns out the answer is simple, an **action** is **the act of assigning values to state variables**. 
+It turns out the answer is simple: an **action** is the act of assigning values to state variables.
 
 > An **action** is the act of assigning values to state variables.
 
-For example, if we take the *Fill the 5-gallon jug* action. This action is an act of assigning 5 to variable {%katex%}big{%endkatex%} and previous value of {%katex%}small{%endkatex%} to the next value of {%katex%}small'{%endkatex%}.
+For example, consider the *Fill the 5-gallon jug* action. In this case, the action assigns 5 to the variable {%katex%}big{%endkatex%} and carries over the current value of {%katex%}small{%endkatex%} to the next state as {%katex%}small'{%endkatex%}.
 
 We can write this as:
 
@@ -198,20 +196,15 @@ We can write this as:
 \begin{bmatrix} \text{small}' = \text{small} \\ \text{big} = 5 \end{bmatrix}
 {%endkatex%}
 
-<br>Sometimes, you'll read or hear someone defining an action as
+<br>Sometimes, you'll read or hear someone define an action as
 
 {% html div class="classic-quote" %}
 > *an operation that **transitions** the system from one state to another*
 {% endhtml %}
 
-This definition can be confusing as sometimes one can mistakenly assume that **transitions** means
-that the system actually changes to a **different state**. This however is not always a case. For example,
-starting from the initial state {%katex%}(small=0, big=0){%endkatex%}, the *Fill the 5-gallon jug* action
-results in the next state being {%katex%}(small=0, big=5){%endkatex%}, but if we perform the *Fill the 5-gallon jug* action
-again the system will remain in the {%katex%}(small=0, big=5){%endkatex%} state. No state change actually occurs!
-The system remained in the {%katex%}(small=0, big=5){%endkatex%} state and will keep staying in that state forever as long
-as you keep repeating the *Fill the 5-gallon jug* action.
-However, the system does transition in a sense that in a **sequence of states** a new state is added to the sequence even though the new state is the same as the previous state.
+This definition can be confusing because it might lead you to think that a **transition** always results in a different state. However, that's not always the case. For example, starting from the initial state {%katex%}(small=0, big=0){%endkatex%}, performing the *Fill the 5-gallon jug* action gives you the next state {%katex%}(small=0, big=5){%endkatex%}. But if you perform the *Fill the 5-gallon jug* action again, the system remains in the {%katex%}(small=0, big=5){%endkatex%} state—no change occurs! 
+
+Even though the state doesn't change, a new state is still added to the sequence of states. In other words, the system transitions in the sense that each action results in a new state being recorded, even if that new state is identical to the previous one.
 
 {%katex%}
 \begin{bmatrix} \text{small} = 0 \\ \text{big} = 0 \end{bmatrix} 
@@ -223,16 +216,11 @@ However, the system does transition in a sense that in a **sequence of states** 
 \text{...}
 {%endkatex%}
 
-<br>Subtle but very important difference to catch and understand!
+<br>A subtle but crucial difference to catch and understand!
 
 ## State transition formula
 
-The last thing we need to understand is that a program like any state machine
-can be described using a mathematical formula. Why on earth you would want to do that?
-Well, as we've seen from the example of the example problem, the actual
-state diagram for the *Die Hard Water Jug Problem* is very complex and hard to follow.
-
-Mathematics allows for a much more elegant way to expressed, as shown below:
+The last thing we need to understand is that a program—just like any state machine—can be described using a mathematical formula. You might ask, "Why would I ever want to do that?" The answer is simple: as we've seen with the *Die Hard Water Jug Problem*, the state diagram can be extremely complex and hard to follow. Mathematics offers a much more elegant and concise way to express these transitions, as shown below:
 
 {%katex%}
    (\text{action} = \text{"fill\_small"}) \land (\text{small}' = 3 \land \text{big}' = \text{big}) \lor \\
@@ -243,17 +231,14 @@ Mathematics allows for a much more elegant way to expressed, as shown below:
    (\text{action} = \text{"pour\_small\_to\_big"}) \land (\text{small}' = \max(0, \text{small} + \text{big} - 5) \land \text{big}' = \min(\text{small} + \text{big}, 5))
 {%endkatex%}
 
-<br>Where we've added the {%katex%}action{%endkatex%} input variable to help select the action to be performed.
-While the formula might look scary, don't be intimidated, the {%katex%}\land{%endkatex%} is a logical *`AND`* operation
-and {%katex%}\lor{%endkatex%} is a logical *`OR`* operation. Also, given this is a mathematical formula, the {%katex%}={%endkatex%} is not an assignment but is equality operator.
+<br>Where we've added the {%katex%}action{%endkatex%} input variable to help select the action to be performed. While the formula might look intimidating at first, don't be worried—the {%katex%}\land{%endkatex%} represents a logical *`AND`* operation, and {%katex%}\lor{%endkatex%} represents a logical *`OR`* operation. Also, note that since this is a mathematical formula, {%katex%}={%endkatex%} is the equality operator, not an assignment.
 
-We need this representation of the system to help us understand some of the terms.
+We need this precise representation of the system to help us understand and apply these terms effectively.
 
-# Defining our terms precisely
 
-Having laid the foundation with our *Die Hard water jug problem* example, we are ready
-to define the terms **condition**, **proposition**, **predicate**, **property**, and **invariant**
-precisely in terms of how it applies to states.
+# Defining the terms precisely
+
+Having laid the foundation with our *Die Hard water jug problem* example, we are now ready to define precisely the terms **condition**, **proposition**, **predicate**, **property**, and **invariant** in terms of how they apply to states.
 
 ## What's a **condition**?
 
