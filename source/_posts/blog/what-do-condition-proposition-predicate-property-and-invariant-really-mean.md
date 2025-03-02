@@ -13,7 +13,7 @@ To understand these terms, we will first define what a state is, what a sequence
 
 ## The Die Hard Water Jug Problem
 
-In *Die Hard with a Vengeance* (1995), the characters face a logical challenge to defuse a bomb: measure exactly 4 gallons of water using only a 5-gallon jug and a 3-gallon jug, with access to an unlimited water source. This example was popularized by the [TLA+ Video Course](https://www.youtube.com/watch?v=IW0oA3Pxe-Q), and you can watch the scene on [YouTube](https://www.youtube.com/watch?v=2vdF6NASMiE). 
+In the movie *Die Hard with a Vengeance* (1995), the characters face a logical challenge to defuse a bomb: measure exactly 4 gallons of water using only a 5-gallon jug and a 3-gallon jug, with access to an unlimited water source. This example was popularized by the [TLA+ Video Course](https://www.youtube.com/watch?v=IW0oA3Pxe-Q), and you can watch the scene on [YouTube](https://www.youtube.com/watch?v=2vdF6NASMiE). 
 
 The problem can be represented as a simple state machine. Since we aim to define our terms precisely, we must first establish how these terms apply to states—and the *Die Hard water jug problem* will serve as our framework. In doing so, we will also define what a state is, what a sequence of states is, and how a system can be represented as a mathematical formula.
 

@@ -30,9 +30,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1740927329920" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1740927611165" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1740927329920" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1740927611165" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -114,7 +114,7 @@
         <div class="col-12">
             <p>In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” and “invariant”—but what do they really mean? In this article, we’ll break each of them down by defining them in relation to the states and state transitions that make up state machines. After all, software programs are, at their core, state machines. To aid understanding, we’ll use a well-known puzzle: the <em>Die Hard</em> water jug problem as our reference system.
 To understand these terms, we will first define what a state is, what a sequence of states is, and how a system can be represented as a mathematical formula. As a bonus, we’ll also define what an assertion means.<span id="more"></span></p>
-<h2 id="The-Die-Hard-Water-Jug-Problem"><a href="#The-Die-Hard-Water-Jug-Problem" class="headerlink" title="The Die Hard Water Jug Problem"></a>The Die Hard Water Jug Problem</h2><p>In <em>Die Hard with a Vengeance</em> (1995), the characters face a logical challenge to defuse a bomb: measure exactly 4 gallons of water using only a 5-gallon jug and a 3-gallon jug, with access to an unlimited water source. This example was popularized by the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=IW0oA3Pxe-Q">TLA+ Video Course</a>, and you can watch the scene on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=2vdF6NASMiE">YouTube</a>. </p>
+<h2 id="The-Die-Hard-Water-Jug-Problem"><a href="#The-Die-Hard-Water-Jug-Problem" class="headerlink" title="The Die Hard Water Jug Problem"></a>The Die Hard Water Jug Problem</h2><p>In the movie <em>Die Hard with a Vengeance</em> (1995), the characters face a logical challenge to defuse a bomb: measure exactly 4 gallons of water using only a 5-gallon jug and a 3-gallon jug, with access to an unlimited water source. This example was popularized by the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=IW0oA3Pxe-Q">TLA+ Video Course</a>, and you can watch the scene on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=2vdF6NASMiE">YouTube</a>. </p>
 <p>The problem can be represented as a simple state machine. Since we aim to define our terms precisely, we must first establish how these terms apply to states—and the <em>Die Hard water jug problem</em> will serve as our framework. In doing so, we will also define what a state is, what a sequence of states is, and how a system can be represented as a mathematical formula.</p>
 <h3 id="Water-Jug-Problem-possible-actions"><a href="#Water-Jug-Problem-possible-actions" class="headerlink" title="Water Jug Problem possible actions"></a>Water Jug Problem possible actions</h3><p>To solve the problem, the trick is to use a sequence of available actions to achieve the goal. 
 The possible actions and the resulting states are:</p>
