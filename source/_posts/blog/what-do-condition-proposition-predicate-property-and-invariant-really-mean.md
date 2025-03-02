@@ -48,7 +48,25 @@ To help us understand states better we can visualize the *"Die Hard water jug pr
 
 As we can see, the state diagram becomes quite complex, since at each state the user can execute one of six possible actions, each resulting in different state transitions. Furthermore, the graphical representation of state machines using state diagrams can quickly become messy, even for relatively small systems. Therefore, we will show that mathematics can help us describe this problem in a much more concise and elegant way.
 
-Nonetheless, the state diagram shows that there are {%katex%}24{%endkatex%} possible states. Why? Because we have {%katex%}4{%endkatex%} possible values for the small jug ({%katex%}[0, 1, 2, 3]{%endkatex%}) and {%katex%}6{%endkatex%} possible values for the big jug ({%katex%}[0, 1, 2, 3, 4, 5]{%endkatex%}), giving us {%katex%}4 \times 6 = 24{%endkatex%}. However, only {%katex%}16{%endkatex%} of these states are reachable. The states {%katex%}(1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4){%endkatex%} are not reachable, no matter what sequence of actions we perform. Nonetheless, we can see that using these two jugs, we can measure 0, 1, 2, 3, 4, or 5 gallons of water.
+<div class="text-center">
+
+{% html div class="styled-table compact" style="display: inline-block" %}
+**All possible states (small, big)**
+
+|  |     |     |     |
+|-----|-----|-----|-----|
+| (0,0) | (1,0) | (2,0) | (3,0) |
+| (0,1) | **~(1,1)~** | **~(2,1)~** | (3,1) |
+| (0,2) | **~(1,2)~**  | **~(2,2)~**  | (3,2) |
+| (0,3) | **~(1,3)~**  | **~(2,3)~**  | (3,3) |
+| (0,4) | **~(1,4)~**  | **~(2,4)~**  | (3,4) |
+| (0,5) | (1,5) | (2,5) | (3,5) |
+
+<div class="text-secondary text-bold">States: 24 possible with 8 unreachable</div>
+{% endhtml %}
+</div>
+
+<br>Nonetheless, the state diagram shows that there are {%katex%}24{%endkatex%} possible states. Why? Because we have {%katex%}4{%endkatex%} possible values for the small jug ({%katex%}[0, 1, 2, 3]{%endkatex%}) and {%katex%}6{%endkatex%} possible values for the big jug ({%katex%}[0, 1, 2, 3, 4, 5]{%endkatex%}), giving us {%katex%}4 \times 6 = 24{%endkatex%}. However, only {%katex%}16{%endkatex%} of these states are reachable. The states {%katex%}(1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4){%endkatex%} are not reachable, no matter what sequence of actions we perform. Nonetheless, we can see that using these two jugs, we can measure 0, 1, 2, 3, 4, or 5 gallons of water.
 
 ## What's a state?
 
@@ -432,7 +450,7 @@ In this sense, the property (or invariant) acts as a global condition on the sys
 
 Thus, while a typical condition might directly check an input (like {%katex%}\text{action} = \text{"fill\_big"}{%endkatex%}), a property or invariant imposes a condition on the overall state space by effectively setting an extra variable. This perspective bridges the gap between guarding individual transitions and ensuring the system as a whole behaves correctly.
 
-## A Bonus: What's an Assertion?
+## A Bonus: What's an assertion?
 
 Lastly, as a bonus, let's define what an assertion is.
 
