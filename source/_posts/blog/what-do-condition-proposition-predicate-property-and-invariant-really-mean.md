@@ -8,13 +8,16 @@ image: images/what-do-condition-proposition-predicate-property-invariant-really-
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-In software testing, you often hear terms like "condition," "proposition," "predicate," "property," and "invariant"—but what do they really mean? In this article, we'll break each of them down by defining them in relation to the states and state transitions that make up state machines. After all, software programs are, at their core, state machines. To aid understanding, we'll use a well-known puzzle: the *Die Hard* water jug problem as our system under test.<!-- more -->
+In software testing, you often hear terms like "condition," "proposition," "predicate," "property," and "invariant"—but what do they really mean? In this article, we'll break each of them down by defining them in relation to the states and state transitions that make up state machines. After all, software programs are, at their core, state machines. To aid understanding, we'll use a well-known puzzle: the *Die Hard* water jug problem as our reference system.
+To understand these terms, we will first define what a state is, what a sequence of states is, and how a system can be represented as a mathematical formula. As a bonus, we'll also define what an assertion means.<!-- more -->
 
-## The Die Hard water jug problem
+## The Die Hard Water Jug Problem
 
 In *Die Hard with a Vengeance* (1995), the characters face a logical challenge to defuse a bomb: measure exactly 4 gallons of water using only a 5-gallon jug and a 3-gallon jug, with access to an unlimited water source. This example was popularized by the [TLA+ Video Course](https://www.youtube.com/watch?v=IW0oA3Pxe-Q), and you can watch the scene on [YouTube](https://www.youtube.com/watch?v=2vdF6NASMiE). 
 
-The problem can be represented as a simple state machine, and since we aim to define our terms precisely, we need to establish how they apply to states it will serve as our framework for doing so.
+The problem can be represented as a simple state machine. Since we aim to define our terms precisely, we must first establish how these terms apply to states—and the *Die Hard water jug problem* will serve as our framework. In doing so, we will also define what a state is, what a sequence of states is, and how a system can be represented as a mathematical formula.
+
+### Water Jug Problem possible actions
 
 To solve the problem, the trick is to use a sequence of available actions to achieve the goal. 
 The possible actions and the resulting states are:
@@ -34,17 +37,18 @@ The possible actions and the resulting states are:
 
 The initial state is {%katex%}(small=0, big=0){%endkatex%}.
 
+### Water Jug Problem state diagram
+
 To help us understand states better we can visualize the *"Die Hard water jug problem"* using the following state diagram that shows all the reachable states and all possible state transitions:
 
 <div class="text-center">
-<img style="width: 55%" src="/images/die-hard-states.png">
+<img style="width: 90%" src="/images/die-hard-states.png">
 <div class="text-secondary text-bold"><br>The Die Hard Water Jug Problem: State Diagram</div>
 </div><br>
 
-Therea are {%katex%}24{%endkatex%} possible states. Why? Because we have {%katex%}4{%endkatex%} possible values
-for the small jug {%katex%}[0,1,2,3]{%endkatex%} and {%katex%}6{%endkatex%} possible values for the big jug
-{%katex%}[0,1,2,3,4,5]{%endkatex%} giving us {%katex%}4 \times 6 = 24{%endkatex%}. However, only {%katex%}16{%endkatex%} states are reachable. The states {%katex%}(1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4){%endkatex%} are not reachable no matter what sequence of actions we perform. Nonetheless, we can see that using these two jugs we
-can measure 0, 1, 2, 3, 4, or 5 gallons of water.
+As we can see, the state diagram becomes quite complex, since at each state the user can execute one of six possible actions, each resulting in different state transitions. Furthermore, the graphical representation of state machines using state diagrams can quickly become messy, even for relatively small systems. Therefore, we will show that mathematics can help us describe this problem in a much more concise and elegant way.
+
+Nonetheless, the state diagram shows that there are {%katex%}24{%endkatex%} possible states. Why? Because we have {%katex%}4{%endkatex%} possible values for the small jug ({%katex%}[0, 1, 2, 3]{%endkatex%}) and {%katex%}6{%endkatex%} possible values for the big jug ({%katex%}[0, 1, 2, 3, 4, 5]{%endkatex%}), giving us {%katex%}4 \times 6 = 24{%endkatex%}. However, only {%katex%}16{%endkatex%} of these states are reachable. The states {%katex%}(1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4){%endkatex%} are not reachable, no matter what sequence of actions we perform. Nonetheless, we can see that using these two jugs, we can measure 0, 1, 2, 3, 4, or 5 gallons of water.
 
 ## What's a state?
 
@@ -138,6 +142,33 @@ big=\textcolor{green}{4}
 {%endkatex%}
 
 <br>This principle is universal—it applies to any system and, therefore, to every program you will ever test. Programs have states, and these states are composed of variables that hold specific values. In essence, each state is defined by the unique combination of values assigned to its variables.
+
+### You can always add more variables
+
+There is one more important aspect to understand about states. No matter what you think the state variables are for a given problem, **you can always add more**. In fact, there are infinitely many variables you could list to represent any given state. Of course, for simplicity we'll try to keep the variable count to a minimum, but it's essential to remember that a state might include additional variables beyond those we choose to focus on.
+
+> No matter what you think the state variables are for a given problem, **you can always add more**.
+
+In our case, it's convenient to think of the state as:
+
+{%katex%}
+\begin{bmatrix} 
+\text{small}=0 \\ 
+\text{big}=0
+\end{bmatrix}
+{%endkatex%}
+
+<br>but more generally, you should think of the state as:
+
+{%katex%}
+\begin{bmatrix} 
+\text{small}=0 \\ 
+\text{big}=0 \\
+\vdots
+\end{bmatrix}
+{%endkatex%}
+
+<br>This generalization will come in handy later when we discuss how a property and an invariant can act as a condition.
 
 ## What's a sequence of states?
 
@@ -348,12 +379,12 @@ P(small, big) \equiv \big(0 \leq \text{small} \leq 3\big) \land \big(0 \leq \tex
 A **proposition**, on the other hand, is a statement that makes an assertion about a single state—it has a definite truth value (true or false) in that state. Therefore,
 
 - A **proposition** is a statement about one specific state.
-- A **property** is a condition or rule that applies to many states (or an entire execution trace) of the system.
+- A **property** is a *condition* or rule that applies to many states (or an entire execution trace) of the system.
 
 
 ## What's invariant?
 
-An **invariant** is a *property* that must hold in **every reachable state of a system throughout its execution**. It is a condition that remains unchanged, no matter which transitions occur.
+An **invariant** is a *property* that must hold in **every reachable state of a system throughout its execution**. It is a *condition* that remains unchanged, no matter which transitions occur.
 
 In our water jug system, an example we used for a property is also an invariant:
 
@@ -382,25 +413,71 @@ It "covers" the unreachable states by ruling them out:
 
 Because an invariant must hold for every reachable state, we'll enforce that such states cannot be reached.
 
+## How can a property and invariant be a condition?
+
+Wait a second—why do we say that a property or invariant can act as a condition? We defined a **condition** as a Boolean expression that serves as a guard for a state transition. So, where is the state transition that a property serves as a guard?
+
+A correct way to think about it is to view a property as a mechanism that sets other state variables.
+Remember that [you can always add more variables](#You-can-always-add-more-variables)! For example, consider the invariant:
+
+{%katex%}
+0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5
+{%endkatex%}
+
+<br>You can imagine this invariant as "setting" an additional state variable, say {%katex%}is\_state\_valid{%endkatex%}. When a state transition occurs, the invariant checks the new state and essentially assigns:
+- {%katex%}is\_state\_valid = true{%endkatex%} if the invariant is satisfied, or 
+- {%katex%}is\_state\_valid = false{%endkatex%} if it is not.
+
+In this sense, the property (or invariant) acts as a global condition on the system. Every time a state transition is attempted, the system "asks" whether the resulting state meets the invariant—i.e., whether {%katex%}is\_state\_valid{%endkatex%} is true. If not, that transition should not occur.
+
+Thus, while a typical condition might directly check an input (like {%katex%}\text{action} = \text{"fill\_big"}{%endkatex%}), a property or invariant imposes a condition on the overall state space by effectively setting an extra variable. This perspective bridges the gap between guarding individual transitions and ensuring the system as a whole behaves correctly.
+
+## A Bonus: What's an Assertion?
+
+Lastly, as a bonus, let's define what an assertion is.
+
+An **assertion** is a runtime check that verifies a specific condition—often a property or invariant—holds at a particular point in your program. Think of it as putting our theoretical rules into practice.
+
+> An assertion is a runtime check that verifies a specific condition.
+
+Properties and invariants are global constraints on your system's states. For instance, consider the invariant for our water jug problem:
+
+{%katex%}
+0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5
+{%endkatex%}
+
+<br>This invariant is a rule that every valid state must satisfy. An assertion enforces this rule during execution. You might write an assertion like:
+
+{%katex%}
+\text{assert } \big(0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5\big)
+{%endkatex%}
+
+<br>This assertion checks that the current state adheres to the invariant. If it doesn’t, the assertion fails, alerting you that something unexpected has occurred.
+
+In short, while properties and invariants define what the system should always satisfy, assertions actively check these conditions at runtime—helping catch errors early and reinforcing the overall reliability and correctness of the system.
+
 ## Comparing the terms
 
 Now, let's compare all the terms that we've defined:
 
 {% html div class="styled-table compact" %}
 
-| Term         | Definition                                                                                                                                                                                                                                                                                                              | Example in the Water Jug System                                                                                                                                                   | Role/Usage                                                                                                                                                   |
-|--------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Condition**    | A Boolean expression (i.e. a predicate with free variables) that serves as a guard for a state transition. It determines whether an action is allowed in a given state.                                                                                                                                        | {%katex%}\text{action} = \text{"fill\_small"}{%endkatex%}                                                                                                                        | Determines whether a specific transition (e.g. filling the small jug) should occur.                                                                         |
-| **Proposition**  | A declarative statement about a single state that is either true or false. It has no free variables once the state is fixed.                                                                                                                                                                                             | {%katex%}\text{big} = 4{%endkatex%}                                                                                                                                                | Asserts a fact about one state (e.g. in a given state, the big jug contains exactly 4 gallons).                                                              |
-| **Predicate**    | A logical formula that may contain free variables and evaluates to true or false once the variables are instantiated. It becomes a proposition when all its variables are assigned.                                                                                                                                | {%katex%}P(\text{big}) = (\text{big} = 4){%endkatex%}                                                                                                                            | Used to define conditions or properties that depend on state variables.                                                                                      |
-| **Property**     | A predicate that expresses a constraint or rule expected to hold over a set of states or along an execution path. It is not confined to a single state but applies to many states in the system.                                                                                                                 | {%katex%}0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5{%endkatex%}                                                                                                        | Describes global constraints (e.g. jug capacities) that guide the system’s behavior over many states.                                                         |
-| **Invariant**    | A property that must hold in every reachable state of the system throughout its execution. It is a global, unchanging constraint that prevents the system from entering an invalid state.                                                                                                                       | {%katex%}\big(\text{if } \text{small} \in \{1,2\} \text{ then } \text{big} \in \{0,5\}\big){%endkatex%}                                                                          | Ensures the system never enters an invalid state (e.g. excludes states like (1,1) or (2,4) that violate the physical limits of the jugs).                      |
+| Term         | Definition                                                                                                                                                                                                                  | Example in the Water Jug System                                                                                                                                                   | Role/Usage                                                                                                                                                            |
+|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Condition**    | A Boolean expression (i.e. a predicate with free variables) that serves as a guard for a state transition. It determines whether an action is allowed in a given state.                                                                                                   | {%katex%}\text{action} = \text{"fill\_small"}{%endkatex%}                                                                                                                        | Determines whether a specific transition (e.g., filling the small jug) should occur.                                                                                 |
+| **Proposition**  | A declarative statement about a single state that is either true or false. It has no free variables once the state is fixed.                                                                                                                                     | {%katex%}\text{big} = 4{%endkatex%}                                                                                                                                                | Asserts a fact about one state (e.g., in a given state, the big jug contains exactly 4 gallons).                                                                     |
+| **Predicate**    | A logical formula that may contain free variables and evaluates to true or false once the variables are instantiated. It becomes a proposition when all its variables are assigned.                                                                              | {%katex%}P(\text{big}) = (\text{big} = 4){%endkatex%}                                                                                                                            | Used to define conditions or properties that depend on state variables.                                                                                             |
+| **Property**     | A predicate that expresses a constraint or rule expected to hold over a set of states or along an execution path. It is not confined to a single state but applies to many states in the system.                                                                 | {%katex%}0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5{%endkatex%}                                                                                                        | Describes global constraints (e.g., jug capacities) that guide the system’s behavior over many states.                                                               |
+| **Invariant**    | A property that must hold in every reachable state of the system throughout its execution. It is a global, unchanging constraint that prevents the system from entering an invalid state.                                                                        | {%katex%}\big(\text{if } \text{small} \in \{1,2\} \text{ then } \text{big} \in \{0,5\}\big){%endkatex%}                                                                          | Ensures the system never enters an invalid state (e.g., excludes states like (1,1) or (2,4) that violate the jugs’ physical limits).                                  |
+| **Assertion**    | A runtime check that verifies a particular condition (often a property or invariant) holds at a specific point in the execution. If the condition is false, the assertion fails.                                                                                | {%katex%}\text{assert } (0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5){%endkatex%}                                                                                      | Enforces that the system adheres to the stated condition at runtime, helping detect errors early if the condition (property or invariant) is violated.              | 
 
 {% endhtml %}
 
 ## Conclusion
 
-So, as it turns out, the *Die Hard water jug problem* isn’t just a cool puzzle—it provides us with a fun way to explore essential testing concepts in a practical context. By defining what conditions, propositions, predicates, properties, and invariants mean in terms of the states that make up a system's state machine, we saw firsthand how these terms are applied in real-world scenarios. Connecting these concepts directly to states and state transitions not only clarifies their meanings but also demonstrates how they work together to ensure that your system behaves correctly—from the instant an action is taken to the evolution of the entire behavior over time. This understanding is critical for effective software testing; without a precise grasp of these concepts, software testers handicap themselves in their ability to fully comprehend and evaluate the overall behavior of the systems they test.
+The *Die Hard water jug problem* isn’t just a cool puzzle—it offers a fun, hands-on way to understand essential testing concepts. By defining **what a state is**, **what a sequence of states is**, **what an action is**, and **how a system can be represented as a formula**, we laid the groundwork for precisely describing conditions, propositions, predicates, properties, and invariants. Along the way, we also introduced **assertions** as a runtime mechanism to verify that properties and invariants hold.
+
+Grounding all of these terms in states and state transitions not only clarifies what they mean, but also shows how they ensure your system behaves correctly—from the moment an action is taken to the way its entire behavior unfolds over time. This understanding is critical for effective software testing; without a firm grasp of these concepts, testers risk missing key insights into how the systems they work with truly operate.
 
 Until the next time – happy testing!
 
