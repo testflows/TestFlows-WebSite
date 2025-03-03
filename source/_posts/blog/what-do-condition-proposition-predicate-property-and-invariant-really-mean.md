@@ -272,17 +272,17 @@ Even though the state doesn't change, a new state is still added to the sequence
 The last thing we need to understand is that a program—just like any state machine—can be described using a mathematical formula. You might ask, "Why would I ever want to do that?" The answer is simple: as we've seen with the *Die Hard Water Jug Problem*, the state diagram can be extremely complex and hard to follow. Mathematics offers a much more elegant and concise way to express these transitions, as shown below:
 
 {%katex%}
-   (\text{action} = \text{"fill\_small"}) \land (\text{small}' = 3 \land \text{big}' = \text{big}) \lor \\
-   (\text{action} = \text{"fill\_big"}) \land (\text{small}' = \text{small} \land \text{big}' = 5) \lor \\
-   (\text{action} = \text{"empty\_small"}) \land (\text{small}' = 0 \land \text{big}' = \text{big}) \lor \\
-   (\text{action} = \text{"empty\_big"}) \land (\text{small}' = \text{small} \land \text{big}' = 0) \lor \\
-   (\text{action} = \text{"pour\_big\_to\_small"}) \land (\text{small}' = \min(\text{small} + \text{big}, 3) \land \text{big}' = \max(0, \text{small} + \text{big} - 3)) \lor \\
-   (\text{action} = \text{"pour\_small\_to\_big"}) \land (\text{small}' = \max(0, \text{small} + \text{big} - 5) \land \text{big}' = \min(\text{small} + \text{big}, 5))
+\Bigl[(\text{action} = \text{"fill\_small"}) \land (\text{small}' = 3 \land \text{big}' = \text{big})\Bigr] \lor \\
+\Bigl[(\text{action} = \text{"fill\_big"}) \land (\text{small}' = \text{small} \land \text{big}' = 5)\Bigr] \lor \\
+\Bigl[(\text{action} = \text{"empty\_small"}) \land (\text{small}' = 0 \land \text{big}' = \text{big})\Bigr] \lor \\
+\Bigl[(\text{action} = \text{"empty\_big"}) \land (\text{small}' = \text{small} \land \text{big}' = 0)\Bigr] \lor \\
+\Bigl[(\text{action} = \text{"pour\_big\_to\_small"}) \land (\text{small}' = \min(\text{small} + \text{big}, 3) \land \text{big}' = \max(0, \text{small} + \text{big} - 3))\Bigr] \lor \\
+\Bigl[(\text{action} = \text{"pour\_small\_to\_big"}) \land (\text{small}' = \max(0, \text{small} + \text{big} - 5) \land \text{big}' = \min(\text{small} + \text{big}, 5))\Bigr]
 {%endkatex%}
 
 <br>Where we've added the {%katex%}action{%endkatex%} input variable to help select the action to be performed. While the formula might look intimidating at first, don't be worried—the {%katex%}\land{%endkatex%} represents a logical *`AND`* operation, and {%katex%}\lor{%endkatex%} represents a logical *`OR`* operation. Also, note that since this is a mathematical formula, {%katex%}={%endkatex%} is the equality operator, not an assignment.
 
-We need this precise representation of the system to help us understand and apply these terms effectively.
+Just because a formula representaion might be more concise, why do we need it to define **condition**, **proposition**, **predicate**, **property**, and **invariant**? In short, without a precise mathematical representation of the system, these terms would remain abstract. By expressing the system as a collection of states, actions, and transitions in a formula, we can pinpoint exactly **where** and **how** each concept applies.
 
 
 # Defining the terms precisely
