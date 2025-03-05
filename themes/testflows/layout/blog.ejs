@@ -8,13 +8,19 @@
 <% site.posts.sort('date', 'desc').forEach(function(item) { %>
     <div class="blog post">
         <div class="post-header row">
-            <div class="post-summary col-lg-6 mt-auto mb-auto">
-                <a href=<%- item.permalink %>>
-                    <h1 style="font-weight: bold;"><%- item.title %></h1>
-                </a>
+            <div class="post-summary col-lg-6 mt-auto mb-auto pb-4">
+                <div class="text-center">
+                    <a href=<%- item.permalink %>>
+                        <h1 style="font-weight: bold;"><%- item.title %></h1>
+                    </a>
+                    <a href=<%- item.permalink %> class="d-block d-sm-none pb-4">
+                        <img src="<%- config.root %><%- item.image %>" style="width: 100%;"></img>
+                        <span class="post-image-credit"><%- item.image.credit %></span>
+                    </a>
+                </div>
                 <%- item.excerpt %><i class="post-summary-more">...</i>
             </div>
-            <div class="post-image col-lg-6 m-auto">
+            <div class="post-image col-lg-6 m-auto d-none d-sm-block">
                 <a href=<%- item.permalink %>>
                     <img src="<%- config.root %><%- item.image %>"></img>
                     <span class="post-image-credit"><%- item.image.credit %></span>
