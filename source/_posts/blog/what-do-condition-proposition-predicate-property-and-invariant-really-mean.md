@@ -66,7 +66,7 @@ As we can see, the state diagram becomes quite complex, since at each state the 
 {% endhtml %}
 </div>
 
-<br>Nonetheless, the state diagram shows that there are {%katex%}24{%endkatex%} possible states. Why? Because we have {%katex%}4{%endkatex%} possible values for the small jug ({%katex%}[0, 1, 2, 3]{%endkatex%}) and {%katex%}6{%endkatex%} possible values for the big jug ({%katex%}[0, 1, 2, 3, 4, 5]{%endkatex%}), giving us {%katex%}4 \times 6 = 24{%endkatex%}. However, only {%katex%}16{%endkatex%} of these states are reachable. The states {%katex%}(1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4){%endkatex%} are not reachable, no matter what sequence of actions we perform. Nonetheless, we can see that using these two jugs, we can measure 0, 1, 2, 3, 4, or 5 gallons of water.
+<br>Nonetheless, the state diagram shows that there are {%katex%}24{%endkatex%} possible states. Why? Because we have {%katex%}4{%endkatex%} possible values for the small jug ({%katex%}[0, 1, 2, 3]{%endkatex%}) and {%katex%}6{%endkatex%} possible values for the big jug ({%katex%}[0, 1, 2, 3, 4, 5]{%endkatex%}), giving us {%katex%}4 \times 6 = 24{%endkatex%}. However, only {%katex%}16{%endkatex%} of these states are reachable. The states (1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4) are not reachable, no matter what sequence of actions we perform. Nonetheless, we can see that using these two jugs, we can measure 0, 1, 2, 3, 4, or 5 gallons of water.
 
 ## What's a state?
 
@@ -416,7 +416,7 @@ Invariants are critical for ensuring that the system never reaches an invalid st
 
 ### Covering unreachable states
 
-Another invariant for our system is the statement that the states {%katex%}(1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4){%endkatex%} are not reachable.
+Another invariant for our system is the statement that the states (1,1), (2,1), (1,2), (2,2), (1,3), (2,3), (1,4), (2,4) are not reachable.
 
 {%katex%}
 \big((\text{small} \neq 0 \land \text{small} \neq 3) \implies (\text{big} = 0 \lor \text{big} = 5)\big)

@@ -129,6 +129,72 @@ blockquote::-webkit-scrollbar {
     padding-bottom: 0px;
 }
 
+/* Change color of the carousel control icons */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(73%) sepia(85%) saturate(481%) hue-rotate(101deg) brightness(255%) contrast(95%);
+    width: 3em;
+    height: 3em;
+}
+
+.carousel-control-next,
+.carousel-control-prev {
+    opacity: 1;
+}
+
+/* Ensure all items are in the document flow */
+.carousel-inner {
+    display: flex;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Ensure all slides are positioned side by side */
+.carousel-item {
+    flex: 0 0 100%;
+    transform: translateX(100%);
+    transition: transform 0.1s cubic-bezier(0.8, 0, 1, 0.8), transform 0.6s cubic-bezier(0.8, 1, 0.3, 1);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Reduce padding inside the card */
+.carousel-item .card-body {
+    padding: 10px;
+}
+
+/* Make the active slide visible and move it into view */
+.carousel-item.active {
+    transform: translateX(0);
+    opacity: 1;
+    visibility: visible;
+    position: relative;
+}
+
+/* Previous slide moves out to the left */
+.carousel-item.prev {
+    transform: translateX(-100%);
+}
+
+/* Next slide moves out to the right */
+.carousel-item.next {
+    transform: translateX(100%);
+}
+
+/* Previous slide moves out to the left */
+.carousel-item.prev {
+    transform: translateX(-100%);
+}
+
+/* Next slide */
+.carousel-inner .card-item {
+    min-height: 100%;
+}
+
 #sidebar {
     padding-left: 15px;
     z-index: 999;

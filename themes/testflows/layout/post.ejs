@@ -31,26 +31,57 @@
             <%- page.content %>
         </div>
         <div class="col-12 divider"></div>
-        <div class="post-footer">
-            <div class="post-metadata">
-                <div class="post-author">
-                    <span class="author-title text-nowrap">Written By</span><span class="author-name"><%- page.author %></span>
-                    <span class="authored-date text-nowrap"><%= date(page.date, 'MMMM D, YYYY') %></span>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        <% 
+        var postsPerSlide = 2; // Adjust based on screen size if needed
+        var recentPosts = site.posts.sort('date', 'desc').filter(p => p.path !== page.path).toArray();
+        var totalSlides = recentPosts.length; // Calculate total slides
+        if (totalSlides > 0) { 
+        %>
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    <% for (var postIndex = 0; postIndex < totalSlides; postIndex++) { %>
+                        <div class="carousel-item <%= postIndex === 0 ? 'active' : '' %>">
+                            <div class="row">
+                                <% 
+                                for (var j = 0; j < postsPerSlide; j++) { 
+                                    postIndex = postIndex + j;
+                                    if (postIndex >= totalSlides) {
+                                        break;
+                                    }
+                                    var post = recentPosts[postIndex]; 
+                                    var thumbnail = post.image || '/assets/images/placeholder.jpg'; 
+                                %>
+                                <div class="col-md-6 d-flex">
+                                    <a href="<%= url_for(post.path) %>" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="<%= url_for(thumbnail) %>" class="card-img-top" alt="<%= post.title %>">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title"><%= post.title %></h3>
+                                            <p class="card-text flex-grow-1">
+                                                <%= post.excerpt ? post.excerpt.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100) + '...' : '' %>
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                <% } %>
+                            </div>
+                        </div>
+                    <% } %>
                 </div>
-                <div class="post-share btn-group" role="group" aria-label="share">
-                    <span class="caption">Share It</span>
-                    <a href="https://twitter.com/intent/tweet?url=<%- page.permalink %>">
-                        <i class="fab fa-2x fa-twitter"></i>
-                    </a>
-                    <a href="https://www.facebook.com/sharer/sharer.php?u=<%- page.permalink %>">
-                        <i class="fab fa-2x fa-facebook"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- page.permalink %>">
-                        <i class="fab fa-2x fa-linkedin"></i>
-                    </a>
-                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
             </div>
-        </div>
+        <% } %>
+        <!-- End of Read Next Carousel -->
     </div>
 </div>
 <script>
@@ -63,6 +94,33 @@
                     window.location = "#" + element_id;
                 }
             }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
         });
     });
 </script>
