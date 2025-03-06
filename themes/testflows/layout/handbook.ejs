@@ -38,8 +38,9 @@
                         </div>
                     </div>
                 </div>
+                <div id="Top-of-the-handbook"></div>
                 <nav id="sidebar" class="col-lg-4 sidebar">
-                    <div id="Contents" class="sidebar-header pt-4">
+                    <div id="Contents" class="sidebar-header pt-5">
                         <h3 class="d-none d-md-block">Contents</h3>
                         <h2 class="d-block d-md-none">Contents</h2>
                     </div>
@@ -70,7 +71,7 @@
                 <div class="jump" role="group" aria-label="Control Buttons">
                     <div class="btn-group">
                         <div class="action" onclick="openDocsAssistantModal();">Ask Me?</div>
-                        <div class="fas fa-chevron-circle-up" onclick="window.scrollTo(0, 500); document.getElementById('sidebar').scrollTo(0, 0)"></div>
+                        <div class="fas fa-chevron-circle-up" onclick="document.getElementById('Top-of-the-handbook').scrollIntoView({ behavior: 'smooth' });"></div>
                     </div>
                 </div>
             </div>

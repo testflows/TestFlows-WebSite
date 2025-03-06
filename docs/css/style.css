@@ -200,7 +200,6 @@ blockquote::-webkit-scrollbar {
     z-index: 999;
     transition: all 0.3s;
     color: #50749c;
-    padding-bottom: 50px;
 }
 
 @media (min-width: 992px) {
@@ -211,7 +210,6 @@ blockquote::-webkit-scrollbar {
     #sidebar {
         position: sticky;
         top: 0px;
-        max-height: calc(100vh);
         overflow-y: scroll;
     }
 
