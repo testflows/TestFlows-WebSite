@@ -52,11 +52,6 @@ pip3 install testflows
                 </a>
             </button>
             <button type="button" class="btn btn-secondary">
-                <a href="https://t.me/testflows">
-                    <span class="fab fa-3x fa-telegram-plane"></span>
-                </a>
-            </button>
-            <button type="button" class="btn btn-secondary">
                 <a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
                     <span class="fab fa-3x fa-linkedin"></span>
                 </a>

@@ -2,18 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://testflows.com/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/</loc>
+    <loc>https://testflows.com/index.html</loc>
     
-    <lastmod>2025-03-05</lastmod>
+    <lastmod>2025-03-06</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/index.html</loc>
+    <loc>https://testflows.com/contact.html</loc>
     
-    <lastmod>2025-02-12</lastmod>
+    <lastmod>2025-03-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/handbook/index.html</loc>
+    
+    <lastmod>2025-03-06</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/</loc>
+    
+    <lastmod>2025-03-05</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -83,24 +101,6 @@
   </url>
   
   <url>
-    <loc>https://testflows.com/handbook/index.html</loc>
-    
-    <lastmod>2024-07-25</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/contact.html</loc>
-    
-    <lastmod>2024-03-14</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://testflows.com/credits.html</loc>
     
     <lastmod>2024-03-14</lastmod>
@@ -111,15 +111,6 @@
   
   <url>
     <loc>https://testflows.com/blog/index.html</loc>
-    
-    <lastmod>2024-03-14</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/assistant/index.html</loc>
     
     <lastmod>2024-03-14</lastmod>
     
@@ -184,7 +175,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2025-03-05</lastmod>
+    <lastmod>2025-03-06</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
