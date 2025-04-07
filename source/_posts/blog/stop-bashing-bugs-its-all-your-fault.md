@@ -1,7 +1,7 @@
 ---
 post: true
 title: "Stop Bashing Bugs – It's All Your Fault!"
-description: A light and philosophical look at bugs as just states in your system. Inspired by BugBash 2025 test conference.
+description: A light and systematic look at bugs as just states in your system. Inspired by BugBash 2025 reliability conference.
 date: 2025-04-07
 author: Vitaliy Zakaznikov
 image: images/stop-bashing-bugs-its-all-your-fault.png
