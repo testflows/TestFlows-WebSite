@@ -9,15 +9,15 @@ icon: fas fa-bug pt-5 pb-5
 ---
 
 
-You’re running your tests, and there it is again — a red light, a failing check, a bug. You sigh, roll your eyes, and maybe mutter something about “the devs.” But what if I told you... the bug isn’t the problem?
+You’re running your tests, and there it is again — a red light, a failing check, you've found another bug. You sigh, roll your eyes, and maybe if you are a tester you mutter something about “the devs” or if you are a dev well there is nobody to blame but yourself. But what if I told you... the bug isn’t the problem?
 
-In fact, that little bug might be your system’s most honest state. And the truth is, it’s not the bug’s fault — it’s yours.
+In fact, that little bug might be your system’s most honest state. And the truth is, it’s not the bug’s fault that you don't want it — it’s yours!
 
-Inspired by the always-lively BugBash2025 test conference, this post is a lighthearted, philosophical, and (hopefully) enlightening take on why bugs deserve a little more love — or at least, a little less blame.
+Inspired by the first BugBash 2025 test conference organized by [Antithesis](https://bugbash.antithesis.com/), this post is a lighthearted, philosophical, and (hopefully) helpful take on why bugs deserve a little more love — or at least, a little less blame.
 
----
+<!-- more -->
 
-## The universe of software states
+# The universe of software states
 
 Every software system — no matter how simple or complex — can be described as a collection of possible **states**. A state is just a snapshot of your system at a given moment: values of variables, inputs, outputs, internal flags, you name it.
 
@@ -25,21 +25,39 @@ Here’s the kicker: the system doesn’t “know” which states are good or ba
 
 Let’s take a ridiculously simple example:
 
-    def add(a, b):
-        return a + b
+```python
+def add(a, b):
+    return a + b
+```
 
 Now imagine these two states:
 
-- `[a=1, b=1, result=2]` ✅  
-- `[a=1, b=1, result=3]` ❌  
+1. One of the desirable states
+
+  ✅ {% katex %}
+\begin{bmatrix} 
+a = 1 \\
+b = 1 \\
+\text{result} = 2
+\end{bmatrix} 
+{% endkatex %}
+
+2. The unwanted state
+
+  ❌ {% katex %}
+\begin{bmatrix} 
+a = 1 \\
+b = 1 \\
+\text{result} = 3
+\end{bmatrix} 
+{% endkatex %}
 
 Both are perfectly valid *from the universe’s perspective* — but only one matches our *definition* of what addition means. The second state is a “bug” only because **we** decided that `1 + 1` must equal `2`.
 
-And that’s the whole point. A “bug” is just an **undesirable state**. It’s not evil. It’s not malicious. It’s just... there.
+And that’s the whole point. A “bug” is just an **undesirable state**. It’s not evil. It’s not malicious. It’s just a possibility.
 
----
 
-## “Bug or feature?” – Perspective matters
+# “Bug or feature?” – Perspective matters
 
 Every tester or developer has faced the eternal question:  
 > _“Is this a bug... or a feature?”_
@@ -52,9 +70,7 @@ That’s because there’s nothing inherently wrong with a bug state. It’s jus
 
 In other words, bugs are just **states we didn’t plan for** — and sometimes, not planning for something is the real bug.
 
----
-
-## Why bugs happen: the problem of state explosion
+# Why bugs happen: the problem of state explosion
 
 As systems grow in complexity, the number of possible states grows **exponentially**. This is the well-known problem of **state explosion**.
 
@@ -64,48 +80,39 @@ Since we can’t test every possible state, undesirable ones sneak in — and su
 
 But the truth is, the system is just exploring the space you built for it. You gave it the keys, and it took a wrong turn... because you forgot to build a roadblock.
 
----
 
-## What can we do? — Design with state in mind
+# What can we do? — Design with state in mind
 
 We can’t eliminate bugs entirely, but we *can* improve how we deal with them — and even reduce how often they show up — by designing with **state** in mind.
 
-### ✅ Tip #1: Limit the state space
+## ✅ Tip #1: Limit the state space
 
 Be ruthless. Avoid adding options, flags, or configurations unless they’re truly needed. Every additional branch or case increases the number of possible states exponentially.
 
-### ✅ Tip #2: Define what “valid” means
+## ✅ Tip #2: Define what “valid” means
 
 Don’t just rely on intuition. If you can, **formally define** the valid state space. Whether it’s contracts, assertions, or state models — write it down.
 
-### ✅ Tip #3: Test behaviors, not just results
+## ✅ Tip #3: Test behaviors, not just results
 
 Focus on how the system behaves in response to events and inputs over time. A snapshot might pass, but the **path** could still be wrong.
 
-### ✅ Tip #4: Use model-based or property-based testing
+## ✅ Tip #4: Use model-based or property-based testing
 
 These testing approaches are great at **exploring unexpected states** and helping you find issues in places your brain forgot to look.
 
-### ✅ Tip #5: Treat bugs as insights
+## ✅ Tip #5: Treat bugs as insights
 
 Every bug is a clue about your system’s structure. Ask: “What path led here?” and “How can we prevent it — or learn from it?”
 
----
+# A new attitude towards bugs
 
-## A new attitude towards bugs
-
-So let’s stop bashing bugs.  
-Let’s stop treating them like invaders or villains.
-
+So let’s stop bashing bugs. Let’s stop treating them like invaders or villains.
 Bugs are **natural consequences** of systems we build. They’re not lies — they’re inconvenient truths.
-
 A bug is your system telling you, “Hey, I can do this too — did you think about that?”
-
 Instead of blame, let’s bring **curiosity**. Instead of punishment, let’s pursue **understanding**. And instead of fear, let’s aim for **better design**.
 
----
-
-## Conclusion: Embrace your bugs
+# Conclusion: Embrace your bugs
 
 Next time you find a bug, don’t reach for your hammer — reach for your model.  
 Try asking:
@@ -118,9 +125,7 @@ And remember — bugs don’t happen *to* you.
 They happen *because* of you.  
 And that means... you’re in control.
 
----
-
-## Bonus: Explore behaviors with TestFlows
+# Bonus: Explore behaviors with TestFlows
 
 If you’re interested in testing behavior models or exploring equivalence classes, check out [TestFlows](https://testflows.com). It’s a Python testing framework designed to help you model, define, and explore complex systems in a structured way — so you can prevent bugs by understanding your system better.
 
