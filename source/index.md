@@ -11,7 +11,7 @@ layout: index
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" data-interval="6000" data-wrap="false">
   <div class="carousel-inner">
     <div class="carousel-item active">
-        <h1>Not a framework</h1>
+        <h1>Not a typical framework</h1>
         <h1>A Python library for testing as code</h1>
     </div>
     <div class="carousel-item">
@@ -45,7 +45,7 @@ layout: index
   </a>
 </div>
 <div class="banner-description">
-<h4>Python testing framework for any project</h4>
+<h4>Write Python test programs for any project</h4>
 <h2>Try now</h1>
 </div>
 <div class="row justify-content-center no-gutters">
