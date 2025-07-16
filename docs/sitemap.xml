@@ -2,18 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://testflows.com/blog/stop-bashing-bugs-its-all-your-fault/</loc>
+    <loc>https://testflows.com/index.html</loc>
     
-    <lastmod>2025-04-07</lastmod>
+    <lastmod>2025-07-16</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/index.html</loc>
+    <loc>https://testflows.com/blog/rolling-your-own-docker-cache-for-self-hosted-github-actions-runners/</loc>
     
-    <lastmod>2025-03-06</lastmod>
+    <lastmod>2025-05-17</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/stop-bashing-bugs-its-all-your-fault/</loc>
+    
+    <lastmod>2025-04-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -184,7 +193,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2025-04-07</lastmod>
+    <lastmod>2025-07-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
