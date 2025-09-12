@@ -30,9 +30,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1757703026781" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1757704551170" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1757703026781" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1757704551170" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -172,7 +172,7 @@ The real magic isn’t the tree itself—it’s that you have explicit control o
 <li><p>Parallel Execution: Running tests in parallel is no longer a complex configuration file. It’s an argument in a function call.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    <span class="comment"># Run testA and testB in parallel</span></span><br><span class="line">    Scenario(run=testA, parallel=<span class="literal">True</span>)</span><br><span class="line">    Scenario(run=testB, parallel=<span class="literal">True</span>)</span><br><span class="line">    join() <span class="comment"># Wait for both to finish</span></span><br><span class="line">    Scenario(run=testC)</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h1 id="Everything-is-reusable-and-composable"><a href="#Everything-is-reusable-and-composable" class="headerlink" title="Everything is reusable and composable"></a>Everything is reusable and composable</h1><p>One of the most powerful ideas behind test programs is that <strong>everything can be defined once, reused anywhere, and composed into larger flows</strong>.<br>When reusability isn’t needed, you can define steps inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  </p>
+<h1 id="Everything-is-reusable-and-composable"><a href="#Everything-is-reusable-and-composable" class="headerlink" title="Everything is reusable and composable"></a>Everything is reusable and composable</h1><p>One of the most powerful ideas behind test programs is that <strong>everything can be defined once, reused anywhere, and composed into larger flows</strong>.<br>When reusability isn’t needed, you can define everything inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  </p>
 <p>For reusability:  </p>
 <ul>
 <li>A suite can be defined with the <a href="/handbook/#Suite">@TestSuite</a> decorator.  </li>

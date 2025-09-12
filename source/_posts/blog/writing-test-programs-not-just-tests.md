@@ -175,7 +175,7 @@ When you are the captain, you have the full power of a programming language at y
 # Everything is reusable and composable
 
 One of the most powerful ideas behind test programs is that **everything can be defined once, reused anywhere, and composed into larger flows**.  
-When reusability isn’t needed, you can define steps inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  
+When reusability isn’t needed, you can define everything inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  
 
 For reusability:  
 
