@@ -1,0 +1,669 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Writing Test Programs — Not Just Tests | TestFlows</title>
+  <meta name="description" content="Exploring how writing test programs with TestFlows puts testers back in control — an alternative to runner-centric frameworks.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Vitaliy Zakaznikov">
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/images/writing-test-programs-not-just-tests.png">
+  
+  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
+  
+  
+  <meta name="image" property="og:image" content="https://testflows.com/">
+<meta name="publish_date" property="og:publish_date" content="2025-09-12T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-09-12T00:00:00-0000" />
+<meta property="og:title" content="Writing Test Programs — Not Just Tests">
+<meta property="og:image" content="https://testflows.com/">
+<meta property="og:description" content="Exploring how writing test programs with TestFlows puts testers back in control — an alternative to runner-centric frameworks.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Writing Test Programs — Not Just Tests">
+<meta name="twitter:description" content="Exploring how writing test programs with TestFlows puts testers back in control — an alternative to runner-centric frameworks.">
+<meta name="twitter:image" content="https://testflows.com/">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1757703026781" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1757703026781" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo-white.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Writing Test Programs — Not Just Tests</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2025-09-12T00:00:00-0000"><span class="authored-date text-nowrap">Sep 12, 2025</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/writing-test-programs-not-just-tests/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/writing-test-programs-not-just-tests/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/writing-test-programs-not-just-tests/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/writing-test-programs-not-just-tests.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>Have you ever found yourself fighting your test framework? Wasting hours searching for the right plugin just to run a test conditionally or in a dynamic loop? If so, you’re not alone. The problem might not be your tests, but the dominant “runner mentality” that governs them.
+For years, the software testing landscape has relied on this model. We diligently write tests as passive objects, only to hand them over to a separate runner that dictates their execution. This approach, popularized by frameworks like <em>Pytest</em>, and many others, certainly has its merits. Runners offer convention over configuration, and features like auto-discovery make it incredibly easy for beginners to get started. They provide a standardized way to execute tests, which is valuable. However, this convenience comes at a cost.<span id="more"></span></p>
+<blockquote>
+<p>The separation of what to run (the tests) from how it runs (the flow) creates a fundamental disconnect, leading to awkward workarounds and limitations.</p>
+</blockquote>
+<p>This article explores a more powerful alternative: writing test programs instead of just tests. We’ll show how unifying tests and control flow empowers you with complete programmatic control, turning your testing from a constrained activity into a creative one.</p>
+<h1 id="The-pain-of-the-runner-centric-world"><a href="#The-pain-of-the-runner-centric-world" class="headerlink" title="The pain of the runner-centric world"></a>The pain of the runner-centric world</h1><p>The core design choice of separating the test from the runner leads to real-world pain. The moment you need dynamic control, you hit a wall.
+Have you ever tried to:</p>
+<ul>
+<li>Conditionally run a test based on the result of another? You likely had to find, install, and learn a special dependency plugin.</li>
+<li>Loop a test with parameters generated at runtime? This often requires contorting your code to fit a rigid parameterization scheme that wasn’t designed for dynamic inputs.</li>
+</ul>
+<p>These are not edge cases. The need for plugins to handle such basic control flow is a clear sign that the model is flawed. Plugins are a patch, an attempt to bridge the disconnect between the tests and the runner’s limited vocabulary.</p>
+<p>Let’s consider a concrete example using <em>Pytest</em>. To create a dependency between two tests and run one repeatedly, you need two separate plugins: <em>pytest-dependency</em> and <em>pytest-repeat</em>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.dependency(<span class="params">name=<span class="string">&quot;login&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login</span>():</span><br><span class="line">    <span class="keyword">assert</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.dependency(<span class="params">depends=[<span class="string">&quot;login&quot;</span>]</span>)</span></span><br><span class="line"><span class="meta">@pytest.mark.repeat(<span class="params"><span class="number">10</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_purchase</span>():</span><br><span class="line">    <span class="keyword">assert</span> <span class="number">1</span> + <span class="number">1</span> == <span class="number">2</span></span><br></pre></td></tr></table></figure>
+
+<p>This works for a static number of repetitions. But what if the repeat count is dynamic—calculated moments before the test runs? The plugin breaks. You’re stuck again, fighting your framework instead of writing tests.</p>
+<h1 id="The-alternative-embracing-test-programs"><a href="#The-alternative-embracing-test-programs" class="headerlink" title="The alternative: embracing test programs"></a>The alternative: embracing test programs</h1><p>The alternative is to eliminate the runner and, instead, write a test program. In this everything-is-code paradigm, your tests are simply functions, and the control flow is explicitly defined using the full power of your programming language.</p>
+<p>Let’s rewrite the previous example using <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span>, where the framework is just a library, not a runner.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">purchase</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="number">1</span> + <span class="number">1</span> == <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Feature(<span class="string">&quot;login and purchase&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> Scenario(run=login) == OK:</span><br><span class="line">        <span class="comment"># Easily replace 10 with any dynamic value</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">            Scenario(<span class="string">f&quot;purchase #<span class="subst">&#123;i&#125;</span>&quot;</span>, run=purchase)</span><br></pre></td></tr></table></figure>
+
+<p>This might look like more code upfront, but this explicitness is a feature. It completely eliminates the “hidden work” of finding, learning, and maintaining a fragile ecosystem of plugins. The dependency is a simple if statement. The repetition is a standard for loop. It’s not a new DSL; it’s just Python.</p>
+<p>And how do you run it? You execute the file directly.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./test-program.py</span><br></pre></td></tr></table></figure>
+
+<p>The lack of auto-discovery is also a feature, not a bug. It forces explicit composition, which means the execution flow is always clear, predictable,
+and defined by you—not by some runner’s discovery process.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test_program.py </span><br><span class="line">Sep 12,2025 12:43:15   ⟥  Feature login and purchase</span><br><span class="line">Sep 12,2025 12:43:15     ⟥  Scenario login</span><br><span class="line">               270us     ⟥⟤ OK login, /login and purchase/login</span><br><span class="line">Sep 12,2025 12:43:15     ⟥  Scenario purchase <span class="comment">#0</span></span><br><span class="line">               211us     ⟥⟤ OK purchase <span class="comment">#0, /login and purchase/purchase #0</span></span><br><span class="line">...</span><br><span class="line">Sep 12,2025 12:43:15     ⟥  Scenario purchase <span class="comment">#9</span></span><br><span class="line">               180us     ⟥⟤ OK purchase <span class="comment">#9, /login and purchase/purchase #9</span></span><br><span class="line">                 6ms   ⟥⟤ OK login and purchase, /login and purchase</span><br></pre></td></tr></table></figure>
+
+<h1 id="Test-program-tree"><a href="#Test-program-tree" class="headerlink" title="Test program tree"></a>Test program tree</h1><p>Test program code naturally forms a program tree—just like any other program.
+A critic might argue, “Of course a program has a call stack—that’s obvious,” and they’re right.
+The real magic isn’t the tree itself—it’s that you have explicit control over building it.</p>
+<p>For example, consider this simple test program:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_a</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step A&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step B&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_b</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step A&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step B&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Top Test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Suite(<span class="string">&quot;Suite A&quot;</span>):</span><br><span class="line">        Scenario(<span class="string">&quot;Test A&quot;</span>, run=test_a)</span><br><span class="line">        Scenario(<span class="string">&quot;Test B&quot;</span>, run=test_b)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>When executed, will form this tree structure.</p>
+<img style="width: 75%" src="/images/writing-test-programs-not-just-tests-pic-1.png">
+
+<p>This structure isn’t discovered by magic—it’s directed by your test program code.</p>
+<p>Also, note how everything is a test. The flow of the program is described only by the executed tests, and each test defines its own flow. There is no special distinction between test types—everything is uniform and logical.</p>
+<ul>
+<li><p>The scenarios <code>Test A</code> and <code>Test B</code> each define their flow as two inline test steps: <code>Step A</code> and <code>Step B</code>.</p>
+</li>
+<li><p>The suite <code>Suite A</code> defines its flow as running the <code>Test A</code> and <code>Test B</code> scenarios.</p>
+</li>
+<li><p>The module <code>Top Test</code>, which is the top-level test of the program, defines its flow as running the inline suite <code>Suite A</code>.</p>
+</li>
+</ul>
+<p>The test program begins with the top-level test and proceeds by executing nested tests.</p>
+<blockquote>
+<p>Just like the famous saying goes: “it’s turtles all the way down”—only here, it’s tests.</p>
+</blockquote>
+<p>That consistency, where every test defines its flow in the same way, has a kind of mathematical beauty—like a recursive definition, where the whole is built from smaller parts that mirror the same structure. No runner is needed—and if you add one, you break that consistency, and there’s no way back.</p>
+<h1 id="The-power-of-explicit-control"><a href="#The-power-of-explicit-control" class="headerlink" title="The power of explicit control"></a>The power of explicit control</h1><p>When you are the captain, you have the full power of a programming language at your fingertips. Complex testing logic becomes trivial.</p>
+<ul>
+<li><p>Conditional Execution: Need to run one test only if another test failed? That’s an <strong>if</strong> statement.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> Scenario(run=testA) != OK:</span><br><span class="line">        Scenario(run=testB) <span class="comment"># Conditional execution</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Running Until Pass: Need to retry a flaky test until it succeeds? A while loop is your friend.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    <span class="keyword">while</span> Scenario(run=flaky_test) != OK:</span><br><span class="line">        <span class="keyword">continue</span> <span class="comment"># Retry until it passes</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>Parallel Execution: Running tests in parallel is no longer a complex configuration file. It’s an argument in a function call.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    <span class="comment"># Run testA and testB in parallel</span></span><br><span class="line">    Scenario(run=testA, parallel=<span class="literal">True</span>)</span><br><span class="line">    Scenario(run=testB, parallel=<span class="literal">True</span>)</span><br><span class="line">    join() <span class="comment"># Wait for both to finish</span></span><br><span class="line">    Scenario(run=testC)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h1 id="Everything-is-reusable-and-composable"><a href="#Everything-is-reusable-and-composable" class="headerlink" title="Everything is reusable and composable"></a>Everything is reusable and composable</h1><p>One of the most powerful ideas behind test programs is that <strong>everything can be defined once, reused anywhere, and composed into larger flows</strong>.<br>When reusability isn’t needed, you can define steps inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  </p>
+<p>For reusability:  </p>
+<ul>
+<li>A suite can be defined with the <a href="/handbook/#Suite">@TestSuite</a> decorator.  </li>
+<li>A scenario can be defined with the <a href="/handbook/#Scenario">@TestScenario</a> decorator.  </li>
+<li>A step can be defined with the <a href="/handbook/#Step">@TestStep</a> decorator.</li>
+</ul>
+<p>This makes tests uniform, consistent, and naturally composable. Suites can call scenarios, scenarios can call steps, and steps themselves can wrap other steps.  </p>
+<p>For example, we can define reusable steps:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep(<span class="params">Given</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">have_something</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">When</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">do_something</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">Then</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_something</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>Next, define a reusable scenario that uses these steps:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scenarioA</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;I have something&quot;</span>):</span><br><span class="line">        have_something()</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I do something&quot;</span>):</span><br><span class="line">        do_something()</span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;I check something&quot;</span>):</span><br><span class="line">        check_something()</span><br></pre></td></tr></table></figure>
+
+<p>The wrapping inline steps are optional, but they make the scenario’s procedure much more readable.
+Readability comes from the way reusable pieces are named and composed inline.</p>
+<p>We can do the same for a reusable suite:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">suiteA</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(run=scenarioA)</span><br></pre></td></tr></table></figure>
+
+<p>A full test program looks like this:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">Given</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">have_something</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">When</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">do_something</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">Then</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_something</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scenarioA</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;I have something&quot;</span>):</span><br><span class="line">        have_something()</span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I do something&quot;</span>):</span><br><span class="line">        do_something()</span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;I check something&quot;</span>):</span><br><span class="line">        check_something()</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">suiteA</span>(<span class="params">self</span>):</span><br><span class="line">    Scenario(run=scenarioA)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    Suite(run=suiteA)</span><br></pre></td></tr></table></figure>
+
+<p>Which produces the following output:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test_program.py</span><br><span class="line">Sep 12,2025 14:05:16   ⟥  Module Test program</span><br><span class="line">Sep 12,2025 14:05:16     ⟥  Suite suiteA</span><br><span class="line">Sep 12,2025 14:05:16       ⟥  Scenario scenarioA</span><br><span class="line">Sep 12,2025 14:05:16         ⟥  Given I have something, flags:MANDATORY|SETUP</span><br><span class="line">               218us         ⟥⟤ OK I have something, /Test program/suiteA/scenarioA/I have something</span><br><span class="line">Sep 12,2025 14:05:16         ⟥  When I <span class="keyword">do</span> something</span><br><span class="line">               181us         ⟥⟤ OK I <span class="keyword">do</span> something, /Test program/suiteA/scenarioA/I <span class="keyword">do</span> something</span><br><span class="line">Sep 12,2025 14:05:16         ⟥  Then I check something</span><br><span class="line">               177us         ⟥⟤ OK I check something, /Test program/suiteA/scenarioA/I check something</span><br><span class="line">                 1ms       ⟥⟤ OK scenarioA, /Test program/suiteA/scenarioA</span><br><span class="line">                 1ms     ⟥⟤ OK suiteA, /Test program/suiteA</span><br><span class="line">                 4ms   ⟥⟤ OK Test program, /Test program</span><br></pre></td></tr></table></figure>
+
+<p>If we change the output format to short with the <code>-o short</code> option:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test_program.py -o short</span><br><span class="line">Module Test program</span><br><span class="line">  Suite suiteA</span><br><span class="line">    Scenario scenarioA</span><br><span class="line">      Given I have something</span><br><span class="line">      OK</span><br><span class="line">      When I <span class="keyword">do</span> something</span><br><span class="line">      OK</span><br><span class="line">      Then I check something</span><br><span class="line">      OK</span><br><span class="line">    OK</span><br><span class="line">  OK</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
+
+<p>The short output may now start to look like a Gherkin specification. The difference is that here it’s output, not input. You don’t lose control, and you stay entirely within Python—while making both your test code and test output readable and maintainable. That balance becomes essential as your testing grows to hundreds or thousands of cases.</p>
+<h1 id="From-simple-to-advanced-with-ease"><a href="#From-simple-to-advanced-with-ease" class="headerlink" title="From simple to advanced with ease"></a>From simple to advanced with ease</h1><p>Because your tests are just code, scaling from simple to advanced techniques is simply a matter of applying different coding patterns.
+Dynamic test generation—often a nightmare elsewhere—becomes as simple as writing a nested <strong>for</strong> loop.</p>
+<p>Here’s an example from <a href="/blog/combinatorial-testing-the-introduction">Combinatorial Testing: The Introduction</a>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_pressure_switch</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Check all pressure and volume combinations.&quot;&quot;&quot;</span></span><br><span class="line">    pressures = [<span class="number">0</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>]</span><br><span class="line">    volumes = [<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> pressure <span class="keyword">in</span> pressures:</span><br><span class="line">        <span class="keyword">for</span> volume <span class="keyword">in</span> volumes:</span><br><span class="line">            <span class="keyword">with</span> Check(<span class="string">f&quot;pressure=<span class="subst">&#123;pressure&#125;</span>,volume=<span class="subst">&#123;volume&#125;</span>&quot;</span>):</span><br><span class="line">                pressure_switch(pressure=pressure, volume=volume)</span><br></pre></td></tr></table></figure>
+
+<p>This same approach unlocks truly advanced strategies like property-based testing and model-based testing,
+as introduced in <a href="/blog/combinatorial-testing-behavior-model/">Combinatorial Testing: Writing Behavior Model</a>.
+It can also extend to working with formal system descriptions, as in <a href="/blog/testing-simple-train-control-system-using-formal-description/">Testing Simple Train Control System Using Its Formal Description</a>, and even fuzzing—all using test programs.</p>
+<blockquote>
+<p> In the end, it’s just code.</p>
+</blockquote>
+<h1 id="Understanding-some-of-the-trade-offs"><a href="#Understanding-some-of-the-trade-offs" class="headerlink" title="Understanding some of the trade-offs"></a>Understanding some of the trade-offs</h1><p>Like any architectural choice, writing test programs comes with trade-offs. The paradigm gives you explicit control, but that power comes with responsibility.</p>
+<ul>
+<li><p>Conventions vs. ownership – Runners provide auto-discovery and naming rules for free. Test programs put you in charge of defining and maintaining them.</p>
+</li>
+<li><p>Guardrails vs. freedom – Without restrictions, test code can be elegant or messy. Discipline shifts from the framework to your team’s practices.</p>
+</li>
+<li><p>Tooling convenience – IDE buttons, discovery panels, and green checkmarks don’t come automatically. Replicating them takes extra effort.</p>
+</li>
+<li><p>Learning curve and perception – New contributors must learn your flow, and some teams may see programmatic tests as unconventional.</p>
+</li>
+</ul>
+<p>At the same time, for teams moving into advanced testing techniques—like autonomous testing with property-based or behavior models—test programs open the freedom to explore approaches that would be difficult or impossible under a runner’s constraints.</p>
+<p>In short, you trade the convenience of implicit frameworks for the explicit power of code. For teams hitting the ceiling of what their runner can do,
+that trade can be liberating and sometimes unavoidable.</p>
+<h1 id="Get-started"><a href="#Get-started" class="headerlink" title="Get started"></a>Get started</h1><p>If this idea of freedom and control resonates with you, I encourage you to explore it further.</p>
+<span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> is an open-source project that embodies these principles. You can get started with a simple:
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install testflows</span><br></pre></td></tr></table></figure>
+
+<p>Try the “Hello World” example.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;test&quot;</span>):</span><br><span class="line">    note(<span class="string">&quot;Hello World&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>For more information, read the <a href="/handbook">Handbook</a> or explore and contribute on <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/TestFlows-Core">GitHub</a>.
+And remember: no runner required—it’s just Python.</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </div>
+  </div>
+  <div class="container-footer" id="container-footer">
+    
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
+                        <span class="fab fa-3x fa-linkedin"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2025 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+    
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="https://unpkg.com/3d-force-graph@1.72.3/dist/3d-force-graph.min.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+// hero graph
+function heroGraph() {
+    const distance = 2350;
+    const N = 7;
+    const msb = n => Math.max(0, 31 - Math.clz32(n));
+    const gData = {
+        nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
+        links: [...Array(2*((2**(N+1)-2)-2**N)).keys()]
+        .map(id => ({
+            source: Math.floor(id/2),
+            target: id+2
+        }))
+    };
+    start = gData.nodes.length;
+    gData.nodes.push({id:start, group: 2, val:msb(start)});
+    gData.links.push({source: start, target: 0});
+    gData.links.push({source: start, target: 1});
+    window.Graph = ForceGraph3D()
+    .backgroundColor("black")
+    //.dagMode('td')
+    //.dagLevelDistance(200)
+    (document.getElementById('banner-graph'))
+	.nodeAutoColorBy('group')
+    .linkAutoColorBy(d => gData.nodes[d.source].group)
+	.onNodeDragEnd(node => {
+        node.fx = node.x;
+        node.fy = node.y;
+        node.fz = node.z;
+    })
+    .linkDirectionalArrowLength(3.5)
+    .linkDirectionalArrowRelPos(1)
+    .graphData(gData);
+    // camera orbit
+    let angle = 0;
+    //let isRotationActive = true;
+    window.Graph.cameraPosition({
+        x: distance * Math.sin(angle),
+        z: distance * Math.cos(angle)
+    });
+    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
+    window.Graph.currentDagMode = 0;
+}
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
+</body>
+</html>
+
+
