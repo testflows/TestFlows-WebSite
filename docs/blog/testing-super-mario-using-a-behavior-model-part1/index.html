@@ -1,0 +1,899 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Testing Super Mario Using a Behavior Model (Part 1) | TestFlows</title>
+  <meta name="description" content="An article about testing Super Mario game using a behavior model (Part 1).">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Vitaliy Zakaznikov">
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-part1.png">
+  
+  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
+  
+  
+  <meta name="image" property="og:image" content="https://testflows.com/">
+<meta name="publish_date" property="og:publish_date" content="2025-09-17T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-09-17T00:00:00-0000" />
+<meta property="og:title" content="Testing Super Mario Using a Behavior Model (Part 1)">
+<meta property="og:image" content="https://testflows.com/">
+<meta property="og:description" content="An article about testing Super Mario game using a behavior model (Part 1).">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Testing Super Mario Using a Behavior Model (Part 1)">
+<meta name="twitter:description" content="An article about testing Super Mario game using a behavior model (Part 1).">
+<meta name="twitter:image" content="https://testflows.com/">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1758147255957" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1758147255957" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo-white.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Testing Super Mario Using a Behavior Model (Part 1)</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2025-09-17T00:00:00-0000"><span class="authored-date text-nowrap">Sep 17, 2025</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/testing-super-mario-using-a-behavior-model-part1.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>The classic game <a target="_blank" rel="noopener external nofollow noreferrer" href="https://en.wikipedia.org/wiki/Super_Mario_Bros."><em>Super Mario</em></a> isn’t just fun to play—it has also become a favorite system for testing and analysis. In a blog post, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis</a> showed how their deterministic hypervisor can autonomously play <em>Super Mario</em> and explore its vast state space. This kind of exploration is powerful for surfacing unexpected states, but it leaves one question unanswered: does the game <strong>behave correctly</strong> in every one of those states?  </p>
+<p>In this multi-part series, we tackle that challenge. Our approach is to apply a <strong>behavior model</strong> that captures the game’s intended mechanics—movement, collision detection, enemy interactions—and use it as a framework for systematic testing. With this model, we can go beyond searching for the winning state: we can check that <em>Super Mario</em> behaves <strong>as it should</strong> in every explored state.<span id="more"></span>  </p>
+<p>A key advantage of this approach is that the model itself can be built incrementally, allowing it to be as simple or as comprehensive as needed. Once constructed, the model is <strong>universal</strong>—while its most advanced applications involve integration with autonomous state space exploration techniques, it can also be effectively used for manual and semi-automated test implementations.  </p>
+<p>In this Part 1, we’ll explore the game’s architecture, build a comprehensive testing framework with custom controls and vision systems, and create classic tests that reveal the fundamental challenges of testing stateful systems. This foundation will set us up for <a href="/blog/testing-super-mario-using-a-behavior-model-part2/">Part 2</a>, where we’ll dive into the theory behind behavior models and start implementing one to make our testing much more robust.</p>
+<h2 id="Setting-up-the-Super-Mario-test-project"><a href="#Setting-up-the-Super-Mario-test-project" class="headerlink" title="Setting up the Super Mario test project"></a>Setting up the Super Mario test project</h2><p>To write a behavior model, we need a reference implementation of the game. Fortunately, there is an open-source Python implementation of <em>Super Mario</em> available on GitHub: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/marblexu/PythonSuperMario">PythonSuperMario</a>. This project includes two playable levels. For our test project, we’ll use a specific version of the repository, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/marblexu/PythonSuperMario/commit/f34087e4cc47f6cc70b46ced758b1070e64c4dc2">f34087e4cc47f6cc70b46ced758b1070e64c4dc2</a>, and create a modified fork of it
+that you can find in our <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/tree/main/SuperMario">Examples&#x2F;SuperMario</a> repository.</p>
+<p>Clone the repository and checkout the commit using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/testflows/Examples.git &amp;&amp; <span class="built_in">cd</span> Examples/SuperMario</span><br></pre></td></tr></table></figure>
+
+<h3 id="Environment-setup"><a href="#Environment-setup" class="headerlink" title="Environment setup"></a>Environment setup</h3><p>We’ll run and test the game in the following environment:</p>
+<ul>
+<li><strong>Operating System:</strong> Ubuntu 22.04.5 LTS</li>
+<li><strong>Python Version:</strong> 3.10.12</li>
+</ul>
+<p>Additionally, we’ll use the following Python dependencies, which are defined in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/requirements.txt">requirements.txt</a>:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">testflows==2.4.19</span><br><span class="line">pygame==2.6.1</span><br></pre></td></tr></table></figure>
+
+<p>To install the dependencies, run:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install -r requirements.txt</span><br></pre></td></tr></table></figure>
+
+<h3 id="Playing-the-game-manually"><a href="#Playing-the-game-manually" class="headerlink" title="Playing the game manually"></a>Playing the game manually</h3><p>At this point, the project folder should look like this:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">main.py  README.md  requirements.txt  resources  <span class="built_in">source</span>  tests</span><br></pre></td></tr></table></figure>
+
+<p>The <code>main.py</code> file serves as the entry point for the game. Before diving into testing, let’s have fun and take a moment to <strong>play the game manually</strong> to get familiar with its mechanics.</p>
+<h4 id="Game-Controls"><a href="#Game-Controls" class="headerlink" title="Game Controls:"></a><strong>Game Controls:</strong></h4><ul>
+<li><strong>Arrow Keys (<code>←</code>&#x2F;<code>→</code>&#x2F;<code>↓</code>)</strong> – Move the player  </li>
+<li><strong><code>a</code> key</strong> – Jump  </li>
+<li><strong><code>s</code> key</strong> – Shoot fireballs or run</li>
+</ul>
+<p>Run the game with:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 main.py</span><br></pre></td></tr></table></figure>
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Playing the game manually</div>
+</div><br>
+
+<h2 id="Understanding-the-game-architecture"><a href="#Understanding-the-game-architecture" class="headerlink" title="Understanding the game architecture"></a>Understanding the game architecture</h2><p>Before we can start testing the game, we need a basic understanding of its architecture.
+Why? Unlike autonomous testing approaches that can assert basic properties without deep game knowledge, 
+a behavior model requires a clear understanding of the game’s behavior. This understanding is inherently tied to 
+the game’s architecture. You simply can’t model what you fundamentally don’t understand. This architectural 
+exploration also serves as a valuable learning tool that will make development of the behavior model 
+more intuitive. As we develop the game’s behavior model, we will need to add basic test plumbing 
+to the source code to simplify the testing process, and we need to know where to plug it in.
+Additionally, we need to make a clear distinction between what a game developer considers a state and what constitutes a state from a testing perspective.</p>
+<p>The game’s execution starts in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/main.py">source&#x2F;main.py</a>, where the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/main.py#L8">main()</a> function initializes the game structure:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    game = tools.Control()</span><br><span class="line">    state_dict = &#123;c.MAIN_MENU: main_menu.Menu(),</span><br><span class="line">                  c.LOAD_SCREEN: load_screen.LoadScreen(),</span><br><span class="line">                  c.LEVEL: level.Level(),</span><br><span class="line">                  c.GAME_OVER: load_screen.GameOver(),</span><br><span class="line">                  c.TIME_OUT: load_screen.TimeOut()&#125;</span><br><span class="line">    game.setup_states(state_dict, c.MAIN_MENU)</span><br><span class="line">    game.main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="Game-as-a-state-machine"><a href="#Game-as-a-state-machine" class="headerlink" title="Game as a state machine"></a>Game as a state machine</h3><p>The game is implemented as an explicit <strong>state-driven system</strong>, where different <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/tree/main/SuperMario/source/states">states</a> represent major phases of execution. These include:</p>
+<ul>
+<li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9">MAIN_MENU</a></strong> – The game’s main menu.</li>
+<li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/load_screen.py#L7">LOAD_SCREEN</a></strong> – The load screen.</li>
+<li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L11">LEVEL</a></strong> – The active gameplay state where the player interacts with the game world.</li>
+<li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/load_screen.py#L39">GAME_OVER</a></strong> – The state when the player loses all lives.</li>
+<li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/load_screen.py#L50">TIME_OUT</a></strong> – The state when the level timer runs out (a type of load screen).</li>
+</ul>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
+<div class="text-secondary text-bold"><br>Super Mario: State Classes</div>
+</div><br>
+
+
+<p>Each of these is a subclass of the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L15">State</a> class, that implements the state machine architecture. The transitions between states are managed using the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L20">next</a> attribute, which determines the next game state.</p>
+<h3 id="The-actual-game-states"><a href="#The-actual-game-states" class="headerlink" title="The actual game states"></a>The actual game states</h3><p>However, these <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/tree/main/SuperMario/source/states">state</a> classes actually present clusters of <strong>states</strong>, where each cluster contains its own <strong>actual states</strong>. These <strong>actual states</strong> are defined by the specific values of the attributes of these <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L15">State</a> classes. You can think of them as shown in the following diagram. However, the transition edges between states are relative. In the real system, we don’t really know which transitions are possible. Some of these states or state transitions might be a bug!</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
+<div class="text-secondary text-bold"><br>Super Mario: Clusters of States (transition lines are random)</div>
+</div><br>
+
+<h4 id="The-crucial-detail"><a href="#The-crucial-detail" class="headerlink" title="The crucial detail"></a>The crucial detail</h4><p>The crucial detail is that <strong>the game does not have just five states</strong>! In reality, the number of possible states is very large because each <code>State</code> class has multiple attributes whose values define distinct actual states.</p>
+<blockquote>
+<p>Don’t be misled by the class name <code>State</code>, which can create confusion—it does not represent a singular game state but rather a structure that implements multiple possible states through the values of its attributes.</p>
+</blockquote>
+<p>Understanding this distinction is key to bridging the gap between the code and the state machine representation of the system under test. Effective testing relies on exploring as many states and transitions of this state machine as possible to ensure comprehensive coverage. </p>
+<p>Just exploring these states is not enough. Ideally, we want to assert that each state is actually valid, as well as transitions between the states. This is way more complex than just asserting, for example, that the game does not crash, and is the heart of the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://en.wikipedia.org/wiki/Test_oracle">test oracle problem</a>.</p>
+<p>Let’s take a closer look at the two main game state classes, the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9">MAIN_MENU</a> and the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L11">LEVEL</a>.</p>
+<h4 id="The-MAIN-MENU-state-class"><a href="#The-MAIN-MENU-state-class" class="headerlink" title="The MAIN_MENU state class"></a>The MAIN_MENU state class</h4><p>For example, the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9">MAIN_MENU</a></strong> state class defines many states, determined by values of its attributes, such as:</p>
+<ul>
+<li><strong><code>persist</code></strong> – Stores persistent game information that is <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L62">passed between states</a> during transitions. It contains:<ul>
+<li><code>COIN_TOTAL</code>, <code>SCORE</code>, <code>LIVES</code>, <code>TOP_SCORE</code>, <code>CURRENT_TIME</code>, <code>LEVEL_NUM</code>, <code>PLAYER_NAME</code></li>
+</ul>
+</li>
+<li><strong><code>game_info</code></strong> – Holds the current game’s information (set equal to <code>persist</code>).</li>
+<li><strong><code>overhead_info</code></strong> – Manages the display of overhead game information, initialized as an instance of the <code>Info</code> class with <code>game_info</code> and <code>MAIN_MENU</code> as parameters.</li>
+<li><strong><code>viewport</code></strong> – Manages the visible portion of the game world in the main menu.</li>
+<li><strong><code>background</code></strong> – Handles the background setup for the main menu; initialized in the <code>setup_background()</code> method.</li>
+<li><strong><code>player_list</code> and <code>player_index</code></strong> – Represent the selectable player characters in the main menu; initialized in the <code>setup_player()</code> method.</li>
+<li><strong><code>cursor</code></strong> – Manages the menu selection cursor; initialized in the <code>setup_cursor()</code> method.</li>
+</ul>
+<p>These attributes are primarily initialized in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L21"><code>startup()</code></a> method, which is called when the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9">Menu</a> class is <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L10">initialized</a>.</p>
+<h4 id="The-LEVEL-state-class"><a href="#The-LEVEL-state-class" class="headerlink" title="The LEVEL state class"></a>The LEVEL state class</h4><p>As we see, the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9">MAIN_MENU</a></strong> has a lot of attributes, but as expected the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L11">LEVEL</a></strong> state class which implements the actual
+gameplay is even more complex as can be judged by its <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L16">startup()</a> method that initializes this class and sets the initial values of its attributes that implement all possible game states.</p>
+<p>Here is a peek at the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L16">startup()</a> method:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">startup</span>(<span class="params">self, current_time, persist</span>):</span><br><span class="line">   self.game_info = persist</span><br><span class="line">   self.persist = self.game_info</span><br><span class="line">   self.game_info[c.CURRENT_TIME] = current_time</span><br><span class="line">   self.death_timer = <span class="number">0</span></span><br><span class="line">   self.castle_timer = <span class="number">0</span></span><br><span class="line">   </span><br><span class="line">   self.moving_score_list = []</span><br><span class="line">   self.overhead_info = info.Info(self.game_info, c.LEVEL)</span><br><span class="line">   self.load_map()</span><br><span class="line">   self.setup_background()</span><br><span class="line">   self.setup_maps()</span><br><span class="line">   self.ground_group = self.setup_collide(c.MAP_GROUND)</span><br><span class="line">   self.step_group = self.setup_collide(c.MAP_STEP)</span><br><span class="line">   self.setup_pipe()</span><br><span class="line">   self.setup_slider()</span><br><span class="line">   self.setup_static_coin()</span><br><span class="line">   self.setup_brick_and_box()</span><br><span class="line">   self.setup_player()</span><br><span class="line">   self.setup_enemies()</span><br><span class="line">   self.setup_checkpoints()</span><br><span class="line">   self.setup_flagpole()</span><br><span class="line">   self.setup_sprite_groups()</span><br></pre></td></tr></table></figure>
+
+<p>The brief overview of its key functions:</p>
+<ul>
+<li><p><strong>Initialize Game Information</strong>: It assigns the <code>persist</code> dictionary to both <code>self.game_info</code> and <code>self.persist</code>, ensuring that persistent game data is maintained and can be passed across states.</p>
+</li>
+<li><p><strong>Reset Timers</strong>: Adds and initializes <code>death_timer</code> and <code>castle_timer</code> to <code>0</code>, preparing these timers for the level.</p>
+</li>
+<li><p><strong>Initialize Overhead Display Information</strong>: Sets up the overhead display information for the level.</p>
+</li>
+<li><p><strong>Load Level Assets</strong>: It calls setup methods to load and initialize various level components, including:</p>
+<ul>
+<li><code>load_map()</code>: Loads the level map data.</li>
+<li><code>setup_background()</code>: Prepares the background graphics.</li>
+<li><code>setup_maps()</code>: Configures additional map settings.</li>
+<li><code>setup_collide()</code>: Sets up collision detection for ground and steps.</li>
+<li><code>setup_pipe()</code>: Initializes pipes within the level.</li>
+<li><code>setup_slider()</code>: Sets up sliding platforms or elements.</li>
+<li><code>setup_static_coin()</code>: Places static coins in the level.</li>
+<li><code>setup_brick_and_box()</code>: Configures bricks and boxes.</li>
+<li><code>setup_player()</code>: Initializes the player character.</li>
+<li><code>setup_enemies()</code>: Spawns enemies in the level.</li>
+<li><code>setup_checkpoints()</code>: Establishes checkpoints for progress tracking.</li>
+<li><code>setup_flagpole()</code>: Sets up the flagpole at the end of the level.</li>
+<li><code>setup_sprite_groups()</code>: Organizes sprites into groups for efficient management. Where a <strong>sprite</strong> is a 2D image or animation used in video games to represent characters, objects, and other visual elements.</li>
+</ul>
+</li>
+</ul>
+<p>By executing these steps, the startup method ensures that all necessary game components are properly initialized defining the initial state. The large number of attributes and possible values for each attribute allowed by the <strong>LEVEL</strong> state class is what makes testing the game a challenge. Nonetheless, the state-driven architecture of the game is clearly evident. </p>
+<h3 id="Aligning-architecture-to-behavior-model"><a href="#Aligning-architecture-to-behavior-model" class="headerlink" title="Aligning architecture to behavior model"></a>Aligning architecture to behavior model</h3><p>The game’s state-driven code architecture is well-aligned with <strong>behavior model-based testing</strong>, where <strong>behavior</strong> is defined as a sequence of states. Our model must compute the expected values in the <strong>current state</strong> based on the sequence of <strong>previous states</strong> (the system’s history). By leveraging this structure, we can systematically validate that the game behaves as intended as the game transitions between states.</p>
+<blockquote>
+<p>Note that state machine representation applies in general to any software even when the implementation
+is not explicitly defined using state-driven code.</p>
+</blockquote>
+<h3 id="The-game-loop-and-state-transitions"><a href="#The-game-loop-and-state-transitions" class="headerlink" title="The game loop and state transitions"></a>The game loop and state transitions</h3><p>The transition of game states is handled by the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L35">Control</a> class, which among other things defines the frames per second (FPS) — the theoretical <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L78">frequency</a> at which the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L74">game loop</a> executes.</p>
+<p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L74">game loop</a> itself is very simple.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">while</span> <span class="keyword">not</span> self.done:</span><br><span class="line">        self.event_loop()</span><br><span class="line">        self.update()</span><br><span class="line">        pg.display.update()</span><br><span class="line">        self.clock.tick(self.fps)</span><br></pre></td></tr></table></figure>
+
+<p>The game loop operates in discrete time steps, where each tick of the clock produces a new frame. The FPS value determines the number of frames generated per second, with each frame representing the game’s state at a specific point in time. While the game might appear to run continuously, it is actually discrete, advancing in small, well-defined steps. Here is a graphical representation of the loop’s actions along with their descriptions:</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
+<div class="text-secondary text-bold"><br>Super Mario: Game Loop</div>
+</div><br>
+
+<p>This is crucial for testing because the game’s behavior at any moment is fully determined by the current frame state. Therefore, testing must account for the fact that all animations, inputs, and events are processed frame-by-frame, and a <strong>behavior model</strong> must accurately observe and validate the correctness of the state for each frame.</p>
+<h2 id="Wiring-up-test-actions"><a href="#Wiring-up-test-actions" class="headerlink" title="Wiring up test actions"></a>Wiring up test actions</h2><p>Now, having a good understanding of the underlying game code architecture,
+we are ready to wire up test actions that we’ll enable us to test the game.
+Let’s compile a list of actions that we need for testing!</p>
+<h3 id="Starting-and-stopping-the-game"><a href="#Starting-and-stopping-the-game" class="headerlink" title="Starting and stopping the game"></a>Starting and stopping the game</h3><p>For obvious reasons the first test action is to be able to start and stop the game.
+When we start the game, we also want to be able to wait for the game
+to be ready to play which means that we want to pass the <code>MAIN_MENU</code> states and
+enter the first <code>LEVEL</code> state. It also makes sense to always cleanly
+stop the game using <code>pygame.quit()</code> call, so we’ll define this action as
+a <a href="https://testflows.com/handbook/#Given-With-yield">Given with yield</a> step that supports combining setup and clean up in one step.  </p>
+<p>Most of the code to implement this action will be similar to the game’s <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/marblexu/PythonSuperMario/blob/master/source/main.py#L8">main()</a> function. We’ll just add <code>yield</code>ing the game’s object, clean up using <code>pygame.quit()</code> call and call to <code>wait_ready(game)</code> to enter playable state with the default Mario player selected. The stubs for the <code>start()</code> and <code>wait_ready()</code> actions will be the following: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep(<span class="params">When</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wait_ready</span>(<span class="params">self, game, seconds=<span class="number">3</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Wait for game to be loaded and ready.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">Given</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">start</span>(<span class="params">self, ready=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Start the game and wait for it to be ready.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Controlling-the-game"><a href="#Controlling-the-game" class="headerlink" title="Controlling the game"></a>Controlling the game</h3><p>When we actually try implementing the above actions, we’ll quickly come to a realization that the default game’s <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L35">Control</a></strong> will need to be modified to allow testing the game at frame by frame level. This is because we need the ability to do the following:</p>
+<ul>
+<li>Control and capture <strong>frame-by-frame game states</strong>, advancing and storing states for validation.</li>
+<li>Manage <strong>keypress events</strong>, allowing programmatic as well as manual control of the player.</li>
+<li>Detect <strong>objects</strong> visible on the screen as well as overlay custom graphics for easy debugging.</li>
+</ul>
+<p>We’ll accomplish this using the custom <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68">Control</a></strong> that will use the original class as the base, and create the new <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13">Vision</a></strong> to handle graphical object detection and overlaying on the screen.</p>
+<p>Here is shortened version of custom <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68">Control</a></strong> class <code>__init__</code> method that adds extra attributes:</p>
+<ul>
+<li><strong><code>fps</code></strong> ability to set custom frame rate</li>
+<li><strong><code>keys</code></strong> set to our custom <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L26">Keys</a></strong> class to store and look up pressed keys</li>
+<li><strong><code>vision</code></strong> instance of the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13">Vision</a></strong> class to detect objects draw on the screen</li>
+<li><strong><code>behavior</code></strong> list of frame states, previous and current, that tests and <strong>behavior model</strong> can use</li>
+<li><strong><code>play</code></strong> handle to the generator function that allows to control game advancement at the frame level</li>
+<li><strong><code>manual</code></strong> flag to enable manual game play inside a test that we’ll use to allow manual testing of the <strong>behavior model</strong></li>
+</ul>
+<p>Here is the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68">Control</a></strong> class <code>__init__</code> method:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Custom game Control class</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Control</span>(tools.Control):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, fps=<span class="number">60</span>, *args, **kwargs</span>):</span><br><span class="line">        <span class="built_in">super</span>().__init__(*args, **kwargs)</span><br><span class="line">        self.fps = fps</span><br><span class="line">        self.keys = Keys()</span><br><span class="line">        self.vision = Vision(self)</span><br><span class="line">        self.behavior = []</span><br><span class="line">        self.play = <span class="literal">None</span></span><br><span class="line">        self.manual = <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+
+<p>The other important part is the customized <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L102">main()</a></strong> method that is converted to be a generator to control the game loop and
+advance it step by step using the standard <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.python.org/3/library/functions.html#next">next</a></strong> function applied to the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L76">play</a></strong> attribute that stores game loop generator object.
+Therefore, <strong><code>next(game.play)</code></strong> will allow us move the game to the next frame.
+It also calls the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13">Vision</a></strong> class instance’s <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L188">detect()</a></strong> method to detect currently visible game objects. </p>
+<p>The customized <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L102">main()</a></strong> method also <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L110">appends</a> the new <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L54">BehaviorState</a></strong> to the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L75">behavior</a></strong> list to store previous and current frame states forming current game history. </p>
+<p>Here is the updated <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L102">main()</a></strong> method that contains the updated game loop which now contains a <code>yield</code> statement:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Main game loop.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">_main</span>():</span><br><span class="line">        <span class="keyword">while</span> <span class="keyword">not</span> self.done:</span><br><span class="line">            self.event_loop()</span><br><span class="line">            self.update()</span><br><span class="line">            self.vision.detect()</span><br><span class="line">            self.behavior.append(</span><br><span class="line">                BehaviorState(self.keys, self.vision.boxes, self.vision.viewport)</span><br><span class="line">            )</span><br><span class="line">            <span class="keyword">yield</span> self</span><br><span class="line">            pg.display.update()</span><br><span class="line">            self.clock.tick(self.fps)</span><br><span class="line">    self.play = _main()</span><br></pre></td></tr></table></figure>
+
+<p>The new <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68">Control</a></strong> class allows us to implement the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L165">play()</a></strong> action below where we can advance the game either by specifying time in seconds or the number of frames.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">play</span>(<span class="params">game, seconds=<span class="number">1</span>, frames=<span class="literal">None</span>, model=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Play the game for the specified number seconds or frames.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> frames <span class="keyword">is</span> <span class="literal">None</span>:</span><br><span class="line">        frames = <span class="built_in">int</span>(seconds * game.fps)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(frames):</span><br><span class="line">        <span class="built_in">next</span>(game.play)</span><br><span class="line">        <span class="keyword">if</span> model:</span><br><span class="line">            model.expect(game.behavior)</span><br></pre></td></tr></table></figure>
+
+<p>Note that the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L165">play()</a></strong> action can take an optional <strong><code>model</code></strong> parameter which will allow us to pass a behavior model object,
+which will provide the <strong>expect()</strong> method that will take the current game behavior and perform assertions about
+the correctness of the current game state.</p>
+<h3 id="Detecting-game-objects-and-drawing-boxes-around-them"><a href="#Detecting-game-objects-and-drawing-boxes-around-them" class="headerlink" title="Detecting game objects and drawing boxes around them"></a>Detecting game objects and drawing boxes around them</h3><p>The ability to detect game objects and their positions is critical to game testing. To make games interesting they have quite a variety of them and <em>Super Mario</em> is no exception. We’ve already seen that in the new <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68">Control</a></strong> class we’ve added <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L74">vision</a></strong> attribute set to an instance of the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13">Vision</a></strong> class. The <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13">Vision</a></strong> class is exactly what implements object detection as well as the ability to draw on a screen that can be used in debugging our tests. </p>
+<p>Here is the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L29"><strong>init</strong></a></strong> method of the class: </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Vision</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Game vision.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, game</span>):</span><br><span class="line">        self.game = game</span><br><span class="line">        self.boxes = &#123;&#125;</span><br><span class="line">        self.viewport = pg.Rect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>It only has three attributes:</p>
+<ul>
+<li><strong><code>game</code></strong> - a handle to the game’s <strong><code>Control</code></strong> object (used for convenience)</li>
+<li><strong><code>boxes</code></strong> - stores the detected game objects. It is called <em>boxes</em> because the bounds of each object in the game are defined by a rectangular box or specifically <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.pygame.org/docs/ref/rect.html">pygame.Rect</a></strong> object which defines the position of the object in the game.</li>
+<li><strong><code>viewport</code></strong> - stores an object that defines the chunk of the game level that can be currently seen on the screen</li>
+</ul>
+<p>The actual method that is responsible for object detection is called the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L188">detect()</a></strong> which is defined as follows:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">detect</span>(<span class="params">self</span>):</span><br><span class="line">     <span class="string">&quot;&quot;&quot;Detect visible game elements.&quot;&quot;&quot;</span></span><br><span class="line">     self.boxes = self.get_visible()</span><br><span class="line">     <span class="keyword">if</span> self.boxes:</span><br><span class="line">         self.viewport = self.game.state.viewport</span><br><span class="line">     <span class="keyword">return</span> self</span><br></pre></td></tr></table></figure>
+
+<p>It is very simple as the heavy lifting is done in the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L52">get_visible()</a></strong> method
+which returns a list of visible elements in the current viewport. If any object
+was detected then the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L32">viewport</a></strong> attribute is set to the current viewport.</p>
+<p>In order to obtain the list of visible objects, the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L52">get_visible()</a></strong> method
+introspects the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L45">self.game.state</a></strong> and pulls out any attribute
+that is of <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite">pygame.sprite.Sprite</a></strong> or <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group">pygame.sprite.Group</a></strong> type. Where in PyGame, the <strong>sprite.Sprite</strong> is used for visible game objects and <strong>sprite.Group</strong> is used for holding and managing a group of Sprite objects.</p>
+<p>The detected objects are saved in <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L57">boxes</a></strong> attribute of the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L54">BehaviorState</a></strong> objects which are added to the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L75">game.behavior</a></strong> attribute, where the <strong><code>game</code></strong> is an instance of the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68">Control</a></strong> class,  which holds a list of them.</p>
+<p>All this machinery is used to implement the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L176">get_elements</a></strong> and <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L181">get_element</a></strong> actions. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_elements</span>(<span class="params">game, name, frame=-<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get elements by name in the specified frame, default: -1 (current frame).&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> game.behavior[frame].boxes[name]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_element</span>(<span class="params">game, name, frame=-<span class="number">1</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Get element by name in the specified frame, default: -1 (current frame).&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> get_elements(game, name, frame)[<span class="number">0</span>]</span><br></pre></td></tr></table></figure>
+
+<p>For easier visual debugging, the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13">Vision</a></strong> class also provides the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L34">overlay()</a></strong> method that can be used to draw boxes around elements. For example,
+we can draw a colored box around Mario to visually mark its detected position in the test. The <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L186">overlay()</a></strong> action then just provides a convenient wrapper around calling this method.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">overlay</span>(<span class="params">game, elements, color=Vision.color[<span class="string">&quot;red&quot;</span>]</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Overlay boxes around elements on the screen.&quot;&quot;&quot;</span></span><br><span class="line">    game.vision.overlay(boxes=[element.box <span class="keyword">for</span> element <span class="keyword">in</span> elements], color=color)</span><br></pre></td></tr></table></figure>
+
+
+<h3 id="Simulating-keypresses"><a href="#Simulating-keypresses" class="headerlink" title="Simulating keypresses"></a>Simulating keypresses</h3><p>The last set of actions are for controlling keypresses supported by the game.
+A single key press consists of posting <code>KEYDOWN</code> and <code>KEYUP</code> events.
+We also need the ability to keep the key down for some period of time and
+therefore the low-level <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L126">simulate_keypress</a></strong> action is implemented as a context manager. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@contextmanager</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">simulate_keypress</span>(<span class="params">key</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Simulate a key press and release event for the given key.&quot;&quot;&quot;</span></span><br><span class="line">    pg.event.post(pg.event.Event(pg.KEYDOWN, key=key))</span><br><span class="line">    <span class="keyword">yield</span></span><br><span class="line">    pg.event.post(pg.event.Event(pg.KEYUP, key=key))</span><br></pre></td></tr></table></figure>
+
+<p>Using the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L126">simulate_keypress</a></strong> low-level action we can implement all necessary player actions such as pressing:</p>
+<ul>
+<li><p><strong>Enter</strong> key (activate selection like when selecting a player type)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">press_enter</span>():</span><br><span class="line">   <span class="string">&quot;&quot;&quot;Press the enter key.&quot;&quot;&quot;</span></span><br><span class="line">   <span class="keyword">return</span> simulate_keypress(key=keys[<span class="string">&quot;enter&quot;</span>])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>→</code> (right)</strong> key (move right)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">press_right</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Press the right arrow key.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> simulate_keypress(key=keys[<span class="string">&quot;right&quot;</span>])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>←</code> (left)</strong> key (move left)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">press_left</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Press the left arrow key.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> simulate_keypress(key=keys[<span class="string">&quot;left&quot;</span>])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>↓</code> (down)</strong> key (move down like when entering a pipe)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">press_down</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Press the down arrow key.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> simulate_keypress(key=keys[<span class="string">&quot;down&quot;</span>])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>a</code> (up)</strong> key (short or, if pressed continuously, long jump)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">press_jump</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Press the jump key.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> simulate_keypress(key=keys[<span class="string">&quot;jump&quot;</span>])</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong><code>s</code> (action)</strong> key (perform an action like running or throwing a fireball)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">press_action</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Press the action key.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> simulate_keypress(key=keys[<span class="string">&quot;action&quot;</span>])</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Checking-basic-movements-using-classical-auto-tests"><a href="#Checking-basic-movements-using-classical-auto-tests" class="headerlink" title="Checking basic movements using classical auto tests"></a>Checking basic movements using classical auto tests</h2><p>With all these test actions in hand we are ready to start testing.
+First, we can write a few simple classic tests and then off we go to developing
+a <strong>behavior model</strong> that we can use with manual, semi-automated, or any sort of automated or autonomous testing we want.</p>
+<h3 id="Moving-right-test"><a href="#Moving-right-test" class="headerlink" title="Moving right test"></a>Moving right test</h3><p>Alright, let’s kick things off with a simple but essential test: checking if Mario — called the <strong><code>player</code></strong> element in the game — actually moves <strong>right</strong> when we press the right key.</p>
+<p>Here is our simple plan for the test:</p>
+<ol>
+<li><strong>Get Mario’s starting position</strong> – Where is he standing before we do anything?</li>
+<li><strong>Press the right key</strong> – Hold it for <strong>one second</strong>.</li>
+<li><strong>Check where Mario ended up</strong> – Where is Mario standing now?</li>
+<li><strong>Verify the result</strong> – If his <strong>x-coordinate increased</strong>, he did move right 🎉!</li>
+</ol>
+<p>Here is the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right.py">move right</a></strong> test that uses our test actions:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Check Mario can move right in the game.&quot;&quot;&quot;</span></span><br><span class="line">    game = self.context.game</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;Mario&#x27;s start position&quot;</span>):</span><br><span class="line">        mario_start = actions.get_element(game, <span class="string">&quot;player&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;press the right key for 1 second&quot;</span>):</span><br><span class="line">        <span class="keyword">with</span> actions.press_right():</span><br><span class="line">            actions.play(game, seconds=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> And(<span class="string">&quot;get Mario&#x27;s end position&quot;</span>):</span><br><span class="line">        mario_end = actions.get_element(game, <span class="string">&quot;player&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;check Mario moves right&quot;</span>):</span><br><span class="line">        <span class="keyword">assert</span> mario_end.box.x &gt; mario_start.box.x, error()</span><br></pre></td></tr></table></figure>
+
+<p>If Mario <strong>doesn’t move</strong>, we’ll know something’s off. But if everything works, our test passes. Here’s a video of this test in action with the red boxes added to Mario’s start and end positions for visual confirmation.</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Move Right Classic Test</div>
+</div><br>
+
+<p>Try it out for yourself inside the <code>Examples/SuperMario</code> directory by running the following command which includes the <code>--save-video</code> option to record the video of that full test:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tests/run.py --save-video --only <span class="string">&quot;/super mario/classic/move right/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The video will be saved in the <code>move_right.gif</code> file inside your current working directory.</p>
+<h3 id="Moving-left-test"><a href="#Moving-left-test" class="headerlink" title="Moving left test"></a>Moving left test</h3><p>Similarly, we can easily implement a test to check if Mario moves <strong>left</strong> when
+we press the left key. </p>
+<p>As expected, the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left.py">move left</a></strong> test is similar to the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right.py">move right</a></strong> test as shown below.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Check Mario can move left in the game.&quot;&quot;&quot;</span></span><br><span class="line">    game = self.context.game</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;Mario&#x27;s start position&quot;</span>):</span><br><span class="line">        mario_start = actions.get_element(game, <span class="string">&quot;player&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;press the left key for 1 second&quot;</span>):</span><br><span class="line">        <span class="keyword">with</span> actions.press_left():</span><br><span class="line">            actions.play(game, seconds=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> And(<span class="string">&quot;get Mario&#x27;s end position&quot;</span>):</span><br><span class="line">        mario_end = actions.get_element(game, <span class="string">&quot;player&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;check Mario moves left&quot;</span>):</span><br><span class="line">        <span class="keyword">assert</span> mario_end.box.x &lt; mario_start.box.x, error()</span><br></pre></td></tr></table></figure>
+
+<p>Here is a video of the test:</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Move Left Classic Test</div>
+</div><br>
+
+<p>However, note that because we share the game between two tests we see that while
+the <strong>move left</strong> test is working and passing, Mario does not move to the left the same
+distance as he did in our <strong>move right</strong> test. Why? Well, because the game is not
+in the starting state and Mario has some velocity given by the <strong>move right</strong> test before we press the left key in our <strong>move left</strong> test! So, this is interesting and shows that by using the optimization of sharing the same instance of the game between tests, our tests have different initial states. Therefore, our <strong>move left</strong> test is actually a <strong>move left after moving right</strong> test. The only reason why our
+assertion is passing is that it tests for a very broad proposition of the <strong>x-coordinate</strong> being larger or smaller based on the direction of the movement.</p>
+<p>Try it out and watch the <code>move_left.gif</code> video when you run the <strong>move left</strong> test by itself:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tests/run.py --save-video --only <span class="string">&quot;/super mario/classic/move left/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Compare this to when you run <strong>move right</strong> and <strong>move left</strong> tests together, where the <strong>move right</strong> test will be executed first:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tests/run.py --save-video --only <span class="string">&quot;/super mario/classic/move right/*&quot;</span> <span class="string">&quot;/super mario/no model/move left/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>We will not address this issue here, but note that in general, the same actions will not result in the same end states if the initial state is different.</p>
+</blockquote>
+<p>This is what makes testing stateful systems like games a lot of fun! The challenge is that to
+properly test the <strong>move left</strong> action inside the game, you need to try to move left in every possible game state,
+observe the result and check if it is correct. This is not possible with simple targeted classic tests.
+Actually, complete test coverage is impossible due to <strong>every possible game state</strong> being practically untraceable.
+However, autonomous testing that uses a behavior model can cover orders of magnitude more <strong>move left</strong> actions across random game states than would otherwise be possible. Every time the action is attempted, the behavior model can run assertions about the correctness of the behavior at that particular state.</p>
+<h3 id="Jumping-test"><a href="#Jumping-test" class="headerlink" title="Jumping test"></a>Jumping test</h3><p>By now you get the idea of how classical tests can be written. But for fun, I can’t resist, so let’s quickly look at the <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_jump.py">jump</a></strong> test. We’d love to see Mario jump!</p>
+<p>Here is the test when we press the jump key for <code>1</code> second and then assert
+that the end <strong>y-coordinate</strong> is smaller that the start <strong>y-coordinate</strong>.
+Why? Because screen’s <strong>y-coordinates</strong> start at <code>0</code> on the top and increase going down. </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Check Mario can jump in the game.&quot;&quot;&quot;</span></span><br><span class="line">    game = self.context.game</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;Mario&#x27;s start position&quot;</span>):</span><br><span class="line">        mario_start = actions.get_element(game, <span class="string">&quot;player&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;press the jump key for 1 seconds&quot;</span>):</span><br><span class="line">        <span class="keyword">with</span> actions.press_jump():</span><br><span class="line">            actions.play(game, seconds=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> And(<span class="string">&quot;get Mario&#x27;s end position&quot;</span>):</span><br><span class="line">        mario_end = actions.get_element(game, <span class="string">&quot;player&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;check Mario moves up&quot;</span>):</span><br><span class="line">        <span class="keyword">assert</span> mario_end.box.y &lt; mario_start.box.y, error()</span><br></pre></td></tr></table></figure>
+
+<p>Here is the video of the test:</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Jump For 1 Second Classic Test</div>
+</div><br>
+
+<p>Wait, but the Mario’s end position looks like is a ground level because he
+hits the left level boundary because he had an initial left velocity (because of the previous <strong>move left</strong> test) and moreover the jump movement does not mean that
+Mario will stay up in the air if we press the jump key for some time.
+Press it long enough and Mario will be pulled by the game’s physics (the gravity)
+back down! So why does the test pass? It just happens that the end position
+is 2 y-pixels off from the starting position. This means that testing the jump move is tricky! The behavior is actually more complex. Also, note that Mario is jumping to the left because of the velocity in the left direction given by the previous <strong>move left</strong>
+test. This means that there is <code>x</code> and <code>y</code> velocity that needs to be considered, and the gravity pull causes Mario’s position in the air to change. This behavior is more complex that one would initially would think.</p>
+<p>Having identified these issues, but still wanting to keep our assertion simple,
+we modify test’s action to hold the jump key for <code>0.2</code> seconds instead of <code>1</code>.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> When(<span class="string">&quot;press the jump key for 0.2 seconds&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> actions.press_jump():</span><br><span class="line">        actions.play(game, seconds=<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Here is what we have now:</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Jump For 0.2 Seconds Classic Test</div>
+</div><br>
+
+<p>Our simple assertion will now pass with confidence! However, checking the complexity of
+the full jumping move is non-trivial. Actually, if we think about the <strong>move right</strong> and <strong>move left</strong> tests they also did not account for initial position and velocity as well as any obstacles we could have run into or even being killed by the enemy!</p>
+<p>Try it out and watch the <code>move_jump.gif</code> video to see a different behavior when you run the <strong>jump</strong> test by itself:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./tests/run.py --save-video --only <span class="string">&quot;/super mario/classic/move jump/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>When the <strong>jump</strong> test is executed by itself, Mario will not have any velocity in the x or y direction, so you should
+see Mario going straight up.</p>
+<p>This is what makes game testing so hard. The behavior is very complex. Nonetheless, we’ve shown that we could make simple assertions work, and they are useful but are not precise enough to capture the game’s physics of the movements.</p>
+<h2 id="Wrapping-up"><a href="#Wrapping-up" class="headerlink" title="Wrapping up"></a>Wrapping up</h2><p>In this first part, we’ve explored the architecture of our reference implementation of <em>Super Mario</em> and built a comprehensive testing framework. We discovered that what developers call “states” are actually <strong>clusters of states</strong>, where the real game states are defined by attribute values, creating practically infinite possible system states.</p>
+<p>We implemented:</p>
+<ul>
+<li>Custom game controls for frame-by-frame advancement</li>
+<li>Vision system for object detection and tracking  </li>
+<li>Test actions for simulating keypresses</li>
+<li>Classic tests that revealed a key insight: <strong>the same action produces different results depending on the initial state</strong></li>
+</ul>
+<p>While our classic tests can verify basic functionality, they struggle with the combinatorial explosion of possible states. This is exactly where behavior models excel—they can cover orders of magnitude more state combinations while running meaningful assertions about correctness at every tested state.</p>
+<p>In <a href="/blog/testing-super-mario-using-a-behavior-model-part2/">Part 2</a>, we’ll cover the theory behind behavior models and build one to make our testing much more robust and comprehensive.</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </div>
+  </div>
+  <div class="container-footer" id="container-footer">
+    
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
+                        <span class="fab fa-3x fa-linkedin"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2025 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+    
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="https://unpkg.com/3d-force-graph@1.72.3/dist/3d-force-graph.min.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+// hero graph
+function heroGraph() {
+    const distance = 2350;
+    const N = 7;
+    const msb = n => Math.max(0, 31 - Math.clz32(n));
+    const gData = {
+        nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
+        links: [...Array(2*((2**(N+1)-2)-2**N)).keys()]
+        .map(id => ({
+            source: Math.floor(id/2),
+            target: id+2
+        }))
+    };
+    start = gData.nodes.length;
+    gData.nodes.push({id:start, group: 2, val:msb(start)});
+    gData.links.push({source: start, target: 0});
+    gData.links.push({source: start, target: 1});
+    window.Graph = ForceGraph3D()
+    .backgroundColor("black")
+    //.dagMode('td')
+    //.dagLevelDistance(200)
+    (document.getElementById('banner-graph'))
+	.nodeAutoColorBy('group')
+    .linkAutoColorBy(d => gData.nodes[d.source].group)
+	.onNodeDragEnd(node => {
+        node.fx = node.x;
+        node.fy = node.y;
+        node.fz = node.z;
+    })
+    .linkDirectionalArrowLength(3.5)
+    .linkDirectionalArrowRelPos(1)
+    .graphData(gData);
+    // camera orbit
+    let angle = 0;
+    //let isRotationActive = true;
+    window.Graph.cameraPosition({
+        x: distance * Math.sin(angle),
+        z: distance * Math.cos(angle)
+    });
+    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
+    window.Graph.currentDagMode = 0;
+}
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
+</body>
+</html>
+
+
