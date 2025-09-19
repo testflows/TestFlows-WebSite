@@ -21,7 +21,8 @@ In this Part 1, we'll explore the game's architecture, build a comprehensive tes
 To write a behavior model, we need a reference implementation of the game. Fortunately, there is an open-source Python implementation of *Super Mario* available on GitHub: [PythonSuperMario](https://github.com/marblexu/PythonSuperMario). This project includes two playable levels. For our test project, we'll use a specific version of the repository, [f34087e4cc47f6cc70b46ced758b1070e64c4dc2](https://github.com/marblexu/PythonSuperMario/commit/f34087e4cc47f6cc70b46ced758b1070e64c4dc2), and create a modified fork of it
 that you can find in our [Examples/SuperMario](https://github.com/testflows/Examples/tree/main/SuperMario) repository.
 
-Clone the repository and checkout the commit using:
+
+Clone the repository using the following command:
 
 ```bash
 git clone https://github.com/testflows/Examples.git && cd Examples/SuperMario
@@ -167,7 +168,6 @@ Here is a peek at the [startup()](https://github.com/testflows/Examples/blob/mai
     self.game_info[c.CURRENT_TIME] = current_time
     self.death_timer = 0
     self.castle_timer = 0
-    
     self.moving_score_list = []
     self.overhead_info = info.Info(self.game_info, c.LEVEL)
     self.load_map()
