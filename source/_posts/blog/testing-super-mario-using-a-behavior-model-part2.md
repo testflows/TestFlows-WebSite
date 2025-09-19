@@ -16,7 +16,7 @@ This is where behavior models shine. They decouple assertions about correct beha
 
 Because behavior models are composable, we can build them incrementally—start with basic properties, then add complexity as needed. The [test oracle problem](https://en.wikipedia.org/wiki/Test_oracle) puts a fundamental boundary on how detailed any model can be, but behavior models acknowledge this reality and let us choose the right abstraction level. Crucially, they're the only practical way to approach correctness testing at scale across such vast state spaces.
 
-So how do we actually build one? In this Part 2, we'll dive deep into the theory that makes behavior models so powerful, then build one step-by-step for our *Super Mario* implementation. Building on the testing framework we created, we'll start with modeling basic movement mechanics, then progressively add collision detection and enemy interactions. By the end, you'll see how the same model can be used for manual, automated, and even autonomous testing.
+So how do we actually build one? In this Part 2, we'll dive deep into the theory that makes behavior models so powerful, then build one step-by-step for our *Super Mario* implementation. Building on the testing framework we created in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/), we'll start with modeling basic movement mechanics, then progressively add collision detection and enemy interactions. By the end, you'll see how the same model can be used for manual, automated, and even autonomous testing.
 
 
 ## The behavior model theory
@@ -48,7 +48,7 @@ is a predicate.
 
 > A **predicate** is a logical statement that contains variables and **becomes a proposition** when specific values are assigned to those variables.
 
-If mathematical notation feels intimidating, the translation relation can be understood in Python as a collection of independent transition rules:
+If mathematical notation feels intimidating, the transition relation can be understood in Python as a collection of independent transition rules:
 
 ```python
 def R(s, s_prime):
