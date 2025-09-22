@@ -254,11 +254,11 @@ Instead, we'll model the *general properties* of movement that any observer woul
 - He has a maximum movement speed
 - Direction changes involve inertia from the previous direction
 
-This approach gives us a robust model that captures the essential movement behavior without being too brittle to internal physics changes.
+This approach gives us a robust model that captures the essential movement behavior without being brittle to internal physics changes.
 
-### Building expectation to move step by step
+### Modeling process
 
-Let's start with the simplest possible movement expectation:
+Let's start with the simplest possible movement expectation for our [`expect_move`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L213) method:
 
 ```python
 def expect_move(self, behavior, direction):
@@ -277,7 +277,7 @@ def expect_move(self, behavior, direction):
             assert pos_now < pos_before, "Mario should move left when left key is pressed"
 ```
 
-This basic model is too simplistic and would fail in many real scenarios. It doesn't account for startup delays, inertia, or cases where keys aren't pressed. Real movement has nuances that this model doesn't capture. Let's add the first layer of complexity—handling the case when keys aren't pressed:
+This basic model is too simplistic and would fail in many real scenarios. It doesn't account for startup delays, inertia, or cases where keys aren't pressed. Let's add the first layer of complexity—handling the case when keys aren't pressed:
 
 ```python
 def expect_move(self, behavior, direction):
@@ -303,7 +303,7 @@ def expect_move(self, behavior, direction):
 
 Now we're handling both key-pressed and key-not-pressed cases. We use helper methods like [`assert_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L76) to check that Mario actually moved, [`assert_inertia_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L161) to validate inertia behavior, and [`assert_no_unintended_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L54) to ensure Mario doesn't move when he shouldn't.
 
-But there's still more complexity: what happens when Mario starts moving from a standing position? In the real game, there's a brief delay before movement begins. Let's add that:
+But there's still more complexity: what happens when Mario starts moving from a standing position? In the real game, there's a brief delay before movement begins. Let's add this final layer of complexity:
 
 ```python
 def expect_move(self, behavior, direction):
@@ -314,7 +314,13 @@ def expect_move(self, behavior, direction):
     now, before, right_before = behavior[-1], behavior[-2], behavior[-3]
     
     if not self.is_key_pressed(before, direction):
-        # Handle inertia and stationary cases...
+        # Key not pressed - Mario should either stand still or continue due to inertia
+        if self.is_moving(before, right_before, direction=direction):
+            # Mario was moving - expect inertia behavior
+            self.assert_inertia_movement(behavior, direction=direction)
+        else:
+            # Mario wasn't moving - he should remain stationary
+            self.assert_no_unintended_movement(now, before, direction=direction)
         return
     
     # Key is pressed - but movement depends on Mario's previous state
@@ -333,9 +339,9 @@ def expect_move(self, behavior, direction):
         self.assert_movement(now, before, direction=direction)
 ```
 
-This version introduces [`has_started_moving_after_standing`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L107), which checks if Mario has waited long enough to start moving from a stationary position.
+This version introduces [`has_started_moving_after_standing`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L107), which checks if Mario has waited long enough to start moving from a stationary position, accounting for the natural startup delay in movement.
 
-This incremental approach demonstrates how behavior models grow organically. Each addition handles a new aspect of the observed behavior, building up a comprehensive model piece by piece.
+This incremental approach demonstrates how behavior models grow organically. We started with a simple rule, then added inertia handling, and finally incorporated startup delays. Each addition handles a new aspect of the observed behavior, building up a comprehensive model piece by piece.
 
 ### Modeling jump behavior
 
@@ -373,7 +379,7 @@ def expect_jump(self, behavior):
                 self.assert_jump(now, before)
 ```
 
-This uses [`has_collision`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py#L17) to check for ground contact and obstacles, [`is_key_pressed`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py#L13) to detect input, and [`assert_jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L67) to validate that Mario actually jumped.
+This uses [`has_collision`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py#L17) to check for ground contact and obstacles, [`is_key_pressed`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py#L13) to detect input, and [`assert_jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L67) to validate that Mario's y-coordinate actually decreased (jumped).
 
 Notice how we check external, observable conditions: collision with ground below, no obstacles above, and key press.
 
