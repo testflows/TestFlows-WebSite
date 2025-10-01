@@ -10,7 +10,7 @@ icon: fas fa-glasses pt-5 pb-5
 
 The classic game [*Super Mario*](https://en.wikipedia.org/wiki/Super_Mario_Bros.) isn't just fun to play—it has also become a favorite system for testing and analysis. In a blog post, [Antithesis](https://antithesis.com/blog/sdtalk/) showed how their deterministic hypervisor can autonomously play *Super Mario* and explore its vast state space. This kind of exploration is powerful for surfacing unexpected states, but it leaves one question unanswered: does the game **behave correctly** in every one of those states?  
 
-In this multi-part series, we tackle that challenge. Our approach is to apply a **behavior model** that captures the game’s intended mechanics—movement, collision detection, enemy interactions—and use it as a framework for systematic testing. With this model, we can go beyond searching for the winning state: we can check that *Super Mario* behaves **as it should** in every explored state.<!-- more -->  
+In this multi-part series, we tackle that challenge. Our approach is to apply a **behavior model** that captures the game's intended mechanics—movement, physics, and collision detection—and use it as a framework for systematic testing. With this model, we can go beyond searching for the winning state: we can check that *Super Mario* behaves **as it should** in every explored state.<!-- more -->  
 
 A key advantage of this approach is that the model itself can be built incrementally, allowing it to be as simple or as comprehensive as needed. Once constructed, the model is **universal**—while its most advanced applications involve integration with autonomous state space exploration techniques, it can also be effectively used for manual and semi-automated test implementations.  
 
@@ -19,13 +19,13 @@ In this Part 1, we'll explore the game's architecture, build a comprehensive tes
 ## Setting up the Super Mario test project
 
 To write a behavior model, we need a reference implementation of the game. Fortunately, there is an open-source Python implementation of *Super Mario* available on GitHub: [PythonSuperMario](https://github.com/marblexu/PythonSuperMario). This project includes two playable levels. For our test project, we'll use a specific version of the repository, [f34087e4cc47f6cc70b46ced758b1070e64c4dc2](https://github.com/marblexu/PythonSuperMario/commit/f34087e4cc47f6cc70b46ced758b1070e64c4dc2), and create a modified fork of it
-that you can find in our [Examples/SuperMario](https://github.com/testflows/Examples/tree/main/SuperMario) repository.
+that you can find in our [Examples/SuperMario](https://github.com/testflows/Examples/tree/v1.0/SuperMario) repository.
 
 
 Clone the repository using the following command:
 
 ```bash
-git clone https://github.com/testflows/Examples.git && cd Examples/SuperMario
+git clone --branch v1.0 --single-branch https://github.com/testflows/Examples.git && cd Examples/SuperMario
 ```
 
 ### Environment setup
@@ -35,7 +35,7 @@ We’ll run and test the game in the following environment:
 - **Operating System:** Ubuntu 22.04.5 LTS
 - **Python Version:** 3.10.12
 
-Additionally, we'll use the following Python dependencies, which are defined in [requirements.txt](https://github.com/testflows/Examples/blob/main/SuperMario/requirements.txt):
+Additionally, we'll use the following Python dependencies, which are defined in [requirements.txt](https://github.com/testflows/Examples/blob/v1.0/SuperMario/requirements.txt):
 
 ```text
 testflows==2.4.19
@@ -56,7 +56,7 @@ At this point, the project folder should look like this:
 main.py  README.md  requirements.txt  resources  source  tests
 ```
 
-The `main.py` file serves as the entry point for the game. Before diving into testing, let's have fun and take a moment to **play the game manually** to get familiar with its mechanics.
+The [main.py](https://github.com/testflows/Examples/blob/v1.0/SuperMario/main.py) file serves as the entry point for the game. Before diving into testing, let's have fun and take a moment to **play the game manually** to get familiar with its mechanics.
 
 #### **Game Controls:**
 
@@ -86,7 +86,7 @@ more intuitive. As we develop the game's behavior model, we will need to add bas
 to the source code to simplify the testing process, and we need to know where to plug it in.
 Additionally, we need to make a clear distinction between what a game developer considers a state and what constitutes a state from a testing perspective.
 
-The game's execution starts in [source/main.py](https://github.com/testflows/Examples/blob/main/SuperMario/source/main.py), where the [main()](https://github.com/testflows/Examples/blob/main/SuperMario/source/main.py#L8) function initializes the game structure:
+The game's execution starts in [source/main.py](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/main.py), where the [main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/main.py#L8) function initializes the game structure:
 
 ```python
 def main():
@@ -102,13 +102,13 @@ def main():
 
 ### Game as a state machine
 
-The game is implemented as an explicit **state-driven system**, where different [states](https://github.com/testflows/Examples/tree/main/SuperMario/source/states) represent major phases of execution. These include:
+The game is implemented as an explicit **state-driven system**, where different [states](https://github.com/testflows/Examples/tree/v1.0/SuperMario/source/states) represent major phases of execution. These include:
 
-- **[MAIN_MENU](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9)** – The game's main menu.
-- **[LOAD_SCREEN](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/load_screen.py#L7)** – The load screen.
-- **[LEVEL](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L11)** – The active gameplay state where the player interacts with the game world.
-- **[GAME_OVER](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/load_screen.py#L39)** – The state when the player loses all lives.
-- **[TIME_OUT](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/load_screen.py#L50)** – The state when the level timer runs out (a type of load screen).
+- **[MAIN_MENU](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L9)** – The game's main menu.
+- **[LOAD_SCREEN](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/load_screen.py#L7)** – The load screen.
+- **[LEVEL](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/level.py#L11)** – The active gameplay state where the player interacts with the game world.
+- **[GAME_OVER](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/load_screen.py#L39)** – The state when the player loses all lives.
+- **[TIME_OUT](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/load_screen.py#L50)** – The state when the level timer runs out (a type of load screen).
 
 <div class="text-center">
 <img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
@@ -116,11 +116,11 @@ The game is implemented as an explicit **state-driven system**, where different 
 </div><br>
 
 
-Each of these is a subclass of the [State](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L15) class, that implements the state machine architecture. The transitions between states are managed using the [next](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L20) attribute, which determines the next game state.
+Each of these is a subclass of the [State](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15) class, that implements the state machine architecture. The transitions between states are managed using the [next](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L20) attribute, which determines the next game state.
 
 ### The actual game states
 
-However, these [state](https://github.com/testflows/Examples/tree/main/SuperMario/source/states) classes actually present clusters of **states**, where each cluster contains its own **actual states**. These **actual states** are defined by the specific values of the attributes of these [State](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L15) classes. You can think of them as shown in the following diagram. However, the transition edges between states are relative. In the real system, we don't really know which transitions are possible. Some of these states or state transitions might be a bug!
+However, these [state](https://github.com/testflows/Examples/tree/v1.0/SuperMario/source/states) classes actually present clusters of **states**, where each cluster contains its own **actual states**. These **actual states** are defined by the specific values of the attributes of these [State](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15) classes. You can think of them as shown in the following diagram. However, the transition edges between states are relative. In the real system, we don't really know which transitions are possible. Some of these states or state transitions might be a bug!
 
 <div class="text-center">
 <img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
@@ -137,13 +137,13 @@ Understanding this distinction is key to bridging the gap between the code and t
 
 Just exploring these states is not enough. Ideally, we want to assert that each state is actually valid, as well as transitions between the states. This is way more complex than just asserting, for example, that the game does not crash, and is the heart of the [test oracle problem](https://en.wikipedia.org/wiki/Test_oracle).
 
-Let's take a closer look at the two main game state classes, the [MAIN_MENU](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9) and the [LEVEL](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L11).
+Let's take a closer look at the two main game state classes, the [MAIN_MENU](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L9) and the [LEVEL](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/level.py#L11).
 
 #### The MAIN_MENU state class
 
-For example, the **[MAIN_MENU](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9)** state class defines many states, determined by values of its attributes, such as:
+For example, the **[MAIN_MENU](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L9)** state class defines many states, determined by values of its attributes, such as:
 
-- **`persist`** – Stores persistent game information that is [passed between states](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L62) during transitions. It contains:
+- **`persist`** – Stores persistent game information that is [passed between states](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L62) during transitions. It contains:
   - `COIN_TOTAL`, `SCORE`, `LIVES`, `TOP_SCORE`, `CURRENT_TIME`, `LEVEL_NUM`, `PLAYER_NAME`
 - **`game_info`** – Holds the current game's information (set equal to `persist`).
 - **`overhead_info`** – Manages the display of overhead game information, initialized as an instance of the `Info` class with `game_info` and `MAIN_MENU` as parameters.
@@ -152,14 +152,14 @@ For example, the **[MAIN_MENU](https://github.com/testflows/Examples/blob/main/S
 - **`player_list` and `player_index`** – Represent the selectable player characters in the main menu; initialized in the `setup_player()` method.
 - **`cursor`** – Manages the menu selection cursor; initialized in the `setup_cursor()` method.
 
-These attributes are primarily initialized in the [`startup()`](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L21) method, which is called when the [Menu](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9) class is [initialized](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L10).
+These attributes are primarily initialized in the [`startup()`](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L21) method, which is called when the [Menu](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L9) class is [initialized](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L10).
 
 #### The LEVEL state class
 
-As we see, the **[MAIN_MENU](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/main_menu.py#L9)** has a lot of attributes, but as expected the **[LEVEL](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L11)** state class which implements the actual
-gameplay is even more complex as can be judged by its [startup()](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L16) method that initializes this class and sets the initial values of its attributes that implement all possible game states.
+As we see, the **[MAIN_MENU](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/main_menu.py#L9)** has a lot of attributes, but as expected the **[LEVEL](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/level.py#L11)** state class which implements the actual
+gameplay is even more complex as can be judged by its [startup()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/level.py#L16) method that initializes this class and sets the initial values of its attributes that implement all possible game states.
 
-Here is a peek at the [startup()](https://github.com/testflows/Examples/blob/main/SuperMario/source/states/level.py#L16) method:
+Here is a peek at the [startup()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/level.py#L16) method:
 
 ```python
  def startup(self, current_time, persist):
@@ -221,9 +221,9 @@ is not explicitly defined using state-driven code.
 
 ### The game loop and state transitions
 
-The transition of game states is handled by the [Control](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L35) class, which among other things defines the frames per second (FPS) — the theoretical [frequency](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L78) at which the [game loop](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L74) executes.
+The transition of game states is handled by the [Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L35) class, which among other things defines the frames per second (FPS) — the theoretical [frequency](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L78) at which the [game loop](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L74) executes.
 
-The [game loop](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L74) itself is very simple.
+The [game loop](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L74) itself is very simple.
 
 ```python
     def main(self):
@@ -258,7 +258,7 @@ enter the first `LEVEL` state. It also makes sense to always cleanly
 stop the game using `pygame.quit()` call, so we'll define this action as
 a [Given with yield](https://testflows.com/handbook/#Given-With-yield) step that supports combining setup and clean up in one step.  
 
-Most of the code to implement this action will be similar to the game's [main()](https://github.com/marblexu/PythonSuperMario/blob/master/source/main.py#L8) function. We'll just add `yield`ing the game's object, clean up using `pygame.quit()` call and call to `wait_ready(game)` to enter playable state with the default Mario player selected. The stubs for the `start()` and `wait_ready()` actions will be the following: 
+Most of the code to implement this action will be similar to the game's [main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/main.py#L8) function. We'll just add `yield`ing the game's object, clean up using `pygame.quit()` call and call to `wait_ready(game)` to enter playable state with the default Mario player selected. The stubs for the `start()` and `wait_ready()` actions will be the following: 
 
 ```python
 @TestStep(When)
@@ -274,24 +274,24 @@ def start(self, ready=True):
 
 ### Controlling the game
 
-When we actually try implementing the above actions, we'll quickly come to a realization that the default game's **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L35)** will need to be modified to allow testing the game at frame by frame level. This is because we need the ability to do the following:
+When we actually try implementing the above actions, we'll quickly come to a realization that the default game's **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L35)** will need to be modified to allow testing the game at frame by frame level. This is because we need the ability to do the following:
 
 - Control and capture **frame-by-frame game states**, advancing and storing states for validation.
 - Manage **keypress events**, allowing programmatic as well as manual control of the player.
 - Detect **objects** visible on the screen as well as overlay custom graphics for easy debugging.
 
-We'll accomplish this using the custom **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68)** that will use the original class as the base, and create the new **[Vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13)** to handle graphical object detection and overlaying on the screen.
+We'll accomplish this using the custom **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101)** that will use the original class as the base, and create the new **[Vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L13)** to handle graphical object detection and overlaying on the screen.
 
-Here is shortened version of custom **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68)** class `__init__` method that adds extra attributes:
+Here is shortened version of custom **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101)** class `__init__` method that adds extra attributes:
 
 - **`fps`** ability to set custom frame rate
-- **`keys`** set to our custom **[Keys](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L26)** class to store and look up pressed keys
-- **`vision`** instance of the **[Vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13)** class to detect objects draw on the screen
+- **`keys`** set to our custom **[Keys](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L54)** class to store and look up pressed keys
+- **`vision`** instance of the **[Vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L13)** class to detect objects draw on the screen
 - **`behavior`** list of frame states, previous and current, that tests and **behavior model** can use
 - **`play`** handle to the generator function that allows to control game advancement at the frame level
 - **`manual`** flag to enable manual game play inside a test that we'll use to allow manual testing of the **behavior model**
 
-Here is the **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68)** class `__init__` method:
+Here is the **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101)** class `__init__` method:
 
 ```python
 # Custom game Control class
@@ -306,14 +306,14 @@ class Control(tools.Control):
         self.manual = False
 ```
 
-The other important part is the customized **[main()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L102)** method that is converted to be a generator to control the game loop and
-advance it step by step using the standard **[next](https://docs.python.org/3/library/functions.html#next)** function applied to the **[play](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L76)** attribute that stores game loop generator object.
+The other important part is the customized **[main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L135)** method that is converted to be a generator to control the game loop and
+advance it step by step using the standard **[next](https://docs.python.org/3/library/functions.html#next)** function applied to the **[play](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L109)** attribute that stores game loop generator object.
 Therefore, **`next(game.play)`** will allow us move the game to the next frame.
-It also calls the **[Vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13)** class instance's **[detect()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L188)** method to detect currently visible game objects. 
+It also calls the **[Vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L13)** class instance's **[detect()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L208)** method to detect currently visible game objects. 
 
-The customized **[main()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L102)** method also [appends](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L110) the new **[BehaviorState](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L54)** to the **[behavior](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L75)** list to store previous and current frame states forming current game history. 
+The customized **[main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L135)** method also [appends](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L144) the new **[BehaviorState](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L82)** to the **[behavior](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L108)** list to store previous and current frame states forming current game history. 
 
-Here is the updated **[main()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L102)** method that contains the updated game loop which now contains a `yield` statement:
+Here is the updated **[main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L135)** method that contains the updated game loop which now contains a `yield` statement:
 
 ```python
     def main(self):
@@ -332,7 +332,7 @@ Here is the updated **[main()](https://github.com/testflows/Examples/blob/main/S
         self.play = _main()
 ```
 
-The new **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68)** class allows us to implement the **[play()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L165)** action below where we can advance the game either by specifying time in seconds or the number of frames.
+The new **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101)** class allows us to implement the **[play()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L200)** action below where we can advance the game either by specifying time in seconds or the number of frames.
 
 ```python
 def play(game, seconds=1, frames=None, model=None):
@@ -346,15 +346,15 @@ def play(game, seconds=1, frames=None, model=None):
             model.expect(game.behavior)
 ```
 
-Note that the **[play()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L165)** action can take an optional **`model`** parameter which will allow us to pass a behavior model object,
+Note that the **[play()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L200)** action can take an optional **`model`** parameter which will allow us to pass a behavior model object,
 which will provide the **expect()** method that will take the current game behavior and perform assertions about
 the correctness of the current game state.
 
 ### Detecting game objects and drawing boxes around them
 
-The ability to detect game objects and their positions is critical to game testing. To make games interesting they have quite a variety of them and *Super Mario* is no exception. We've already seen that in the new **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68)** class we've added **[vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L74)** attribute set to an instance of the **[Vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13)** class. The **[Vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13)** class is exactly what implements object detection as well as the ability to draw on a screen that can be used in debugging our tests. 
+The ability to detect game objects and their positions is critical to game testing. To make games interesting they have quite a variety of them and *Super Mario* is no exception. We've already seen that in the new **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101)** class we've added **[vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L107)** attribute set to an instance of the **[Vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L13)** class. The **[Vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L13)** class is exactly what implements object detection as well as the ability to draw on a screen that can be used in debugging our tests. 
 
-Here is the **[__init__](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L29)** method of the class: 
+Here is the **[\_\_init\_\_](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L29)** method of the class: 
 
 ```python
 class Vision:
@@ -371,7 +371,7 @@ It only has three attributes:
 - **`boxes`** - stores the detected game objects. It is called *boxes* because the bounds of each object in the game are defined by a rectangular box or specifically **[pygame.Rect](https://www.pygame.org/docs/ref/rect.html)** object which defines the position of the object in the game.
 - **`viewport`** - stores an object that defines the chunk of the game level that can be currently seen on the screen
 
-The actual method that is responsible for object detection is called the **[detect()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L188)** which is defined as follows:
+The actual method that is responsible for object detection is called the **[detect()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L208)** which is defined as follows:
 
 ```python
    def detect(self):
@@ -382,17 +382,17 @@ The actual method that is responsible for object detection is called the **[dete
         return self
 ```
 
-It is very simple as the heavy lifting is done in the **[get_visible()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L52)** method
+It is very simple as the heavy lifting is done in the **[get_visible()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L52)** method
 which returns a list of visible elements in the current viewport. If any object
-was detected then the **[viewport](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L32)** attribute is set to the current viewport.
+was detected then the **[viewport](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L32)** attribute is set to the current viewport.
 
-In order to obtain the list of visible objects, the **[get_visible()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L52)** method
-introspects the **[self.game.state](https://github.com/testflows/Examples/blob/main/SuperMario/source/tools.py#L45)** and pulls out any attribute
+In order to obtain the list of visible objects, the **[get_visible()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L52)** method
+introspects the **[self.game.state](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L45)** and pulls out any attribute
 that is of **[pygame.sprite.Sprite](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Sprite)** or **[pygame.sprite.Group](https://www.pygame.org/docs/ref/sprite.html#pygame.sprite.Group)** type. Where in PyGame, the **sprite.Sprite** is used for visible game objects and **sprite.Group** is used for holding and managing a group of Sprite objects.
 
-The detected objects are saved in **[boxes](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L57)** attribute of the **[BehaviorState](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L54)** objects which are added to the **[game.behavior](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L75)** attribute, where the **`game`** is an instance of the **[Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68)** class,  which holds a list of them.
+The detected objects are saved in **[boxes](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L85)** attribute of the **[BehaviorState](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L82)** objects which are added to the **[game.behavior](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L108)** attribute, where the **`game`** is an instance of the **[Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101)** class,  which holds a list of them.
 
-All this machinery is used to implement the **[get_elements](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L176)** and **[get_element](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L181)** actions. 
+All this machinery is used to implement the **[get_elements](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L211)** and **[get_element](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L216)** actions. 
 
 ```python
 def get_elements(game, name, frame=-1):
@@ -406,8 +406,8 @@ def get_element(game, name, frame=-1):
     return get_elements(game, name, frame)[0]
 ```
 
-For easier visual debugging, the **[Vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L13)** class also provides the **[overlay()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/vision.py#L34)** method that can be used to draw boxes around elements. For example,
-we can draw a colored box around Mario to visually mark its detected position in the test. The **[overlay()](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L186)** action then just provides a convenient wrapper around calling this method.
+For easier visual debugging, the **[Vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L13)** class also provides the **[overlay()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/vision.py#L34)** method that can be used to draw boxes around elements. For example,
+we can draw a colored box around Mario to visually mark its detected position in the test. The **[overlay()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L221)** action then just provides a convenient wrapper around calling this method.
 
 ```python
 def overlay(game, elements, color=Vision.color["red"]):
@@ -421,7 +421,7 @@ def overlay(game, elements, color=Vision.color["red"]):
 The last set of actions are for controlling keypresses supported by the game.
 A single key press consists of posting `KEYDOWN` and `KEYUP` events.
 We also need the ability to keep the key down for some period of time and
-therefore the low-level **[simulate_keypress](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L126)** action is implemented as a context manager. 
+therefore the low-level **[simulate_keypress](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L161)** action is implemented as a context manager. 
 
 ```python
 @contextmanager
@@ -432,7 +432,7 @@ def simulate_keypress(key):
     pg.event.post(pg.event.Event(pg.KEYUP, key=key))
 ```
 
-Using the **[simulate_keypress](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L126)** low-level action we can implement all necessary player actions such as pressing:
+Using the **[simulate_keypress](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L161)** low-level action we can implement all necessary player actions such as pressing:
 
 - **Enter** key (activate selection like when selecting a player type)
 
@@ -500,7 +500,7 @@ Here is our simple plan for the test:
 3. **Check where Mario ended up** – Where is Mario standing now?
 4. **Verify the result** – If his **x-coordinate increased**, he did move right 🎉!
 
-Here is the **[move right](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right.py)** test that uses our test actions:
+Here is the **[move right](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right.py)** test that uses our test actions:
 
 ```python
 @TestScenario
@@ -542,7 +542,7 @@ The video will be saved in the `move_right.gif` file inside your current working
 Similarly, we can easily implement a test to check if Mario moves **left** when
 we press the left key. 
 
-As expected, the **[move left](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left.py)** test is similar to the **[move right](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right.py)** test as shown below.
+As expected, the **[move left](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_left.py)** test is similar to the **[move right](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right.py)** test as shown below.
 
 ```python
 @TestScenario
@@ -586,7 +586,7 @@ Try it out and watch the `move_left.gif` video when you run the **move left** te
 Compare this to when you run **move right** and **move left** tests together, where the **move right** test will be executed first:
 
 ```bash
-./tests/run.py --save-video --only "/super mario/classic/move right/*" "/super mario/no model/move left/*"
+./tests/run.py --save-video --only "/super mario/classic/move right/*" "/super mario/classic/move left/*"
 ```
 
 > We will not address this issue here, but note that in general, the same actions will not result in the same end states if the initial state is different.
@@ -600,7 +600,7 @@ However, autonomous testing that uses a behavior model can cover orders of magni
 
 ### Jumping test
 
-By now you get the idea of how classical tests can be written. But for fun, I can't resist, so let's quickly look at the **[jump](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_jump.py)** test. We'd love to see Mario jump!
+By now you get the idea of how classical tests can be written. But for fun, I can't resist, so let's quickly look at the **[jump](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_jump.py)** test. We'd love to see Mario jump!
 
 Here is the test when we press the jump key for `1` second and then assert
 that the end **y-coordinate** is smaller that the start **y-coordinate**.
@@ -658,7 +658,7 @@ Here is what we have now:
 </div><br>
 
 Our simple assertion will now pass with confidence! However, checking the complexity of
-the full jumping move is non-trivial. Actually, if we think about the **move right** and **move left** tests they also did not account for initial position and velocity as well as any obstacles we could have run into or even being killed by the enemy!
+the full jumping move is non-trivial. Actually, if we think about the **move right** and **move left** tests they also did not account for initial position and velocity as well as any obstacles we could have run into or complex physics interactions!
 
 Try it out and watch the `move_jump.gif` video to see a different behavior when you run the **jump** test by itself:
 
