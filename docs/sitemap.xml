@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/</loc>
+    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/</loc>
     
     <lastmod>2025-10-03</lastmod>
     
@@ -11,9 +11,9 @@
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/</loc>
+    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/</loc>
     
-    <lastmod>2025-10-01</lastmod>
+    <lastmod>2025-10-03</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

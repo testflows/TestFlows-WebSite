@@ -8,7 +8,7 @@ image: images/testing-super-mario-using-a-behavior-model-part1.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-The classic game [*Super Mario*](https://en.wikipedia.org/wiki/Super_Mario_Bros.) isn't just fun to play—it has also become a favorite system for testing and analysis. In a blog post, [Antithesis](https://antithesis.com/blog/sdtalk/) showed how their deterministic hypervisor can autonomously play *Super Mario* and explore its vast state space. This kind of exploration is powerful for surfacing unexpected states, but it leaves one question unanswered: does the game **behave correctly** in every one of those states?  
+The classic game [*Super Mario*](https://en.wikipedia.org/wiki/Super_Mario_Bros) isn't just fun to play—it has also become a favorite system for testing and analysis. In a blog post, [Antithesis](https://antithesis.com/blog/sdtalk/) showed how their system that includes a deterministic hypervisor can autonomously play *Super Mario* and explore its vast state space. This kind of exploration is powerful for surfacing unexpected states, but it leaves one question unanswered: does the game **behave correctly** in every one of those states?  
 
 In this multi-part series, we tackle that challenge. Our approach is to apply a **behavior model** that captures the game's intended mechanics—movement, physics, and collision detection—and use it as a framework for systematic testing. With this model, we can go beyond searching for the winning state: we can check that *Super Mario* behaves **as it should** in every explored state.<!-- more -->  
 
