@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1758147255957" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1759530306965" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1758147255957" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1759530306965" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -87,7 +87,7 @@
                     </a>
                 </div>
                 <p>The classic game <a target="_blank" rel="noopener external nofollow noreferrer" href="https://en.wikipedia.org/wiki/Super_Mario_Bros."><em>Super Mario</em></a> isn’t just fun to play—it has also become a favorite system for testing and analysis. In a blog post, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis</a> showed how their deterministic hypervisor can autonomously play <em>Super Mario</em> and explore its vast state space. This kind of exploration is powerful for surfacing unexpected states, but it leaves one question unanswered: does the game <strong>behave correctly</strong> in every one of those states?  </p>
-<p>In this multi-part series, we tackle that challenge. Our approach is to apply a <strong>behavior model</strong> that captures the game’s intended mechanics—movement, collision detection, enemy interactions—and use it as a framework for systematic testing. With this model, we can go beyond searching for the winning state: we can check that <em>Super Mario</em> behaves <strong>as it should</strong> in every explored state.<i class="post-summary-more">...</i>
+<p>In this multi-part series, we tackle that challenge. Our approach is to apply a <strong>behavior model</strong> that captures the game’s intended mechanics—movement, physics, and collision detection—and use it as a framework for systematic testing. With this model, we can go beyond searching for the winning state: we can check that <em>Super Mario</em> behaves <strong>as it should</strong> in every explored state.<i class="post-summary-more">...</i>
             </div>
             <div class="post-image col-lg-6 m-auto d-none d-sm-block">
                 <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/>
@@ -110,6 +110,51 @@
                             <i class="fab fa-2x fa-facebook"></i>
                         </a>
                         <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/">
+                            <i class="fab fa-2x fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="blog post">
+        <div class="post-header row">
+            <div class="post-summary col-lg-6 mt-auto mb-auto pb-4">
+                <div class="text-center">
+                    <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/>
+                        <h1 style="font-weight: bold;">Testing Super Mario Using a Behavior Model (Part 2)</h1>
+                    </a>
+                    <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/ class="d-block d-sm-none pb-4">
+                        <img src="/images/testing-super-mario-using-a-behavior-model-part2.png" style="width: 100%;"></img>
+                        <span class="post-image-credit"></span>
+                    </a>
+                </div>
+                <p>When testing complex stateful systems like <a target="_blank" rel="noopener external nofollow noreferrer" href="https://en.wikipedia.org/wiki/Super_Mario_Bros"><em>Super Mario</em></a>, behavior models can be your secret weapon. Think of them as property-based testing on steroids. The game world is vast, with countless combinations of player positions, velocities, physics states, and environmental conditions. This complexity makes it impractical to write classical test cases that cover any significant portion of the state space. At best, such tests can only form a sanity suite.</p>
+<p>Imagine Mario sprinting through a level, collecting coins, and leaping over pits. Each action he takes depends on a myriad of factors: his speed, the timing of his jumps, his momentum and inertia, and even the layout of the level itself. Writing individual test cases for each scenario—like we showed in <a href="/blog/testing-super-mario-using-a-behavior-model-part1/">Part 1</a>—would be like trying to count every grain of sand on a beach.</p>
+<p>This is where behavior models shine. They decouple assertions about expected behavior from the test actions themselves, allowing us to focus on what the game should do rather than how to test it. The key idea is that these models are executable specifications—behavior‑as‑code—that can be plugged into any driver. This decoupling opens the door to applying various state space exploration techniques—whether through manual testing, automated scripts, or fully autonomous systems. The model becomes your universal correctness oracle, validating behavior across any path through Mario’s world.<i class="post-summary-more">...</i>
+            </div>
+            <div class="post-image col-lg-6 m-auto d-none d-sm-block">
+                <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/>
+                    <img src="/images/testing-super-mario-using-a-behavior-model-part2.png"></img>
+                    <span class="post-image-credit"></span>
+                </a>
+            </div>
+            <div class="post-metadata row m-auto">
+                <div class="col-md-12">
+                    <div class="post-author">
+                        <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                        <span class="authored-date text-nowrap">September 17, 2025</span>
+                    </div>
+                    <div class="post-share btn-group" role="group" aria-label="share">
+                        <span class="caption">Share It</span>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/">
+                            <i class="fab fa-2x fa-twitter"></i>
+                        </a>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/">
+                            <i class="fab fa-2x fa-facebook"></i>
+                        </a>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/">
                             <i class="fab fa-2x fa-linkedin"></i>
                         </a>
                     </div>
