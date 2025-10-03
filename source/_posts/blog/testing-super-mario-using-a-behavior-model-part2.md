@@ -19,11 +19,11 @@ Because behavior models are composable, we can build them incrementally—start 
 So how do we actually build one? In this Part 2, we'll dive deep into the theory that makes behavior models so powerful, then build one step-by-step for our *Super Mario* implementation. Building on the testing framework we created in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/), we'll show how to start constructing a game model using properties. While behavior models support defining both transition relations and properties, transition relations for complex systems like games would not be trivial to implement. Instead, we'll show how to implement causal properties (why Mario moved), safety properties (what should never happen), and liveness properties (what should eventually happen) for basic movement and jumping. This won't be a complete model of *Super Mario*—that would require covering power-ups, enemies, scoring, and much more—but it will demonstrate the incremental, composable approach to building behavior models. Because behavior models are executable specifications, or behavior-as-code as we call it, you'll see how the same model can be used for automated and manual testing.
 
 
-## The behavior model theory
+## The theory behind behavior models
 
-Before we start writing and using a **behavior model** to verify the correctness of **Super Mario** under test, we need to understand the underlying theory behind it.
+Before we start writing and using a behavior model to verify the correctness of *Super Mario* under test, we need to understand the underlying theory behind it.
 
-At its core, a **behavior model** is a practical method of describing how a system should **behave** using a programming language.
+At its core, a behavior model is a practical method of describing how a system should **behave** using a programming language.
 
 The **behavior** consists of the following fundamental parts:
 
@@ -65,7 +65,7 @@ def is_grounded(state):
 
 This means a transition from a state {% katex %}s{% endkatex %} to the next state {% katex %}s'{% endkatex %} is valid if any of its defining predicate functions {% katex %}\varphi_i(s, s'){% endkatex %} returns true. Note this formalism allows to describe any system and the logical **OR** in this formal definition is what makes any description of the system's behavior composable. 
 
-Note that systems described as a predicate-based transition relation is the foundation of tools like [TLA+](https://lamport.azurewebsites.net/tla/tla.html).
+ > Note that systems described as a predicate-based transition relation is the foundation of tools like [TLA+](https://lamport.azurewebsites.net/tla/tla.html).
 
 ### Properties
 
@@ -90,7 +90,7 @@ In addition to the above, properties also fall into one of the following categor
 * **Liveness Properties**: Something good eventually happens.
 * **Fairness Properties**: If something is possible to do infinitely often, it must eventually be done.
 
-In practice, technically, most properties will fall into **safety**. Why? Because **liveness** and 
+Technically, most properties fall into **safety**. Why? Because **liveness** and 
 **fairness** properties are unbounded and as soon as you bound them they fall into the 
 **safety** category. For example, "After pressing the right key, if the path is clear, 
 Mario should eventually start moving to the right" is a liveness property—there's no 
@@ -104,12 +104,12 @@ it becomes a safety property because we're now saying "it should never take more
 A special type of **safety** property is **causal properties**, and they deserve special attention because they offer a uniquely powerful and practical approach to validation. Causal properties flip the logic of traditional assertions by reasoning backwards from effects to causes.
 
 **Traditional forward logic:**
-> "If the right key is pressed, then Mario should move right."
+  * "If the right key is pressed, then Mario should move right."
 
 This forward approach requires you to predict and implement exactly what should happen—you must define how Mario accelerates, how inertia works, how collisions affect movement, and so on. This essentially requires reimplementing the game's logic in your model.
 
 **Causal reverse logic:**
-> "If Mario moved right, then there must have been a valid cause (right key pressed OR rightward velocity from inertia)."
+  * "If Mario moved right, then there must have been a valid cause (right key pressed OR rightward velocity from inertia)."
 
 This causal approach only validates what actually happened. You observe Mario moved right, then check: was there a reason for this? This is fundamentally easier because:
 
@@ -128,7 +128,7 @@ Consider a simple example: testing an **add(a, b)** function.
 
 We might write a property:
 
-> "The result of adding two positive numbers must be greater than or equal to each input."
+  * "The result of adding two positive numbers must be greater than or equal to each input."
 
 ```python
 def add(a, b):
@@ -155,7 +155,7 @@ This property passes for the clearly incorrect *max()* implementation! The prope
 
 This is why in general we need both parts: the transition relation {%katex%}R{%endkatex%} that describes the behavior, and properties that hold true for this behavior.
 
-## Composability and scalability
+## Composability and scalability of the behavior model
 
 No matter if our behavior model implements a partial or full transition relation, or contains just properties or a mix of both, composability is what makes it practical and scalable. This is because both transition relations and properties are composable, which enables **incremental construction**. This means you can start with a single validation rule and grow the model piece by piece, without needing a complete specification upfront.
 
@@ -169,13 +169,13 @@ No matter if our behavior model implements a partial or full transition relation
 
 This flexibility is what makes behavior models both powerful and practical for complex systems.
 
-## The behavior model
+## Starting to build the behavior model
 
 With the theory out of the way, now we're ready to start writing the *Super Mario* behavior model. Given the composability and scalability properties discussed above, getting started is straightforward. 
 
-We'll start by defining a **`Game`** class that takes a **`game`** object (an instance of the [Control](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L68) class) and stores it as an attribute for quick access. For example, we'll need to access the [vision](https://github.com/testflows/Examples/blob/main/SuperMario/tests/actions/game.py#L74) system to get a list of visible objects.
+We'll start by defining a [**Game**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L8) class that takes a [**`game`**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L11) object (an instance of the [Control](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L101) class) and stores it as an attribute for quick access. For example, we'll need to access the [vision](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/actions/game.py#L107) system to get a list of visible objects.
 
-The game model implements an **`expect`** method that takes the current **`behavior`** of the game—the history of all game states up to and including the current state—and uses this history to assert whether the current state meets the model's expectations.
+The game model implements an [**expect**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L16) method that takes the current **`behavior`** of the game—the history of all game states up to and including the current state—and uses this history to assert whether the current state meets the model's expectations.
 
 ```python
 class Game(Model):
@@ -201,96 +201,69 @@ For many simple assertions, having access to just the *before* and *right_before
 
 > Given that the game is executed frame by frame, each state represents the state of the game at a particular frame.
 
-This structure provides the foundation to implement both the **transition relation** {% katex %}R{% endkatex %} (defining valid states and state transitions) and **properties** that must hold across states. The `expect` method will contain our behavioral assertions, and we can add new predicates incrementally as our model grows in sophistication.
+This structure provides the foundation to implement both the **transition relation** {% katex %}R{% endkatex %} (defining valid states and state transitions) and **properties** that must hold across states. The [**expect**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L16) method will contain our behavioral assertions, and we can add new predicates and properties incrementally as our model grows in sophistication. Again, for the purpose of this article we will only focus on properties to keep things simple.
 
-### Object-oriented modeling approach
+## Model code structure
 
-We use object-oriented programming because it provides a natural way to model stateful systems like games. OOP excels at representing entities with state and behavior, making it ideal for behavior models.
+For the model, we use an object-oriented code structure that combines **inheritance** and **composition** to create a modular, scalable design. 
 
-> However, OOP is not absolutely necessary—you can choose the programming style that best matches your needs.
+**Inheritance** provides shared functionality: each game object model inherits from a base [Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/base.py#L6) class that implements common operations like collision detection, position tracking, and key state queries.
 
-Our approach combines **inheritance** and **composition**:
+**Composition** creates the model hierarchy: for example, the [Game](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L8) model [composes](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L13) both [Level](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/level.py#L8) and [Mario](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/model.py#L12) models, while Mario further [composes](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/model.py#L18) a [Movement](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L432) model. This provides natural separation of concerns where each game entity has its own specialized model.
 
-**Inheritance** allows us to define a base [Model](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py) class that provides common functionality for all models:
+Given that our model will focus on Mario's movement, the model hierarchy consists of:
 
-```python
-class Model:
-    """Base model class."""
-    
-    def __init__(self, game):
-        self.game = game
-    
-    def get(self, name, state):
-        """Find element in the specified state."""
-        elements = state.boxes.get(name, [])
-        element = elements[0] if elements else None
-        return element
-    
-    # ... other common methods
-```
+1. **[Base Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/base.py#L6)** - Provides common functionality like collision detection, position tracking, and key state queries
+2. **[Game Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L8)** - Top-level coordinator that composes Level and Mario models
+3. **[Level Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/level.py#L8)** - Handles level-specific properties like boundaries
+4. **[Mario Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/model.py#L12)** - Delegates to specialized movement model
+5. **[Movement Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L432)** - Implements Mario's movement behavior
 
-**Composition** allows us to create specialized models for each game entity. We'll create a specialized [Mario](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py) model:
-
-```python
-class Mario(Model):
-    """Mario's behavior model."""
-
-    def __init__(self, game):
-        super().__init__(game)
-
-
-    def expect(self, behavior):
-        """Expect Mario to behave correctly."""
-        pass
-```
-
-We start with a simple Mario model that inherits from the base Model class. The `expect` method is where we'll build up our movement rules incrementally in the following sections.
-
-Now we can use composition to integrate this Mario model into our main [Game](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/game.py) model:
+Here's the [**Game**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L8) model that serves as the entry point:
 
 ```python
 class Game(Model):
     """Game model."""
-    
+
     def __init__(self, game):
-        super().__init__(game)  # Call base class constructor
-        self.mario = Mario(game=game)  # Composition: Game contains Mario model
-    
+        super().__init__(game)
+        self.level = Level(game=game)
+        self.mario = Mario(game=game, level=self.level)
+
     def expect(self, behavior):
         """Expect the game to behave correctly."""
-        self.mario.expect(behavior)    # Delegate to specialized model
+        self.mario.expect(behavior)
 ```
 
-This design provides several key advantages:
-- **Modularity**: Each entity (Mario, level boundaries, objects) has its own specialized model
+The Game model creates a Level model and passes it to the Mario model, establishing the dependency relationship. When [**expect**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L16) is called with the behavior history, it [delegates](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/game.py#L19) to Mario's expect method.
+
+The [**Mario**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/model.py#L12) model further [delegates](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/model.py#L22) to a Movement model:
+
+```python
+class Mario(Model):
+    """Mario's behavior model using modular architecture."""
+
+    def __init__(self, game, level):
+        super().__init__(game)
+        self.level = level
+        self.movement = Movement(game=game, level=level)
+
+    def expect(self, behavior):
+        """Expect Mario to behave correctly."""
+        self.movement.expect(behavior)
+```
+
+This layered composition provides several advantages:
+- **Modularity**: Each aspect (game coordination, level boundaries, character movement) has its own focused model
 - **Reusability**: Common functionality is shared through the base Model class
-- **Scalability**: We can add new entity models without modifying existing ones
-- **Natural mapping**: Object models directly correspond to game entities
+- **Scalability**: New models can be added without modifying existing ones
+- **Testability**: Each model can be tested independently or as part of the whole
 
-## Modeling movement
+## First attempt to model movement
 
-Now let's build our first behavior model by implementing Mario's movement mechanics in the [Mario](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py) model class. We'll start simple and incrementally add complexity, demonstrating the composable nature of behavior models.
+Now let's build our first behavior model by implementing Mario's movement mechanics in the [Mario](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/model.py#L12) model class.
 
-### Understanding the complexity
-
-*Super Mario* has surprisingly sophisticated movement physics. Mario doesn't just instantly start or stop moving—there's acceleration, deceleration, and inertia. When you press the right key, Mario gradually builds up speed. When you release it, he doesn't stop immediately but slides to a halt due to friction. Change directions mid-run, and Mario's inertia carries him forward briefly before he can reverse course.
-
-We could model these physics in precise detail, tracking acceleration curves, friction coefficients, and inertia vectors. However, this would require us to reverse-engineer the game's internal physics engine—essentially contaminating our model by looking at the system's internal state.
-
-> A fundamental rule of behavior modeling: we observe only external, visible behavior, never internal implementation.
-
-Instead, we'll model the *general properties* of movement that any observer would notice:
-- Mario moves when movement keys are pressed
-- He doesn't move instantly—there's a brief startup delay
-- He continues moving briefly after keys are released (inertia)
-- He has a maximum movement speed
-- Direction changes involve inertia from the previous direction
-
-This approach gives us a robust model that captures the essential movement behavior without being brittle to internal physics changes.
-
-### Modeling process
-
-Let's start with the simplest possible movement expectation for our [`expect_move`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L213) method:
+At first glance, modeling movement seems straightforward: if the right key is pressed, Mario's x-position should increase; if the left key is pressed, it should decrease. Let's start with the most naive approach and attempt to implement an `expect_move` method:
 
 ```python
 def expect_move(self, behavior, direction):
@@ -309,126 +282,260 @@ def expect_move(self, behavior, direction):
             assert pos_now < pos_before, "Mario should move left when left key is pressed"
 ```
 
-This basic model is too simplistic and would fail in many real scenarios. It doesn't account for startup delays, inertia, or cases where keys aren't pressed. Let's add the first layer of complexity—handling the case when keys aren't pressed:
+The `expect_move` model is simple and at first intuitive, but if we plug it into our tests then it immediately fails.
+Why? The game's physics engine introduces numerous complexities that our naive model doesn't account for:
+
+- **Startup delay**: When Mario starts from a standing position, there's a brief delay before movement begins
+- **Inertia**: Mario continues moving briefly after keys are released
+- **Acceleration**: Mario doesn't instantly reach full speed
+- **Deceleration**: Mario doesn't stop immediately when keys are released
+- **Turn-around physics**: Changing direction involves fighting the inertia from the previous direction
+- **Obstacles**: Mario can't move through walls, blocks, bricks, pipes, or enemies
+
+To handle even just a few of these complexities—startup delay, turn-around physics, and obstacles—we'd need to extend our model significantly:
 
 ```python
 def expect_move(self, behavior, direction):
     """Expect Mario to move when movement keys are pressed."""
-    if len(behavior) < 3:  # Need more history for complex behavior
+
+    # Check if Mario was standing still
+    if self.was_standing_still(behavior):
+        # Allow for startup delay - don't assert movement yet
+        if not self.enough_time_elapsed_for_startup(behavior):
+            return
+    
+    # Check if Mario is turning around
+    if self.is_turning_around(behavior, direction):
+        # Need to account for deceleration then acceleration
+        if not self.has_completed_turnaround(behavior, direction):
+            return
+    
+    # Check for obstacles
+    if self.obstacle_in_direction(behavior, direction):
+        # Don't expect movement
         return
     
-    now, before, right_before = behavior[-1], behavior[-2], behavior[-3]
-    
-    if not self.is_key_pressed(before, direction):
-        # Key not pressed - Mario should either stand still or continue due to inertia
-        if self.is_moving(before, right_before, direction=direction):
-            # Mario was moving - expect inertia behavior
-            self.assert_inertia_movement(behavior, direction=direction)
+    # Finally, check if key is pressed and assert movement
+    if self.is_key_pressed(behavior, direction):
+        # But wait, also need to check inertia, acceleration curves...
+        # This is not simple after all!
+```
+
+The conditional logic adds rapidly increasing complexity. Each physics aspect requires checking multiple frames of history, tracking state transitions, and writing increasingly complex nested conditions. We'd need separate helpers for detecting standing states, measuring elapsed time, identifying direction changes, checking for obstacles, validating acceleration, and handling inertia decay. That's hard to maintain, difficult to understand, and brittle to changes in game physics.
+
+## Modeling movement with properties
+
+There's a more practical approach: instead of trying to fully implement all the complex transition relations and state tracking, we can express movement expectations as **properties**. When faced with complex transition relations, properties provide a pragmatic workaround—we avoid modeling intricate physics states by simply verifying key relationships hold.
+
+It's not a complete model of the physics engine, but it's practical. Instead of tracking exact acceleration curves, inertia decay rates, and turn-around physics states, we express high-level properties: effects have valid causes, invariants are never violated, and expected behaviors eventually occur. This gives us useful validation without reverse-engineering the entire physics system.
+
+Our [**movement model**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py) organizes properties into three categories: [**causal**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L220), [**safety**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L389), and [**liveness**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L340).
+
+### Causal properties
+
+Causal properties verify that observed effects have valid causes. Instead of predicting "if X then Y," we observe what happened and check "if Y occurred, then X must have been true."
+```python
+class CausalProperties(Propositions):
+    """Causal properties for Mario's movement."""
+
+    def check_right_movement(self, behavior):
+        """Check if Mario's right movement had a valid cause."""
+        actual_movement = behavior.actual_movement
+        velocity = behavior.velocity
+        right_pressed = self.right_pressed(behavior.keys)
+
+        if self.moved_right(actual_movement):
+            self.model.assert_with_success(
+                self.has_right_movement_cause(velocity, right_pressed),
+                f"moved right because {f'velocity is {velocity}' if velocity > 0 else 'right key is pressed'}",
+            )
+```
+
+The [**check right movement**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L223) causal property says: "if Mario moved right, there must be a cause—either he had rightward velocity (inertia) or the right key was pressed." We don't need to model when movement starts, how fast acceleration happens, or the exact inertia decay curve. We just verify the cause-effect relationship. Similarly, [**check left movement**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L236) verifies leftward movement has a valid cause.
+
+In addition to checking only right and left movement, we can also add a [**check stayed in place**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L249) property to check that Mario is just staying in place also has a valid cause:
+
+```python
+def check_stayed_in_place(self, behavior):
+    """Check if Mario staying in place had a valid cause."""
+    if self.stayed_in_place(actual_movement):
+        self.model.assert_with_success(
+            (
+                # no left or right key pressed
+                self.no_keys(right_pressed, left_pressed)
+                # deaccelearted to full stop
+                or self.tiny_velocity(velocity)
+                # both keys pressed and deaccelarated to full stop
+                or self.both_keys_tiny_velocity(
+                    velocity, right_pressed, left_pressed
+                )
+                # had left velocity but ran into left obsticle
+                or (
+                    self.velocity_left(velocity)
+                    and self.left_touching(mario_now, now, mario_before, before)
+                )
+                # had right velocity but ran into right obsticle
+                or (
+                    self.velocity_right(velocity)
+                    and self.right_touching(mario_now, now, mario_before, before)
+                )
+                # had left velocity but ran into left game boundary
+                or (
+                    self.velocity_left(velocity)
+                    and self.at_left_boundary(mario_now)
+                )
+                # had right velocity but ran into right game boundary
+                or (
+                    self.velocity_right(velocity)
+                    and self.at_right_boundary(mario_now)
+                )
+            ),
+            "stayed in place",
+        )
+```
+
+If Mario didn't move, there must be a reason: no keys were pressed, velocity was too small to register movement, he hit an obstacle, or he reached a boundary.
+
+Causal properties handle the physics complexity practically. For example, for a jump we can assert that upward movement had a valid cause using the [**check jump**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L322) property instead of precisely modeling the complex jump arc:
+
+```python
+def check_jump(self, behavior):
+    """Check if Mario's upward movement (jump) has a valid cause."""
+    if self.moved_up(behavior.actual_vertical_movement):
+        self.model.assert_with_success(
+            (
+                # jump key pressed while on ground
+                (jump_pressed and self.on_the_ground(mario_before, before))
+                # bounced off enemy
+                or self.stomped_enemy(mario_before, before)
+                # had upward velocity from previous jump
+                or self.velocity_up(vertical_velocity)
+            ),
+            "jumped because jump was pressed on ground or bounced off enemy or had upward velocity",
+        )
+```
+
+### Safety properties
+
+Safety properties verify that certain invariants are never violated—things that should never happen regardless of input or timing.
+
+The [**check does not exceed max velocity**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L408) property ensures Mario never moves faster than physically possible. Because walking and running have different max speeds, we take that into account:
+
+```python
+class SafetyProperties(Propositions):
+    """Safety properties for Mario's movement."""
+
+    def check_does_not_exceed_max_velocity(self, behavior):
+        """Check if Mario does not exceed the maximum speed."""
+        if self.running_pressed_recently(behavior):
+            self.model.assert_with_success(
+                not self.exceeds_max_run_velocity(behavior.velocity_now),
+                f"Mario's velocity {behavior.velocity_now} is within run maximum",
+            )
         else:
-            # Mario wasn't moving - he should remain stationary
-            self.assert_no_unintended_movement(now, before, direction=direction)
-        return
-    
-    # Key is pressed - expect movement
-    self.assert_movement(now, before, direction=direction)
+            self.model.assert_with_success(
+                not self.exceeds_max_walk_velocity(behavior.velocity_now),
+                f"Mario's velocity {behavior.velocity_now} is within walk maximum",
+            )
 ```
 
-Now we're handling both key-pressed and key-not-pressed cases. We use helper methods like [`assert_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L76) to check that Mario actually moved, [`assert_inertia_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L161) to validate inertia behavior, and [`assert_no_unintended_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L54) to ensure Mario doesn't move when he shouldn't.
-
-But there's still more complexity: what happens when Mario starts moving from a standing position? In the real game, there's a brief delay before movement begins. Let's add this final layer of complexity:
+Similarly, the [**check does not move past left boundary**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L392) and [**check does not move past right boundary**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L400) properties ensure Mario stays within the level boundaries:
 
 ```python
-def expect_move(self, behavior, direction):
-    """Expect Mario to move when movement keys are pressed."""
-    if len(behavior) < 3:
-        return
-    
-    now, before, right_before = behavior[-1], behavior[-2], behavior[-3]
-    
-    if not self.is_key_pressed(before, direction):
-        # Key not pressed - Mario should either stand still or continue due to inertia
-        if self.is_moving(before, right_before, direction=direction):
-            # Mario was moving - expect inertia behavior
-            self.assert_inertia_movement(behavior, direction=direction)
-        else:
-            # Mario wasn't moving - he should remain stationary
-            self.assert_no_unintended_movement(now, before, direction=direction)
-        return
-    
-    # Key is pressed - but movement depends on Mario's previous state
-    if self.is_moving(before, right_before, direction=direction):
-        # Already moving - should continue
-        self.assert_movement(now, before, direction=direction)
+def check_does_not_move_past_left_boundary(self, behavior):
+    """Check if Mario does not move past the boundary."""
+    self.model.assert_with_success(
+        not self.past_left_boundary(behavior.mario_now),
+        f"Mario is within left boundary x={behavior.mario_now.box.x}, boundary={self.model.level.start_x}",
+    )
 
-    elif self.is_standing(before, right_before):
-        # Was standing - allow startup delay
-        if not self.has_started_moving_after_standing(behavior, direction=direction):
-            return  # Still in startup delay
-        self.assert_movement(now, before, direction=direction)
-    
-    else:
-        # Handle direction changes and other edge cases
-        self.assert_movement(now, before, direction=direction)
+def check_does_not_move_past_right_boundary(self, behavior):
+    """Check if Mario does not move past the boundary."""
+
+    self.model.assert_with_success(
+        not self.past_right_boundary(behavior.mario_now),
+        f"Mario is within right boundary x={behavior.mario_now.box.x}, boundary={self.model.level.end_x - behavior.mario_now.box.w}",
+    )
 ```
 
-This version introduces [`has_started_moving_after_standing`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L107), which checks if Mario has waited long enough to start moving from a stationary position, accounting for the natural startup delay in movement.
+Together, these safety properties catch physics bugs and violations: if Mario suddenly moves faster than possible, clips through level boundaries, or breaks other physical constraints, the model immediately detects and reports the issue.
 
-This incremental approach demonstrates how behavior models grow organically. We started with a simple rule, then added inertia handling, and finally incorporated startup delays. Each addition handles a new aspect of the observed behavior, building up a comprehensive model piece by piece.
+### Liveness properties
 
-### Modeling jump behavior
-
-Jump behavior follows the same incremental pattern. Let's start simple:
+In addition to causal and safety properties, we can also implement a liveness property that verifies expected behaviors eventually occur. For example, we can implement the [**check starts moving**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L343) property to verify that if the left or right key is pressed long enough, Mario eventually starts to move:
 
 ```python
-def expect_jump(self, behavior):
-    """Expect Mario to jump when jump key is pressed."""
-    if len(behavior) < 2:
-        return
-    
-    now, before = behavior[-1], behavior[-2]
-    
-    if self.is_key_pressed(now, "a"):  # 'a' is the jump key
-        pos_now, pos_before = self.get_positions(now, before, axis="y")
-        assert pos_now < pos_before, "Mario should jump when jump key is pressed"
+class LivenessProperties(Propositions):
+    """Liveness properties for Mario's movement."""
+
+    def check_starts_moving(self, behavior):
+        """Check if Mario eventually starts moving when keys are consistently pressed."""
+
+        history = list(reversed(behavior.history[-(self.max_stayed_still + 2) :]))
+        stayed_still = 0
+
+        # set current direction
+        direction = self.model.direction(
+            behavior.now, self.in_the_air(behavior.mario_now, behavior.now)
+        )
+
+        if direction is None:
+            # no keys pressed
+            return
+
+        for now, before in zip(history[:-1], history[1:]):
+            pos_before = self.model.get_position(before)
+            pos_now = self.model.get_position(now)
+            actual_movement = pos_now - pos_before
+
+            mario_now = self.model.get("player", now)
+            mario_before = self.model.get("player", before)
+
+            # Mario started moving
+            if self.moved(actual_movement):
+                break
+
+            # check if direction was changed
+            if self.model.direction(now, self.in_the_air(mario_now, now)) != direction:
+                break
+
+            # check if path was blocked
+            if not self.path_is_clear(mario_now, now, mario_before, before, direction):
+                break
+
+            stayed_still += 1
+
+        if stayed_still < 1:
+            return
+
+        self.model.assert_with_success(
+            not self.stayed_still_too_long(stayed_still),
+            f"Mario started moving after {stayed_still} frames",
+        )
 ```
 
-But jumping has constraints—Mario can only jump when he's on solid ground and has room above him:
+This liveness property is more complex than causal and safety properties as it needs to look back through recent history to count how long Mario stayed still despite holding a direction key with a clear path. If he stayed still too long (more than 45 frames), the property fails.
 
-```python
-def expect_jump(self, behavior):
-    """Expect Mario to jump when jump key is pressed."""
-    if len(behavior) < 2:
-        return
-    
-    solid_objects = ["box", "collider"]
-    now, before = behavior[-1], behavior[-2]
-    mario_before = self.get("player", before)
-    
-    # Check preconditions for jumping
-    if self.has_collision(mario_before, before, "bottom", objects=solid_objects):
-        if not self.has_collision(mario_before, before, "top", objects=solid_objects):
-            if self.is_key_pressed(now, "a"):
-                # Mario can jump - assert that he does
-                self.assert_jump(now, before)
-```
+Liveness properties handle the "eventually" part of behavior that causal and safety properties don't cover. Causal properties say "if Mario moved, there was a cause." Safety properties say "Mario never violates constraints." Liveness properties say "if there's a cause and no obstacles, Mario should eventually move." 
 
-This uses [`has_collision`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py#L17) to check for ground contact and obstacles, [`is_key_pressed`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/base.py#L13) to detect input, and [`assert_jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L67) to validate that Mario's y-coordinate actually decreased (jumped).
+Note that this is bounded liveness—we don't wait forever, but check that the expected behavior occurs within a reasonable time window (45 frames in this case).
 
-Notice how we check external, observable conditions: collision with ground below, no obstacles above, and key press.
+### Composing properties
 
-> We don't peek into Mario's internal state to see if he's "in jumping mode" or check internal physics variables.
+The [Movement model](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L432) composes all properties from these three property categories. Together, they provide comprehensive validation:
 
-### The power of incremental modeling
+- If Mario moved, there was a reason (causal)
+- If Mario is moving, he's not violating limits (safety)
+- If Mario should move, he eventually does (liveness)
 
-This step-by-step approach gives us several advantages:
+This approach is practical because:
+- **No complex state machines**: We don't track "accelerating," "decelerating," "turning around" states
+- **No precise physics modeling**: We don't implement acceleration curves or friction coefficients  
+- **Observable behavior only**: We check what we can see, not internal implementation
+- **Tolerant of timing**: Properties naturally handle delays and gradual transitions
+- **Composable**: Each property is independent and can be added incrementally
 
-1. **Start simple, add complexity**: Each iteration handles more nuanced behavior
-2. **Testable at every step**: We can validate the model as we build it
-3. **Composable**: New rules don't break existing ones—they extend them
-4. **Observable behavior only**: We never depend on internal game state
-5. **Robust to changes**: General properties survive implementation changes
-
-The final [`expect_move`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L213) and [`expect_jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L261) methods in our [Mario model](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py) demonstrate this incremental construction, handling the complexity of movement while remaining focused on externally observable behavior.
+The tradeoff is incompleteness—we're not modeling every detail of the physics engine. But for testing purposes, this pragmatic workaround gives us strong validation without the complexity of a complete transition-relation model, which can be added later if needed. We catch physics bugs, responsiveness issues, and constraint violations without having to reverse-engineer Mario's exact physics implementation from the start.
 
 ## Moving right with a model
 
@@ -501,137 +608,324 @@ Let's run it:
 The model includes low-level debugging messages that will help us clearly understand what the model is expecting and what behavior we are observing:
 
 ```bash
-Sep 23,2025 17:57:47       ⟥  Scenario move right
+Oct 03,2025 15:05:23       ⟥  Scenario move right
                                 Check Mario can move right in the game.
-Sep 23,2025 17:57:47         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
-               291us         ⟥⟤ OK setup and cleanup, /super mario/with model/move right/setup and cleanup
-Sep 23,2025 17:57:47         ⟥  When press the right key for 1 second
-                27ms         ⟥    [debug] Mario was standing and is preparing to move right
-                47ms         ⟥    [debug] Mario was standing and is preparing to move right
-                65ms         ⟥    [debug] Mario was standing and is preparing to move right
-                76ms         ⟥    [debug] Mario should move right
-                76ms         ⟥    [debug] Mario moved right by 1
-                94ms         ⟥    [debug] Mario should move right
-                94ms         ⟥    [debug] Mario moved right by 1
-               108ms         ⟥    [debug] Mario should move right
-               108ms         ⟥    [debug] Mario moved right by 1
-               125ms         ⟥    [debug] Mario should move right
-               125ms         ⟥    [debug] Mario moved right by 1
-               141ms         ⟥    [debug] Mario should move right
-               141ms         ⟥    [debug] Mario moved right by 1
-               157ms         ⟥    [debug] Mario should move right
-               157ms         ⟥    [debug] Mario moved right by 1
-               173ms         ⟥    [debug] Mario should move right
-               173ms         ⟥    [debug] Mario moved right by 1
-               190ms         ⟥    [debug] Mario should move right
-               190ms         ⟥    [debug] Mario moved right by 2
-               207ms         ⟥    [debug] Mario should move right
-               208ms         ⟥    [debug] Mario moved right by 2
-               218ms         ⟥    [debug] Mario should move right
-               218ms         ⟥    [debug] Mario moved right by 2
-               235ms         ⟥    [debug] Mario should move right
-               235ms         ⟥    [debug] Mario moved right by 2
-               251ms         ⟥    [debug] Mario should move right
-               251ms         ⟥    [debug] Mario moved right by 2
-               271ms         ⟥    [debug] Mario should move right
-               271ms         ⟥    [debug] Mario moved right by 2
-               285ms         ⟥    [debug] Mario should move right
-               285ms         ⟥    [debug] Mario moved right by 3
-               304ms         ⟥    [debug] Mario should move right
-               305ms         ⟥    [debug] Mario moved right by 3
-               319ms         ⟥    [debug] Mario should move right
-               319ms         ⟥    [debug] Mario moved right by 3
-               334ms         ⟥    [debug] Mario should move right
-               334ms         ⟥    [debug] Mario moved right by 3
-               350ms         ⟥    [debug] Mario should move right
-               350ms         ⟥    [debug] Mario moved right by 3
-               368ms         ⟥    [debug] Mario should move right
-               369ms         ⟥    [debug] Mario moved right by 3
-               381ms         ⟥    [debug] Mario should move right
-               381ms         ⟥    [debug] Mario moved right by 3
-               397ms         ⟥    [debug] Mario should move right
-               397ms         ⟥    [debug] Mario moved right by 4
-               416ms         ⟥    [debug] Mario should move right
-               416ms         ⟥    [debug] Mario moved right by 4
-               441ms         ⟥    [debug] Mario should move right
-               441ms         ⟥    [debug] Mario moved right by 4
-               450ms         ⟥    [debug] Mario should move right
-               450ms         ⟥    [debug] Mario moved right by 4
-               466ms         ⟥    [debug] Mario should move right
-               466ms         ⟥    [debug] Mario moved right by 4
-               480ms         ⟥    [debug] Mario should move right
-               480ms         ⟥    [debug] Mario moved right by 4
-               499ms         ⟥    [debug] Mario should move right
-               499ms         ⟥    [debug] Mario moved right by 4
-               515ms         ⟥    [debug] Mario should move right
-               515ms         ⟥    [debug] Mario moved right by 5
-               531ms         ⟥    [debug] Mario should move right
-               532ms         ⟥    [debug] Mario moved right by 5
-               546ms         ⟥    [debug] Mario should move right
-               546ms         ⟥    [debug] Mario moved right by 5
-               565ms         ⟥    [debug] Mario should move right
-               565ms         ⟥    [debug] Mario moved right by 5
-               579ms         ⟥    [debug] Mario should move right
-               579ms         ⟥    [debug] Mario moved right by 5
-               596ms         ⟥    [debug] Mario should move right
-               596ms         ⟥    [debug] Mario moved right by 5
-               612ms         ⟥    [debug] Mario should move right
-               612ms         ⟥    [debug] Mario moved right by 6
-               629ms         ⟥    [debug] Mario should move right
-               629ms         ⟥    [debug] Mario moved right by 6
-               647ms         ⟥    [debug] Mario should move right
-               647ms         ⟥    [debug] Mario moved right by 6
-               662ms         ⟥    [debug] Mario should move right
-               662ms         ⟥    [debug] Mario moved right by 6
-               679ms         ⟥    [debug] Mario should move right
-               679ms         ⟥    [debug] Mario moved right by 6
-               694ms         ⟥    [debug] Mario should move right
-               695ms         ⟥    [debug] Mario moved right by 6
-               708ms         ⟥    [debug] Mario should move right
-               708ms         ⟥    [debug] Mario moved right by 6
-               727ms         ⟥    [debug] Mario should move right
-               728ms         ⟥    [debug] Mario moved right by 6
-               745ms         ⟥    [debug] Mario should move right
-               745ms         ⟥    [debug] Mario moved right by 6
-               760ms         ⟥    [debug] Mario should move right
-               760ms         ⟥    [debug] Mario moved right by 6
-               776ms         ⟥    [debug] Mario should move right
-               776ms         ⟥    [debug] Mario moved right by 6
-               792ms         ⟥    [debug] Mario should move right
-               792ms         ⟥    [debug] Mario moved right by 6
-               808ms         ⟥    [debug] Mario should move right
-               808ms         ⟥    [debug] Mario moved right by 6
-               823ms         ⟥    [debug] Mario should move right
-               823ms         ⟥    [debug] Mario moved right by 6
-               839ms         ⟥    [debug] Mario should move right
-               839ms         ⟥    [debug] Mario moved right by 6
-               853ms         ⟥    [debug] Mario should move right
-               853ms         ⟥    [debug] Mario moved right by 6
-               870ms         ⟥    [debug] Mario should move right
-               870ms         ⟥    [debug] Mario moved right by 6
-               891ms         ⟥    [debug] Mario should move right
-               891ms         ⟥    [debug] Mario moved right by 6
-               905ms         ⟥    [debug] Mario should move right
-               905ms         ⟥    [debug] Mario moved right by 6
-               920ms         ⟥    [debug] Mario should move right
-               920ms         ⟥    [debug] Mario moved right by 6
-               937ms         ⟥    [debug] Mario should move right
-               937ms         ⟥    [debug] Mario moved right by 6
-               953ms         ⟥    [debug] Mario should move right
-               953ms         ⟥    [debug] Mario moved right by 6
-               968ms         ⟥    [debug] Mario should move right
-               968ms         ⟥    [debug] Mario moved right by 6
+Oct 03,2025 15:05:23         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
+               284us         ⟥⟤ OK setup and cleanup, /super mario/with model/move right/setup and cleanup
+Oct 03,2025 15:05:23         ⟥  When press the right key for 1 second
+                10ms         ⟥    [debug] ✓ Mario stayed in place
+                11ms         ⟥    [debug] ✓ Mario Mario stayed still for 1 frames
+                11ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                11ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                11ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                11ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                29ms         ⟥    [debug] ✓ Mario stayed in place
+                29ms         ⟥    [debug] ✓ Mario Mario stayed still for 2 frames
+                29ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                29ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                29ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                29ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                45ms         ⟥    [debug] ✓ Mario stayed in place
+                46ms         ⟥    [debug] ✓ Mario Mario stayed still for 3 frames
+                46ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                46ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                47ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                47ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                62ms         ⟥    [debug] ✓ Mario stayed in place
+                63ms         ⟥    [debug] ✓ Mario Mario stayed still for 4 frames
+                63ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                63ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                63ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                63ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                78ms         ⟥    [debug] ✓ Mario moved right because right key is pressed
+                79ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=111, boundary=0
+                79ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=111, boundary=9056
+                79ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+                79ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                95ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+                95ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=112, boundary=0
+                95ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=112, boundary=9056
+                96ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+                96ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               112ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               112ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=113, boundary=0
+               112ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=113, boundary=9056
+               112ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               112ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               127ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               127ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=114, boundary=0
+               127ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=114, boundary=9056
+               128ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               128ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               144ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               144ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=115, boundary=0
+               144ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=115, boundary=9056
+               144ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               144ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               159ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               159ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=116, boundary=0
+               159ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=116, boundary=9056
+               159ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               159ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               175ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               176ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=117, boundary=0
+               176ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=117, boundary=9056
+               176ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               176ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               194ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               195ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=119, boundary=0
+               195ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=119, boundary=9056
+               195ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               195ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               207ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               207ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=121, boundary=0
+               207ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=121, boundary=9056
+               207ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               207ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               225ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               225ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=123, boundary=0
+               225ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=123, boundary=9056
+               225ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               225ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               240ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               241ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=125, boundary=0
+               241ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=125, boundary=9056
+               241ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               241ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               256ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               256ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=127, boundary=0
+               256ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=127, boundary=9056
+               257ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               257ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               271ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               271ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=129, boundary=0
+               271ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=129, boundary=9056
+               271ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               271ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               289ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               289ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=132, boundary=0
+               289ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=132, boundary=9056
+               290ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               290ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               310ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               310ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=135, boundary=0
+               310ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=135, boundary=9056
+               311ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               311ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               323ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               323ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=138, boundary=0
+               323ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=138, boundary=9056
+               323ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               323ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               340ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               340ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=141, boundary=0
+               340ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=141, boundary=9056
+               340ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               340ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               355ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               355ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=144, boundary=0
+               355ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=144, boundary=9056
+               355ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               355ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               369ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               369ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=147, boundary=0
+               369ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=147, boundary=9056
+               369ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               369ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               387ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               387ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=150, boundary=0
+               387ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=150, boundary=9056
+               387ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               387ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               399ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               400ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=154, boundary=0
+               400ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=154, boundary=9056
+               400ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               400ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               419ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               419ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=158, boundary=0
+               419ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=158, boundary=9056
+               419ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               419ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               439ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               439ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=162, boundary=0
+               439ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=162, boundary=9056
+               439ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               439ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               451ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               451ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=166, boundary=0
+               451ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=166, boundary=9056
+               451ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               451ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               468ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               468ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=170, boundary=0
+               468ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=170, boundary=9056
+               468ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               468ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               483ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               483ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=174, boundary=0
+               483ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=174, boundary=9056
+               484ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               484ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               500ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               500ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=178, boundary=0
+               500ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=178, boundary=9056
+               501ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               501ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               519ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               521ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=183, boundary=0
+               521ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=183, boundary=9056
+               522ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               522ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               533ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               533ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=188, boundary=0
+               533ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=188, boundary=9056
+               533ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               533ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               547ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               547ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=193, boundary=0
+               547ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=193, boundary=9056
+               547ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               547ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               561ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               561ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=198, boundary=0
+               561ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=198, boundary=9056
+               561ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               561ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               577ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               577ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=203, boundary=0
+               577ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=203, boundary=9056
+               577ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               577ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               601ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               601ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=208, boundary=0
+               601ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=208, boundary=9056
+               602ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               602ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               614ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               614ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=214, boundary=0
+               614ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=214, boundary=9056
+               614ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               614ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               630ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               630ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=220, boundary=0
+               630ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=220, boundary=9056
+               631ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               631ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               648ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               648ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=226, boundary=0
+               648ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=226, boundary=9056
+               649ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               649ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               665ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               666ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=232, boundary=0
+               666ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=232, boundary=9056
+               666ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               666ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               681ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               685ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=238, boundary=0
+               685ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=238, boundary=9056
+               686ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               686ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               696ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               696ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=244, boundary=0
+               696ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=244, boundary=9056
+               697ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               697ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               712ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               712ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=250, boundary=0
+               712ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=250, boundary=9056
+               712ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               712ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               728ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               728ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=256, boundary=0
+               728ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=256, boundary=9056
+               728ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               728ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               743ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               743ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=262, boundary=0
+               743ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=262, boundary=9056
+               744ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               744ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               758ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               758ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=268, boundary=0
+               758ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=268, boundary=9056
+               759ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               759ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               778ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               778ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=274, boundary=0
+               778ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=274, boundary=9056
+               778ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               778ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               792ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               792ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=280, boundary=0
+               792ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=280, boundary=9056
+               792ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               792ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               808ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               808ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=286, boundary=0
+               808ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=286, boundary=9056
+               808ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               808ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               823ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               824ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=292, boundary=0
+               824ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=292, boundary=9056
+               824ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               824ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               841ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               845ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=298, boundary=0
+               845ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=298, boundary=9056
+               845ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               845ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               855ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               855ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=304, boundary=0
+               855ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=304, boundary=9056
+               856ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               856ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               872ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               873ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=310, boundary=0
+               873ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=310, boundary=9056
+               873ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               873ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               887ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               887ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=316, boundary=0
+               887ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=316, boundary=9056
+               887ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               887ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               900ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               900ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=322, boundary=0
+               900ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=322, boundary=9056
+               900ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               900ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               919ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               919ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=328, boundary=0
+               919ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=328, boundary=9056
+               919ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               919ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               940ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               940ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=334, boundary=0
+               940ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=334, boundary=9056
+               940ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               940ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               952ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               952ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=340, boundary=0
+               952ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=340, boundary=9056
+               952ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               952ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               968ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               968ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=346, boundary=0
+               968ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=346, boundary=9056
+               969ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               969ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
                969ms         ⟥⟤ OK press the right key for 1 second, /super mario/with model/move right/press the right key for 1 second
 ```
 
-The debug messages show Mario's right movement behavior in detail:
+The debug messages show how all three property types validate Mario's movement every frame:
 
-1. **Startup delay**: Mario starts by "preparing to move" for the first 3 frames before actual movement begins
-2. **Gradual acceleration**: Movement speed increases incrementally: 1 → 2 → 3 → 4 → 5 → 6 pixels per frame
-3. **Maximum speed reached**: Mario reaches his maximum speed of 6 pixels per frame
-4. **Floating-point math effects**: When accelerating, we see that it takes 6 to 7 frames to reach the next velocity—the variation is due to floating point math
-
-This detailed frame-by-frame validation demonstrates the power of behavior models—they capture the nuanced physics of the game automatically, something that would be hard to verify with manual assertions.
+1. **Causal property validation**: Each frame shows why Mario moved—either "moved right because right key is pressed" (initial movement) or "moved right because velocity is X" (continued movement from inertia)
+2. **Safety property validation**: Every frame verifies Mario stays within boundaries (left at 0, right at 9056) and doesn't exceed maximum velocity (walk maximum of 6)
+3. **Gradual acceleration**: The velocity in the safety checks reveals Mario's acceleration: 1 → 2 → 3 → 4 → 5 → 6 pixels per frame
+4. **Additional safety checks**: Vertical velocity is also monitored to ensure it stays within limits
 
 What the behavior model gives us is effectively equivalent to writing a manual test that validates every single frame:
 
@@ -645,14 +939,16 @@ def scenario(self):
         with actions.press_right():
             for i in range(60):
                 actions.play(game, frames=1)
-                assert ...? # this is actually very non-trivial!
+                assert ... # this is actually very non-trivial!
 ```
 
-But implementing those frame-by-frame assertions manually would be extremely complex—you'd need to account for startup delays, acceleration curves, maximum speeds, and floating-point precision effects. The behavior model handles all of this automatically and universally!
+But implementing those frame-by-frame assertions manually would be non-trivial. Instead, by keeping the same simple test procedure as before, the model automatically validates every frame against all our properties, transforming a simple "press right for 1 second" action into a test that checks Mario has a valid reason to move, doesn't exceed his maximum speed, stays within level bounds, and eventually starts moving when keys are pressed.
+
+This is what we mean by property testing on steroids! The exact same test action checks an order of magnitude more. And as we add more properties to the model, every existing test automatically gains broader coverage without any code changes.
 
 ## Moving left with a model
 
-With our model successfully handling rightward movement, let's test its limits by converting the [`move left`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left_with_model.py) test. This will reveal some fascinating physics and uncover a limitation in our model:
+With our model successfully handling rightward movement, let's test its limits by converting the [`move left`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left_with_model.py) test. This will reveal some interesting physics:
 
 ```python
 @TestScenario
@@ -667,7 +963,7 @@ def scenario(self):
             actions.play(game, seconds=1, model=model)
 ```
 
-Let's run **move left** first right after the **move right** test :
+Let's run our new with model **move left** test first right after the **move right** test :
 
 ```bash
 ./tests/run.py --save-video --only "/super mario/with model/move right/*" "/super mario/with model/move left/*"
@@ -681,145 +977,332 @@ Let's run **move left** first right after the **move right** test :
 The test will produce the following messages:
 
 ```bash
-Sep 23,2025 19:37:58       ⟥  Scenario move left
+Oct 03,2025 15:26:02       ⟥  Scenario move left
                                 Check Mario can move left in the game.
-Sep 23,2025 19:37:58         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
-               243us         ⟥⟤ OK setup and cleanup, /super mario/with model/move left/setup and cleanup
-Sep 23,2025 19:37:58         ⟥  When press the left key for 1 second
-                 4ms         ⟥    [debug] Mario should move right
-                 4ms         ⟥    [debug] Mario moved right by 6
-                20ms         ⟥    [debug] Mario has right inertia current speed 5, previous speed 6
-                20ms         ⟥    [debug] Mario has right inertia current speed 5, previous speed 6
-                38ms         ⟥    [debug] Mario has right inertia current speed 5, previous speed 5
-                38ms         ⟥    [debug] Mario has right inertia current speed 5, previous speed 5
-                57ms         ⟥    [debug] Mario has right inertia current speed 5, previous speed 5
-                57ms         ⟥    [debug] Mario has right inertia current speed 5, previous speed 5
-                76ms         ⟥    [debug] Mario has right inertia current speed 4, previous speed 5
-                76ms         ⟥    [debug] Mario has right inertia current speed 4, previous speed 5
-                89ms         ⟥    [debug] Mario has right inertia current speed 4, previous speed 4
-                89ms         ⟥    [debug] Mario has right inertia current speed 4, previous speed 4
-               104ms         ⟥    [debug] Mario has right inertia current speed 4, previous speed 4
-               104ms         ⟥    [debug] Mario has right inertia current speed 4, previous speed 4
-               121ms         ⟥    [debug] Mario has right inertia current speed 3, previous speed 4
-               122ms         ⟥    [debug] Mario has right inertia current speed 3, previous speed 4
-               136ms         ⟥    [debug] Mario has right inertia current speed 3, previous speed 3
-               136ms         ⟥    [debug] Mario has right inertia current speed 3, previous speed 3
-               157ms         ⟥    [debug] Mario has right inertia current speed 3, previous speed 3
-               157ms         ⟥    [debug] Mario has right inertia current speed 3, previous speed 3
-               169ms         ⟥    [debug] Mario has right inertia current speed 2, previous speed 3
-               169ms         ⟥    [debug] Mario has right inertia current speed 2, previous speed 3
-               186ms         ⟥    [debug] Mario has right inertia current speed 2, previous speed 2
-               186ms         ⟥    [debug] Mario has right inertia current speed 2, previous speed 2
-               200ms         ⟥    [debug] Mario has right inertia current speed 1, previous speed 2
-               200ms         ⟥    [debug] Mario has right inertia current speed 1, previous speed 2
-               216ms         ⟥    [debug] Mario has right inertia current speed 1, previous speed 1
-               216ms         ⟥    [debug] Mario has right inertia current speed 1, previous speed 1
-               233ms         ⟥    [debug] Mario has right inertia current speed 1, previous speed 1
-               233ms         ⟥    [debug] Mario has right inertia current speed 1, previous speed 1
-               248ms         ⟥    [debug] Mario has right inertia current speed 0, previous speed 1
-               248ms         ⟥    [debug] Mario has right inertia current speed 0, previous speed 1
-               267ms         ⟥    [debug] Mario was standing and is preparing to move left
-               281ms         ⟥    [debug] Mario was standing and is preparing to move left
-               297ms         ⟥    [debug] Mario was standing and is preparing to move left
-               313ms         ⟥    [debug] Mario should move left
-               313ms         ⟥    [debug] Mario moved left by 1
-               330ms         ⟥    [debug] Mario should move left
-               330ms         ⟥    [debug] Mario moved left by 1
-               346ms         ⟥    [debug] Mario should move left
-               346ms         ⟥    [debug] Mario moved left by 1
-               363ms         ⟥    [debug] Mario should move left
-               363ms         ⟥    [debug] Mario moved left by 1
-               377ms         ⟥    [debug] Mario should move left
-               377ms         ⟥    [debug] Mario moved left by 1
-               395ms         ⟥    [debug] Mario should move left
-               395ms         ⟥    [debug] Mario moved left by 1
-               410ms         ⟥    [debug] Mario should move left
-               410ms         ⟥    [debug] Mario moved left by 1
-               426ms         ⟥    [debug] Mario should move left
-               426ms         ⟥    [debug] Mario moved left by 2
-               440ms         ⟥    [debug] Mario should move left
-               440ms         ⟥    [debug] Mario moved left by 2
-               456ms         ⟥    [debug] Mario should move left
-               457ms         ⟥    [debug] Mario moved left by 2
-               474ms         ⟥    [debug] Mario should move left
-               474ms         ⟥    [debug] Mario moved left by 2
-               491ms         ⟥    [debug] Mario should move left
-               491ms         ⟥    [debug] Mario moved left by 2
-               507ms         ⟥    [debug] Mario should move left
-               507ms         ⟥    [debug] Mario moved left by 2
-               524ms         ⟥    [debug] Mario should move left
-               524ms         ⟥    [debug] Mario moved left by 3
-               540ms         ⟥    [debug] Mario should move left
-               540ms         ⟥    [debug] Mario moved left by 3
-               559ms         ⟥    [debug] Mario should move left
-               559ms         ⟥    [debug] Mario moved left by 3
-               576ms         ⟥    [debug] Mario should move left
-               576ms         ⟥    [debug] Mario moved left by 3
-               589ms         ⟥    [debug] Mario should move left
-               589ms         ⟥    [debug] Mario moved left by 3
-               603ms         ⟥    [debug] Mario should move left
-               603ms         ⟥    [debug] Mario moved left by 3
-               620ms         ⟥    [debug] Mario should move left
-               620ms         ⟥    [debug] Mario moved left by 3
-               637ms         ⟥    [debug] Mario should move left
-               637ms         ⟥    [debug] Mario moved left by 4
-               657ms         ⟥    [debug] Mario should move left
-               657ms         ⟥    [debug] Mario moved left by 4
-               673ms         ⟥    [debug] Mario should move left
-               673ms         ⟥    [debug] Mario moved left by 4
-               685ms         ⟥    [debug] Mario should move left
-               685ms         ⟥    [debug] Mario moved left by 4
-               703ms         ⟥    [debug] Mario should move left
-               703ms         ⟥    [debug] Mario moved left by 4
-               718ms         ⟥    [debug] Mario should move left
-               718ms         ⟥    [debug] Mario moved left by 4
-               736ms         ⟥    [debug] Mario should move left
-               736ms         ⟥    [debug] Mario moved left by 4
-               755ms         ⟥    [debug] Mario should move left
-               755ms         ⟥    [debug] Mario moved left by 5
-               766ms         ⟥    [debug] Mario should move left
-               766ms         ⟥    [debug] Mario moved left by 5
-               779ms         ⟥    [debug] Mario should move left
-               779ms         ⟥    [debug] Mario moved left by 5
-               802ms         ⟥    [debug] Mario should move left
-               802ms         ⟥    [debug] Mario moved left by 5
-               814ms         ⟥    [debug] Mario should move left
-               815ms         ⟥    [debug] Mario moved left by 5
-               831ms         ⟥    [debug] Mario should move left
-               831ms         ⟥    [debug] Mario moved left by 5
-               846ms         ⟥    [debug] Mario should move left
-               846ms         ⟥    [debug] Mario moved left by 6
-               863ms         ⟥    [debug] Mario should move left
-               863ms         ⟥    [debug] Mario moved left by 6
-               878ms         ⟥    [debug] Mario should move left
-               878ms         ⟥    [debug] Mario moved left by 6
-               897ms         ⟥    [debug] Mario should move left
-               897ms         ⟥    [debug] Mario moved left by 6
-               912ms         ⟥    [debug] Mario should move left
-               912ms         ⟥    [debug] Mario moved left by 6
-               928ms         ⟥    [debug] Mario should move left
-               928ms         ⟥    [debug] Mario moved left by 6
-               948ms         ⟥    [debug] Mario should move left
-               949ms         ⟥    [debug] Mario moved left by 6
-               959ms         ⟥    [debug] Mario should move left
-               959ms         ⟥    [debug] Mario moved left by 6
-               960ms         ⟥⟤ OK press the left key for 1 second, /super mario/with model/move left/press the left key for 1 second
+Oct 03,2025 15:26:02         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
+               237us         ⟥⟤ OK setup and cleanup, /super mario/with model/move left/setup and cleanup
+Oct 03,2025 15:26:02         ⟥  When press the left key for 1 second
+                 4ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+                 4ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=352, boundary=0
+                 4ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=352, boundary=9056
+                 4ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+                 4ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                20ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+                20ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=357, boundary=0
+                20ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=357, boundary=9056
+                21ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+                21ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                37ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+                37ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=362, boundary=0
+                37ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=362, boundary=9056
+                38ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+                38ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                54ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+                54ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=367, boundary=0
+                54ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=367, boundary=9056
+                54ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+                54ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                71ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+                71ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=371, boundary=0
+                71ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=371, boundary=9056
+                71ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+                71ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                88ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+                88ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=375, boundary=0
+                88ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=375, boundary=9056
+                89ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+                89ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               104ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               104ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=379, boundary=0
+               104ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=379, boundary=9056
+               104ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               104ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               121ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               121ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=382, boundary=0
+               121ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=382, boundary=9056
+               122ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               122ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               137ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               137ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=385, boundary=0
+               137ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=385, boundary=9056
+               137ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               138ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               153ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               153ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=388, boundary=0
+               153ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=388, boundary=9056
+               153ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               153ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               169ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               169ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=390, boundary=0
+               169ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=390, boundary=9056
+               170ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               170ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               185ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               185ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=392, boundary=0
+               185ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=392, boundary=9056
+               185ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               185ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               198ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               198ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=393, boundary=0
+               198ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=393, boundary=9056
+               198ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               198ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               213ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               214ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=394, boundary=0
+               214ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=394, boundary=9056
+               214ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               214ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               229ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               229ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=395, boundary=0
+               229ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=395, boundary=9056
+               229ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               229ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               246ms         ⟥    [debug] ✓ Mario stayed in place
+               246ms         ⟥    [debug] ✓ Mario Mario stayed still for 1 frames
+               246ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=395, boundary=0
+               246ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=395, boundary=9056
+               246ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               246ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               262ms         ⟥    [debug] ✓ Mario stayed in place
+               262ms         ⟥    [debug] ✓ Mario Mario stayed still for 2 frames
+               262ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=395, boundary=0
+               262ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=395, boundary=9056
+               262ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               262ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               282ms         ⟥    [debug] ✓ Mario stayed in place
+               283ms         ⟥    [debug] ✓ Mario Mario stayed still for 3 frames
+               283ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=395, boundary=0
+               283ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=395, boundary=9056
+               283ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               283ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               299ms         ⟥    [debug] ✓ Mario stayed in place
+               299ms         ⟥    [debug] ✓ Mario Mario stayed still for 4 frames
+               299ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=395, boundary=0
+               299ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=395, boundary=9056
+               299ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               299ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               313ms         ⟥    [debug] ✓ Mario moved left because left key is pressed
+               314ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=394, boundary=0
+               314ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=394, boundary=9056
+               314ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               314ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               330ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               330ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=393, boundary=0
+               330ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=393, boundary=9056
+               331ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               331ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               345ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               345ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=392, boundary=0
+               345ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=392, boundary=9056
+               345ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               345ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               361ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               362ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=391, boundary=0
+               362ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=391, boundary=9056
+               362ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               362ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               376ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               376ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=390, boundary=0
+               376ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=390, boundary=9056
+               377ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               377ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               394ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               395ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=389, boundary=0
+               395ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=389, boundary=9056
+               395ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               395ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               407ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               407ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=388, boundary=0
+               407ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=388, boundary=9056
+               407ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               407ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               429ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               429ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=386, boundary=0
+               429ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=386, boundary=9056
+               429ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               429ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               443ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               443ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=384, boundary=0
+               443ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=384, boundary=9056
+               444ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               444ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               461ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               461ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=382, boundary=0
+               461ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=382, boundary=9056
+               461ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               461ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               476ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               476ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=380, boundary=0
+               476ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=380, boundary=9056
+               477ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               477ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               492ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               492ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=378, boundary=0
+               492ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=378, boundary=9056
+               492ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               492ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               506ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               506ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=376, boundary=0
+               506ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=376, boundary=9056
+               507ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               507ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               526ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               528ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=373, boundary=0
+               528ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=373, boundary=9056
+               528ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               528ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               538ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               538ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=370, boundary=0
+               538ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=370, boundary=9056
+               538ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               538ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               555ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               555ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=367, boundary=0
+               555ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=367, boundary=9056
+               556ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               556ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               572ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               572ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=364, boundary=0
+               572ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=364, boundary=9056
+               573ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               573ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               589ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               589ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=361, boundary=0
+               589ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=361, boundary=9056
+               590ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               590ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               605ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               605ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=358, boundary=0
+               605ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=358, boundary=9056
+               605ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               605ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               622ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               622ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=355, boundary=0
+               622ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=355, boundary=9056
+               622ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               622ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               639ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               639ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=351, boundary=0
+               639ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=351, boundary=9056
+               640ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               640ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               653ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               653ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=347, boundary=0
+               653ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=347, boundary=9056
+               654ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               654ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               668ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               668ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=343, boundary=0
+               668ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=343, boundary=9056
+               668ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               668ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               691ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               693ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=339, boundary=0
+               693ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=339, boundary=9056
+               693ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               693ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               698ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               698ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=335, boundary=0
+               698ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=335, boundary=9056
+               698ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               698ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               717ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               717ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=331, boundary=0
+               717ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=331, boundary=9056
+               717ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               717ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               733ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               733ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=327, boundary=0
+               734ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=327, boundary=9056
+               734ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               734ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               751ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               751ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=322, boundary=0
+               751ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=322, boundary=9056
+               751ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               751ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               766ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               766ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=317, boundary=0
+               766ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=317, boundary=9056
+               767ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               767ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               781ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               781ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=312, boundary=0
+               781ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=312, boundary=9056
+               781ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               781ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               798ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               798ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=307, boundary=0
+               798ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=307, boundary=9056
+               799ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               799ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               814ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               814ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=302, boundary=0
+               814ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=302, boundary=9056
+               815ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               815ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               830ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               830ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=297, boundary=0
+               830ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=297, boundary=9056
+               831ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               831ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               846ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               846ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=291, boundary=0
+               846ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=291, boundary=9056
+               846ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               846ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               859ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               859ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=285, boundary=0
+               859ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=285, boundary=9056
+               860ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               860ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               875ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               875ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=279, boundary=0
+               875ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=279, boundary=9056
+               875ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               875ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               898ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               898ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=273, boundary=0
+               898ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=273, boundary=9056
+               898ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               898ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               910ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               910ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=267, boundary=0
+               910ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=267, boundary=9056
+               911ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               911ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               932ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               932ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=261, boundary=0
+               932ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=261, boundary=9056
+               933ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               933ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               942ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               942ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=255, boundary=0
+               942ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=255, boundary=9056
+               942ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               942ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               960ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               960ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=249, boundary=0
+               961ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=249, boundary=9056
+               961ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               961ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               961ms         ⟥⟤ OK press the left key for 1 second, /super mario/with model/move left/press the left key for 1 second
 ```
 
-The debug messages reveal the physics of how Mario changes direction:
+The debug messages reveal the physics of changing direction:
 
-**Phase 1: Right inertia**  
-Mario starts with maximum rightward speed (6 pixels/frame) from the previous test. Even though we're pressing left, Mario continues moving right due to inertia! The model tracks his gradual deceleration: 6 → 5 → 4 → 3 → 2 → 1 → 0 pixels per frame over ~245ms.
+**Phase 1: Rightward inertia and deceleration**
+Mario starts with maximum rightward velocity (6 pixels/frame) from previous movement. Even though we press left, he continues moving right while decelerating due to inertia! The velocity progression: 6 → 5 → 4 → 3 → 2 → 1 → 0.
 
-**Phase 2: Getting started again**  
-Once Mario's rightward momentum is exhausted, he enters the familiar "preparing to move" state for 3 frames before beginning leftward movement.
+**Phase 2: Coming to a stop**
+Mario's velocity reaches 0 and he "stayed in place" for 4 frames. The liveness property tracks this: "Mario stayed still for 1 frames," then 2, 3, and finally 4 frames, validating he eventually starts moving.
 
-**Phase 3: Left acceleration**  
-Mario accelerates leftward following the same pattern as rightward movement: 1 → 2 → 3 → 4 → 5 → 6 pixels per frame, reaching maximum speed by the end of the test.
+**Phase 3: Leftward acceleration**
+Mario begins moving left: "moved left because left key is pressed" initially, then "moved left because velocity is -1" as inertia takes over. He accelerates following the same pattern as rightward movement: -1 → -2 → -3 → -4 → -5 → -6 pixels per frame.
 
-This demonstrates the model's understanding of movement physics—it correctly validates not just movement in isolation, but the complex transition between opposing directions, including inertia effects that span multiple frames.
+This demonstrates how all three property types work together: causal properties explain why Mario moved or stayed still, safety properties ensure velocity stays within limits, and liveness properties confirm Mario doesn't stay still too long when keys are pressed.
 
-### Hitting model's limit
+### Running move left with model test by itself
 
 However, what happens when we just run the [`move left`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left_with_model.py) just by itself?
 
@@ -835,250 +1318,322 @@ However, what happens when we just run the [`move left`](https://github.com/test
 The test output messages are:
 
 ```bash
-Sep 23,2025 19:46:50       ⟥  Scenario move left
+Oct 03,2025 15:33:30       ⟥  Scenario move left
                                 Check Mario can move left in the game.
-Sep 23,2025 19:46:50         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
-               281us         ⟥⟤ OK setup and cleanup, /super mario/with model/move left/setup and cleanup
-Sep 23,2025 19:46:50         ⟥  When press the left key for 1 second
-                27ms         ⟥    [debug] Mario was standing and is preparing to move left
-                39ms         ⟥    [debug] Mario was standing and is preparing to move left
-                58ms         ⟥    [debug] Mario was standing and is preparing to move left
-                75ms         ⟥    [debug] Mario should move left
-                75ms         ⟥    [debug] Mario moved left by 1
-                90ms         ⟥    [debug] Mario should move left
-                91ms         ⟥    [debug] Mario moved left by 1
-               106ms         ⟥    [debug] Mario should move left
-               106ms         ⟥    [debug] Mario moved left by 1
-               124ms         ⟥    [debug] Mario should move left
-               124ms         ⟥    [debug] Mario moved left by 1
-               140ms         ⟥    [debug] Mario should move left
-               141ms         ⟥    [debug] Mario moved left by 1
-               157ms         ⟥    [debug] Mario should move left
-               157ms         ⟥    [debug] Mario moved left by 1
-               172ms         ⟥    [debug] Mario should move left
-               172ms         ⟥    [debug] Mario moved left by 1
-               190ms         ⟥    [debug] Mario should move left
-               190ms         ⟥    [debug] Mario moved left by 2
-               205ms         ⟥    [debug] Mario should move left
-               205ms         ⟥    [debug] Mario moved left by 2
-               222ms         ⟥    [debug] Mario should move left
-               223ms         ⟥    [debug] Mario moved left by 2
-               237ms         ⟥    [debug] Mario should move left
-               238ms         ⟥    [debug] Mario moved left by 2
-               255ms         ⟥    [debug] Mario should move left
-               256ms         ⟥    [debug] Mario moved left by 2
-               271ms         ⟥    [debug] Mario should move left
-               271ms         ⟥    [debug] Mario moved left by 2
-               288ms         ⟥    [debug] Mario should move left
-               288ms         ⟥    [debug] Mario moved left by 3
-               302ms         ⟥    [debug] Mario should move left
-               303ms         ⟥    [debug] Mario moved left by 3
-               320ms         ⟥    [debug] Mario should move left
-               320ms         ⟥    [debug] Mario moved left by 3
-               337ms         ⟥    [debug] Mario should move left
-               337ms         ⟥    [debug] Mario moved left by 3
-               353ms         ⟥    [debug] Mario should move left
-               353ms         ⟥    [debug] Mario moved left by 3
-               368ms         ⟥    [debug] Mario should move left
-               368ms         ⟥    [debug] Mario moved left by 3
-               384ms         ⟥    [debug] Mario should move left
-               384ms         ⟥    [debug] Mario moved left by 3
-               402ms         ⟥    [debug] Mario should move left
-               402ms         ⟥    [debug] Mario moved left by 4
-               417ms         ⟥    [debug] Mario should move left
-               417ms         ⟥    [debug] Mario moved left by 4
-               433ms         ⟥    [debug] Mario should move left
-               433ms         ⟥    [debug] Mario moved left by 4
-               448ms         ⟥    [debug] Mario should move left
-               448ms         ⟥    [debug] Mario moved left by 4
-               465ms         ⟥    [debug] Mario should move left
-               465ms         ⟥    [debug] Mario moved left by 4
-               482ms         ⟥    [debug] Mario should move left
-               482ms         ⟥    [debug] Mario moved left by 4
-               499ms         ⟥    [debug] Mario should move left
-               500ms         ⟥    [debug] Mario moved left by 4
-               515ms         ⟥    [debug] Mario should move left
-               515ms         ⟥    [debug] Mario moved left by 5
-               531ms         ⟥    [debug] Mario should move left
-               531ms         ⟥    [debug] Mario moved left by 5
-               546ms         ⟥    [debug] Mario should move left
-               546ms         ⟥    [debug] Mario moved left by 5
-               564ms         ⟥    [debug] Mario should move left
-               564ms         ⟥    [debug] Mario moved left by 5
-               578ms         ⟥    [debug] Mario should move left
-               578ms         ⟥    [debug] Mario moved left by 5
-               596ms         ⟥    [debug] Mario should move left
-               596ms         ⟥    [debug] Mario moved left by 5
-               610ms         ⟥    [debug] Mario should move left
-               610ms         ⟥    [debug] Mario moved left by 6
-               627ms         ⟥    [debug] Mario should move left
-               627ms         ⟥    [debug] Mario moved left by 6
-               644ms         ⟥    [debug] Mario should move left
-               645ms         ⟥    Exception: AssertionError: Mario did not move left
-               645ms         ⟥⟤ Fail press the left key for 1 second, /super mario/with model/move left/press the left key for 1 second, AssertionError
+Oct 03,2025 15:33:30         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
+               239us         ⟥⟤ OK setup and cleanup, /super mario/with model/move left/setup and cleanup
+Oct 03,2025 15:33:30         ⟥  When press the left key for 1 second
+                 7ms         ⟥    [debug] ✓ Mario stayed in place
+                 7ms         ⟥    [debug] ✓ Mario Mario stayed still for 1 frames
+                 7ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                 7ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                 7ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                 7ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                26ms         ⟥    [debug] ✓ Mario stayed in place
+                26ms         ⟥    [debug] ✓ Mario Mario stayed still for 2 frames
+                27ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                27ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                27ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                27ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                43ms         ⟥    [debug] ✓ Mario stayed in place
+                44ms         ⟥    [debug] ✓ Mario Mario stayed still for 3 frames
+                44ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                44ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                44ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                44ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                59ms         ⟥    [debug] ✓ Mario stayed in place
+                59ms         ⟥    [debug] ✓ Mario Mario stayed still for 4 frames
+                60ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                60ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                60ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                60ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                74ms         ⟥    [debug] ✓ Mario moved left because left key is pressed
+                75ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=109, boundary=0
+                75ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=109, boundary=9056
+                75ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+                75ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                91ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+                91ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=108, boundary=0
+                91ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=108, boundary=9056
+                92ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+                92ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               106ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               107ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=107, boundary=0
+               107ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=107, boundary=9056
+               107ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               107ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               123ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               123ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=106, boundary=0
+               123ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=106, boundary=9056
+               123ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               123ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               139ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               140ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=105, boundary=0
+               140ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=105, boundary=9056
+               140ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               140ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               157ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               157ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=104, boundary=0
+               157ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=104, boundary=9056
+               158ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               158ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               170ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               170ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=103, boundary=0
+               170ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=103, boundary=9056
+               170ms         ⟥    [debug] ✓ Mario Mario's velocity -1 is within walk maximum
+               170ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               188ms         ⟥    [debug] ✓ Mario moved left because velocity is -1
+               188ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=101, boundary=0
+               188ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=101, boundary=9056
+               188ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               188ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               204ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               205ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=99, boundary=0
+               205ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=99, boundary=9056
+               206ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               206ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               218ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               218ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=97, boundary=0
+               218ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=97, boundary=9056
+               218ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               218ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               234ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               234ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=95, boundary=0
+               234ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=95, boundary=9056
+               234ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               234ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               248ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               248ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=93, boundary=0
+               248ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=93, boundary=9056
+               249ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               249ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               267ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               267ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=91, boundary=0
+               268ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=91, boundary=9056
+               268ms         ⟥    [debug] ✓ Mario Mario's velocity -2 is within walk maximum
+               268ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               288ms         ⟥    [debug] ✓ Mario moved left because velocity is -2
+               288ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=88, boundary=0
+               288ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=88, boundary=9056
+               289ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               289ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               302ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               302ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=85, boundary=0
+               302ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=85, boundary=9056
+               303ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               303ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               319ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               319ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=82, boundary=0
+               319ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=82, boundary=9056
+               319ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               319ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               332ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               332ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=79, boundary=0
+               332ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=79, boundary=9056
+               332ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               332ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               348ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               348ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=76, boundary=0
+               348ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=76, boundary=9056
+               349ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               349ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               362ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               362ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=73, boundary=0
+               362ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=73, boundary=9056
+               363ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               363ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               378ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               378ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=70, boundary=0
+               378ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=70, boundary=9056
+               378ms         ⟥    [debug] ✓ Mario Mario's velocity -3 is within walk maximum
+               378ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               400ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
+               400ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=66, boundary=0
+               400ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=66, boundary=9056
+               400ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               400ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               415ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               415ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=62, boundary=0
+               415ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=62, boundary=9056
+               415ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               415ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               430ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               430ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=58, boundary=0
+               430ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=58, boundary=9056
+               430ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               430ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               447ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               447ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=54, boundary=0
+               447ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=54, boundary=9056
+               447ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               447ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               461ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               462ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=50, boundary=0
+               462ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=50, boundary=9056
+               462ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               462ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               478ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               479ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=46, boundary=0
+               479ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=46, boundary=9056
+               479ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               479ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               496ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               496ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=42, boundary=0
+               496ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=42, boundary=9056
+               496ms         ⟥    [debug] ✓ Mario Mario's velocity -4 is within walk maximum
+               497ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               511ms         ⟥    [debug] ✓ Mario moved left because velocity is -4
+               511ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=37, boundary=0
+               511ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=37, boundary=9056
+               512ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               512ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               526ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               527ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=32, boundary=0
+               527ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=32, boundary=9056
+               528ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               528ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               539ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               539ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=27, boundary=0
+               539ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=27, boundary=9056
+               540ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               540ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               555ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               555ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=22, boundary=0
+               555ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=22, boundary=9056
+               555ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               555ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               577ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               577ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=17, boundary=0
+               577ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=17, boundary=9056
+               578ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               578ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               590ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               590ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=12, boundary=0
+               590ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=12, boundary=9056
+               590ms         ⟥    [debug] ✓ Mario Mario's velocity -5 is within walk maximum
+               590ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               606ms         ⟥    [debug] ✓ Mario moved left because velocity is -5
+               606ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=6, boundary=0
+               606ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=6, boundary=9056
+               606ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               606ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               622ms         ⟥    [debug] ✓ Mario moved left because velocity is -6
+               623ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               623ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               623ms         ⟥    [debug] ✓ Mario Mario's velocity -6 is within walk maximum
+               623ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               643ms         ⟥    [debug] ✓ Mario stayed in place
+               643ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               643ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               643ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               643ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               653ms         ⟥    [debug] ✓ Mario stayed in place
+               653ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               653ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               653ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               653ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               671ms         ⟥    [debug] ✓ Mario stayed in place
+               671ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               671ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               671ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               671ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               682ms         ⟥    [debug] ✓ Mario stayed in place
+               682ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               682ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               682ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               682ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               698ms         ⟥    [debug] ✓ Mario stayed in place
+               698ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               699ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               699ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               699ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               717ms         ⟥    [debug] ✓ Mario stayed in place
+               717ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               717ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               717ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               717ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               735ms         ⟥    [debug] ✓ Mario stayed in place
+               736ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               736ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               736ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               736ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               750ms         ⟥    [debug] ✓ Mario stayed in place
+               750ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               750ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               750ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               750ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               767ms         ⟥    [debug] ✓ Mario stayed in place
+               767ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               767ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               767ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               767ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               785ms         ⟥    [debug] ✓ Mario stayed in place
+               785ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               785ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               785ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               785ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               801ms         ⟥    [debug] ✓ Mario stayed in place
+               801ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               801ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               802ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               802ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               817ms         ⟥    [debug] ✓ Mario stayed in place
+               817ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               817ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               817ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               817ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               834ms         ⟥    [debug] ✓ Mario stayed in place
+               835ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               835ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               835ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               835ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               847ms         ⟥    [debug] ✓ Mario stayed in place
+               847ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               847ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               848ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               848ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               864ms         ⟥    [debug] ✓ Mario stayed in place
+               864ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               864ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               864ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               864ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               884ms         ⟥    [debug] ✓ Mario stayed in place
+               884ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               884ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               884ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               884ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               900ms         ⟥    [debug] ✓ Mario stayed in place
+               900ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               900ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               901ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               901ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               917ms         ⟥    [debug] ✓ Mario stayed in place
+               917ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               917ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               917ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               917ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               933ms         ⟥    [debug] ✓ Mario stayed in place
+               933ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               933ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               933ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               933ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               949ms         ⟥    [debug] ✓ Mario stayed in place
+               949ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               949ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               950ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               950ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               962ms         ⟥    [debug] ✓ Mario stayed in place
+               963ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=0, boundary=0
+               963ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=0, boundary=9056
+               963ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+               963ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               963ms         ⟥⟤ OK press the left key for 1 second, /super mario/with model/move left/press the left key for 1 second
 ```
 
-The test fails with `AssertionError: Mario did not move left` because our model expected Mario to continue moving, but he hit the left edge of the level! This reveals that our movement model is incomplete—we need to add collision detection for level boundaries.
+The test still passes, revealing interesting boundary behavior! Mario accelerates leftward (-1 to -6 pixels per frame), then reaches the left boundary (x=0) and stops with velocity 0 for the remainder of the test.
+The model validates this correctly through two properties working together: the causal property confirms staying in place is valid when at a boundary, while the safety property verifies Mario never moves past x=0. 
 
-### Enhancing the model with boundary detection
-
-This demonstrates a key advantage of behavior models: **tests help improve the model iteratively**. Let's enhance our [`assert_movement`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L78) method to handle level boundaries by creating a new [`Level`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/level.py) model:
-
-```python
-def assert_movement(self, now, before, direction="right"):
-    """
-    Assert that Mario moved to the right or left and did not exceed max walking speed or level boundaries.
-    """
-    pos_now = self.get_position(now)
-    pos_before = self.get_position(before)
-    
-    # Check boundary conditions with Level model
-    mario_before = self.get("player", before)
-    
-    if direction == "right":
-        debug("Mario should move right")
-        if self.level.should_stay_at_boundary(mario_before, direction):
-            # Mario should stay at boundary, not move further
-            assert pos_now == pos_before, f"Mario should not move right past boundary"
-        else:
-            assert pos_now > pos_before, "Mario did not move right"
-    elif direction == "left":
-        debug("Mario should move left")
-        if self.level.should_stay_at_boundary(mario_before, direction):
-            # Mario should stay at boundary, not move further
-            assert pos_now == pos_before, f"Mario should not move left past boundary"
-        else:
-            assert pos_now < pos_before, "Mario did not move left"
-```
-
-The key insights are:
-1. **Separation of concerns**: Level model handles boundary logic, Mario model handles movement assertions
-2. **Clean interface**: [`self.level.should_stay_at_boundary`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/level.py#L33) returns True/False
-3. **Mario-specific assertions**: "Mario did not move left/right" stays in Mario model where it belongs
-4. **Boundary respect**: If Level says stay put, Mario asserts no movement; otherwise Mario asserts movement
-
-Now when we run the move left test, it passes because the model correctly expects Mario to stop when he hits the left edge! The enhanced model demonstrates how behavior models evolve through iterative testing—each failure teaches us something new about the system and makes our model more robust.
-
-```bash
-Sep 23,2025 20:35:16       ⟥  Scenario move left
-                                Check Mario can move left in the game.
-Sep 23,2025 20:35:16         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
-               303us         ⟥⟤ OK setup and cleanup, /super mario/with model/move left/setup and cleanup
-Sep 23,2025 20:35:16         ⟥  When press the left key for 1 second
-                30ms         ⟥    [debug] Mario was standing and is preparing to move left
-                41ms         ⟥    [debug] Mario was standing and is preparing to move left
-                61ms         ⟥    [debug] Mario was standing and is preparing to move left
-                72ms         ⟥    [debug] Mario should move left
-                72ms         ⟥    [debug] Mario moved left by 1
-                88ms         ⟥    [debug] Mario should move left
-                88ms         ⟥    [debug] Mario moved left by 1
-               105ms         ⟥    [debug] Mario should move left
-               105ms         ⟥    [debug] Mario moved left by 1
-               121ms         ⟥    [debug] Mario should move left
-               121ms         ⟥    [debug] Mario moved left by 1
-               137ms         ⟥    [debug] Mario should move left
-               137ms         ⟥    [debug] Mario moved left by 1
-               153ms         ⟥    [debug] Mario should move left
-               153ms         ⟥    [debug] Mario moved left by 1
-               170ms         ⟥    [debug] Mario should move left
-               171ms         ⟥    [debug] Mario moved left by 1
-               187ms         ⟥    [debug] Mario should move left
-               187ms         ⟥    [debug] Mario moved left by 2
-               201ms         ⟥    [debug] Mario should move left
-               201ms         ⟥    [debug] Mario moved left by 2
-               219ms         ⟥    [debug] Mario should move left
-               219ms         ⟥    [debug] Mario moved left by 2
-               236ms         ⟥    [debug] Mario should move left
-               236ms         ⟥    [debug] Mario moved left by 2
-               254ms         ⟥    [debug] Mario should move left
-               254ms         ⟥    [debug] Mario moved left by 2
-               269ms         ⟥    [debug] Mario should move left
-               269ms         ⟥    [debug] Mario moved left by 2
-               286ms         ⟥    [debug] Mario should move left
-               286ms         ⟥    [debug] Mario moved left by 3
-               304ms         ⟥    [debug] Mario should move left
-               304ms         ⟥    [debug] Mario moved left by 3
-               318ms         ⟥    [debug] Mario should move left
-               318ms         ⟥    [debug] Mario moved left by 3
-               334ms         ⟥    [debug] Mario should move left
-               334ms         ⟥    [debug] Mario moved left by 3
-               348ms         ⟥    [debug] Mario should move left
-               349ms         ⟥    [debug] Mario moved left by 3
-               372ms         ⟥    [debug] Mario should move left
-               372ms         ⟥    [debug] Mario moved left by 3
-               383ms         ⟥    [debug] Mario should move left
-               383ms         ⟥    [debug] Mario moved left by 3
-               399ms         ⟥    [debug] Mario should move left
-               399ms         ⟥    [debug] Mario moved left by 4
-               416ms         ⟥    [debug] Mario should move left
-               416ms         ⟥    [debug] Mario moved left by 4
-               432ms         ⟥    [debug] Mario should move left
-               432ms         ⟥    [debug] Mario moved left by 4
-               448ms         ⟥    [debug] Mario should move left
-               448ms         ⟥    [debug] Mario moved left by 4
-               465ms         ⟥    [debug] Mario should move left
-               465ms         ⟥    [debug] Mario moved left by 4
-               481ms         ⟥    [debug] Mario should move left
-               481ms         ⟥    [debug] Mario moved left by 4
-               496ms         ⟥    [debug] Mario should move left
-               496ms         ⟥    [debug] Mario moved left by 4
-               512ms         ⟥    [debug] Mario should move left
-               512ms         ⟥    [debug] Mario moved left by 5
-               529ms         ⟥    [debug] Mario should move left
-               529ms         ⟥    [debug] Mario moved left by 5
-               544ms         ⟥    [debug] Mario should move left
-               544ms         ⟥    [debug] Mario moved left by 5
-               562ms         ⟥    [debug] Mario should move left
-               562ms         ⟥    [debug] Mario moved left by 5
-               576ms         ⟥    [debug] Mario should move left
-               576ms         ⟥    [debug] Mario moved left by 5
-               594ms         ⟥    [debug] Mario should move left
-               594ms         ⟥    [debug] Mario moved left by 5
-               610ms         ⟥    [debug] Mario should move left
-               610ms         ⟥    [debug] Mario moved left by 6
-               626ms         ⟥    [debug] Mario should move left
-               626ms         ⟥    [debug] Mario moved left by 6
-               641ms         ⟥    [debug] Mario should move left
-               641ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               654ms         ⟥    [debug] Mario was standing and is preparing to move left
-               675ms         ⟥    [debug] Mario was standing and is preparing to move left
-               690ms         ⟥    [debug] Mario was standing and is preparing to move left
-               705ms         ⟥    [debug] Mario should move left
-               705ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               722ms         ⟥    [debug] Mario should move left
-               722ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               740ms         ⟥    [debug] Mario should move left
-               740ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               757ms         ⟥    [debug] Mario should move left
-               757ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               772ms         ⟥    [debug] Mario should move left
-               772ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               787ms         ⟥    [debug] Mario should move left
-               787ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               802ms         ⟥    [debug] Mario should move left
-               802ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               817ms         ⟥    [debug] Mario should move left
-               817ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               835ms         ⟥    [debug] Mario should move left
-               835ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               852ms         ⟥    [debug] Mario should move left
-               852ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               867ms         ⟥    [debug] Mario should move left
-               867ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               884ms         ⟥    [debug] Mario should move left
-               884ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               900ms         ⟥    [debug] Mario should move left
-               900ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               915ms         ⟥    [debug] Mario should move left
-               915ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               934ms         ⟥    [debug] Mario should move left
-               934ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               947ms         ⟥    [debug] Mario should move left
-               947ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               965ms         ⟥    [debug] Mario should move left
-               965ms         ⟥    [debug] Player at left boundary at x=0, level start_x=0
-               967ms         ⟥⟤ OK press the left key for 1 second, /super mario/with model/move left/press the left key for 1 second
-```
+This demonstrates the robustness of property-based modeling: the boundary collision was properly accounted for without any special code or model changes. The general properties we defined earlier naturally cover this edge case. The test just worked!
 
 ## Jumping with a model
 
