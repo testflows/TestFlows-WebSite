@@ -329,7 +329,7 @@ There's a more practical approach: instead of trying to fully implement all the 
 
 It's not a complete model of the physics engine, but it's practical. Instead of tracking exact acceleration curves, inertia decay rates, and turn-around physics states, we express high-level properties: effects have valid causes, invariants are never violated, and expected behaviors eventually occur. This gives us useful validation without reverse-engineering the entire physics system.
 
-Our [**movement model**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py) organizes properties into three categories: [**causal**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L220), [**safety**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L389), and [**liveness**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L340).
+Our [**movement model**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py) organizes properties into three categories: [**causal**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L220), [**safety**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L389), and [**liveness**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L340).
 
 ### Causal properties
 
@@ -351,9 +351,9 @@ class CausalProperties(Propositions):
             )
 ```
 
-The [**check right movement**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L223) causal property says: "if Mario moved right, there must be a cause—either he had rightward velocity (inertia) or the right key was pressed." We don't need to model when movement starts, how fast acceleration happens, or the exact inertia decay curve. We just verify the cause-effect relationship. Similarly, [**check left movement**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L236) verifies leftward movement has a valid cause.
+The [**check right movement**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L223) causal property says: "if Mario moved right, there must be a cause—either he had rightward velocity (inertia) or the right key was pressed." We don't need to model when movement starts, how fast acceleration happens, or the exact inertia decay curve. We just verify the cause-effect relationship. Similarly, [**check left movement**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L236) verifies leftward movement has a valid cause.
 
-In addition to checking only right and left movement, we can also add a [**check stayed in place**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L249) property to check that Mario is just staying in place also has a valid cause:
+In addition to checking only right and left movement, we can also add a [**check stayed in place**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L249) property to check that Mario is just staying in place also has a valid cause:
 
 ```python
 def check_stayed_in_place(self, behavior):
@@ -396,7 +396,7 @@ def check_stayed_in_place(self, behavior):
 
 If Mario didn't move, there must be a reason: no keys were pressed, velocity was too small to register movement, he hit an obstacle, or he reached a boundary.
 
-Causal properties handle the physics complexity practically. For example, for a jump we can assert that upward movement had a valid cause using the [**check jump**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L322) property instead of precisely modeling the complex jump arc:
+Causal properties handle the physics complexity practically. For example, for a jump we can assert that upward movement had a valid cause using the [**check jump**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L322) property instead of precisely modeling the complex jump arc:
 
 ```python
 def check_jump(self, behavior):
@@ -419,7 +419,7 @@ def check_jump(self, behavior):
 
 Safety properties verify that certain invariants are never violated—things that should never happen regardless of input or timing.
 
-The [**check does not exceed max velocity**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L408) property ensures Mario never moves faster than physically possible. Because walking and running have different max speeds, we take that into account:
+The [**check does not exceed max velocity**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L408) property ensures Mario never moves faster than physically possible. Because walking and running have different max speeds, we take that into account:
 
 ```python
 class SafetyProperties(Propositions):
@@ -439,7 +439,7 @@ class SafetyProperties(Propositions):
             )
 ```
 
-Similarly, the [**check does not move past left boundary**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L392) and [**check does not move past right boundary**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L400) properties ensure Mario stays within the level boundaries:
+Similarly, the [**check does not move past left boundary**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L392) and [**check does not move past right boundary**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L400) properties ensure Mario stays within the level boundaries:
 
 ```python
 def check_does_not_move_past_left_boundary(self, behavior):
@@ -462,7 +462,7 @@ Together, these safety properties catch physics bugs and violations: if Mario su
 
 ### Liveness properties
 
-In addition to causal and safety properties, we can also implement a liveness property that verifies expected behaviors eventually occur. For example, we can implement the [**check starts moving**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L343) property to verify that if the left or right key is pressed long enough, Mario eventually starts to move:
+In addition to causal and safety properties, we can also implement a liveness property that verifies expected behaviors eventually occur. For example, we can implement the [**check starts moving**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L343) property to verify that if the left or right key is pressed long enough, Mario eventually starts to move:
 
 ```python
 class LivenessProperties(Propositions):
@@ -522,7 +522,7 @@ Note that this is bounded liveness—we don't wait forever, but check that the e
 
 ### Composing properties
 
-The [Movement model](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L432) composes all properties from these three property categories. Together, they provide comprehensive validation:
+The [Movement model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L432) composes all properties from these three property categories. Together, they provide comprehensive validation:
 
 - If Mario moved, there was a reason (causal)
 - If Mario is moving, he's not violating limits (safety)
@@ -543,7 +543,7 @@ Now let's see the real power of behavior models in action by converting our firs
 
 ### Before: Classical test with manual assertions
 
-Here's what our original [move right test](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right.py) looked like:
+Here's what our original [move right test](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right.py) looked like:
 
 ```python
 @TestScenario
@@ -572,7 +572,7 @@ Notice that in addition to the actual test action (pressing the right key), the 
 
 ### After: Behavior model-driven test
 
-Here's the same [`move right`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right_with_model.py) test that uses our behavior model:
+Here's the same [`move right`](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py) test that uses our behavior model:
 
 ```python
 @TestScenario
@@ -587,7 +587,7 @@ def scenario(self):
             actions.play(game, seconds=1, model=model) # We plug the behavior model
 ```
 
-This test is way shorter, as the behaviour **[model](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right_with_model.py#L11)** is being passed into the **[actions.play](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_right_with_model.py#L18)** giving us:
+This test is way shorter, as the behaviour **[model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py#L11)** is being passed into the **[actions.play](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py#L18)** giving us:
 
 - No explicit position tracking
 - No explicit assertions
@@ -948,7 +948,7 @@ This is what we mean by property testing on steroids! The exact same test action
 
 ## Moving left with a model
 
-With our model successfully handling rightward movement, let's test its limits by converting the [`move left`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left_with_model.py) test. This will reveal some interesting physics:
+With our model successfully handling rightward movement, let's test its limits by converting the [`move left`](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_left_with_model.py) test. This will reveal some interesting physics:
 
 ```python
 @TestScenario
@@ -1304,7 +1304,7 @@ This demonstrates how all three property types work together: causal properties 
 
 ### Running move left with model test by itself
 
-However, what happens when we just run the [`move left`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_left_with_model.py) just by itself?
+However, what happens when we just run the [`move left`](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_left_with_model.py) just by itself?
 
 ```bash
 ./tests/run.py --save-video --only "/super mario/with model/move left/*"
@@ -1637,7 +1637,7 @@ This demonstrates the robustness of property-based modeling: the boundary collis
 
 ## Jumping with a model
 
-Fresh from our success with movement and boundary validation, let's test jumping. The [`move jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_jump_with_model.py) with model test is just as simple as our right and left movement tests:
+Fresh from our success with movement and boundary validation, let's test jumping. The [`move jump`](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_jump_with_model.py) with model test is just as simple as our right and left movement tests:
 
 ```python
 @TestScenario
@@ -1655,7 +1655,7 @@ def scenario(self):
 
 But jumping introduces vertical movement on top of horizontal movement, this requires us to add more causal properties.
 
-Let's add the [**check fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L292) property to verify that falling has a valid cause:
+Let's add the [**check fall**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L292) property to verify that falling has a valid cause:
 
 ```python
 def check_fall(self, behavior):
@@ -1673,7 +1673,7 @@ def check_fall(self, behavior):
 
 If Mario moved down, there must be a cause: he wasn't on the ground. Simple and direct.
 
-Also, we add the [**check stop fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L305) property to validate that stopping a fall also has a valid cause:
+Also, we add the [**check stop fall**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L305) property to validate that stopping a fall also has a valid cause:
 
 ```python
 def check_stop_fall(self, behavior):
@@ -1695,7 +1695,7 @@ def check_stop_fall(self, behavior):
 
 If Mario was falling but no longer moves down, there must be a reason: he landed on ground or stomped an enemy.
 
-Together with [**check jump**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L322) (shown earlier), these three properties work with the horizontal movement properties to validate jumping.
+Together with [**check jump**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L322) (shown earlier), these three properties work with the horizontal movement properties to validate jumping.
 
 Let's first run our jump test by itself:
 
@@ -2203,7 +2203,7 @@ Oct 03,2025 16:52:37         ⟥  When press right and jump keys for 1 second
                967ms         ⟥⟤ OK press right and jump keys for 1 second, /super mario/with model/move jump/press right and jump keys for 1 second
 ```
 
-Perfect! By extending the test to 1 second, we now see all three vertical causal properties in action across the complete jump cycle. The [**check_jump**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L322) property validates the ascent phase with `jumped because jump was pressed on ground or bounced off enemy or had upward velocity`. The [**check_fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L292) property validates the descent with `fell because there was no ground support`. Finally, the [**check_stop_fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L305) property confirms the landing with `stopped falling because landed on support or stomped an enemy`. Again we see that throughout all frames, horizontal movement properties work independently alongside vertical properties.
+Perfect! By extending the test to 1 second, we now see all three vertical causal properties in action across the complete jump cycle. The [**check_jump**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L322) property validates the ascent phase with `jumped because jump was pressed on ground or bounced off enemy or had upward velocity`. The [**check_fall**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L292) property validates the descent with `fell because there was no ground support`. Finally, the [**check_stop_fall**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L305) property confirms the landing with `stopped falling because landed on support or stomped an enemy`. Again we see that throughout all frames, horizontal movement properties work independently alongside vertical properties.
 
 ## Testing the model using manual play
 
