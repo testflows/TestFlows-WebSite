@@ -8,7 +8,7 @@ image: images/testing-super-mario-using-a-behavior-model-part2.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-When testing complex stateful systems like [*Super Mario*](https://en.wikipedia.org/wiki/Super_Mario_Bros/), behavior models can be your secret weapon. Think of them as property-based testing on steroids. The game world is vast, with countless combinations of player positions, velocities, physics states, and environmental conditions. This complexity makes it impractical to write classical test cases that cover any significant portion of the state space. At best, such tests can only form a sanity suite.
+When testing complex stateful systems like [*Super Mario*](https://en.wikipedia.org/wiki/Super_Mario_Bros), behavior models can be your secret weapon. Think of them as property-based testing on steroids. The game world is vast, with countless combinations of player positions, velocities, physics states, and environmental conditions. This complexity makes it impractical to write classical test cases that cover any significant portion of the state space. At best, such tests can only form a sanity suite.
 
 Imagine Mario sprinting through a level, collecting coins, and leaping over pits. Each action he takes depends on a myriad of factors: his speed, the timing of his jumps, his momentum and inertia, and even the layout of the level itself. Writing individual test cases for each scenario—like we showed in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/)—would be like trying to count every grain of sand on a beach.
 
@@ -34,11 +34,11 @@ The **behavior** consists of the following fundamental parts:
 
 The first part defines the system's core behavior. It describes every valid state the system can be in and every valid way it can move from one state to the next.
 
-This is formally captured by a transition relation {% katex %}R{% endkatex %}. This relation is simply a collection of predicates (functions that return true or false).
+This is formally captured by a transition relation {% katex %} R {% endkatex %}. This relation is simply a collection of predicates (functions that return true or false).
 
 In mathematical terms, the transition relation is a logical **OR** of all individual transition rules:
 
-> {%katex%} R(s, s') \equiv \bigvee_{i=0}^n \varphi_i(s, s') {%endkatex%}
+> {% katex %} R(s, s') \equiv \bigvee_{i=0}^n \varphi_i(s, s') {% endkatex %}
 
 where each transition rule
 
@@ -55,7 +55,7 @@ def R(s, s_prime):
     return phi_0(s, s_prime) or phi_1(s, s_prime) or ... or phi_n(s, s_prime)
 ```
 
-Where each predicate, is just a function that accepts current and next state as input and returns true or false.
+Where each predicate is just a function that accepts current and next state as input and returns true or false.
 
 ```python
 # A state predicate: checks if Mario is on the ground.
@@ -363,18 +363,18 @@ def check_stayed_in_place(self, behavior):
             (
                 # no left or right key pressed
                 self.no_keys(right_pressed, left_pressed)
-                # deaccelearted to full stop
+                # decelerated to full stop
                 or self.tiny_velocity(velocity)
-                # both keys pressed and deaccelarated to full stop
+                # both keys pressed and decelerated to full stop
                 or self.both_keys_tiny_velocity(
                     velocity, right_pressed, left_pressed
                 )
-                # had left velocity but ran into left obsticle
+                # had left velocity but ran into left obstacle
                 or (
                     self.velocity_left(velocity)
                     and self.left_touching(mario_now, now, mario_before, before)
                 )
-                # had right velocity but ran into right obsticle
+                # had right velocity but ran into right obstacle
                 or (
                     self.velocity_right(velocity)
                     and self.right_touching(mario_now, now, mario_before, before)
@@ -587,12 +587,12 @@ def scenario(self):
             actions.play(game, seconds=1, model=model) # We plug the behavior model
 ```
 
-This test is way shorter, as the behaviour **[model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py#L11)** is being passed into the **[actions.play](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py#L18)** giving us:
+This test is much shorter because the behavior **[model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py#L11)** is being passed into the **[actions.play](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/move_right_with_model.py#L18)** giving us:
 
 - No explicit position tracking
 - No explicit assertions
 
-More importantly, the test scenario is actually enhanced as the model is checking the behaviour continuously (frame by frame) instead of only making an assertion about the final position!
+More importantly, the test scenario is actually enhanced as the model is checking the behavior continuously (frame by frame) instead of only making an assertion about the final position!
  
 Let's run it:
 
@@ -1715,7 +1715,7 @@ Oct 03,2025 16:16:54       ⟥  Scenario move jump
                                 Check Mario can jump in the game.
 Oct 03,2025 16:16:54         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
                230us         ⟥⟤ OK setup and cleanup, /super mario/with model/move jump/setup and cleanup
-Oct 03,2025 16:16:54         ⟥  When press right and jump keys for 0․2 seconds
+Oct 03,2025 16:16:54         ⟥  When press right and jump keys for 0.2 seconds
                  6ms         ⟥    [debug] ✓ Mario stayed in place
                  6ms         ⟥    [debug] ✓ Mario Mario stayed still for 1 frames
                  6ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
@@ -1791,7 +1791,7 @@ Oct 03,2025 16:16:54         ⟥  When press right and jump keys for 0․2 secon
                187ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=119, boundary=9056
                187ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
                187ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -7 is less than the maximum
-               187ms         ⟥⟤ OK press right and jump keys for 0․2 seconds, /super mario/with model/move jump/press right and jump keys for 0․2 seconds
+               187ms         ⟥⟤ OK press right and jump keys for 0.2 seconds, /super mario/with model/move jump/press right and jump keys for 0.2 seconds
 ```
 
 The test output reveals how horizontal and vertical movement properties work together during a jump. Looking at the first frame (6ms), Mario stays in place both horizontally (`stayed in place`) and vertically—the jump causal property doesn't trigger because no upward movement occurred yet. On the second frame (25ms), the jump begins: `jumped because jump was pressed on ground or bounced off enemy or had upward velocity` triggers with vertical velocity of -10 (negative values represent upward movement in the game's coordinate system), and the vertical safety property validates `Mario's vertical velocity -10 is less than the maximum`.
@@ -1809,7 +1809,7 @@ The test demonstrates the power of composable properties. We didn't write specia
 
 For fun, let's update our test to keep the jump key pressed for 1 second:
 
-``````python
+```python
 @TestScenario
 @Name("move jump")
 def scenario(self):
