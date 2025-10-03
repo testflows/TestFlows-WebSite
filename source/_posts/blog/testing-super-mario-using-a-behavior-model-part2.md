@@ -1312,7 +1312,7 @@ However, what happens when we just run the [`move left`](https://github.com/test
 
 <div class="text-center">
 <img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-11.gif">
-<div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Left Test Fail</div>
+<div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Left Test</div>
 </div><br>
 
 The test output messages are:
@@ -1637,7 +1637,7 @@ This demonstrates the robustness of property-based modeling: the boundary collis
 
 ## Jumping with a model
 
-Fresh from our success with movement detection and boundary collision, let's now convert the classical [`move jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_jump.py) test to use our behavior model in [`move jump with model`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_jump_with_model.py):
+Fresh from our success with movement and boundary validation, let's test jumping. The [`move jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/move_jump_with_model.py) with model test is just as simple as our right and left movement tests:
 
 ```python
 @TestScenario
@@ -1648,147 +1648,659 @@ def scenario(self):
     model = self.context.model
 
     with When("press right and jump keys for 0.2 seconds"):
-        with actions.press_jump():
-            actions.play(game, seconds=0.2, model=model)
+        with actions.press_right():
+            with actions.press_jump():
+                actions.play(game, seconds=0.2, model=model)
 ```
 
-What could go wrong? After all, jumping is just vertical movement, right? It turns out to be more complex than expected.
+But jumping introduces vertical movement on top of horizontal movement, this requires us to add more causal properties.
 
-#### The tale of the missing frame
-
-The first mystery appeared when we fixed the state peeking issue. Our model would correctly detect when the jump key was pressed, but Mario's y-position stubbornly refused to change. Had our collision detection broken? Was Mario stuck to the ground?
-
-The answer lay in the game's update loop. When the jump key is pressed in frame N, Mario's internal state immediately changes to `JUMP` and his vertical velocity is set. But his actual y-position doesn't change until frame N+1, when the game's position update logic runs. This 1-frame delay is invisible during normal gameplay but crucial for accurate modeling.
-
-We had to redesign our [`expect_jump`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L305) method to look across three frames instead of two:
+Let's add the [**check fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L292) property to verify that falling has a valid cause:
 
 ```python
-def expect_jump(self, behavior):
-    # Need 3 states to handle 1-frame delay: now, before, right_before
-    now, before, right_before = behavior[-1], behavior[-2], behavior[-3]
-    
-    # Check if jump key was just pressed (not held)
-    jump_pressed_before = self.is_key_pressed(before, "a")
-    jump_pressed_right_before = self.is_key_pressed(right_before, "a")
-    
-    if jump_pressed_before and not jump_pressed_right_before:
-        # Jump initiated in 'before' frame, check for y-position change in 'now'
-        self.assert_jump(now, before)
+def check_fall(self, behavior):
+    """Check if Mario's fall (downward movement) has a valid cause."""
+    actual_vertical_movement = behavior.actual_vertical_movement
+
+    if self.moved_down(actual_vertical_movement):
+        mario_before = behavior.mario_before
+        before = behavior.before
+        self.model.assert_with_success(
+            not self.on_the_ground(mario_before, before),
+            "fell because there was no ground support",
+        )
 ```
 
-#### The persistent key problem
+If Mario moved down, there must be a cause: he wasn't on the ground. Simple and direct.
 
-But even with the timing fix, our jump tests were still failing in mysterious ways. Sometimes Mario would jump, sometimes he wouldn't, seemingly at random. The pattern emerged when we realized that our test was holding the jump key down continuously, expecting Mario to keep jumping.
-
-This revealed another authentic game mechanic: Mario can't jump again while the jump key is held down. The key must be released and pressed again for each jump. This prevents accidental double-jumps and gives players precise control over their jumps.
-
-Our model now had to track not just whether the jump key was pressed, but whether it had been released since the last press. This added another layer of temporal complexity to our jump detection logic.
-
-#### When air physics broke inertia
-
-The plot thickened when we started testing combined movement and jumping. Remember our carefully crafted inertia logic that counted consecutive frames to determine when Mario should start decelerating? It was completely wrong for airborne Mario.
-
-When Mario jumps while moving horizontally, he maintains his momentum in the air indefinitely. But our [`has_maintained_inertia`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario.py#L146) method was counting air frames toward the ground-based inertia threshold, causing it to incorrectly expect Mario to decelerate mid-jump.
-
-The fix required recognizing that air physics and ground physics are fundamentally different domains:
+Also, we add the [**check stop fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L305) property to validate that stopping a fall also has a valid cause:
 
 ```python
-def has_maintained_inertia(self, behavior, previous_movement, direction="right"):
-    for state in behavior[-4::-1]:
-        # If Mario was in the air, break the inertia chain
-        mario_current = self.get("player", current_state)
-        if not self.has_collision(mario_current, current_state, "bottom"):
-            debug("Mario is in the air, inertia is maintained")
-            break
-        # ... rest of logic ...
+def check_stop_fall(self, behavior):
+    """Check if stopped falling has a valid cause (landing)."""
+    was_falling = self.velocity_down(behavior.vertical_velocity)
+    now_vertical_movement = behavior.actual_vertical_movement
+
+    if was_falling and self.stayed_in_the_air_or_bounced(now_vertical_movement):
+        mario_now = behavior.mario_now
+        now = behavior.now
+        before = behavior.before
+        mario_before = behavior.mario_before
+        self.model.assert_with_success(
+            self.on_the_ground(mario_now, now)
+            or self.stomped_enemy(mario_before, before),
+            "stopped falling because landed on support or stomped an enemy",
+        )
 ```
+
+If Mario was falling but no longer moves down, there must be a reason: he landed on ground or stomped an enemy.
+
+Together with [**check jump**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L322) (shown earlier), these three properties work with the horizontal movement properties to validate jumping.
+
+Let's first run our jump test by itself:
+
+```bash
+./tests/run.py --save-video --only "/super mario/with model/move jump/*"
+```
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-12.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Jump Test</div>
+</div><br>
+
+The test output messages are:
+
+```bash
+Oct 03,2025 16:16:54       ⟥  Scenario move jump
+                                Check Mario can jump in the game.
+Oct 03,2025 16:16:54         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
+               230us         ⟥⟤ OK setup and cleanup, /super mario/with model/move jump/setup and cleanup
+Oct 03,2025 16:16:54         ⟥  When press right and jump keys for 0․2 seconds
+                 6ms         ⟥    [debug] ✓ Mario stayed in place
+                 6ms         ⟥    [debug] ✓ Mario Mario stayed still for 1 frames
+                 6ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                 6ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                 6ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                 6ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                25ms         ⟥    [debug] ✓ Mario stayed in place
+                26ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                26ms         ⟥    [debug] ✓ Mario Mario stayed still for 2 frames
+                26ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                26ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                26ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                26ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                42ms         ⟥    [debug] ✓ Mario stayed in place
+                42ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                43ms         ⟥    [debug] ✓ Mario Mario stayed still for 3 frames
+                43ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                43ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                43ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                43ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                58ms         ⟥    [debug] ✓ Mario stayed in place
+                58ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                58ms         ⟥    [debug] ✓ Mario Mario stayed still for 4 frames
+                58ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                58ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                58ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                58ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                73ms         ⟥    [debug] ✓ Mario moved right because right key is pressed
+                73ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                73ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=111, boundary=0
+                73ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=111, boundary=9056
+                73ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+                73ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                89ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+                89ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                89ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=112, boundary=0
+                89ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=112, boundary=9056
+                90ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+                90ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -9 is less than the maximum
+               106ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               106ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               106ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=113, boundary=0
+               106ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=113, boundary=9056
+               107ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               107ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -9 is less than the maximum
+               121ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               121ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               121ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=114, boundary=0
+               121ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=114, boundary=9056
+               122ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               122ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -9 is less than the maximum
+               139ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               139ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               139ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=115, boundary=0
+               139ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=115, boundary=9056
+               139ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               139ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -8 is less than the maximum
+               154ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               154ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               154ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=116, boundary=0
+               154ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=116, boundary=9056
+               155ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               155ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -8 is less than the maximum
+               171ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               171ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               171ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=117, boundary=0
+               171ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=117, boundary=9056
+               171ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               171ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -8 is less than the maximum
+               186ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               187ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               187ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=119, boundary=0
+               187ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=119, boundary=9056
+               187ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               187ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -7 is less than the maximum
+               187ms         ⟥⟤ OK press right and jump keys for 0․2 seconds, /super mario/with model/move jump/press right and jump keys for 0․2 seconds
+```
+
+The test output reveals how horizontal and vertical movement properties work together during a jump. Looking at the first frame (6ms), Mario stays in place both horizontally (`stayed in place`) and vertically—the jump causal property doesn't trigger because no upward movement occurred yet. On the second frame (25ms), the jump begins: `jumped because jump was pressed on ground or bounced off enemy or had upward velocity` triggers with vertical velocity of -10 (negative values represent upward movement in the game's coordinate system), and the vertical safety property validates `Mario's vertical velocity -10 is less than the maximum`.
+
+Later we see that the horizontal movement begins: `moved right because right key is pressed`. The horizontal velocity increases from 1, and reaches 2 pixels per frame. Throughout this acceleration, the jump continues—the causal property keeps validating `jumped because jump was pressed on ground or bounced off enemy or had upward velocity`, while the vertical velocity gradually decreases in magnitude (-10 → -9 → -8 → -7) as the jump approaches its apex.
+
+Every frame is validated by horizontal and vertical properties simultaneously:
+- **Horizontal causal**: `stayed in place` or `moved right because...`
+- **Vertical causal**: `jumped because...`
+- **Horizontal safety**: `velocity N is within walk maximum` and boundary checks
+- **Vertical safety**: `vertical velocity N is less than the maximum`
+- **Liveness**: `Mario started moving after N frames` (bounded liveness check)
+
+The test demonstrates the power of composable properties. We didn't write special "jumping while moving right" logic—we simply added three vertical causal properties (`check_jump`, `check_fall`, `check_stop_fall`) that work alongside our existing horizontal properties. The composition is automatic: at each frame, all applicable properties fire, validating horizontal velocity, vertical velocity, boundaries, and movement causes simultaneously. Complex two-dimensional physics reduced to simple, independent causal, safety, and liveness checks!
+
+For fun, let's update our test to keep the jump key pressed for 1 second:
+
+``````python
+@TestScenario
+@Name("move jump")
+def scenario(self):
+    """Check Mario can move and jump in the game."""
+    game = self.context.game
+    model = self.context.model
+
+    with When("press right and jump keys for 1 second"):
+        with actions.press_right():
+            with actions.press_jump():
+                actions.play(game, seconds=1, model=model)
+```
+
+```bash
+./tests/run.py --save-video --only "/super mario/with model/move jump/*"
+```
+
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-13.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Jump Test For 1 Second</div>
+</div><br>
+
+The test output messages are:
+
+```bash
+Oct 03,2025 16:52:37       ⟥  Scenario move jump
+                                Check Mario can jump in the game.
+Oct 03,2025 16:52:37         ⟥  Given setup and cleanup, flags:MANDATORY|SETUP
+               214us         ⟥⟤ OK setup and cleanup, /super mario/with model/move jump/setup and cleanup
+Oct 03,2025 16:52:37         ⟥  When press right and jump keys for 1 second
+                 7ms         ⟥    [debug] ✓ Mario stayed in place
+                 7ms         ⟥    [debug] ✓ Mario Mario stayed still for 1 frames
+                 7ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                 7ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                 7ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                 7ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+                27ms         ⟥    [debug] ✓ Mario stayed in place
+                30ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                30ms         ⟥    [debug] ✓ Mario Mario stayed still for 2 frames
+                30ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                30ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                30ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                30ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                40ms         ⟥    [debug] ✓ Mario stayed in place
+                41ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                41ms         ⟥    [debug] ✓ Mario Mario stayed still for 3 frames
+                41ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                41ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                41ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                41ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                58ms         ⟥    [debug] ✓ Mario stayed in place
+                58ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                58ms         ⟥    [debug] ✓ Mario Mario stayed still for 4 frames
+                58ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=110, boundary=0
+                59ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=110, boundary=9056
+                59ms         ⟥    [debug] ✓ Mario Mario's velocity 0 is within walk maximum
+                59ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                74ms         ⟥    [debug] ✓ Mario moved right because right key is pressed
+                74ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                74ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=111, boundary=0
+                74ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=111, boundary=9056
+                74ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+                74ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -10 is less than the maximum
+                90ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+                90ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+                90ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=112, boundary=0
+                90ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=112, boundary=9056
+                90ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+                91ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -9 is less than the maximum
+               107ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               107ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               107ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=113, boundary=0
+               107ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=113, boundary=9056
+               108ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               108ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -9 is less than the maximum
+               122ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               122ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               122ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=114, boundary=0
+               122ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=114, boundary=9056
+               123ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               123ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -9 is less than the maximum
+               139ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               139ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               139ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=115, boundary=0
+               139ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=115, boundary=9056
+               140ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               140ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -8 is less than the maximum
+               155ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               155ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               155ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=116, boundary=0
+               155ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=116, boundary=9056
+               155ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               155ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -8 is less than the maximum
+               171ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               171ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               171ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=117, boundary=0
+               171ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=117, boundary=9056
+               172ms         ⟥    [debug] ✓ Mario Mario's velocity 1 is within walk maximum
+               172ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -8 is less than the maximum
+               189ms         ⟥    [debug] ✓ Mario moved right because velocity is 1
+               194ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               194ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=119, boundary=0
+               194ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=119, boundary=9056
+               195ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               195ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -7 is less than the maximum
+               203ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               203ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               203ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=121, boundary=0
+               203ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=121, boundary=9056
+               203ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               203ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -7 is less than the maximum
+               215ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               215ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               215ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=123, boundary=0
+               215ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=123, boundary=9056
+               215ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               216ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -7 is less than the maximum
+               232ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               232ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               232ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=125, boundary=0
+               232ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=125, boundary=9056
+               232ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               232ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -6 is less than the maximum
+               248ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               248ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               248ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=127, boundary=0
+               248ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=127, boundary=9056
+               248ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               248ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -6 is less than the maximum
+               268ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               268ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               269ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=129, boundary=0
+               269ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=129, boundary=9056
+               269ms         ⟥    [debug] ✓ Mario Mario's velocity 2 is within walk maximum
+               269ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -6 is less than the maximum
+               285ms         ⟥    [debug] ✓ Mario moved right because velocity is 2
+               285ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               285ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=132, boundary=0
+               285ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=132, boundary=9056
+               286ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               286ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -6 is less than the maximum
+               302ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               302ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               302ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=135, boundary=0
+               302ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=135, boundary=9056
+               302ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               302ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -5 is less than the maximum
+               316ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               316ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               316ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=138, boundary=0
+               316ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=138, boundary=9056
+               317ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               317ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -5 is less than the maximum
+               333ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               333ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               333ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=141, boundary=0
+               333ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=141, boundary=9056
+               333ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               333ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -5 is less than the maximum
+               354ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               359ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               359ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=144, boundary=0
+               359ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=144, boundary=9056
+               360ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               360ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -4 is less than the maximum
+               368ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               368ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               368ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=147, boundary=0
+               368ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=147, boundary=9056
+               368ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               368ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -4 is less than the maximum
+               380ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               381ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               381ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=150, boundary=0
+               381ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=150, boundary=9056
+               381ms         ⟥    [debug] ✓ Mario Mario's velocity 3 is within walk maximum
+               381ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -4 is less than the maximum
+               397ms         ⟥    [debug] ✓ Mario moved right because velocity is 3
+               397ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               397ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=154, boundary=0
+               397ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=154, boundary=9056
+               398ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               398ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -3 is less than the maximum
+               417ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               418ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               418ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=158, boundary=0
+               418ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=158, boundary=9056
+               418ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               418ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -3 is less than the maximum
+               432ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               432ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               432ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=162, boundary=0
+               432ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=162, boundary=9056
+               433ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               433ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -3 is less than the maximum
+               451ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               451ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               451ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=166, boundary=0
+               451ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=166, boundary=9056
+               451ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               451ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -2 is less than the maximum
+               464ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               464ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               464ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=170, boundary=0
+               464ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=170, boundary=9056
+               465ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               465ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -2 is less than the maximum
+               482ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               482ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               482ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=174, boundary=0
+               482ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=174, boundary=9056
+               482ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               482ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -2 is less than the maximum
+               494ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               494ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               494ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=178, boundary=0
+               494ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=178, boundary=9056
+               494ms         ⟥    [debug] ✓ Mario Mario's velocity 4 is within walk maximum
+               494ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -2 is less than the maximum
+               513ms         ⟥    [debug] ✓ Mario moved right because velocity is 4
+               513ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               514ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=183, boundary=0
+               514ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=183, boundary=9056
+               514ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               514ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -1 is less than the maximum
+               529ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               529ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               529ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=188, boundary=0
+               529ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=188, boundary=9056
+               530ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               530ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -1 is less than the maximum
+               542ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               542ms         ⟥    [debug] ✓ Mario jumped because jump was pressed on ground or bounced off enemy or had upward velocity
+               542ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=193, boundary=0
+               542ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=193, boundary=9056
+               543ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               543ms         ⟥    [debug] ✓ Mario Mario's vertical velocity -1 is less than the maximum
+               559ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               559ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=198, boundary=0
+               560ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=198, boundary=9056
+               560ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               560ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               579ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               580ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=203, boundary=0
+               580ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=203, boundary=9056
+               580ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               580ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               594ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               594ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               594ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=208, boundary=0
+               594ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=208, boundary=9056
+               594ms         ⟥    [debug] ✓ Mario Mario's velocity 5 is within walk maximum
+               594ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 1 is less than the maximum
+               609ms         ⟥    [debug] ✓ Mario moved right because velocity is 5
+               609ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               609ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=214, boundary=0
+               609ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=214, boundary=9056
+               609ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               609ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 2 is less than the maximum
+               625ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               625ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               626ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=220, boundary=0
+               626ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=220, boundary=9056
+               626ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               626ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 3 is less than the maximum
+               641ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               641ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               641ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=226, boundary=0
+               641ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=226, boundary=9056
+               641ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               641ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 4 is less than the maximum
+               658ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               658ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               658ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=232, boundary=0
+               658ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=232, boundary=9056
+               659ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               659ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 5 is less than the maximum
+               678ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               681ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               681ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=238, boundary=0
+               681ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=238, boundary=9056
+               681ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               681ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 6 is less than the maximum
+               692ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               692ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               692ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=244, boundary=0
+               692ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=244, boundary=9056
+               692ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               692ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 7 is less than the maximum
+               709ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               709ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               709ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=250, boundary=0
+               709ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=250, boundary=9056
+               709ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               710ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 8 is less than the maximum
+               727ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               727ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               727ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=256, boundary=0
+               727ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=256, boundary=9056
+               727ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               727ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 9 is less than the maximum
+               742ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               742ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               742ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=262, boundary=0
+               742ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=262, boundary=9056
+               743ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               743ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 10 is less than the maximum
+               758ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               758ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               758ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=268, boundary=0
+               758ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=268, boundary=9056
+               758ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               758ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               774ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               774ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               774ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=274, boundary=0
+               774ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=274, boundary=9056
+               775ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               775ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               790ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               790ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               790ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=280, boundary=0
+               790ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=280, boundary=9056
+               791ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               791ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               807ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               807ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               807ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=286, boundary=0
+               807ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=286, boundary=9056
+               807ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               807ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               821ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               821ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               821ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=292, boundary=0
+               821ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=292, boundary=9056
+               822ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               822ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               840ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               843ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               843ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=298, boundary=0
+               843ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=298, boundary=9056
+               843ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               843ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               850ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               850ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               850ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=304, boundary=0
+               850ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=304, boundary=9056
+               850ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               850ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               871ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               871ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               871ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=310, boundary=0
+               871ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=310, boundary=9056
+               871ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               871ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               885ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               885ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               885ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=316, boundary=0
+               885ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=316, boundary=9056
+               886ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               886ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               902ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               902ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               902ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=322, boundary=0
+               902ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=322, boundary=9056
+               902ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               902ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               917ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               917ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               917ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=328, boundary=0
+               917ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=328, boundary=9056
+               918ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               918ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 11 is less than the maximum
+               935ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               935ms         ⟥    [debug] ✓ Mario fell because there was no ground support
+               935ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=334, boundary=0
+               935ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=334, boundary=9056
+               935ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               935ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 7 is less than the maximum
+               950ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               950ms         ⟥    [debug] ✓ Mario stopped falling because landed on support or stomped an enemy
+               950ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=340, boundary=0
+               950ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=340, boundary=9056
+               951ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               951ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               967ms         ⟥    [debug] ✓ Mario moved right because velocity is 6
+               967ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=346, boundary=0
+               967ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=346, boundary=9056
+               967ms         ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+               967ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+               967ms         ⟥⟤ OK press right and jump keys for 1 second, /super mario/with model/move jump/press right and jump keys for 1 second
+```
+
+Perfect! By extending the test to 1 second, we now see all three vertical causal properties in action across the complete jump cycle. The [**check_jump**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L322) property validates the ascent phase with `jumped because jump was pressed on ground or bounced off enemy or had upward velocity`. The [**check_fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L292) property validates the descent with `fell because there was no ground support`. Finally, the [**check_stop_fall**](https://github.com/testflows/Examples/blob/main/SuperMario/tests/models/mario/movement.py#L305) property confirms the landing with `stopped falling because landed on support or stomped an enemy`. Again we see that throughout all frames, horizontal movement properties work independently alongside vertical properties.
 
 ## Testing the model using manual play
 
-As our behavior model grew more sophisticated, we faced a fundamental challenge: how do you test a model designed to predict human behavior? Automated tests are excellent for regression testing, but they follow predictable patterns. Real players are chaotic, unpredictable, and creative in ways that expose edge cases no automated test would ever discover.
+Now that our model includes some interesting properties, we face a fundamental challenge: how do we push the model's limit? Automated tests are excellent for regression testing, but they follow predictable patterns. Real players are chaotic, unpredictable, and creative in ways that expose edge cases no automated test would ever discover.
 
-The solution was to combine the best of both worlds: **manual play with real-time model validation**.
+Given that the behavior model can be plugged into any test driver, let's just combine manual play with our real-time model validation!
 
-### The power of interactive validation
-
-We created a [`manual_play.py`](https://github.com/testflows/Examples/blob/main/SuperMario/tests/manual_play.py) test that lets you control Mario directly while the behavior model validates every single frame in real-time. It's like having a physics professor watching over your shoulder, instantly calling out any violation of the game's expected behavior.
+For this, we created a [`manual play`](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/manual_play.py) test that lets you control Mario directly while the behavior model validates every single frame in real-time. It's like having a referee watching over your shoulder, instantly calling out any violation of the game's expected behavior.
 
 The implementation is surprisingly simple:
 
 ```python
 @TestScenario
 def scenario(self, play_seconds=30):
-    """Allow manual play with behavior model validation."""
+    """Allow manual play of the game for a specified duration with behavior model validation."""
     game = self.context.game
     model = self.context.model
-    
+
     with Given("setup for manual play"):
         actions.setup(game=game, overlays=[])
-    
+
     with When(f"playing manually for {play_seconds} seconds"):
-        game.manual = True  # Enable manual keyboard input
-        
-        with By("starting manual play session", 
-                description="Use arrow keys, A to jump, S for action"):
-            # This single line does all the magic:
+        # Enable manual mode so all keys are captured
+        game.manual = True
+
+        with By("starting manual play session"):
+            # Play for the specified duration with model validation
             actions.play(game, seconds=play_seconds, model=model)
+
+    with Then("manual play session completed"):
+        game.manual = False
+        note("Manual play session finished!")
 ```
 
 Run it with:
 ```bash
-python -m pytest tests/run.py::module -k "manual" -v --manual-play-seconds=60
+./tests/run.py --save-video --only "/super mario/manual/play/*" --manual-play-seconds=60
 ```
 
-The moment you start playing, something magical happens. Every movement, every jump, every collision is being analyzed by hundreds of assertions per second. The model is checking:
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-14.gif">
+<div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Manual Play</div>
+</div><br>
 
-- Is Mario's movement speed within expected limits?
-- Is his inertia behavior correct when you release keys?
-- Are jump physics working properly?
-- Do boundaries and collisions behave as expected?
-- Is the startup delay for direction changes being respected?
+The moment you start playing, something magical happens. Every movement, every jump, every collision is being analyzed by each of our properties!
 
-### Discovering the undiscoverable
+### Discovering model's limits
 
-Within minutes of manual testing, we uncovered issues that months of automated testing had missed. The most revealing was what we call the "boundary switching problem" - when Mario hits the left edge of the level and you immediately switch from pressing left to right, the model would fail:
+We can try running the manual play longer. Let's say for 5 minutes:
 
+```bash
+./tests/run.py --save-video --only "/super mario/manual/play/*" --manual-play-seconds 300
 ```
-Exception: AssertionError: Mario did not move right
+
+Soon you will see that our model still needs some improvements. For example, we hit this case:
+
+
+```         2s 203ms           ⟥    [debug] ✓ Mario moved right because velocity is 6
+            2s 203ms           ⟥    [debug] ✓ Mario fell because there was no ground support
+            2s 203ms           ⟥    [debug] ✓ Mario Mario is within left boundary x=856, boundary=0
+            2s 203ms           ⟥    [debug] ✓ Mario Mario is within right boundary x=856, boundary=9056
+            2s 203ms           ⟥    [debug] ✓ Mario Mario's velocity 6 is within walk maximum
+            2s 203ms           ⟥    [debug] ✓ Mario Mario's vertical velocity 8 is less than the maximum
+            2s 218ms           ⟥    [debug] ✓ Mario moved right because velocity is 6
+            2s 219ms           ⟥    Exception: AssertionError: Mario failed to: stopped falling because landed on support or stomped an enemy
 ```
 
-This revealed a subtle timing issue: Mario needs an extra frame to transition away from boundary positions, something our automated tests never encountered because they don't rapidly switch directions at boundaries like humans do.
+This means that our [**check stop fall**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L305) causal property still needs some work.
 
-Similarly, we discovered a critical bug in our boundary assertion logic where the model would correctly detect Mario hitting a boundary, assert he should stop, but then continue executing and fail on a contradictory movement assertion. This logic error was invisible in automated tests but immediately apparent during manual play.
+However, what makes manual testing so powerful is that humans naturally do things automated tests never would: rapidly switching directions, jumping at boundaries, mashing buttons, trying impossible combinations. Each behavior stress-tests different aspects of the model, revealing gaps between expectations and reality.
 
-### The human advantage
+The beauty is the immediate feedback loop. Play naturally, and when behavior violates the model's expectations, you get an instant assertion failure that you can start to debug. Fix the model to handle the edge case or report a bug in the game, then continue playing to find the next issue. This rapid cycle is far more efficient than trying to anticipate edge cases through reasoning alone.
 
-What makes manual testing so powerful is that humans naturally do things that break assumptions:
+When you can play for extended periods without assertion failures, you have empirical proof that your model correctly predicts the game's behavior under all conditions a human player might create—combining human creativity with automated validation to ensure accurate, verifiable understanding.
 
-- **Rapid input changes**: Switching directions multiple times per second
-- **Edge case exploration**: Running into walls, jumping at boundaries, trying impossible combinations
-- **Persistence testing**: Holding keys down, mashing buttons, testing limits
-- **Creative sequences**: Combining movements in ways automated tests never would
+## The power of pluggable validation
 
-Each of these human behaviors stress-tests different aspects of the model, revealing gaps between our expectations and reality.
+The true power of behavior modeling lies in its flexibility—the model can be plugged into any testing mechanism. Manual play, scripted tests, random action generators, reinforcement learning agents, genetic algorithms—the behavior model doesn't care who or what is controlling the game. It simply validates that observed behavior matches expected properties, regardless of the source of the actions.
 
-### Real-time feedback loop
+This pluggability is transformative. You write your causal, safety, and liveness properties once, and they immediately work across every testing context. The same model that validates your manual exploration validates your CI/CD automated tests, or your overnight AI fuzzing runs. No need to rewrite assertions for different test drivers or maintain separate validation logic for different testing approaches.
 
-The beauty of this approach is the immediate feedback. The moment your behavior violates the model's expectations, you get an assertion failure with detailed debug information. This creates a rapid learning cycle:
+Consider AI-driven testing: plug in a reinforcement learning agent, and it can play for hours or days without fatigue, systematically exploring edge cases while your behavior model validates every frame. The agent actively tries to maximize rewards, which leads it to exploit game mechanics in unexpected ways. As it learns optimal strategies, it naturally discovers edge cases—and your model catches any violations in real-time. Random action generators, despite their simplicity, are equally effective at finding bizarre input combinations that no human would naturally create: pressing multiple directional keys simultaneously, switching directions every frame, or alternating between jump and movement in patterns that stress-test your properties.
 
-1. **Play naturally** - Use Mario as you would in any game
-2. **Model fails** - An assertion catches unexpected behavior  
-3. **Investigate** - Debug output shows exactly what went wrong
-4. **Fix model** - Update the model to handle the edge case
-5. **Repeat** - Continue playing to find the next issue
-
-This process is far more efficient than trying to anticipate edge cases through pure reasoning or hoping automated tests will stumble upon them.
-
-### Beyond bug finding
-
-Manual testing with model validation does more than just find bugs - it validates that our understanding of the game's behavior is complete and accurate. When you can play for extended periods without any assertion failures, you know your model truly captures the game's physics and mechanics.
-
-It's the difference between having a theoretical understanding of how Mario should behave versus having empirical proof that your model correctly predicts how Mario actually behaves under all conditions a human player might create.
-
-This combination of human creativity and automated validation represents a new paradigm in testing: using human intuition to explore the space of possible behaviors while using formal models to ensure that exploration leads to accurate, verifiable understanding.
+This universality means your investment in model development compounds across your entire testing strategy. Whether you're doing quick manual verification, running regression tests, or conducting extended autonomous exploration, the same properties provide consistent, reliable validation. That's the real power—write once, validate everywhere.
 
 ## Conclusion
 
+We began this series by referencing Antithesis's [How Antithesis finds bugs (with help from the Super Mario Bros.)](https://antithesis.com/blog/sdtalk/) blog article, which demonstrates how their system that includes a deterministic hypervisor can explore *Super Mario's* vast state space. Their approach is powerful for finding unexpected states and edge cases, but we asked a fundamental question: how do you verify that the game **behaves correctly** in those states?
+
+Our journey through behavior modeling revealed that testing real game correctness is far more complex than simply exploring states or finding the winning condition. Game behavior is intricate—filled with physics interactions, inertia, acceleration, boundaries, collisions, and countless edge cases. When we attempted to model the complete transition relations for even simple movements, we quickly discovered that the complexity explodes. A naive procedural approach to modeling "move right" would require tracking startup delays, velocity states, direction changes, obstacles, boundary conditions, and their countless interactions—an unmaintainable tangle of conditional logic.
+
+This is where properties offer a pragmatic workaround. Instead of precisely modeling complex transition relations, we assert causal, safety, and liveness properties: if Mario moved right, there must be a valid cause; Mario's velocity must never exceed limits; Mario must eventually start moving when keys are pressed. Think of it as **property-based testing on steroids**—properties that check not just input-output relationships, but causal relationships, safety invariants, and liveness guarantees across state transitions. These properties provide practical validation without requiring us to fully implement the game's intricate physics engine. Yet even with this approach, gaps remain—as our manual testing revealed when the [**check stop fall**](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/mario/movement.py#L305) property failed on edge cases we hadn't anticipated.
+
+This brings us to the heart of the matter: the [**test oracle problem**](https://en.wikipedia.org/wiki/Test_oracle). How do you know what the correct behavior should be in every possible state? This is one of the hardest problems in software testing, and our experience with *Super Mario* demonstrates why. Not even the combination of deterministic hypervisors and autonomous game play can solve it—they can explore states extensively, but they cannot tell you whether those states are correct **without an oracle**.
+
+Behavior models are our best attempt at creating that oracle. They're flexible—you can use properties where transition relations are too complex, and model explicit transition relations where they're feasible and desirable. They're imperfect, requiring continuous refinement through testing and observation. But they're also universal, pluggable, and incrementally improvable. By building properties and transitions that compose naturally, we create validation that scales across manual testing, automated regression suites, and autonomous or AI-driven exploration. The model grows with our understanding, capturing more of the system's complexity over time.
+
+The real insight is that behavior modeling isn't about achieving perfect coverage—it's about creating a systematic framework for validating correctness that can evolve as your understanding deepens. Write the properties once, plug them into any testing mechanism, and let them validate behavior wherever it occurs. That's as close to an oracle as we're likely to get.
+
+This approach—capturing expected behavior as executable code that validates actual behavior across all testing contexts—is what we call **behavior-as-code**, and it's quickly becoming the new gold standard for systematic, scalable software testing.
