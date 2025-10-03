@@ -12,7 +12,7 @@ When testing complex stateful systems like [*Super Mario*](https://en.wikipedia.
 
 Imagine Mario sprinting through a level, collecting coins, and leaping over pits. Each action he takes depends on a myriad of factors: his speed, the timing of his jumps, his momentum and inertia, and even the layout of the level itself. Writing individual test cases for each scenario—like we showed in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/)—would be like trying to count every grain of sand on a beach.
 
-This is where behavior models shine. They decouple assertions about expected behavior from the test actions themselves, allowing us to focus on what the game should do rather than how to test it. This decoupling opens the door to applying various state space exploration techniques—whether through manual testing, automated scripts, or fully autonomous systems. The model becomes your universal correctness oracle, validating behavior across any path through Mario's world.<!-- more -->
+This is where behavior models shine. They decouple assertions about expected behavior from the test actions themselves, allowing us to focus on what the game should do rather than how to test it. The key idea is that these models are executable specifications—behavior‑as‑code—that can be plugged into any driver. This decoupling opens the door to applying various state space exploration techniques—whether through manual testing, automated scripts, or fully autonomous systems. The model becomes your universal correctness oracle, validating behavior across any path through Mario's world.<!-- more -->
 
 Because behavior models are composable, we can build them incrementally—start with basic properties, then add complexity as needed. The [test oracle problem](https://en.wikipedia.org/wiki/Test_oracle) puts a fundamental boundary on any model, but behavior models acknowledge this reality and let us choose the right abstraction level. Crucially, they provide a practical way to approach correctness testing at scale across such vast state spaces.
 
@@ -88,7 +88,7 @@ In addition to the above, properties also fall into one of the following categor
 
 * **Safety Properties**: Something bad never happens.
 * **Liveness Properties**: Something good eventually happens.
-* **Fairness Properties**: If something is possible to do infinitely often, it must eventually be done.
+* **Fairness Properties**: If something is possible to do infinitely often, it must eventually be done. However, we won’t use it here.
 
 Technically, most properties fall into **safety**. Why? Because **liveness** and 
 **fairness** properties are unbounded and as soon as you bound them they fall into the 
@@ -205,7 +205,9 @@ This structure provides the foundation to implement both the **transition relati
 
 ## Model code structure
 
-For the model, we use an object-oriented code structure that combines **inheritance** and **composition** to create a modular, scalable design. 
+With the model’s `expect` entry point in place, here’s the minimal modular scaffold it plugs into.
+
+We'll use an object-oriented code structure that combines **inheritance** and **composition** to create a modular, scalable design. 
 
 **Inheritance** provides shared functionality: each game object model inherits from a base [Model](https://github.com/testflows/Examples/blob/v1.0/SuperMario/tests/models/base.py#L6) class that implements common operations like collision detection, position tracking, and key state queries.
 
@@ -2207,6 +2209,8 @@ Perfect! By extending the test to 1 second, we now see all three vertical causal
 
 ## Testing the model using manual play
 
+We’ve validated automated test actions; next, let’s stress the model with unpredictable human play.
+
 Now that our model includes some interesting properties, we face a fundamental challenge: how do we push the model's limit? Automated tests are excellent for regression testing, but they follow predictable patterns. Real players are chaotic, unpredictable, and creative in ways that expose edge cases no automated test would ever discover.
 
 Given that the behavior model can be plugged into any test driver, let's just combine manual play with our real-time model validation!
@@ -2303,4 +2307,6 @@ Behavior models are our best attempt at creating that oracle. They're flexible�
 
 The real insight is that behavior modeling isn't about achieving perfect coverage—it's about creating a systematic framework for validating correctness that can evolve as your understanding deepens. Write the properties once, plug them into any testing mechanism, and let them validate behavior wherever it occurs. That's as close to an oracle as we're likely to get.
 
-This approach—capturing expected behavior as executable code that validates actual behavior across all testing contexts—is what we call **behavior-as-code**, and it's quickly becoming the new gold standard for systematic, scalable software testing.
+This approach—capturing expected behavior as executable code that validates actual behavior across all testing contexts—is what we call **behavior-as-code**, and it's quickly becoming for us the new gold standard for systematic, scalable software testing.
+
+> Given that the model presented here is intentionally incomplete and tailored for teaching purposes. We welcome your improvements and extensions, so feel free to open a PR in the repository at https://github.com/testflows/Examples (see https://github.com/testflows/Examples/tree/v1.0/SuperMario).
