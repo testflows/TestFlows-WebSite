@@ -10,13 +10,13 @@ icon: fas fa-glasses pt-5 pb-5
 
 When testing complex stateful systems like [*Super Mario*](https://en.wikipedia.org/wiki/Super_Mario_Bros), behavior models can be your secret weapon. Think of them as property-based testing on steroids. The game world is vast, with countless combinations of player positions, velocities, physics states, and environmental conditions. This complexity makes it impractical to write classical test cases that cover any significant portion of the state space. At best, such tests can only form a sanity suite.
 
-Imagine Mario sprinting through a level, collecting coins, and leaping over pits. Each action he takes depends on a myriad of factors: his speed, the timing of his jumps, his momentum and inertia, and even the layout of the level itself. Writing individual test cases for each scenario—like we showed in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/)—would be like trying to count every grain of sand on a beach.<!-- more -->
+Imagine Mario sprinting through a level, collecting coins, and leaping over pits. Each action he takes depends on a myriad of factors: his speed, the timing of his jumps, his momentum and inertia, and even the layout of the level itself. Writing individual test cases for each scenario—like we showed in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/)—would be like trying to count every grain of sand on a beach.
 
-This is where behavior models shine. They decouple assertions about expected behavior from the test actions themselves, allowing us to focus on what the game should do rather than how to test it. The key idea is that these models are executable specifications—behavior‑as‑code—that can be plugged into any driver. This decoupling opens the door to applying various state space exploration techniques—whether through manual testing, automated scripts, or fully autonomous systems. The model becomes your universal correctness oracle, validating behavior across any path through Mario's world.
+This is where behavior models shine. They decouple assertions about expected behavior from the test actions themselves, allowing us to focus on what the game should do rather than how to test it. The key idea is that these models are executable specifications, or behavior-as-code, that can be plugged into any driver. This decoupling opens the door to applying various state space exploration techniques, whether through manual testing, automated scripts, or fully autonomous systems. The model becomes your universal correctness oracle, validating behavior across any path through Mario's world.
 
 Because behavior models are composable, we can build them incrementally—start with basic properties, then add complexity as needed. The [test oracle problem](https://en.wikipedia.org/wiki/Test_oracle) puts a fundamental boundary on any model, but behavior models acknowledge this reality and let us choose the right abstraction level. Crucially, they provide a practical way to approach correctness testing at scale across such vast state spaces.
 
-So how do we actually build one? In this Part 2, we'll dive deep into the theory that makes behavior models so powerful, then build one step-by-step for our *Super Mario* implementation. Building on the testing framework we created in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/), we'll show how to start constructing a game model using properties. While behavior models support defining both transition relations and properties, transition relations for complex systems like games would not be trivial to implement. Instead, we'll show how to implement causal properties (why Mario moved), safety properties (what should never happen), and liveness properties (what should eventually happen) for basic movement and jumping. This won't be a complete model of *Super Mario*—that would require covering power-ups, enemies, scoring, and much more—but it will demonstrate the incremental, composable approach to building behavior models. Because behavior models are executable specifications, or behavior-as-code as we call it, you'll see how the same model can be used for automated and manual testing.
+So how do we actually build one? In this Part 2, we'll dive deep into the theory that makes behavior models so powerful, then build one step-by-step for our *Super Mario* implementation. Building on the testing framework we created in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/), we'll show how to start constructing a game model using properties. While behavior models support defining both transition relations and properties, transition relations for complex systems like games would not be trivial to implement. Instead, we'll show how to implement causal properties (why Mario moved), safety properties (what should never happen), and liveness properties (what should eventually happen) for basic movement and jumping. This won't be a complete model of *Super Mario*—that would require covering power-ups, enemies, scoring, and much more—but it will demonstrate the incremental, composable approach to building behavior models. Because behavior models are executable specifications, or again behavior-as-code as we call it, you'll see how the same model can be used for automated and manual testing.
 
 
 ## The theory behind behavior models
@@ -88,7 +88,7 @@ In addition to the above, properties also fall into one of the following categor
 
 * **Safety Properties**: Something bad never happens.
 * **Liveness Properties**: Something good eventually happens.
-* **Fairness Properties**: If something is possible to do infinitely often, it must eventually be done. However, we won’t use it here.
+* **Fairness Properties**: If something is possible to do infinitely often, it must eventually be done. However, we won't use it here.
 
 Technically, most properties fall into **safety**. Why? Because **liveness** and 
 **fairness** properties are unbounded and as soon as you bound them they fall into the 
@@ -205,7 +205,7 @@ This structure provides the foundation to implement both the **transition relati
 
 ## Model code structure
 
-With the model’s `expect` entry point in place, here’s the minimal modular scaffold it plugs into.
+With the model's `expect` entry point in place, here's the minimal modular scaffold it plugs into.
 
 We'll use an object-oriented code structure that combines **inheritance** and **composition** to create a modular, scalable design. 
 
@@ -2209,7 +2209,7 @@ Perfect! By extending the test to 1 second, we now see all three vertical causal
 
 ## Testing the model using manual play
 
-We’ve validated automated test actions; next, let’s stress the model with unpredictable human play.
+We've validated automated test actions; next, let's stress the model with unpredictable human play.
 
 Now that our model includes some interesting properties, we face a fundamental challenge: how do we push the model's limit? Automated tests are excellent for regression testing, but they follow predictable patterns. Real players are chaotic, unpredictable, and creative in ways that expose edge cases no automated test would ever discover.
 
