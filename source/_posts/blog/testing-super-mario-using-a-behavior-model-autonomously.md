@@ -100,33 +100,24 @@ Let's address the genotype question first. In traditional GAs, genotypes often e
 
 As for the absence of crossover, it's important to understand what crossover actually is: an evolutionary optimization technique that progresses the population by recombining currently present genetic material. Crossover combines beneficial traits from different individuals to potentially create better offspring without requiring new mutations. However, crossover is not strictly required—it's an evolutionary optimization, not a fundamental requirement. Mutation alone can effectively explore the state space, particularly when paths build incrementally as in our case. Therefore, the proposed approach remains a valid GA, just one that currently relies solely on mutation for variation rather than using both mutation and crossover for evolution.
 
-### The Natural Evolution Parallel
+## Why this maps to Genetic Algorithms?
 
-This reveals something profound: GA in nature **is** state space exploration. Biological evolution optimizes organisms for survival by exploring the state space of possible behaviors and traits. The parallels are exact:
+The fact that this state space exploration technique maps perfectly to a Genetic Algorithm is **not a coincidence**—it reveals something fundamental about both testing and evolution.
 
-- **Organisms** navigate environmental state space (their ecological niche)
-- **Genes** encode behavioral strategies (how to respond to stimuli)
-- **Fitness** = reaching states where reproduction is possible (survival)
-- **Selection** is ruthless—higher fitness individuals reproduce more (~70% seems biologically plausible in competitive environments)
-- **Mutation** provides variation to explore new strategies
-- **Death** prunes unfit paths from the gene pool
+When exploring complex state spaces, you need:
+- A way to maintain progress (population of paths)
+- A way to focus on promising areas (selection by fitness)
+- A way to discover new possibilities (mutation)
+- A way to reach specific states (genes as enablers)
 
-The only difference is substrate and timescale: nature operates on DNA over millions of years, we operate on input sequences over minutes. The fundamental mechanism—**fitness-guided search through state space to find optimal survival strategies**—is identical.
+This is exactly what biological evolution does. Genes aren't just instructions—they're traits that enable organisms to reach and survive in environmental states not yet mastered by the population. Our input sequences serve the same role: enabling Mario to reach game states not yet explored.
 
-### Why Determinism Matters
+But one might question whether GA truly applies to deterministic systems where the same inputs always produce the same results.
+Interestingly, the universe itself might be actually deterministic! To show that it is non-deterministic would require one to rewind it to a previous state and replay. Moreover, if the universe truly contains *everything*, by definition, then it must be deterministic because any apparent randomness would just be hidden state, since true non-determinism would require an external source (meaning the universe isn't everything). Therefore, one could argue that **determinism is the top-level concept**—apparent non-determinism is simply incomplete observation of deterministic state. 
 
-Operating on a deterministic system transforms genetic search. Unlike nature's noisy environments or traditional GAs with stochastic fitness, we get:
+> Consequently, we can define non-determinism as not having control over all the inputs.
 
-- **Reproducibility**: Every input sequence produces identical results
-- **Stable fitness landscape**: Scores don't fluctuate between evaluations  
-- **Causal precision**: We can measure exactly which mutations improve fitness
-- **Valid recombination**: Splicing input sequences is safe because causality is preserved
-
-Determinism gives us the substrate to do controlled evolution—all the power of natural selection without the noise.
-
-### The Engineering Leverage
-
-Recognizing this as GA unlocks decades of evolutionary computation research. We can tune **selection pressure** (our 70% rate) to balance exploitation vs exploration, adjust **mutation rate** to control variation intensity, or implement advanced GA techniques like adaptive mutation, speciation, or fitness sharing. The algorithm is a **deterministic, branch-based Genetic Algorithm over executable state space**—the right abstraction for exploring game worlds and, as nature demonstrates, for optimizing survival in any complex state space.
+Deterministic systems like *Super Mario* make this explicit, giving us perfect reproducibility for controlled evolutionary experiments. Leaving this almost philosophical digression, recognizing the approach as a mutation-based Genetic Algorithm unlocks decades of evolutionary computation research and opens a wide range of possibilities.
 
 
 # Bugs found
