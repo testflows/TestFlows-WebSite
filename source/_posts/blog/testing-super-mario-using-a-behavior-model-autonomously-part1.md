@@ -109,9 +109,7 @@ However, a skeptic might raise two concerns: the absence of **crossover**, and w
 
 ### Genotype mapping
 
-Let's address the genotype question first. In traditional GAs, genotypes often encode multiple behavioral strategies that apply broadly: "jump more often," "play aggressively," "avoid edges." In our system, the input sequence encodes something more specific: *the ability to reach a particular state*. But this **is** a form of behavioral encoding! Consider an analogy: if a gene encoded "how to live exactly to 90 years and 1 day" in a deterministic world, that would be incredibly useful—a genotype containing just one gene is a valid genotype that produces a specific, valuable outcome.
-
-> The key insight: our input sequence represents **one gene**—a single behavioral instruction that takes Mario to a specific position. Our single-gene approach is a valid specialization of the general multi-gene GA framework.
+Let's address the genotype question first. In traditional GAs, genotypes often encode multiple behavioral strategies that apply broadly: "jump more often," "play aggressively," "avoid edges." In our system, the input sequence encodes something more specific: *the ability to reach a particular state*. But this **is** a form of behavioral encoding! Our input sequences are genes that enable reaching specific game states—a valid specialization of the general multi-gene GA framework where each path represents a complete behavioral strategy for reaching a specific position.
 
 ### Absence of crossover
 
@@ -129,12 +127,9 @@ When exploring complex state spaces, you need:
 
 This is exactly what biological evolution does. Genes aren't just instructions—they're traits that enable organisms to reach and survive in environmental states not yet mastered by the population. Our input sequences serve the same role: enabling Mario to reach game states not yet explored.
 
-But one might question whether GA truly applies to deterministic systems where the same inputs always produce the same results.
-Interestingly, the universe itself might be actually deterministic! To show that it is non-deterministic would require one to rewind it to a previous state and replay. Moreover, if the universe truly contains *everything*, by definition, then it must be deterministic because any apparent randomness would just be hidden state, since true non-determinism would require an external source (meaning the universe isn't everything). Therefore, one could argue that **determinism is the top-level concept**—apparent non-determinism is simply incomplete observation of deterministic state. 
+One might question whether GA truly applies to deterministic systems where the same inputs always produce the same results. However, determinism actually makes GAs more powerful by providing perfect reproducibility. We can define non-determinism as simply not having control over all inputs—apparent randomness is often just hidden state. Deterministic systems like *Super Mario* make this explicit, giving us perfect reproducibility for controlled evolutionary experiments.
 
-> Consequently, we can define non-determinism as not having control over all the inputs.
-
-Deterministic systems like *Super Mario* make this explicit, giving us perfect reproducibility for controlled evolutionary experiments. Leaving this almost philosophical digression, recognizing the approach as a mutation-based Genetic Algorithm unlocks decades of evolutionary computation research and opens a wide range of possibilities.
+Recognizing the approach as a mutation-based Genetic Algorithm unlocks decades of evolutionary computation research and opens a wide range of possibilities.
 
 ## Concrete implementation of autonomous exploration
 
@@ -182,8 +177,8 @@ Input generation is implemented using [weighted move selection](https://github.c
 Path selection is implemented in the [selection](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L241) function.
 The selection strategy must balance exploitation (using our best discoveries) with exploration (trying less promising paths that might break through plateaus). A naive "always pick best" strategy fails when the best path leads to an unrecoverable state. Our exponential weighting gives the best path strong preference while maintaining a diverse population of alternatives.
   
-  - **Best path dominance**: ~70% probability (50% base + exponential share) ensures we heavily exploit our most successful discoveries without getting trapped.
-  - **Exponential decay for others**: ~30% probability distributed among remaining paths using exponential weighting maintains diversity and prevents convergence to local maxima—occasionally exploring "worse" paths can reveal breakthrough strategies.
+  - **Best path preference**: 50% base probability plus exponential weighting ensures we heavily exploit our most successful discoveries without getting trapped.
+  - **Exponential decay for alternatives**: Remaining probability distributed among other paths using exponential weighting maintains diversity and prevents convergence to local maxima—occasionally exploring "worse" paths can reveal breakthrough strategies.
 
 ### Scoring
 
@@ -209,7 +204,7 @@ Path resuming is implemented in the [play](https://github.com/testflows/Examples
 
 ### Path cleaning
 
-Path cleaning is performed by the [cleaning](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L208) function. As the stored paths population grows, many paths become redundant—slightly different input sequences that reach nearly the same position. Keeping all of them wastes computational resources and dilutes selection pressure. By grouping paths within 100-pixel ranges and keeping only the best from each group, we maintain a diverse population while eliminating near-duplicates. This compression prevents the population from exploding with marginally different strategies that offer no real diversity.
+Path cleaning is performed by the [cleaning](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L208) function. As the stored paths population grows, many paths become redundant—slightly different input sequences that reach nearly the same position. Keeping all of them wastes computational resources and dilutes selection pressure. By grouping paths within position ranges and keeping only the best from each group, we maintain a diverse population while eliminating near-duplicates. This compression prevents the population from exploding with marginally different strategies that offer no real diversity.
 
 ## Autonomous exploration in action
 
@@ -239,7 +234,7 @@ The population contains 16 paths with varying scores, demonstrating the diversit
 - **X-position**: 2836 pixels (middle 5 digits)
 - **Time**: 23 seconds (999 - 976)
 
-This means Mario successfully progressed 2836 pixels into Level 1—a non-trivial achievement for fully autonomous exploration!
+This means Mario successfully progressed 2836 pixels into Level 1—approximately 70% of the level's total distance—demonstrating that autonomous exploration can make substantial progress without domain knowledge.
 
 ## Performance optimization through instrumentation
 
@@ -248,7 +243,7 @@ Replaying paths to reach specific states for each exploration attempt introduces
 To accelerate the process, we've instrumented the game with two key capabilities:
 
 - **Level selection** (`--start-level`): Start exploration directly at any level with full lives, allowing us to focus on specific level challenges without replaying earlier sections.
-- **Accelerated speed** (`--fps 300`): Run the game 5× faster while keeping in-game time normal—Mario moves at 300 fps instead of 60, dramatically speeding up path evaluation without affecting game mechanics.
+- **Accelerated speed** (`--fps 300`): Run the game 5× faster than the default 60 fps—dramatically speeding up path evaluation. The algorithm works at normal speed too, but without checkpointing support, the replay overhead makes higher frame rates practical for faster iteration.
 
 These test instrumentation techniques are standard practice in real-world testing scenarios and essential for making autonomous exploration practical. In production testing environments, we routinely instrument systems to control initial states, accelerate time, inject faults, and manipulate conditions—it's how effective testing gets done.
 
@@ -275,7 +270,7 @@ Here is a video of us beating Level 1:
   Your browser does not support the video tag.
 </video>
 
-Level 1 proved relatively straightforward—the algorithm consistently discovered the underground pipe shortcut that bypasses most of the level's obstacles. Wait to go Mario!
+Level 1 proved relatively straightforward—the algorithm consistently discovered the underground pipe shortcut that bypasses most of the level's obstacles. Excellent work, Mario!
 
 ## Finding a path to complete Level 2
 
@@ -324,10 +319,10 @@ Level 4 revealed an interesting bug (which could be caused by our high FPS hack)
 
 ## Conclusion
 
-This will be all for now. We've successfully demonstrated the effectiveness of [Antithesis](https://antithesis.com/blog/sdtalk/)'s autonomous exploration approach using our reference Python implementation of *Super Mario Bros.* After analyzing the approach, we tied it to Genetic Algorithms, revealing the evolutionary computation structure underlying the exploration. Our implementation completed all four levels (maybe with some cheating 😊 or performance optimization as we call it) without human guidance, discovering shortcuts, navigating complex enemy patterns, mastering precise jumping, and even uncovering a potential collision bug in Level 4.
+We've successfully demonstrated the effectiveness of [Antithesis](https://antithesis.com/blog/sdtalk/)'s autonomous exploration approach using our reference Python implementation of *Super Mario Bros.* After analyzing the approach, we connected it to Genetic Algorithms, revealing the evolutionary computation structure underlying the exploration. Our implementation completed all four levels without human guidance, discovering shortcuts, navigating complex enemy patterns, mastering precise jumping, and even uncovering a potential collision bug in Level 4.
 
 However, there's a critical limitation: our fitness function only measures **progress** (x-position, level completion), not **correctness**. We don't validate whether Mario's velocity follows expected physics, whether jumps have valid causes, whether falling happens only without ground support, or whether movements are causally justified by game state. While Antithesis played the original NES game and we used a Python implementation, this distinction becomes crucial for correctness validation—checking proper behavior requires access to internal game variables (velocity, collision state, key presses) beyond just Mario's x,y position.
 
-In [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/) of the first series, we developed a comprehensive behavior model with **causal**, **safety**, and **liveness** properties that validate game correctness frame-by-frame. In **Part 2** of this autonomous testing series, we'll plug that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers millions of states, while the behavior model ensures correctness throughout—finding not just winning paths, but correctness bugs hiding in edge cases.
+In the [behavior model series](/blog/testing-super-mario-using-a-behavior-model-part1/) ([Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/)), we developed a comprehensive behavior model with **causal**, **safety**, and **liveness** properties that validate game correctness frame-by-frame. In **Part 2** of this autonomous testing series, we'll integrate that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers vast state spaces, while the behavior model ensures correctness throughout—finding not just winning paths, but correctness bugs hiding in edge cases.
 
-Stay tuned for **Part 2**, where autonomous exploration meets rigorous correctness validation using Mario's behavior model!
+Stay tuned for **Part 2**, where autonomous exploration meets rigorous correctness validation!
