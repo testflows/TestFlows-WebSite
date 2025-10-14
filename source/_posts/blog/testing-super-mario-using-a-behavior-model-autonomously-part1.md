@@ -9,7 +9,8 @@ icon: fas fa-glasses pt-5 pb-5
 ---
 
 Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex systems. Rather than manually writing test cases for every scenario, autonomous systems can systematically explore millions of states, discovering edge cases that human testers would never think to check.
-In this article, we'll continue the *Super Mario Bros.* testing series by implementing the autonomous testing approach presented by [Antithesis](https://antithesis.com/blog/sdtalk/), where they autonomously play and beat the game in about 45 minutes.<!-- more --> We'll also plug in the **behavior model** we developed in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/) to validate correctness in real-time during autonomous exploration. In the process, we demonstrate the true power of behavior models: write your validation once, then plug it into any testing driver—including autonomous systems that discover new paths while validating behavior at every step.
+
+In this two-part follow-up, we'll continue the *Super Mario Bros.* testing series by implementing the autonomous testing approach presented by [Antithesis](https://antithesis.com/blog/sdtalk/), where they autonomously play and beat the game.<!-- more --> Later in **Part 2**, we'll plug in the **behavior model** we developed in [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/) of our first series to validate correctness in real-time during autonomous exploration. In the process, we demonstrate the true power of autonomous testing and behavior models: systematically exploring massive state spaces while writing your validation once, then plugging it into any testing driver—including our very own autonomous system that discovers new paths while validating behavior at every step.
 
 Here's what we're aiming for—implement our own autonomous state space exploration that will allow Mario to complete levels of *Super Mario Bros.* without any human guidance:
 
@@ -57,7 +58,7 @@ This random mutation approach treats game inputs (right, left, jump, action, dow
 
 The reason behind choosing this input generation algorithm is that it better mimics how the game is meant to be played: the currently pressed key is likely to remain pressed in the next frame while another key can be added at the same time. For example, you hold down the right key while also pressing the jump or action buttons.
 
-However, the algorithm itself is not enough. The reason is that Mario moving randomly will inevitably cause it to die by running into enemies or falling into pits.
+However, the random input generation is not enough. The reason is that Mario moving randomly will inevitably cause it to die by running into enemies or falling into pits.
 Therefore, the exploration itself can never be one-shot. Instead, you have to store traveled paths (input sequences) and have a strategy to pick a sequence for the next iteration. These travel paths effectively define Mario's state because the game is **deterministic**.
 
 > The system is said to be **deterministic** only if given the same input you will always get the same output.
@@ -178,7 +179,7 @@ Input generation is implemented using [weighted move selection](https://github.c
 
 ### Path selection
 
-Path selection is implemented in the [selection function](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L241).
+Path selection is implemented in the [selection](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L241) function.
 The selection strategy must balance exploitation (using our best discoveries) with exploration (trying less promising paths that might break through plateaus). A naive "always pick best" strategy fails when the best path leads to an unrecoverable state. Our exponential weighting gives the best path strong preference while maintaining a diverse population of alternatives.
   
   - **Best path dominance**: ~70% probability (50% base + exponential share) ensures we heavily exploit our most successful discoveries without getting trapped.
@@ -221,7 +222,7 @@ Here is the basic command to run our autonomous play test:
 python3 tests/run.py --autonomous --play-seconds 300
 ```
 
-With default settings (20-second intervals, 3 tries per interval), this creates 15 epochs with 3 exploration attempts each. Since we must replay paths from the beginning to reach selected states, the actual runtime varies based on path lengths—expect 13-30 minutes for a 5-minute exploration session.
+With default settings (20-second intervals, 3 tries per interval), this creates 15 epochs with 3 exploration attempts each. Since we must replay paths from the beginning to reach selected states, the actual runtime varies based on path lengths—expect 15-30 minutes for a 5-minute exploration session.
 
 Here's an example run that completed in 22 minutes:
 
@@ -289,11 +290,11 @@ python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-be
   Your browser does not support the video tag.
 </video>
 
-Level 2 proved more challenging due to increased presence of pits, diverse enemies (Goombas, Koopas, Piranha Plants), and moving platforms. The high fps setting provided an unexpected advantage—Mario's invincibility period appeared extended, allowing rapid progress through dangerous sections. Despite the difficulty, our exploitation-focused strategy (always picking the best path with stop-index mutation, no backtracking) successfully discovered a winning path. Way to go Mario!
+Level 2 proved more challenging due to increased presence of pits, diverse enemies (Goombas, Koopas, Piranha Plants), and moving platforms. The high fps setting provided an unexpected advantage—Mario's invincibility period appeared extended, allowing rapid progress through dangerous sections. Despite the difficulty, our exploitation-focused strategy (always picking the best path with stop-index mutation, no backtracking) successfully discovered a winning path.
 
 ## Finding a path to complete Level 3
 
-Continuing with Level 3, which was the harder level to complete!
+Continuing with Level 3, which was the harder level to complete.
 
 ```bash
 python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-best-path --start-level 3 --paths-file level3_paths.json --backtrack 0
@@ -304,11 +305,11 @@ python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-be
   Your browser does not support the video tag.
 </video>
 
-Level 3 features numerous paths that lead to Mario's death—he must precisely jump from platform to platform across large gaps while avoiding enemies. The combination of precise platforming and enemy avoidance made finding a winning path significantly harder. Nevertheless, Level 3 was beaten, and the video above shows our autonomous Mario's successful run. Way to go Mario! 
+Level 3 features numerous paths that lead to Mario's death—he must precisely jump from platform to platform across large gaps while avoiding enemies. The combination of precise jumping and enemy avoidance made finding a winning path significantly harder. Nevertheless, Level 3 was beaten, and the video above shows our autonomous Mario's successful run. Autonomous testing for the win again! 
 
 ## Finding a path to complete Level 4
 
-Our reference Python implementation of *Super Mario* contains 4 levels, making this the final challenge for our autonomous exploration:
+Our reference Python implementation of *Super Mario* contains 4 levels, making Level 4 the final challenge for our autonomous exploration test:
 
 ```bash
 python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-best-path --start-level 4 --paths-file level4_paths.json --backtrack 0
@@ -323,10 +324,10 @@ Level 4 revealed an interesting bug (which could be caused by our high FPS hack)
 
 ## Conclusion
 
-This will be all for now. We've successfully demonstrated the effectiveness of [Antithesis's autonomous exploration approach](https://antithesis.com/blog/sdtalk/) using our reference Python implementation of *Super Mario Bros.* After analyzing their approach, we tied it to Genetic Algorithms, revealing the evolutionary computation structure underlying the exploration. Our implementation completed all four levels (maybe with some cheating 😊 or performance optimization as we call it) without human guidance, discovering shortcuts, navigating complex enemy patterns, mastering precise platforming, and even uncovering a potential collision bug in Level 4.
+This will be all for now. We've successfully demonstrated the effectiveness of [Antithesis](https://antithesis.com/blog/sdtalk/)'s autonomous exploration approach using our reference Python implementation of *Super Mario Bros.* After analyzing the approach, we tied it to Genetic Algorithms, revealing the evolutionary computation structure underlying the exploration. Our implementation completed all four levels (maybe with some cheating 😊 or performance optimization as we call it) without human guidance, discovering shortcuts, navigating complex enemy patterns, mastering precise jumping, and even uncovering a potential collision bug in Level 4.
 
 However, there's a critical limitation: our fitness function only measures **progress** (x-position, level completion), not **correctness**. We don't validate whether Mario's velocity follows expected physics, whether jumps have valid causes, whether falling happens only without ground support, or whether movements are causally justified by game state. While Antithesis played the original NES game and we used a Python implementation, this distinction becomes crucial for correctness validation—checking proper behavior requires access to internal game variables (velocity, collision state, key presses) beyond just Mario's x,y position.
 
-In [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/) of this series, we developed a comprehensive behavior model with **causal**, **safety**, and **liveness** properties that validate game correctness frame-by-frame. In **Part 2** of this autonomous testing series, we'll plug that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers millions of states, while the behavior model ensures correctness throughout—finding not just winning paths, but bugs hiding in edge cases.
+In [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/) of the first series, we developed a comprehensive behavior model with **causal**, **safety**, and **liveness** properties that validate game correctness frame-by-frame. In **Part 2** of this autonomous testing series, we'll plug that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers millions of states, while the behavior model ensures correctness throughout—finding not just winning paths, but correctness bugs hiding in edge cases.
 
 Stay tuned for **Part 2**, where autonomous exploration meets rigorous correctness validation using Mario's behavior model!
