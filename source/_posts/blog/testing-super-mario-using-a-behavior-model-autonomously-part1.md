@@ -21,7 +21,7 @@ Here's what we're aiming for—implement our own autonomous state space explorat
 <div class="text-secondary text-bold"><br>Autonomous exploration: Completing Level 1</div>
 </div><br>
 
-The complete implementation is open source and available in our [Examples/SuperMario](https://github.com/testflows/Examples/tree/v2.0/SuperMario) repository. Clone the code and let's dive into how autonomous state stpace exploration works!
+The complete implementation is open source and available in our [Examples/SuperMario](https://github.com/testflows/Examples/tree/v2.0/SuperMario) repository. Clone the code and let's dive into how autonomous state space exploration works!
 
 ```bash
 git clone --branch v2.0 --single-branch https://github.com/testflows/Examples.git && cd Examples/SuperMario
