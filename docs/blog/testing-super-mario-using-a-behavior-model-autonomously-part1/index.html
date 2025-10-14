@@ -1,0 +1,806 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Testing Super Mario Using a Behavior Model Autonomously (Part 1) | TestFlows</title>
+  <meta name="description" content="An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Vitaliy Zakaznikov">
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-autonomously.png">
+  
+  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
+  
+  
+  <meta name="image" property="og:image" content="https://testflows.com/">
+<meta name="publish_date" property="og:publish_date" content="2025-10-10T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2025-10-10T00:00:00-0000" />
+<meta property="og:title" content="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+<meta property="og:image" content="https://testflows.com/">
+<meta property="og:description" content="An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+<meta name="twitter:description" content="An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques.">
+<meta name="twitter:image" content="https://testflows.com/">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1760474632203" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1760474632203" media="screen" type="text/css">
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 5.4.2"></head>
+
+<body>
+  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+    <a class="navbar-brand" href="/">
+        <img src="/img/logo-white.png" alt="TestFlows">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    </button>
+    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
+        <ul class="nav navbar-nav">
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
+                </li>
+            
+                <li class="nav-item">
+                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
+                </li>
+            
+        </ul>
+    </div>
+</nav>
+<div class="clearfix"></div>
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2025-10-10T00:00:00-0000"><span class="authored-date text-nowrap">Oct 10, 2025</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="post-image col-lg-6 m-auto">
+            <img src="/images/testing-super-mario-using-a-behavior-model-autonomously.png"></img>
+            <span class="post-image-credit"></span>
+        </div>
+    </div>
+    <div class="blog post-body row">
+        <div class="col-12">
+            <p>Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex systems. Rather than manually writing test cases for every scenario, autonomous systems can systematically explore millions of states, discovering edge cases that human testers would never think to check.
+In this article, we’ll continue the <em>Super Mario Bros.</em> testing series by implementing the autonomous testing approach presented by <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis</a>, where they autonomously play and beat the game in about 45 minutes.<span id="more"></span> We’ll also plug in the <strong>behavior model</strong> we developed in <a href="/blog/testing-super-mario-using-a-behavior-model-part1/">Part 1</a> and <a href="/blog/testing-super-mario-using-a-behavior-model-part2/">Part 2</a> to validate correctness in real-time during autonomous exploration. In the process, we demonstrate the true power of behavior models: write your validation once, then plug it into any testing driver—including autonomous systems that discover new paths while validating behavior at every step.</p>
+<p>Here’s what we’re aiming for—implement our own autonomous state space exploration that will allow Mario to complete levels of <em>Super Mario Bros.</em> without any human guidance:</p>
+<div class="text-center">
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video1.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+<div class="text-secondary text-bold"><br>Autonomous exploration: Completing Level 1</div>
+</div><br>
+
+<p>The complete implementation is open source and available in our <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/tree/v2.0/SuperMario">Examples&#x2F;SuperMario</a> repository. Clone the code and let’s dive into how autonomous state space exploration works!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --branch v2.0 --single-branch https://github.com/testflows/Examples.git &amp;&amp; <span class="built_in">cd</span> Examples/SuperMario</span><br></pre></td></tr></table></figure>
+
+<h2 id="The-proposed-approach"><a href="#The-proposed-approach" class="headerlink" title="The proposed approach"></a>The proposed approach</h2><p>Antithesis’s article presents a surprisingly simple yet powerful algorithm for autonomous exploration of <em>Super Mario</em>. At its core is a mutation-based input generator that randomly flips input bits to create variations:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mario</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_input</span>(<span class="params">starting_byte, flip_probability, input_length</span>):</span><br><span class="line">    <span class="built_in">input</span> = []</span><br><span class="line">    next_byte = starting_byte</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">for</span> _ <span class="keyword">in</span> <span class="built_in">range</span>(input_length):</span><br><span class="line">        <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">8</span>):</span><br><span class="line">            <span class="keyword">if</span> random.random() &lt; flip_probability:</span><br><span class="line">                next_byte ^= (<span class="number">1</span> &lt;&lt; j)</span><br><span class="line">        <span class="built_in">input</span>.append(next_byte)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">input</span></span><br></pre></td></tr></table></figure>
+
+<p>This random mutation approach treats game inputs (right, left, jump, action, down, enter) as bytes, where each bit represents whether a given key is pressed (1) or not (0). The algorithm randomly flips individual bits with a small probability (typically around 10%) by XORing the current input with a random mask—flipping bits where the mask is 1 while preserving bits where the mask is 0. By flipping bits, the algorithm generates variations of input sequences, exploring different paths through the game.</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-1.png">
+<div class="text-secondary text-bold"><br>Input: Random input generation</div>
+</div><br>
+
+<p>The reason behind choosing this input generation algorithm is that it better mimics how the game is meant to be played: the currently pressed key is likely to remain pressed in the next frame while another key can be added at the same time. For example, you hold down the right key while also pressing the jump or action buttons.</p>
+<p>However, the algorithm itself is not enough. The reason is that Mario moving randomly will inevitably cause it to die by running into enemies or falling into pits.
+Therefore, the exploration itself can never be one-shot. Instead, you have to store traveled paths (input sequences) and have a strategy to pick a sequence for the next iteration. These travel paths effectively define Mario’s state because the game is <strong>deterministic</strong>.</p>
+<blockquote>
+<p>The system is said to be <strong>deterministic</strong> only if given the same input you will always get the same output.</p>
+</blockquote>
+<p>Therefore, starting from the same position and applying the same input sequence will always lead to the same Mario position in the game. This means when we pick a traveled path, we can replay it and then try to continue it with new mutations.</p>
+<p>The path selection requires a fitness function. For <em>Super Mario</em>, a simple criterion is to favor paths with the highest x-axis position, since winning the game requires advancing to the right. However, always picking the path with the highest fitness score doesn’t work—there will be many cases where the path ends in a state from which no further exploration is possible. For example, right before touching a Goomba, or being in the air right before falling into a pit. Such states are not recoverable and lead to dead ends.</p>
+<p>To overcome this problem, it’s not enough to keep just the best path we’ve found so far. Instead, we need to maintain a collection of paths with different fitness scores and use a probability distribution function to pick the next path to explore. This way, we’re more likely to pick paths with higher scores while still giving paths with lower scores a chance to be explored.</p>
+<div class="text-center">
+<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-2.png">
+<div class="text-secondary text-bold"><br>Paths: Selecting path</div>
+</div><br>
+
+<p>The beauty of this state space exploration approach lies in its simplicity. You don’t need to understand the game’s mechanics or hand-craft complex strategies. The mutation process naturally discovers interesting behaviors through random exploration, guided by fitness scoring that rewards progress through the game world.</p>
+<h2 id="Characteristics-of-the-proposed-approach"><a href="#Characteristics-of-the-proposed-approach" class="headerlink" title="Characteristics of the proposed approach"></a>Characteristics of the proposed approach</h2><p>Let’s step back and examine how the proposed exploration system works:</p>
+<ul>
+<li>We <strong>generate random input</strong> by flipping bits with small probability (typically ~10%), producing a sequence of button presses</li>
+<li>We <strong>build a path</strong> by recording the input sequence along with a <strong>score</strong> quantifying how far Mario progresses (for <em>Super Mario</em>, based on x-axis position)</li>
+<li>We <strong>store these paths</strong> in a collection, maintaining a population of different trajectories through the game</li>
+<li>We <strong>select a path</strong> using a probability distribution function that favors higher-scoring paths while still giving lower-scoring paths a chance</li>
+<li><strong>Determinism enables resuming</strong> in exactly the same state: because the game always produces identical results for the same input sequence, we can replay any stored path to reach that specific game state, then continue exploring from there with new mutations</li>
+<li>This cycle of <strong>select→replay→mutate→evaluate</strong> repeats continuously, systematically exploring the state space by building on previously discovered paths</li>
+</ul>
+<h2 id="Comparing-the-approach-to-Genetic-Algorithm"><a href="#Comparing-the-approach-to-Genetic-Algorithm" class="headerlink" title="Comparing the approach to Genetic Algorithm"></a>Comparing the approach to Genetic Algorithm</h2><p>Let’s see how these characteristics map to a canonical Genetic Algorithm:</p>
+<table>
+<thead>
+<tr>
+<th>Our System</th>
+<th>GA Concept</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Collection of stored paths</td>
+<td><strong>Population</strong> of individuals</td>
+</tr>
+<tr>
+<td>Input sequence (button presses)</td>
+<td><strong>Genotype</strong> encoding behavior</td>
+</tr>
+<tr>
+<td>Game state (Mario position, score)</td>
+<td><strong>Phenotype</strong> (observable result)</td>
+</tr>
+<tr>
+<td>Progress scoring function</td>
+<td><strong>Fitness function</strong></td>
+</tr>
+<tr>
+<td>Path probability distribution selection function</td>
+<td><strong>Selection</strong> with elite bias</td>
+</tr>
+<tr>
+<td>Bit-flip input generation</td>
+<td><strong>Mutation</strong> operator</td>
+</tr>
+<tr>
+<td>—</td>
+<td><strong>Crossover</strong> (recombination)</td>
+</tr>
+<tr>
+<td>Each exploration iteration</td>
+<td><strong>Generation</strong> cycle</td>
+</tr>
+<tr>
+<td><br></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Applying the broad understanding of these concepts, without nit-picking, the proposed approach is essentially a Genetic Algorithm—maintaining a population, scoring fitness, selecting promising candidates, and mutating them to explore variations.</p>
+<p>However, a skeptic might raise two concerns: the absence of <strong>crossover</strong>, and whether an input sequence truly qualifies as a <strong>genotype</strong>.</p>
+<h3 id="Genotype-mapping"><a href="#Genotype-mapping" class="headerlink" title="Genotype mapping"></a>Genotype mapping</h3><p>Let’s address the genotype question first. In traditional GAs, genotypes often encode multiple behavioral strategies that apply broadly: “jump more often,” “play aggressively,” “avoid edges.” In our system, the input sequence encodes something more specific: <em>the ability to reach a particular state</em>. But this <strong>is</strong> a form of behavioral encoding! Consider an analogy: if a gene encoded “how to live exactly to 90 years and 1 day” in a deterministic world, that would be incredibly useful—a genotype containing just one gene is a valid genotype that produces a specific, valuable outcome.</p>
+<blockquote>
+<p>The key insight: our input sequence represents <strong>one gene</strong>—a single behavioral instruction that takes Mario to a specific position. Our single-gene approach is a valid specialization of the general multi-gene GA framework.</p>
+</blockquote>
+<h3 id="Absence-of-crossover"><a href="#Absence-of-crossover" class="headerlink" title="Absence of crossover"></a>Absence of crossover</h3><p>As for the absence of crossover, it’s important to understand what crossover actually is: an evolutionary optimization technique that progresses the population by recombining currently present genetic material. Crossover combines beneficial traits from different individuals to potentially create better offspring without requiring new mutations. However, crossover is not strictly required—it’s an evolutionary optimization, not a fundamental requirement. Mutation alone can effectively explore the state space, particularly when paths build incrementally as in our case. Therefore, the proposed approach remains a valid GA, just one that currently relies solely on mutation for variation rather than using both mutation and crossover for evolution.</p>
+<h2 id="Why-this-maps-to-Genetic-Algorithms"><a href="#Why-this-maps-to-Genetic-Algorithms" class="headerlink" title="Why this maps to Genetic Algorithms?"></a>Why this maps to Genetic Algorithms?</h2><p>The fact that this state space exploration technique maps perfectly to a Genetic Algorithm is <strong>not a coincidence</strong>—it reveals something fundamental about both testing and evolution.</p>
+<p>When exploring complex state spaces, you need:</p>
+<ul>
+<li>A way to maintain progress (population of paths)</li>
+<li>A way to focus on promising areas (selection by fitness)</li>
+<li>A way to discover new possibilities (mutation)</li>
+<li>A way to reach specific states (genes as enablers)</li>
+</ul>
+<p>This is exactly what biological evolution does. Genes aren’t just instructions—they’re traits that enable organisms to reach and survive in environmental states not yet mastered by the population. Our input sequences serve the same role: enabling Mario to reach game states not yet explored.</p>
+<p>But one might question whether GA truly applies to deterministic systems where the same inputs always produce the same results.
+Interestingly, the universe itself might be actually deterministic! To show that it is non-deterministic would require one to rewind it to a previous state and replay. Moreover, if the universe truly contains <em>everything</em>, by definition, then it must be deterministic because any apparent randomness would just be hidden state, since true non-determinism would require an external source (meaning the universe isn’t everything). Therefore, one could argue that <strong>determinism is the top-level concept</strong>—apparent non-determinism is simply incomplete observation of deterministic state. </p>
+<blockquote>
+<p>Consequently, we can define non-determinism as not having control over all the inputs.</p>
+</blockquote>
+<p>Deterministic systems like <em>Super Mario</em> make this explicit, giving us perfect reproducibility for controlled evolutionary experiments. Leaving this almost philosophical digression, recognizing the approach as a mutation-based Genetic Algorithm unlocks decades of evolutionary computation research and opens a wide range of possibilities.</p>
+<h2 id="Concrete-implementation-of-autonomous-exploration"><a href="#Concrete-implementation-of-autonomous-exploration" class="headerlink" title="Concrete implementation of autonomous exploration"></a>Concrete implementation of autonomous exploration</h2><p>Unfortunately, the original article did not present a concrete implementation. Since the approach is essentially a Genetic Algorithm, there are countless variations to explore in how we generate inputs, select paths, score progress, and manage stored paths. After some trial and error, we’ve settled on the following implementation—by no means optimal, but sufficient to demonstrate that the approach works.</p>
+<p>The core state exploration loop is implemented in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L92"><code>autonomous play</code></a> test, which orchestrates the entire process. The test repeatedly selects promising paths from stored paths, replays them to specific game states, then extends them with new generated inputs—continuously discovering and expanding reachable regions of the state space.</p>
+<p>Here is the top level loop of the algorithm:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">path = self.context.paths.select()  <span class="comment"># Start with the most promising path</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Break exploration into intervals (evolution epochs) to refresh path selection</span></span><br><span class="line"><span class="keyword">for</span> part <span class="keyword">in</span> <span class="built_in">range</span>(play_seconds // interval):       </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(tries):  <span class="comment"># Try extending the same path multiple times</span></span><br><span class="line">        <span class="keyword">with</span> Scenario(<span class="string">f&quot;interval <span class="subst">&#123;part&#125;</span>-<span class="subst">&#123;i&#125;</span>&quot;</span>):</span><br><span class="line">            stop_index = path.select_stop_index()  <span class="comment"># Pick resume point (usually near end)</span></span><br><span class="line">            <span class="comment"># Replay path to that point, then extend with new generated inputs</span></span><br><span class="line">            play(</span><br><span class="line">                path=path,</span><br><span class="line">                play_seconds=interval,</span><br><span class="line">                with_model=with_model,</span><br><span class="line">                stop_index=stop_index,</span><br><span class="line">            )</span><br><span class="line">        <span class="keyword">if</span> path <span class="keyword">not</span> <span class="keyword">in</span> self.context.paths.paths:  <span class="comment"># Path led to death?</span></span><br><span class="line">            <span class="keyword">break</span>  <span class="comment"># Stop trying this path, move to next one</span></span><br><span class="line">    self.context.paths.clean()  <span class="comment"># Remove redundant paths with similar progress</span></span><br><span class="line">    path = self.context.paths.select()  <span class="comment"># Select next path (favoring higher scores)</span></span><br></pre></td></tr></table></figure>
+
+<p>This elegant loop captures the essence of systematic state space exploration, organized into exploration intervals (epochs) that structure the discovery process. Within each epoch: <strong>select</strong> a path based on its score, <strong>replay</strong> it to a chosen state, <strong>extend</strong> it with generated inputs, then <strong>evaluate</strong> the results. Paths that lead to death are immediately pruned from the population, focusing effort on viable states. At each epoch boundary, the population of the stored paths is cleaned to remove redundant paths, and a new path is selected—this periodic reassessment prevents the algorithm from getting stuck while ensuring each promising path gets multiple attempts. This structure embodies the core Genetic Algorithm cycle: maintaining a population (stored paths), scoring fitness, selecting promising candidates, introducing variation through mutation (varying the resume point and generated inputs, without crossover), and letting natural selection (death pruning) drive evolution toward increasingly successful paths.</p>
+<p>Let’s examine each component in detail.</p>
+<h3 id="Input-generation"><a href="#Input-generation" class="headerlink" title="Input generation"></a>Input generation</h3><p>Input generation is implemented using <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L11">weighted move selection</a>. We use a hybrid approach that balances pure exploration with structured gameplay patterns. The key insight here is that random mutations alone can be too chaotic—Mario needs some coherent action sequences to make meaningful progress. By combining weighted fuzzy mutations with predefined move patterns, we get the best of both worlds: the ability to discover unexpected solutions through randomness, and the efficiency of human-like movement patterns that naturally fit the game’s mechanics.</p>
+<ul>
+<li><strong>Fuzzy mutation</strong>: 5% bit-flip probability with 10× selection weight (<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/moves.py#L17">fuzzy generator</a>) enables pure exploration that can discover unconventional solutions, like precise timing sequences that bypass enemies.</li>
+<li><strong>Predefined moves</strong>: patterns like <code>walk_right_long</code>, <code>jump_up_right_high_action</code> spanning 5-120 frames (<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/moves.py#L7">move library</a>) provide coherent action sequences that mimic natural gameplay and accelerate early progress.</li>
+<li><strong>Directional bias</strong>: right moves weighted 2×, left moves 0.5× naturally aligns exploration with the game’s primary objective of progressing rightward through the level.</li>
+</ul>
+<h3 id="Path-selection"><a href="#Path-selection" class="headerlink" title="Path selection"></a>Path selection</h3><p>Path selection is implemented in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L241">selection function</a>.
+The selection strategy must balance exploitation (using our best discoveries) with exploration (trying less promising paths that might break through plateaus). A naive “always pick best” strategy fails when the best path leads to an unrecoverable state. Our exponential weighting gives the best path strong preference while maintaining a diverse population of alternatives.</p>
+<ul>
+<li><strong>Best path dominance</strong>: ~70% probability (50% base + exponential share) ensures we heavily exploit our most successful discoveries without getting trapped.</li>
+<li><strong>Exponential decay for others</strong>: ~30% probability distributed among remaining paths using exponential weighting maintains diversity and prevents convergence to local maxima—occasionally exploring “worse” paths can reveal breakthrough strategies.</li>
+</ul>
+<h3 id="Scoring"><a href="#Scoring" class="headerlink" title="Scoring"></a>Scoring</h3><p>Scoring is calculated by the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L58">scoring</a> function.
+The scoring function defines what “success” means and guides the entire evolutionary state space exploration process. We use a hierarchical structure with powers of 10 to create clear priorities: completing a level is worth infinitely more than any position within a level, reaching further right is worth more than doing it faster. The formula <code>level_num × 10⁹ + x_pos × 10³ + (999 - time)</code> ensures these priorities never conflict—a path that completes level 2 will always score higher than any path still in level 1, regardless of how fast or far the latter progresses.</p>
+<h3 id="Backtracking-and-splitting"><a href="#Backtracking-and-splitting" class="headerlink" title="Backtracking and splitting"></a>Backtracking and splitting</h3><p>Backtracking and splitting are handled by <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L103">backtracking</a> and <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L131">splitting</a> functions.
+When Mario dies, we don’t want to discard the entire path—there’s often valuable progress hidden within failed attempts. Backtracking removes the dangerous final frames, giving us a safer starting point. Splitting goes further by extracting the highest-scoring intermediate state, preserving Mario’s best position even if later moves led to disaster. This salvaging mechanism significantly accelerates exploration by retaining hard-won progress.</p>
+<ul>
+<li><strong>Backtracking</strong>: Remove last frames before death, creating a safer checkpoint by rewinding before the fatal mistake.</li>
+<li><strong>Splitting</strong>: Extract the intermediate high-scoring point, preserving peak progress even when the path ends poorly—for example, saving Mario’s farthest position before he fell into a pit.</li>
+</ul>
+<h3 id="Death-state-pruning"><a href="#Death-state-pruning" class="headerlink" title="Death state pruning"></a>Death state pruning</h3><p>Death state pruning is enforced by <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L161">stored paths management</a> and in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L78">play loop</a>.
+Dead ends are evolutionary dead weight. By aggressively pruning any path that ends in death and immediately deleting replayed paths that fail, we maintain a population of only viable starting points. This creates intense selection pressure that prevents the population from being diluted with paths that can’t possibly contribute to finding the solution. It’s harsh, but effective—survival of the fittest in action.</p>
+<h3 id="Path-resuming-and-mutation"><a href="#Path-resuming-and-mutation" class="headerlink" title="Path resuming and mutation"></a>Path resuming and mutation</h3><p>Path resuming is implemented in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L32">play</a> function. Rather than always replaying a path to its end, we use a triangular distribution to occasionally resume from earlier points along the path. This implements mutation by varying where we branch off from existing paths—we might try different continuations from the same intermediate state, potentially discovering better alternatives. The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L88">high mode value</a> means we usually resume near the end (small mutations), but the occasional early resumption (large mutations) prevents us from getting stuck always trying to extend from the same final state.</p>
+<h3 id="Path-cleaning"><a href="#Path-cleaning" class="headerlink" title="Path cleaning"></a>Path cleaning</h3><p>Path cleaning is performed by the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L208">cleaning</a> function. As the stored paths population grows, many paths become redundant—slightly different input sequences that reach nearly the same position. Keeping all of them wastes computational resources and dilutes selection pressure. By grouping paths within 100-pixel ranges and keeping only the best from each group, we maintain a diverse population while eliminating near-duplicates. This compression prevents the population from exploding with marginally different strategies that offer no real diversity.</p>
+<h2 id="Autonomous-exploration-in-action"><a href="#Autonomous-exploration-in-action" class="headerlink" title="Autonomous exploration in action"></a>Autonomous exploration in action</h2><p>With the above autonomous test in place we can start exploring
+<em>Super Mario</em> state space. </p>
+<p>Here is the basic command to run our autonomous play test:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tests/run.py --autonomous --play-seconds 300</span><br></pre></td></tr></table></figure>
+
+<p>With default settings (20-second intervals, 3 tries per interval), this creates 15 epochs with 3 exploration attempts each. Since we must replay paths from the beginning to reach selected states, the actual runtime varies based on path lengths—expect 13-30 minutes for a 5-minute exploration session.</p>
+<p>Here’s an example run that completed in 22 minutes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">  ⟥    [note] All end scores: [1002836976, 1002453959, 1002334961, 1002058957, 1001942961, 1001763981, 1001595956, 1001398975, 1001234983, 1000966985, 1000835964, 1000729959, 1000393959, 1000108963, 1000004963, 0]</span><br><span class="line">  ⟥    [note] Best end score: 1002836976</span><br><span class="line">  ⟥    [note] Selected path score: 1002836976 (index 0)</span><br><span class="line">  </span><br><span class="line">✔ [ OK ] &#x27;/super mario/autonomous/play&#x27; (22m 21s)</span><br></pre></td></tr></table></figure>
+
+<p>The population contains 16 paths with varying scores, demonstrating the diversity maintained by our cleaning strategy. Our best score of <code>1002836976</code> decodes as:</p>
+<ul>
+<li><strong>Level</strong>: 1 (first 3 left digits)</li>
+<li><strong>X-position</strong>: 2836 pixels (middle 5 digits)</li>
+<li><strong>Time</strong>: 23 seconds (999 - 976)</li>
+</ul>
+<p>This means Mario successfully progressed 2836 pixels into Level 1—a non-trivial achievement for fully autonomous exploration!</p>
+<h2 id="Performance-optimization-through-instrumentation"><a href="#Performance-optimization-through-instrumentation" class="headerlink" title="Performance optimization through instrumentation"></a>Performance optimization through instrumentation</h2><p>Replaying paths to reach specific states for each exploration attempt introduces significant overhead. Since our reference implementation doesn’t include save&#x2F;resume functionality (checkpointing), we must replay from the beginning each time—a practical constraint that slows exploration.</p>
+<p>To accelerate the process, we’ve instrumented the game with two key capabilities:</p>
+<ul>
+<li><strong>Level selection</strong> (<code>--start-level</code>): Start exploration directly at any level with full lives, allowing us to focus on specific level challenges without replaying earlier sections.</li>
+<li><strong>Accelerated speed</strong> (<code>--fps 300</code>): Run the game 5× faster while keeping in-game time normal—Mario moves at 300 fps instead of 60, dramatically speeding up path evaluation without affecting game mechanics.</li>
+</ul>
+<p>These test instrumentation techniques are standard practice in real-world testing scenarios and essential for making autonomous exploration practical. In production testing environments, we routinely instrument systems to control initial states, accelerate time, inject faults, and manipulate conditions—it’s how effective testing gets done.</p>
+<h2 id="Finding-a-path-to-complete-Level-1"><a href="#Finding-a-path-to-complete-Level-1" class="headerlink" title="Finding a path to complete Level 1"></a>Finding a path to complete Level 1</h2><p>After some trial and error—as expected with probabilistic search techniques—we found that these parameters significantly speed up finding a solution:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-best-path --start-level 1 --paths-file level1_paths.json --backtrack 0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong><code>--fps 300</code></strong>: Runs 5× faster while staying within game loop latency limits</li>
+<li><strong><code>--always-pick-best-path</code></strong>: Focuses on the highest-scoring path; stop-index mutation provides enough variation to avoid getting stuck</li>
+<li><strong><code>--start-level 1</code></strong>: Begins exploration directly at Level 1, skipping the intro screens</li>
+<li><strong><code>--paths-file level1_paths.json</code></strong>: Stores discovered paths for this level independently</li>
+<li><strong><code>--backtrack 0</code></strong>: Turns off backtracking since stop-index mutation already explores alternative branches</li>
+</ul>
+<p>This shifts toward exploitation (best path) over exploration (diverse population), which works well when targeting a specific level. </p>
+<p>Here is a video of us beating Level 1:</p>
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video1.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<p>Level 1 proved relatively straightforward—the algorithm consistently discovered the underground pipe shortcut that bypasses most of the level’s obstacles. Wait to go Mario!</p>
+<h2 id="Finding-a-path-to-complete-Level-2"><a href="#Finding-a-path-to-complete-Level-2" class="headerlink" title="Finding a path to complete Level 2"></a>Finding a path to complete Level 2</h2><p>Level 2 uses the same parameters with a fresh paths file to explore independently:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-best-path --start-level 2 --paths-file level2_paths.json --backtrack 0</span><br></pre></td></tr></table></figure>
+
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video2.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<p>Level 2 proved more challenging due to increased presence of pits, diverse enemies (Goombas, Koopas, Piranha Plants), and moving platforms. The high fps setting provided an unexpected advantage—Mario’s invincibility period appeared extended, allowing rapid progress through dangerous sections. Despite the difficulty, our exploitation-focused strategy (always picking the best path with stop-index mutation, no backtracking) successfully discovered a winning path. Way to go Mario!</p>
+<h2 id="Finding-a-path-to-complete-Level-3"><a href="#Finding-a-path-to-complete-Level-3" class="headerlink" title="Finding a path to complete Level 3"></a>Finding a path to complete Level 3</h2><p>Continuing with Level 3, which was the harder level to complete!</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-best-path --start-level 3 --paths-file level3_paths.json --backtrack 0</span><br></pre></td></tr></table></figure>
+
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video3.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<p>Level 3 features numerous paths that lead to Mario’s death—he must precisely jump from platform to platform across large gaps while avoiding enemies. The combination of precise platforming and enemy avoidance made finding a winning path significantly harder. Nevertheless, Level 3 was beaten, and the video above shows our autonomous Mario’s successful run. Way to go Mario! </p>
+<h2 id="Finding-a-path-to-complete-Level-4"><a href="#Finding-a-path-to-complete-Level-4" class="headerlink" title="Finding a path to complete Level 4"></a>Finding a path to complete Level 4</h2><p>Our reference Python implementation of <em>Super Mario</em> contains 4 levels, making this the final challenge for our autonomous exploration:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 tests/run.py --autonomous --play-seconds 3000 --fps 300 --always-pick-best-path --start-level 4 --paths-file level4_paths.json --backtrack 0</span><br></pre></td></tr></table></figure>
+
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video4.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+
+<p>Level 4 revealed an interesting bug (which could be caused by our high FPS hack)—colliding with a Fire Bar renders Mario invisible, allowing him to bypass all remaining obstacles and reach the level’s end. Bug or not, the algorithm found its way to the end, demonstrating how autonomous state space exploration can uncover unexpected behaviors that would be hard to find using classical testing techniques.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>This will be all for now. We’ve successfully demonstrated the effectiveness of <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis’s autonomous exploration approach</a> using our reference Python implementation of <em>Super Mario Bros.</em> After analyzing their approach, we tied it to Genetic Algorithms, revealing the evolutionary computation structure underlying the exploration. Our implementation completed all four levels (maybe with some cheating 😊 or performance optimization as we call it) without human guidance, discovering shortcuts, navigating complex enemy patterns, mastering precise platforming, and even uncovering a potential collision bug in Level 4.</p>
+<p>However, there’s a critical limitation: our fitness function only measures <strong>progress</strong> (x-position, level completion), not <strong>correctness</strong>. We don’t validate whether Mario’s velocity follows expected physics, whether jumps have valid causes, whether falling happens only without ground support, or whether movements are causally justified by game state. While Antithesis played the original NES game and we used a Python implementation, this distinction becomes crucial for correctness validation—checking proper behavior requires access to internal game variables (velocity, collision state, key presses) beyond just Mario’s x,y position.</p>
+<p>In <a href="/blog/testing-super-mario-using-a-behavior-model-part1/">Part 1</a> and <a href="/blog/testing-super-mario-using-a-behavior-model-part2/">Part 2</a> of this series, we developed a comprehensive behavior model with <strong>causal</strong>, <strong>safety</strong>, and <strong>liveness</strong> properties that validate game correctness frame-by-frame. In <strong>Part 2</strong> of this autonomous testing series, we’ll plug that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers millions of states, while the behavior model ensures correctness throughout—finding not just winning paths, but bugs hiding in edge cases.</p>
+<p>Stay tuned for <strong>Part 2</strong>, where autonomous exploration meets rigorous correctness validation using Mario’s behavior model!</p>
+
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                        <img src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>                                     
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </div>
+  </div>
+  <div class="container-footer" id="container-footer">
+    
+    <footer> <div class="row no-gutters">
+    <div class="col-12 text-center">
+        <div class="links">
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                        <span class="fab fa-2x fa-python"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
+                        <span class="fab fa-3x fa-linkedin"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                        <span class="fab fa-2x fa-github"></span>
+                    </a>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 text-center">
+        <img src="/img/favicon-square.png"</img>
+    </div>
+    <div class="col-12 text-center">
+        Copyright 2020-2025 Katteli Inc.
+    </div>
+    <div class="col-12 text-center">
+        <span class="text-nowrap">All rights reserved.</span>
+    </div>
+    <div class="col-12 text-center no-padding links">
+        <a class="btn" href="/credits.html">Credits</a>
+    </div>
+</div>
+ </footer>
+    
+  </div>
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="https://unpkg.com/3d-force-graph@1.72.3/dist/3d-force-graph.min.js"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+window.addEventListener('scroll', function (event) {
+	if (isInViewport(banner)) {
+    	banner.classList.remove("not-in-view");
+	} else {
+	    banner.classList.add("not-in-view");
+	}
+}, false);
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+// hero graph
+function heroGraph() {
+    const distance = 2350;
+    const N = 7;
+    const msb = n => Math.max(0, 31 - Math.clz32(n));
+    const gData = {
+        nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
+        links: [...Array(2*((2**(N+1)-2)-2**N)).keys()]
+        .map(id => ({
+            source: Math.floor(id/2),
+            target: id+2
+        }))
+    };
+    start = gData.nodes.length;
+    gData.nodes.push({id:start, group: 2, val:msb(start)});
+    gData.links.push({source: start, target: 0});
+    gData.links.push({source: start, target: 1});
+    window.Graph = ForceGraph3D()
+    .backgroundColor("black")
+    //.dagMode('td')
+    //.dagLevelDistance(200)
+    (document.getElementById('banner-graph'))
+	.nodeAutoColorBy('group')
+    .linkAutoColorBy(d => gData.nodes[d.source].group)
+	.onNodeDragEnd(node => {
+        node.fx = node.x;
+        node.fy = node.y;
+        node.fz = node.z;
+    })
+    .linkDirectionalArrowLength(3.5)
+    .linkDirectionalArrowRelPos(1)
+    .graphData(gData);
+    // camera orbit
+    let angle = 0;
+    //let isRotationActive = true;
+    window.Graph.cameraPosition({
+        x: distance * Math.sin(angle),
+        z: distance * Math.cos(angle)
+    });
+    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
+    window.Graph.currentDagMode = 0;
+}
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
+</body>
+</html>
+
+
