@@ -4,7 +4,7 @@ title: "Testing Super Mario Using a Behavior Model Autonomously (Part 1)"
 description: An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques. 
 date: 2025-10-10
 author: Vitaliy Zakaznikov
-image: images/testing-super-mario-using-a-behavior-model-autonomously.png
+image: images/testing-super-mario-using-a-behavior-model-autonomously-part1.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
