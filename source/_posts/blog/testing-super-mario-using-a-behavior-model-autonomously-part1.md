@@ -170,7 +170,7 @@ Input generation is implemented using [weighted move selection](https://github.c
   
   - **Fuzzy mutation**: 5% bit-flip probability with 10× selection weight ([fuzzy generator](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/moves.py#L17)) enables pure exploration that can discover unconventional solutions, like precise timing sequences that bypass enemies.
   - **Predefined moves**: patterns like `walk_right_long`, `jump_up_right_high_action` spanning 5-120 frames ([move library](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/moves.py#L7)) provide coherent action sequences that mimic natural gameplay and accelerate early progress.
-  - **Directional bias**: right moves weighted 2×, left moves 0.5× naturally aligns exploration with the game's primary objective of progressing rightward through the level.
+  - **Directional bias**: right moves weighted {%katex%}2\times{%endkatex%}, left moves {%katex%}0.5\times{%endkatex%} naturally aligns exploration with the game's primary objective of progressing rightward through the level.
 
 ### Path selection
 
@@ -183,7 +183,7 @@ The selection strategy must balance exploitation (using our best discoveries) wi
 ### Scoring
 
 Scoring is calculated by the [scoring](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/paths.py#L58) function.
-The scoring function defines what "success" means and guides the entire evolutionary state space exploration process. We use a hierarchical structure with powers of 10 to create clear priorities: completing a level is worth infinitely more than any position within a level, reaching further right is worth more than doing it faster. The formula `level_num × 10⁹ + x_pos × 10³ + (999 - time)` ensures these priorities never conflict—a path that completes level 2 will always score higher than any path still in level 1, regardless of how fast or far the latter progresses.
+The scoring function defines what "success" means and guides the entire evolutionary state space exploration process. We use a hierarchical structure with powers of 10 to create clear priorities: completing a level is worth more than any position within a level, reaching further right is worth more than doing it faster. The formula {%katex%}level\_num \times 10^9 + x\_pos \times 10³ + (999 - time){%endkatex%} ensures these priorities never conflict—a path that completes level 2 will always score higher than any path still in level 1, regardless of how fast or far the latter progresses.
 
 ### Backtracking and splitting
 
