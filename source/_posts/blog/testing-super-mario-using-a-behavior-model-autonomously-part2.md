@@ -39,17 +39,25 @@ def play(game, seconds=1, frames=None, model=None):
 Now let's see what happens when we run autonomous exploration with the model enabled:
 
 ```bash
-python3 tests/run.py --autonomous --play-seconds 300 --with-model
+python3 tests/run.py --autonomous --play-seconds 300 --fps 300 --with-model
 ```
 
-The system explores thousands of states, validating every frame. Properties pass, pass, pass... until they don't. Here's what a failure looks like:
+<div class="text-center">
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video6.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+<div class="text-secondary text-bold"><br>Autonomous exploration with behavior model</div>
+</div><br>
+
+The system explores thousands of states, validating every frame. Properties pass, pass, pass... until they don't. Here's what a failure from the video above looks like:
 
 ```bash
-           24s 151ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 8 is less than the maximum
-           24s 151ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=711, boundary=0
-           24s 151ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=711, boundary=9056
-           24s 168ms         ⟥    [debug] ✓ Mario moved left because velocity is -3
-           24s 168ms         ⟥    Exception: AssertionError: Mario failed to: stopped falling because landed on support or stomped an enemy
+           40s 432ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 0 is less than the maximum
+           40s 432ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=1014, boundary=0
+           40s 432ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=1014, boundary=9046
+           40s 439ms         ⟥    [debug] ✓ Mario stayed in place (0)
+           40s 440ms         ⟥    Exception: AssertionError: Mario failed to: fell 25 because there was no ground support
 ```
 
 The model caught something. But here's the catch: this failure could mean the game has a bug, or it could mean our model is wrong. We need to figure out which one.
@@ -176,6 +184,38 @@ The first bug we found was an instrumentation issue. The game was resetting [`co
 After that, we started to find real engine bugs. First, stacked brick collisions were snapping Mario to the wrong height because `spritecollideany` grabbed the first overlapping brick. We fixed this with a new [`get_vertical_collision`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/states/level.py#L477) method that collects all overlaps and chooses the correct ceiling or floor. We also found that gravity wasn't being reinitialized after head bumps, causing anomalous velocity deltas. We also found issues with Mario disappearing. It turned out that the viewport could drift after position adjustments because the camera only advanced when velocity was nonzero.
 
 But the most interesting bug was the Level 4 teleport. Autonomous exploration found a path where Mario would suddenly teleport across the screen near the firebar section. The model's "Mario does not overlap any solid objects" property failed, but replaying the path showed something strange: Mario would brush against the firebar pedestal and then instantly appear far away.
+
+Here is a video of the gameplay that we created using a saved failed path.
+
+```bash
+python3 tests/run.py --autonomous --fps 300 --start-level 4 --load-paths --paths-file fails/4-1.json --play-best-path --save-video
+```
+
+<div class="text-center">
+<video width="50%" controls>
+  <source src="/images/testing-super-mario-using-a-behavior-model-autonomously-video5.webm" type="video/webm">
+  Your browser does not support the video tag.
+</video>
+<div class="text-secondary text-bold"><br>Level 4 teleport bug</div>
+</div><br>
+
+Note how Mario teleports when hitting one of the firebar boxes!
+
+Running the same failed path with the model enabled shows how our model detected this issue.
+
+> By the way, this is also a demonstration of how deterministic execution makes our lives easier!
+
+```bash
+python3 tests/run.py --autonomous --with-model --fps 300 --start-level 4 --load-paths --paths-file fails/4-1.json --play-best-path --save-video
+```
+
+```bash
+           11s 858ms         ⟥    [debug] ✓ Mario Mario's horizontal move 6px is within max limits
+           11s 858ms         ⟥    [debug] ✓ Mario Mario's vertical move 40px is within max limits
+           11s 858ms         ⟥    [debug] ✓ Mario Mario is within left boundary x=3551, boundary=0
+           11s 858ms         ⟥    [debug] ✓ Mario Mario is within right boundary x=3551, boundary=6814
+           11s 858ms         ⟥    [note] Model assertion failed: Mario failed to: Mario does not overlap any solid objects
+```
 
 After analyzing the saved path, we discovered the root cause: two `step` colliders at `x≈3580` overlapped by just 1 pixel. When Mario touched the firebar pedestal, the X collision resolver snapped him to the first collider, but he still overlapped the second collider. The Y resolver then interpreted this as a head bump and pushed Mario downward into the floor slab. On the next frame, the X resolver ejected him to the far edge of the slab, creating the apparent teleport.
 
