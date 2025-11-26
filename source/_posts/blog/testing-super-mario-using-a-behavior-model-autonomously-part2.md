@@ -18,7 +18,7 @@ We already had a behavior model from our earlier series ([Part 1](/blog/testing-
 git clone --branch v2.0 --single-branch https://github.com/testflows/Examples.git && cd Examples/SuperMario
 ```
 
-This [model](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/game.py#L7) is by no means complete and limited to enforce that [Mario's movement](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/mario/movement.py#L475) has a valid cause, that velocity never exceeds physical limits, that boundaries are respected, and that expected behaviors eventually occur. However, given that the model is composable, we will add a few additional properties later.
+This [model](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/game.py#L7) is by no means complete and is limited to enforcing that [Mario's movement](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/mario/movement.py#L475) has a valid cause, that velocity never exceeds physical limits, that boundaries are respected, and that expected behaviors eventually occur. However, given that the model is composable, we will add two additional properties later.
 
 The integration is simple. We pass the model to the same [play()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L71) function that advances the game. Every frame, the [play()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/game.py#L267) method calls the model's [expect()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/game.py#L275) method, which runs all the property checks. Here's the implementation:
 
@@ -149,7 +149,7 @@ The fix was conceptually simple: skip the check when there's a collision adjustm
 
 But here's the problem: implementing `has_horizontal_collision_adjustment` and `had_horizontal_collision_adjustment` turned out to be quite complex! A full reimplementation of that logic would blow up the model.
 
-We needed ground truth from the game itself: direct information from the game engine about what actually happened, not our best guess. This meant expanding the game's observability to expose collision information, viewport state, and other details the model needed. Given the fixes were needed in both the model and the game code, we created a [v3.0](https://github.com/testflows/Examples/tree/v3.0) branch to implement them.
+We needed ground truth from the game itself: direct information from the game engine about what actually happened, not our best guess. This meant expanding the game's observability to expose collision information, viewport state, and other details the model needed. Given the fixes were needed in both the model and the game code, we created a [v3.0](https://github.com/testflows/Examples/tree/v3.0) branch to implement them. We also added two new safety properties: [`check_does_not_overlap_with_solid_objects`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/tests/models/mario/movement.py#L683) to ensure Mario never overlaps solid objects, and [`check_does_not_exceed_max_position_adjustment`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/tests/models/mario/movement.py#L667) to enforce that per-frame displacement stays within physical limits.
 
 ```bash
 # If you already have v2.0 checked out, switch to v3.0
@@ -159,7 +159,7 @@ git fetch origin v3.0 && git checkout v3.0
 git clone --branch v3.0 --single-branch https://github.com/testflows/Examples.git && cd Examples/SuperMario
 ```
 
-## Expanding observability
+## Expanding game's observability
 
 To give the model ground truth, we added observability directly to the game engine. The key addition is the [`CollisionInfo`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L10) class that tracks when the engine adjusts Mario's position due to collisions. The [`Player`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L27) class now has a [`collision_info`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L47) attribute with `x_adjusted` and `y_adjusted` flags that get reset each frame and set whenever the engine snaps Mario's position. This information flows into [`BehaviorState`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/tests/actions/game.py#L84) so the model can access it directly.
 
@@ -181,7 +181,7 @@ These changes fixed the model's false positives. Collision snaps, brick bumps, s
 
 The first bug we found was an instrumentation issue. The game was resetting [`collision_info`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L47) before the recorder snapshot, so [`x_adjusted`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L17) and [`y_adjusted`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L18) flags read false even after teleport snaps. We fixed this by moving the reset into [`Player.update`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/components/player.py#L151) and propagating the flags through [`BehaviorState`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/tests/actions/game.py#L68).
 
-After that, we started to find real engine bugs. First, stacked brick collisions were snapping Mario to the wrong height because `spritecollideany` grabbed the first overlapping brick. We fixed this with a new [`get_vertical_collision`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/states/level.py#L477) method that collects all overlaps and chooses the correct ceiling or floor. We also found that gravity wasn't being reinitialized after head bumps, causing anomalous velocity deltas. We also found issues with Mario disappearing. It turned out that the viewport could drift after position adjustments because the camera only advanced when velocity was nonzero.
+After that, we started to find real engine bugs. First, stacked brick collisions were snapping Mario to the wrong height because `spritecollideany` grabbed the first overlapping brick. We fixed this with a new [`get_vertical_collision`](https://github.com/testflows/Examples/blob/v3.0/SuperMario/source/states/level.py#L477) method that collects all overlaps and chooses the correct ceiling or floor. We also found that gravity wasn't being reinitialized after head bumps, causing anomalous velocity deltas. Additionally, we found issues with Mario disappearing. It turned out that the viewport could drift after position adjustments because the camera only advanced when velocity was nonzero.
 
 But the most interesting bug was the Level 4 teleport. Autonomous exploration found a path where Mario would suddenly teleport across the screen near the firebar section. The model's "Mario does not overlap any solid objects" property failed, but replaying the path showed something strange: Mario would brush against the firebar pedestal and then instantly appear far away.
 
