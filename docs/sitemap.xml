@@ -2,6 +2,24 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/</loc>
+    
+    <lastmod>2025-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/index.html</loc>
+    
+    <lastmod>2025-11-26</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/</loc>
     
     <lastmod>2025-10-15</lastmod>
@@ -32,15 +50,6 @@
     <loc>https://testflows.com/blog/writing-test-programs-not-just-tests/</loc>
     
     <lastmod>2025-09-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/index.html</loc>
-    
-    <lastmod>2025-07-16</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -220,7 +229,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2025-10-15</lastmod>
+    <lastmod>2025-11-26</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>

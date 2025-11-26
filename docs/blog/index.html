@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1760534496502" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1764191569110" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1760534496502" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1764191569110" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -110,6 +110,49 @@
                             <i class="fab fa-2x fa-facebook"></i>
                         </a>
                         <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">
+                            <i class="fab fa-2x fa-linkedin"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="blog post">
+        <div class="post-header row">
+            <div class="post-summary col-lg-6 mt-auto mb-auto pb-4">
+                <div class="text-center">
+                    <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/>
+                        <h1 style="font-weight: bold;">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h1>
+                    </a>
+                    <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/ class="d-block d-sm-none pb-4">
+                        <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" style="width: 100%;"></img>
+                        <span class="post-image-credit"></span>
+                    </a>
+                </div>
+                <p>In <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Part 1</a>, we built an autonomous system that beat all four levels of <em>Super Mario Bros.</em> without any human guidance. We treated the exploration as a mutation-based Genetic Algorithm, and it worked: the system discovered winning paths by exploring, replaying, and mutating input sequences. It found shortcuts, navigated complex enemy patterns, and even uncovered unexpected behaviors like <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/#Finding-a-path-to-complete-Level-4">the Level 4 collision bug</a>. However, the exploration only validated one dimension of correctness: <em>Mario’s progress</em>. Our fitness function measured how far Mario advanced (x-position, level completion, and time), but the exploration couldn’t tell us whether the game actually behaved correctly. Did Mario’s velocity follow expected constraints? Were jumps causally justified? Did falling only occur when Mario lacked ground support? We had no way to know. This shows that autonomous testing by itself is not enough. To address this problem, we need a way to actually check state correctness. What we need is to plug in a behavior model!<i class="post-summary-more">...</i>
+            </div>
+            <div class="post-image col-lg-6 m-auto d-none d-sm-block">
+                <a href=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/>
+                    <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png"></img>
+                    <span class="post-image-credit"></span>
+                </a>
+            </div>
+            <div class="post-metadata row m-auto">
+                <div class="col-md-12">
+                    <div class="post-author">
+                        <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                        <span class="authored-date text-nowrap">October 10, 2025</span>
+                    </div>
+                    <div class="post-share btn-group" role="group" aria-label="share">
+                        <span class="caption">Share It</span>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/">
+                            <i class="fab fa-2x fa-twitter"></i>
+                        </a>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/">
+                            <i class="fab fa-2x fa-facebook"></i>
+                        </a>
+                        <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/">
                             <i class="fab fa-2x fa-linkedin"></i>
                         </a>
                     </div>
@@ -901,6 +944,11 @@ For tests, on the other hand, readability and maintainability are a must.<i clas
                 <button type="button" class="btn btn-secondary">
                     <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
                         <span class="fab fa-3x fa-linkedin"></span>
+                    </a>
+                </button>
+                <button type="button" class="btn btn-secondary">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">
+                        <span class="fab fa-3x fa-x-twitter"></span>
                     </a>
                 </button>
                 <button type="button" class="btn btn-secondary">
