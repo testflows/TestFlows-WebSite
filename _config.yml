@@ -4,7 +4,7 @@
 
 # Site
 title: TestFlows - Python Testing Framework
-description: TestFlows is a Python testing framework with support for behavior-driven testing, combinatorial testing, AI auto-steps, and requirement traceability"
+description: Python testing libary for writing test programs"
 keywords:
 author: TestFlows
 language: en

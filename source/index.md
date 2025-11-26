@@ -46,7 +46,7 @@ layout: index
 </div>
 <div class="banner-description">
 <h4>Write Python test programs for any project</h4>
-<h2>Try now</h1>
+<h1><Br></h1>
 </div>
 <div class="row justify-content-center no-gutters">
 <div class="command">
@@ -66,6 +66,11 @@ pip3 install testflows
             <button type="button" class="btn btn-secondary">
                 <a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
                     <span class="fab fa-3x fa-linkedin"></span>
+                </a>
+            </button>
+            <button type="button" class="btn btn-secondary">
+                <a href="https://x.com/TestFlowsOSTF">
+                    <span class="fab fa-3x fa-x-twitter"></span>
                 </a>
             </button>
             <button type="button" class="btn btn-secondary">
