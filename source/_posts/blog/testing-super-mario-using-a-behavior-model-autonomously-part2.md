@@ -12,15 +12,15 @@ In [Part 1](/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/
 
 ## Plugging the Behavior Model
 
-In our earlier series, Testing Super Mario Using a Behavior Model [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/), we introduced the theory and built a behavior model that includes **causal**, **safety**, and **liveness** properties that validate game correctness frame-by-frame. This original model is available in the v2.0 branch:
+We already had a behavior model from our earlier series ([Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/))—a model with **causal**, **safety**, and **liveness** properties that enforce game correctness frame-by-frame. The original model is available in the v2.0 branch:
 
 ```bash
 git clone --branch v2.0 --single-branch https://github.com/testflows/Examples.git && cd Examples/SuperMario
 ```
 
-The [model](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/game.py#L7) checks that [Mario's movement](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/mario/movement.py#L475) has a valid cause, that velocity never exceeds physical limits, that boundaries are respected, and that expected behaviors eventually occur.
+This [model](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/game.py#L7) enforces that [Mario's movement](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/models/mario/movement.py#L475) has a valid cause, that velocity never exceeds physical limits, that boundaries are respected, and that expected behaviors eventually occur.
 
-Plugging in the model is simple: we just pass it to the [play()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L71) method that we call to advance the game. The [play()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/game.py#L267) method takes the model and calls the model's [expect()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/game.py#L275) method that implements all the assertions. Here is its simple implementation:
+The integration is simple. We pass the model to the same [play()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/autonomous_play.py#L71) function that advances the game. Every frame, the [play()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/game.py#L267) method calls the model's [expect()](https://github.com/testflows/Examples/blob/v2.0/SuperMario/tests/actions/game.py#L275) method, which runs all the property checks. Here's the implementation:
 
 ```python
 def play(game, seconds=1, frames=None, model=None):
@@ -36,13 +36,13 @@ def play(game, seconds=1, frames=None, model=None):
 
 ## Running autonomous exploration with the model
 
-We can run an autonomous play test with the model using the following command:
+Now let's see what happens when we run autonomous exploration with the model enabled:
 
 ```bash
 python3 tests/run.py --autonomous --play-seconds 300 --with-model
 ```
 
-After some time, the test will eventually fail as some properties defined in the model will be violated. For example,
+The system explores thousands of states, validating every frame. Properties pass, pass, pass... until they don't. Here's what a failure looks like:
 
 ```bash
            24s 151ms         ⟥    [debug] ✓ Mario Mario's vertical velocity 8 is less than the maximum
@@ -52,14 +52,15 @@ After some time, the test will eventually fail as some properties defined in the
            24s 168ms         ⟥    Exception: AssertionError: Mario failed to: stopped falling because landed on support or stomped an enemy
 ```
 
-Such failures indicate that either our model or the game has a bug because the expected behavior does not match.
+The model caught something. But here's the catch: this failure could mean the game has a bug, or it could mean our model is wrong. We need to figure out which one.
 
 ## Bidirectional testing
 
-When the model's assertion fails, like in the example above, we face a fundamental question: *Is the game wrong, or is the model wrong?*
+When the model's assertion fails, we face a fundamental question: *Is the game wrong, or is the model wrong?*
+
 This is where bidirectional testing comes in. Unlike traditional testing where only the system is validated, for any non-trivial properties or transition relations, both the model and the game test each other simultaneously:
 
-- **The model tests the game**: Every frame, the model validates that the game's behavior satisfies the specified properties. If Mario moves right, there must be a cause (velocity or key press). If Mario falls, he must lack ground support. These are the model's expectations.
+- **The model tests the game**: Every frame, the model enforces that the game's behavior satisfies the specified properties. If Mario moves right, there must be a cause (velocity or key press). If Mario falls, he must lack ground support. These are the model's expectations.
 
 - **The game tests the model**: The game acts as the ground truth—it's what actually runs and what players experience. When the model's expectations fail, it reveals that the model's understanding might be incomplete or incorrect.
 
@@ -75,11 +76,13 @@ This creates a self-correcting feedback loop:
 
 Both components improve through their disagreements. Fix a game bug, and the model becomes more reliable. Fix a model bug, and game validation becomes more accurate. Each fix makes the other component more trustworthy. 
 
-## Deciding if model or code has a bug
+## Deciding if model or game has a bug
 
-So how do we determine which component has the bug? This is the classic *oracle problem*. Unfortunately, deciding if a non-trivial model matches software is undecidable in general. For Turing-complete systems, there's no algorithm that can always decide if the model and software agree for all possible inputs. Even for finite-state systems, you'd need to explore the entire state space, which is computationally infeasible for complex systems such as our Mario game.
+So how do we figure out which component has the bug? This is the classic *oracle problem*—how do you know what the correct behavior should be?
 
-However, the good news is that autonomous testing is as good at testing that the model's expectations match the game as it is at testing if the game matches the model. This means that even if we can't show the model is correct in absolute terms, autonomous testing is great at finding disagreements between the two. When a failure occurs, we must use a pragmatic approach:
+The theoretical answer is sobering: deciding if a non-trivial model matches software is undecidable in general. For Turing-complete systems, there's no algorithm that can always decide if the model and software agree for all possible inputs. Even for finite-state systems, you'd need to explore the entire state space, which is computationally infeasible for complex systems like our Mario game.
+
+But here's the practical insight: autonomous testing is just as good at finding when the model's expectations don't match the game as it is at finding when the game doesn't match the model. We can't prove the model is correct in absolute terms, but autonomous testing excels at finding disagreements. When a failure occurs, we just use a pragmatic approach:
 
 1. **Analyze the failure**: When a property fails, examine the saved path to understand what happened.
 2. **Determine the cause**: Is the game violating a physical law? Or is the model missing context about a valid game mechanic?
