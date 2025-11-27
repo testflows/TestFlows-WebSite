@@ -30,9 +30,9 @@
   
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1764192764755" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1764268876745" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1764192764755" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1764268876745" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -317,7 +317,10 @@ Dead ends are evolutionary dead weight. By aggressively pruning any path that en
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>We’ve successfully demonstrated the effectiveness of <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis</a>‘s autonomous exploration approach using our reference Python implementation of <em>Super Mario Bros.</em> After analyzing the approach, we connected it to Genetic Algorithms, revealing the evolutionary computation structure underlying the exploration. Our implementation completed all four levels without human guidance, discovering shortcuts, navigating complex enemy patterns, mastering precise jumping, and even uncovering a potential collision bug in Level 4.</p>
 <p>However, there’s a critical limitation: our fitness function only measures <strong>progress</strong> (x-position, level completion), not <strong>correctness</strong>. We don’t validate whether Mario’s velocity follows expected physics, whether jumps have valid causes, whether falling happens only without ground support, or whether movements are causally justified by game state. While Antithesis played the original NES game and we used a Python implementation, this distinction becomes crucial for correctness validation—checking proper behavior requires access to internal game variables (velocity, collision state, key presses) beyond just Mario’s x,y position.</p>
 <p>In the <a href="/blog/testing-super-mario-using-a-behavior-model-part1/">behavior model series</a> (<a href="/blog/testing-super-mario-using-a-behavior-model-part1/">Part 1</a> and <a href="/blog/testing-super-mario-using-a-behavior-model-part2/">Part 2</a>), we developed a comprehensive behavior model with <strong>causal</strong>, <strong>safety</strong>, and <strong>liveness</strong> properties that validate game correctness frame-by-frame. In <strong>Part 2</strong> of this autonomous testing series, we’ll integrate that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers vast state spaces, while the behavior model ensures correctness throughout—finding not just winning paths, but correctness bugs hiding in edge cases.</p>
-<p>Stay tuned for <strong>Part 2</strong>, where autonomous exploration meets rigorous correctness validation!</p>
+<div class="classic-quote"><blockquote>
+<p>🛸 Continue to <strong><a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</a></strong></p>
+</blockquote>
+</div>
 
         </div>
         <div class="col-12 divider"></div>

@@ -683,4 +683,10 @@ We implemented:
 
 While our classic tests can verify basic functionality, they struggle with the combinatorial explosion of possible states. This is exactly where behavior models excel—they can cover orders of magnitude more state combinations while running meaningful assertions about correctness at every tested state.
 
-In [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/), we'll cover the theory behind behavior models and build one to make our testing much more robust and comprehensive.
+In Part 2, we'll cover the theory behind behavior models and build one from scratch.
+
+{% html div class="classic-quote" %}
+
+> 🛸 Continue to **[Testing Super Mario Using a Behavior Model (Part 2)](/blog/testing-super-mario-using-a-behavior-model-part2/)**
+
+{% endhtml %}

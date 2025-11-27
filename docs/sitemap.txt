@@ -1,8 +1,8 @@
-https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/
-https://testflows.com/index.html
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/
+https://testflows.com/index.html
+https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/
 https://testflows.com/blog/writing-test-programs-not-just-tests/
 https://testflows.com/blog/stop-bashing-bugs-its-all-your-fault/
 https://testflows.com/contact.html

@@ -45,7 +45,7 @@ layout: index
   </a>
 </div>
 <div class="banner-description">
-<h4>Write Python test programs for any project</h4>
+<h4></h4>
 <h1><Br></h1>
 </div>
 <div class="row justify-content-center no-gutters">

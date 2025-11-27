@@ -2311,3 +2311,11 @@ The real insight is that behavior modeling isn't about achieving perfect coverag
 This approach, capturing expected behavior as executable code that validates actual behavior across all testing contexts, is what we call **behavior-as-code**, and it's quickly becoming for us the new gold standard for systematic, scalable software testing.
 
 > Given that the model presented here is intentionally incomplete and tailored for teaching purposes. We welcome your improvements and extensions, so feel free to open a PR in the repository at https://github.com/testflows/Examples (see https://github.com/testflows/Examples/tree/v1.0/SuperMario).
+
+Now that we have a behavior model, the next step is to learn how to implement autonomous testing. In the autonomous testing series, we'll explore how to build a mutation-based Genetic Algorithm that systematically explores *Super Mario*'s vast state space, and then integrate our behavior model to validate correctness at every step.
+
+{% html div class="classic-quote" %}
+
+> 🛸 Continue to **[Testing Super Mario Using a Behavior Model Autonomously (Part 1)](/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/)**
+
+{% endhtml %}

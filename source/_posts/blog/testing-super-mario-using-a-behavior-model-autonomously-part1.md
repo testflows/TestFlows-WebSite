@@ -325,4 +325,8 @@ However, there's a critical limitation: our fitness function only measures **pro
 
 In the [behavior model series](/blog/testing-super-mario-using-a-behavior-model-part1/) ([Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/) and [Part 2](/blog/testing-super-mario-using-a-behavior-model-part2/)), we developed a comprehensive behavior model with **causal**, **safety**, and **liveness** properties that validate game correctness frame-by-frame. In **Part 2** of this autonomous testing series, we'll integrate that model directly into the exploration loop, validating every frame in real-time. This combination is powerful: autonomous exploration discovers vast state spaces, while the behavior model ensures correctness throughout—finding not just winning paths, but correctness bugs hiding in edge cases.
 
-Stay tuned for **Part 2**, where autonomous exploration meets rigorous correctness validation!
+{% html div class="classic-quote" %}
+
+> 🛸 Continue to **[Testing Super Mario Using a Behavior Model Autonomously (Part 2)](/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/)**
+
+{% endhtml %}
