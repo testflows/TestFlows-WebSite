@@ -4,25 +4,7 @@
   <url>
     <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/</loc>
     
-    <lastmod>2025-11-27</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/</loc>
-    
-    <lastmod>2025-11-27</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/</loc>
-    
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2026-06-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -31,16 +13,16 @@
   <url>
     <loc>https://testflows.com/index.html</loc>
     
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2026-06-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/</loc>
+    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/</loc>
     
-    <lastmod>2025-11-26</lastmod>
+    <lastmod>2026-06-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -49,25 +31,25 @@
   <url>
     <loc>https://testflows.com/blog/writing-test-programs-not-just-tests/</loc>
     
-    <lastmod>2025-09-12</lastmod>
+    <lastmod>2026-06-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/stop-bashing-bugs-its-all-your-fault/</loc>
+    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/</loc>
     
-    <lastmod>2025-04-07</lastmod>
+    <lastmod>2026-06-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/contact.html</loc>
+    <loc>https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/</loc>
     
-    <lastmod>2025-03-06</lastmod>
+    <lastmod>2026-06-07</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -76,79 +58,16 @@
   <url>
     <loc>https://testflows.com/handbook/index.html</loc>
     
-    <lastmod>2025-03-06</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/</loc>
+    <loc>https://testflows.com/contact.html</loc>
     
-    <lastmod>2025-03-05</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/decoding-formal-description-simple-train-control-system/</loc>
-    
-    <lastmod>2025-02-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/</loc>
-    
-    <lastmod>2025-02-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/transforming-testing-behavior-models-into-formal-models/</loc>
-    
-    <lastmod>2025-01-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/</loc>
-    
-    <lastmod>2025-01-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/</loc>
-    
-    <lastmod>2025-01-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/combinatorial-testing-behavior-model/</loc>
-    
-    <lastmod>2025-01-28</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/combinatorial-testing-the-introduction/</loc>
-    
-    <lastmod>2024-11-05</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -157,7 +76,7 @@
   <url>
     <loc>https://testflows.com/credits.html</loc>
     
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -166,43 +85,34 @@
   <url>
     <loc>https://testflows.com/blog/index.html</loc>
     
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/</loc>
+    <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/</loc>
     
-    <lastmod>2024-03-14</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/blog/get-your-software-covered-using-covering-arrays/</loc>
-    
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/how-to-break-your-tests-into-steps/</loc>
+    <loc>https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/</loc>
     
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/</loc>
+    <loc>https://testflows.com/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/</loc>
     
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -211,7 +121,7 @@
   <url>
     <loc>https://testflows.com/blog/working-with-requirements-just-like-with-code/</loc>
     
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -220,7 +130,97 @@
   <url>
     <loc>https://testflows.com/about.html</loc>
     
-    <lastmod>2024-03-14</lastmod>
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/combinatorial-testing-behavior-model/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/combinatorial-testing-the-introduction/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/decoding-formal-description-simple-train-control-system/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/get-your-software-covered-using-covering-arrays/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/how-to-break-your-tests-into-steps/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/stop-bashing-bugs-its-all-your-fault/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://testflows.com/blog/transforming-testing-behavior-models-into-formal-models/</loc>
+    
+    <lastmod>2025-08-20</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -229,7 +229,7 @@
 
   <url>
     <loc>https://testflows.com/</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2026-07-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
