@@ -28,11 +28,11 @@
   
   <link href="https://testflows.com/img/favicon.ico" rel="icon">
   
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785433335873" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785445551668" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1785433335873" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1785445551668" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -45,36 +45,48 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 <body>
-  <nav id="main-nav" class="fixed-top navbar navbar-expand-md navbar-fixed-top" role="navigation">
+  <nav id="main-nav" class="navbar navbar-expand-md fixed-top" role="navigation">
     <a class="navbar-brand" href="/">
         <img src="/img/logo-white.png" alt="TestFlows">
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon fas fa-2x fa-bars"></span>
+    <button class="navbar-toggler" type="button"
+            data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-bars" aria-hidden="true">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </span>
     </button>
-    <div class="collapse navbar-collapse nav-menu" id="navbarNav">
-        <ul class="nav navbar-nav">
-            
-                <li class="nav-item">
-                    <a class="nav-link" href="/handbook"><i class="fas fa-book pr-2"></i>Handbook</a>
-                </li>
-            
-                <li class="nav-item">
-                    <a class="nav-link" href="/blog"><i class="fas fa-blog pr-2"></i>Blog</a>
-                </li>
-            
-                <li class="nav-item">
-                    <a class="nav-link" href="/about.html"><i class="fas fa-info-circle pr-2"></i>About</a>
-                </li>
-            
-                <li class="nav-item">
-                    <a class="nav-link" href="/contact.html"><i class="fas fa-envelope-open-text pr-2"></i>Contact</a>
-                </li>
-            
-        </ul>
+    <div class="collapse navbar-collapse site-menu" id="navbarNav">
+        <div class="site-menu-panel">
+            <ul class="navbar-nav">
+                
+                
+                    <li class="nav-item">
+                        <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                        <a class="nav-link" href="/handbook">Handbook</a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                        <a class="nav-link" href="/blog">Blog</a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7.5h.01"/></svg></span>
+                        <a class="nav-link" href="/about.html">About</a>
+                    </li>
+                
+                    <li class="nav-item">
+                        <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                        <a class="nav-link" href="/contact.html">Contact</a>
+                    </li>
+                
+            </ul>
+        </div>
     </div>
 </nav>
-<div class="clearfix"></div>
 
   <div class="container-fluid p-0">
     <div class="content">
@@ -568,7 +580,6 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="https://unpkg.com/3d-force-graph@1.72.3/dist/3d-force-graph.min.js"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
@@ -581,13 +592,15 @@ var isInViewport = function (elem) {
     );
 };
 var banner = document.querySelector('.banner');
-window.addEventListener('scroll', function (event) {
-	if (isInViewport(banner)) {
-    	banner.classList.remove("not-in-view");
-	} else {
-	    banner.classList.add("not-in-view");
-	}
-}, false);
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
 // codeblock copy
 function codeblock_copy() {
     $("figure.highlight").hover(
@@ -611,48 +624,42 @@ function codeblock_copy() {
 }
 // apply codeblock copy
 codeblock_copy()
-// hero graph
-function heroGraph() {
-    const distance = 2350;
-    const N = 7;
-    const msb = n => Math.max(0, 31 - Math.clz32(n));
-    const gData = {
-        nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
-        links: [...Array(2*((2**(N+1)-2)-2**N)).keys()]
-        .map(id => ({
-            source: Math.floor(id/2),
-            target: id+2
-        }))
-    };
-    start = gData.nodes.length;
-    gData.nodes.push({id:start, group: 2, val:msb(start)});
-    gData.links.push({source: start, target: 0});
-    gData.links.push({source: start, target: 1});
-    window.Graph = ForceGraph3D()
-    .backgroundColor("black")
-    //.dagMode('td')
-    //.dagLevelDistance(200)
-    (document.getElementById('banner-graph'))
-	.nodeAutoColorBy('group')
-    .linkAutoColorBy(d => gData.nodes[d.source].group)
-	.onNodeDragEnd(node => {
-        node.fx = node.x;
-        node.fy = node.y;
-        node.fz = node.z;
-    })
-    .linkDirectionalArrowLength(3.5)
-    .linkDirectionalArrowRelPos(1)
-    .graphData(gData);
-    // camera orbit
-    let angle = 0;
-    //let isRotationActive = true;
-    window.Graph.cameraPosition({
-        x: distance * Math.sin(angle),
-        z: distance * Math.cos(angle)
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
     });
-    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
-    window.Graph.currentDagMode = 0;
-}
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 767.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
 // disabling form submissions if there are invalid fields
 (function() {
     'use strict';

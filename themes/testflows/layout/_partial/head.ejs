@@ -1,6 +1,6 @@
 <head>
   <meta charset="utf-8">
-  <title><%- page.title || config.title %> | TestFlows</title>
+  <title><% if (page.path === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | TestFlows<% } %></title>
   <meta name="description" content="<%- page.description || config.description %>">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="<%- page.author || 'TestFlows'%>">
@@ -15,7 +15,7 @@
   <% if (theme.favicon){ %>
   <link href="<%- full_url_for(theme.favicon) %>" rel="icon">
   <% } %>
-  <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<%- config.root %>css/bootstrap/bootstrap.css" media="screen" type="text/css">
   <link rel="stylesheet" href="<%- config.root %>css/highlight.css?v=<%- Date.now() %>" media="screen" type="text/css">
   <link rel="stylesheet" href="<%- config.root %>css/fontawesome/css/all.css?v=1.0" type="text/css">

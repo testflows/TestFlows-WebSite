@@ -1,7 +1,6 @@
 <script src="<%- config.root %>js/jquery-3.4.1.slim.js"></script>
 <script src="<%- config.root %>js/popper.min.js"></script>
 <script src="<%- config.root %>js/bootstrap/bootstrap.min.js"></script>
-<script src="https://unpkg.com/3d-force-graph@1.72.3/dist/3d-force-graph.min.js"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
@@ -14,13 +13,15 @@ var isInViewport = function (elem) {
     );
 };
 var banner = document.querySelector('.banner');
-window.addEventListener('scroll', function (event) {
-	if (isInViewport(banner)) {
-    	banner.classList.remove("not-in-view");
-	} else {
-	    banner.classList.add("not-in-view");
-	}
-}, false);
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
 // codeblock copy
 function codeblock_copy() {
     $("figure.highlight").hover(
@@ -44,48 +45,42 @@ function codeblock_copy() {
 }
 // apply codeblock copy
 codeblock_copy()
-// hero graph
-function heroGraph() {
-    const distance = 2350;
-    const N = 7;
-    const msb = n => Math.max(0, 31 - Math.clz32(n));
-    const gData = {
-        nodes: [...Array(2**(N+1)-2).keys()].map(i => ({ id: i, group: i % 2, val: msb(i) })),
-        links: [...Array(2*((2**(N+1)-2)-2**N)).keys()]
-        .map(id => ({
-            source: Math.floor(id/2),
-            target: id+2
-        }))
-    };
-    start = gData.nodes.length;
-    gData.nodes.push({id:start, group: 2, val:msb(start)});
-    gData.links.push({source: start, target: 0});
-    gData.links.push({source: start, target: 1});
-    window.Graph = ForceGraph3D()
-    .backgroundColor("black")
-    //.dagMode('td')
-    //.dagLevelDistance(200)
-    (document.getElementById('banner-graph'))
-	.nodeAutoColorBy('group')
-    .linkAutoColorBy(d => gData.nodes[d.source].group)
-	.onNodeDragEnd(node => {
-        node.fx = node.x;
-        node.fy = node.y;
-        node.fz = node.z;
-    })
-    .linkDirectionalArrowLength(3.5)
-    .linkDirectionalArrowRelPos(1)
-    .graphData(gData);
-    // camera orbit
-    let angle = 0;
-    //let isRotationActive = true;
-    window.Graph.cameraPosition({
-        x: distance * Math.sin(angle),
-        z: distance * Math.cos(angle)
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
     });
-    window.Graph.dagGraphModes = ['td', 'bu', 'lr', 'rl', 'zin', 'zout', 'radialout', 'radialin', 'off'];
-    window.Graph.currentDagMode = 0;
-}
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 767.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
 // disabling form submissions if there are invalid fields
 (function() {
     'use strict';

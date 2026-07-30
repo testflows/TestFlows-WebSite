@@ -7,6 +7,5 @@ icon: fas fa-id-badge pt-5 pb-5
 
 * Hexo: https://hexo.io/
 * Bootstrap: https://getbootstrap.com/
-* 3D Force-Directed Graph: https://github.com/vasturiano/3d-force-graph
 * FontAwesome icons: https://fontawesome.com/
-* Source Sans Pro font: https://fonts.google.com/specimen/Source+Sans+Pro
+* Titillium Web font: https://fonts.google.com/specimen/Titillium+Web
