@@ -1,40 +1,46 @@
-<div class="row no-gutters">
-    <div class="col-12 text-center">
-        <div class="links">
-            <div class="btn-group" role="group" aria-label="Basic example">
-                <button type="button" class="btn btn-secondary">
-                    <a href="https://pypi.org/project/testflows/">
-                        <span class="fab fa-2x fa-python"></span>
-                    </a>
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    <a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">
-                        <span class="fab fa-3x fa-linkedin"></span>
-                    </a>
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    <a href="https://x.com/TestFlowsOSTF">
-                        <span class="fab fa-3x fa-x-twitter"></span>
-                    </a>
-                </button>
-                <button type="button" class="btn btn-secondary">
-                    <a href="https://github.com/testflows">
-                        <span class="fab fa-2x fa-github"></span>
-                    </a>
-                </button>
-            </div>
+<div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="<%- url_for('/handbook/') %>">Handbook</a></li>
+                <li><a href="<%- url_for('/blog/') %>">Blog</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a href="https://github.com/testflows">GitHub</a></li>
+                <li><a href="https://pypi.org/project/testflows/">PyPI</a></li>
+                <li><a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="<%- url_for('/about.html') %>">About</a></li>
+                <li><a href="<%- url_for('/contact.html') %>">Contact</a></li>
+                <li><a href="<%- url_for('/credits.html') %>">Credits</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Get started</h3>
+            <ul>
+                <li><a href="https://pypi.org/project/testflows/">pip3 install testflows</a></li>
+                <li><a href="<%- url_for('/handbook/') %>">Read the Handbook</a></li>
+            </ul>
         </div>
     </div>
-    <div class="col-12 text-center">
-        <img src="/img/favicon-square.png"</img>
-    </div>
-    <div class="col-12 text-center">
-        Copyright 2020-<%= new Date().getFullYear() %> Katteli Inc.
-    </div>
-    <div class="col-12 text-center">
-        <span class="text-nowrap">All rights reserved.</span>
-    </div>
-    <div class="col-12 text-center no-padding links">
-        <a class="btn" href="/credits.html">Credits</a>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-<%= new Date().getFullYear() %> Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
     </div>
 </div>

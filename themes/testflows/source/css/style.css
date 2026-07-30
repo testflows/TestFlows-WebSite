@@ -143,14 +143,114 @@ figure.example {
 }
 
 footer {
-    background: black;
-    color: white;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    background-color: var(--tf-bg-deep);
+    background-image: linear-gradient(
+        160deg,
+        #033030 0%,
+        #012020 35%,
+        #000a0a 70%,
+        var(--tf-bg-deep) 100%
+    );
+    color: rgba(232, 245, 242, 0.85);
+    padding: 3rem 0 2rem;
+    border-top: 1px solid rgba(6, 249, 150, 0.28);
+    font-family: var(--tf-font);
 }
 
 footer .btn {
     color: inherit;
+}
+
+.site-footer-grid {
+    margin: 0;
+}
+
+.site-footer-col {
+    text-align: left;
+}
+
+.site-footer-col h3 {
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: left;
+    margin: 0 0 0.85rem;
+    letter-spacing: 0.02em;
+}
+
+.site-footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-footer-col li {
+    margin: 0.4rem 0;
+}
+
+.site-footer-col a {
+    color: var(--tf-green);
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.site-footer-col a:hover,
+.site-footer-col a:focus {
+    color: #fff;
+    text-decoration: none;
+}
+
+.site-footer-bottom {
+    margin: 2.25rem 0 0;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid rgba(6, 249, 150, 0.45);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    font-size: 0.85rem;
+    color: rgba(232, 245, 242, 0.55);
+}
+
+.site-footer-bottom a {
+    color: rgba(232, 245, 242, 0.7);
+    text-decoration: none;
+}
+
+.site-footer-bottom a:hover,
+.site-footer-bottom a:focus {
+    color: var(--tf-green);
+}
+
+.site-footer-social {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.site-footer-social a {
+    color: rgba(232, 245, 242, 0.75);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.site-footer-social a:hover,
+.site-footer-social a:focus {
+    color: var(--tf-green);
+}
+
+@media (max-width: 767.98px) {
+    .site-footer-col {
+        margin-bottom: 1.75rem;
+    }
+
+    .site-footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+    }
 }
 
 blockquote {
@@ -534,134 +634,646 @@ blockquote::-webkit-scrollbar {
 }
 
 /* --------------------------------------------------------------------------
- * Index feature sections — flat (hero alone keeps gradient + wave)
+ * Index — continuous flat flow (hero keeps wave; no elevated chapter boxes)
  * -------------------------------------------------------------------------- */
 .index-start,
-.content > section {
+.index-why,
+.index-journal,
+.index-close {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 50dvh;
-    background: none;
     color: #e8f5f2;
     font-family: var(--tf-font);
-    overflow: hidden;
     border-top: none;
 }
 
 .index-start {
-    padding: 3.5rem 0 4rem;
+    padding: 3.5rem 0 4.5rem;
 }
 
+.index-start .index-block-title,
 .index-start h2 {
     color: #fff;
     font-weight: 600;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    margin: 2.5rem 0 1.5rem;
-    text-align: center;
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    margin: 0 0 0.75rem;
+    text-align: left;
 }
 
-.index-start h2:first-child {
-    margin-top: 0;
+.index-start .index-block-lead {
+    color: rgba(232, 245, 242, 0.85);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    line-height: 1.45;
+    text-align: left;
+    max-width: none;
+    margin: 0 0 2.5rem;
 }
 
-.index-start-aside {
-    color: rgba(232, 245, 242, 0.88);
-    font-size: 1.1rem;
-    font-weight: 400;
+.index-start .index-block-lead p {
+    margin: 0;
+}
+
+.index-start-art {
+    display: block;
+    position: relative;
+    z-index: 0;
+    width: 100%;
+    margin: 0;
+    text-align: left;
+    border: none;
+    background: transparent;
+    pointer-events: none;
+}
+
+.index-start-art p {
+    margin: 0;
+    text-align: left;
+}
+
+.index-start-art img,
+.index-start-art svg {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: auto;
+    margin: 0;
+    border-radius: 0.5rem;
+    pointer-events: auto;
+}
+
+/* Soft overlap: art still peeks under columns, with more breathing room */
+.index-start-steps {
+    position: relative;
+    z-index: 1;
+    align-items: stretch;
+    /* image aspect ≈ 2000×600 → ~8% of height ≈ 2.4% of width */
+    margin-top: -2.4%;
+    padding-top: 1.75rem;
+}
+
+.index-start-step {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.75rem;
-    padding: 1rem 1.25rem;
-}
-
-.index-start-icon {
-    color: var(--tf-green);
-    line-height: 1;
-    margin-bottom: 0.25rem;
-}
-
-.section-header {
+    margin-bottom: 1.75rem;
+    padding: 0;
     background: transparent;
-    padding: 2.5rem 1.25rem 1rem;
-    overflow: hidden;
+    border: none;
+    box-shadow: none;
+}
+
+.index-start-step h3 {
     color: #fff;
+    font-weight: 600;
+    font-size: clamp(1.65rem, 3vw, 2.1rem);
+    margin: 0 0 0.65rem;
+    text-align: left;
+}
+
+.index-start-step-story,
+.index-start-step-story p {
+    color: rgba(232, 245, 242, 0.88);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    text-align: left;
+    margin: 0 0 1.1rem;
+    max-width: 28rem;
+}
+
+.index-start-step-file,
+.index-start-step-file p {
+    color: rgba(232, 245, 242, 0.55);
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    letter-spacing: 0.02em;
+    line-height: 1.2;
+    text-align: left;
+}
+
+.index-start-step figure.highlight {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 14rem;
+    margin-bottom: 0;
+    font-size: 1.02rem;
+}
+
+.index-start-step figure.highlight table {
+    flex: 1 1 auto;
+    height: 100%;
+}
+
+.index-start-step figure.highlight .code,
+.index-start-step figure.highlight pre {
+    height: 100%;
+}
+
+@media (min-width: 768px) {
+    .index-start-steps {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+
+    .index-start-step {
+        margin-bottom: 0;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+}
+
+.index-block-title {
+    color: #fff;
+    font-weight: 600;
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    margin: 0 0 0.75rem;
     text-align: center;
 }
 
-.section-header.section-header-top {
-    padding-top: 2.5rem;
-    padding-bottom: 1rem;
-}
-
-.section-header h1,
-.section-header h1 strong {
-    color: #fff;
-    font-weight: 600;
-    font-size: clamp(1.75rem, 3.5vw, 2.35rem);
-    letter-spacing: -0.01em;
-    margin-bottom: 0.75rem;
-}
-
-.section-header h2 {
-    color: var(--tf-green);
-    font-weight: 400;
-    font-size: clamp(1.05rem, 2vw, 1.35rem);
+.index-block-lead {
+    color: rgba(232, 245, 242, 0.85);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
     line-height: 1.45;
-    margin: 0.25rem 0;
-    opacity: 0.95;
+    text-align: center;
+    max-width: 40rem;
+    margin: 0 auto 2.5rem;
 }
 
-.section-header a {
+.index-why {
+    /* Above hero wave bleed so cards stay readable */
+    z-index: 1;
+    padding: 5rem 0 5rem;
+}
+
+.index-journal {
+    /* Above close-section wave so blog copy stays readable */
+    z-index: 1;
+    padding: 4.5rem 0 4.5rem;
+}
+
+.index-why-grid {
+    align-items: stretch;
+    margin-bottom: 0.5rem;
+}
+
+.index-why-grid-more {
+    margin-top: 1.25rem;
+}
+
+.index-why-col {
+    display: flex;
+    margin-bottom: 1.25rem;
+}
+
+.index-why-card {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 13.5rem;
+    padding: 2rem 1.6rem 1.85rem;
+    text-align: center;
+    border: 1px solid rgba(6, 249, 150, 0.22);
+    border-radius: 0.5rem;
+    background: rgba(0, 8, 8, 0.22);
+    box-shadow:
+        0 0 0 1px rgba(6, 249, 150, 0.06),
+        0 0 24px rgba(6, 249, 150, 0.12),
+        0 12px 32px rgba(0, 0, 0, 0.35);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.index-why-card:not(.index-why-card-more):hover {
+    border-color: rgba(6, 249, 150, 0.35);
+    box-shadow:
+        0 0 0 1px rgba(6, 249, 150, 0.1),
+        0 0 36px rgba(6, 249, 150, 0.2),
+        0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.index-why-card h3 {
+    color: var(--tf-green);
+    font-weight: 600;
+    font-size: clamp(1.45rem, 2.6vw, 1.75rem);
+    line-height: 1.25;
+    margin: 0 0 1rem;
+    text-align: center;
+}
+
+.index-why-card p {
+    color: rgba(232, 245, 242, 0.88);
+    font-size: 1.05rem;
+    line-height: 1.55;
+    margin: 0;
+    flex: 1 1 auto;
+    text-align: left;
+}
+
+.index-why-card-more {
+    min-height: 0;
+    padding: 2.25rem 0 0;
+    border: none;
+    background: transparent;
+    box-shadow: none;
+}
+
+.index-why-card-more p {
+    text-align: center;
+    max-width: 42rem;
+    margin: 0 auto;
+}
+
+.index-why-card-cta {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+    .index-why-col {
+        margin-bottom: 0;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .index-why-grid {
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+}
+
+.index-journal-heading {
+    width: 100%;
+    margin: 0 0 2.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid rgba(6, 249, 150, 0.35);
+    text-align: right;
+}
+
+.index-journal .index-block-title {
+    margin: 0 0 0.75rem;
+    text-align: right;
+}
+
+.index-journal .index-block-lead {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    text-align: right;
+}
+
+.index-journal-feature {
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+}
+
+.index-journal-col {
+    display: flex;
+    margin-bottom: 1.5rem;
+}
+
+.index-journal-media {
+    display: block;
+    width: 100%;
+    margin: 0;
+    text-align: center;
+}
+
+.index-journal-media img {
+    display: block;
+    width: auto;
+    max-width: min(100%, 500px);
+    max-height: 500px;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+}
+
+.index-journal-copy {
+    width: 100%;
+    text-align: left;
+    color: #e8f5f2;
+}
+
+.index-journal-copy *,
+.index-journal-copy *::before,
+.index-journal-copy *::after {
+    border: none !important;
+    box-shadow: none !important;
+    outline: none;
+}
+
+.index-journal-copy h3 {
+    color: #fff;
+    font-size: clamp(1.35rem, 2.4vw, 1.7rem);
+    font-weight: 700;
+    line-height: 1.25;
+    margin: 0 0 1rem;
+    text-align: left;
+}
+
+.index-journal-copy h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.index-journal-copy h3 a:hover,
+.index-journal-copy h3 a:focus {
+    color: var(--tf-green);
+}
+
+.index-journal-excerpt {
+    color: rgba(232, 245, 242, 0.88);
+    font-size: 1.05rem;
+    line-height: 1.55;
+    text-align: left;
+}
+
+.index-journal-excerpt p {
+    margin: 0 0 0.85rem;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: left;
+    border: none !important;
+    padding: 0;
+    background: none;
+}
+
+.index-journal-excerpt p:last-of-type {
+    margin-bottom: 0;
+}
+
+.index-journal-excerpt a {
     color: var(--tf-green);
     text-decoration: underline;
     text-underline-offset: 0.15em;
 }
 
-.section-header a:hover,
-.section-header a:focus {
+.index-journal-excerpt .post-summary-more {
+    color: var(--tf-green);
+    font-style: normal;
+    font-weight: 600;
+}
+
+.index-journal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.75rem 1.25rem;
+    margin-top: 1.25rem;
+    color: rgba(232, 245, 242, 0.7);
+    font-size: 0.95rem;
+}
+
+.index-journal-author {
+    color: #fff;
+    font-weight: 600;
+}
+
+.index-journal-meta time {
+    color: var(--tf-green);
+    font-weight: 600;
+}
+
+.index-journal-cta-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 2rem 0 0 1.25rem;
+    text-align: left;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-sizing: border-box;
+}
+
+.index-journal-cta-card h3 {
+    color: #fff;
+    font-weight: 600;
+    font-size: clamp(1.45rem, 2.6vw, 1.85rem);
+    margin: 0 0 1rem;
+    text-align: left;
+}
+
+.index-journal-cta-card p {
+    color: rgba(232, 245, 242, 0.88);
+    font-size: 1.1rem;
+    line-height: 1.55;
+    margin: 0 0 1.75rem;
+    max-width: none;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .index-journal-col {
+        margin-bottom: 0;
+    }
+
+    .index-journal-feature .index-journal-col:first-child {
+        padding-right: 1.25rem;
+    }
+
+    .index-journal-feature .index-journal-col:last-child {
+        padding-left: 1.25rem;
+    }
+
+    .index-journal-media {
+        text-align: left;
+    }
+
+    .index-journal-media img {
+        margin: 0;
+    }
+}
+
+.section-cta {
+    display: inline-block;
+    margin-top: 0.35rem;
+    background: var(--tf-green);
+    color: var(--tf-bg-deep) !important;
+    font-family: var(--tf-font);
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    padding: 0.7rem 1.15rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--tf-green);
+    text-decoration: none !important;
+    transition: filter 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.section-cta:hover,
+.section-cta:focus {
+    color: var(--tf-bg-deep) !important;
+    filter: brightness(1.08);
+    text-decoration: none !important;
+}
+
+.section-cta-ghost {
+    background: transparent;
+    color: var(--tf-green) !important;
+    margin-left: 0.65rem;
+}
+
+.section-cta-ghost:hover,
+.section-cta-ghost:focus {
+    background: rgba(6, 249, 150, 0.12);
+    color: #fff !important;
+    filter: none;
+}
+
+.section-cta-lg {
+    margin-top: 1.5rem;
+    margin-left: 0;
+    font-size: 1.15rem;
+    padding: 0.95rem 1.75rem;
+}
+
+.index-close {
+    z-index: 0;
+    overflow: visible;
+    padding: 6.5rem 0 7.5rem;
+}
+
+.index-close::before,
+.index-close::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    z-index: 0;
+    width: min(36vw, 24rem);
+    /* Tall enough to bleed into Always learning above; ~75% of prior scale */
+    height: min(67.5vw, 43.5rem);
+    pointer-events: none;
+    background: url(/images/side-wave-website.svg) left bottom / contain no-repeat;
+    opacity: 0.4;
+}
+
+.index-close::before {
+    left: 0;
+}
+
+.index-close::after {
+    right: 0;
+    transform: scaleX(-1);
+}
+
+.index-close .section-close {
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+
+.index-close .section-close h1 {
+    color: #fff;
+    font-weight: 600;
+    font-size: clamp(1.75rem, 3.5vw, 2.4rem);
+    margin: 0 0 0.85rem;
+}
+
+.index-close .section-close p {
+    color: var(--tf-green);
+    font-weight: 400;
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    margin: 0 0 1.75rem;
+}
+
+.index-close .section-cta-ghost {
+    margin-left: 0.75rem;
+}
+
+@media (max-width: 575.98px) {
+    .index-close .section-cta,
+    .index-close .section-cta-ghost {
+        display: block;
+        margin: 0.65rem auto 0;
+        max-width: 18rem;
+    }
+}
+
+/* Dark code panels — quick start */
+.index-start figure.highlight {
+    background: var(--tf-bg-deep) !important;
+    border: 1px solid rgba(6, 249, 150, 0.22);
+    border-radius: 0.85rem;
+    padding: 1.4rem 1.25rem;
+    box-shadow:
+        0 0 0 1px rgba(6, 249, 150, 0.06),
+        0 0 24px rgba(6, 249, 150, 0.12),
+        0 12px 32px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+}
+
+.index-start figure.highlight pre,
+.index-start figure.highlight code,
+.index-start figure.highlight .code,
+.index-start figure.highlight .line {
+    background: transparent !important;
+    color: #e8f5f2 !important;
+}
+
+.index-start pre .comment {
+    color: #6fd9a8 !important;
+}
+
+.index-start pre .keyword {
+    color: #b59cff !important;
+}
+
+.index-start pre .string {
+    color: var(--tf-green) !important;
+}
+
+.index-start pre .number,
+.index-start pre .built_in,
+.index-start pre .literal {
+    color: #ffb070 !important;
+}
+
+.index-start pre .function,
+.index-start pre .title,
+.index-start pre .python .title {
+    color: #8ec8ff !important;
+}
+
+.index-start pre .params {
+    color: #d7ebe6 !important;
+}
+
+/* Legacy section styles (non-index pages / leftover markup) */
+.section-header {
+    background: transparent;
+    padding: 2.5rem 1.25rem 1rem;
+    color: #fff;
+    text-align: center;
+}
+
+.section-header h1,
+.section-header h1 strong {
     color: #fff;
 }
 
-/* Legacy spinning graphic — retired in favor of wave overlay */
+.section-header h2 {
+    color: var(--tf-green);
+}
+
 .section-bg-wrapper,
 .section-bg {
     display: none !important;
 }
 
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
 .section-body {
     margin: auto;
-    padding-top: 1.25rem;
-    padding-bottom: 2.75rem;
+    padding: 1.25rem 1rem 2.75rem;
     color: rgba(232, 245, 242, 0.9);
-    width: 100%;
+    max-width: 1140px;
 }
 
-.section-body h2 {
-    color: #fff;
-    font-weight: 400;
-    font-size: clamp(1.05rem, 2vw, 1.3rem);
-    line-height: 1.45;
-    text-align: center;
-}
-
-.section-body h1 {
-    color: #fff;
-}
-
-.section-body a {
+.section-body a:not(.section-cta) {
     color: var(--tf-green);
 }
 
@@ -674,8 +1286,6 @@ blockquote::-webkit-scrollbar {
     font-size: 0.92em;
 }
 
-/* Dark code panels — high contrast over the gradient */
-.index-start figure.highlight,
 .section-body figure.highlight,
 .codeblock-image figure.highlight,
 .codeblock-image.dark figure.highlight {
@@ -683,14 +1293,9 @@ blockquote::-webkit-scrollbar {
     border: 1px solid rgba(6, 249, 150, 0.28);
     border-radius: 0.85rem;
     padding: 1.15rem 1rem;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
     overflow: hidden;
 }
 
-.index-start figure.highlight pre,
-.index-start figure.highlight code,
-.index-start figure.highlight .code,
-.index-start figure.highlight .line,
 .section-body figure.highlight pre,
 .section-body figure.highlight code,
 .section-body figure.highlight .code,
@@ -703,45 +1308,6 @@ blockquote::-webkit-scrollbar {
     color: #e8f5f2 !important;
 }
 
-/* Syntax accents tuned for dark panels */
-.index-start pre .comment,
-.section-body pre .comment,
-.section-body pre .meta {
-    color: #6fd9a8 !important;
-}
-
-.index-start pre .keyword,
-.section-body pre .keyword,
-.section-body pre .javascript .function {
-    color: #b59cff !important;
-}
-
-.index-start pre .string,
-.section-body pre .string,
-.section-body pre .value {
-    color: var(--tf-green) !important;
-}
-
-.index-start pre .number,
-.section-body pre .number,
-.section-body pre .built_in,
-.section-body pre .literal {
-    color: #ffb070 !important;
-}
-
-.index-start pre .function,
-.section-body pre .function,
-.section-body pre .title,
-.section-body pre .python .title {
-    color: #8ec8ff !important;
-}
-
-.index-start pre .params,
-.section-body pre .params {
-    color: #d7ebe6 !important;
-}
-
-/* Raw <pre> blocks (e.g. Testing Documentation) */
 .section-body .codeblock-image > div > pre,
 .section-body .codeblock-image > pre {
     background: rgba(0, 4, 5, 0.92);
@@ -780,6 +1346,11 @@ blockquote::-webkit-scrollbar {
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4);
 }
 
+/* Hero wrapper must not clip the wave bleed into Why TestFlows */
+.content > .container-fluid:has(.banner) {
+    overflow: visible;
+}
+
 .banner {
     /* Sit below fixed nav; together they fill the viewport */
     margin-top: var(--tf-nav-height);
@@ -790,22 +1361,26 @@ blockquote::-webkit-scrollbar {
     background-image: var(--tf-bg-gradient);
     color: white;
     position: relative !important;
-    overflow: hidden;
+    z-index: 0;
+    overflow: visible;
     font-weight: 400;
     display: flex;
     align-items: center;
     box-sizing: border-box;
 }
 
-/* Dot-wave overlay (transparent PNG) over solid/gradient color */
+/* Dot-wave overlay — shifted up 25%; bleeds into the section below */
 .banner::before {
     content: "";
     position: absolute;
-    inset: 0;
+    top: -25%;
+    left: 0;
+    right: 0;
+    height: 150%;
     z-index: 0;
     pointer-events: none;
-    background: url(/images/background-website.png) center center / cover no-repeat;
-    opacity: 0.32;
+    background: url(/images/background-website.svg) center center / cover no-repeat;
+    opacity: 0.4;
 }
 
 .banner-inner {
@@ -923,13 +1498,13 @@ blockquote::-webkit-scrollbar {
 }
 
 @media (max-width: 991.98px) {
-    /* Menu + hero must equal one viewport — no height overflow */
+    /* Menu + hero must equal one viewport — height locked; wave may bleed */
     .banner {
         align-items: stretch;
         height: calc(100dvh - var(--tf-nav-height));
         min-height: calc(100dvh - var(--tf-nav-height));
         max-height: calc(100dvh - var(--tf-nav-height));
-        overflow: hidden;
+        overflow: visible;
     }
 
     .banner-inner {
@@ -1203,22 +1778,101 @@ code, pre, figure.highlight {
  * Mobile: green hamburger → full-screen dark overlay
  */
 #main-nav.navbar {
-    display: flex;
-    align-items: center;
+    display: block;
     height: var(--tf-nav-height);
     min-height: var(--tf-nav-height);
     background-color: var(--tf-bg);
     background-image: none;
     font-family: var(--tf-font);
-    padding: 0 1.5rem;
+    padding: 0;
     z-index: 1040;
+    overflow: visible;
     border-bottom: 1px solid var(--tf-green);
+    /* Black drop is invisible on dark hero — use green card glow under the rule */
+    box-shadow: none;
+}
+
+/* Soft glow cast below the border */
+#main-nav.navbar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: 1.25rem;
+    pointer-events: none;
+    background: linear-gradient(
+        to bottom,
+        rgba(6, 249, 150, 0.1) 0%,
+        transparent 100%
+    );
+}
+
+/* Centered content column — matches page .container on wide screens */
+#main-nav .navbar-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: var(--tf-nav-height);
+    min-height: var(--tf-nav-height);
+}
+
+#main-nav .navbar-github-slot {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
+    position: relative;
+    z-index: 1050;
+}
+
+#main-nav .navbar-github-sep {
+    color: var(--tf-green);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0 0.85rem;
+    opacity: 0.85;
+    user-select: none;
+}
+
+#main-nav .navbar-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    color: var(--tf-green) !important;
+    font-family: var(--tf-font);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    padding: 0.4rem 0.85rem;
+    border-radius: 0.25rem;
+    border: 1px solid var(--tf-green);
+    text-decoration: none !important;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+#main-nav .navbar-github .fab {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+#main-nav .navbar-github:hover,
+#main-nav .navbar-github:focus {
+    background: rgba(6, 249, 150, 0.12);
+    color: #fff !important;
+    text-decoration: none !important;
 }
 
 #main-nav .navbar-brand {
     display: flex;
     align-items: center;
-    position: relative;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     z-index: 1050;
     padding: 0;
     margin: 0;
@@ -1227,9 +1881,9 @@ code, pre, figure.highlight {
 
 #main-nav .navbar-brand > img {
     display: block;
-    height: 1.7em;
+    height: 2.45rem;
     width: auto;
-    max-height: calc(var(--tf-nav-height) - 0.9rem);
+    max-height: calc(var(--tf-nav-height) - 0.6rem);
 }
 
 #main-nav .navbar-toggler {
@@ -1303,11 +1957,17 @@ code, pre, figure.highlight {
         position: static;
         inset: auto;
         height: auto !important;
+        margin-left: 0;
+        margin-right: auto;
         padding: 0;
         background: transparent;
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
+    }
+
+    #main-nav .site-menu .navbar-nav {
+        margin-left: 0;
     }
 
     /* Glyphs are mobile-only */
@@ -1403,8 +2063,8 @@ code, pre, figure.highlight {
         inset: 0;
         z-index: 0;
         pointer-events: none;
-        background: url(/images/background-website.png) center center / cover no-repeat;
-        opacity: 0.32;
+        background: url(/images/background-website.svg) center center / cover no-repeat;
+        opacity: 0.4;
     }
 
     #main-nav .site-menu.navbar-collapse.show,
