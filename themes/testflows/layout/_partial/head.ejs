@@ -31,7 +31,7 @@
   <link rel="stylesheet" href="<%- config.root %>css/highlight.css?v=<%- Date.now() %>" media="screen" type="text/css">
   <link rel="stylesheet" href="<%- config.root %>css/fontawesome/css/all.css?v=1.0" type="text/css">
   <% /* Theme modules — order: tokens → base → chrome → pages */ %>
-  <% var tfCss = ['tokens','base','nav','footer','hero','index','blog','about','contact','content','misc']; %>
+  <% var tfCss = ['tokens','base','nav','footer','hero','index','blog','about','contact','portal','content','misc']; %>
   <% tfCss.forEach(function (name) { %>
   <link rel="stylesheet" href="<%- config.root %>css/tf/<%= name %>.css?v=<%- Date.now() %>" media="screen" type="text/css">
   <% }); %>

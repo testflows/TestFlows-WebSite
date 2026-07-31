@@ -4,7 +4,7 @@
    Production loads modules from layout/_partial/head.ejs:
 
      tokens → base → nav → footer → hero → index → blog
-     → about → contact → content → misc
+     → about → contact → portal → content → misc
 
    Keep this import order in sync with head.ejs.
    ========================================================================== */
@@ -18,5 +18,6 @@
 @import url("tf/blog.css");
 @import url("tf/about.css");
 @import url("tf/contact.css");
+@import url("tf/portal.css");
 @import url("tf/content.css");
 @import url("tf/misc.css");

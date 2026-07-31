@@ -1,0 +1,210 @@
+/* ==========================================================================
+   Machine portal — sign-in / sign-up / account
+   ========================================================================== */
+
+.portal-page {
+    position: relative;
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    background-color: var(--tf-bg);
+    background-image: var(--tf-bg-gradient);
+    padding: 3.5rem 0 5rem;
+    min-height: 50vh;
+}
+
+.portal-page-inner {
+    max-width: 28rem;
+    margin: 0 auto;
+}
+
+.portal-page-header {
+    margin: 0 0 1.75rem;
+}
+
+.portal-page-header h1 {
+    color: var(--tf-text-strong);
+    font-family: var(--tf-font);
+    font-weight: 700;
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    line-height: 1.15;
+    margin: 0 0 0.55rem;
+}
+
+.portal-page-header p {
+    color: var(--tf-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.portal-card {
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: 0.75rem;
+    padding: 1.5rem 1.35rem;
+}
+
+.portal-field {
+    margin: 0 0 1rem;
+}
+
+.portal-field label {
+    display: block;
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0 0 0.35rem;
+}
+
+.portal-field .form-control {
+    background: var(--tf-field-bg);
+    border: 1px solid var(--tf-field-border);
+    color: var(--tf-text-strong);
+    border-radius: 0.5rem;
+    padding: 0.65rem 0.75rem;
+}
+
+.portal-field .form-control:focus {
+    border-color: var(--tf-accent);
+    box-shadow: 0 0 0 0.15rem rgba(61, 186, 140, 0.2);
+}
+
+.portal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.25rem;
+}
+
+.portal-actions .btn-primary {
+    background: var(--tf-primary);
+    border-color: var(--tf-primary);
+    color: var(--tf-ink-on-primary);
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.5rem 1.15rem;
+}
+
+.portal-actions .btn-primary:hover,
+.portal-actions .btn-primary:focus {
+    filter: brightness(1.05);
+    color: var(--tf-ink-on-primary);
+}
+
+.portal-actions .btn-primary:disabled {
+    opacity: 0.65;
+}
+
+.portal-actions .btn-ghost {
+    background: transparent;
+    border: 1px solid var(--tf-ghost-border);
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    border-radius: 999px;
+    padding: 0.5rem 1.15rem;
+}
+
+.portal-actions .btn-ghost:hover,
+.portal-actions .btn-ghost:focus {
+    background: var(--tf-ghost-hover-bg);
+    color: var(--tf-text-strong);
+}
+
+.portal-status {
+    margin: 0 0 1rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.portal-status--info {
+    background: rgba(var(--tf-fg-rgb), 0.06);
+    color: var(--tf-text);
+}
+
+.portal-status--ok {
+    background: rgba(61, 186, 140, 0.12);
+    color: var(--tf-accent);
+}
+
+.portal-status--err {
+    background: rgba(220, 80, 80, 0.12);
+    color: #e07070;
+}
+
+[data-theme="light"] .portal-status--err {
+    color: #b33;
+}
+
+/* CLI-style braille spinner (⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏), ~80ms/frame */
+.portal-status--busy {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 1.35rem;
+}
+
+.portal-spinner {
+    display: inline-block;
+    width: 1.1em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 1.05em;
+    line-height: 1;
+    color: var(--tf-accent);
+}
+
+.portal-spinner::before {
+    content: "⠋";
+    animation: portal-braille 0.8s steps(1, end) infinite;
+}
+
+.portal-spinner-label {
+    color: var(--tf-text-muted);
+    font-weight: 500;
+}
+
+@keyframes portal-braille {
+    0% { content: "⠋"; }
+    10% { content: "⠙"; }
+    20% { content: "⠹"; }
+    30% { content: "⠸"; }
+    40% { content: "⠼"; }
+    50% { content: "⠴"; }
+    60% { content: "⠦"; }
+    70% { content: "⠧"; }
+    80% { content: "⠇"; }
+    90%, 100% { content: "⠏"; }
+}
+
+.portal-foot {
+    margin: 1.25rem 0 0;
+    color: var(--tf-text-muted);
+    font-size: 0.95rem;
+}
+
+.portal-foot a {
+    color: var(--tf-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.portal-foot a:hover,
+.portal-foot a:focus {
+    color: var(--tf-text-strong);
+}
+
+.portal-account-email {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0 0 1.25rem;
+    word-break: break-word;
+}
+
+.portal-hint {
+    margin: 0.75rem 0 0;
+    font-size: 0.9rem;
+    color: var(--tf-text-muted);
+}
