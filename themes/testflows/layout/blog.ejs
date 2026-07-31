@@ -1,46 +1,34 @@
-<div class="container" style="padding-bottom: 2em !important">
+<section class="blog-page">
+    <div class="container blog-page-inner">
+        <header class="blog-hero">
+            <h1>Journal about testing</h1>
+            <p class="blog-lead">Deep dives on test programs, combinatorial coverage, behavior models, and shipping quality software.</p>
+        </header>
+        <div class="blog-list">
 <% site.posts.sort('date', 'desc').forEach(function(item) { %>
-    <div class="blog post">
-        <div class="post-header row">
-            <div class="post-summary col-lg-6 mt-auto mb-auto pb-4">
-                <div class="text-center">
-                    <a href=<%- item.permalink %>>
-                        <h1 style="font-weight: bold;"><%- item.title %></h1>
-                    </a>
-                    <a href=<%- item.permalink %> class="d-block d-sm-none pb-4">
-                        <img src="<%- config.root %><%- item.image %>" style="width: 100%;"></img>
-                        <span class="post-image-credit"><%- item.image.credit %></span>
+            <article class="blog-card">
+                <div class="blog-card-copy">
+                    <h2 class="blog-card-title">
+                        <a href="<%- item.permalink %>"><%- item.title %></a>
+                    </h2>
+                    <div class="blog-card-excerpt">
+                        <%- item.excerpt %>
+                    </div>
+                    <div class="blog-card-meta">
+                        <span class="blog-card-author"><%- item.author %></span>
+                        <time datetime="<%= date(item.date, 'YYYY-MM-DD') %>"><%= date(item.date, 'MMMM D, YYYY') %></time>
+                    </div>
+                    <a class="blog-card-more" href="<%- item.permalink %>">Read more <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                </div>
+                <% if (item.image) { %>
+                <div class="blog-card-media">
+                    <a href="<%- item.permalink %>" tabindex="-1" aria-hidden="true">
+                        <img src="<%- url_for(item.image) %>" alt="">
                     </a>
                 </div>
-                <%- item.excerpt %><i class="post-summary-more">...</i>
-            </div>
-            <div class="post-image col-lg-6 m-auto d-none d-sm-block">
-                <a href=<%- item.permalink %>>
-                    <img src="<%- config.root %><%- item.image %>"></img>
-                    <span class="post-image-credit"><%- item.image.credit %></span>
-                </a>
-            </div>
-            <div class="post-metadata row m-auto">
-                <div class="col-md-12">
-                    <div class="post-author">
-                        <span class="author-title text-nowrap">Written By</span><span class="author-name"><%- item.author %></span>
-                        <span class="authored-date text-nowrap"><%= date(item.date, 'MMMM D, YYYY') %></span>
-                    </div>
-                    <div class="post-share btn-group" role="group" aria-label="share">
-                        <span class="caption">Share It</span>
-                        <a href="https://twitter.com/intent/tweet?url=<%- item.permalink %>">
-                            <i class="fab fa-2x fa-twitter"></i>
-                        </a>
-                        <a href="https://www.facebook.com/sharer/sharer.php?u=<%- item.permalink %>">
-                            <i class="fab fa-2x fa-facebook"></i>
-                        </a>
-                        <a href="https://www.linkedin.com/shareArticle?mini=true&url=<%- item.permalink %>">
-                            <i class="fab fa-2x fa-linkedin"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+                <% } %>
+            </article>
+<% }); %>
         </div>
     </div>
-<% }); %>
-</div>
+</section>

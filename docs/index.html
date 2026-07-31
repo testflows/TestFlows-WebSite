@@ -18,9 +18,9 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785455325859" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785511960081" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1785455325859" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/style.css?v=1785511960081" media="screen" type="text/css">
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -87,17 +87,32 @@
 
   <div class="container-fluid p-0">
     <div class="content">
-      <div class="container-fluid p-0"><div class="banner in-view-watcher"><div class="container banner-inner"><div class="row align-items-center"><div class="col-lg-6 banner-visual"><div class="banner-sphere" aria-hidden="true"></div></div>
+      <div class="container-fluid p-0">
+<div class="banner in-view-watcher">
+<div class="container banner-inner">
 
-<div class="col-lg-6 banner-text"><h1 id="not-a-typical-framework">Not a typical framework</h1>
-<p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic flow, parallel execution, and combinatorial coverage.</p>
-<p><a class="btn banner-cta" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">pip3 install testflows</a></p>
-<div class="banner-links"><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+<div class="banner-text">
+<h1>Not a typical framework</h1>
+<p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic control, parallel execution, and combinatorial coverage.</p>
+<a class="btn banner-cta" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">pip3 install testflows</a>
+</div>
+
+<div class="banner-visual">
+<div class="banner-sphere-frame">
+<img class="banner-sphere" src="/images/hello-world.gif" alt="" aria-hidden="true">
+</div>
+</div>
+
+<div class="banner-links">
+<a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
-<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a></p>
-</div></div>
-</div></div></div></div>
+<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+</div>
+
+</div>
+</div>
+</div>
 
 <section class="index-why">
     <div class="container">
@@ -107,7 +122,7 @@
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
                     <h3>Test programs</h3>
-                    <p>Control flow is yours. Branch, loop, and compose scenarios in Python. No plugin maze for basic dynamics. Your tests read like the program you meant to write.</p>
+                    <p>Control is yours. Branch, loop, and compose scenarios in Python. No plugin maze for basic dynamics. Your tests read like the program you meant to write.</p>
                 </div>
             </div>
             <div class="col-md-4 index-why-col">
@@ -157,30 +172,31 @@
     </div>
 </section>
 
-<div class="index-start"><div class="container"><h2 id="everything-is-code">Everything is code</h2>
-<div class="index-block-lead"><p>No scaffolding. Just Python.</p>
+<div class="index-start">
+<div class="container">
+<h2 class="index-block-title">Everything is code</h2>
+<div class="index-block-lead"><p>No scaffolding. Just Python.</p></div>
+<div class="index-start-art">
+<img src="/images/everything-is-code.png" alt="Everything is code">
 </div>
+<div class="row index-start-steps">
+<div class="col-md-6 index-start-step">
+<h3>Write</h3>
+<div class="index-start-step-story"><p>A test is just a Python program. Open a file and define a scenario. No special runner config, no scaffolding.</p></div>
+<div class="index-start-step-file"><p>test.py</p></div>
 
-<div class="index-start-art"><img src="/images/everything-is-code.png" alt="Everything is code"></div>
-
-<div class="row index-start-steps"><div class="col-md-6 index-start-step"><h3 id="write">Write</h3>
-<div class="index-start-step-story"><p>A test is just a Python program. Open a file and define a scenario. No special runner config, no scaffolding.</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Scenario</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;Hello TestFlows&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 </div>
+<div class="col-md-6 index-start-step">
+<h3>Run</h3>
+<div class="index-start-step-story"><p>Execute it like any other script. You get a clear pass, a scenario count, and a time. Then keep building.</p></div>
+<div class="index-start-step-file"><p>terminal</p></div>
 
-<div class="index-start-step-file"><p>test.py</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 ./test.py</span></span><br><span class="line">✔ [ OK ] /Hello TestFlows</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br><span class="line">Total time 2ms</span><br></pre></td></tr></table></figure>
 </div>
-
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Scenario</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;Hello TestFlows&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></div>
-
-<div class="col-md-6 index-start-step"><h3 id="run">Run</h3>
-<div class="index-start-step-story"><p>Execute it like any other script. You get a clear pass, a scenario count, and a time. Then keep building.</p>
 </div>
-
-<div class="index-start-step-file"><p>terminal</p>
 </div>
-
-<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 ./test.py</span></span><br><span class="line">✔ [ OK ] /Hello TestFlows</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br><span class="line">Total time 2ms</span><br></pre></td></tr></table></figure></div>
-</div></div></div>
+</div>
 
 <section class="index-journal">
     <div class="container">
@@ -188,38 +204,10 @@
             <h2 class="index-block-title">Always learning</h2>
             <p class="index-block-lead">From the TestFlows blog.</p>
         </div>
-        
-        
-        <div class="row index-journal-feature">
-            
-            <div class="col-md-5 index-journal-col">
-                <a class="index-journal-media" href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">
-                    <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
-                </a>
-            </div>
-            
-            <div class="col-md-7 index-journal-col">
-                <article class="index-journal-copy">
-                    <h3><a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</a></h3>
-                    
-                    <div class="index-journal-excerpt">
-                        <p>Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex systems. Rather than manually writing test cases for every scenario, autonomous systems can systematically explore millions of states, discovering edge cases that human testers would never think to check.</p>
-<p>In this two-part follow-up, we’ll continue the <em>Super Mario Bros.</em> testing series by implementing the autonomous testing approach presented by <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis</a>, where they autonomously play and beat the game.<i class="post-summary-more">...</i>
-                    </div>
-                    
-                    <div class="index-journal-meta">
-                        
-                        <span class="index-journal-author">Vitaliy Zakaznikov</span>
-                        
-                        <time datetime="2025-10-10T04:00:00.000Z">October 10, 2025</time>
-                    </div>
-                </article>
-            </div>
-        </div>
-        
+        <div class="row index-journal-feature"><div class="col-md-5 index-journal-col"><a class="index-journal-media" href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/"><img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)"></a></div><div class="col-md-7 index-journal-col"><article class="index-journal-copy"><h3><a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</a></h3><div class="index-journal-meta"><span class="index-journal-author">Vitaliy Zakaznikov</span><time datetime="2025-10-10T04:00:00.000Z">October 10, 2025</time></div></article></div></div>
         <div class="index-journal-cta-card">
             <h3>Read the blog</h3>
-                    <p>Deep dives on test programs, steps, combinatorial coverage, behavior models, and more. Written for developers who ship tests for complex systems.</p>
+            <p>Deep dives on test programs, steps, combinatorial coverage, behavior models, and more. Written for developers who ship tests for complex systems.</p>
             <a class="section-cta" href="/blog/">Read all posts</a>
         </div>
     </div>
@@ -232,10 +220,10 @@
     </div>
 </section>
 
+
     </div>
   </div>
   <div class="container-footer" id="container-footer">
-    
     <footer> <div class="container">
     <div class="site-footer-grid row">
         <div class="col-6 col-md-3 site-footer-col">
@@ -283,7 +271,6 @@
     </div>
 </div>
  </footer>
-    
   </div>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>

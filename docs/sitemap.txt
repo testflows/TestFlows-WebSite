@@ -1,4 +1,7 @@
 https://testflows.com/index.html
+https://testflows.com/about.html
+https://testflows.com/blog/index.html
+https://testflows.com/contact.html
 https://testflows.com/credits.html
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2/
@@ -6,13 +9,10 @@ https://testflows.com/blog/writing-test-programs-not-just-tests/
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/
 https://testflows.com/handbook/index.html
-https://testflows.com/contact.html
-https://testflows.com/blog/index.html
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/
 https://testflows.com/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/
 https://testflows.com/blog/working-with-requirements-just-like-with-code/
-https://testflows.com/about.html
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
 https://testflows.com/blog/combinatorial-testing-behavior-model/
 https://testflows.com/blog/combinatorial-testing-the-introduction/

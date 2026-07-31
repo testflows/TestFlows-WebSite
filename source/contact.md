@@ -1,119 +1,110 @@
 ---
-title: Contact Us
-description: TestFlows contact information
-heading: We are happy to hear from you
-icon: fas fa-envelope-open-text pt-5 pb-5
+title: Contact
+description: Get in touch with the TestFlows team
 date: 2019-11-23 10:41:21
+fullwidth: true
 ---
 
-<div class="row">
-  <form class="needs-validation contact-us" novalidate onsubmit="return submitContactUs(this);">
-    <div class="row form-header">
-      <div class="col-md-2"></div>
-      <div class="col-md-8">
-        <h3>Contact the TestFlows team now and we'll be happy to support all your testing needs.</h4>
-      </div>
-      <div class="col-md-2"></div>
+<section class="contact-page">
+    <div class="container contact-page-inner">
+        <div class="row contact-page-row">
+            <div class="col-lg-5 contact-visual">
+                <div class="contact-visual-panel">
+                    <div class="contact-visual-art" aria-hidden="true">
+                        <img src="/images/side-wave-website.svg" alt="">
+                    </div>
+                    <h1>Let's talk</h1>
+                    <p>Questions about TestFlows, support for your test program, or partnerships — we are happy to hear from you.</p>
+                    <div class="contact-visual-links">
+                        <a class="contact-visual-link" href="mailto:contact@testflows.com">
+                            <span class="fas fa-envelope" aria-hidden="true"></span>
+                            contact@testflows.com
+                        </a>
+                        <a class="contact-visual-link" href="https://github.com/testflows">
+                            <span class="fab fa-github" aria-hidden="true"></span>
+                            github.com/testflows
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7 contact-form-col">
+                <form class="needs-validation contact-us" novalidate onsubmit="return submitContactUs(this);">
+                    <div class="contact-form-intro">
+                        <h2>What are you testing?</h2>
+                        <p>Tell us a bit about your project. We will get back shortly.</p>
+                    </div>
+                    <div class="form-fields">
+                        <div class="contact-name-row">
+                            <div class="contact-field">
+                                <label for="firstname">First name</label>
+                                <input type="text" class="form-control" id="firstname" required autocomplete="given-name">
+                                <div class="invalid-feedback">Please enter your first name</div>
+                            </div>
+                            <div class="contact-field">
+                                <label for="lastname">Last name</label>
+                                <input type="text" class="form-control" id="lastname" required autocomplete="family-name">
+                                <div class="invalid-feedback">Please enter your last name</div>
+                            </div>
+                        </div>
+                        <div class="contact-field">
+                            <label for="email">Email</label>
+                            <input type="email" class="form-control" id="email" required autocomplete="email">
+                            <div class="invalid-feedback">Please enter a valid email</div>
+                        </div>
+                        <div class="contact-field">
+                            <label for="company">Company</label>
+                            <input type="text" class="form-control" id="company" required autocomplete="organization">
+                            <div class="invalid-feedback">Please enter your company</div>
+                        </div>
+                        <div class="contact-field">
+                            <label for="usecase">How can we help?</label>
+                            <textarea class="form-control" id="usecase" rows="6" required></textarea>
+                            <div class="invalid-feedback">Please tell us briefly how we can help</div>
+                        </div>
+                        <div class="contact-field d-none" aria-hidden="true">
+                            <label for="title">Title</label>
+                            <input type="text" class="form-control" id="title" tabindex="-1" autocomplete="off">
+                        </div>
+                        <p class="contact-privacy">
+                            By clicking Submit, you acknowledge that Katteli Inc. will process your personal information in accordance with our privacy policy.
+                        </p>
+                        <p class="contact-error failed-submission d-none">
+                            <span role="error-message">Something went wrong while submitting.</span>
+                            Try again, or write us at <strong>contact@testflows.com</strong>.
+                        </p>
+                        <button class="btn contact-submit" id="submit" type="submit">
+                            <span role="submit">Submit <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                            <span role="processing" class="d-none">
+                                <span class="spinner-border text-light" style="width: 1.1em; height: 1.1em;" role="status"></span>
+                                Sending…
+                            </span>
+                        </button>
+                    </div>
+                    <div class="contact-success successful-submission d-none">
+                        <div class="contact-success-icon" aria-hidden="true"><span class="fas fa-check"></span></div>
+                        <h3>Message sent</h3>
+                        <p>
+                            Thanks — we received your note for <span role="contact-email"></span> and will be in touch shortly.
+                            You can also follow up at <strong>contact@testflows.com</strong>.
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div class="form-fields">
-      <div class="row">
-        <div class="col-sm-6">
-          <label for="firstname">First name</label>
-          <input type="text" class="form-control" id="firstname" required placeholder="">
-          <div class="invalid-feedback">
-            Invalid first name
-          </div>
-        </div>
-        <div class="col-sm-6">
-          <label for="lastname">Last name</label>
-          <input type="text" class="form-control" id="lastname" required placeholder="">
-          <div class="invalid-feedback">
-            Invalid last name
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label for="email">Email</label>
-          <input type="email" class="form-control" id="email" required placeholder="">
-          <div class="invalid-feedback">
-            Invalid email
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label for="company">Company</label>
-          <input type="company" class="form-control" id="company" required placeholder="">
-          <div class="invalid-feedback">
-            Invalid company
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col">
-          <label for="usecase">Tell us your use case</label>
-          <textarea type="text" rows="10"  class="form-control" id="usecase" required placeholder=""></textarea>
-          <div class="invalid-feedback">
-            Invalid use case
-          </div>
-        </div>
-      </div>
-      <div class="row d-none">
-        <div class="col">
-          <label for="title">Title</label>
-          <input type="title" class="form-control" id="title" required placeholder="">
-          <div class="invalid-feedback">
-            Invalid title
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col text-center text-small">
-            <label class="text-secondary">
-              By clicking Submit, you acknowledge that Katteli Inc. will
-              process your personal information in accordance with our privacy policy.
-            </label>
-            <label class="text-danger failed-submission d-none">
-              <span role="error-message">Error: something went wrong while trying to submit the contact information</span>. Please try again or contact us directly by writing to <strong>contact@testflows.com</strong>.
-            </label>
-            <button class="btn" id="submit">
-              <label role="submit"><span>Submit</span><i class="fas fa-envelope-open-text pl-2"></i></label>
-              <label role="processing" class="d-none">
-                <i class="pr-2">
-                  <span class="spinner-border text-light" style="width: 1.2em; height: 1.2em;" role="status">
-                    <span class="sr-only text-center">Processing...</span>
-                  </span>
-                </i>Processing
-              </label>
-            </button>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col text-success text-center successful-submission d-none">
-        <div class="fas fa-check fa-2x"></div>
-        <div>
-          <label>
-            Thank you. Your contact information for <span role="contact-email"></span> has been successfully submitted. We will be in touch shortly! You can also follow up on your inquiry by writing directly to <strong>contact@testflows.com</strong>.
-          </label>
-        </div>
-      </div>
-    </div>
-  </form>
-</div>
+</section>
 
 <script>
 function submitContactUs(form) {
     if (form.checkValidity() === false) {
         document.activeElement && document.activeElement.blur()
         invalid = form.querySelector(":invalid")
-        if (invalid.getAttribute("type") !== "title") {
+        if (invalid && invalid.id !== "title") {
             invalid.focus()
             return true
         }
     }
-    if (form.querySelector("input[type=title]").value !== '') {
+    if (form.querySelector("#title").value !== '') {
         form.querySelectorAll("input").forEach(function(el) {
             el.value = ''
         })
@@ -136,8 +127,8 @@ function submitContactUs(form) {
     public_magic_number = "d2343fe3342242324abfec12"
     signature = MD5(public_magic_number + unescape(encodeURIComponent(body)))
 
-    form.querySelector("label[role=submit]").classList.add("d-none")
-    form.querySelector("label[role=processing]").classList.remove("d-none")
+    form.querySelector("[role=submit]").classList.add("d-none")
+    form.querySelector("[role=processing]").classList.remove("d-none")
     form.querySelector(".failed-submission").classList.add("d-none")
 
     response = null
@@ -178,19 +169,10 @@ function submitContactUs(form) {
         element = form.querySelector(".failed-submission")
         element.classList.remove("d-none")
         element.querySelector("span[role=error-message]").innerHTML = `${e}`
-        form.querySelector("label[role=submit]").classList.remove("d-none")
-        form.querySelector("label[role=processing]").classList.add("d-none")
+        form.querySelector("[role=submit]").classList.remove("d-none")
+        form.querySelector("[role=processing]").classList.add("d-none")
     })
 
     return false
 }
 </script>
-
-# <div class="fab fa-2x fa-github text-success"></div>
-# GitHub
-
-{% html div class="text-center" %}
-Reach us on GitHub at https://github.com/testflows
-by leaving a comment, creating a feature or bug fix request,
-or submitting a pull-request with your improvements.
-{% endhtml %}
