@@ -1,0 +1,457 @@
+/* ==========================================================================
+   Navigation — no bottom border; muted links; pill actions
+   ========================================================================== */
+
+/* Desktop: logo + muted links; Mobile: full-screen overlay */
+#main-nav.navbar {
+    display: block;
+    height: var(--tf-nav-height);
+    min-height: var(--tf-nav-height);
+    background-color: var(--tf-bg);
+    background-image: none;
+    font-family: var(--tf-font);
+    padding: 0;
+    z-index: 1040;
+    overflow: visible;
+    border-bottom: none;
+    box-shadow: none;
+}
+
+/* Centered content column — matches page .container on wide screens */
+#main-nav .navbar-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: var(--tf-nav-height);
+    min-height: var(--tf-nav-height);
+}
+
+#main-nav .navbar-github-slot {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
+    position: relative;
+    z-index: 1050;
+}
+
+#main-nav .navbar-github-sep {
+    color: var(--tf-text-muted);
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1;
+    margin: 0 0.85rem;
+    opacity: 0.85;
+    user-select: none;
+}
+
+#main-nav .navbar-github {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: transparent;
+    color: var(--tf-text-strong) !important;
+    font-family: var(--tf-font);
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.2;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--tf-radius-pill);
+    border: 1px solid var(--tf-card-border);
+    text-decoration: none !important;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+#main-nav .navbar-github .fab {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+#main-nav .navbar-github:hover,
+#main-nav .navbar-github:focus {
+    background: rgba(var(--tf-fg-rgb), 0.08);
+    color: var(--tf-text-strong) !important;
+    border-color: rgba(var(--tf-fg-rgb), 0.28);
+    text-decoration: none !important;
+}
+
+[data-theme="light"] #main-nav .navbar-github:hover,
+[data-theme="light"] #main-nav .navbar-github:focus {
+    background: rgba(var(--tf-fg-rgb), 0.06);
+    border-color: rgba(var(--tf-fg-rgb), 0.28);
+}
+
+#main-nav .navbar-brand {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    padding: 0;
+    margin: 0;
+    line-height: 0;
+}
+
+#main-nav .navbar-logo {
+    display: block;
+    height: 2.45rem;
+    width: auto;
+    max-height: calc(var(--tf-nav-height) - 0.6rem);
+}
+
+#main-nav .navbar-theme {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    padding: 0;
+    margin: 0;
+    border: 1px solid transparent;
+    border-radius: var(--tf-radius-pill);
+    background: transparent;
+    color: var(--tf-text-strong);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+#main-nav .navbar-theme:hover,
+#main-nav .navbar-theme:focus {
+    background: rgba(var(--tf-fg-rgb), 0.08);
+    border-color: rgba(var(--tf-fg-rgb), 0.22);
+    color: var(--tf-text-strong);
+    outline: none;
+}
+
+[data-theme="light"] #main-nav .navbar-theme:hover,
+[data-theme="light"] #main-nav .navbar-theme:focus {
+    background: rgba(var(--tf-fg-rgb), 0.06);
+    border-color: rgba(var(--tf-fg-rgb), 0.22);
+}
+
+#main-nav .navbar-theme-moon {
+    display: none;
+}
+
+[data-theme="light"] #main-nav .navbar-theme-sun {
+    display: none;
+}
+
+[data-theme="light"] #main-nav .navbar-theme-moon {
+    display: inline-block;
+}
+
+#main-nav .navbar-toggler {
+    position: relative;
+    z-index: 1050;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    outline: none;
+    box-shadow: none;
+}
+
+#main-nav .navbar-toggler:hover,
+#main-nav .navbar-toggler:focus,
+#main-nav .navbar-toggler:active {
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+#main-nav .navbar-toggler-bars {
+    display: block;
+    width: 1.75rem;
+    height: 1.25rem;
+    position: relative;
+}
+
+#main-nav .navbar-toggler-bars .bar {
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 1px;
+    background: var(--tf-text-strong);
+    transition: transform 0.25s ease, opacity 0.2s ease, top 0.25s ease;
+}
+
+#main-nav .navbar-toggler-bars .bar:nth-child(1) {
+    top: 0;
+}
+
+#main-nav .navbar-toggler-bars .bar:nth-child(2) {
+    top: calc(50% - 1px);
+}
+
+#main-nav .navbar-toggler-bars .bar:nth-child(3) {
+    top: calc(100% - 2px);
+}
+
+#main-nav .navbar-toggler.is-open .navbar-toggler-bars .bar:nth-child(1) {
+    top: calc(50% - 1px);
+    transform: rotate(45deg);
+}
+
+#main-nav .navbar-toggler.is-open .navbar-toggler-bars .bar:nth-child(2) {
+    opacity: 0;
+}
+
+#main-nav .navbar-toggler.is-open .navbar-toggler-bars .bar:nth-child(3) {
+    top: calc(50% - 1px);
+    transform: rotate(-45deg);
+}
+
+/* Desktop: horizontal teal links with | separators */
+@media (min-width: 768px) {
+    #main-nav .site-menu.navbar-collapse {
+        display: flex !important;
+        align-items: center;
+        flex-basis: auto;
+        position: static;
+        inset: auto;
+        height: auto !important;
+        margin-left: 0;
+        margin-right: auto;
+        padding: 0;
+        background: transparent;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    #main-nav .site-menu .navbar-nav {
+        margin-left: 0;
+    }
+
+    /* Glyphs are mobile-only */
+    #main-nav .site-menu-glyph {
+        display: none;
+    }
+
+    #main-nav .site-menu-panel {
+        display: contents;
+    }
+
+    #main-nav .site-menu .navbar-nav {
+        flex-direction: row;
+        align-items: center;
+        margin-left: 1.5rem;
+        width: auto;
+        max-width: none;
+    }
+
+    #main-nav .site-menu .nav-item {
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    #main-nav .site-menu .nav-item:not(:last-child)::after {
+        content: "|";
+        color: var(--tf-text-muted);
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1;
+        margin: 0 0.85rem;
+        opacity: 0.55;
+        user-select: none;
+    }
+
+    #main-nav .site-menu .nav-link {
+        font-family: var(--tf-font);
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 1.2;
+        color: var(--tf-text-muted);
+        padding: 0.25rem 0 !important;
+        border-bottom: 1px solid transparent;
+        display: inline-block;
+        transition: color 0.2s ease;
+    }
+
+    #main-nav .site-menu .nav-link:hover,
+    #main-nav .site-menu .nav-link:focus,
+    #main-nav .site-menu .nav-link:active {
+        color: var(--tf-text-strong);
+        border-bottom-color: transparent;
+        text-decoration: none;
+    }
+}
+
+/* Mobile: full-screen dark overlay (netcup-style rail + border) */
+@media (max-width: 767.98px) {
+    /* Keep logo, X, and green bottom border above the overlay */
+    body.menu-open #main-nav.navbar {
+        z-index: 1060;
+        border-bottom: none;
+        background-color: var(--tf-bg);
+    }
+
+    #main-nav .site-menu.navbar-collapse {
+        position: fixed;
+        /* Start below the nav so the header border stays visible */
+        top: var(--tf-nav-height);
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1045;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 1.75rem 1.5rem 3rem 1.25rem;
+        /* Same base as hero (.banner) so open/closed feel identical */
+        background-color: var(--tf-bg);
+        background-image: var(--tf-bg-gradient);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.25s ease, visibility 0.25s ease;
+        overflow: hidden;
+    }
+
+    /* Same CSS dots as the hero */
+    #main-nav .site-menu.navbar-collapse::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        background-image: var(--tf-hero-atmosphere);
+        background-size: var(--tf-hero-atmosphere-size);
+        background-repeat: repeat;
+        background-position: 0 0;
+    }
+
+    #main-nav .site-menu.navbar-collapse.show,
+    #main-nav .site-menu.navbar-collapse.collapsing {
+        display: flex !important;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        height: auto !important;
+    }
+
+    #main-nav .site-menu-panel {
+        position: relative;
+        z-index: 1;
+        display: block;
+        width: 100%;
+        max-width: 22rem;
+        margin: 0;
+    }
+
+    #main-nav .site-menu .navbar-nav {
+        /* Integer px so the rule lands on a whole pixel (avoids fat blur) */
+        --tf-menu-glyph-col: 24px;
+        --tf-menu-rule-gap: 18px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+        gap: 0;
+    }
+
+    /* One continuous 1px vertical accent line */
+    #main-nav .site-menu .navbar-nav::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: calc(var(--tf-menu-glyph-col) + var(--tf-menu-rule-gap));
+        width: 1px;
+        background: var(--tf-card-border);
+        pointer-events: none;
+        transform: scaleX(0.5);
+        transform-origin: left center;
+    }
+
+    /* One row: glyph | text — aligned */
+    #main-nav .site-menu .nav-item {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        min-height: 2.35rem;
+    }
+
+    #main-nav .site-menu-glyph {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 var(--tf-menu-glyph-col);
+        width: var(--tf-menu-glyph-col);
+        height: 1.25rem;
+        margin-right: calc(var(--tf-menu-rule-gap) * 2);
+        color: var(--tf-text-muted);
+        opacity: 0.95;
+        border: none;
+    }
+
+    #main-nav .site-menu-glyph svg {
+        display: block;
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    #main-nav .site-menu .nav-link {
+        font-family: var(--tf-font);
+        font-size: 1.05rem;
+        font-weight: 400;
+        line-height: 1.25;
+        color: var(--tf-text-muted);
+        padding: 0.4rem 0 !important;
+        border-bottom: 1px solid transparent;
+        display: inline-block;
+        transition: color 0.2s ease;
+    }
+
+    #main-nav .site-menu .nav-link:hover,
+    #main-nav .site-menu .nav-link:focus,
+    #main-nav .site-menu .nav-link:active {
+        color: var(--tf-text-strong);
+        text-decoration: none;
+    }
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
+/* Legacy / secondary nav helpers */
+.nav-menu {
+    text-align: center;
+}
+
+.nav-menu .fas {
+    color: var(--tf-accent);
+}
+
+.container-narrow {
+    margin: 0 auto;
+    max-width: 970px;
+}
+
+.container-narrow > footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.container-narrow > footer p {
+    padding: 5px;
+    display: inline-block;
+    border-radius: 6px;
+}
+
+a.header-anchor {
+    color: inherit;
+}

@@ -1,0 +1,124 @@
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+
+footer {
+    position: relative;
+    background-color: var(--tf-bg-deep);
+    background-image: var(--tf-bg-gradient);
+    color: var(--tf-text-muted);
+    padding: 3rem 0 2rem;
+    border-top: none;
+    font-family: var(--tf-font);
+}
+
+footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--tf-divider-gradient);
+    pointer-events: none;
+}
+
+footer .btn {
+    color: inherit;
+}
+
+.site-footer-grid {
+    margin: 0;
+}
+
+.site-footer-col {
+    text-align: left;
+}
+
+.site-footer-col h3 {
+    color: var(--tf-text-strong);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: left;
+    margin: 0 0 0.85rem;
+    letter-spacing: 0.02em;
+}
+
+.site-footer-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.site-footer-col li {
+    margin: 0.4rem 0;
+}
+
+.site-footer-col a {
+    color: var(--tf-accent);
+    font-size: 0.95rem;
+    font-weight: 400;
+    text-decoration: none;
+}
+
+.site-footer-col a:hover,
+.site-footer-col a:focus {
+    color: var(--tf-text-strong);
+    text-decoration: none;
+}
+
+.site-footer-bottom {
+    margin: 2.25rem 0 0;
+    padding: 1.25rem 0 0;
+    border-top: none;
+    background-image: var(--tf-divider-gradient);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% 1px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--tf-text-muted);
+}
+
+.site-footer-bottom a {
+    color: var(--tf-text-muted);
+    text-decoration: none;
+}
+
+.site-footer-bottom a:hover,
+.site-footer-bottom a:focus {
+    color: var(--tf-accent);
+}
+
+.site-footer-social {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.site-footer-social a {
+    color: var(--tf-text-muted);
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.site-footer-social a:hover,
+.site-footer-social a:focus {
+    color: var(--tf-accent);
+}
+
+@media (max-width: 767.98px) {
+    .site-footer-col {
+        margin-bottom: 1.75rem;
+    }
+
+    .site-footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+    }
+}

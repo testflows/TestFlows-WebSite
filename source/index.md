@@ -91,16 +91,13 @@ layout: index
 <div class="container">
 <h2 class="index-block-title">Everything is code</h2>
 <div class="index-block-lead"><p>No scaffolding. Just Python.</p></div>
-<div class="index-start-art">
-<img src="/images/everything-is-code.png" alt="Everything is code">
-</div>
 <div class="row index-start-steps">
 <div class="col-md-6 index-start-step">
 <h3>Write</h3>
 <div class="index-start-step-story"><p>A test is just a Python program. Open a file and define a scenario. No special runner config, no scaffolding.</p></div>
 <div class="index-start-step-file"><p>test.py</p></div>
 
-{% codeblock lang:python line_number:false highlight:true %}
+{% codeblock lang:python line_number:true highlight:true %}
 from testflows.core import Scenario
 
 with Scenario("Hello TestFlows"):
@@ -112,7 +109,7 @@ with Scenario("Hello TestFlows"):
 <div class="index-start-step-story"><p>Execute it like any other script. You get a clear pass, a scenario count, and a time. Then keep building.</p></div>
 <div class="index-start-step-file"><p>terminal</p></div>
 
-{% codeblock lang:shell line_number:false highlight:true %}
+{% codeblock lang:shell line_number:true highlight:true %}
 $ python3 ./test.py
 ✔ [ OK ] /Hello TestFlows
 

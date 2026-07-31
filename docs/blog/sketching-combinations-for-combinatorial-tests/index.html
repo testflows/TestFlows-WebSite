@@ -3,6 +3,17 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
   <title>Sketching Combinations For Combinatorial Tests | TestFlows</title>
   <meta name="description" content="Sketching combinations for combinatorial tests using TestFlows.">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -30,9 +41,33 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785511960106" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785524141728" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
-  <link rel="stylesheet" href="/css/style.css?v=1785511960106" media="screen" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/about.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1785524141728" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1785524141728" media="screen" type="text/css">
+  
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
@@ -48,8 +83,26 @@
   <nav id="main-nav" class="navbar navbar-expand-md fixed-top" role="navigation">
     <div class="container navbar-inner">
         <a class="navbar-brand" href="/">
-            <img src="/img/logo-simple-modern.png" alt="TestFlows">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
         </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
         <button class="navbar-toggler" type="button"
                 data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -88,6 +141,10 @@
             </div>
         </div>
         <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
             <span class="navbar-github-sep" aria-hidden="true">|</span>
             <a class="navbar-github" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
                 <span class="fab fa-github" aria-hidden="true"></span>
@@ -245,7 +302,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
@@ -253,11 +310,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
@@ -265,7 +322,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 In Part 1, we built an autonomous system that beat all four levels of Super Mario Bros. without any ...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -275,7 +332,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
@@ -283,11 +340,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
@@ -295,7 +352,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -305,7 +362,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
@@ -313,11 +370,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
@@ -325,7 +382,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -335,7 +392,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
@@ -343,11 +400,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
@@ -355,7 +412,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 Most software systems do not come with formal models. However, formal models are invaluable for cons...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -365,7 +422,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
@@ -373,11 +430,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
@@ -385,7 +442,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 In scientific research on software testing, you often come across papers filled with complex mathema...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -395,7 +452,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
@@ -403,11 +460,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
@@ -415,7 +472,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -425,7 +482,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
@@ -433,11 +490,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 Combinatorial testing significantly increases the test coverage of software systems, achieving level...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
@@ -445,7 +502,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -455,7 +512,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
@@ -463,11 +520,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 How do software development processes such as behavior-driven development (BDD), test-driven develop...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
@@ -475,7 +532,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -485,7 +542,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                             <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Working With Requirements Just Like With Code</h3>
@@ -493,11 +550,11 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
                                                 “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                                 <div class="col-md-6 d-flex">
-                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
                                         <img src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
@@ -506,7 +563,7 @@ combinatorial <a href="/handbook/#Using-Sketches">Sketch</a>es for a spin. You w
 In many cases, writing a good test...
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 
                             </div>
@@ -720,6 +777,45 @@ $(function () {
       });
     }, false);
   })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
 </script>
 
 </body>

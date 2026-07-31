@@ -55,7 +55,7 @@
                                     var thumbnail = post.image || '/assets/images/placeholder.jpg'; 
                                 %>
                                 <div class="col-md-6 d-flex">
-                                    <a href="<%= url_for(post.path) %>" class="card shadow-sm d-flex flex-column text-decoration-none text-dark">
+                                    <a href="<%= url_for(post.path) %>" class="card read-next-card d-flex flex-column">
                                         <img src="<%= url_for(thumbnail) %>" class="card-img-top" alt="<%= post.title %>">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title"><%= post.title %></h3>
@@ -63,7 +63,7 @@
                                                 <%= post.excerpt ? post.excerpt.replace(/<\/?[^>]+(>|$)/g, "").substring(0, 100) + '...' : '' %>
                                             </p>
                                         </div>
-                                    </a>                                     
+                                    </a>
                                 </div>
                                 <% } %>
                             </div>

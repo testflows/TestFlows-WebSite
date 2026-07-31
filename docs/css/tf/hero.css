@@ -1,0 +1,202 @@
+/* ==========================================================================
+   Hero / banner
+   ========================================================================== */
+
+/* Hero wrapper must not clip the wave bleed into Why TestFlows */
+.content > .container-fluid:has(.banner) {
+    overflow: visible;
+}
+
+.banner {
+    /* Sit below fixed nav; copy on top, full-width visual below */
+    margin-top: var(--tf-nav-height);
+    min-height: calc(100dvh - var(--tf-nav-height));
+    padding: 1.25rem 0 0;
+    background-color: var(--tf-bg);
+    background-image: var(--tf-hero-gradient);
+    color: var(--tf-text);
+    position: relative !important;
+    z-index: 0;
+    overflow: visible;
+    font-weight: 400;
+    display: flex;
+    align-items: flex-start;
+    box-sizing: border-box;
+}
+
+/* CSS dots only — a bit larger / more present */
+.banner::before {
+    content: "";
+    position: absolute;
+    top: -12%;
+    left: 0;
+    right: 0;
+    height: 120%;
+    z-index: 0;
+    pointer-events: none;
+    background-image: var(--tf-hero-atmosphere);
+    background-size: var(--tf-hero-atmosphere-size);
+    background-repeat: repeat;
+    background-position: 0 0;
+    -webkit-mask-image: linear-gradient(180deg, #000 60%, transparent 96%);
+    mask-image: linear-gradient(180deg, #000 60%, transparent 96%);
+}
+
+.banner-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    box-sizing: border-box;
+}
+
+.banner-text {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    text-align: left;
+    padding: 0.25rem 0 0.85rem;
+    max-width: 40rem;
+}
+
+.banner-text h1,
+.banner-text .h1 {
+    color: var(--tf-text-strong);
+    font-family: var(--tf-font);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 4.5vw, 3.1rem);
+    line-height: 1.12;
+    margin: 0 0 0.7rem;
+    text-align: left;
+}
+
+.banner-text p,
+.banner-text > p {
+    color: var(--tf-text-strong);
+    font-family: var(--tf-font);
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: 1.5;
+    margin: 0 0 1.1rem;
+    max-width: 36rem;
+    text-align: left;
+}
+
+.banner-text strong {
+    font-weight: 700;
+    color: var(--tf-text-strong);
+}
+
+.banner-links {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.1rem;
+    margin: 0 0 1.5rem;
+    padding: 2.5em 0 0;
+}
+
+.banner-links a {
+    color: var(--tf-text-strong);
+    font-size: 2rem;
+    line-height: 1;
+    opacity: 0.85;
+    transition: color 0.15s ease, opacity 0.15s ease;
+}
+
+.banner-links a:hover,
+.banner-links a:focus {
+    color: var(--tf-accent);
+    opacity: 1;
+    text-decoration: none;
+}
+
+.banner-visual {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    flex: 0 0 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 2em 0 0;
+    overflow: visible;
+}
+
+.banner-sphere-frame {
+    --banner-radius: 1.25rem;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    flex-shrink: 0;
+    aspect-ratio: 1998 / 1249;
+    border-radius: var(--banner-radius) var(--banner-radius) 0 0;
+    border: 1px solid var(--tf-card-border);
+    border-bottom: none;
+    box-shadow: none;
+    overflow: hidden;
+    background: #0a0a0a;
+}
+
+.banner-sphere {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    object-fit: cover;
+    border-radius: inherit;
+    border: 0;
+}
+
+@media (max-width: 991.98px) {
+    .banner {
+        min-height: calc(100dvh - var(--tf-nav-height));
+        padding-top: 0.75rem;
+    }
+
+    .banner-inner {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .banner-text {
+        padding: 0.15rem 0.5rem 0.7rem;
+    }
+
+    .banner-text h1,
+    .banner-text .h1 {
+        font-size: clamp(1.65rem, 7vw, 2.25rem);
+        margin-bottom: 0.55rem;
+    }
+
+    .banner-text p,
+    .banner-text > p {
+        font-size: 1rem;
+        margin-bottom: 0.85rem;
+    }
+
+    .banner-cta {
+        font-size: 0.98rem;
+        padding: 0.7rem 1.15rem;
+    }
+
+    .banner-links {
+        margin: 0 0 1.25rem;
+        padding-top: 2.5em;
+        gap: 0.95rem;
+    }
+
+    .banner-links a {
+        font-size: 1.75rem;
+    }
+
+    .banner-sphere-frame {
+        --banner-radius: 1rem;
+    }
+}
+

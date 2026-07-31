@@ -19,32 +19,17 @@ fullwidth: true
                     <h2>History</h2>
                     <p>The first line of the framework was committed on <strong>September 9, 2019</strong>, and since then it has been actively developed and improved.</p>
                 </div>
-                <div class="about-chapter-art" aria-hidden="true">
-                    <div class="about-art-slot about-art-slot-icon">
-                        <span class="about-art-mark fas fa-history"></span>
-                    </div>
-                </div>
             </article>
-            <article class="about-chapter about-chapter-flip">
+            <article class="about-chapter">
                 <div class="about-chapter-body">
                     <h2>Background</h2>
                     <p>The motivation came from building test automation across many projects. After shipping multiple custom closed-source systems — and not being satisfied with other open-source approaches — TestFlows became a platform for a flexible framework that adapts to the testing task at hand.</p>
-                </div>
-                <div class="about-chapter-art" aria-hidden="true">
-                    <div class="about-art-slot about-art-slot-icon">
-                        <span class="about-art-mark fas fa-landmark"></span>
-                    </div>
                 </div>
             </article>
             <article class="about-chapter">
                 <div class="about-chapter-body">
                     <h2>Goals</h2>
                     <p>Provide an enterprise-quality testing framework so teams stop rewriting closed-source automation. One generic tool across personal, open-source, and commercial projects — at whatever level of formality the work needs.</p>
-                </div>
-                <div class="about-chapter-art" aria-hidden="true">
-                    <div class="about-art-slot about-art-slot-icon">
-                        <span class="about-art-mark far fa-compass"></span>
-                    </div>
                 </div>
             </article>
         </div>

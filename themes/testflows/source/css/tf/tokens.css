@@ -1,0 +1,101 @@
+/* ==========================================================================
+   Design tokens — dark (default) + light
+   Forest charcoal + sage paper (TestFlows-owned; not Cursor neutrals).
+   Quiet green accent for links / small accents only.
+   ========================================================================== */
+
+:root {
+    color-scheme: dark;
+
+    /* Surfaces — deep forest charcoal */
+    --tf-bg: #101412;
+    --tf-bg-deep: #171c19;
+    --tf-bg-mid: #1d2420;
+    --tf-bg-gradient: none;
+    --tf-hero-gradient: none;
+
+    /* Foreground ink as RGB channels (for rgba() mixes) */
+    --tf-fg-rgb: 230, 235, 231;
+
+    /* Atmosphere + dividers */
+    --tf-hero-atmosphere: radial-gradient(rgba(var(--tf-fg-rgb), 0.06) 1.1px, transparent 1.25px);
+    --tf-hero-atmosphere-size: 22px 22px;
+    --tf-divider-gradient: linear-gradient(
+        to right,
+        rgba(var(--tf-fg-rgb), 0) 0%,
+        rgba(var(--tf-fg-rgb), 0.14) 25%,
+        rgba(var(--tf-fg-rgb), 0.14) 75%,
+        rgba(var(--tf-fg-rgb), 0) 100%
+    );
+
+    /* Primary fill (CTAs, strong chrome) — soft sage-white on dark */
+    --tf-primary: #e6ebe7;
+    /* Quiet TestFlows green — links / small accents */
+    --tf-accent: #3dba8c;
+
+    --tf-text: #e6ebe7;
+    --tf-text-strong: #e6ebe7;
+    --tf-text-muted: rgba(var(--tf-fg-rgb), 0.6);
+    --tf-ink-on-primary: #101412;
+
+    --tf-card-border: rgba(var(--tf-fg-rgb), 0.1);
+    --tf-card-border-hover: rgba(var(--tf-fg-rgb), 0.22);
+    --tf-card-bg: #171c19;
+    --tf-field-bg: #171c19;
+    --tf-field-border: rgba(var(--tf-fg-rgb), 0.18);
+    --tf-ghost-border: rgba(var(--tf-fg-rgb), 0.28);
+    --tf-ghost-hover-bg: rgba(var(--tf-fg-rgb), 0.08);
+
+    /* Code / terminal panels (always dark, both themes) */
+    --tf-terminal-bg: #141916;
+    --tf-terminal-fg-rgb: 230, 235, 231;
+
+    --tf-font: "Titillium Web", "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
+        "Lucida Sans", Tahoma, sans-serif;
+    --font-family-sans-serif: var(--tf-font);
+    --tf-nav-height: 4rem;
+    --tf-radius-pill: 999px;
+    --tf-radius: 0.45rem;
+}
+
+[data-theme="light"] {
+    color-scheme: light;
+
+    /* Surfaces — cool sage paper */
+    --tf-bg: #f3f5f2;
+    --tf-bg-deep: #ecefeb;
+    --tf-bg-mid: #e4e8e3;
+    --tf-bg-gradient: none;
+    --tf-hero-gradient: none;
+
+    --tf-fg-rgb: 26, 33, 29;
+
+    --tf-hero-atmosphere: radial-gradient(rgba(var(--tf-fg-rgb), 0.055) 1.1px, transparent 1.25px);
+    --tf-divider-gradient: linear-gradient(
+        to right,
+        rgba(var(--tf-fg-rgb), 0) 0%,
+        rgba(var(--tf-fg-rgb), 0.14) 25%,
+        rgba(var(--tf-fg-rgb), 0.14) 75%,
+        rgba(var(--tf-fg-rgb), 0) 100%
+    );
+
+    /* Primary fill — forest ink on paper */
+    --tf-primary: #1a211d;
+    --tf-accent: #1a7a58;
+
+    --tf-text: #1a211d;
+    --tf-text-strong: #1a211d;
+    --tf-text-muted: rgba(var(--tf-fg-rgb), 0.6);
+    --tf-ink-on-primary: #f3f5f2;
+
+    --tf-card-border: rgba(var(--tf-fg-rgb), 0.1);
+    --tf-card-border-hover: rgba(var(--tf-fg-rgb), 0.18);
+    --tf-card-bg: #ffffff;
+    --tf-field-bg: #ffffff;
+    --tf-field-border: rgba(var(--tf-fg-rgb), 0.18);
+    --tf-ghost-border: rgba(var(--tf-fg-rgb), 0.28);
+    --tf-ghost-hover-bg: rgba(var(--tf-fg-rgb), 0.06);
+
+    --tf-terminal-bg: #141916;
+    --tf-terminal-fg-rgb: 230, 235, 231;
+}

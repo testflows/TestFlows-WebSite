@@ -1,0 +1,304 @@
+/* ==========================================================================
+   Contact page
+   ========================================================================== */
+
+.contact-page {
+    position: relative;
+    overflow: visible;
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    background-color: var(--tf-bg);
+    background-image: var(--tf-bg-gradient);
+    padding: 3.5rem 0 5rem;
+}
+
+.contact-page-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.contact-page-header {
+    flex: 0 0 auto;
+    align-self: flex-start;
+    max-width: 40rem;
+    margin: 0 0 2.5rem;
+    padding: 0;
+    text-align: left;
+}
+
+.contact-page-header h1 {
+    color: var(--tf-text-strong);
+    font-family: var(--tf-font);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 4.5vw, 3.1rem);
+    line-height: 1.12;
+    margin: 0 0 0.7rem;
+    text-align: left;
+}
+
+.contact-page-header > p {
+    color: var(--tf-text-strong);
+    font-family: var(--tf-font);
+    font-weight: 400;
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: 1.5;
+    margin: 0 0 1.1rem;
+    max-width: 36rem;
+    text-align: left;
+}
+
+.contact-visual-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.contact-visual-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: var(--tf-accent) !important;
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-decoration: none !important;
+    transition: color 0.15s ease;
+}
+
+.contact-visual-link:hover,
+.contact-visual-link:focus {
+    color: var(--tf-text-strong) !important;
+}
+
+.contact-visual-link .fas,
+.contact-visual-link .fab {
+    width: 1.25rem;
+    text-align: center;
+}
+
+.contact-form-col {
+    display: flex;
+    position: relative;
+    z-index: 3;
+    max-width: 40rem;
+}
+
+form.contact-us {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    color: var(--tf-text);
+    box-shadow: none;
+}
+
+.contact-step-2[hidden] {
+    display: none !important;
+}
+
+.contact-us.is-expanded .contact-step-2 {
+    display: block !important;
+    margin-top: 0.35rem;
+    padding-top: 0.35rem;
+    animation: contact-step-in 0.28s ease;
+}
+
+@keyframes contact-step-in {
+    from {
+        opacity: 0;
+        transform: translateY(0.6rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.contact-field {
+    margin-bottom: 1.1rem;
+}
+
+.contact-continue {
+    margin-top: 0.35rem;
+}
+
+form.contact-us label {
+    display: block;
+    color: var(--tf-text);
+    font-weight: 600;
+    font-size: 0.92rem;
+    margin-bottom: 0.4rem;
+}
+
+form.contact-us .form-control {
+    background: var(--tf-field-bg);
+    border: 1px solid var(--tf-field-border);
+    border-radius: 0.45rem;
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    font-size: 1rem;
+    line-height: 1.4;
+    min-height: 3rem;
+    padding: 0.75rem 0.9rem;
+    box-shadow: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+form.contact-us .form-control::placeholder {
+    color: var(--tf-text-muted);
+    opacity: 0.7;
+}
+
+form.contact-us .form-control:focus {
+    outline: none;
+    background: var(--tf-field-bg);
+    border-color: var(--tf-accent);
+    color: var(--tf-text-strong);
+    box-shadow: none;
+}
+
+form.contact-us textarea.form-control {
+    resize: vertical;
+    min-height: 8rem;
+    line-height: 1.5;
+}
+
+/* Topic select — native menu follows color-scheme */
+form.contact-us select.form-control,
+form.contact-us select.contact-topic {
+    -webkit-appearance: none;
+    appearance: none;
+    color-scheme: inherit;
+    cursor: pointer;
+    min-height: 3.1rem;
+    padding: 0.8rem 2.4rem 0.8rem 0.9rem;
+    color: var(--tf-text);
+    background-color: var(--tf-field-bg);
+    background-image:
+        linear-gradient(45deg, transparent 50%, var(--tf-accent) 50%),
+        linear-gradient(135deg, var(--tf-accent) 50%, transparent 50%),
+        linear-gradient(var(--tf-field-bg), var(--tf-field-bg));
+    background-position:
+        calc(100% - 1.15rem) calc(50% - 0.12rem),
+        calc(100% - 0.75rem) calc(50% - 0.12rem),
+        0 0;
+    background-size: 0.4rem 0.4rem, 0.4rem 0.4rem, auto;
+    background-repeat: no-repeat;
+}
+
+form.contact-us select.form-control:invalid,
+form.contact-us select.contact-topic:invalid {
+    color: var(--tf-text-muted);
+}
+
+form.contact-us select.form-control:focus,
+form.contact-us select.contact-topic:focus {
+    color: var(--tf-text-strong);
+    background-color: var(--tf-field-bg);
+}
+
+form.contact-us select.form-control option,
+form.contact-us select.contact-topic option {
+    background-color: var(--tf-bg-mid);
+    color: var(--tf-text);
+}
+
+form.contact-us .invalid-feedback {
+    display: none;
+    color: #e85a5a;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    margin-top: 0.4rem;
+}
+
+form.contact-us .form-control.is-invalid ~ .invalid-feedback,
+form.contact-us .was-validated .form-control:invalid ~ .invalid-feedback {
+    display: block;
+}
+
+.contact-privacy {
+    color: var(--tf-text-muted);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    margin: 0.25rem 0 1.25rem;
+    text-wrap: balance;
+}
+
+.contact-error {
+    color: #ff8f8f;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    margin: 0 0 1rem;
+    text-wrap: balance;
+}
+
+.contact-submit {
+    width: 100%;
+    min-height: 3rem;
+    font-size: 1.05rem;
+}
+
+.contact-submit [role="submit"],
+.contact-submit [role="processing"] {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.contact-success {
+    text-align: center;
+    padding: 2rem 1rem 1rem;
+}
+
+.contact-success-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: 1rem;
+    border-radius: 999px;
+    background: rgba(var(--tf-fg-rgb), 0.08);
+    color: var(--tf-accent);
+    font-size: 1.25rem;
+}
+
+.contact-success h3 {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+}
+
+.contact-success p {
+    color: var(--tf-text-muted);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.was-validated .form-control:valid,
+.form-control.is-valid {
+    border-color: var(--tf-accent);
+}
+
+form.contact-us .form-control.is-invalid {
+    border-color: #ff8f8f;
+}
+
+@media (max-width: 991.98px) {
+    .contact-page {
+        padding: 2.5rem 0 3.5rem;
+    }
+
+    .contact-page-header {
+        margin-bottom: 2rem;
+    }
+
+    .contact-page-header h1 {
+        font-size: clamp(1.65rem, 7vw, 2.25rem);
+    }
+}

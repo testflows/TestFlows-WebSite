@@ -1,40 +1,170 @@
-figure.highlight {
-  margin-left: 0;
-  margin-right: 0;
-}
-figure.highlight figcaption {
-  padding-top: 10px;
-  font-size: 75%;
-  opacity: 0.75;
-}
-figure.highlight figcaption:before {
-  content: "\f016";
-  font-family: FontAwesome;
-  margin: 0 10px 0 20px;
-}
-figure.highlight figcaption a {
-  margin-left: 10px;
-}
-figure.highlight .gutter {
-  display: none;
-}
-figure.highlight .code {
-  padding-left: 15px;
-}
-code,
-pre,
-figure.highlight {
-  background-color: #f7f7f7;
-  font-family: monospace, monospace;
-  font-size: 0.85em;
-  line-height: 1.45;
-  overflow: auto;
-  padding: 0em;
-  margin: 0em;
+/* ==========================================================================
+   Syntax highlighting — layout + dark/light themes
+   Themes follow document data-theme (including handbook).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+ * Theme tokens
+ * -------------------------------------------------------------------------- */
+
+:root,
+[data-theme="dark"] {
+    --hl-bg: #141916;
+    --hl-fg: #e6ebe7;
+    --hl-gutter: rgba(230, 235, 231, 0.32);
+    --hl-gutter-border: rgba(230, 235, 231, 0.12);
+    --hl-caption: rgba(230, 235, 231, 0.65);
+
+    --hl-comment: #7eb896;
+    --hl-keyword: #c4a6e8;
+    --hl-string: #6fd9a8;
+    --hl-number: #e8a06a;
+    --hl-function: #8ec8ff;
+    --hl-class: #b5d47a;
+    --hl-variable: #f0a0a0;
+    --hl-meta: #7eb896;
+    --hl-section: #c4a6e8;
+    --hl-hex: #6ec4c9;
 }
 
+[data-theme="light"] {
+    --hl-bg: #eef1ee;
+    --hl-fg: #1a211d;
+    --hl-gutter: rgba(26, 33, 29, 0.35);
+    --hl-gutter-border: rgba(26, 33, 29, 0.1);
+    --hl-caption: rgba(26, 33, 29, 0.65);
+
+    --hl-comment: #1a7a58;
+    --hl-keyword: #6b4c9a;
+    --hl-string: #0f7a52;
+    --hl-number: #c45e12;
+    --hl-function: #2b6cb0;
+    --hl-class: #5a7a00;
+    --hl-variable: #b42318;
+    --hl-meta: #1a7a58;
+    --hl-section: #6b4c9a;
+    --hl-hex: #0f7a7f;
+}
+
+/* --------------------------------------------------------------------------
+ * Layout
+ * -------------------------------------------------------------------------- */
+
+figure.highlight {
+    position: relative;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Copy control — top-right on hover */
+figure.highlight > .btn.codeblock-copy {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    z-index: 3;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    margin: 0;
+    border: 1px solid var(--hl-gutter-border);
+    border-radius: 0.35rem;
+    background: color-mix(in srgb, var(--hl-bg) 82%, transparent);
+    color: var(--hl-caption);
+    box-shadow: none;
+    line-height: 1;
+    cursor: pointer;
+}
+
+figure.highlight > .btn.codeblock-copy:hover,
+figure.highlight > .btn.codeblock-copy:focus {
+    color: var(--hl-fg);
+    border-color: var(--hl-gutter);
+    background: color-mix(in srgb, var(--hl-bg) 92%, var(--hl-fg));
+    outline: none;
+    box-shadow: none;
+}
+
+figure.highlight > .btn.codeblock-copy .fas {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+figure.highlight figcaption {
+    padding-top: 10px;
+    font-size: 75%;
+    opacity: 0.75;
+    color: var(--hl-caption);
+}
+
+figure.highlight figcaption:before {
+    content: "\f016";
+    font-family: FontAwesome;
+    margin: 0 10px 0 20px;
+}
+
+figure.highlight figcaption a {
+    margin-left: 10px;
+}
+
+figure.highlight .gutter {
+    display: table-cell;
+    width: 1.75em;
+    min-width: 1.75em;
+    padding: 0 0.5em 0 0;
+    text-align: right;
+    user-select: none;
+    -webkit-user-select: none;
+    color: var(--hl-gutter);
+    border-right: 1px solid var(--hl-gutter-border);
+    vertical-align: top;
+}
+
+figure.highlight .gutter pre {
+    background: transparent;
+    color: inherit;
+}
+
+figure.highlight .code {
+    padding-left: 15px;
+    display: table-cell;
+    width: 100%;
+    vertical-align: top;
+}
+
+pre,
+figure.highlight {
+    background-color: var(--hl-bg);
+    color: var(--hl-fg);
+    font-family: monospace, monospace;
+    font-size: 0.85em;
+    line-height: 1.45;
+    overflow: auto;
+    padding: 0;
+    margin: 0;
+}
+
+/* Inline code in prose — soft chip, not a full terminal panel */
+:not(pre) > code {
+    font-family: monospace, monospace;
+    font-size: 0.9em;
+    line-height: 1.35;
+    padding: 0.12em 0.4em;
+    margin: 0;
+    border-radius: 0.3rem;
+    border: 1px solid var(--tf-card-border);
+    background-color: var(--tf-ghost-hover-bg);
+    color: var(--tf-accent);
+}
+
+/* --------------------------------------------------------------------------
+ * Token colors
+ * -------------------------------------------------------------------------- */
+
 pre .section {
-  color: purple;
+    color: var(--hl-section);
 }
 
 pre .comment,
@@ -45,8 +175,9 @@ pre .pi,
 pre .lisp .string,
 pre .javadoc,
 pre .meta {
-  color: #02a257;
+    color: var(--hl-meta);
 }
+
 pre .variable,
 pre .attribute,
 pre .tag,
@@ -65,8 +196,9 @@ pre .constant,
 pre .class .title,
 pre .parent,
 pre .haskell .type {
-  color: #c82829;
+    color: var(--hl-variable);
 }
+
 pre .number,
 pre .preprocessor,
 pre .built_in,
@@ -89,24 +221,28 @@ pre .tag .value,
 pre .phpdoc,
 pre .tex .formula,
 pre .regexp {
-  color: #fb6d19;
+    color: var(--hl-number);
 }
+
 pre .class,
 pre .ruby .class .title,
 pre .css .rules .attribute {
-  color: #718c00;
+    color: var(--hl-class);
 }
+
 pre .string,
 pre .value,
 pre .inheritance,
 pre .header,
 pre .ruby .symbol,
 pre .xml .cdata {
-  color: #02a257;
+    color: var(--hl-string);
 }
+
 pre .hexcolor {
-  color: #3e999f;
+    color: var(--hl-hex);
 }
+
 pre .function,
 pre .python .decorator,
 pre .python .title,
@@ -115,8 +251,9 @@ pre .ruby .title .keyword,
 pre .perl .sub,
 pre .javascript .title,
 pre .coffeescript .title {
-  color: #4271ae;
+    color: var(--hl-function);
 }
+
 pre .keyword,
 pre .javascript .function,
 pre .winutils,
@@ -126,5 +263,5 @@ pre .css .tag,
 pre .request,
 pre .status,
 pre .nginx .title {
-  color: #8959a8;
+    color: var(--hl-keyword);
 }

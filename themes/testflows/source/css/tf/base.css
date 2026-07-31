@@ -1,0 +1,194 @@
+/* ==========================================================================
+   Base — document chrome, layout shell, typography
+   ========================================================================== */
+
+html {
+    background-color: var(--tf-bg);
+}
+
+html,
+body {
+    font-family: var(--tf-font);
+    -webkit-font-smoothing: antialiased;
+    background-color: var(--tf-bg);
+    min-height: 100%;
+}
+
+body {
+    position: relative;
+    color: var(--tf-text);
+    font-size: 1em;
+    text-wrap: balance;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+body > .container-fluid {
+    flex: 1 0 auto;
+    background-color: var(--tf-bg);
+}
+
+.container-footer {
+    flex-shrink: 0;
+    background-color: var(--tf-bg-deep);
+    background-image: var(--tf-bg-gradient);
+    width: 100%;
+}
+
+/* Handbook uses the same themed page chrome as the rest of the site */
+body:has(.handbook) {
+    display: block;
+    min-height: 0;
+}
+
+.content {
+    padding-top: var(--tf-nav-height);
+    background-color: var(--tf-bg);
+}
+
+.content:has(.banner) {
+    padding-top: 0;
+    background-color: var(--tf-bg);
+}
+
+.content:has(.contact-page),
+.content:has(.about-page),
+.content:has(.blog-page),
+.content:has(.handbook) {
+    padding-top: var(--tf-nav-height);
+    overflow: visible;
+    background-color: var(--tf-bg);
+}
+
+.content:has(.contact-page) .contact-page-inner,
+.content:has(.contact-page) .contact-page-row {
+    overflow: visible;
+}
+
+/* Bootstrap font override — code stays monospace */
+body,
+button,
+input,
+select,
+textarea,
+.btn,
+.navbar,
+.navbar-nav,
+.nav-link,
+.dropdown-menu,
+.form-control,
+.nav,
+.modal,
+.card,
+.alert,
+.pagination,
+.list-group,
+.tooltip,
+.popover,
+.site-menu,
+.site-menu .nav-link,
+.banner,
+.banner-text,
+.users-banner,
+.post,
+.post-header,
+.post-body,
+.handbook,
+.blog,
+footer,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: var(--tf-font);
+}
+
+.text-muted {
+    color: var(--tf-text-muted) !important;
+}
+
+.text-success {
+    color: var(--tf-accent) !important;
+}
+
+.text-primary {
+    color: var(--tf-text-muted);
+}
+
+.no-padding {
+    padding: 0 !important;
+}
+
+.text-small {
+    font-size: 0.9em;
+}
+
+/* Shared primary / ghost CTAs */
+.section-cta,
+.banner-cta,
+.contact-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--tf-primary);
+    background-image: none;
+    color: var(--tf-ink-on-primary) !important;
+    font-family: var(--tf-font);
+    font-weight: 700;
+    line-height: 1.2;
+    border: 1px solid var(--tf-primary);
+    border-radius: var(--tf-radius-pill);
+    text-decoration: none !important;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.section-cta {
+    margin-top: 0.35rem;
+    font-size: 0.95rem;
+    padding: 0.7rem 1.15rem;
+}
+
+.banner-cta {
+    font-size: 1.05rem;
+    padding: 0.85rem 1.35rem;
+}
+
+.section-cta:hover,
+.section-cta:focus,
+.banner-cta:hover,
+.banner-cta:focus,
+.contact-submit:hover,
+.contact-submit:focus,
+.contact-submit:active {
+    filter: brightness(1.08);
+    color: var(--tf-ink-on-primary) !important;
+    text-decoration: none !important;
+    outline: none;
+    box-shadow: none;
+}
+
+.section-cta-ghost {
+    background: transparent;
+    color: var(--tf-text-strong) !important;
+    border: 1px solid var(--tf-ghost-border);
+    margin-left: 0.65rem;
+}
+
+.section-cta-ghost:hover,
+.section-cta-ghost:focus {
+    background: var(--tf-ghost-hover-bg);
+    color: var(--tf-text-strong) !important;
+    filter: none;
+}
+
+.section-cta-lg {
+    margin-top: 1.5rem;
+    margin-left: 0;
+    font-size: 1.15rem;
+    padding: 0.95rem 1.75rem;
+}

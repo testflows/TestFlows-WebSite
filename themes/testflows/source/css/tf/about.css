@@ -1,0 +1,165 @@
+/* ==========================================================================
+   About page
+   ========================================================================== */
+
+.about-page {
+    position: relative;
+    overflow: hidden;
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    background-color: var(--tf-bg);
+    background-image: var(--tf-bg-gradient);
+    padding: 3.5rem 0 5rem;
+}
+
+.about-page-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.about-hero {
+    margin-bottom: 4rem;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+}
+
+.about-hero-copy {
+    text-align: left;
+}
+
+.about-hero-copy h1 {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: clamp(2rem, 4.2vw, 2.85rem);
+    line-height: 1.15;
+    margin: 0 0 1rem;
+    text-align: left;
+    text-wrap: balance;
+}
+
+.about-lead {
+    margin: 0;
+    max-width: 36rem;
+    color: var(--tf-text-muted);
+    font-size: clamp(1.05rem, 2vw, 1.2rem);
+    line-height: 1.55;
+    text-align: left;
+}
+
+.about-chapters {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+}
+
+.about-chapter {
+    padding: 2.25rem 0;
+    border-top: 1px solid var(--tf-card-border);
+}
+
+.about-chapter:last-child {
+    border-bottom: 1px solid var(--tf-card-border);
+}
+
+.about-chapter-body {
+    text-align: left;
+}
+
+.about-chapter-body h2 {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: clamp(1.45rem, 2.5vw, 1.85rem);
+    margin: 0 0 0.75rem;
+    text-align: left;
+}
+
+.about-chapter-body p {
+    margin: 0;
+    max-width: 40rem;
+    color: var(--tf-text-muted);
+    font-size: 1.08rem;
+    line-height: 1.55;
+    text-align: left;
+}
+
+.about-chapter-body strong {
+    color: var(--tf-accent);
+    font-weight: 600;
+}
+
+.about-close {
+    margin-top: 4rem;
+    padding: 2.5rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem 2rem;
+    border-top: none;
+    background-image: var(--tf-divider-gradient);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% 1px;
+}
+
+.about-close-copy {
+    text-align: left;
+}
+
+.about-close-copy h2 {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: clamp(1.45rem, 2.5vw, 1.85rem);
+    margin: 0 0 0.45rem;
+    text-align: left;
+}
+
+.about-close-copy p {
+    margin: 0;
+    color: var(--tf-text-muted);
+    font-size: 1.05rem;
+    text-align: left;
+}
+
+.about-close-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.about-close-actions .section-cta,
+.about-close-actions .section-cta-ghost {
+    margin: 0;
+}
+
+@media (max-width: 991.98px) {
+    .about-hero {
+        margin-bottom: 3rem;
+        padding: 0;
+    }
+
+    .about-chapter {
+        padding: 1.75rem 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .about-page {
+        padding: 2.5rem 0 3.5rem;
+    }
+
+    .about-close-actions {
+        width: 100%;
+    }
+
+    .about-close-actions .section-cta,
+    .about-close-actions .section-cta-ghost {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+}
