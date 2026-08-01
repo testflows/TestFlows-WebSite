@@ -11,9 +11,9 @@ import {
   cancelBillingOrder,
   getBillingOrders,
   resumeBillingOrder,
-} from "../api.js?v=5225a1fabb42";
-import { setStatus, showSpinner } from "../ui.js?v=5225a1fabb42";
-import { compactDatetime, eur, titleCase } from "./format.js?v=5225a1fabb42";
+} from "../api.js?v=1ab94989ba09";
+import { setStatus, showSpinner } from "../ui.js?v=1ab94989ba09";
+import { compactDatetime, eur, titleCase } from "./format.js?v=1ab94989ba09";
 
 /**
  * @param {HTMLElement} panel
