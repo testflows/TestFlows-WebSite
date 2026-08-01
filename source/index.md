@@ -3,12 +3,12 @@ layout: index
 ---
 
 <div class="container-fluid p-0">
-<div class="banner in-view-watcher">
+<div class="banner">
 <div class="container banner-inner">
 
 <div class="banner-text">
 <h1>Not a typical<br>framework</h1>
-<p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic control, structured steps, parallel execution, combinatorial coverage, and much more. Written for the humans. Loved by the AI agents.</p>
+<p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic control, structured steps, parallel execution, properties, behavior models, combinatorial and autonomous exploration, and more. Written for humans. Loved by the AI agents.</p>
 <div class="banner-actions">
 <a class="btn banner-cta" href="https://pypi.org/project/testflows/">pip3 install testflows</a>
 <a class="btn banner-cta banner-cta-ghost" href="/handbook/">Read the handbook</a>
@@ -113,7 +113,7 @@ layout: index
 <h2 class="index-block-title">Everything is code</h2>
 <div class="index-block-lead"><p>No scaffolding. Just Python.</p></div>
 <div class="row index-start-steps">
-<div class="col-md-6 index-start-step">
+<div class="col-md-6 index-start-step index-code-animate">
 <h3>Write</h3>
 <div class="index-start-step-story"><p>A test is just a Python program. Open a file and define a scenario. No special runner config, no scaffolding.</p></div>
 <div class="index-start-step-file"><p>test.py</p></div>
@@ -145,9 +145,9 @@ Total time 2ms
 <section class="index-steps">
 <div class="container">
 <h2 class="index-block-title">Using test steps</h2>
-<p class="index-block-lead">Break the procedure into steps. Each step is a named result — easier to read, debug, and reuse.</p>
+<p class="index-block-lead">Break the procedure into steps. Each step is a named result - easier to read, debug, and reuse.</p>
 <div class="index-steps-cascade">
-<div class="index-start-step index-steps-panel index-steps-panel--code">
+<div class="index-start-step index-steps-panel index-steps-panel--code index-code-animate">
 <div class="index-panel-chrome">
 <div class="index-start-step-file"><p>test.py</p></div>
 

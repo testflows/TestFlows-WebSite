@@ -10,7 +10,7 @@
 .banner {
     /* Sit below fixed nav; copy on top, full-width visual below */
     margin-top: var(--tf-nav-height);
-    min-height: calc(100dvh - var(--tf-nav-height));
+    min-height: 0;
     padding: 1.25rem 0 0;
     background-color: var(--tf-bg);
     background-image: var(--tf-hero-gradient);
@@ -172,9 +172,15 @@
     border: 0;
 }
 
-@media (max-width: 991.98px) {
+/* Full-viewport hero only on desktop — mobile should hug content height */
+@media (min-width: 992px) {
     .banner {
         min-height: calc(100dvh - var(--tf-nav-height));
+    }
+}
+
+@media (max-width: 991.98px) {
+    .banner {
         padding-top: 0.75rem;
     }
 
