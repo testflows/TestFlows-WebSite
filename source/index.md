@@ -100,7 +100,7 @@ layout: index
                     <h3>And More...</h3>
                     <p>Manual testing, documentation as code, professional reports, analytics, protocol modules, and the rest of the toolkit. Built for teams that outgrow checklist frameworks.</p>
                     <div class="index-why-card-cta">
-                        <a class="section-cta" href="/handbook/">Read the Handbook</a>
+                        <a class="section-cta" href="/handbook/">Read the handbook</a>
                     </div>
                 </div>
             </div>
@@ -194,7 +194,7 @@ def my_scenario(self):
 </div>
 <div class="index-steps-cta">
 <a class="section-cta" href="/handbook/#Using-Test-Steps">How to use test steps</a>
-<a class="section-cta section-cta-ghost" href="/blog/how-to-break-your-tests-into-steps/"><span class="fas fa-file-lines" aria-hidden="true"></span> Making Your Tests Better or How to Break Your Tests Into Steps</a>
+<a class="section-cta section-cta-ghost" href="/blog/how-to-break-your-tests-into-steps/"><span class="fas fa-file-lines" aria-hidden="true"></span> Making your tests better</a>
 </div>
 </div>
 </section>
