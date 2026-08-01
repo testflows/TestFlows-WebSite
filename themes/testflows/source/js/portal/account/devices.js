@@ -28,14 +28,23 @@ const UA_OSES = [
   ["Macintosh", "macOS"],
   ["Linux", "Linux"],
 ];
+// The CLI sends `machine-cli/<platform.system()>`, e.g. `machine-cli/Linux`. Map the
+// raw OS token onto the same display names the browser rows use (Darwin → macOS).
+const CLI_OS_NAMES = { Darwin: "macOS" };
+
+/** `machine-cli/Linux` → 'Client on Linux'; no OS token → 'Client'. 'Client' is
+ * reserved for our own `machine` client (UA `machine-cli/<os>`) — never a browser. */
+function cliClientLabel(ua) {
+  const osToken = (ua.split("/")[1] || "").trim();
+  if (!osToken) return "Client";
+  return `Client on ${CLI_OS_NAMES[osToken] || osToken}`;
+}
 
 /** Coarse human label from a User-Agent. */
 function formatDevice(ua) {
   if (!ua) return "Unknown device";
   const low = ua.toLowerCase();
-  if (low.startsWith("machine-cli") || low.startsWith("python-")) {
-    return "machine CLI";
-  }
+  if (low.startsWith("machine-cli")) return cliClientLabel(ua);
   const browser = UA_BROWSERS.find(([t]) => ua.includes(t));
   const os = UA_OSES.find(([t]) => ua.includes(t));
   if (browser && os) return `${browser[1]} on ${os[1]}`;
@@ -95,7 +104,7 @@ export function renderDevices(panel, ctx) {
       const tr = document.createElement("tr");
       const current = Boolean(row.current);
       let label = formatDevice(row.device ? String(row.device) : "");
-      if (current) label += " · this device";
+      if (current) label += " · current";
       const cells = [
         label,
         String(row.hostname || "—"),

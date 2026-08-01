@@ -113,7 +113,7 @@ class PortalHandler(SimpleHTTPRequestHandler):
             "Cookie",
             # Forward the browser's User-Agent so a login through this proxy is captured
             # with the real device label (else urllib sends "Python-urllib" and the
-            # signed-in-devices list shows "machine CLI" for a browser).
+            # signed-in-devices list shows a raw "python-urllib/…" row for a browser).
             "User-Agent",
             "X-Tf-Client",
             "X-Tf-Pow",
