@@ -8,21 +8,21 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=0995e3ec0e4e";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=0995e3ec0e4e";
-import { setStatus, showSpinner } from "../ui.js?v=0995e3ec0e4e";
-import { renderOverview } from "./overview.js?v=0995e3ec0e4e";
-import { renderCredits } from "./credits.js?v=0995e3ec0e4e";
-import { renderActivity } from "./activity.js?v=0995e3ec0e4e";
-import { renderBuy } from "./buy.js?v=0995e3ec0e4e";
-import { renderBilling } from "./billing.js?v=0995e3ec0e4e";
-import { renderInvoices } from "./invoices.js?v=0995e3ec0e4e";
-import { renderOrders } from "./orders.js?v=0995e3ec0e4e";
-import { renderKeys } from "./keys.js?v=0995e3ec0e4e";
-import { renderStorage } from "./storage.js?v=0995e3ec0e4e";
-import { renderSettings } from "./settings.js?v=0995e3ec0e4e";
-import { enhanceSelects } from "./select.js?v=0995e3ec0e4e";
-import { todayDate } from "./format.js?v=0995e3ec0e4e";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=5225a1fabb42";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=5225a1fabb42";
+import { setStatus, showSpinner } from "../ui.js?v=5225a1fabb42";
+import { renderOverview } from "./overview.js?v=5225a1fabb42";
+import { renderCredits } from "./credits.js?v=5225a1fabb42";
+import { renderActivity } from "./activity.js?v=5225a1fabb42";
+import { renderBuy } from "./buy.js?v=5225a1fabb42";
+import { renderBilling } from "./billing.js?v=5225a1fabb42";
+import { renderInvoices } from "./invoices.js?v=5225a1fabb42";
+import { renderOrders } from "./orders.js?v=5225a1fabb42";
+import { renderKeys } from "./keys.js?v=5225a1fabb42";
+import { renderStorage } from "./storage.js?v=5225a1fabb42";
+import { renderSettings } from "./settings.js?v=5225a1fabb42";
+import { enhanceSelects } from "./select.js?v=5225a1fabb42";
+import { todayDate } from "./format.js?v=5225a1fabb42";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
