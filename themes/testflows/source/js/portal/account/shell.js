@@ -19,6 +19,7 @@ import { renderBilling } from "./billing.js";
 import { renderInvoices } from "./invoices.js";
 import { renderOrders } from "./orders.js";
 import { renderKeys } from "./keys.js";
+import { renderDevices } from "./devices.js";
 import { renderStorage } from "./storage.js";
 import { renderSettings } from "./settings.js";
 import { enhanceSelects } from "./select.js";
@@ -35,6 +36,7 @@ const SECTIONS = [
   "invoices",
   "orders",
   "keys",
+  "devices",
   "storage",
   "settings",
 ];
@@ -141,6 +143,9 @@ async function showSection(section, force = false) {
         break;
       case "keys":
         renderKeys(panel, ctx);
+        break;
+      case "devices":
+        renderDevices(panel, ctx);
         break;
       case "storage":
         renderStorage(panel, acct, ctx);
