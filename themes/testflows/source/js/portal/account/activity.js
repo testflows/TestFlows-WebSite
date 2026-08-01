@@ -121,7 +121,7 @@ export function renderActivity(panel, ctx) {
   filters.className = "portal-filters";
   filters.innerHTML = `
     <label class="portal-field portal-field--inline">
-      <span>Limit</span>
+      <span>Page size</span>
       <select name="limit" class="form-control portal-select">
         <option value="25">25</option>
         <option value="50" selected>50</option>
@@ -148,22 +148,88 @@ export function renderActivity(panel, ctx) {
   tableWrap.className = "portal-table-wrap";
   panel.append(tableWrap);
 
+  const pager = document.createElement("nav");
+  pager.className = "portal-pager";
+  pager.setAttribute("aria-label", "Activity pages");
+  pager.hidden = true;
+  panel.append(pager);
+
+  /** @type {number} */
+  let offset = 0;
+
+  const pageSize = () => {
+    const fd = new FormData(filters);
+    return Math.max(1, Number(fd.get("limit") || 50));
+  };
+
+  /**
+   * @param {{ hasPrev: boolean, hasNext: boolean, from: number, to: number }} state
+   */
+  const paintPager = (state) => {
+    pager.replaceChildren();
+    if (!state.to && !state.hasPrev) {
+      pager.hidden = true;
+      return;
+    }
+    pager.hidden = false;
+
+    const prev = document.createElement("button");
+    prev.type = "button";
+    prev.className = "btn btn-default btn-sm";
+    prev.textContent = "Previous";
+    prev.disabled = !state.hasPrev;
+    prev.addEventListener("click", () => {
+      offset = Math.max(0, offset - pageSize());
+      void load();
+    });
+
+    const label = document.createElement("span");
+    label.className = "portal-pager-label";
+    label.textContent =
+      state.to > 0 ? `Showing ${state.from}–${state.to}` : "No transactions";
+
+    const next = document.createElement("button");
+    next.type = "button";
+    next.className = "btn btn-default btn-sm";
+    next.textContent = "Next";
+    next.disabled = !state.hasNext;
+    next.addEventListener("click", () => {
+      offset = offset + pageSize();
+      void load();
+    });
+
+    pager.append(prev, label, next);
+  };
+
   const load = async () => {
     const fd = new FormData(filters);
-    const limit = String(fd.get("limit") || "50");
+    const limit = pageSize();
     const activityKey = String(fd.get("activity") || "");
     showSpinner(ctx.statusEl, "Loading activity");
     try {
       /** @type {Record<string, string|number>} */
-      const params = { limit: Number(limit) };
+      const params = {
+        // Ask for one extra row so we know whether a next page exists.
+        limit: limit + 1,
+        offset,
+      };
       if (activityKey && ACTIVITY_FILTER[activityKey]) {
         params.activity = ACTIVITY_FILTER[activityKey];
       }
       const rows = await getTransactions(params);
       setStatus(ctx.statusEl, "", "");
-      paint(rows);
+      const hasNext = rows.length > limit;
+      const page = hasNext ? rows.slice(0, limit) : rows;
+      paint(page);
+      paintPager({
+        hasPrev: offset > 0,
+        hasNext,
+        from: page.length ? offset + 1 : 0,
+        to: offset + page.length,
+      });
     } catch (err) {
       tableWrap.replaceChildren();
+      pager.hidden = true;
       setStatus(
         ctx.statusEl,
         err instanceof ApiError
@@ -182,12 +248,12 @@ export function renderActivity(panel, ctx) {
     if (!rows.length) {
       const empty = document.createElement("p");
       empty.className = "portal-muted";
-      empty.textContent = "No transactions yet.";
+      empty.textContent = offset > 0 ? "No more transactions." : "No transactions yet.";
       tableWrap.append(empty);
       return;
     }
     const table = document.createElement("table");
-    table.className = "portal-table";
+    table.className = "portal-table portal-table--activity";
     const thead = document.createElement("thead");
     // Column order matches client/core/transactions.py `headers()`.
     thead.innerHTML = `
@@ -234,6 +300,7 @@ export function renderActivity(panel, ctx) {
   };
 
   filters.addEventListener("change", () => {
+    offset = 0;
     void load();
   });
   void load();
