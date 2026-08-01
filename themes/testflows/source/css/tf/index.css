@@ -13,47 +13,6 @@
     border-top: none;
 }
 
-/* Soft alternating bands — break the flat page without loud color */
-.index-why {
-    background-color: var(--tf-section-soft-a);
-    background-image: radial-gradient(
-        120% 70% at 50% -10%,
-        var(--tf-section-wash-a),
-        transparent 58%
-    );
-}
-
-.index-start {
-    background-color: var(--tf-section-soft-b);
-}
-
-.index-steps {
-    background-color: var(--tf-section-soft-c);
-    background-image: radial-gradient(
-        90% 80% at 85% 20%,
-        var(--tf-section-wash-c),
-        transparent 55%
-    );
-}
-
-.index-journal {
-    background-color: var(--tf-section-soft-d);
-    background-image: radial-gradient(
-        100% 70% at 15% 0%,
-        var(--tf-section-wash-d),
-        transparent 55%
-    );
-}
-
-.index-close {
-    background-color: var(--tf-section-soft-a);
-    background-image: radial-gradient(
-        110% 80% at 50% 120%,
-        var(--tf-section-wash-a),
-        transparent 55%
-    );
-}
-
 .index-start,
 .index-steps {
     padding: 3.5rem 0 4.5rem;
@@ -115,37 +74,23 @@
     margin-bottom: 0;
 }
 
-/*
- * One outline stack slid down-right.
- * Punch with section band color + 1px line = hollow frame (always paints).
- * Y offset slightly tighter than X so the bottom gap doesn’t look oversized.
- */
+/* Flat chrome — no outline stack / drop shadow on steps panels */
 .index-steps .index-panel-chrome {
-    --index-stack-x: 0.7rem;
-    --index-stack-y: 0.4rem;
     position: relative;
     z-index: 1;
-    margin: 0 var(--index-stack-x) var(--index-stack-y) 0;
+    margin: 0;
     border-radius: 1.25rem 1.25rem 0 0;
-    box-shadow:
-        var(--index-stack-x) var(--index-stack-y) 0 0 var(--tf-section-soft-c),
-        var(--index-stack-x) var(--index-stack-y) 0 1px rgba(var(--tf-fg-rgb), 0.42);
+    box-shadow: none;
 }
 
-/* Drop soft blur shelf on steps — the outline stack carries depth */
 .index-steps-panel.index-start-step::after {
     display: none;
 }
 
-.index-steps .index-panel-chrome figure.highlight,
-.index-steps .index-panel-chrome .index-steps-result {
-    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset !important;
-}
-
-/* Kill start-demo sizing — leftover margin-bottom was stretching the outline */
+/* Shorter than Everything is code demos, but keep height while typewriter blanks lines */
 .index-steps .index-panel-chrome figure.highlight {
     flex: 0 0 auto;
-    min-height: 0 !important;
+    min-height: 14rem !important;
     height: auto !important;
     margin: 0 !important;
     padding-bottom: 0.85rem;
@@ -764,12 +709,10 @@
 }
 
 /* Radical section panel colors — shared by code + terminal within a section */
-.index-start {
-    --tf-terminal-bg: var(--tf-terminal-bg-start);
-}
-
+.index-start,
 .index-steps {
-    --tf-terminal-bg: var(--tf-terminal-bg-steps);
+    /* Same near-black panel tone as Everything is code */
+    --tf-terminal-bg: var(--tf-terminal-bg-start);
 }
 
 /* Dark terminals — softer charcoal, light border, glass under */
@@ -791,6 +734,13 @@
         0 1px 0 rgba(255, 255, 255, 0.05) inset,
         0 28px 56px rgba(0, 0, 0, 0.36),
         0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+/* Steps: no panel shadows — border + shared bg only */
+.index-steps figure.highlight,
+.index-steps .index-steps-result,
+.index-steps .index-panel-chrome .index-start-step-file {
+    box-shadow: none !important;
 }
 
 /* Soft glassy shelf under each terminal (on the step — figure scrolls/clips). */
