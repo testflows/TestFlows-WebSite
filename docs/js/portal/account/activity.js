@@ -6,10 +6,17 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getTransactions } from "../api.js?v=086fa99a4287";
-import { setStatus, showSpinner } from "../ui.js?v=086fa99a4287";
-import { compactDatetime, eur, eurSigned, titleCase } from "./format.js?v=086fa99a4287";
-import { enhanceSelects } from "./select.js?v=086fa99a4287";
+import { ApiError, getTransactions } from "../api.js?v=3fc36f052053";
+import { setStatus, showSpinner } from "../ui.js?v=3fc36f052053";
+import {
+  compactDatetime,
+  duration,
+  elapsed,
+  eur,
+  eurSigned,
+  titleCase,
+} from "./format.js?v=3fc36f052053";
+import { enhanceSelects } from "./select.js?v=3fc36f052053";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
@@ -36,6 +43,64 @@ const ACCOUNT_LABEL = {
   plan_credit: "Included",
   usage_credit: "Usage",
 };
+
+/**
+ * RATE — frozen hourly rate `units × unit_hour_micros`. Mirrors
+ * client/core/transactions.py `_rate`.
+ * @param {unknown} units
+ * @param {unknown} unitHourMicros
+ * @returns {string}
+ */
+function rate(units, unitHourMicros) {
+  if (units == null || unitHourMicros == null) return "—";
+  return `${eur(Number(units) * Number(unitHourMicros), 3)}/h`;
+}
+
+/**
+ * DURATION — billed runtime for Settled; held interval for Reserved.
+ * Mirrors client/core/transactions.py `_duration`.
+ * @param {string} type
+ * @param {unknown} billedSeconds
+ * @param {unknown} paidFrom
+ * @param {unknown} paidUntil
+ * @returns {string}
+ */
+function rowDuration(type, billedSeconds, paidFrom, paidUntil) {
+  if (type === "coverage_refund" && billedSeconds != null && billedSeconds !== "") {
+    return duration(Number(billedSeconds) || 0);
+  }
+  if (type === "coverage_purchase" && paidFrom && paidUntil) {
+    const span = elapsed(String(paidFrom), String(paidUntil));
+    return span || "—";
+  }
+  return "—";
+}
+
+/**
+ * COST — settled session charge (`billed_micros` = reserved − returned).
+ * Settlement rows only. Mirrors client/core/transactions.py `_cost`.
+ * @param {string} type
+ * @param {unknown} billedMicros
+ * @returns {string}
+ */
+function cost(type, billedMicros) {
+  if (type === "coverage_refund" && billedMicros != null && billedMicros !== "") {
+    return eur(Number(billedMicros) || 0, 3);
+  }
+  return "—";
+}
+
+/**
+ * PERIOD — service interval or plan movement window.
+ * Mirrors client/core/transactions.py `_period`.
+ * @param {unknown} paidFrom
+ * @param {unknown} paidUntil
+ * @returns {string}
+ */
+function period(paidFrom, paidUntil) {
+  if (!paidFrom || !paidUntil) return "—";
+  return `${compactDatetime(String(paidFrom))} → ${compactDatetime(String(paidUntil))}`;
+}
 
 /**
  * @param {HTMLElement} panel
@@ -124,6 +189,7 @@ export function renderActivity(panel, ctx) {
     const table = document.createElement("table");
     table.className = "portal-table";
     const thead = document.createElement("thead");
+    // Column order matches client/core/transactions.py `headers()`.
     thead.innerHTML = `
       <tr>
         <th>Posted</th>
@@ -131,7 +197,11 @@ export function renderActivity(panel, ctx) {
         <th>Credit</th>
         <th>Change</th>
         <th>Remaining</th>
+        <th>Rate</th>
+        <th>Duration</th>
+        <th>Cost</th>
         <th>Session</th>
+        <th>Period</th>
       </tr>
     `;
     const tbody = document.createElement("tbody");
@@ -146,7 +216,11 @@ export function renderActivity(panel, ctx) {
           (row.account ? titleCase(String(row.account).replace(/_/g, " ")) : "—"),
         eurSigned(Number(row.amount_micros) || 0, 3),
         eur(Number(row.balance_after_micros) || 0, 3),
+        rate(row.units, row.unit_hour_micros),
+        rowDuration(type, row.billed_seconds, row.paid_from, row.paid_until),
+        cost(type, row.billed_micros),
         String(row.session_name || row.session_id || "—"),
+        period(row.paid_from, row.paid_until),
       ];
       for (const text of cells) {
         const td = document.createElement("td");

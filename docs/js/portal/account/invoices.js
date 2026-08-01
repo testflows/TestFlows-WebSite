@@ -6,9 +6,9 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=086fa99a4287";
-import { setStatus, showSpinner } from "../ui.js?v=086fa99a4287";
-import { compactDatetime, eur, titleCase } from "./format.js?v=086fa99a4287";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=3fc36f052053";
+import { setStatus, showSpinner } from "../ui.js?v=3fc36f052053";
+import { compactDatetime, eur, titleCase } from "./format.js?v=3fc36f052053";
 
 /**
  * @param {HTMLElement} panel
