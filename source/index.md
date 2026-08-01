@@ -7,7 +7,7 @@ layout: index
 <div class="container banner-inner">
 
 <div class="banner-text">
-<h1>Not a typical framework</h1>
+<h1>Not a typical<br>framework</h1>
 <p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic control, structured steps, parallel execution, combinatorial coverage, and much more. Written for the humans. Loved by the AI agents.</p>
 <div class="banner-actions">
 <a class="btn banner-cta" href="https://pypi.org/project/testflows/">pip3 install testflows</a>
