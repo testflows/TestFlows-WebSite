@@ -6,6 +6,6 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { bootAccountDashboard } from "./account/shell.js?v=3fc36f052053";
+import { bootAccountDashboard } from "./account/shell.js?v=2a7b6d21d767";
 
 bootAccountDashboard();
