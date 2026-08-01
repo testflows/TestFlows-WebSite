@@ -41,34 +41,34 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785555541974" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/about.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1785555541974" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785526437804" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1785555541974" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -82,7 +82,8 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 <body>
-  <nav id="main-nav" class="navbar navbar-expand-md fixed-top" role="navigation">
+  
+  <nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
     <div class="container navbar-inner">
         <a class="navbar-brand" href="/">
             <img
@@ -141,6 +142,16 @@
                     
                 </ul>
             </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
         </div>
         <div class="navbar-github-slot">
             <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
@@ -150,12 +161,13 @@
             <span class="navbar-github-sep" aria-hidden="true">|</span>
             <a class="navbar-github" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
                 <span class="fab fa-github" aria-hidden="true"></span>
-                GitHub
+                <span class="navbar-github-label">GitHub</span>
             </a>
         </div>
     </div>
 </nav>
 
+  
   <div class="container-fluid p-0">
     <div class="content">
       <div class="container" style="padding-bottom: 2em !important">
@@ -740,6 +752,7 @@ In many cases, writing a good test...
 
     </div>
   </div>
+  
   <div class="container-footer" id="container-footer">
     <footer> <div class="container">
     <div class="site-footer-grid row">
@@ -789,6 +802,7 @@ In many cases, writing a good test...
 </div>
  </footer>
   </div>
+  
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
@@ -866,7 +880,7 @@ $(function () {
     });
 
     $menu.on('click', '.nav-link', function () {
-        if (window.matchMedia('(max-width: 767.98px)').matches) {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
             $menu.collapse('hide');
         }
     });

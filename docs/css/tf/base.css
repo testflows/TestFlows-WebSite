@@ -4,6 +4,8 @@
 
 html {
     background-color: var(--tf-bg);
+    /* Keep layout width stable when overflow appears (fixed navbar won't jump). */
+    scrollbar-gutter: stable;
 }
 
 html,
@@ -11,7 +13,6 @@ body {
     font-family: var(--tf-font);
     -webkit-font-smoothing: antialiased;
     background-color: var(--tf-bg);
-    min-height: 100%;
 }
 
 body {
@@ -19,6 +20,7 @@ body {
     color: var(--tf-text);
     font-size: 1em;
     text-wrap: balance;
+    /* Sticky footer: short pages still fill the viewport so the footer sits at the bottom. */
     min-height: 100vh;
     min-height: 100dvh;
     display: flex;
@@ -27,23 +29,25 @@ body {
 
 body > .container-fluid {
     flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     background-color: var(--tf-bg);
 }
 
 .container-footer {
     flex-shrink: 0;
+    margin-top: auto;
     background-color: var(--tf-bg-deep);
     background-image: var(--tf-bg-gradient);
     width: 100%;
 }
 
-/* Handbook uses the same themed page chrome as the rest of the site */
-body:has(.handbook) {
-    display: block;
-    min-height: 0;
-}
-
 .content {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     padding-top: var(--tf-nav-height);
     background-color: var(--tf-bg);
 }

@@ -4,12 +4,16 @@
 
 .about-page {
     position: relative;
+    flex: 1 0 auto;
     overflow: hidden;
     color: var(--tf-text);
     font-family: var(--tf-font);
     background-color: var(--tf-bg);
     background-image: var(--tf-bg-gradient);
     padding: 3.5rem 0 5rem;
+    min-height: calc(100vh - var(--tf-nav-height, 4rem));
+    min-height: calc(100dvh - var(--tf-nav-height, 4rem));
+    box-sizing: border-box;
 }
 
 .about-page-inner {

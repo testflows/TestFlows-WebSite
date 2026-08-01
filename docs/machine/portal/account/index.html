@@ -29,34 +29,34 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785555541968" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/about.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1785555541968" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785526437797" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1785555541968" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -70,9 +70,10 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 <body>
-  <nav id="main-nav" class="navbar navbar-expand-md fixed-top" role="navigation">
-    <div class="container navbar-inner">
-        <a class="navbar-brand" href="/">
+  
+  <nav id="main-nav" class="navbar navbar-expand-md fixed-top portal-navbar" role="navigation">
+    <div class="container-fluid navbar-inner portal-navbar-inner">
+        <a class="navbar-brand portal-navbar-brand" href="/machine/portal/account/">
             <img
                 class="navbar-logo"
                 id="navbar-logo"
@@ -93,129 +94,127 @@
             if (src) logo.setAttribute("src", src);
         })();
         </script>
-        <button class="navbar-toggler" type="button"
-                data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-bars" aria-hidden="true">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </span>
+        <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+            <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+            <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
         </button>
-        <div class="collapse navbar-collapse site-menu" id="navbarNav">
-            <div class="site-menu-panel">
-                <ul class="navbar-nav">
-                    
-                    
-                        <li class="nav-item">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
-                            <a class="nav-link" href="/handbook">Handbook</a>
-                        </li>
-                    
-                        <li class="nav-item">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
-                            <a class="nav-link" href="/blog">Blog</a>
-                        </li>
-                    
-                        <li class="nav-item">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7.5h.01"/></svg></span>
-                            <a class="nav-link" href="/about.html">About</a>
-                        </li>
-                    
-                        <li class="nav-item">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
-                            <a class="nav-link" href="/contact.html">Contact</a>
-                        </li>
-                    
-                </ul>
-            </div>
-        </div>
-        <div class="navbar-github-slot">
-            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
-                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
-                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
-            </button>
-            <span class="navbar-github-sep" aria-hidden="true">|</span>
-            <a class="navbar-github" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
-                <span class="fab fa-github" aria-hidden="true"></span>
-                GitHub
-            </a>
+        <div class="portal-navbar-actions">
+            <span class="portal-navbar-email" id="portal-nav-email" title=""></span>
+            <script>
+            (function () {
+                var el = document.getElementById("portal-nav-email");
+                if (!el) return;
+                var prefix = "tf_machine_email=";
+                var parts = document.cookie.split("; ");
+                for (var i = 0; i < parts.length; i++) {
+                    if (parts[i].indexOf(prefix) === 0) {
+                        try {
+                            var email = decodeURIComponent(parts[i].slice(prefix.length));
+                            if (email) {
+                                el.textContent = email;
+                                el.setAttribute("title", email);
+                            }
+                        } catch (e) {}
+                        break;
+                    }
+                }
+            })();
+            </script>
+            <button type="button" class="portal-navbar-signout" id="portal-account-logout">Sign out</button>
         </div>
     </div>
 </nav>
 
+  
   <div class="container-fluid p-0">
     <div class="content">
       
-<section class="portal-page">
-    <div class="container portal-page-inner">
-        <header class="portal-page-header">
-            <h1>Account</h1>
-        </header>
-        <div class="portal-card">
-            <div id="portal-account-status" class="portal-status" hidden></div>
-            <p class="portal-account-email" id="portal-account-email">…</p>
-            <div class="portal-actions">
-                <button type="button" class="btn btn-ghost" id="portal-account-logout">Sign out</button>
+<section class="portal-page portal-dash">
+    <div class="container portal-dash-inner">
+        <aside class="portal-dash-sidebar" aria-label="Account navigation">
+            <div class="portal-dash-brand">
+                <span class="portal-dash-brand-title">Account</span>
             </div>
-        </div>
+            <label class="portal-dash-mobile-nav" for="portal-dash-select">
+                <span class="visually-hidden">Section</span>
+                <select id="portal-dash-select" class="form-control portal-select">
+                    <option value="overview" data-portal-nav="overview">Overview</option>
+                    <option value="credits" data-portal-nav="credits">Credits</option>
+                    <option value="activity" data-portal-nav="activity">Activity</option>
+                    <option value="buy" data-portal-nav="buy">Buy</option>
+                    <option value="billing" data-portal-nav="billing">Billing</option>
+                    <option value="invoices" data-portal-nav="invoices">Invoices</option>
+                    <option value="orders" data-portal-nav="orders">Orders</option>
+                    <option value="keys" data-portal-nav="keys">API keys</option>
+                    <option value="storage" data-portal-nav="storage">Storage</option>
+                    <option value="settings" data-portal-nav="settings">Settings</option>
+                </select>
+            </label>
+            <nav class="portal-dash-nav">
+                <a href="#overview" data-portal-nav="overview"><span class="fas fa-fw fa-house" aria-hidden="true"></span><span>Overview</span></a>
+                <a href="#credits" data-portal-nav="credits"><span class="fas fa-fw fa-coins" aria-hidden="true"></span><span>Credits</span></a>
+                <a href="#activity" data-portal-nav="activity"><span class="fas fa-fw fa-clock-rotate-left" aria-hidden="true"></span><span>Activity</span></a>
+                <a href="#buy" data-portal-nav="buy"><span class="fas fa-fw fa-cart-shopping" aria-hidden="true"></span><span>Buy</span></a>
+                <a href="#billing" data-portal-nav="billing"><span class="fas fa-fw fa-credit-card" aria-hidden="true"></span><span>Billing</span></a>
+                <a href="#invoices" data-portal-nav="invoices"><span class="fas fa-fw fa-file-invoice" aria-hidden="true"></span><span>Invoices</span></a>
+                <a href="#orders" data-portal-nav="orders"><span class="fas fa-fw fa-box" aria-hidden="true"></span><span>Orders</span></a>
+                <a href="#keys" data-portal-nav="keys"><span class="fas fa-fw fa-key" aria-hidden="true"></span><span>API keys</span></a>
+                <a href="#storage" data-portal-nav="storage"><span class="fas fa-fw fa-hard-drive" aria-hidden="true"></span><span>Storage</span></a>
+                <a href="#settings" data-portal-nav="settings"><span class="fas fa-fw fa-gear" aria-hidden="true"></span><span>Settings</span></a>
+            </nav>
+            <p class="portal-dash-mark">
+                <span class="fas fa-umbrella" aria-hidden="true"></span>
+                <span class="portal-dash-mark-title">Machine Dashboard</span>
+                <time class="portal-dash-mark-date" id="portal-dash-mark-date" datetime=""></time>
+            </p>
+        </aside>
+        <main class="portal-dash-main">
+            <div class="portal-dash-toolbar">
+                <div id="portal-account-status" class="portal-status portal-status--dock" hidden role="status" aria-live="polite"></div>
+                <button type="button" class="btn btn-ghost portal-dash-refresh" id="portal-account-refresh">
+                    <span class="fas fa-sync-alt" aria-hidden="true"></span>
+                    Refresh
+                </button>
+            </div>
+            <div class="portal-dash-panel" data-portal-panel="overview"></div>
+            <div class="portal-dash-panel" data-portal-panel="credits" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="activity" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="buy" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="billing" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="invoices" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="orders" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="keys" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="storage" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="settings" hidden></div>
+        </main>
     </div>
 </section>
-<script type="module" src="/js/portal/account.js"></script>
 
-
-
-    </div>
-  </div>
-  <div class="container-footer" id="container-footer">
-    <footer> <div class="container">
-    <div class="site-footer-grid row">
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Developers</h3>
-            <ul>
-                <li><a href="/handbook/">Handbook</a></li>
-                <li><a href="/blog/">Blog</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Community</h3>
-            <ul>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Company</h3>
-            <ul>
-                <li><a href="/about.html">About</a></li>
-                <li><a href="/contact.html">Contact</a></li>
-                <li><a href="/credits.html">Credits</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Get started</h3>
-            <ul>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">pip3 install testflows</a></li>
-                <li><a href="/handbook/">Read the Handbook</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="site-footer-bottom">
-        <div>
-            Copyright 2020-2026 Katteli Inc. All rights reserved.
-        </div>
-        <div class="site-footer-social">
-            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
-            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
-            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
-            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+<div id="portal-stepup" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-stepup-title">
+    <div class="portal-modal-backdrop" data-portal-stepup-dismiss></div>
+    <div class="portal-modal-card">
+        <h2 id="portal-stepup-title">Confirm</h2>
+        <p id="portal-stepup-hint" class="portal-muted">We'll email a one-time code to confirm.</p>
+        <div id="portal-stepup-status" class="portal-status" hidden></div>
+        <label class="portal-field">
+            <span>Code</span>
+            <input id="portal-stepup-code" class="form-control" type="text" inputmode="numeric" autocomplete="one-time-code" />
+        </label>
+        <div class="portal-actions">
+            <button type="button" class="btn btn-ghost" id="portal-stepup-send">Resend code</button>
+            <button type="button" class="btn btn-primary" id="portal-stepup-confirm">Confirm</button>
+            <button type="button" class="btn btn-ghost" id="portal-stepup-cancel">Cancel</button>
         </div>
     </div>
 </div>
- </footer>
+
+<script type="module" src="/js/portal/account.js?v=20260731r"></script>
+
+
+
+    </div>
   </div>
+  
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
@@ -293,7 +292,7 @@ $(function () {
     });
 
     $menu.on('click', '.nav-link', function () {
-        if (window.matchMedia('(max-width: 767.98px)').matches) {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
             $menu.collapse('hide');
         }
     });

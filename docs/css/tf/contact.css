@@ -4,12 +4,17 @@
 
 .contact-page {
     position: relative;
+    flex: 1 0 auto;
     overflow: visible;
     color: var(--tf-text);
     font-family: var(--tf-font);
     background-color: var(--tf-bg);
     background-image: var(--tf-bg-gradient);
     padding: 3.5rem 0 5rem;
+    /* Short form must still fill the viewport so the site footer sits at the bottom. */
+    min-height: calc(100vh - var(--tf-nav-height, 4rem));
+    min-height: calc(100dvh - var(--tf-nav-height, 4rem));
+    box-sizing: border-box;
 }
 
 .contact-page-inner {

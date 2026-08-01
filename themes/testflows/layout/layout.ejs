@@ -3,15 +3,21 @@
 <html lang="en">
 <%- partial('_partial/head') %>
 <body>
+  <% if (page.portal_nav) { %>
+  <%- partial('_partial/navigation_portal') %>
+  <% } else { %>
   <%- partial('_partial/navigation') %>
+  <% } %>
   <div class="container-fluid p-0">
     <div class="content">
       <%- body %>
     </div>
   </div>
+  <% if (!page.hide_footer) { %>
   <div class="container-footer" id="container-footer">
     <footer> <%- partial('_partial/footer') %> </footer>
   </div>
+  <% } %>
   <%- partial('_partial/after_footer') %>
 </body>
 </html>

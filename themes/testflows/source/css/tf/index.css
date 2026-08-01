@@ -45,6 +45,7 @@
 }
 
 .index-start-step {
+    position: relative;
     display: flex;
     flex-direction: column;
     margin-bottom: 2.75rem;
@@ -53,6 +54,8 @@
     border: none;
     box-shadow: none;
     overflow: visible;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .index-start-step h3 {
@@ -101,6 +104,8 @@
     display: flex;
     flex-direction: column;
     min-height: 18rem;
+    min-width: 0;
+    max-width: 100%;
     margin: 0 0 1.75rem;
     font-size: 1.12rem;
 }
@@ -108,11 +113,28 @@
 .index-start-step figure.highlight table {
     flex: 1 1 auto;
     height: 100%;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.index-start-step figure.highlight table tbody,
+.index-start-step figure.highlight table tr {
+    display: table;
+    width: max-content;
+    min-width: 100%;
 }
 
 .index-start-step figure.highlight .code,
 .index-start-step figure.highlight pre {
     height: 100%;
+}
+
+.index-start-step figure.highlight .line {
+    white-space: pre;
 }
 
 @media (min-width: 768px) {
@@ -542,20 +564,22 @@
     border-top: none;
     border-radius: 0;
     padding: 0.85rem 1.35rem 1.85rem 0.85rem;
-    overflow: visible;
+    /* Keep panel chrome clipped; long lines scroll inside the table */
+    overflow: hidden;
+    max-width: 100%;
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.05) inset,
         0 28px 56px rgba(0, 0, 0, 0.36),
         0 10px 28px rgba(0, 0, 0, 0.22);
 }
 
-/* Soft glassy shelf under each terminal */
-.index-start figure.highlight::after {
+/* Soft glassy shelf under each terminal (on the step — figure scrolls/clips). */
+.index-start-step::after {
     content: "";
     position: absolute;
-    left: 6%;
-    right: 6%;
-    bottom: -1.35rem;
+    left: 10%;
+    right: 10%;
+    bottom: 0.15rem;
     height: 1.6rem;
     border-radius: 50%;
     background: radial-gradient(
@@ -566,7 +590,7 @@
     );
     filter: blur(10px);
     pointer-events: none;
-    z-index: -1;
+    z-index: 0;
 }
 
 [data-theme="light"] .index-start figure.highlight {
@@ -576,7 +600,7 @@
         0 10px 28px rgba(var(--tf-fg-rgb), 0.09);
 }
 
-[data-theme="light"] .index-start figure.highlight::after {
+[data-theme="light"] .index-start-step::after {
     background: radial-gradient(
         ellipse at center,
         rgba(var(--tf-fg-rgb), 0.1) 0%,

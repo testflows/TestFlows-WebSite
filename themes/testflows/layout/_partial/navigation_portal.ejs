@@ -1,0 +1,53 @@
+<nav id="main-nav" class="navbar navbar-expand-md fixed-top portal-navbar" role="navigation">
+    <div class="container-fluid navbar-inner portal-navbar-inner">
+        <a class="navbar-brand portal-navbar-brand" href="<%- url_for('machine/portal/account/') %>">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="<%- config.root %>img/logo-simple-modern.png"
+                data-logo-dark="<%- config.root %>img/logo-simple-modern.png"
+                data-logo-light="<%- config.root %>img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+            <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+            <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+        </button>
+        <div class="portal-navbar-actions">
+            <span class="portal-navbar-email" id="portal-nav-email" title=""></span>
+            <script>
+            (function () {
+                var el = document.getElementById("portal-nav-email");
+                if (!el) return;
+                var prefix = "tf_machine_email=";
+                var parts = document.cookie.split("; ");
+                for (var i = 0; i < parts.length; i++) {
+                    if (parts[i].indexOf(prefix) === 0) {
+                        try {
+                            var email = decodeURIComponent(parts[i].slice(prefix.length));
+                            if (email) {
+                                el.textContent = email;
+                                el.setAttribute("title", email);
+                            }
+                        } catch (e) {}
+                        break;
+                    }
+                }
+            })();
+            </script>
+            <button type="button" class="portal-navbar-signout" id="portal-account-logout">Sign out</button>
+        </div>
+    </div>
+</nav>

@@ -90,7 +90,14 @@ class PortalHandler(SimpleHTTPRequestHandler):
         length = int(self.headers.get("Content-Length", "0") or "0")
         body = self.rfile.read(length) if length > 0 else None
         headers = {}
-        for key in ("Content-Type", "Authorization", "X-Tf-Pow", "Accept"):
+        for key in (
+            "Content-Type",
+            "Authorization",
+            "X-Tf-Pow",
+            "X-Tf-Code",
+            "Idempotency-Key",
+            "Accept",
+        ):
             val = self.headers.get(key)
             if val:
                 headers[key] = val

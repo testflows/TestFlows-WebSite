@@ -1,4 +1,4 @@
-<nav id="main-nav" class="navbar navbar-expand-md fixed-top" role="navigation">
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
     <div class="container navbar-inner">
         <a class="navbar-brand" href="<%- config.root %>">
             <img
@@ -49,6 +49,16 @@
                     <% } %>
                 </ul>
             </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
         </div>
         <div class="navbar-github-slot">
             <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
@@ -58,7 +68,7 @@
             <span class="navbar-github-sep" aria-hidden="true">|</span>
             <a class="navbar-github" href="https://github.com/testflows">
                 <span class="fab fa-github" aria-hidden="true"></span>
-                GitHub
+                <span class="navbar-github-label">GitHub</span>
             </a>
         </div>
     </div>
