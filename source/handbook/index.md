@@ -11,7 +11,7 @@ icon: fas fa-book pt-5 pb-5
 
 **{% testflows %}** is an open-source software testing framework that can be used for functional,
 integration, acceptance and unit testing across various teams. It is designed to provide
-complete control of how tests are written and executed by allowing to write tests and
+complete control of how tests are written and executed by allowing you to write tests and
 define test [flow](#Flow-is) explicitly as [Python] code. It uses [everything is a test] approach
 with the focus on giving test authors flexibility in writing and running their tests.
 It's designed to meet the needs of small QA groups at software startup companies
@@ -25,15 +25,15 @@ and could be executed in a hive mode on multi-node clusters.
 
 # Differentiating Features
 
-**{% testflows %}** has the following differentiating features that makes
-it stand out from a plenty of other open and closed source test frameworks.
+**{% testflows %}** has the following differentiating features that make
+it stand out from plenty of other open and closed source test frameworks.
 
 <div class="heading-h2">Flexible</div>
 
 The framework has many advanced features but it allows you to use only
 the pieces that you need. For example, if you don't want to use requirements
-you don't have to or if you don't want to break your tests into steps or
-using behavior driven step keywords that is perfectly fine.
+you don't have to, or if you don't want to break your tests into steps or
+use behavior driven step keywords, that is perfectly fine.
 At the heart, it is just a collection of Python modules so you are always
 in control and you are not forced to use anything that you don't need.
 
@@ -42,7 +42,7 @@ in control and you are not forced to use anything that you don't need.
 An enterprise quality assurance process must always revolve around ***requirements***.
 However, requirements are most often ignored in software development groups even at
 large companies. The framework is designed to break that trend
-and allows to write and work with requirements just like you work with code.
+and allows you to write and work with requirements just like you work with code.
 However, if you are not ready to use requirements then you don't have to.
 
 Whether you realize it or not the only **true purpose of writing any test is
@@ -75,8 +75,8 @@ of how you want to structure and approach the testing of a given project.
 
 Through its flexibility, **{% testflows %}** helps to avoid test tool fragmentation
 where each project in a company eventually starts to use their own test framework
-and nobody knows how to run tests written by other groups and reporting accross
-groups become inconsistent and difficult to follow.
+and nobody knows how to run tests written by other groups and reporting across
+groups becomes inconsistent and difficult to follow.
 
 <div class="heading-h2">Self-documenting tests</div>
 
@@ -125,7 +125,7 @@ tests to be run at the same time. Mixing parallel and asynchronous tests is also
 <div class="heading-h2">Combinatorial tests and covering arrays</div>
 
 Combinatorial tests are supported by allowing you to define tests and steps that can take arguments,
-as well as allowing to easily and naturally define tests that check different combinations using [TestSketch]es
+as well as allowing you to easily and naturally define tests that check different combinations using [TestSketch]es
 without writing any nested for-loops or calculating combinations beforehand.
 
 In addition, a convenient collection of tools used for combinatorial testing is provided
@@ -135,7 +135,7 @@ including calculation of [Covering Arrays] for pairwise and n-wise testing using
 
 It uses everything-is-a-test approach that allows unified treatment
 of any code that is executed during testing. There is no second class test code.
-If test fails during setup, teardown or execution of one of its actions,
+If a test fails during setup, teardown or execution of one of its actions,
 the failure is handled identically. This avoids mixing analysis of why the test failed
 with test execution and results in a clean and uniform approach to testing.
 
@@ -183,7 +183,7 @@ Also, feel free to click on any internal or external references, as you can
 use your browser's &#8678; back button to return to where you were.
 
 >  **{% attention %}** Try clicking [Using Handbook](#Using-Handbook) link and then
-> browser's use &#8678; back button to return to the same scroll position in the handbook.
+> use your browser's &#8678; back button to return to the same scroll position in the handbook.
 
 If you find any errors or would like to add documentation for something that is
 still not documented, then submit a pull request
@@ -903,7 +903,7 @@ def my_scenario(self):
 
 The best practice, however, is to wrap calls to decorated test steps with inline
 [Step]s which allows you to clearly give each [Step] a proper `name` in the context
-of the specific test scenario as well as allows to specify a detailed `description`
+of the specific test scenario as well as allows you to specify a detailed `description`
 when necessary.
 
 For example,
@@ -1167,7 +1167,7 @@ def regression(self):
     Scenario(run=testC)
 ```
 
-It is trivial to see that given that the order or test execution ([Flow]) is explicitely
+It is trivial to see that given that the order of test execution ([Flow]) is explicitly
 defined in `regression()` we could easily change it from `testA` -> `testB` -> `testC` to
 `testC` -> `testA` -> `testB`.
 
@@ -1736,7 +1736,7 @@ If we also want to set custom `examples`, you could do it as follows:
 Scenario(name="my new name", flags=PAUSE_BEFORE,
          examples=Examples("x y result", [
             (1,2,3), (2,2,4)
-         ], test=test)(x=1, y=1, result=2)
+         ]), test=test)(x=1, y=1, result=2)
 ```
 
 Similarly, any other attribute of the scenario can be set. If the same attribute
@@ -1934,7 +1934,7 @@ if needed, you can specify custom id value using [--id] test program option.
 
 In general, the most common use case when you need to specify custom [--id]
 is when you need to know [Top Level Test] id before running your test program.
-Therefore, you would generate [UUIDv1] externaly using for example `uuid` utility
+Therefore, you would generate [UUIDv1] externally using for example `uuid` utility
 
  ```bash
 uuid
@@ -3539,7 +3539,7 @@ These classes are usually used for the classification of checks during reporting
 ## Example
 
 An [Example] can only be defined inline using [Example] test definition class. There is no decorator
-to define it outside of existing test. An [Example] is of a [Test Type] and is used to define
+to define it outside of existing test. An [Example] is a sub-type of a [Test Type] and is used to define
 one or more sub-tests. Usually, [Example]s are created automatically using [Outline]s.
 
 ```python
@@ -3554,7 +3554,7 @@ with Scenario("My scenario"):
 ## Outline
 
 An [Outline] can be defined using [Outline] test definition class or [TestOutline] decorator.
-An [Outline] is a sub-type of a [Test] type but can you can change the type
+An [Outline] is a sub-type of a [Test] type but you can change the type
 by passing it another [Type] or a [Sub-Type] such as [Scenario] or [Suite] etc.
 
 However, because [Outline]s are meant to be called from other tests or used with [Examples]
@@ -3576,7 +3576,7 @@ outline()
 
 When [Examples] are defined for the [Outline] and an outline is called with no arguments from a test
 that is of a higher [Type] than the [Type] of outline itself, then when called, the outline will iterate over all
-the examples defined in the [Examples] table. For example,if you run the example above that executes the outline
+the examples defined in the [Examples] table. For example, if you run the example above that executes the outline
 with no arguments, you will see that the outline iterates over all the examples in the [Examples] table, where
 each example, a row in the examples table, defines the values of the arguments for the outline.
 
@@ -4090,7 +4090,7 @@ When custom command line argument parser is defined then the help messages obtai
 the description of the custom arguments. For example,
 
 ```bash
-python3 ./test.py
+python3 ./test.py --help
 ```
 ```bash
 ...
@@ -4102,7 +4102,7 @@ test arguments:
 
 # Filtering Tests By Name
 
-**{% testflows %}** allows to control which tests to run during any
+**{% testflows %}** allows you to control which tests to run during any
 specific test program run using advanced test filtering [pattern]s.
 Test filters can be either specified in the code or controlled using command line
 options.
@@ -4155,7 +4155,7 @@ For example,
 
 Internally **{% testflows %}** converts all [pattern]s into
 regular expressions but these expressions become very complex and therefore
-not practicle to be specified explicitely.
+not practical to be specified explicitly.
 
 Let's see how test filtering can be specified either using command line or inside the
 test program code.
@@ -4777,7 +4777,7 @@ can be accessed as long as the same context variable is not redefined by the cur
 test.
 
 The main use case for using `context` is to avoid passing along common arguments
-to sub-tests, and becuase `context`s enable them to pass **automatically**.
+to sub-tests, because `contexts` enable them to pass **automatically**.
 
 Also, test clean up functions can be added to the current test using `context`.
 See [Cleanup Functions](#Cleanup-Functions).
@@ -5367,7 +5367,7 @@ def feature(self):
 
 ## Using `load_module()`
 
-The [load_module() function] allows to load any module by specifying the module name.
+The [load_module() function] allows you to load any module by specifying the module name.
 
 For example,
 
@@ -5382,8 +5382,8 @@ def feature(self):
 
 > **{% attention %}** Available in version >= `2.1.2`
 
-Combinatorial testing is supported by allowing to define tests that can take arguments,
-as well as allowing to easily define tests that check different combinations using [TestSketch]es.
+Combinatorial testing is supported by allowing you to define tests that can take arguments,
+as well as allowing you to easily define tests that check different combinations using [TestSketch]es.
 
 In addition, a convenient collection of tools used for combinatorial testing is provided
 including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
@@ -6896,7 +6896,7 @@ def my_scenario(self):
     pass
 ```
 
-or you can specify `pattern` explicitely. For example,
+or you can specify `pattern` explicitly. For example,
 
 ```python
 @TestScenario
@@ -7174,7 +7174,7 @@ assert stopwatch.elapsed > 10
 
 # Using YML Config Files
 
-All the test programs have a common optional `--config` argument that allows to
+All the test programs have a common optional `--config` argument that allows you to
 specify one or more configuration files in [YML](https://yaml.org/) format.
 The configuration files can be used to specify either common test program arguments
 such as [--no-colors], [--output], etc. as well as custom
@@ -7263,7 +7263,7 @@ with Scenario("my test", argparser=argparser):
     pass
 ```
 
-and if you havee the following configuration file
+and if you have the following configuration file
 
 > `config.yml`
 >
@@ -8466,7 +8466,7 @@ where
 * `group` secret group (optional)
 * `uid` secret unique identifier (optional)
 
- When creating a secret,only the `name` is required, the other arguments `type`,
+When creating a secret, only the `name` is required, the other arguments `type`,
 `group`, `uid`, are optional.
 
 The name must be a valid regex group name as defined by Python's [re] module.
@@ -8717,7 +8717,7 @@ Here a simple tutorial to introduce you to using [testflows.texts].
     cmd = run(ls_a_command, shell=True, capture_output=True, text=True)
 
     assert cmd.returncode == 0, "returncode {cmd.returncode} is not 0"
-    assert ".hidden_file" in cmd.stdout, "hidden file '.hidden_file' in not in the outout"
+    assert ".hidden_file" in cmd.stdout, "hidden file '.hidden_file' is not in the output"
     ```
 
     ```bash

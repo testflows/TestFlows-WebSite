@@ -36,10 +36,10 @@ fullwidth: true
         <div class="about-close">
             <div class="about-close-copy">
                 <h2>Test with us</h2>
-                <p>Read the Handbook, explore the code, or say hello.</p>
+                <p>Read the handbook, explore the code, or say hello.</p>
             </div>
             <div class="about-close-actions">
-                <a class="section-cta" href="/handbook/">Read the Handbook</a>
+                <a class="section-cta" href="/handbook/">Read the handbook</a>
                 <a class="section-cta section-cta-ghost" href="https://github.com/testflows">GitHub</a>
                 <a class="section-cta section-cta-ghost" href="/contact.html">Contact</a>
             </div>
