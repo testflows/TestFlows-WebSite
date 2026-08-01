@@ -13,10 +13,10 @@ import {
   tokenCreate,
   tokenRevoke,
   tokenUpdate,
-} from "../api.js?v=1ab94989ba09";
-import { setStatus, showSpinner } from "../ui.js?v=1ab94989ba09";
-import { compactDatetime } from "./format.js?v=1ab94989ba09";
-import { runStepUp } from "./stepup.js?v=1ab94989ba09";
+} from "../api.js?v=e59a97fec363";
+import { setStatus, showSpinner } from "../ui.js?v=e59a97fec363";
+import { compactDatetime } from "./format.js?v=e59a97fec363";
+import { runStepUp } from "./stepup.js?v=e59a97fec363";
 
 /**
  * @param {HTMLElement} panel

@@ -6,10 +6,10 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getTransactions } from "../api.js?v=1ab94989ba09";
-import { setStatus, showSpinner } from "../ui.js?v=1ab94989ba09";
-import { compactDatetime, eur, eurSigned, titleCase } from "./format.js?v=1ab94989ba09";
-import { enhanceSelects } from "./select.js?v=1ab94989ba09";
+import { ApiError, getTransactions } from "../api.js?v=e59a97fec363";
+import { setStatus, showSpinner } from "../ui.js?v=e59a97fec363";
+import { compactDatetime, eur, eurSigned, titleCase } from "./format.js?v=e59a97fec363";
+import { enhanceSelects } from "./select.js?v=e59a97fec363";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {

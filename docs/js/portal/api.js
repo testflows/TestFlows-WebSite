@@ -21,9 +21,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=1ab94989ba09";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=1ab94989ba09";
-import { setSession, clearSession } from "./session.js?v=1ab94989ba09";
+import { solve, currentBucket } from "./hashcash.js?v=e59a97fec363";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=e59a97fec363";
+import { setSession, clearSession } from "./session.js?v=e59a97fec363";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -289,6 +289,28 @@ export async function getAccount() {
     return resp.data;
   }
   fail(resp, "Could not load account.");
+}
+
+/** Signed-in devices (active login sessions), newest-active first. */
+export async function getDevices() {
+  const resp = await request("GET", "/account/devices", null);
+  if (resp.status === 200 && Array.isArray(resp.data)) {
+    return resp.data;
+  }
+  fail(resp, "Could not load devices.");
+}
+
+/** Sign out one device by its session id. @param {string} sessionId */
+export async function revokeDevice(sessionId) {
+  const resp = await request(
+    "DELETE",
+    `/account/devices/${encodeURIComponent(sessionId)}`,
+    null
+  );
+  if (resp.status === 204) {
+    return;
+  }
+  fail(resp, "Could not sign out device.");
 }
 
 /**

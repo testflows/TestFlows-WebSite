@@ -291,6 +291,28 @@ export async function getAccount() {
   fail(resp, "Could not load account.");
 }
 
+/** Signed-in devices (active login sessions), newest-active first. */
+export async function getDevices() {
+  const resp = await request("GET", "/account/devices", null);
+  if (resp.status === 200 && Array.isArray(resp.data)) {
+    return resp.data;
+  }
+  fail(resp, "Could not load devices.");
+}
+
+/** Sign out one device by its session id. @param {string} sessionId */
+export async function revokeDevice(sessionId) {
+  const resp = await request(
+    "DELETE",
+    `/account/devices/${encodeURIComponent(sessionId)}`,
+    null
+  );
+  if (resp.status === 204) {
+    return;
+  }
+  fail(resp, "Could not sign out device.");
+}
+
 /**
  * @param {Record<string, string|number|boolean|undefined|null>} [params]
  */

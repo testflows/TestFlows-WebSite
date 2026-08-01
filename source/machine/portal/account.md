@@ -25,6 +25,7 @@ permalink: machine/portal/account/index.html
                     <option value="invoices" data-portal-nav="invoices">Invoices</option>
                     <option value="orders" data-portal-nav="orders">Orders</option>
                     <option value="keys" data-portal-nav="keys">API keys</option>
+                    <option value="devices" data-portal-nav="devices">Devices</option>
                     <option value="storage" data-portal-nav="storage">Storage</option>
                     <option value="settings" data-portal-nav="settings">Settings</option>
                 </select>
@@ -38,6 +39,7 @@ permalink: machine/portal/account/index.html
                 <a href="#invoices" data-portal-nav="invoices"><span class="fas fa-fw fa-file-invoice" aria-hidden="true"></span><span>Invoices</span></a>
                 <a href="#orders" data-portal-nav="orders"><span class="fas fa-fw fa-box" aria-hidden="true"></span><span>Orders</span></a>
                 <a href="#keys" data-portal-nav="keys"><span class="fas fa-fw fa-key" aria-hidden="true"></span><span>API keys</span></a>
+                <a href="#devices" data-portal-nav="devices"><span class="fas fa-fw fa-laptop" aria-hidden="true"></span><span>Devices</span></a>
                 <a href="#storage" data-portal-nav="storage"><span class="fas fa-fw fa-hard-drive" aria-hidden="true"></span><span>Storage</span></a>
                 <a href="#settings" data-portal-nav="settings"><span class="fas fa-fw fa-gear" aria-hidden="true"></span><span>Settings</span></a>
             </nav>
@@ -63,6 +65,7 @@ permalink: machine/portal/account/index.html
             <div class="portal-dash-panel" data-portal-panel="invoices" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="orders" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="keys" hidden></div>
+            <div class="portal-dash-panel" data-portal-panel="devices" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="storage" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="settings" hidden></div>
         </main>
