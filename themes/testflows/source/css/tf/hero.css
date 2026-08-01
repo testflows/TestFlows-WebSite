@@ -47,21 +47,20 @@
     z-index: 1;
     width: 100%;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
-    grid-template-rows: auto auto;
-    column-gap: clamp(1.25rem, 3vw, 2.5rem);
-    row-gap: 0.75rem;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
     box-sizing: border-box;
 }
 
 .banner-text {
-    grid-column: 1;
-    grid-row: 1;
+    flex: 0 0 auto;
+    align-self: stretch;
     text-align: left;
-    padding: 0.25rem 0 0;
+    padding: 0.25rem 0 0.85rem;
     max-width: none;
+    width: 100%;
 }
 
 .banner-text h1,
@@ -83,7 +82,7 @@
     font-size: clamp(1.05rem, 1.8vw, 1.25rem);
     line-height: 1.5;
     margin: 0 0 1.1rem;
-    max-width: 36rem;
+    max-width: none;
     text-align: left;
 }
 
@@ -113,15 +112,12 @@
 }
 
 .banner-links {
-    grid-column: 1;
-    grid-row: 2;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 1.1rem;
-    margin: 0;
-    padding: 0.85rem 0 1.25rem;
-    align-self: end;
+    margin: 0 0 1.5rem;
+    padding: 2.5em 0 0;
 }
 
 .banner-links a {
@@ -140,17 +136,15 @@
 }
 
 .banner-visual {
-    grid-column: 2;
-    grid-row: 1 / span 2;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     width: 100%;
+    flex: 0 0 auto;
     min-height: 0;
     margin: 0;
-    padding: 0.25rem 0 1.25rem;
+    padding: 2em 0 0;
     overflow: visible;
-    align-self: center;
 }
 
 .banner-sphere-frame {
@@ -180,19 +174,11 @@
 
 @media (max-width: 991.98px) {
     .banner {
-        min-height: 0;
+        min-height: calc(100dvh - var(--tf-nav-height));
         padding-top: 0.75rem;
     }
 
-    .banner-inner {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-        row-gap: 0;
-    }
-
     .banner-text {
-        grid-column: 1;
-        grid-row: auto;
         padding: 0.15rem 0 0.7rem;
     }
 
@@ -217,19 +203,9 @@
         gap: 0.6rem;
     }
 
-    .banner-visual {
-        grid-column: 1;
-        grid-row: auto;
-        padding: 1.25rem 0 0;
-        align-self: stretch;
-    }
-
     .banner-links {
-        grid-column: 1;
-        grid-row: auto;
-        justify-content: center;
         margin: 0 0 1.25rem;
-        padding-top: 1.5rem;
+        padding-top: 2.5em;
         gap: 0.95rem;
     }
 
@@ -241,4 +217,3 @@
         --banner-radius: 1rem;
     }
 }
-
