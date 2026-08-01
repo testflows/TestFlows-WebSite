@@ -62,7 +62,15 @@ export function eurSigned(micros, dp = 2) {
  */
 function parseDt(ts) {
   if (!ts) return null;
-  const d = new Date(ts);
+  // The API sends NAIVE UTC datetimes (no offset), matching the DB. JS parses a bare
+  // "YYYY-MM-DDTHH:MM:SS" as LOCAL time, which skews every relative age by the viewer's
+  // UTC offset (e.g. all "just now" on a machine behind UTC). Treat a naive value as
+  // UTC — the same convention the CLI/TUI _parse_dt uses.
+  let value = String(ts).replace(" ", "T");
+  if (!/(?:Z|[+-]\d\d:?\d\d)$/i.test(value)) {
+    value += "Z";
+  }
+  const d = new Date(value);
   return Number.isNaN(d.getTime()) ? null : d;
 }
 
@@ -125,10 +133,11 @@ export function since(ts) {
 }
 
 /**
+ * Compact duration up to two units — mirrors client/core/format.py `duration`.
  * @param {number} secs
  * @returns {string}
  */
-function duration(secs) {
+export function duration(secs) {
   let s = Math.max(0, Math.trunc(secs));
   const d = Math.trunc(s / 86400);
   s %= 86400;
@@ -140,6 +149,20 @@ function duration(secs) {
   if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`;
   if (m > 0) return `${m}m`;
   return `${sec}s`;
+}
+
+/**
+ * Compact span between two ISO instants — mirrors client/core/format.py `elapsed`.
+ * @param {string} startTs
+ * @param {string} [endTs]
+ * @returns {string}
+ */
+export function elapsed(startTs, endTs) {
+  const start = parseDt(startTs);
+  if (!start) return "";
+  const end = endTs ? parseDt(endTs) : new Date();
+  if (!end) return "";
+  return duration((end.getTime() - start.getTime()) / 1000);
 }
 
 /**
