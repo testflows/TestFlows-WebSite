@@ -13,8 +13,12 @@
  * Homepage demos: type test.py on scroll, then reveal the paired terminal
  * line-by-line (idle state is a green $).
  *
- * Always plays (GNOME “reduce animation” maps to prefers-reduced-motion in
- * Chromium and would otherwise skip these demos). Opt out: ?animate=0
+ * Per-panel opt-in: add class `index-code-animate` on the `.index-start-step`
+ * (or panel) that wraps the test.py figure. Without it, the block stays static.
+ *
+ * Global opt-out (wins over per-panel): ?animate=0 or localStorage tf-animate=0
+ * (GNOME “reduce animation” maps to prefers-reduced-motion in Chromium, so we
+ * do not honor that media query here — demos would never play.)
  */
 (function () {
   "use strict";
@@ -34,15 +38,12 @@
     })();
 
   /**
+   * Panels marked with `.index-code-animate` that contain a test.py figure.
    * @returns {HTMLElement[]}
    */
   function findTestPyFigures() {
     return Array.prototype.slice
-      .call(document.querySelectorAll(".index-start-step"))
-      .filter(function (step) {
-        var file = step.querySelector(".index-start-step-file");
-        return file && /test\.py/i.test(file.textContent || "");
-      })
+      .call(document.querySelectorAll(".index-code-animate"))
       .map(function (step) {
         return step.querySelector("figure.highlight");
       })
