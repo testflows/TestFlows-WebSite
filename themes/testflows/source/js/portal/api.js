@@ -13,10 +13,12 @@
  * the header both selects the cookie credential server-side and is the CSRF guard
  * (a cross-site page can't set it without a preflight the origin allowlist rejects).
  *
- * An authed call that returns 401 transparently rotates the cookie once (via
- * `/login/refresh`) and retries — so an idle-expired token refreshes without the
- * user noticing. The PoW handshake mirrors client/api/client.py. Every failure path
- * goes through fail() → friendlyApiError so the portal never shows raw API codes.
+ * Sessions are kept fresh PROACTIVELY: the shell rotates the cookie on boot when
+ * `refreshDue()` (while it's still valid). The 401->refresh->retry below is only a
+ * best-effort fallback — it can recover a still-valid cookie that raced a revoke,
+ * but an already-expired cookie can't refresh itself, so that path ends in re-login.
+ * The PoW handshake mirrors client/api/client.py. Every failure path goes through
+ * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
 import { solve, currentBucket } from "./hashcash.js";
