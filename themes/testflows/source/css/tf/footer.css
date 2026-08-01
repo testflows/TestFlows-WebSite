@@ -36,7 +36,7 @@ footer .btn {
 }
 
 .site-footer-col h3 {
-    color: var(--tf-text-strong);
+    color: var(--tf-text-muted);
     font-size: 0.95rem;
     font-weight: 600;
     text-align: left;
@@ -55,7 +55,7 @@ footer .btn {
 }
 
 .site-footer-col a {
-    color: var(--tf-accent);
+    color: var(--tf-text);
     font-size: 0.95rem;
     font-weight: 400;
     text-decoration: none;
@@ -91,7 +91,7 @@ footer .btn {
 
 .site-footer-bottom a:hover,
 .site-footer-bottom a:focus {
-    color: var(--tf-accent);
+    color: var(--tf-text-strong);
 }
 
 .site-footer-social {
@@ -108,7 +108,7 @@ footer .btn {
 
 .site-footer-social a:hover,
 .site-footer-social a:focus {
-    color: var(--tf-accent);
+    color: var(--tf-text-strong);
 }
 
 @media (max-width: 767.98px) {
