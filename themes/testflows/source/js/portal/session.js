@@ -64,7 +64,13 @@ function secondsUntil(expiresAt) {
   if (!expiresAt) {
     return undefined;
   }
-  const ms = Date.parse(expiresAt) - Date.now();
+  // The API sends a NAIVE UTC expiry (no offset); Date.parse reads a bare timestamp as
+  // LOCAL, which would skew the cookie Max-Age by the viewer's offset. Treat as UTC.
+  let value = String(expiresAt).replace(" ", "T");
+  if (!/(?:Z|[+-]\d\d:?\d\d)$/i.test(value)) {
+    value += "Z";
+  }
+  const ms = Date.parse(value) - Date.now();
   if (!Number.isFinite(ms) || ms <= 0) {
     return undefined;
   }
