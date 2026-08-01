@@ -82,6 +82,12 @@ export function friendlyApiError(data, status, fallback) {
     return "Billing required for this action.";
   }
   if (status === 403) {
+    // A 403 detail is authored for the token holder (e.g. the sign-up
+    // allowlist, "account not active") — show a human server message verbatim,
+    // fall back to generic only for a bare code / no message.
+    if (code && !/^[a-z][a-z0-9_]*$/.test(code)) {
+      return code;
+    }
     return "Not allowed right now.";
   }
   if (status === 404) {
