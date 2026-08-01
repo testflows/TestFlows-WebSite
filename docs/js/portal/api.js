@@ -21,9 +21,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=e59a97fec363";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=e59a97fec363";
-import { setSession, clearSession } from "./session.js?v=e59a97fec363";
+import { solve, currentBucket } from "./hashcash.js?v=ad83371e5d67";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=ad83371e5d67";
+import { setSession, clearSession } from "./session.js?v=ad83371e5d67";
 
 const MAX_POW_ROUNDS = 5;
 
