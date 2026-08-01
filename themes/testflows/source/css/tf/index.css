@@ -1,8 +1,9 @@
 /* ==========================================================================
-   Index page — why / start / journal / close
+   Index page — why / start / steps / journal / close
    Flat flow (hero keeps wave; no elevated chapter boxes)
    ========================================================================== */
 .index-start,
+.index-steps,
 .index-why,
 .index-journal,
 .index-close {
@@ -12,12 +13,56 @@
     border-top: none;
 }
 
+/* Soft alternating bands — break the flat page without loud color */
+.index-why {
+    background-color: var(--tf-section-soft-a);
+    background-image: radial-gradient(
+        120% 70% at 50% -10%,
+        var(--tf-section-wash-a),
+        transparent 58%
+    );
+}
+
 .index-start {
+    background-color: var(--tf-section-soft-b);
+}
+
+.index-steps {
+    background-color: var(--tf-section-soft-c);
+    background-image: radial-gradient(
+        90% 80% at 85% 20%,
+        var(--tf-section-wash-c),
+        transparent 55%
+    );
+}
+
+.index-journal {
+    background-color: var(--tf-section-soft-d);
+    background-image: radial-gradient(
+        100% 70% at 15% 0%,
+        var(--tf-section-wash-d),
+        transparent 55%
+    );
+}
+
+.index-close {
+    background-color: var(--tf-section-soft-a);
+    background-image: radial-gradient(
+        110% 80% at 50% 120%,
+        var(--tf-section-wash-a),
+        transparent 55%
+    );
+}
+
+.index-start,
+.index-steps {
     padding: 3.5rem 0 4.5rem;
 }
 
 .index-start .index-block-title,
-.index-start h2 {
+.index-start h2,
+.index-steps .index-block-title,
+.index-steps h2 {
     color: var(--tf-text-strong);
     font-weight: 600;
     font-size: clamp(2rem, 4vw, 2.65rem);
@@ -25,17 +70,136 @@
     text-align: left;
 }
 
-.index-start .index-block-lead {
+.index-start .index-block-lead,
+.index-steps .index-block-lead {
     color: var(--tf-text-muted);
     font-size: clamp(1.05rem, 2vw, 1.25rem);
     line-height: 1.45;
     text-align: left;
-    max-width: none;
+    max-width: 42rem;
     margin: 0 0 2.5rem;
 }
 
 .index-start .index-block-lead p {
     margin: 0;
+}
+
+.index-steps .index-start-step-story code {
+    color: var(--tf-text-strong);
+    font-size: 0.95em;
+}
+
+/* Code left, terminal below and offset right — same box chrome as .index-start */
+.index-steps-cascade {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin: 0 0 2rem;
+    max-width: 56rem;
+}
+
+.index-steps-panel {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 0;
+    /* Override .index-start-step’s large bottom margin — cascade gap owns spacing */
+    padding-bottom: 0;
+}
+
+.index-steps-panel.index-start-step {
+    margin-bottom: 0;
+}
+
+.index-steps-panel figure.highlight,
+.index-steps-panel .index-steps-result {
+    margin-bottom: 0;
+}
+
+/*
+ * One outline stack slid down-right.
+ * Punch with section band color + 1px line = hollow frame (always paints).
+ * Y offset slightly tighter than X so the bottom gap doesn’t look oversized.
+ */
+.index-steps .index-panel-chrome {
+    --index-stack-x: 0.7rem;
+    --index-stack-y: 0.4rem;
+    position: relative;
+    z-index: 1;
+    margin: 0 var(--index-stack-x) var(--index-stack-y) 0;
+    border-radius: 1.25rem 1.25rem 0 0;
+    box-shadow:
+        var(--index-stack-x) var(--index-stack-y) 0 0 var(--tf-section-soft-c),
+        var(--index-stack-x) var(--index-stack-y) 0 1px rgba(var(--tf-fg-rgb), 0.42);
+}
+
+/* Drop soft blur shelf on steps — the outline stack carries depth */
+.index-steps-panel.index-start-step::after {
+    display: none;
+}
+
+.index-steps .index-panel-chrome figure.highlight,
+.index-steps .index-panel-chrome .index-steps-result {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05) inset !important;
+}
+
+/* Kill start-demo sizing — leftover margin-bottom was stretching the outline */
+.index-steps .index-panel-chrome figure.highlight {
+    flex: 0 0 auto;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding-bottom: 0.85rem;
+}
+
+.index-steps-cascade,
+.index-steps-panel,
+.index-steps .index-panel-chrome {
+    overflow: visible;
+}
+
+.index-steps-panel--run .index-start-step-story,
+.index-steps-panel--run .index-start-step-story p {
+    margin-bottom: 0.55rem;
+    max-width: 36rem;
+}
+
+@media (min-width: 768px) {
+    .index-steps-panel--code {
+        align-self: flex-start;
+        width: 72%;
+        max-width: 34rem;
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 0;
+    }
+
+    .index-steps-panel--run {
+        align-self: flex-end;
+        /* Wide enough for Handbook nice-format lines (~82 chars) without scroll */
+        width: min(100%, 48rem);
+        max-width: 48rem;
+        margin-left: auto;
+        margin-top: 0;
+        padding-left: 0;
+        padding-right: 0;
+        margin-bottom: 0;
+    }
+
+    /* Cascade panels are shorter than the side-by-side start demos */
+    .index-steps-panel figure.highlight {
+        min-height: 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    .index-steps-cascade {
+        max-width: 60rem;
+    }
+
+    .index-steps-panel--run {
+        width: min(100%, 52rem);
+        max-width: 52rem;
+    }
 }
 
 .index-start-steps {
@@ -80,11 +244,11 @@
 .index-start-step-file,
 .index-start-step-file p {
     color: rgba(var(--tf-terminal-fg-rgb), 0.55);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 400;
     margin: 0;
-    letter-spacing: 0.02em;
-    line-height: 1.2;
+    letter-spacing: 0.03em;
+    line-height: 1.15;
     text-align: left;
 }
 
@@ -92,11 +256,29 @@
     position: relative;
     z-index: 1;
     margin: 0;
-    padding: 0.85rem 1.5rem 0.55rem;
+    /* Extra right pad for mac traffic-light dots */
+    padding: 0.4rem 2.85rem 0.3rem 1rem;
     background: var(--tf-terminal-bg);
     border: 1px solid rgba(var(--tf-terminal-fg-rgb), 0.18);
     border-bottom: 1px solid rgba(var(--tf-terminal-fg-rgb), 0.08);
     border-radius: 1.25rem 1.25rem 0 0;
+}
+
+/* Mac window dots — on the right; order still red → yellow → green */
+.index-start-step-file::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0.85rem;
+    width: 0.42rem;
+    height: 0.42rem;
+    margin-top: -0.21rem;
+    border-radius: 50%;
+    background: #28c840;
+    box-shadow:
+        -0.65rem 0 0 #febc2e,
+        -1.3rem 0 0 #ff5f57;
+    pointer-events: none;
 }
 
 .index-start-step figure.highlight {
@@ -107,7 +289,9 @@
     min-width: 0;
     max-width: 100%;
     margin: 0 0 1.75rem;
-    font-size: 1.12rem;
+    /* Shared with .index-steps — compact monospace for all homepage demos */
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.88rem;
 }
 
 .index-start-step figure.highlight table {
@@ -137,6 +321,30 @@
     white-space: pre;
 }
 
+/* Typewriter caret for test.py panels (index-code-type.js) */
+.index-code-caret {
+    display: inline-block;
+    width: 0.55ch;
+    height: 1.05em;
+    margin-left: 1px;
+    background: #06f996;
+    vertical-align: text-bottom;
+    animation: index-code-caret-blink 0.9s step-end infinite;
+}
+
+@keyframes index-code-caret-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .index-code-caret {
+        display: none;
+        animation: none;
+    }
+}
+
 @media (min-width: 768px) {
     .index-start-steps {
         margin-left: -0.75rem;
@@ -159,7 +367,7 @@
 
     .index-start-step figure.highlight {
         min-height: 15.5rem;
-        font-size: 1.05rem;
+        font-size: 0.82rem;
         padding: 0.7rem 1.25rem 1.55rem;
     }
 }
@@ -555,8 +763,18 @@
     }
 }
 
+/* Radical section panel colors — shared by code + terminal within a section */
+.index-start {
+    --tf-terminal-bg: var(--tf-terminal-bg-start);
+}
+
+.index-steps {
+    --tf-terminal-bg: var(--tf-terminal-bg-steps);
+}
+
 /* Dark terminals — softer charcoal, light border, glass under */
-.index-start figure.highlight {
+.index-start figure.highlight,
+.index-steps figure.highlight {
     --index-term-radius: 1.25rem;
     position: relative;
     background: var(--tf-terminal-bg) !important;
@@ -567,6 +785,8 @@
     /* Keep panel chrome clipped; long lines scroll inside the table */
     overflow: hidden;
     max-width: 100%;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.88rem;
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.05) inset,
         0 28px 56px rgba(0, 0, 0, 0.36),
@@ -593,7 +813,8 @@
     z-index: 0;
 }
 
-[data-theme="light"] .index-start figure.highlight {
+[data-theme="light"] .index-start figure.highlight,
+[data-theme="light"] .index-steps figure.highlight {
     box-shadow:
         0 1px 0 rgba(255, 255, 255, 0.06) inset,
         0 28px 56px rgba(var(--tf-fg-rgb), 0.16),
@@ -612,58 +833,302 @@
 .index-start figure.highlight pre,
 .index-start figure.highlight code,
 .index-start figure.highlight .code,
-.index-start figure.highlight .line {
+.index-start figure.highlight .line,
+.index-steps figure.highlight pre,
+.index-steps figure.highlight code,
+.index-steps figure.highlight .code,
+.index-steps figure.highlight .line {
     background: transparent !important;
     color: #e8f5f2 !important;
+    /* Beat highlight.css `pre { font-size: 0.85em }` — nested pre was
+       shrinking code but not gutter (gutter had inherit), so numbers drifted. */
+    font-size: inherit !important;
+    line-height: inherit !important;
 }
 
-.index-start figure.highlight .gutter {
+.index-start figure.highlight .gutter,
+.index-steps figure.highlight .gutter {
     width: 1.6em;
     min-width: 1.6em;
     max-width: 1.6em;
     color: rgba(var(--tf-terminal-fg-rgb), 0.32);
     border-right: 1px solid rgba(var(--tf-terminal-fg-rgb), 0.12);
     padding: 0 0.45em 0 0;
+    font-size: inherit;
+    line-height: inherit;
 }
 
 .index-start figure.highlight .gutter pre,
-.index-start figure.highlight .gutter .line {
+.index-start figure.highlight .gutter .line,
+.index-steps figure.highlight .gutter pre,
+.index-steps figure.highlight .gutter .line {
     color: rgba(var(--tf-terminal-fg-rgb), 0.32) !important;
     background: transparent !important;
-    font-size: 0.85em;
+    /* highlight.css sets pre { overflow: auto } — scrollbar shows as a bar in the gutter */
+    overflow: visible !important;
 }
 
-.index-start figure.highlight .code {
+.index-start figure.highlight .code,
+.index-steps figure.highlight .code {
     padding-left: 0.75em;
 }
 
-.index-start pre .comment {
+.index-start pre .comment,
+.index-steps pre .comment {
     color: #6fd9a8 !important;
 }
 
-.index-start pre .keyword {
+.index-start pre .keyword,
+.index-steps pre .keyword {
     color: #b59cff !important;
 }
 
-.index-start pre .string {
+.index-start pre .string,
+.index-steps pre .string {
     /* Keep mint on dark panels — never theme accent (near-black in light) */
     color: #06f996 !important;
 }
 
 .index-start pre .number,
 .index-start pre .built_in,
-.index-start pre .literal {
+.index-start pre .literal,
+.index-steps pre .number,
+.index-steps pre .built_in,
+.index-steps pre .literal {
     color: #ffb070 !important;
 }
 
 .index-start pre .function,
 .index-start pre .title,
-.index-start pre .python .title {
+.index-start pre .python .title,
+.index-steps pre .function,
+.index-steps pre .title,
+.index-steps pre .python .title {
     color: #8ec8ff !important;
 }
 
-.index-start pre .params {
+.index-start pre .params,
+.index-steps pre .params {
     color: #d7ebe6 !important;
+}
+
+/* —— Steps demo: Handbook nice-format sample (animated reveal) ——
+   Match .index-start figure.highlight terminal chrome. */
+.index-steps-result {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 auto;
+    /* 9 nice-format lines + padding — sized up front so reveal doesn't grow the box */
+    --index-steps-term-lines: 9;
+    --index-steps-term-lh: 1.45;
+    min-height: calc(
+        0.85rem + 1.85rem + (var(--index-steps-term-lines) * 0.88rem * var(--index-steps-term-lh))
+    );
+    margin: 0 0 1.75rem;
+    background: var(--tf-terminal-bg) !important;
+    border: 1px solid rgba(var(--tf-terminal-fg-rgb), 0.18);
+    border-top: none;
+    border-radius: 0;
+    padding: 0.85rem 1.35rem 1.85rem 0.85rem;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.05) inset,
+        0 28px 56px rgba(0, 0, 0, 0.36),
+        0 10px 28px rgba(0, 0, 0, 0.22);
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    color: #e8f5f2;
+    /* Same monospace stack/size as homepage codeblocks */
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.88rem;
+}
+
+[data-theme="light"] .index-steps-result {
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.06) inset,
+        0 28px 56px rgba(var(--tf-fg-rgb), 0.16),
+        0 10px 28px rgba(var(--tf-fg-rgb), 0.09);
+}
+
+.index-steps-result-pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1.45;
+    white-space: pre;
+    min-width: max-content;
+}
+
+/* Idle prompt: green $ while no output lines are visible yet */
+.index-term-prompt {
+    display: none;
+    margin: 0;
+    padding: 0;
+    color: #06f996;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 600;
+    line-height: 1.45;
+}
+
+.index-term-dollar {
+    color: #06f996;
+    font-weight: 600;
+}
+
+.index-steps-result[data-scripted="1"]:not(:has(.index-steps-line.is-visible)) .index-term-prompt,
+.index-start-step figure.highlight[data-scripted="1"]:not(:has(.code .line.is-visible)) .index-term-prompt {
+    display: block;
+}
+
+/* Awaiting first line: hide wide output — kills empty-state scrollbars */
+.index-steps-result[data-scripted="1"]:not(:has(.index-steps-line.is-visible)) {
+    overflow: hidden;
+}
+
+.index-steps-result[data-scripted="1"]:not(:has(.index-steps-line.is-visible)) .index-steps-result-pre {
+    display: none;
+    min-width: 0;
+}
+
+.index-start-step figure.highlight[data-scripted="1"]:not(:has(.code .line.is-visible)) {
+    overflow: hidden;
+}
+
+.index-start-step figure.highlight[data-scripted="1"]:not(:has(.code .line.is-visible)) table,
+.index-start-step figure.highlight[data-scripted="1"]:not(:has(.code .line.is-visible)) .code,
+.index-start-step figure.highlight[data-scripted="1"]:not(:has(.code .line.is-visible)) pre {
+    overflow: hidden !important;
+}
+
+/* Visible by default (no-JS). Sequenced reveal once scripted. */
+.index-steps-line {
+    display: block;
+}
+
+.index-steps-result[data-scripted="1"] .index-steps-line:not(.is-visible) {
+    display: none;
+}
+
+.index-steps-result[data-scripted="1"] .index-steps-line.is-visible {
+    display: block;
+    opacity: 0;
+    transform: translateY(0.25rem);
+    animation: index-term-line-in 0.16s ease forwards;
+}
+
+.index-start-step figure.highlight[data-scripted="1"] .code .line:not(.is-visible) {
+    display: none !important;
+}
+
+.index-start-step figure.highlight[data-scripted="1"] .code .line.is-visible {
+    display: block !important;
+    opacity: 0;
+    transform: translateY(0.25rem);
+    animation: index-term-line-in 0.16s ease forwards;
+}
+
+.index-start-step figure.highlight[data-scripted="1"] .code .line:not(.is-visible) + br {
+    display: none !important;
+}
+
+@keyframes index-term-line-in {
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+.index-steps-line--cmd {
+    color: rgba(232, 245, 242, 0.72);
+}
+
+.index-steps-line--dim {
+    color: rgba(232, 245, 242, 0.45);
+}
+
+.index-steps-line--ok {
+    color: #06f996;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .index-steps-result[data-scripted="1"] .index-steps-line.is-visible,
+    .index-start-step figure.highlight[data-scripted="1"] .code .line.is-visible {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+}
+
+.index-steps-points {
+    margin: 0.75rem -0.75rem 2rem;
+    width: auto;
+    max-width: none;
+}
+
+.index-steps-point {
+    margin-bottom: 1.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    text-align: center;
+}
+
+.index-steps-point h3 {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin: 0 0 0.45rem;
+}
+
+.index-steps-point p {
+    color: var(--tf-text-muted);
+    font-size: 1.05rem;
+    line-height: 1.45;
+    margin: 0 auto;
+    max-width: 18rem;
+}
+
+@media (min-width: 768px) {
+    .index-steps-point {
+        margin-bottom: 0;
+    }
+}
+
+.index-steps-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+}
+
+.index-steps-cta .section-cta-ghost {
+    margin-left: 0;
+    max-width: 100%;
+    text-align: left;
+    white-space: normal;
+    line-height: 1.35;
+}
+
+.index-steps-cta .section-cta-ghost .fas {
+    flex: 0 0 auto;
+    font-size: 0.95em;
+    opacity: 0.85;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
 /* Legacy section styles (non-index pages / leftover markup) */

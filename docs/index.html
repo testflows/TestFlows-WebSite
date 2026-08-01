@@ -29,34 +29,34 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785563801867" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/about.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1785563801867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785555541964" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1785563801867" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -260,11 +260,55 @@
 <div class="index-start-step-story"><p>Execute it like any other script. You get a clear pass, a scenario count, and a time. Then keep building.</p></div>
 <div class="index-start-step-file"><p>terminal</p></div>
 
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 ./test.py</span></span><br><span class="line">✔ [ OK ] /Hello TestFlows</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br><span class="line">Total time 2ms</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 ./test.py</span></span><br><span class="line">✔ [ OK ] /Hello TestFlows</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br><span class="line">Total time 2ms</span><br></pre></td></tr></table></figure>
 </div>
 </div>
 </div>
 </div>
+
+<section class="index-steps">
+<div class="container">
+<h2 class="index-block-title">Using test steps</h2>
+<p class="index-block-lead">Break the procedure into steps. Each step is a named result — easier to read, debug, and reuse.</p>
+<div class="index-steps-cascade">
+<div class="index-start-step index-steps-panel index-steps-panel--code">
+<div class="index-panel-chrome">
+<div class="index-start-step-file"><p>test.py</p></div>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Given(<span class="string">&quot;I setup something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> When(<span class="string">&quot;I do something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Then(<span class="string">&quot;I expect something&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+</div>
+</div>
+<div class="index-start-step index-steps-panel index-steps-panel--run">
+<div class="index-start-step-story"><p>Test output will show each step executing and its result.</p></div>
+<div class="index-panel-chrome">
+<div class="index-start-step-file"><p>terminal</p></div>
+<div class="index-steps-result" aria-hidden="true">
+<pre class="index-steps-result-pre"><span class="index-steps-line index-steps-line--cmd" style="--i:0"><span class="index-term-dollar">$</span> python3 ./test.py</span><span class="index-steps-line" style="--i:1">Nov 12,2021 10:56:17   ⟥  Scenario my scenario</span><span class="index-steps-line" style="--i:2">Nov 12,2021 10:56:17     ⟥  Given I setup something, flags:MANDATORY</span><span class="index-steps-line index-steps-line--ok" style="--i:3">               305us     ⟥⟤ OK I setup something, /my scenario/I setup something</span><span class="index-steps-line" style="--i:4">Nov 12,2021 10:56:17     ⟥  When I do something</span><span class="index-steps-line index-steps-line--ok" style="--i:5">               165us     ⟥⟤ OK I do something, /my scenario/I do something</span><span class="index-steps-line" style="--i:6">Nov 12,2021 10:56:17     ⟥  Then I expect something</span><span class="index-steps-line index-steps-line--ok" style="--i:7">               225us     ⟥⟤ OK I expect something, /my scenario/I expect something</span><span class="index-steps-line index-steps-line--ok" style="--i:8">                 7ms   ⟥⟤ OK my scenario, /my scenario</span></pre>
+</div>
+</div>
+<p class="visually-hidden">Example output: Scenario my scenario with Given, When, and Then steps each reporting OK.</p>
+</div>
+</div>
+<div class="row index-steps-points">
+<div class="col-12 col-md-4 index-steps-point">
+<h3>Structure</h3>
+<p>Improves how the procedure is written</p>
+</div>
+<div class="col-12 col-md-4 index-steps-point">
+<h3>Debug</h3>
+<p>Failures show which step broke</p>
+</div>
+<div class="col-12 col-md-4 index-steps-point">
+<h3>Document</h3>
+<p>Step names become the specification</p>
+</div>
+</div>
+<div class="index-steps-cta">
+<a class="section-cta" href="/handbook/#Using-Test-Steps">How to use test steps</a>
+<a class="section-cta section-cta-ghost" href="/blog/how-to-break-your-tests-into-steps/"><span class="fas fa-file-lines" aria-hidden="true"></span> Making Your Tests Better or How to Break Your Tests Into Steps</a>
+</div>
+</div>
+</section>
 
 <section class="index-journal">
     <div class="container">
@@ -272,7 +316,8 @@
             <h2 class="index-block-title">Always learning</h2>
             <p class="index-block-lead">From the TestFlows blog.</p>
         </div>
-        <div class="row index-journal-feature"><div class="col-md-5 index-journal-col"><a class="index-journal-media" href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/"><img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)"></a></div><div class="col-md-7 index-journal-col"><article class="index-journal-copy"><h3><a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</a></h3><div class="index-journal-meta"><span class="index-journal-author">Vitaliy Zakaznikov</span><time datetime="2025-10-10T04:00:00.000Z">October 10, 2025</time></div></article></div></div>
+        <div class="row index-journal-feature"><div class="col-md-5 index-journal-col"><a class="index-journal-media" href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/"><img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)"></a></div><div class="col-md-7 index-journal-col"><article class="index-journal-copy"><h3><a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</a></h3><div class="index-journal-excerpt"><p>Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex systems. Rather than manually writing test cases for every scenario, autonomous systems can systematically explore millions of states, discovering edge cases that human testers would never think to check.</p>
+<p>In this two-part follow-up, we’ll continue the <em>Super Mario Bros.</em> testing series by implementing the autonomous testing approach presented by <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesis.com/blog/sdtalk/">Antithesis</a>, where they autonomously play and beat the game.<i class="post-summary-more">...</i></div><div class="index-journal-meta"><span class="index-journal-author">Vitaliy Zakaznikov</span><time datetime="2025-10-10T04:00:00.000Z">October 10, 2025</time></div></article></div></div>
         <div class="index-journal-cta-card">
             <h3>Read the blog</h3>
             <p>Deep dives on test programs, steps, combinatorial coverage, behavior models, and more. Written for developers who ship tests for complex systems.</p>
@@ -345,6 +390,7 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1785563801868"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

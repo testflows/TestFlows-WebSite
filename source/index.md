@@ -109,7 +109,7 @@ with Scenario("Hello TestFlows"):
 <div class="index-start-step-story"><p>Execute it like any other script. You get a clear pass, a scenario count, and a time. Then keep building.</p></div>
 <div class="index-start-step-file"><p>terminal</p></div>
 
-{% codeblock lang:shell line_number:true highlight:true %}
+{% codeblock lang:shell line_number:false highlight:true %}
 $ python3 ./test.py
 ✔ [ OK ] /Hello TestFlows
 
@@ -120,6 +120,63 @@ Total time 2ms
 </div>
 </div>
 </div>
+
+<section class="index-steps">
+<div class="container">
+<h2 class="index-block-title">Using test steps</h2>
+<p class="index-block-lead">Break the procedure into steps. Each step is a named result — easier to read, debug, and reuse.</p>
+<div class="index-steps-cascade">
+<div class="index-start-step index-steps-panel index-steps-panel--code">
+<div class="index-panel-chrome">
+<div class="index-start-step-file"><p>test.py</p></div>
+
+{% codeblock lang:python line_number:true highlight:true %}
+from testflows.core import *
+
+@TestScenario
+def my_scenario(self):
+    with Given("I setup something"):
+        pass
+
+    with When("I do something"):
+        pass
+
+    with Then("I expect something"):
+        pass
+{% endcodeblock %}
+</div>
+</div>
+<div class="index-start-step index-steps-panel index-steps-panel--run">
+<div class="index-start-step-story"><p>Test output will show each step executing and its result.</p></div>
+<div class="index-panel-chrome">
+<div class="index-start-step-file"><p>terminal</p></div>
+<div class="index-steps-result" aria-hidden="true">
+<pre class="index-steps-result-pre"><span class="index-steps-line index-steps-line--cmd" style="--i:0"><span class="index-term-dollar">$</span> python3 ./test.py</span><span class="index-steps-line" style="--i:1">Nov 12,2021 10:56:17   ⟥  Scenario my scenario</span><span class="index-steps-line" style="--i:2">Nov 12,2021 10:56:17     ⟥  Given I setup something, flags:MANDATORY</span><span class="index-steps-line index-steps-line--ok" style="--i:3">               305us     ⟥⟤ OK I setup something, /my scenario/I setup something</span><span class="index-steps-line" style="--i:4">Nov 12,2021 10:56:17     ⟥  When I do something</span><span class="index-steps-line index-steps-line--ok" style="--i:5">               165us     ⟥⟤ OK I do something, /my scenario/I do something</span><span class="index-steps-line" style="--i:6">Nov 12,2021 10:56:17     ⟥  Then I expect something</span><span class="index-steps-line index-steps-line--ok" style="--i:7">               225us     ⟥⟤ OK I expect something, /my scenario/I expect something</span><span class="index-steps-line index-steps-line--ok" style="--i:8">                 7ms   ⟥⟤ OK my scenario, /my scenario</span></pre>
+</div>
+</div>
+<p class="visually-hidden">Example output: Scenario my scenario with Given, When, and Then steps each reporting OK.</p>
+</div>
+</div>
+<div class="row index-steps-points">
+<div class="col-12 col-md-4 index-steps-point">
+<h3>Structure</h3>
+<p>Improves how the procedure is written</p>
+</div>
+<div class="col-12 col-md-4 index-steps-point">
+<h3>Debug</h3>
+<p>Failures show which step broke</p>
+</div>
+<div class="col-12 col-md-4 index-steps-point">
+<h3>Document</h3>
+<p>Step names become the specification</p>
+</div>
+</div>
+<div class="index-steps-cta">
+<a class="section-cta" href="/handbook/#Using-Test-Steps">How to use test steps</a>
+<a class="section-cta section-cta-ghost" href="/blog/how-to-break-your-tests-into-steps/"><span class="fas fa-file-lines" aria-hidden="true"></span> Making Your Tests Better or How to Break Your Tests Into Steps</a>
+</div>
+</div>
+</section>
 
 <section class="index-journal">
     <div class="container">

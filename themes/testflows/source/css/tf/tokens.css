@@ -14,6 +14,15 @@
     --tf-bg-gradient: none;
     --tf-hero-gradient: none;
 
+    /* Homepage section bands — soft shifts so chapters don't flatten */
+    --tf-section-soft-a: #151b17;
+    --tf-section-soft-b: #101412;
+    --tf-section-soft-c: #121816;
+    --tf-section-soft-d: #161914;
+    --tf-section-wash-a: rgba(61, 186, 140, 0.055);
+    --tf-section-wash-c: rgba(90, 150, 140, 0.05);
+    --tf-section-wash-d: rgba(180, 170, 120, 0.04);
+
     /* Foreground ink as RGB channels (for rgba() mixes) */
     --tf-fg-rgb: 230, 235, 231;
 
@@ -49,6 +58,9 @@
     /* Code / terminal panels (always dark, both themes) */
     --tf-terminal-bg: #141916;
     --tf-terminal-fg-rgb: 230, 235, 231;
+    /* Homepage section panels — clearly different bases */
+    --tf-terminal-bg-start: #0b0d0c; /* near-black charcoal */
+    --tf-terminal-bg-steps: #1c1610; /* earth brown */
 
     --tf-font: "Titillium Web", "Trebuchet MS", "Lucida Grande", "Lucida Sans Unicode",
         "Lucida Sans", Tahoma, sans-serif;
@@ -67,6 +79,15 @@
     --tf-bg-mid: #e4e8e3;
     --tf-bg-gradient: none;
     --tf-hero-gradient: none;
+
+    /* Homepage section bands — soft paper shifts */
+    --tf-section-soft-a: #e7ece8;
+    --tf-section-soft-b: #f3f5f2;
+    --tf-section-soft-c: #eef2ef;
+    --tf-section-soft-d: #f1f2eb;
+    --tf-section-wash-a: rgba(26, 122, 88, 0.045);
+    --tf-section-wash-c: rgba(60, 110, 100, 0.04);
+    --tf-section-wash-d: rgba(140, 130, 80, 0.035);
 
     --tf-fg-rgb: 26, 33, 29;
 
@@ -98,4 +119,6 @@
 
     --tf-terminal-bg: #141916;
     --tf-terminal-fg-rgb: 230, 235, 231;
+    --tf-terminal-bg-start: #0b0d0c;
+    --tf-terminal-bg-steps: #1c1610;
 }
