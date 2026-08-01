@@ -368,7 +368,7 @@
     flex: 1 1 auto;
     width: 100%;
     min-height: 13.5rem;
-    padding: 2rem 1.6rem 2.1rem;
+    padding: 1.6rem 1.6rem 2.1rem;
     text-align: center;
     border: 1px solid var(--tf-card-border);
     border-bottom: none;
@@ -380,6 +380,59 @@
         0 8px 20px rgba(0, 0, 0, 0.16);
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     overflow: visible;
+}
+
+.index-why-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin: 0 0 1rem;
+    text-align: left;
+}
+
+/* Line icons — painted via mask so light/dark themes share one PNG */
+.index-why-icon {
+    flex: 0 0 auto;
+    width: 3.1rem;
+    height: 3.1rem;
+    background-color: var(--tf-text-strong);
+    opacity: 0.92;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+}
+
+.index-why-icon--document {
+    -webkit-mask-image: url("/images/why/document.png");
+    mask-image: url("/images/why/document.png");
+}
+
+.index-why-icon--puzzle {
+    -webkit-mask-image: url("/images/why/puzzle.png");
+    mask-image: url("/images/why/puzzle.png");
+}
+
+.index-why-icon--grid {
+    -webkit-mask-image: url("/images/why/grid.png");
+    mask-image: url("/images/why/grid.png");
+}
+
+.index-why-icon--shoe {
+    -webkit-mask-image: url("/images/why/shoe.png");
+    mask-image: url("/images/why/shoe.png");
+}
+
+.index-why-icon--gears {
+    -webkit-mask-image: url("/images/why/gears.png");
+    mask-image: url("/images/why/gears.png");
+}
+
+.index-why-icon--checklist {
+    -webkit-mask-image: url("/images/why/checklist.png");
+    mask-image: url("/images/why/checklist.png");
 }
 
 /* Soft glassy shelf under each card (open bottom, like hero / terminals) */
@@ -426,8 +479,14 @@
     color: var(--tf-text-strong);
     font-weight: 600;
     font-size: clamp(1.45rem, 2.6vw, 1.75rem);
-    line-height: 1.25;
-    margin: 0 0 1rem;
+    line-height: 1.2;
+    margin: 0;
+    text-align: left;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.index-why-card-more h3 {
     text-align: center;
 }
 

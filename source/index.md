@@ -36,19 +36,28 @@ layout: index
         <div class="row index-why-grid">
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
-                    <h3>Test programs</h3>
+                    <div class="index-why-card-title">
+                        <span class="index-why-icon index-why-icon--document" aria-hidden="true"></span>
+                        <h3>Test programs</h3>
+                    </div>
                     <p>Control is yours. Branch, loop, and compose scenarios in Python. No plugin maze for basic dynamics. Your tests read like the program you meant to write.</p>
                 </div>
             </div>
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
-                    <h3>Steps</h3>
+                    <div class="index-why-card-title">
+                        <span class="index-why-icon index-why-icon--shoe" aria-hidden="true"></span>
+                        <h3>Steps</h3>
+                    </div>
                     <p>Break behavior into named steps with clear results. Readable runs, easier debugging, reusable building blocks. Failures point to the step that broke, not a wall of assert noise.</p>
                 </div>
             </div>
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
-                    <h3>Combinatorial</h3>
+                    <div class="index-why-card-title">
+                        <span class="index-why-icon index-why-icon--puzzle" aria-hidden="true"></span>
+                        <h3>Combinatorial</h3>
+                    </div>
                     <p>Cover combinations systematically. Explore parameter space without hand-writing every case. Pairwise and beyond, driven from the same test program model.</p>
                 </div>
             </div>
@@ -56,19 +65,28 @@ layout: index
         <div class="row index-why-grid index-why-grid-more">
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
-                    <h3>Parallel &amp; Async</h3>
+                    <div class="index-why-card-title">
+                        <span class="index-why-icon index-why-icon--gears" aria-hidden="true"></span>
+                        <h3>Parallel &amp; Async</h3>
+                    </div>
                     <p>Scale out across processes for throughput, or go concurrent with async and await. Same scenario style either way. Keep the test program model when the suite grows.</p>
                 </div>
             </div>
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
-                    <h3>Requirements</h3>
+                    <div class="index-why-card-title">
+                        <span class="index-why-icon index-why-icon--checklist" aria-hidden="true"></span>
+                        <h3>Requirements</h3>
+                    </div>
                     <p>Treat requirements like code. Author them in Markdown, link them to tests, and produce coverage reports from the same workflow you already run.</p>
                 </div>
             </div>
             <div class="col-md-4 index-why-col">
                 <div class="index-why-card">
-                    <h3>Covering Arrays</h3>
+                    <div class="index-why-card-title">
+                        <span class="index-why-icon index-why-icon--grid" aria-hidden="true"></span>
+                        <h3>Covering Arrays</h3>
+                    </div>
                     <p>Cut huge combination spaces down to pairwise or n-wise sets. Get strong coverage with far fewer cases than exhaustive enumeration.</p>
                 </div>
             </div>
