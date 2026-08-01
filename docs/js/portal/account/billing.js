@@ -6,9 +6,9 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, billingPortal } from "../api.js";
-import { setStatus, showSpinner } from "../ui.js";
-import { titleCase } from "./format.js";
+import { ApiError, billingPortal } from "../api.js?v=0995e3ec0e4e";
+import { setStatus, showSpinner } from "../ui.js?v=0995e3ec0e4e";
+import { titleCase } from "./format.js?v=0995e3ec0e4e";
 
 /**
  * @param {HTMLElement} panel

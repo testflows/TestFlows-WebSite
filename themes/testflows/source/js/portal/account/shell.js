@@ -8,8 +8,8 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout } from "../api.js";
-import { clearSession, getEmail, getToken, isSignedIn } from "../session.js";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js";
 import { setStatus, showSpinner } from "../ui.js";
 import { renderOverview } from "./overview.js";
 import { renderCredits } from "./credits.js";
@@ -187,9 +187,8 @@ async function onLogout(event) {
   );
   if (button) button.disabled = true;
   showSpinner(statusEl(), "Signing out");
-  const token = getToken();
   try {
-    await logout(token);
+    await logout();
   } catch (err) {
     if (!(err instanceof ApiError && err.status === 401)) {
       setStatus(
@@ -276,5 +275,15 @@ export async function bootAccountDashboard() {
   fillDashMarkDate();
   bindNav();
   enhanceSelects(document);
+  if (refreshDue()) {
+    // Best-effort proactive rotation on an actively-used session; a dead session
+    // just surfaces as a 401 on the first data load below, which redirects to
+    // sign-in (refreshSession already cleared the hint).
+    try {
+      await refreshSession();
+    } catch {
+      /* ignore — showSection's getAccount handles a gone session */
+    }
+  }
   await showSection(currentSection(), true);
 }

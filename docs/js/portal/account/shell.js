@@ -8,21 +8,21 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout } from "../api.js";
-import { clearSession, getEmail, getToken, isSignedIn } from "../session.js";
-import { setStatus, showSpinner } from "../ui.js";
-import { renderOverview } from "./overview.js";
-import { renderCredits } from "./credits.js";
-import { renderActivity } from "./activity.js";
-import { renderBuy } from "./buy.js";
-import { renderBilling } from "./billing.js";
-import { renderInvoices } from "./invoices.js";
-import { renderOrders } from "./orders.js";
-import { renderKeys } from "./keys.js";
-import { renderStorage } from "./storage.js";
-import { renderSettings } from "./settings.js";
-import { enhanceSelects } from "./select.js";
-import { todayDate } from "./format.js";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=0995e3ec0e4e";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=0995e3ec0e4e";
+import { setStatus, showSpinner } from "../ui.js?v=0995e3ec0e4e";
+import { renderOverview } from "./overview.js?v=0995e3ec0e4e";
+import { renderCredits } from "./credits.js?v=0995e3ec0e4e";
+import { renderActivity } from "./activity.js?v=0995e3ec0e4e";
+import { renderBuy } from "./buy.js?v=0995e3ec0e4e";
+import { renderBilling } from "./billing.js?v=0995e3ec0e4e";
+import { renderInvoices } from "./invoices.js?v=0995e3ec0e4e";
+import { renderOrders } from "./orders.js?v=0995e3ec0e4e";
+import { renderKeys } from "./keys.js?v=0995e3ec0e4e";
+import { renderStorage } from "./storage.js?v=0995e3ec0e4e";
+import { renderSettings } from "./settings.js?v=0995e3ec0e4e";
+import { enhanceSelects } from "./select.js?v=0995e3ec0e4e";
+import { todayDate } from "./format.js?v=0995e3ec0e4e";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -187,9 +187,8 @@ async function onLogout(event) {
   );
   if (button) button.disabled = true;
   showSpinner(statusEl(), "Signing out");
-  const token = getToken();
   try {
-    await logout(token);
+    await logout();
   } catch (err) {
     if (!(err instanceof ApiError && err.status === 401)) {
       setStatus(
@@ -276,5 +275,15 @@ export async function bootAccountDashboard() {
   fillDashMarkDate();
   bindNav();
   enhanceSelects(document);
+  if (refreshDue()) {
+    // Best-effort proactive rotation on an actively-used session; a dead session
+    // just surfaces as a 401 on the first data load below, which redirects to
+    // sign-in (refreshSession already cleared the hint).
+    try {
+      await refreshSession();
+    } catch {
+      /* ignore — showSection's getAccount handles a gone session */
+    }
+  }
   await showSection(currentSection(), true);
 }

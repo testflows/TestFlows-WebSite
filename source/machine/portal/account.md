@@ -87,4 +87,4 @@ permalink: machine/portal/account/index.html
     </div>
 </div>
 
-<script type="module" src="/js/portal/account.js?v=20260731r"></script>
+<script type="module" src="/js/portal/account.js"></script>

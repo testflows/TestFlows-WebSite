@@ -6,17 +6,28 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-/** Machine API client — PoW handshake mirrors client/api/client.py.
+/** Machine API client — cookie-native browser session.
  *
- * Every failure path goes through fail() → friendlyApiError so portal UI never
- * shows raw API codes. New endpoints should throw via fail(resp, fallback) only.
+ * The access token lives in the HttpOnly `tf_session` cookie the API sets; JS never
+ * sees it. Every request rides `credentials: "include"` + `X-Tf-Client: browser` —
+ * the header both selects the cookie credential server-side and is the CSRF guard
+ * (a cross-site page can't set it without a preflight the origin allowlist rejects).
+ *
+ * An authed call that returns 401 transparently rotates the cookie once (via
+ * `/login/refresh`) and retries — so an idle-expired token refreshes without the
+ * user noticing. The PoW handshake mirrors client/api/client.py. Every failure path
+ * goes through fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js";
-import { getToken } from "./session.js";
+import { solve, currentBucket } from "./hashcash.js?v=0995e3ec0e4e";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=0995e3ec0e4e";
+import { setSession, clearSession } from "./session.js?v=0995e3ec0e4e";
 
 const MAX_POW_ROUNDS = 5;
+
+/** Identifies the browser portal: selects the HttpOnly-cookie credential path and
+ * carries the CSRF defense (sent on every request). */
+const CLIENT = "browser";
 
 /**
  * API base URL.
@@ -86,16 +97,24 @@ function isPowChallenge(status, data) {
 }
 
 /**
+ * One fetch, no auto-refresh. Always sends the session cookie (`credentials`) and
+ * the `X-Tf-Client` header. Undefined/null header values are dropped.
  * @param {string} method
  * @param {string} path
  * @param {object|null} body
- * @param {Record<string, string>} [headers]
+ * @param {Record<string, string|undefined|null>} [headers]
  */
-async function request(method, path, body, headers = {}) {
+async function rawRequest(method, path, body, headers = {}) {
   const opts = {
     method,
-    headers: { ...headers },
+    credentials: "include",
+    headers: { "X-Tf-Client": CLIENT },
   };
+  for (const [key, value] of Object.entries(headers)) {
+    if (value !== undefined && value !== null) {
+      opts.headers[key] = value;
+    }
+  }
   if (body !== null && body !== undefined) {
     opts.headers["Content-Type"] = "application/json";
     opts.body = JSON.stringify(body);
@@ -118,11 +137,53 @@ async function request(method, path, body, headers = {}) {
   return { status: resp.status, data };
 }
 
+/** The auth flow itself — never triggers a refresh (avoids recursion / needless
+ * rotation on the login/logout/refresh path). */
+function isAuthFlowPath(path) {
+  return (
+    path.startsWith("/login") ||
+    path.startsWith("/signup") ||
+    path.startsWith("/logout")
+  );
+}
+
+/** Coalesce concurrent 401-driven refreshes into a single in-flight rotation. */
+let refreshInFlight = null;
+function refreshOnce() {
+  if (!refreshInFlight) {
+    refreshInFlight = refreshSession()
+      .then(() => true)
+      .catch(() => false)
+      .finally(() => {
+        refreshInFlight = null;
+      });
+  }
+  return refreshInFlight;
+}
+
+/**
+ * One request with transparent one-shot refresh: on a 401 from an authed endpoint,
+ * rotate the cookie once and retry. Login/logout/refresh bypass the retry.
+ * @param {string} method
+ * @param {string} path
+ * @param {object|null} body
+ * @param {Record<string, string|undefined|null>} [headers]
+ */
+async function request(method, path, body, headers = {}) {
+  let resp = await rawRequest(method, path, body, headers);
+  if (resp.status === 401 && !isAuthFlowPath(path)) {
+    if (await refreshOnce()) {
+      resp = await rawRequest(method, path, body, headers);
+    }
+  }
+  return resp;
+}
+
 /**
  * @param {string} method
  * @param {string} path
  * @param {object|null} body
- * @param {{ onPow?: () => void, headers?: Record<string, string> }} [opts]
+ * @param {{ onPow?: () => void, headers?: Record<string, string|undefined|null> }} [opts]
  */
 async function requestPow(method, path, body, opts = {}) {
   const base = { ...(opts.headers || {}) };
@@ -146,15 +207,6 @@ async function requestPow(method, path, body, opts = {}) {
   return resp;
 }
 
-/** Bearer header from the session cookie (throws if signed out). */
-function authHeaders(token) {
-  const t = token || getToken();
-  if (!t) {
-    throw new ApiError("Not signed in.", 401);
-  }
-  return { Authorization: `Bearer ${t}` };
-}
-
 /** @param {string} email @param {() => void} [onPow] */
 export async function signupStart(email, onPow) {
   const resp = await requestPow("POST", "/signup/start", { email }, { onPow });
@@ -174,10 +226,12 @@ export async function loginStart(email, onPow) {
 }
 
 /**
+ * Verify the emailed code. On success the API sets the HttpOnly session cookie and
+ * returns only the expiry (the token never touches JS).
  * @param {string} email
  * @param {string} code
  * @param {() => void} [onPow]
- * @returns {Promise<{ access_token: string, expires_at: string }>}
+ * @returns {Promise<{ expires_at: string }>}
  */
 export async function loginVerify(email, code, onPow) {
   const resp = await requestPow(
@@ -186,11 +240,8 @@ export async function loginVerify(email, code, onPow) {
     { email, code },
     { onPow }
   );
-  if (resp.status === 200 && resp.data && resp.data.access_token) {
-    return {
-      access_token: String(resp.data.access_token),
-      expires_at: String(resp.data.expires_at),
-    };
+  if (resp.status === 200 && resp.data && resp.data.expires_at) {
+    return { expires_at: String(resp.data.expires_at) };
   }
   if (resp.status === 403) {
     fail(resp, "This account isn't active.");
@@ -198,28 +249,40 @@ export async function loginVerify(email, code, onPow) {
   throw new InvalidLoginCode();
 }
 
-/** @param {string} [token] */
-export async function logout(token) {
-  let t = token;
-  if (!t) {
-    t = getToken();
+/**
+ * Rotate the HttpOnly session cookie (browser refresh). The API mints a fresh token,
+ * keeps the old one valid for a short grace window, and sets the new cookie. Updates
+ * the local session hint on success; a 401 means the session is gone (→ sign in).
+ * @returns {Promise<{ expires_at: string }>}
+ */
+export async function refreshSession() {
+  const resp = await rawRequest("POST", "/login/refresh", null);
+  if (resp.status === 200 && resp.data && resp.data.expires_at) {
+    const expiresAt = String(resp.data.expires_at);
+    setSession(null, expiresAt); // keep email; bump expiry + refreshed stamp
+    return { expires_at: expiresAt };
   }
-  if (!t) {
-    return;
+  if (resp.status === 401) {
+    clearSession();
   }
-  const resp = await request("POST", "/logout", null, {
-    Authorization: `Bearer ${t}`,
-  });
+  fail(resp, "Your session has expired. Please sign in again.");
+}
+
+/** End this session (or every session with `everywhere`). The API clears the
+ * HttpOnly cookie; the caller clears the local hint regardless.
+ * @param {boolean} [everywhere] revoke all of the user's sessions
+ */
+export async function logout(everywhere = false) {
+  const path = everywhere ? "/logout?everywhere=true" : "/logout";
+  const resp = await rawRequest("POST", path, null);
   if (resp.status === 204 || resp.status === 401) {
     return;
   }
   fail(resp, "Sign-out failed.");
 }
 
-/** @param {string} [token] */
-export async function getAccount(token) {
-  const { Authorization } = authHeaders(token);
-  const resp = await request("GET", "/account", null, { Authorization });
+export async function getAccount() {
+  const resp = await request("GET", "/account", null);
   if (resp.status === 200 && resp.data) {
     return resp.data;
   }
@@ -228,10 +291,8 @@ export async function getAccount(token) {
 
 /**
  * @param {Record<string, string|number|boolean|undefined|null>} [params]
- * @param {string} [token]
  */
-export async function getTransactions(params = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function getTransactions(params = {}) {
   const q = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined && v !== null && v !== "") {
@@ -240,27 +301,23 @@ export async function getTransactions(params = {}, token) {
   }
   const qs = q.toString();
   const path = `/account/transactions${qs ? `?${qs}` : ""}`;
-  const resp = await request("GET", path, null, { Authorization });
+  const resp = await request("GET", path, null);
   if (resp.status === 200 && Array.isArray(resp.data)) {
     return resp.data;
   }
   fail(resp, "Could not load activity.");
 }
 
-/** @param {string} [token] */
-export async function provisionStorage(token) {
-  const { Authorization } = authHeaders(token);
-  const resp = await request("POST", "/account/provision", null, { Authorization });
+export async function provisionStorage() {
+  const resp = await request("POST", "/account/provision", null);
   if (resp.status === 200 && resp.data) {
     return resp.data;
   }
   fail(resp, "Could not provision storage.");
 }
 
-/** @param {string} [token] */
-export async function getBillingProducts(token) {
-  const { Authorization } = authHeaders(token);
-  const resp = await request("GET", "/billing/products", null, { Authorization });
+export async function getBillingProducts() {
+  const resp = await request("GET", "/billing/products", null);
   if (resp.status === 200 && resp.data) {
     return resp.data;
   }
@@ -270,15 +327,13 @@ export async function getBillingProducts(token) {
 /**
  * @param {string} priceId
  * @param {string} requestId
- * @param {string} [token]
  */
-export async function billingCheckout(priceId, requestId, token) {
-  const { Authorization } = authHeaders(token);
+export async function billingCheckout(priceId, requestId) {
   const resp = await request(
     "POST",
     "/billing/checkout",
     { price_id: priceId },
-    { Authorization, "Idempotency-Key": requestId }
+    { "Idempotency-Key": requestId }
   );
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -289,15 +344,13 @@ export async function billingCheckout(priceId, requestId, token) {
 /**
  * @param {string} priceId
  * @param {string} requestId
- * @param {string} [token]
  */
-export async function billingSubscribe(priceId, requestId, token) {
-  const { Authorization } = authHeaders(token);
+export async function billingSubscribe(priceId, requestId) {
   const resp = await request(
     "POST",
     "/billing/subscribe",
     { price_id: priceId },
-    { Authorization, "Idempotency-Key": requestId }
+    { "Idempotency-Key": requestId }
   );
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -308,15 +361,13 @@ export async function billingSubscribe(priceId, requestId, token) {
 /**
  * @param {string} flow
  * @param {{ plan?: string }} [opts]
- * @param {string} [token]
  */
-export async function billingPortal(flow, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function billingPortal(flow, opts = {}) {
   const body = { flow };
   if (opts.plan) {
     body.plan = opts.plan;
   }
-  const resp = await request("POST", "/billing/portal", body, { Authorization });
+  const resp = await request("POST", "/billing/portal", body);
   if (resp.status === 200 && resp.data && resp.data.url) {
     return resp.data;
   }
@@ -325,10 +376,8 @@ export async function billingPortal(flow, opts = {}, token) {
 
 /**
  * @param {Record<string, string|number|undefined|null>} [params]
- * @param {string} [token]
  */
-export async function getBillingOrders(params = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function getBillingOrders(params = {}) {
   const q = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined && v !== null && v !== "") {
@@ -336,26 +385,19 @@ export async function getBillingOrders(params = {}, token) {
     }
   }
   const qs = q.toString();
-  const resp = await request(
-    "GET",
-    `/billing/orders${qs ? `?${qs}` : ""}`,
-    null,
-    { Authorization }
-  );
+  const resp = await request("GET", `/billing/orders${qs ? `?${qs}` : ""}`, null);
   if (resp.status === 200 && resp.data && Array.isArray(resp.data.orders)) {
     return resp.data.orders;
   }
   fail(resp, "Could not load orders.");
 }
 
-/** @param {string} orderId @param {string} [token] */
-export async function getBillingOrder(orderId, token) {
-  const { Authorization } = authHeaders(token);
+/** @param {string} orderId */
+export async function getBillingOrder(orderId) {
   const resp = await request(
     "GET",
     `/billing/orders/${encodeURIComponent(orderId)}`,
-    null,
-    { Authorization }
+    null
   );
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -363,14 +405,12 @@ export async function getBillingOrder(orderId, token) {
   fail(resp, "Could not load order.");
 }
 
-/** @param {string} orderId @param {string} [token] */
-export async function resumeBillingOrder(orderId, token) {
-  const { Authorization } = authHeaders(token);
+/** @param {string} orderId */
+export async function resumeBillingOrder(orderId) {
   const resp = await request(
     "POST",
     `/billing/orders/${encodeURIComponent(orderId)}/resume`,
-    null,
-    { Authorization }
+    null
   );
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -378,14 +418,12 @@ export async function resumeBillingOrder(orderId, token) {
   fail(resp, "Could not resume order.");
 }
 
-/** @param {string} orderId @param {string} [token] */
-export async function cancelBillingOrder(orderId, token) {
-  const { Authorization } = authHeaders(token);
+/** @param {string} orderId */
+export async function cancelBillingOrder(orderId) {
   const resp = await request(
     "POST",
     `/billing/orders/${encodeURIComponent(orderId)}/cancel`,
-    null,
-    { Authorization }
+    null
   );
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -395,10 +433,8 @@ export async function cancelBillingOrder(orderId, token) {
 
 /**
  * @param {Record<string, string|number|boolean|undefined|null>} [params]
- * @param {string} [token]
  */
-export async function getBillingInvoices(params = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function getBillingInvoices(params = {}) {
   const q = new URLSearchParams();
   for (const [k, v] of Object.entries(params)) {
     if (v !== undefined && v !== null && v !== "") {
@@ -406,26 +442,19 @@ export async function getBillingInvoices(params = {}, token) {
     }
   }
   const qs = q.toString();
-  const resp = await request(
-    "GET",
-    `/billing/invoices${qs ? `?${qs}` : ""}`,
-    null,
-    { Authorization }
-  );
+  const resp = await request("GET", `/billing/invoices${qs ? `?${qs}` : ""}`, null);
   if (resp.status === 200 && resp.data && Array.isArray(resp.data.invoices)) {
     return resp.data.invoices;
   }
   fail(resp, "Could not load invoices.");
 }
 
-/** @param {string} invoiceId @param {string} [token] */
-export async function downloadBillingInvoice(invoiceId, token) {
-  const { Authorization } = authHeaders(token);
+/** @param {string} invoiceId */
+export async function downloadBillingInvoice(invoiceId) {
   const resp = await request(
     "GET",
     `/billing/invoices/${encodeURIComponent(invoiceId)}/download`,
-    null,
-    { Authorization }
+    null
   );
   if (resp.status === 200 && resp.data && resp.data.url) {
     return resp.data;
@@ -433,10 +462,8 @@ export async function downloadBillingInvoice(invoiceId, token) {
   fail(resp, "Could not open invoice.");
 }
 
-/** @param {string} [token] */
-export async function listTokens(token) {
-  const { Authorization } = authHeaders(token);
-  const resp = await request("GET", "/tokens", null, { Authorization });
+export async function listTokens() {
+  const resp = await request("GET", "/tokens", null);
   if (resp.status === 200 && Array.isArray(resp.data)) {
     return resp.data;
   }
@@ -446,17 +473,14 @@ export async function listTokens(token) {
 /**
  * @param {string} operation create|update|delete
  * @param {{ tokenId?: number, onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function tokenChallenge(operation, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function tokenChallenge(operation, opts = {}) {
   const body = { operation };
   if (opts.tokenId != null) {
     body.token_id = opts.tokenId;
   }
   const resp = await requestPow("POST", "/tokens/challenge", body, {
     onPow: opts.onPow,
-    headers: { Authorization },
   });
   if (resp.status === 204) {
     return;
@@ -468,18 +492,13 @@ export async function tokenChallenge(operation, opts = {}, token) {
  * @param {string} name
  * @param {string} code
  * @param {{ expiresAt?: string, onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function tokenCreate(name, code, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function tokenCreate(name, code, opts = {}) {
   const body = { name, code };
   if (opts.expiresAt) {
     body.expires_at = opts.expiresAt;
   }
-  const resp = await requestPow("POST", "/tokens", body, {
-    onPow: opts.onPow,
-    headers: { Authorization },
-  });
+  const resp = await requestPow("POST", "/tokens", body, { onPow: opts.onPow });
   if (resp.status === 201 && resp.data) {
     return resp.data;
   }
@@ -490,13 +509,11 @@ export async function tokenCreate(name, code, opts = {}, token) {
  * @param {number} tokenId
  * @param {string} code
  * @param {{ onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function tokenRevoke(tokenId, code, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function tokenRevoke(tokenId, code, opts = {}) {
   const resp = await requestPow("DELETE", `/tokens/${tokenId}`, null, {
     onPow: opts.onPow,
-    headers: { Authorization, "X-Tf-Code": code },
+    headers: { "X-Tf-Code": code },
   });
   if (resp.status === 204) {
     return;
@@ -508,17 +525,14 @@ export async function tokenRevoke(tokenId, code, opts = {}, token) {
  * @param {number} tokenId
  * @param {string} code
  * @param {{ expiresAt?: string|null, clearExpiry?: boolean, onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function tokenUpdate(tokenId, code, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function tokenUpdate(tokenId, code, opts = {}) {
   const body = {
     code,
     expires_at: opts.clearExpiry ? null : opts.expiresAt ?? null,
   };
   const resp = await requestPow("PATCH", `/tokens/${tokenId}`, body, {
     onPow: opts.onPow,
-    headers: { Authorization },
   });
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -529,15 +543,13 @@ export async function tokenUpdate(tokenId, code, opts = {}, token) {
 /**
  * @param {string} email
  * @param {{ onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function emailChallenge(email, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function emailChallenge(email, opts = {}) {
   const resp = await requestPow(
     "POST",
     "/account/email/challenge",
     { email },
-    { onPow: opts.onPow, headers: { Authorization } }
+    { onPow: opts.onPow }
   );
   if (resp.status === 204) {
     return;
@@ -549,18 +561,13 @@ export async function emailChallenge(email, opts = {}, token) {
  * @param {string} email
  * @param {string} code
  * @param {{ onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function emailStart(email, code, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function emailStart(email, code, opts = {}) {
   const resp = await requestPow(
     "POST",
     "/account/email/start",
     { email },
-    {
-      onPow: opts.onPow,
-      headers: { Authorization, "X-Tf-Code": code },
-    }
+    { onPow: opts.onPow, headers: { "X-Tf-Code": code } }
   );
   if (resp.status === 204) {
     return;
@@ -571,15 +578,13 @@ export async function emailStart(email, code, opts = {}, token) {
 /**
  * @param {string} phase start|confirm
  * @param {{ onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function closeChallenge(phase, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function closeChallenge(phase, opts = {}) {
   const resp = await requestPow(
     "POST",
     "/account/close/challenge",
     { phase },
-    { onPow: opts.onPow, headers: { Authorization } }
+    { onPow: opts.onPow }
   );
   if (resp.status === 204) {
     return;
@@ -590,18 +595,11 @@ export async function closeChallenge(phase, opts = {}, token) {
 /**
  * @param {string|null} code
  * @param {{ onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function closeStart(code, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
-  /** @type {Record<string, string>} */
-  const headers = { Authorization };
-  if (code) {
-    headers["X-Tf-Code"] = code;
-  }
+export async function closeStart(code, opts = {}) {
   const resp = await requestPow("POST", "/account/close/start", null, {
     onPow: opts.onPow,
-    headers,
+    headers: { "X-Tf-Code": code || undefined },
   });
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -609,10 +607,8 @@ export async function closeStart(code, opts = {}, token) {
   fail(resp, "Could not start closing account.");
 }
 
-/** @param {string} [token] */
-export async function closeStatus(token) {
-  const { Authorization } = authHeaders(token);
-  const resp = await request("GET", "/account/close", null, { Authorization });
+export async function closeStatus() {
+  const resp = await request("GET", "/account/close", null);
   if (resp.status === 200 && resp.data) {
     return resp.data;
   }
@@ -622,13 +618,11 @@ export async function closeStatus(token) {
 /**
  * @param {string} code
  * @param {{ onPow?: () => void }} [opts]
- * @param {string} [token]
  */
-export async function closeConfirm(code, opts = {}, token) {
-  const { Authorization } = authHeaders(token);
+export async function closeConfirm(code, opts = {}) {
   const resp = await requestPow("POST", "/account/close/confirm", null, {
     onPow: opts.onPow,
-    headers: { Authorization, "X-Tf-Code": code },
+    headers: { "X-Tf-Code": code },
   });
   if (resp.status === 200 && resp.data) {
     return resp.data;
@@ -636,12 +630,8 @@ export async function closeConfirm(code, opts = {}, token) {
   fail(resp, "Could not close account.");
 }
 
-/** @param {string} [token] */
-export async function closeCancel(token) {
-  const { Authorization } = authHeaders(token);
-  const resp = await request("POST", "/account/close/cancel", null, {
-    Authorization,
-  });
+export async function closeCancel() {
+  const resp = await request("POST", "/account/close/cancel", null);
   if (resp.status === 200 && resp.data) {
     return resp.data;
   }

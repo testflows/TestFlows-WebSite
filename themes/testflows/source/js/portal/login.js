@@ -92,7 +92,8 @@ async function onCodeSubmit(event) {
   showSpinner(status, "Verifying code");
   try {
     const auth = await loginVerify(email, code, makePow(status, "Working"));
-    setSession(auth.access_token, email, auth.expires_at);
+    // The API set the HttpOnly session cookie; store only the local UI hint.
+    setSession(email, auth.expires_at);
     window.location.href = ACCOUNT_HREF;
   } catch (err) {
     const msg =

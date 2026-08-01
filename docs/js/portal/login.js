@@ -6,10 +6,10 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { loginStart, loginVerify, ApiError } from "./api.js";
-import { looksLikeEmail } from "./errors.js";
-import { getEmail, isSignedIn, setSession } from "./session.js";
-import { setStatus, showSpinner } from "./ui.js";
+import { loginStart, loginVerify, ApiError } from "./api.js?v=0995e3ec0e4e";
+import { looksLikeEmail } from "./errors.js?v=0995e3ec0e4e";
+import { getEmail, isSignedIn, setSession } from "./session.js?v=0995e3ec0e4e";
+import { setStatus, showSpinner } from "./ui.js?v=0995e3ec0e4e";
 
 const ACCOUNT_HREF = "/machine/portal/account/";
 const SIGNUP_HREF = "/machine/portal/signup/";
@@ -92,7 +92,8 @@ async function onCodeSubmit(event) {
   showSpinner(status, "Verifying code");
   try {
     const auth = await loginVerify(email, code, makePow(status, "Working"));
-    setSession(auth.access_token, email, auth.expires_at);
+    // The API set the HttpOnly session cookie; store only the local UI hint.
+    setSession(email, auth.expires_at);
     window.location.href = ACCOUNT_HREF;
   } catch (err) {
     const msg =
