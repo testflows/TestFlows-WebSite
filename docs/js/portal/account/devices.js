@@ -6,10 +6,10 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getDevices, revokeDevice } from "../api.js?v=ad83371e5d67";
-import { clearSession } from "../session.js?v=ad83371e5d67";
-import { setStatus, showSpinner } from "../ui.js?v=ad83371e5d67";
-import { ago } from "./format.js?v=ad83371e5d67";
+import { ApiError, getDevices, revokeDevice } from "../api.js?v=086fa99a4287";
+import { clearSession } from "../session.js?v=086fa99a4287";
+import { setStatus, showSpinner } from "../ui.js?v=086fa99a4287";
+import { ago } from "./format.js?v=086fa99a4287";
 
 const UA_BROWSERS = [
   ["Edg", "Edge"],
