@@ -6,10 +6,12 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getDevices, revokeDevice } from "../api.js";
+import { ApiError, getDevices, logout, revokeDevice } from "../api.js";
 import { clearSession } from "../session.js";
 import { setStatus, showSpinner } from "../ui.js";
 import { ago } from "./format.js";
+
+const LOGIN_HREF = "/machine/portal/login/";
 
 const UA_BROWSERS = [
   ["Edg", "Edge"],
@@ -52,6 +54,34 @@ function formatDevice(ua) {
   return ua.length > 48 ? `${ua.slice(0, 48)}…` : ua;
 }
 
+/** @returns {"desktop"|"web"|"unknown"} */
+function deviceKind(ua) {
+  if (!ua) return "unknown";
+  const low = ua.toLowerCase();
+  if (low.startsWith("machine-cli")) return "desktop";
+  if (UA_BROWSERS.some(([t]) => ua.includes(t))) return "web";
+  return "unknown";
+}
+
+const DEVICE_KIND_ICON = {
+  desktop: "fa-desktop",
+  web: "fa-globe",
+  unknown: "fa-circle-question",
+};
+
+/** Icon + label for the Device column. @param {string} ua @param {string} label */
+function deviceLabelCell(ua, label) {
+  const wrap = document.createElement("span");
+  wrap.className = "portal-device-label";
+  const icon = document.createElement("span");
+  icon.className = `fas fa-fw ${DEVICE_KIND_ICON[deviceKind(ua)]}`;
+  icon.setAttribute("aria-hidden", "true");
+  const text = document.createElement("span");
+  text.textContent = label;
+  wrap.append(icon, text);
+  return wrap;
+}
+
 /**
  * @param {HTMLElement} panel
  * @param {{ statusEl: HTMLElement|null }} ctx
@@ -68,13 +98,39 @@ export function renderDevices(panel, ctx) {
   head.append(h2, lead);
   panel.append(head);
 
+  const everywhereBlock = document.createElement("section");
+  everywhereBlock.className = "portal-block portal-block--fit";
+  const h3Everywhere = document.createElement("h3");
+  h3Everywhere.textContent = "Sign out everywhere";
+  const everywhereRow = document.createElement("div");
+  everywhereRow.className = "portal-devices-everywhere";
+  const everywhereNote = document.createElement("span");
+  everywhereNote.textContent = "Revoke all sign-in tokens, including current";
+  const everywhereBtn = document.createElement("button");
+  everywhereBtn.type = "button";
+  everywhereBtn.className = "btn btn-ghost btn-sm portal-btn-danger";
+  everywhereBtn.textContent = "Revoke";
+  everywhereBtn.addEventListener("click", () => void onRevokeAll(everywhereBtn));
+  everywhereRow.append(everywhereNote, everywhereBtn);
+  everywhereBlock.append(h3Everywhere, everywhereRow);
+  panel.append(everywhereBlock);
+
+  const sessionsBlock = document.createElement("section");
+  sessionsBlock.className = "portal-block";
+  const h3Sessions = document.createElement("h3");
+  h3Sessions.textContent = "Signed-in devices";
   const listHost = document.createElement("div");
-  panel.append(listHost);
+  const summary = document.createElement("p");
+  summary.className = "portal-pager-label";
+  summary.hidden = true;
+  sessionsBlock.append(h3Sessions, listHost, summary);
+  panel.append(sessionsBlock);
 
   /** @param {Record<string, unknown>[]} rows */
   const paint = (rows) => {
     listHost.replaceChildren();
     if (!rows.length) {
+      summary.hidden = true;
       const empty = document.createElement("p");
       empty.className = "portal-muted";
       empty.textContent = "No signed-in devices.";
@@ -101,10 +157,13 @@ export function renderDevices(panel, ctx) {
     for (const row of rows) {
       const tr = document.createElement("tr");
       const current = Boolean(row.current);
-      let label = formatDevice(row.device ? String(row.device) : "");
+      const ua = row.device ? String(row.device) : "";
+      let label = formatDevice(ua);
       if (current) label += " · current";
+      const deviceTd = document.createElement("td");
+      deviceTd.append(deviceLabelCell(ua, label));
+      tr.append(deviceTd);
       const cells = [
-        label,
         String(row.hostname || "—"),
         String(row.ip || "—"),
         row.last_used ? ago(String(row.last_used)) : "—",
@@ -120,7 +179,7 @@ export function renderDevices(panel, ctx) {
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "btn btn-ghost btn-sm portal-btn-danger";
-      btn.textContent = "Sign out";
+      btn.textContent = "Revoke";
       btn.addEventListener(
         "click",
         () => void onRevoke(String(row.session_id), current, btn)
@@ -132,10 +191,14 @@ export function renderDevices(panel, ctx) {
     table.append(tbody);
     wrap.append(table);
     listHost.append(wrap);
+    const n = rows.length;
+    summary.textContent = `Showing 1–${n} of ${n}`;
+    summary.hidden = false;
   };
 
   const load = async () => {
     listHost.replaceChildren();
+    summary.hidden = true;
     showSpinner(ctx.statusEl, "Loading devices");
     try {
       const rows = await getDevices();
@@ -154,30 +217,59 @@ export function renderDevices(panel, ctx) {
   const onRevoke = async (sessionId, current, btn) => {
     const ok = window.confirm(
       current
-        ? "Sign out this device? You'll be signed out here."
-        : "Sign out this device?"
+        ? "Revoke this sign-in token? You'll be signed out here."
+        : "Revoke this sign-in token?"
     );
     if (!ok) return;
     btn.disabled = true;
-    showSpinner(ctx.statusEl, "Signing out device");
+    showSpinner(ctx.statusEl, "Revoking token");
     try {
       await revokeDevice(sessionId);
       if (current) {
         // Revoked our own session — the cookie is dead; clear the hint and re-login.
         clearSession();
-        window.location.href = "/machine/portal/login/";
+        window.location.href = LOGIN_HREF;
         return;
       }
-      setStatus(ctx.statusEl, "Device signed out.", "ok");
+      setStatus(ctx.statusEl, "Token revoked.", "ok");
       await load();
     } catch (err) {
       btn.disabled = false;
       setStatus(
         ctx.statusEl,
-        err instanceof ApiError ? err.message : "Could not sign out device.",
+        err instanceof ApiError ? err.message : "Could not revoke token.",
         "err"
       );
     }
+  };
+
+  /** @param {HTMLButtonElement} btn */
+  const onRevokeAll = async (btn) => {
+    const ok = window.confirm(
+      "Revoke all sign-in tokens, including this one? You'll be signed out here."
+    );
+    if (!ok) return;
+    btn.disabled = true;
+    everywhereBtn.disabled = true;
+    showSpinner(ctx.statusEl, "Revoking all tokens");
+    try {
+      await logout(true);
+    } catch (err) {
+      if (!(err instanceof ApiError && err.status === 401)) {
+        setStatus(
+          ctx.statusEl,
+          "Couldn't reach the server. Local sign-out done. Other sessions may stay valid until they expire.",
+          "err"
+        );
+        clearSession();
+        window.setTimeout(() => {
+          window.location.href = LOGIN_HREF;
+        }, 1200);
+        return;
+      }
+    }
+    clearSession();
+    window.location.href = LOGIN_HREF;
   };
 
   void load();

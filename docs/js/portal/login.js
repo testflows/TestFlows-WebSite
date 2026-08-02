@@ -6,10 +6,10 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { loginStart, loginVerify, ApiError } from "./api.js?v=ff542d1fad0c";
-import { looksLikeEmail } from "./errors.js?v=ff542d1fad0c";
-import { getEmail, isSignedIn, setSession } from "./session.js?v=ff542d1fad0c";
-import { setStatus, showSpinner } from "./ui.js?v=ff542d1fad0c";
+import { loginStart, loginVerify, ApiError } from "./api.js?v=a9c577326ec5";
+import { looksLikeEmail } from "./errors.js?v=a9c577326ec5";
+import { getEmail, isSignedIn, setSession } from "./session.js?v=a9c577326ec5";
+import { setStatus, showSpinner } from "./ui.js?v=a9c577326ec5";
 
 const ACCOUNT_HREF = "/machine/portal/account/";
 const SIGNUP_HREF = "/machine/portal/signup/";

@@ -1167,6 +1167,41 @@
     align-self: flex-end;
 }
 
+/* Sign out everywhere: note left, action right; block hugs content. */
+.portal-block--fit {
+    width: max-content;
+    max-width: 100%;
+}
+
+.portal-devices-everywhere {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.portal-devices-everywhere > .btn {
+    flex: 0 0 auto;
+}
+
+.portal-device-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+.portal-device-label > .fas {
+    color: var(--tf-text-muted);
+    font-size: 0.95rem;
+}
+
+/* Table inside a portal-block: the block is the card; wrap is scroll only. */
+.portal-block .portal-table-wrap {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
 .portal-table-wrap {
     overflow-x: auto;
     background: var(--tf-card-bg);
@@ -1230,8 +1265,13 @@
 }
 
 .portal-pager-label {
+    margin: 0.85rem 0 0;
     color: var(--tf-text-muted);
     font-size: 0.85rem;
+}
+
+.portal-pager > .portal-pager-label {
+    margin: 0;
 }
 
 .portal-pager-note {
