@@ -14,7 +14,7 @@ import {
   since,
   titleCase,
   until,
-} from "./format.js?v=ff542d1fad0c";
+} from "./format.js?v=a9c577326ec5";
 
 /**
  * @param {HTMLElement} panel
