@@ -6,22 +6,11 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=9fb52a8a7f0b";
-import { setStatus, showSpinner } from "../ui.js?v=9fb52a8a7f0b";
-import { titleCase, until } from "./format.js?v=9fb52a8a7f0b";
-import { runConfirm, runPlanPick } from "./modal.js?v=9fb52a8a7f0b";
-
-/** Paid catalog tiers, low → high. Free is never a switch target. */
-const TIER_RANK = ["starter", "pro", "enterprise"];
-
-/**
- * @param {string} tier
- * @returns {number}
- */
-function tierRank(tier) {
-  const i = TIER_RANK.indexOf(tier.toLowerCase());
-  return i < 0 ? -1 : i;
-}
+import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=0f5c00e0c3af";
+import { setStatus, showSpinner } from "../ui.js?v=0f5c00e0c3af";
+import { titleCase, until } from "./format.js?v=0f5c00e0c3af";
+import { runConfirm, runPlanPick } from "./modal.js?v=0f5c00e0c3af";
+import { TIER_RANK, tierRank } from "./plans.js?v=0f5c00e0c3af";
 
 /**
  * @param {HTMLElement} host

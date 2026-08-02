@@ -400,9 +400,6 @@
 /* Fixed-height slot under Refresh so the header doesn't jump. */
 .portal-status--dock {
     order: 2;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
     box-sizing: border-box;
     margin: 0;
     width: max-content;
@@ -416,9 +413,13 @@
     line-height: 1.3;
     text-align: right;
     color: var(--tf-text-muted);
-    white-space: nowrap;
+    /* Wrap up to two lines, then ellipsis — a long message (e.g. a Stripe error)
+       is no longer cut mid-word to a single line. */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 /* Stay in layout when empty — only hide visually. */

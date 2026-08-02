@@ -8,22 +8,22 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=9fb52a8a7f0b";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=9fb52a8a7f0b";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=9fb52a8a7f0b";
-import { renderOverview } from "./overview.js?v=9fb52a8a7f0b";
-import { renderCredits } from "./credits.js?v=9fb52a8a7f0b";
-import { renderActivity } from "./activity.js?v=9fb52a8a7f0b";
-import { renderBuy } from "./buy.js?v=9fb52a8a7f0b";
-import { renderBilling } from "./billing.js?v=9fb52a8a7f0b";
-import { renderInvoices } from "./invoices.js?v=9fb52a8a7f0b";
-import { renderOrders } from "./orders.js?v=9fb52a8a7f0b";
-import { renderKeys } from "./keys.js?v=9fb52a8a7f0b";
-import { renderDevices } from "./devices.js?v=9fb52a8a7f0b";
-import { renderStorage } from "./storage.js?v=9fb52a8a7f0b";
-import { renderSettings } from "./settings.js?v=9fb52a8a7f0b";
-import { enhanceSelects } from "./select.js?v=9fb52a8a7f0b";
-import { todayDate } from "./format.js?v=9fb52a8a7f0b";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=0f5c00e0c3af";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=0f5c00e0c3af";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=0f5c00e0c3af";
+import { renderOverview } from "./overview.js?v=0f5c00e0c3af";
+import { renderCredits } from "./credits.js?v=0f5c00e0c3af";
+import { renderActivity } from "./activity.js?v=0f5c00e0c3af";
+import { renderBuy } from "./buy.js?v=0f5c00e0c3af";
+import { renderBilling } from "./billing.js?v=0f5c00e0c3af";
+import { renderInvoices } from "./invoices.js?v=0f5c00e0c3af";
+import { renderOrders } from "./orders.js?v=0f5c00e0c3af";
+import { renderKeys } from "./keys.js?v=0f5c00e0c3af";
+import { renderDevices } from "./devices.js?v=0f5c00e0c3af";
+import { renderStorage } from "./storage.js?v=0f5c00e0c3af";
+import { renderSettings } from "./settings.js?v=0f5c00e0c3af";
+import { enhanceSelects } from "./select.js?v=0f5c00e0c3af";
+import { todayDate } from "./format.js?v=0f5c00e0c3af";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
