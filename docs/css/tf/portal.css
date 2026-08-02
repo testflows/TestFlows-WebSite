@@ -892,7 +892,8 @@
 .portal-dash-main:has(
     .portal-dash-panel:not([hidden])[data-portal-panel="keys"]
   ) {
-    max-width: min(75vw, 72rem);
+    /* 100vw would ignore the sidebar inset and can overflow; subtract it. */
+    max-width: min(calc(100vw - var(--portal-dash-sidebar-width, 14.5rem)), 80rem);
 }
 
 .portal-dash-panel {
@@ -1422,13 +1423,31 @@
         z-index: 50;
     }
 
-    .portal-dash-main {
+    .portal-dash-main,
+    .portal-dash-main:has(
+        .portal-dash-panel:not([hidden])[data-portal-panel="activity"]
+      ),
+    .portal-dash-main:has(
+        .portal-dash-panel:not([hidden])[data-portal-panel="orders"]
+      ),
+    .portal-dash-main:has(
+        .portal-dash-panel:not([hidden])[data-portal-panel="invoices"]
+      ),
+    .portal-dash-main:has(
+        .portal-dash-panel:not([hidden])[data-portal-panel="devices"]
+      ),
+    .portal-dash-main:has(
+        .portal-dash-panel:not([hidden])[data-portal-panel="keys"]
+      ) {
         order: 4;
         position: relative;
         z-index: 1;
         flex: 1 1 auto;
         margin-left: 0;
         padding: 1.25rem 1rem 2rem;
+        /* Mobile: beat desktop column caps — full width for tables. */
+        max-width: none;
+        width: 100%;
     }
 
     .portal-dash-toolbar {
