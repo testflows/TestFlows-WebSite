@@ -13,9 +13,9 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=9ffe6eac4b30";
-import { setStatus, showSpinner } from "../ui.js?v=9ffe6eac4b30";
-import { eur, titleCase } from "./format.js?v=9ffe6eac4b30";
+} from "../api.js?v=ff542d1fad0c";
+import { setStatus, showSpinner } from "../ui.js?v=ff542d1fad0c";
+import { eur, titleCase } from "./format.js?v=ff542d1fad0c";
 
 /**
  * @param {string|undefined} url

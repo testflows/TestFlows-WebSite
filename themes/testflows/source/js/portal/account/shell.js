@@ -10,7 +10,7 @@
 
 import { ApiError, getAccount, logout, refreshSession } from "../api.js";
 import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js";
-import { setStatus, showSpinner } from "../ui.js";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js";
 import { renderOverview } from "./overview.js";
 import { renderCredits } from "./credits.js";
 import { renderActivity } from "./activity.js";
@@ -40,6 +40,54 @@ const SECTIONS = [
   "storage",
   "settings",
 ];
+
+/** Title + lead painted synchronously when a section opens (before any fetch). */
+const SECTION_CHROME = {
+  overview: {
+    title: "Overview",
+    lead: "Identity, plan, credits, and quotas.",
+  },
+  credits: {
+    title: "Credits",
+    lead: "Included plan balance and purchased usage credits.",
+  },
+  activity: {
+    title: "Activity",
+    lead: "Credit transactions on this account.",
+  },
+  buy: {
+    title: "Buy",
+    lead: "Subscribe to a plan or purchase usage credits.",
+  },
+  billing: {
+    title: "Billing",
+    lead: "Manage plan, payment method, and cancellation in Stripe.",
+  },
+  invoices: {
+    title: "Invoices",
+    lead: "Stripe invoices for this account.",
+  },
+  orders: {
+    title: "Orders",
+    lead: "Checkout orders — resume or cancel pending ones.",
+  },
+  keys: {
+    title: "API keys",
+    lead: "Keys for CLI and automation. Plaintext is shown once on create.",
+  },
+  devices: {
+    title: "Devices",
+    lead: "Where you're signed in. Sign out any device you don't recognize.",
+  },
+  storage: {
+    title: "Storage",
+    lead: "Provision cloud storage for images and sessions.",
+  },
+  settings: {
+    title: "Settings",
+    lead: "Change email or close this account.",
+  },
+};
 
 /** @type {Record<string, unknown>|null} */
 let accountCache = null;
@@ -78,6 +126,26 @@ function setActiveNav(section) {
 }
 
 /**
+ * Paint title + description immediately (panels start empty in the HTML).
+ * Full render*() later replaces this with the complete section body.
+ * @param {HTMLElement} panel
+ * @param {string} id
+ */
+function paintSectionChrome(panel, id) {
+  const meta = SECTION_CHROME[id];
+  if (!meta) return;
+  panel.replaceChildren();
+  const head = document.createElement("header");
+  head.className = "portal-panel-header";
+  const h2 = document.createElement("h2");
+  h2.textContent = meta.title;
+  const p = document.createElement("p");
+  p.textContent = meta.lead;
+  head.append(h2, p);
+  panel.append(head);
+}
+
+/**
  * @param {string} section
  * @param {boolean} [force]
  */
@@ -108,16 +176,35 @@ async function showSection(section, force = false) {
   };
 
   try {
-    if (!accountCache || accountSections.has(id)) {
+    if (!accountSections.has(id) && !force && panel.dataset.loaded === "1") {
+      return;
+    }
+
+    // Title/description first — Refresh is already in static HTML; panels are not.
+    paintSectionChrome(panel, id);
+
+    // Don't block list/table views on getAccount.
+    // Account-backed sections still wait; others refresh email in the background.
+    if (accountSections.has(id)) {
       showSpinner(statusEl(), "Loading account");
       accountCache = await getAccount();
       setStatus(statusEl(), "", "");
       updateNavEmail(accountCache);
-    } else if (!force && panel.dataset.loaded === "1") {
-      return;
+    } else if (!accountCache) {
+      void getAccount()
+        .then((acct) => {
+          accountCache = acct;
+          updateNavEmail(acct);
+        })
+        .catch((err) => {
+          if (err instanceof ApiError && err.status === 401) {
+            clearSession();
+            window.location.replace(LOGIN_HREF);
+          }
+        });
     }
 
-    const acct = /** @type {Record<string, unknown>} */ (accountCache);
+    const acct = /** @type {Record<string, unknown>} */ (accountCache || {});
 
     switch (id) {
       case "overview":
@@ -213,13 +300,7 @@ async function onLogout(event) {
 }
 
 async function refreshCurrentView() {
-  const btn = /** @type {HTMLButtonElement|null} */ (
-    $("portal-account-refresh")
-  );
-  if (btn) {
-    btn.disabled = true;
-    btn.classList.add("is-busy");
-  }
+  setRefreshBusy(true);
   accountCache = null;
   document.querySelectorAll("[data-portal-panel]").forEach((el) => {
     el.dataset.loaded = "0";
@@ -227,10 +308,7 @@ async function refreshCurrentView() {
   try {
     await showSection(currentSection(), true);
   } finally {
-    if (btn) {
-      btn.disabled = false;
-      btn.classList.remove("is-busy");
-    }
+    setRefreshBusy(false);
   }
 }
 

@@ -6,9 +6,11 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=9ffe6eac4b30";
-import { setStatus, showSpinner } from "../ui.js?v=9ffe6eac4b30";
-import { compactDatetime, eur, titleCase } from "./format.js?v=9ffe6eac4b30";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=ff542d1fad0c";
+import { setStatus, showSpinner } from "../ui.js?v=ff542d1fad0c";
+import { compactDatetime, eur, titleCase } from "./format.js?v=ff542d1fad0c";
+import { makePager } from "./pager.js?v=ff542d1fad0c";
+import { paintEmpty } from "./table.js?v=ff542d1fad0c";
 
 /**
  * @param {HTMLElement} panel
@@ -29,14 +31,53 @@ export function renderInvoices(panel, ctx) {
   tableWrap.className = "portal-table-wrap";
   panel.append(tableWrap);
 
+  const pager = document.createElement("nav");
+  panel.append(pager);
+
+  const capNote = document.createElement("p");
+  capNote.className = "portal-muted portal-pager-note";
+  capNote.hidden = true;
+  capNote.textContent =
+    "Showing the most recent invoices — older invoices are in your Stripe billing portal.";
+  panel.append(capNote);
+
+  const PAGE_SIZE = 25;
+  /** @type {number} */
+  let offset = 0;
+
+  const pg = makePager(pager, {
+    onPrev: () => {
+      offset = Math.max(0, offset - PAGE_SIZE);
+      return load();
+    },
+    onNext: () => {
+      offset = offset + PAGE_SIZE;
+      return load();
+    },
+    emptyLabel: "No invoices",
+  });
+
   const load = async () => {
     showSpinner(ctx.statusEl, "Loading invoices");
     try {
-      const rows = await getBillingInvoices({ limit: 50 });
+      // Ask for one extra row so we know whether a next page exists.
+      const data = await getBillingInvoices({ limit: PAGE_SIZE + 1, offset });
       setStatus(ctx.statusEl, "", "");
-      paint(rows);
+      const all = Array.isArray(data.invoices) ? data.invoices : [];
+      const hasNext = all.length > PAGE_SIZE;
+      const page = hasNext ? all.slice(0, PAGE_SIZE) : all;
+      paint(page);
+      pg.update({
+        hasPrev: offset > 0,
+        hasNext,
+        from: page.length ? offset + 1 : 0,
+        to: offset + page.length,
+      });
+      capNote.hidden = !data.capped;
     } catch (err) {
-      tableWrap.replaceChildren();
+      paintEmpty(tableWrap, "No invoices");
+      pg.hide();
+      capNote.hidden = true;
       setStatus(
         ctx.statusEl,
         err instanceof ApiError
@@ -51,14 +92,11 @@ export function renderInvoices(panel, ctx) {
    * @param {Record<string, unknown>[]} rows
    */
   const paint = (rows) => {
-    tableWrap.replaceChildren();
     if (!rows.length) {
-      const empty = document.createElement("p");
-      empty.className = "portal-muted";
-      empty.textContent = "No invoices yet.";
-      tableWrap.append(empty);
+      paintEmpty(tableWrap, offset > 0 ? "No more invoices" : "No invoices");
       return;
     }
+    tableWrap.replaceChildren();
     const table = document.createElement("table");
     table.className = "portal-table";
     table.innerHTML = `

@@ -62,13 +62,11 @@ export function renderDevices(panel, ctx) {
   head.className = "portal-panel-header";
   const h2 = document.createElement("h2");
   h2.textContent = "Devices";
-  head.append(h2);
-  panel.append(head);
   const lead = document.createElement("p");
-  lead.className = "portal-muted";
   lead.textContent =
     "Where you're signed in. Sign out any device you don't recognize.";
-  panel.append(lead);
+  head.append(h2, lead);
+  panel.append(head);
 
   const listHost = document.createElement("div");
   panel.append(listHost);

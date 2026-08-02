@@ -17,6 +17,8 @@ import {
   titleCase,
 } from "./format.js";
 import { enhanceSelects } from "./select.js";
+import { makePager } from "./pager.js";
+import { paintEmpty } from "./table.js";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
@@ -149,9 +151,6 @@ export function renderActivity(panel, ctx) {
   panel.append(tableWrap);
 
   const pager = document.createElement("nav");
-  pager.className = "portal-pager";
-  pager.setAttribute("aria-label", "Activity pages");
-  pager.hidden = true;
   panel.append(pager);
 
   /** @type {number} */
@@ -162,44 +161,17 @@ export function renderActivity(panel, ctx) {
     return Math.max(1, Number(fd.get("limit") || 50));
   };
 
-  /**
-   * @param {{ hasPrev: boolean, hasNext: boolean, from: number, to: number }} state
-   */
-  const paintPager = (state) => {
-    pager.replaceChildren();
-    if (!state.to && !state.hasPrev) {
-      pager.hidden = true;
-      return;
-    }
-    pager.hidden = false;
-
-    const prev = document.createElement("button");
-    prev.type = "button";
-    prev.className = "btn btn-default btn-sm";
-    prev.textContent = "Previous";
-    prev.disabled = !state.hasPrev;
-    prev.addEventListener("click", () => {
+  const pg = makePager(pager, {
+    onPrev: () => {
       offset = Math.max(0, offset - pageSize());
-      void load();
-    });
-
-    const label = document.createElement("span");
-    label.className = "portal-pager-label";
-    label.textContent =
-      state.to > 0 ? `Showing ${state.from}–${state.to}` : "No transactions";
-
-    const next = document.createElement("button");
-    next.type = "button";
-    next.className = "btn btn-default btn-sm";
-    next.textContent = "Next";
-    next.disabled = !state.hasNext;
-    next.addEventListener("click", () => {
+      return load();
+    },
+    onNext: () => {
       offset = offset + pageSize();
-      void load();
-    });
-
-    pager.append(prev, label, next);
-  };
+      return load();
+    },
+    emptyLabel: "No transactions",
+  });
 
   const load = async () => {
     const fd = new FormData(filters);
@@ -221,15 +193,15 @@ export function renderActivity(panel, ctx) {
       const hasNext = rows.length > limit;
       const page = hasNext ? rows.slice(0, limit) : rows;
       paint(page);
-      paintPager({
+      pg.update({
         hasPrev: offset > 0,
         hasNext,
         from: page.length ? offset + 1 : 0,
         to: offset + page.length,
       });
     } catch (err) {
-      tableWrap.replaceChildren();
-      pager.hidden = true;
+      paintEmpty(tableWrap, "No transactions");
+      pg.hide();
       setStatus(
         ctx.statusEl,
         err instanceof ApiError
@@ -244,14 +216,14 @@ export function renderActivity(panel, ctx) {
    * @param {Record<string, unknown>[]} rows
    */
   const paint = (rows) => {
-    tableWrap.replaceChildren();
     if (!rows.length) {
-      const empty = document.createElement("p");
-      empty.className = "portal-muted";
-      empty.textContent = offset > 0 ? "No more transactions." : "No transactions yet.";
-      tableWrap.append(empty);
+      paintEmpty(
+        tableWrap,
+        offset > 0 ? "No more transactions" : "No transactions"
+      );
       return;
     }
+    tableWrap.replaceChildren();
     const table = document.createElement("table");
     table.className = "portal-table portal-table--activity";
     const thead = document.createElement("thead");

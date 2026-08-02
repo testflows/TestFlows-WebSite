@@ -468,7 +468,9 @@ export async function getBillingInvoices(params = {}) {
   const qs = q.toString();
   const resp = await request("GET", `/billing/invoices${qs ? `?${qs}` : ""}`, null);
   if (resp.status === 200 && resp.data && Array.isArray(resp.data.invoices)) {
-    return resp.data.invoices;
+    // Whole envelope { invoices, capped } — the panel reads `capped` to show the
+    // "older invoices live in Stripe" note when Stripe's scan cap is hit.
+    return resp.data;
   }
   fail(resp, "Could not load invoices.");
 }
