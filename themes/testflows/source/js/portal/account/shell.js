@@ -217,7 +217,7 @@ async function showSection(section, force = false) {
         renderActivity(panel, ctx);
         break;
       case "buy":
-        renderBuy(panel, ctx);
+        renderBuy(panel, acct, ctx);
         break;
       case "billing":
         renderBilling(panel, acct, ctx);

@@ -16,10 +16,10 @@ import {
   emailChallenge,
   emailStart,
   getAccount,
-} from "../api.js?v=a9c577326ec5";
-import { clearSession } from "../session.js?v=a9c577326ec5";
-import { setStatus, showSpinner } from "../ui.js?v=a9c577326ec5";
-import { runStepUp } from "./stepup.js?v=a9c577326ec5";
+} from "../api.js?v=84c7f636a38d";
+import { clearSession } from "../session.js?v=84c7f636a38d";
+import { setStatus, showSpinner } from "../ui.js?v=84c7f636a38d";
+import { runStepUp } from "./stepup.js?v=84c7f636a38d";
 
 /**
  * @param {HTMLElement} panel
