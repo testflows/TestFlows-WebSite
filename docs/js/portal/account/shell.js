@@ -8,22 +8,22 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=a9c577326ec5";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=a9c577326ec5";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=a9c577326ec5";
-import { renderOverview } from "./overview.js?v=a9c577326ec5";
-import { renderCredits } from "./credits.js?v=a9c577326ec5";
-import { renderActivity } from "./activity.js?v=a9c577326ec5";
-import { renderBuy } from "./buy.js?v=a9c577326ec5";
-import { renderBilling } from "./billing.js?v=a9c577326ec5";
-import { renderInvoices } from "./invoices.js?v=a9c577326ec5";
-import { renderOrders } from "./orders.js?v=a9c577326ec5";
-import { renderKeys } from "./keys.js?v=a9c577326ec5";
-import { renderDevices } from "./devices.js?v=a9c577326ec5";
-import { renderStorage } from "./storage.js?v=a9c577326ec5";
-import { renderSettings } from "./settings.js?v=a9c577326ec5";
-import { enhanceSelects } from "./select.js?v=a9c577326ec5";
-import { todayDate } from "./format.js?v=a9c577326ec5";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=84c7f636a38d";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=84c7f636a38d";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=84c7f636a38d";
+import { renderOverview } from "./overview.js?v=84c7f636a38d";
+import { renderCredits } from "./credits.js?v=84c7f636a38d";
+import { renderActivity } from "./activity.js?v=84c7f636a38d";
+import { renderBuy } from "./buy.js?v=84c7f636a38d";
+import { renderBilling } from "./billing.js?v=84c7f636a38d";
+import { renderInvoices } from "./invoices.js?v=84c7f636a38d";
+import { renderOrders } from "./orders.js?v=84c7f636a38d";
+import { renderKeys } from "./keys.js?v=84c7f636a38d";
+import { renderDevices } from "./devices.js?v=84c7f636a38d";
+import { renderStorage } from "./storage.js?v=84c7f636a38d";
+import { renderSettings } from "./settings.js?v=84c7f636a38d";
+import { enhanceSelects } from "./select.js?v=84c7f636a38d";
+import { todayDate } from "./format.js?v=84c7f636a38d";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -217,7 +217,7 @@ async function showSection(section, force = false) {
         renderActivity(panel, ctx);
         break;
       case "buy":
-        renderBuy(panel, ctx);
+        renderBuy(panel, acct, ctx);
         break;
       case "billing":
         renderBilling(panel, acct, ctx);

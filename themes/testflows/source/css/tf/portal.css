@@ -941,6 +941,14 @@
     margin-top: 1.75rem;
 }
 
+/* Section chrome without the outer card — use when children are already cards. */
+.portal-block--borderless {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
 .portal-block h3 {
     position: absolute;
     left: 0;
@@ -1338,11 +1346,31 @@
     gap: 0.4rem;
 }
 
+.portal-product--subscribed {
+    opacity: 0.55;
+}
+
+.portal-product-title {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.65rem;
+}
+
 .portal-product h4 {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 500;
     color: var(--tf-text-strong);
+}
+
+.portal-product-badge {
+    flex: 0 0 auto;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--tf-accent);
 }
 
 .portal-product .btn {

@@ -10,6 +10,7 @@ import {
   ApiError,
   billingCheckout,
   billingSubscribe,
+  getAccount,
   getBillingOrder,
   getBillingProducts,
   newRequestId,
@@ -27,9 +28,10 @@ function openStripe(url) {
 
 /**
  * @param {HTMLElement} panel
- * @param {{ statusEl: HTMLElement|null }} ctx
+ * @param {Record<string, unknown>} account
+ * @param {{ statusEl: HTMLElement|null, onAccount?: (acct: Record<string, unknown>) => void }} ctx
  */
-export function renderBuy(panel, ctx) {
+export function renderBuy(panel, account, ctx) {
   panel.replaceChildren();
   const head = document.createElement("header");
   head.className = "portal-panel-header";
@@ -41,15 +43,23 @@ export function renderBuy(panel, ctx) {
   panel.append(head);
 
   const plansEl = document.createElement("section");
-  plansEl.className = "portal-block";
+  plansEl.className = "portal-block portal-block--borderless";
   const packsEl = document.createElement("section");
-  packsEl.className = "portal-block";
+  packsEl.className = "portal-block portal-block--borderless";
   panel.append(plansEl, packsEl);
+
+  /** @type {string} */
+  let currentTier = String(account.tier || "").toLowerCase();
 
   const load = async () => {
     showSpinner(ctx.statusEl, "Loading products");
     try {
-      const catalog = await getBillingProducts();
+      const [catalog, acct] = await Promise.all([
+        getBillingProducts(),
+        getAccount(),
+      ]);
+      currentTier = String(acct.tier || "").toLowerCase();
+      if (ctx.onAccount) ctx.onAccount(acct);
       setStatus(ctx.statusEl, "", "");
       paint(catalog);
     } catch (err) {
@@ -93,21 +103,36 @@ export function renderBuy(panel, ctx) {
         const priceId = String(sub.price_id || "");
         const tier = String(sub.tier || "plan");
         const micros = Number(sub.credit_micros) || 0;
+        const subscribed = tier.toLowerCase() === currentTier;
         const card = document.createElement("article");
-        card.className = "portal-product";
+        card.className = subscribed
+          ? "portal-product portal-product--subscribed"
+          : "portal-product";
+        const titleRow = document.createElement("div");
+        titleRow.className = "portal-product-title";
         const title = document.createElement("h4");
         title.textContent = titleCase(tier) || "Plan";
+        titleRow.append(title);
+        if (subscribed) {
+          const badge = document.createElement("span");
+          badge.className = "portal-product-badge";
+          badge.textContent = "Subscribed";
+          titleRow.append(badge);
+        }
         const meta = document.createElement("p");
         meta.className = "portal-muted";
         meta.textContent = `${eur(micros, 3)} included credits / period`;
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "btn btn-ghost";
-        btn.textContent = "Subscribe";
-        btn.addEventListener("click", () =>
-          void startCheckout(priceId, "plan", btn)
-        );
-        card.append(title, meta, btn);
+        card.append(titleRow, meta);
+        if (!subscribed) {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn btn-ghost";
+          btn.textContent = "Subscribe";
+          btn.addEventListener("click", () =>
+            void startCheckout(priceId, "plan", btn)
+          );
+          card.append(btn);
+        }
         list.append(card);
       }
       plansEl.append(list);
