@@ -123,6 +123,12 @@ form.contact-us {
     }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .contact-us.is-expanded .contact-step-2 {
+        animation: none;
+    }
+}
+
 .contact-field {
     margin-bottom: 1.1rem;
 }

@@ -16,9 +16,8 @@
  * Per-panel opt-in: add class `index-code-animate` on the `.index-start-step`
  * (or panel) that wraps the test.py figure. Without it, the block stays static.
  *
- * Global opt-out (wins over per-panel): ?animate=0 or localStorage tf-animate=0
- * (GNOME “reduce animation” maps to prefers-reduced-motion in Chromium, so we
- * do not honor that media query here — demos would never play.)
+ * Global opt-out (wins over per-panel): prefers-reduced-motion, ?animate=0,
+ * or localStorage tf-animate=0. Static final content is shown instead.
  */
 (function () {
   "use strict";
@@ -28,6 +27,8 @@
   var CMD_HOLD_MS = 160;
 
   var skipAnimate =
+    (typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches) ||
     /(?:\?|&)animate=0(?:&|$)/.test(window.location.search) ||
     (function () {
       try {
