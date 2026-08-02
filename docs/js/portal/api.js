@@ -21,9 +21,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=9ffe6eac4b30";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=9ffe6eac4b30";
-import { setSession, clearSession } from "./session.js?v=9ffe6eac4b30";
+import { solve, currentBucket } from "./hashcash.js?v=ff542d1fad0c";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=ff542d1fad0c";
+import { setSession, clearSession } from "./session.js?v=ff542d1fad0c";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -468,7 +468,9 @@ export async function getBillingInvoices(params = {}) {
   const qs = q.toString();
   const resp = await request("GET", `/billing/invoices${qs ? `?${qs}` : ""}`, null);
   if (resp.status === 200 && resp.data && Array.isArray(resp.data.invoices)) {
-    return resp.data.invoices;
+    // Whole envelope { invoices, capped } — the panel reads `capped` to show the
+    // "older invoices live in Stripe" note when Stripe's scan cap is hit.
+    return resp.data;
   }
   fail(resp, "Could not load invoices.");
 }

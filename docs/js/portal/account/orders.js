@@ -11,9 +11,11 @@ import {
   cancelBillingOrder,
   getBillingOrders,
   resumeBillingOrder,
-} from "../api.js?v=9ffe6eac4b30";
-import { setStatus, showSpinner } from "../ui.js?v=9ffe6eac4b30";
-import { compactDatetime, eur, titleCase } from "./format.js?v=9ffe6eac4b30";
+} from "../api.js?v=ff542d1fad0c";
+import { setStatus, showSpinner } from "../ui.js?v=ff542d1fad0c";
+import { compactDatetime, eur, titleCase } from "./format.js?v=ff542d1fad0c";
+import { makePager } from "./pager.js?v=ff542d1fad0c";
+import { paintEmpty } from "./table.js?v=ff542d1fad0c";
 
 /**
  * @param {HTMLElement} panel
@@ -34,14 +36,43 @@ export function renderOrders(panel, ctx) {
   tableWrap.className = "portal-table-wrap";
   panel.append(tableWrap);
 
+  const pager = document.createElement("nav");
+  panel.append(pager);
+
+  const PAGE_SIZE = 25;
+  /** @type {number} */
+  let offset = 0;
+
+  const pg = makePager(pager, {
+    onPrev: () => {
+      offset = Math.max(0, offset - PAGE_SIZE);
+      return load();
+    },
+    onNext: () => {
+      offset = offset + PAGE_SIZE;
+      return load();
+    },
+    emptyLabel: "No orders",
+  });
+
   const load = async () => {
     showSpinner(ctx.statusEl, "Loading orders");
     try {
-      const rows = await getBillingOrders({ limit: 50 });
+      // Ask for one extra row so we know whether a next page exists.
+      const rows = await getBillingOrders({ limit: PAGE_SIZE + 1, offset });
       setStatus(ctx.statusEl, "", "");
-      paint(rows);
+      const hasNext = rows.length > PAGE_SIZE;
+      const page = hasNext ? rows.slice(0, PAGE_SIZE) : rows;
+      paint(page);
+      pg.update({
+        hasPrev: offset > 0,
+        hasNext,
+        from: page.length ? offset + 1 : 0,
+        to: offset + page.length,
+      });
     } catch (err) {
-      tableWrap.replaceChildren();
+      paintEmpty(tableWrap, "No orders");
+      pg.hide();
       setStatus(
         ctx.statusEl,
         err instanceof ApiError
@@ -56,14 +87,11 @@ export function renderOrders(panel, ctx) {
    * @param {Record<string, unknown>[]} rows
    */
   const paint = (rows) => {
-    tableWrap.replaceChildren();
     if (!rows.length) {
-      const empty = document.createElement("p");
-      empty.className = "portal-muted";
-      empty.textContent = "No orders yet.";
-      tableWrap.append(empty);
+      paintEmpty(tableWrap, offset > 0 ? "No more orders" : "No orders");
       return;
     }
+    tableWrap.replaceChildren();
     const table = document.createElement("table");
     table.className = "portal-table";
     table.innerHTML = `

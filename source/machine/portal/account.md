@@ -9,7 +9,7 @@ permalink: machine/portal/account/index.html
 ---
 
 <section class="portal-page portal-dash">
-    <div class="container portal-dash-inner">
+    <div class="portal-dash-inner">
         <aside class="portal-dash-sidebar" aria-label="Account navigation">
             <div class="portal-dash-brand">
                 <span class="portal-dash-brand-title">Account</span>
@@ -53,7 +53,7 @@ permalink: machine/portal/account/index.html
             <div class="portal-dash-toolbar">
                 <div id="portal-account-status" class="portal-status portal-status--dock" hidden role="status" aria-live="polite"></div>
                 <button type="button" class="btn btn-ghost portal-dash-refresh" id="portal-account-refresh">
-                    <span class="fas fa-sync-alt" aria-hidden="true"></span>
+                    <span class="fas fa-spinner" aria-hidden="true"></span>
                     Refresh
                 </button>
             </div>

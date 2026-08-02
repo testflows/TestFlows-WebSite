@@ -366,17 +366,17 @@
     color: #b33;
 }
 
-/* Account dash toolbar: status + Refresh beside the section title (no layout jump). */
+/* Account dash toolbar: Refresh on top, status under it (right-aligned). */
 .portal-dash-toolbar {
     position: absolute;
     top: 1.7rem;
     right: 1.75rem;
     z-index: 6;
     display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 0.65rem;
-    max-width: min(22rem, 55%);
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.35rem;
+    max-width: min(16rem, 48%);
     pointer-events: none;
 }
 
@@ -384,30 +384,9 @@
     pointer-events: auto;
 }
 
-.portal-dash-toolbar .portal-status--dock {
-    margin: 0;
-    min-width: 0;
-    max-width: 12rem;
-    padding: 0.3rem 0.6rem;
-    font-size: 0.82rem;
-    line-height: 1.25;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.portal-dash-toolbar .portal-status--dock[hidden] {
-    display: none !important;
-}
-
-.portal-dash-toolbar .portal-status--dock.portal-status--busy {
-    background: transparent;
-    padding: 0.2rem 0;
-    color: var(--tf-text-muted);
-    pointer-events: none;
-}
-
+/* DOM order is status then Refresh — keep Refresh on top. */
 .portal-dash-refresh {
+    order: 1;
     flex: 0 0 auto;
     gap: 0.4rem;
     min-height: 2.1rem !important;
@@ -417,58 +396,92 @@
     border-radius: 0.45rem !important;
 }
 
-.portal-dash-refresh .fa-sync-alt {
+/* Fixed-height slot under Refresh so the header doesn't jump. */
+.portal-status--dock {
+    order: 2;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    box-sizing: border-box;
+    margin: 0;
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 1.5rem;
+    padding: 0;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+    text-align: right;
+    color: var(--tf-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Stay in layout when empty — only hide visually. */
+.portal-status--dock[hidden] {
+    display: flex !important;
+    visibility: hidden;
+    background: transparent;
+    pointer-events: none;
+}
+
+.portal-status--dock.portal-status--busy {
+    background: transparent;
+    pointer-events: none;
+}
+
+.portal-dash-refresh .fa-spinner {
     font-size: 0.8em;
 }
 
-.portal-dash-refresh.is-busy .fa-sync-alt {
-    animation: portal-refresh-spin 0.8s linear infinite;
+/* Busy status: text only on the account dashboard (indicator is the Refresh
+   fa-spinner). Pages without a Refresh button (login/signup) get the inline
+   .portal-status-spinner below. */
+.portal-status--busy {
+    color: var(--tf-text-muted);
+    font-weight: 500;
 }
 
-@keyframes portal-refresh-spin {
+/* Inline busy spinner for pages that have no Refresh indicator (login/signup). */
+.portal-status-spinner {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 0.45em;
+    vertical-align: -0.08em;
+    border: 2px solid currentColor;
+    border-top-color: var(--tf-accent);
+    border-radius: 50%;
+    opacity: 0.7;
+    animation: portal-spin 0.8s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .portal-status-spinner {
+        animation: none;
+    }
+}
+
+/* Active: green spinner. Spins unless prefers-reduced-motion. */
+.portal-dash-refresh.is-busy .fa-spinner {
+    display: inline-block;
+    color: var(--tf-accent);
+    animation: portal-spin 0.8s linear infinite;
+}
+
+@keyframes portal-spin {
     to {
         transform: rotate(360deg);
     }
 }
 
-/* CLI-style braille spinner (⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏), ~80ms/frame */
-.portal-status--busy {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    min-height: 1.35rem;
-}
-
-.portal-spinner {
-    display: inline-block;
-    width: 1.1em;
-    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-    font-size: 1.05em;
-    line-height: 1;
-    color: var(--tf-accent);
-}
-
-.portal-spinner::before {
-    content: "⠋";
-    animation: portal-braille 0.8s steps(1, end) infinite;
-}
-
-.portal-spinner-label {
-    color: var(--tf-text-muted);
-    font-weight: 500;
-}
-
-@keyframes portal-braille {
-    0% { content: "⠋"; }
-    10% { content: "⠙"; }
-    20% { content: "⠹"; }
-    30% { content: "⠸"; }
-    40% { content: "⠼"; }
-    50% { content: "⠴"; }
-    60% { content: "⠦"; }
-    70% { content: "⠧"; }
-    80% { content: "⠇"; }
-    90%, 100% { content: "⠏"; }
+@media (prefers-reduced-motion: reduce) {
+    .portal-dash-refresh.is-busy .fa-spinner {
+        animation: none;
+    }
 }
 
 .portal-foot {
@@ -720,8 +733,10 @@
     background-image: none;
 }
 
+/* Full-bleed shell — not Bootstrap .container (that caps at ~1140px). */
 .portal-dash-inner {
     --portal-dash-sidebar-width: 14.5rem;
+    box-sizing: border-box;
     max-width: none;
     width: 100%;
     margin: 0;
@@ -847,8 +862,10 @@
     display: none;
 }
 
+/* Left-aligned content column after the fixed sidebar (no Bootstrap .container). */
 .portal-dash-main {
     position: relative;
+    box-sizing: border-box;
     min-width: 0;
     margin-left: var(--portal-dash-sidebar-width, 14.5rem);
     background: transparent;
@@ -856,6 +873,31 @@
     border-radius: 0;
     padding: 1.75rem 1.75rem 3.5rem;
     max-width: 52rem;
+    width: 100%;
+}
+
+/* Table sections reserve width as soon as the panel is shown (Refresh stays put). */
+.portal-dash-main:has(
+    .portal-dash-panel:not([hidden])[data-portal-panel="activity"]
+  ),
+.portal-dash-main:has(
+    .portal-dash-panel:not([hidden])[data-portal-panel="orders"]
+  ),
+.portal-dash-main:has(
+    .portal-dash-panel:not([hidden])[data-portal-panel="invoices"]
+  ),
+.portal-dash-main:has(
+    .portal-dash-panel:not([hidden])[data-portal-panel="devices"]
+  ),
+.portal-dash-main:has(
+    .portal-dash-panel:not([hidden])[data-portal-panel="keys"]
+  ) {
+    max-width: min(75vw, 72rem);
+}
+
+.portal-dash-panel {
+    width: 100%;
+    max-width: 100%;
 }
 
 .portal-dash-panel[hidden] {
@@ -863,8 +905,10 @@
 }
 
 .portal-panel-header {
-    margin: 0 0 1.5rem;
-    padding-right: min(12.5rem, 52%);
+    /* Breathing room before tables / blocks in every section. */
+    margin: 0 0 2.25rem;
+    /* Clear stacked Refresh + status (right column). */
+    padding-right: min(12rem, 48%);
 }
 
 .portal-panel-header h2 {
@@ -1158,11 +1202,17 @@
     letter-spacing: 0;
 }
 
+.portal-table-empty {
+    color: var(--tf-text-muted);
+    font-style: normal;
+    text-align: left;
+}
+
 /* Dense activity statement: never wrap cells (keeps -€0.10 / rates / periods intact).
-   Horizontal scroll lives on .portal-table-wrap. */
+   Fill the wrap; scroll only if columns still exceed the viewport. */
 .portal-table--activity {
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    min-width: max-content;
 }
 
 .portal-table--activity th,
@@ -1180,6 +1230,11 @@
 
 .portal-pager-label {
     color: var(--tf-text-muted);
+    font-size: 0.85rem;
+}
+
+.portal-pager-note {
+    margin: 0.5rem 0 0;
     font-size: 0.85rem;
 }
 
@@ -1374,6 +1429,22 @@
         flex: 1 1 auto;
         margin-left: 0;
         padding: 1.25rem 1rem 2rem;
+    }
+
+    .portal-dash-toolbar {
+        top: 1.15rem;
+        right: 1rem;
+        left: auto;
+        max-width: min(16rem, 55%);
+    }
+
+    .portal-panel-header {
+        padding-right: 7rem;
+    }
+
+    /* Room for Refresh + status under the title line. */
+    .portal-panel-header p {
+        margin-top: 2.35rem;
     }
 
     .portal-dash-mark {
