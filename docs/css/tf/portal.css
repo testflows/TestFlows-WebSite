@@ -285,7 +285,8 @@
     font-weight: 600;
     font-size: 0.9rem;
     line-height: 1.25;
-    border-radius: var(--tf-radius-pill);
+    /* Match portal cards / action rows — pills look over-round on short labels. */
+    border-radius: 0.65rem;
     padding: 0.55rem 1.15rem;
     min-height: 2.5rem;
     box-shadow: none;
@@ -318,7 +319,7 @@
     font-weight: 600;
     font-size: 0.9rem;
     line-height: 1.25;
-    border-radius: var(--tf-radius-pill);
+    border-radius: 0.65rem;
     padding: 0.55rem 1.15rem;
     min-height: 2.5rem;
     box-shadow: none;
@@ -393,7 +394,7 @@
     padding: 0.4rem 0.95rem !important;
     font-size: 0.85rem !important;
     font-weight: 500 !important;
-    border-radius: 0.45rem !important;
+    border-radius: 0.65rem !important;
 }
 
 /* Fixed-height slot under Refresh so the header doesn't jump. */
@@ -1191,6 +1192,93 @@
     flex: 0 0 auto;
 }
 
+/* Billing (and similar): stacked description + action rows.
+ * Group hugs the widest row, but keeps a min-width so buttons stay right-aligned
+ * with air between label and control. */
+.portal-action-rows {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    width: fit-content;
+    min-width: min(22rem, 100%);
+    max-width: 100%;
+}
+
+.portal-action-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 0.65rem 0.85rem;
+    background: var(--tf-bg-deep);
+    border: 1px solid var(--tf-card-border);
+    border-radius: 0.65rem;
+    font-size: 0.92rem;
+    color: var(--tf-text);
+}
+
+.portal-action-row > .btn,
+.portal-action-row-value {
+    flex: 0 0 auto;
+}
+
+.portal-action-row-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.portal-action-row-meta {
+    font-size: 0.82rem;
+    line-height: 1.3;
+}
+
+/* Read-only value: button-sized padding, green text, no chrome (e.g. Current plan). */
+.portal-action-row-value {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.1rem;
+    padding: 0.3rem 0.75rem;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--tf-accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.25;
+}
+
+.portal-plan-options {
+    margin: 0.75rem 0 0;
+    padding: 0;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.portal-plan-option {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.45rem 0.55rem;
+    border-radius: 0.45rem;
+    cursor: pointer;
+    color: var(--tf-text);
+}
+
+.portal-plan-option:hover {
+    background: var(--tf-ghost-hover-bg);
+}
+
+.portal-plan-option input {
+    margin: 0;
+}
+
 .portal-device-label {
     display: inline-flex;
     align-items: center;
@@ -1371,6 +1459,13 @@
     letter-spacing: 0.02em;
     text-transform: uppercase;
     color: var(--tf-accent);
+}
+
+.portal-product-price {
+    margin: 0.15rem 0 0;
+    color: var(--tf-text-strong);
+    font-size: 1.15rem;
+    font-weight: 600;
 }
 
 .portal-product .btn {

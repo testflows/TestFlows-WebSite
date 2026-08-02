@@ -8,8 +8,8 @@
  */
 /** Shared emailed-code step-up modal (PoW + code) for keys / email / close. */
 
-import { ApiError } from "../api.js?v=84c7f636a38d";
-import { setStatus, showSpinner } from "../ui.js?v=84c7f636a38d";
+import { ApiError } from "../api.js?v=9fb52a8a7f0b";
+import { setStatus, showSpinner } from "../ui.js?v=9fb52a8a7f0b";
 
 /**
  * @typedef {{

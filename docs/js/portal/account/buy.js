@@ -14,9 +14,9 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=84c7f636a38d";
-import { setStatus, showSpinner } from "../ui.js?v=84c7f636a38d";
-import { eur, titleCase } from "./format.js?v=84c7f636a38d";
+} from "../api.js?v=9fb52a8a7f0b";
+import { setStatus, showSpinner } from "../ui.js?v=9fb52a8a7f0b";
+import { eur, titleCase } from "./format.js?v=9fb52a8a7f0b";
 
 /**
  * @param {string|undefined} url
@@ -119,10 +119,24 @@ export function renderBuy(panel, account, ctx) {
           badge.textContent = "Subscribed";
           titleRow.append(badge);
         }
+        const amountMicros = Number(sub.amount_micros) || 0;
+        const interval = String(sub.interval || "");
+        const price = document.createElement("p");
+        price.className = "portal-product-price";
+        price.textContent =
+          amountMicros > 0
+            ? interval
+              ? `${eur(amountMicros, 2)} / ${interval}`
+              : eur(amountMicros, 2)
+            : "";
         const meta = document.createElement("p");
         meta.className = "portal-muted";
         meta.textContent = `${eur(micros, 3)} included credits / period`;
-        card.append(titleRow, meta);
+        if (amountMicros > 0) {
+          card.append(titleRow, price, meta);
+        } else {
+          card.append(titleRow, meta);
+        }
         if (!subscribed) {
           const btn = document.createElement("button");
           btn.type = "button";

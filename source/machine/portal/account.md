@@ -90,4 +90,29 @@ permalink: machine/portal/account/index.html
     </div>
 </div>
 
+<div id="portal-confirm" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-confirm-title">
+    <div class="portal-modal-backdrop" data-portal-confirm-dismiss></div>
+    <div class="portal-modal-card">
+        <h2 id="portal-confirm-title">Confirm</h2>
+        <p id="portal-confirm-body" class="portal-muted"></p>
+        <div class="portal-actions">
+            <button type="button" class="btn btn-primary" id="portal-confirm-ok">Confirm</button>
+            <button type="button" class="btn btn-ghost" id="portal-confirm-cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<div id="portal-billing-plan" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-billing-plan-title">
+    <div class="portal-modal-backdrop" data-portal-billing-plan-dismiss></div>
+    <div class="portal-modal-card">
+        <h2 id="portal-billing-plan-title">Choose plan</h2>
+        <p id="portal-billing-plan-note" class="portal-muted" hidden></p>
+        <fieldset id="portal-billing-plan-options" class="portal-plan-options"></fieldset>
+        <div class="portal-actions">
+            <button type="button" class="btn btn-primary" id="portal-billing-plan-ok">Continue</button>
+            <button type="button" class="btn btn-ghost" id="portal-billing-plan-cancel">Cancel</button>
+        </div>
+    </div>
+</div>
+
 <script type="module" src="/js/portal/account.js"></script>

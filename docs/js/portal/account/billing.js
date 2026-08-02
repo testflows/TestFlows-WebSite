@@ -6,9 +6,60 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, billingPortal } from "../api.js?v=84c7f636a38d";
-import { setStatus, showSpinner } from "../ui.js?v=84c7f636a38d";
-import { titleCase } from "./format.js?v=84c7f636a38d";
+import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=9fb52a8a7f0b";
+import { setStatus, showSpinner } from "../ui.js?v=9fb52a8a7f0b";
+import { titleCase, until } from "./format.js?v=9fb52a8a7f0b";
+import { runConfirm, runPlanPick } from "./modal.js?v=9fb52a8a7f0b";
+
+/** Paid catalog tiers, low → high. Free is never a switch target. */
+const TIER_RANK = ["starter", "pro", "enterprise"];
+
+/**
+ * @param {string} tier
+ * @returns {number}
+ */
+function tierRank(tier) {
+  const i = TIER_RANK.indexOf(tier.toLowerCase());
+  return i < 0 ? -1 : i;
+}
+
+/**
+ * @param {HTMLElement} host
+ * @param {{ label: string, button: string, danger?: boolean, disabled?: boolean, onClick: (btn: HTMLButtonElement) => void }} row
+ */
+function appendActionRow(host, row) {
+  const el = document.createElement("div");
+  el.className = "portal-action-row";
+  const label = document.createElement("span");
+  label.textContent = row.label;
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = row.danger
+    ? "btn btn-ghost btn-sm portal-btn-danger"
+    : "btn btn-ghost btn-sm";
+  btn.textContent = row.button;
+  btn.disabled = Boolean(row.disabled);
+  btn.addEventListener("click", () => row.onClick(btn));
+  el.append(label, btn);
+  host.append(el);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {string} title
+ * @returns {HTMLElement} rows host
+ */
+function appendSection(panel, title) {
+  const section = document.createElement("section");
+  section.className = "portal-block portal-block--borderless";
+  const h3 = document.createElement("h3");
+  h3.textContent = title;
+  const rows = document.createElement("div");
+  rows.className = "portal-action-rows";
+  section.append(h3, rows);
+  panel.append(section);
+  return rows;
+}
 
 /**
  * @param {HTMLElement} panel
@@ -26,73 +77,57 @@ export function renderBilling(panel, account, ctx) {
   head.append(h2, p);
   panel.append(head);
 
-  const tier = String(account.tier || "");
-  const info = document.createElement("p");
-  info.className = "portal-muted";
-  info.textContent = tier
-    ? `Current plan: ${titleCase(tier)}`
-    : "No plan on file.";
-  panel.append(info);
+  const tier = String(account.tier || "").toLowerCase();
+  const paid = tierRank(tier) >= 0;
 
-  const actions = document.createElement("div");
-  actions.className = "portal-action-grid";
+  /** @type {Record<string, unknown>[]|null} */
+  let catalogSubs = null;
 
-  /** @type {{ flow: string, label: string, confirm?: string, plan?: boolean }[]} */
-  const items = [
-    { flow: "manage", label: "Open billing portal" },
-    { flow: "payment", label: "Update payment method" },
-    { flow: "upgrade", label: "Upgrade plan", plan: true },
-    { flow: "downgrade", label: "Downgrade plan", plan: true },
-    {
-      flow: "cancel",
-      label: "Cancel subscription",
-      confirm:
-        "Cancel your subscription at period end? You can keep using it until then.",
-    },
-  ];
-
-  for (const item of items) {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className =
-      item.flow === "cancel" ? "btn btn-ghost portal-btn-danger" : "btn btn-ghost";
-    btn.textContent = item.label;
-    btn.addEventListener("click", () => void runFlow(item, btn));
-    actions.append(btn);
-  }
-  panel.append(actions);
-
-  const planField = document.createElement("div");
-  planField.className = "portal-field";
-  planField.innerHTML = `
-    <label for="portal-billing-plan">Target plan (optional)</label>
-    <input id="portal-billing-plan" class="form-control" type="text"
-      placeholder="Leave blank for nearest plan" autocomplete="off" />
-    <p class="portal-hint">Used for upgrade / downgrade when you want a specific tier.</p>
-  `;
-  panel.append(planField);
+  const loadCatalog = async () => {
+    if (catalogSubs) return catalogSubs;
+    const catalog = await getBillingProducts();
+    catalogSubs = Array.isArray(catalog.subscriptions)
+      ? catalog.subscriptions
+      : [];
+    return catalogSubs;
+  };
 
   /**
-   * @param {{ flow: string, label: string, confirm?: string, plan?: boolean }} item
-   * @param {HTMLButtonElement} btn
+   * @param {"upgrade"|"downgrade"} flow
+   * @returns {Promise<{ value: string, label: string }[]>}
    */
-  const runFlow = async (item, btn) => {
-    if (item.confirm && !window.confirm(item.confirm)) {
-      return;
-    }
-    const planInput = /** @type {HTMLInputElement|null} */ (
-      document.getElementById("portal-billing-plan")
+  const planOptions = async (flow) => {
+    const subs = await loadCatalog();
+    const offered = new Set(
+      subs.map((s) => String(s.tier || "").toLowerCase()).filter(Boolean)
     );
-    const plan = planInput?.value.trim() || "";
+    const current = tierRank(tier);
+    /** @type {{ value: string, label: string }[]} */
+    const options = [];
+    for (const t of TIER_RANK) {
+      if (!offered.has(t)) continue;
+      const r = tierRank(t);
+      if (flow === "upgrade" && r > current) {
+        options.push({ value: t, label: titleCase(t) });
+      }
+      if (flow === "downgrade" && r < current && r >= 0) {
+        options.push({ value: t, label: titleCase(t) });
+      }
+    }
+    // Ascending; upgrade preselects first (nearest up), downgrade last (nearest down).
+    return options;
+  };
+
+  /**
+   * @param {string} flow
+   * @param {HTMLButtonElement} btn
+   * @param {{ plan?: string }} [opts]
+   */
+  const openPortal = async (flow, btn, opts = {}) => {
     btn.disabled = true;
     showSpinner(ctx.statusEl, "Opening Stripe");
     try {
-      /** @type {{ plan?: string }} */
-      const opts = {};
-      if (item.plan && plan) {
-        opts.plan = plan;
-      }
-      const data = await billingPortal(item.flow, opts);
+      const data = await billingPortal(flow, opts);
       const url = String(data.url || "");
       if (url) {
         window.open(url, "_blank", "noopener,noreferrer");
@@ -111,5 +146,148 @@ export function renderBilling(panel, account, ctx) {
     } finally {
       btn.disabled = false;
     }
+  };
+
+  const planRows = appendSection(panel, "Plan");
+  const currentRow = document.createElement("div");
+  currentRow.className = "portal-action-row";
+  const currentLabel = document.createElement("span");
+  currentLabel.className = "portal-action-row-label";
+  const currentTitle = document.createElement("span");
+  currentTitle.textContent = "Current plan";
+  currentLabel.append(currentTitle);
+  const resetsAt = account.credit_resets_at
+    ? String(account.credit_resets_at)
+    : "";
+  if (resetsAt) {
+    const ends = document.createElement("span");
+    ends.className = "portal-muted portal-action-row-meta";
+    ends.textContent = `Period ends ${until(resetsAt)}`;
+    currentLabel.append(ends);
+  }
+  const currentValue = document.createElement("span");
+  currentValue.className = "portal-action-row-value";
+  currentValue.textContent = tier ? titleCase(tier) : "None";
+  currentRow.append(currentLabel, currentValue);
+  planRows.append(currentRow);
+
+  if (!paid) {
+    const note = document.createElement("p");
+    note.className = "portal-muted";
+    note.textContent = "Subscribe on Buy before you can change or cancel a plan.";
+    planRows.append(note);
+  }
+
+  appendActionRow(planRows, {
+    label: "Upgrade plan",
+    button: "Upgrade",
+    disabled: !paid,
+    onClick: (btn) => void onUpgrade(btn),
+  });
+  appendActionRow(planRows, {
+    label: "Downgrade plan",
+    button: "Downgrade",
+    disabled: !paid,
+    onClick: (btn) => void onDowngrade(btn),
+  });
+  appendActionRow(planRows, {
+    label: "Cancel subscription",
+    button: "Cancel",
+    danger: true,
+    disabled: !paid,
+    onClick: (btn) => void onCancel(btn),
+  });
+
+  const portalRows = appendSection(panel, "Billing portal");
+  appendActionRow(portalRows, {
+    label: "Open billing portal",
+    button: "Open",
+    onClick: (btn) => void openPortal("manage", btn),
+  });
+  appendActionRow(portalRows, {
+    label: "Update payment method",
+    button: "Update",
+    onClick: (btn) => void openPortal("payment", btn),
+  });
+
+  /** @param {HTMLButtonElement} btn */
+  const onUpgrade = async (btn) => {
+    btn.disabled = true;
+    showSpinner(ctx.statusEl, "Loading plans");
+    try {
+      const options = await planOptions("upgrade");
+      setStatus(ctx.statusEl, "", "");
+      if (!options.length) {
+        setStatus(ctx.statusEl, "You're already on the highest plan.", "info");
+        return;
+      }
+      const plan = await runPlanPick({
+        title: "Upgrade plan",
+        options,
+        selected: options[0].value,
+      });
+      if (!plan) return;
+      await openPortal("upgrade", btn, { plan });
+    } catch (err) {
+      setStatus(
+        ctx.statusEl,
+        err instanceof ApiError
+          ? err.message
+          : "Could not load plans. Try again shortly.",
+        "err"
+      );
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  /** @param {HTMLButtonElement} btn */
+  const onDowngrade = async (btn) => {
+    btn.disabled = true;
+    showSpinner(ctx.statusEl, "Loading plans");
+    try {
+      const options = await planOptions("downgrade");
+      setStatus(ctx.statusEl, "", "");
+      if (!options.length) {
+        await runConfirm({
+          title: "Downgrade plan",
+          body: "Cancel your subscription to return to Free.",
+          confirmLabel: "OK",
+        });
+        return;
+      }
+      // Nearest downgrade = highest tier still below current (last in ascending list).
+      const nearest = options[options.length - 1].value;
+      const plan = await runPlanPick({
+        title: "Downgrade plan",
+        note: "To return to Free, cancel your subscription.",
+        options,
+        selected: nearest,
+      });
+      if (!plan) return;
+      await openPortal("downgrade", btn, { plan });
+    } catch (err) {
+      setStatus(
+        ctx.statusEl,
+        err instanceof ApiError
+          ? err.message
+          : "Could not load plans. Try again shortly.",
+        "err"
+      );
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
+  /** @param {HTMLButtonElement} btn */
+  const onCancel = async (btn) => {
+    const ok = await runConfirm({
+      title: "Cancel subscription",
+      body: "Cancel at period end? You can keep using the plan until then, then you move to Free.",
+      confirmLabel: "Cancel subscription",
+      danger: true,
+    });
+    if (!ok) return;
+    await openPortal("cancel", btn);
   };
 }
