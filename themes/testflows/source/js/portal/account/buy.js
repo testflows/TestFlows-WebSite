@@ -9,6 +9,7 @@
 import {
   ApiError,
   billingCheckout,
+  billingPortal,
   billingSubscribe,
   getAccount,
   getBillingOrder,
@@ -17,6 +18,7 @@ import {
 } from "../api.js";
 import { setStatus, showSpinner } from "../ui.js";
 import { eur, titleCase } from "./format.js";
+import { tierRank } from "./plans.js";
 
 /**
  * @param {string|undefined} url
@@ -138,12 +140,30 @@ export function renderBuy(panel, account, ctx) {
           card.append(titleRow, meta);
         }
         if (!subscribed) {
+          // Already on a paid plan → this is an upgrade/downgrade by rank, which
+          // goes through the Stripe portal (a fresh Subscribe would 409). No paid
+          // plan yet → a plain new subscription.
+          const currentRank = tierRank(currentTier);
+          const targetRank = tierRank(tier);
+          const flow =
+            currentRank >= 0 && targetRank >= 0
+              ? targetRank > currentRank
+                ? "upgrade"
+                : "downgrade"
+              : "";
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "btn btn-ghost";
-          btn.textContent = "Subscribe";
+          btn.textContent =
+            flow === "upgrade"
+              ? "Upgrade"
+              : flow === "downgrade"
+                ? "Downgrade"
+                : "Subscribe";
           btn.addEventListener("click", () =>
-            void startCheckout(priceId, "plan", btn)
+            flow
+              ? void startSwitch(flow, tier, btn)
+              : void startCheckout(priceId, "plan", btn)
           );
           card.append(btn);
         }
@@ -201,6 +221,37 @@ export function renderBuy(panel, account, ctx) {
    * @param {"pack"|"plan"} kind
    * @param {HTMLButtonElement} btn
    */
+  /**
+   * Upgrade/downgrade an existing subscription via the Stripe portal.
+   * @param {"upgrade"|"downgrade"} flow
+   * @param {string} tier
+   * @param {HTMLButtonElement} btn
+   */
+  const startSwitch = async (flow, tier, btn) => {
+    btn.disabled = true;
+    showSpinner(ctx.statusEl, "Opening Stripe");
+    try {
+      const data = await billingPortal(flow, { plan: tier });
+      const url = String(data.url || "");
+      if (url) {
+        openStripe(url);
+        setStatus(ctx.statusEl, "Continue in Stripe.", "ok");
+      } else {
+        setStatus(ctx.statusEl, `${titleCase(flow)} started.`, "ok");
+      }
+    } catch (err) {
+      setStatus(
+        ctx.statusEl,
+        err instanceof ApiError
+          ? err.message
+          : `Could not ${flow}. Try again shortly.`,
+        "err"
+      );
+    } finally {
+      btn.disabled = false;
+    }
+  };
+
   const startCheckout = async (priceId, kind, btn) => {
     if (!priceId) return;
     btn.disabled = true;
