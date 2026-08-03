@@ -16,10 +16,11 @@ import {
   emailChallenge,
   emailStart,
   getAccount,
-} from "../api.js?v=ffb8907cf590";
-import { clearSession } from "../session.js?v=ffb8907cf590";
-import { setStatus, showSpinner } from "../ui.js?v=ffb8907cf590";
-import { runStepUp } from "./stepup.js?v=ffb8907cf590";
+} from "../api.js?v=18b54629821c";
+import { clearSession } from "../session.js?v=18b54629821c";
+import { setStatus, showSpinner } from "../ui.js?v=18b54629821c";
+import { runConfirm } from "./modal.js?v=18b54629821c";
+import { runStepUp } from "./stepup.js?v=18b54629821c";
 
 /**
  * @param {HTMLElement} panel
@@ -145,13 +146,13 @@ export function renderSettings(panel, account, ctx) {
   };
 
   const onStartClose = async () => {
-    if (
-      !window.confirm(
-        "Start closing this account? You’ll need a second confirmation to finish."
-      )
-    ) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Start closing",
+      body: "Start closing this account? You'll need a second confirmation to finish.",
+      confirmLabel: "Start closing",
+      danger: true,
+    });
+    if (!proceed) return;
     const ok = await runStepUp({
       title: "Start closing account",
       hint: "We'll email a code to begin closing.",
@@ -170,13 +171,13 @@ export function renderSettings(panel, account, ctx) {
   };
 
   const onConfirmClose = async () => {
-    if (
-      !window.confirm(
-        "Permanently close this account? This can’t be undone after it finishes."
-      )
-    ) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Close account",
+      body: "Permanently close this account? This can't be undone after it finishes.",
+      confirmLabel: "Close account",
+      danger: true,
+    });
+    if (!proceed) return;
     const ok = await runStepUp({
       title: "Confirm account close",
       hint: "We'll email a final confirmation code.",

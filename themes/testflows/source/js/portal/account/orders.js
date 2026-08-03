@@ -14,6 +14,7 @@ import {
 } from "../api.js";
 import { setStatus, showSpinner } from "../ui.js";
 import { compactDatetime, eur, titleCase } from "./format.js";
+import { runConfirm } from "./modal.js";
 import { makePager } from "./pager.js";
 import { paintEmpty } from "./table.js";
 
@@ -183,9 +184,13 @@ export function renderOrders(panel, ctx) {
    * @param {HTMLButtonElement} btn
    */
   const onCancel = async (orderId, btn) => {
-    if (!window.confirm("Cancel this pending checkout?")) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Cancel order",
+      body: "Cancel this pending checkout?",
+      confirmLabel: "Cancel order",
+      danger: true,
+    });
+    if (!proceed) return;
     btn.disabled = true;
     showSpinner(ctx.statusEl, "Canceling order");
     try {

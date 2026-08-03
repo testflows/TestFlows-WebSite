@@ -273,8 +273,11 @@
     min-width: 11.5rem;
 }
 
-/* Portal buttons — ours, not Bootstrap blue (scoped beyond .portal-actions). */
-.portal-page .btn-primary {
+/* Portal buttons — ours, not Bootstrap blue.
+   Modals live outside .portal-page (siblings under body content), so include
+   .portal-modal or Cancel/OK inherit Bootstrap .btn and vanish in dark theme. */
+.portal-page .btn-primary,
+.portal-modal .btn-primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -294,7 +297,9 @@
 }
 
 .portal-page .btn-primary:hover,
-.portal-page .btn-primary:focus {
+.portal-page .btn-primary:focus,
+.portal-modal .btn-primary:hover,
+.portal-modal .btn-primary:focus {
     filter: brightness(1.05);
     background: var(--tf-primary);
     border-color: var(--tf-primary);
@@ -303,12 +308,14 @@
     outline: none;
 }
 
-.portal-page .btn-primary:disabled {
+.portal-page .btn-primary:disabled,
+.portal-modal .btn-primary:disabled {
     opacity: 0.65;
     cursor: default;
 }
 
-.portal-page .btn-ghost {
+.portal-page .btn-ghost,
+.portal-modal .btn-ghost {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -326,7 +333,9 @@
 }
 
 .portal-page .btn-ghost:hover,
-.portal-page .btn-ghost:focus {
+.portal-page .btn-ghost:focus,
+.portal-modal .btn-ghost:hover,
+.portal-modal .btn-ghost:focus {
     background: var(--tf-ghost-hover-bg);
     color: var(--tf-text-strong);
     outline: none;

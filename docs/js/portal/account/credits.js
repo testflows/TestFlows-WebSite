@@ -6,7 +6,7 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { compactDatetime, eur } from "./format.js?v=ffb8907cf590";
+import { compactDatetime, eur } from "./format.js?v=18b54629821c";
 
 /**
  * @param {HTMLElement} panel
