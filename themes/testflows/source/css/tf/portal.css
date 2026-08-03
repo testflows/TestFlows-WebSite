@@ -503,6 +503,26 @@
     color: var(--tf-text-strong);
 }
 
+.portal-legal {
+    margin: 0.85rem 0 0;
+    color: var(--tf-text-muted);
+    font-size: 0.85rem;
+    line-height: 1.45;
+    /* body uses text-wrap:balance, which wraps early for even lines */
+    text-wrap: wrap;
+}
+
+.portal-legal a {
+    color: var(--tf-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.portal-legal a:hover,
+.portal-legal a:focus {
+    color: var(--tf-text-strong);
+}
+
 .portal-account-email {
     color: var(--tf-text-strong);
     font-weight: 600;

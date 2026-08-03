@@ -44,6 +44,12 @@ permalink: machine/portal/login/index.html
         <p class="portal-foot" id="portal-login-foot">
             New here? <a href="/machine/portal/signup/">Create an account</a>
         </p>
+        <p class="portal-legal">
+            Use is governed by the
+            <a href="/machine/legal/terms-of-service/">Terms of Service</a>
+            and
+            <a href="/machine/legal/privacy-policy/">Privacy Policy</a>.
+        </p>
     </div>
 </section>
 <script type="module" src="/js/portal/login.js"></script>
