@@ -1,13 +1,14 @@
 ---
 title: "TestFlows Machine: Acceptable Use Policy"
 description: Acceptable Use Policy for the TestFlows Machine service.
-layout: page
+layout: legal
+legal_family: machine
 permalink: machine/legal/acceptable-use/index.html
 ---
 
-# TestFlows Machine™: Acceptable Use Policy
+# Acceptable Use Policy
 
-Last updated: 2 August 2026
+<p class="legal-updated">Last updated: 2 August 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 

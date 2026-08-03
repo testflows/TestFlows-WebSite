@@ -1,13 +1,14 @@
 ---
 title: "TestFlows Machine: Usage Credit Terms"
 description: Usage Credit Terms for the TestFlows Machine service.
-layout: page
+layout: legal
+legal_family: machine
 permalink: machine/legal/usage-credit/index.html
 ---
 
-# TestFlows Machine™: Usage Credit Terms
+# Usage Credit Terms
 
-Last updated: 26 July 2026
+<p class="legal-updated">Last updated: 2 August 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 

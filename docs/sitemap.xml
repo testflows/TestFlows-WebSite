@@ -3,15 +3,6 @@
   
   
   <url>
-    <loc>https://testflows.com/legal/privacy-policy/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://testflows.com/legal/copyright-and-content-use/index.html</loc>
     
     <lastmod>2026-08-03</lastmod>
@@ -29,7 +20,25 @@
     <priority>0.6</priority>
   </url>
   
+  <url>
+    <loc>https://testflows.com/legal/privacy-policy/index.html</loc>
+    
+    <lastmod>2026-08-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   
+  
+  
+  <url>
+    <loc>https://testflows.com/legal/index.html</loc>
+    
+    <lastmod>2026-08-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   
   
   
@@ -78,15 +87,6 @@
     <loc>https://testflows.com/blog/index.html</loc>
     
     <lastmod>2026-07-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/credits.html</loc>
-    
-    <lastmod>2026-07-30</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

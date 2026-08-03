@@ -60,7 +60,8 @@ body > .container-fluid {
 .content:has(.contact-page),
 .content:has(.about-page),
 .content:has(.blog-page),
-.content:has(.handbook) {
+.content:has(.handbook),
+.content:has(.legal-page) {
     padding-top: var(--tf-nav-height);
     overflow: visible;
     background-color: var(--tf-bg);

@@ -1,21 +1,21 @@
 ---
 title: "TestFlows Website: Terms of Use"
 description: Terms governing use of the testflows.com website and its content.
-layout: page
+layout: legal
+legal_family: website
 permalink: legal/terms-of-use/index.html
 ---
 
-# TestFlows Website: Terms of Use
+# Terms of Use
 
-Last updated: 2 August 2026
+<p class="legal-updated">Last updated: 2 August 2026</p>
 
 Katteli Inc. (“**we**,” “**us**,” or “**our**”) operates the
 testflows.com website and its subdomains (the “**Site**”). These Website Terms
 of Use (the “**Terms**”) govern your access to and use of the Site.
 
 These Terms cover the Site and its content, including documentation, the
-handbook, and the blog. They do not govern the TestFlows Machine service, which
-is provided under its own separate terms, or the open-source TestFlows testing
+handbook, and the blog. They do not govern the open-source TestFlows testing
 framework, which is licensed under its own open-source license in the project
 source repository. By using the Site you agree to these Terms; if
 you do not agree, do not use the Site.
@@ -77,10 +77,7 @@ laws of Canada applicable therein, without regard to conflict-of-law principles.
 
 Questions about these Terms?
 
-Katteli Inc.  
-110 Didsbury Rd  
-Kanata, ON K2T 0C2  
-Canada
+Katteli Inc.
 
 Legal: `legal@testflows.com`  
 Website: `https://testflows.com`

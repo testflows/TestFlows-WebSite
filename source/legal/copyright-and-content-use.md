@@ -1,13 +1,14 @@
 ---
 title: "TestFlows Website: Copyright and Content Use"
 description: Copyright, trademarks, and permitted use of testflows.com content.
-layout: page
+layout: legal
+legal_family: website
 permalink: legal/copyright-and-content-use/index.html
 ---
 
-# TestFlows Website: Copyright and Content Use
+# Copyright and Content Use
 
-Last updated: 2 August 2026
+<p class="legal-updated">Last updated: 2 August 2026</p>
 
 © 2026 Katteli Inc. All rights reserved.
 
@@ -15,8 +16,7 @@ This notice explains who owns the content on the testflows.com website (the
 “**Site**”) and how you may use it. It covers the Site and its content. The
 open-source TestFlows testing framework is licensed under its own open-source
 license in the project source repository, and that license, not this notice,
-governs the framework’s source code. Use of the TestFlows Machine service
-is governed by its own separate terms.
+governs the framework’s source code.
 
 ## 1. Ownership
 
@@ -54,10 +54,7 @@ at issue, and we will review it.
 
 Questions about content use or permissions?
 
-Katteli Inc.  
-110 Didsbury Rd  
-Kanata, ON K2T 0C2  
-Canada
+Katteli Inc.
 
 Legal: `legal@testflows.com`  
 Website: `https://testflows.com`

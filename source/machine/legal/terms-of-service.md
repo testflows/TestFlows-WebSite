@@ -1,13 +1,14 @@
 ---
 title: "TestFlows Machine: Terms of Service"
 description: Terms of Service for the TestFlows Machine service.
-layout: page
+layout: legal
+legal_family: machine
 permalink: machine/legal/terms-of-service/index.html
 ---
 
-# TestFlows Machine™: Terms of Service
+# Terms of Service
 
-Last updated: 26 July 2026
+<p class="legal-updated">Last updated: 26 July 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -119,10 +120,9 @@ will not reverse engineer or create derivative works of the Services except
 where that restriction is prohibited by law. Open-source components are
 governed by their licenses.
 
-Send copyright infringement notices to `abuse@testflows.com` and to Katteli
-Inc., 110 Didsbury Rd, Kanata, ON K2T 0C2, Canada, identifying the copyrighted
-work, the allegedly infringing material and where it is located, your contact
-information, and a good-faith statement. We handle valid notices under Canada's
+Send copyright infringement notices to `legal@testflows.com`, identifying the
+copyrighted work, the allegedly infringing material and where it is located,
+your contact information, and a good-faith statement. We handle valid notices under Canada's
 Copyright Act (notice-and-notice) and other applicable law.
 
 ## 8. Confidentiality
@@ -248,19 +248,15 @@ our prior written consent; we may assign them in a merger, acquisition, or sale
 of assets. Neither party is liable for delay due to events beyond reasonable
 control (except payment obligations). The parties are independent contractors.
 We may notify you via the Services or your account email. You may notify us at
-`legal@testflows.com`, `abuse@testflows.com` for abuse, or by mail to the
-address below. Third-party services (including Stripe) are governed by their
-own terms; we are not responsible for services we do not control. We may
-identify you as a customer by name and logo unless you opt out by emailing
-`legal@testflows.com`. If these Terms are translated, the English version
-controls to the extent permitted by law.
+`legal@testflows.com`, or `abuse@testflows.com` for abuse. Third-party services
+(including Stripe) are governed by their own terms; we are not responsible for
+services we do not control. We may identify you as a customer by name and logo
+unless you opt out by emailing `legal@testflows.com`. If these Terms are
+translated, the English version controls to the extent permitted by law.
 
 ## 17. Contact
 
-Katteli Inc.  
-110 Didsbury Rd  
-Kanata, ON K2T 0C2  
-Canada
+Katteli Inc.
 
 Support: `support@testflows.com`  
 Legal: `legal@testflows.com`  
