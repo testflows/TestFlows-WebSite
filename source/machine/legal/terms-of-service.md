@@ -1,6 +1,6 @@
 ---
 title: "TestFlows Machine: Terms of Service"
-description: Terms of Service for the TestFlows Machine cloud service.
+description: Terms of Service for the TestFlows Machine service.
 layout: page
 permalink: machine/legal/terms-of-service/index.html
 ---

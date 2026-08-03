@@ -14,8 +14,8 @@ privacy. This Privacy Policy explains how we handle personal information on the
 testflows.com website and its subdomains (the “**Site**”).
 
 This policy covers the Site, including its documentation and contact form.
-Personal information processed as part of the TestFlows Machine cloud service is
-governed by the [Machine Privacy Policy](/machine/legal/privacy-policy/).
+Personal information processed as part of the TestFlows Machine service is
+governed by its own separate privacy policy.
 
 ## 1. Information we collect
 
@@ -41,36 +41,44 @@ obligations; when required by law or to protect our rights, safety, or property;
 and in connection with a merger, acquisition, or sale of assets, subject to this
 policy.
 
-## 4. Cookies and choices
+## 4. International transfers
+
+We are a Canadian company. To operate the Site and respond to you, we and our
+service providers may process and store information outside your country,
+including in Canada, the European Union, and other places where we or our
+providers operate. Where required, we use appropriate transfer mechanisms, such
+as Standard Contractual Clauses.
+
+## 5. Cookies and choices
 
 You can control cookies through your browser settings, though blocking essential
 cookies may affect how the Site works. Where analytics cookies are used, they
 help us measure and improve the Site.
 
-## 5. Retention
+## 6. Retention
 
 We keep personal information only as long as needed for the purposes described
 here or as required by law, then delete or anonymize it.
 
-## 6. Your rights
+## 7. Your rights
 
 Depending on where you live, you may have the right to access, correct, delete,
 or restrict the use of your personal information, or to object to certain
 processing. To exercise a right, email `privacy@testflows.com`.
 
-## 7. Security and children
+## 8. Security and children
 
 We use commercially reasonable technical and organizational measures to protect
 personal information, though no method of transmission or storage is completely
 secure. The Site is intended for adults and is not directed to anyone under 18,
 and we do not knowingly collect their personal information.
 
-## 8. Changes
+## 9. Changes
 
 We may update this Privacy Policy from time to time; changes take effect when
 posted, as shown by the “Last updated” date above.
 
-## 9. Contact
+## 10. Contact
 
 Questions about this Privacy Policy, or want to exercise a privacy right?
 
