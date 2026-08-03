@@ -6,8 +6,8 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getTransactions } from "../api.js?v=48a6fbd25698";
-import { setStatus, showSpinner } from "../ui.js?v=48a6fbd25698";
+import { ApiError, getTransactions } from "../api.js?v=9943371cc422";
+import { setStatus, showSpinner } from "../ui.js?v=9943371cc422";
 import {
   compactDatetime,
   duration,
@@ -15,10 +15,10 @@ import {
   eur,
   eurSigned,
   titleCase,
-} from "./format.js?v=48a6fbd25698";
-import { enhanceSelects } from "./select.js?v=48a6fbd25698";
-import { makePager } from "./pager.js?v=48a6fbd25698";
-import { paintEmpty } from "./table.js?v=48a6fbd25698";
+} from "./format.js?v=9943371cc422";
+import { enhanceSelects } from "./select.js?v=9943371cc422";
+import { makePager } from "./pager.js?v=9943371cc422";
+import { paintEmpty } from "./table.js?v=9943371cc422";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {

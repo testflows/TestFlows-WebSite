@@ -11,6 +11,21 @@
     }
   })();
   </script>
+  <% if (page.portal_auth_gate) { %>
+  <% /* Sync gate before body paints — module boot is too late (flashes the dash). */ %>
+  <script>
+  (function () {
+    var prefix = "tf_machine_email=";
+    var parts = document.cookie.split("; ");
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i].indexOf(prefix) === 0 && parts[i].length > prefix.length) {
+        return;
+      }
+    }
+    location.replace("<%- config.root %>machine/portal/login/");
+  })();
+  </script>
+  <% } %>
   <title><% if (page.path === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | TestFlows<% } %></title>
   <meta name="description" content="<%- page.description || config.description %>">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

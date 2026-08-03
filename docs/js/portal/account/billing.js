@@ -6,15 +6,16 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=48a6fbd25698";
-import { setStatus, showSpinner } from "../ui.js?v=48a6fbd25698";
-import { titleCase, until } from "./format.js?v=48a6fbd25698";
-import { runConfirm, runPlanPick } from "./modal.js?v=48a6fbd25698";
-import { TIER_RANK, tierRank } from "./plans.js?v=48a6fbd25698";
+import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=9943371cc422";
+import { setStatus, showSpinner } from "../ui.js?v=9943371cc422";
+import { titleCase, until } from "./format.js?v=9943371cc422";
+import { runConfirm, runPlanPick } from "./modal.js?v=9943371cc422";
+import { TIER_RANK, tierRank } from "./plans.js?v=9943371cc422";
 
 /**
  * @param {HTMLElement} host
  * @param {{ label: string, button: string, danger?: boolean, disabled?: boolean, onClick: (btn: HTMLButtonElement) => void }} row
+ * @returns {HTMLButtonElement}
  */
 function appendActionRow(host, row) {
   const el = document.createElement("div");
@@ -28,9 +29,13 @@ function appendActionRow(host, row) {
     : "btn btn-ghost btn-sm";
   btn.textContent = row.button;
   btn.disabled = Boolean(row.disabled);
+  if (row.disabled) {
+    btn.dataset.baseDisabled = "1";
+  }
   btn.addEventListener("click", () => row.onClick(btn));
   el.append(label, btn);
   host.append(el);
+  return btn;
 }
 
 /**
@@ -68,6 +73,18 @@ export function renderBilling(panel, account, ctx) {
 
   const tier = String(account.tier || "").toLowerCase();
   const paid = tierRank(tier) >= 0;
+
+  /** @type {HTMLButtonElement[]} */
+  const actionButtons = [];
+  let busy = false;
+
+  /** @param {boolean} on */
+  const setBusy = (on) => {
+    busy = on;
+    for (const b of actionButtons) {
+      b.disabled = on || b.dataset.baseDisabled === "1";
+    }
+  };
 
   /** @type {Record<string, unknown>[]|null} */
   let catalogSubs = null;
@@ -109,11 +126,9 @@ export function renderBilling(panel, account, ctx) {
 
   /**
    * @param {string} flow
-   * @param {HTMLButtonElement} btn
    * @param {{ plan?: string }} [opts]
    */
-  const openPortal = async (flow, btn, opts = {}) => {
-    btn.disabled = true;
+  const openPortal = async (flow, opts = {}) => {
     showSpinner(ctx.statusEl, "Opening Stripe");
     try {
       const data = await billingPortal(flow, opts);
@@ -132,8 +147,6 @@ export function renderBilling(panel, account, ctx) {
           : "Could not open billing. Try again shortly.",
         "err"
       );
-    } finally {
-      btn.disabled = false;
     }
   };
 
@@ -151,7 +164,8 @@ export function renderBilling(panel, account, ctx) {
   if (resetsAt) {
     const ends = document.createElement("span");
     ends.className = "portal-muted portal-action-row-meta";
-    ends.textContent = `Period ends ${until(resetsAt)}`;
+    // credit_resets_at is the credit-block renewal, same as Overview "Renewal".
+    ends.textContent = `Credits renew ${until(resetsAt)}`;
     currentLabel.append(ends);
   }
   const currentValue = document.createElement("span");
@@ -167,47 +181,67 @@ export function renderBilling(panel, account, ctx) {
     planRows.append(note);
   }
 
-  appendActionRow(planRows, {
-    label: "Upgrade plan",
-    button: "Upgrade",
-    disabled: !paid,
-    onClick: (btn) => void onUpgrade(btn),
-  });
-  appendActionRow(planRows, {
-    label: "Downgrade plan",
-    button: "Downgrade",
-    disabled: !paid,
-    onClick: (btn) => void onDowngrade(btn),
-  });
-  appendActionRow(planRows, {
-    label: "Cancel subscription",
-    button: "Cancel",
-    danger: true,
-    disabled: !paid,
-    onClick: (btn) => void onCancel(btn),
-  });
+  actionButtons.push(
+    appendActionRow(planRows, {
+      label: "Upgrade plan",
+      button: "Upgrade",
+      disabled: !paid,
+      onClick: () => void onUpgrade(),
+    }),
+    appendActionRow(planRows, {
+      label: "Downgrade plan",
+      button: "Downgrade",
+      disabled: !paid,
+      onClick: () => void onDowngrade(),
+    }),
+    appendActionRow(planRows, {
+      label: "Cancel subscription",
+      button: "Cancel",
+      danger: true,
+      disabled: !paid,
+      onClick: () => void onCancel(),
+    })
+  );
 
   const portalRows = appendSection(panel, "Billing portal");
-  appendActionRow(portalRows, {
-    label: "Open billing portal",
-    button: "Open",
-    onClick: (btn) => void openPortal("manage", btn),
-  });
-  appendActionRow(portalRows, {
-    label: "Update payment method",
-    button: "Update",
-    onClick: (btn) => void openPortal("payment", btn),
-  });
+  actionButtons.push(
+    appendActionRow(portalRows, {
+      label: "Open billing portal",
+      button: "Open",
+      onClick: () => void onPortal("manage"),
+    }),
+    appendActionRow(portalRows, {
+      label: "Update payment method",
+      button: "Update",
+      onClick: () => void onPortal("payment"),
+    })
+  );
 
-  /** @param {HTMLButtonElement} btn */
-  const onUpgrade = async (btn) => {
-    btn.disabled = true;
+  /** @param {string} flow @param {{ plan?: string }} [opts] */
+  const onPortal = async (flow, opts = {}) => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      await openPortal(flow, opts);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const onUpgrade = async () => {
+    if (busy) return;
+    setBusy(true);
     showSpinner(ctx.statusEl, "Loading plans");
     try {
       const options = await planOptions("upgrade");
       setStatus(ctx.statusEl, "", "");
       if (!options.length) {
-        setStatus(ctx.statusEl, "You're already on the highest plan.", "info");
+        await runConfirm({
+          title: "Upgrade plan",
+          body: "You're already on the highest plan.",
+          confirmLabel: "OK",
+          dismissOnly: true,
+        });
         return;
       }
       const plan = await runPlanPick({
@@ -216,7 +250,7 @@ export function renderBilling(panel, account, ctx) {
         selected: options[0].value,
       });
       if (!plan) return;
-      await openPortal("upgrade", btn, { plan });
+      await openPortal("upgrade", { plan });
     } catch (err) {
       setStatus(
         ctx.statusEl,
@@ -226,23 +260,26 @@ export function renderBilling(panel, account, ctx) {
         "err"
       );
     } finally {
-      btn.disabled = false;
+      setBusy(false);
     }
   };
 
-  /** @param {HTMLButtonElement} btn */
-  const onDowngrade = async (btn) => {
-    btn.disabled = true;
+  const onDowngrade = async () => {
+    if (busy) return;
+    setBusy(true);
     showSpinner(ctx.statusEl, "Loading plans");
     try {
       const options = await planOptions("downgrade");
       setStatus(ctx.statusEl, "", "");
       if (!options.length) {
-        await runConfirm({
+        // No paid tier below — Free is cancel, not a plan switch.
+        const ok = await runConfirm({
           title: "Downgrade plan",
-          body: "Cancel your subscription to return to Free.",
-          confirmLabel: "OK",
+          body: "There's no lower paid plan. Cancel your subscription at period end to return to Free. You can keep using the plan until then.",
+          confirmLabel: "Cancel subscription",
+          danger: true,
         });
+        if (ok) await openPortal("cancel");
         return;
       }
       // Nearest downgrade = highest tier still below current (last in ascending list).
@@ -254,7 +291,7 @@ export function renderBilling(panel, account, ctx) {
         selected: nearest,
       });
       if (!plan) return;
-      await openPortal("downgrade", btn, { plan });
+      await openPortal("downgrade", { plan });
     } catch (err) {
       setStatus(
         ctx.statusEl,
@@ -264,19 +301,24 @@ export function renderBilling(panel, account, ctx) {
         "err"
       );
     } finally {
-      btn.disabled = false;
+      setBusy(false);
     }
   };
 
-  /** @param {HTMLButtonElement} btn */
-  const onCancel = async (btn) => {
-    const ok = await runConfirm({
-      title: "Cancel subscription",
-      body: "Cancel at period end? You can keep using the plan until then, then you move to Free.",
-      confirmLabel: "Cancel subscription",
-      danger: true,
-    });
-    if (!ok) return;
-    await openPortal("cancel", btn);
+  const onCancel = async () => {
+    if (busy) return;
+    setBusy(true);
+    try {
+      const ok = await runConfirm({
+        title: "Cancel subscription",
+        body: "Cancel at period end? You can keep using the plan until then, then you move to Free.",
+        confirmLabel: "Cancel subscription",
+        danger: true,
+      });
+      if (!ok) return;
+      await openPortal("cancel");
+    } finally {
+      setBusy(false);
+    }
   };
 }
