@@ -15,8 +15,8 @@
   })();
   </script>
   
-  <title>Machine portal | TestFlows</title>
-  <meta name="description" content="TestFlows Machine account portal">
+  <title>Purchase | TestFlows</title>
+  <meta name="description" content="TestFlows Machine purchase">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="TestFlows">
   <meta name="og:site_name" content="TestFlows">
@@ -30,34 +30,34 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785716448918" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/about.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1785716448918" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785716448915" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1785716448918" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -162,10 +162,20 @@
       
 <section class="portal-page">
     <div class="container portal-page-inner">
-        <p class="portal-status portal-status--info">Redirecting…</p>
+        <div class="portal-card" style="text-align:center">
+            <div id="portal-purchase-mark" style="font-size:3rem;line-height:1;margin:0 0 0.75rem;color:var(--tf-accent)">✓</div>
+            <header class="portal-page-header" style="margin-bottom:1rem">
+                <h1 id="portal-purchase-title">Payment received</h1>
+                <p id="portal-purchase-body" class="portal-muted">Your account is being updated. You can close this tab and return to your terminal.</p>
+            </header>
+            <div class="portal-actions" style="justify-content:center">
+                <a class="btn btn-primary" href="/machine/portal/login/">Sign in</a>
+            </div>
+        </div>
     </div>
 </section>
-<script type="module" src="/js/portal/index.js?v=48a6fbd25698"></script>
+
+<script type="module" src="/js/portal/purchase.js?v=48a6fbd25698"></script>
 
 
 
@@ -225,7 +235,7 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1785716448916"></script>
+<script src="/js/index-code-type.js?v=1785716448919"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

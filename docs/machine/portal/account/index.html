@@ -14,6 +14,21 @@
     }
   })();
   </script>
+  
+  
+  <script>
+  (function () {
+    var prefix = "tf_machine_email=";
+    var parts = document.cookie.split("; ");
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i].indexOf(prefix) === 0 && parts[i].length > prefix.length) {
+        return;
+      }
+    }
+    location.replace("/machine/portal/login/");
+  })();
+  </script>
+  
   <title>Account | TestFlows</title>
   <meta name="description" content="Your TestFlows Machine account">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,34 +44,34 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1785716448914" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/about.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1785716448914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785711838101" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1785716448914" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -236,7 +251,7 @@
     </div>
 </div>
 
-<script type="module" src="/js/portal/account.js?v=0f5c00e0c3af"></script>
+<script type="module" src="/js/portal/account.js?v=48a6fbd25698"></script>
 
 
 
@@ -246,7 +261,7 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1785711838102"></script>
+<script src="/js/index-code-type.js?v=1785716448915"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

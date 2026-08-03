@@ -369,4 +369,30 @@ export async function bootAccountDashboard() {
     }
   }
   await showSection(currentSection(), true);
+  showPurchaseReturn();
+}
+
+/** Surface a Stripe return (?purchase=success|cancelled) as a status note, then
+ * scrub the param so a reload doesn't repeat it. Boot already reloaded the
+ * account fresh; a webhook-driven grant may lag a moment, hence the wording. */
+function showPurchaseReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const purchase = (params.get("purchase") || "").toLowerCase();
+  if (!purchase) return;
+  params.delete("purchase");
+  const qs = params.toString();
+  window.history.replaceState(
+    {},
+    "",
+    window.location.pathname + (qs ? `?${qs}` : "")
+  );
+  if (purchase === "success") {
+    setStatus(
+      statusEl(),
+      "Payment received — your balance updates in a moment.",
+      "ok"
+    );
+  } else if (purchase === "cancelled") {
+    setStatus(statusEl(), "Checkout cancelled — no charge was made.", "info");
+  }
 }
