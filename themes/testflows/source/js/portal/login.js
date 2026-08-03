@@ -125,37 +125,63 @@ async function onCodeSubmit(event) {
   }
 }
 
-// Notes shown after a machine-api confirm link redirects back here.
+// Notes shown after a machine-api confirm link redirects back here. Each value is
+// [message(addr), level]; addr is the account email when the redirect carries it.
 const SIGNUP_STATUS = {
-  activated: ["Your account is activated. Sign in below to continue.", "ok"],
-  reopened: ["Welcome back. Sign in below to continue.", "ok"],
-  invalid: ["That activation link is invalid or expired. Sign up again.", "err"],
-  full: ["This email domain has reached its account limit.", "err"],
-  error: ["Couldn't finish activation. Open the link again in a moment.", "err"],
+  activated: [
+    (a) =>
+      a
+        ? `Your account ${a} is activated. Sign in below to continue.`
+        : "Your account is activated. Sign in below to continue.",
+    "ok",
+  ],
+  reopened: [
+    (a) =>
+      a
+        ? `Welcome back, ${a}. Sign in below to continue.`
+        : "Welcome back. Sign in below to continue.",
+    "ok",
+  ],
+  invalid: [() => "That activation link is invalid or expired. Sign up again.", "err"],
+  full: [() => "This email domain has reached its account limit.", "err"],
+  error: [() => "Couldn't finish activation. Open the link again in a moment.", "err"],
 };
 
 const EMAIL_STATUS = {
-  changed: ["Your email is changed. Sign in with your new address.", "ok"],
-  taken: ["That address is already in use. Change it again from your account.", "err"],
-  full: ["This email domain has reached its account limit.", "err"],
-  invalid: ["That confirmation link is invalid or expired.", "err"],
-  error: ["Couldn't update your email. Open the link again in a moment.", "err"],
+  changed: [
+    (a) =>
+      a
+        ? `Your email is changed to ${a}. Sign in with your new address.`
+        : "Your email is changed. Sign in with your new address.",
+    "ok",
+  ],
+  taken: [() => "That address is already in use. Change it again from your account.", "err"],
+  full: [() => "This email domain has reached its account limit.", "err"],
+  invalid: [() => "That confirmation link is invalid or expired.", "err"],
+  error: [() => "Couldn't update your email. Open the link again in a moment.", "err"],
 };
 
-/** Read ?<param>=<outcome> from a confirm redirect, show the note, scrub the param. */
+/** Read ?<param>=<outcome> (+ optional ?addr=email) from a confirm redirect: show
+ *  the note, pre-fill the email field, and scrub the params. */
 function showConfirmStatus(param, statusMap) {
   const params = new URLSearchParams(window.location.search);
   const outcome = params.get(param);
   if (!outcome) return;
+  const addr = params.get("addr") || "";
   params.delete(param);
+  params.delete("addr");
   const qs = params.toString();
   window.history.replaceState(
     {},
     "",
     window.location.pathname + (qs ? `?${qs}` : "") + window.location.hash
   );
+  if (addr) {
+    const emailInput = $("portal-login-email");
+    if (emailInput && !emailInput.value) emailInput.value = addr;
+  }
   const entry = statusMap[outcome];
-  if (entry) setStatus($("portal-login-status"), entry[0], entry[1]);
+  if (entry) setStatus($("portal-login-status"), entry[0](addr), entry[1]);
 }
 
 function init() {
@@ -167,7 +193,7 @@ function init() {
   showConfirmStatus("email", EMAIL_STATUS);
   const emailInput = $("portal-login-email");
   const saved = getEmail();
-  if (emailInput && saved) {
+  if (emailInput && saved && !emailInput.value) {
     emailInput.value = saved;
   }
   const emailForm = $("portal-login-email-form");
