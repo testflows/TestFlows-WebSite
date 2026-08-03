@@ -6,11 +6,11 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=08f0a1b4e18a";
-import { setStatus, showSpinner } from "../ui.js?v=08f0a1b4e18a";
-import { titleCase, until } from "./format.js?v=08f0a1b4e18a";
-import { runConfirm, runPlanPick } from "./modal.js?v=08f0a1b4e18a";
-import { TIER_RANK, tierRank } from "./plans.js?v=08f0a1b4e18a";
+import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=c180d996aa4b";
+import { setStatus, showSpinner } from "../ui.js?v=c180d996aa4b";
+import { titleCase, until } from "./format.js?v=c180d996aa4b";
+import { runConfirm, runPlanPick } from "./modal.js?v=c180d996aa4b";
+import { TIER_RANK, tierRank } from "./plans.js?v=c180d996aa4b";
 
 /**
  * @param {HTMLElement} host
