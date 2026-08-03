@@ -16,14 +16,39 @@ import {
   emailChallenge,
   emailStart,
   getAccount,
-} from "../api.js?v=6e72d7cd2916";
-import { clearSession } from "../session.js?v=6e72d7cd2916";
-import { setStatus, showSpinner } from "../ui.js?v=6e72d7cd2916";
-import { runConfirm } from "./modal.js?v=6e72d7cd2916";
-import { runStepUp } from "./stepup.js?v=6e72d7cd2916";
+} from "../api.js?v=0b7804b627a3";
+import { clearSession } from "../session.js?v=0b7804b627a3";
+import { setStatus, showSpinner } from "../ui.js?v=0b7804b627a3";
+import { runConfirm } from "./modal.js?v=0b7804b627a3";
+import { runStepUp } from "./stepup.js?v=0b7804b627a3";
 
 /** How often the closing panel resumes teardown while waiting for `ready`. */
 const CLOSE_POLL_MS = 5000;
+
+/** Teardown steps in API order (start_closing). Keys aren't separately reported;
+ * once sessions are gone the next resume has revoked them. */
+const CLOSE_STEPS = [
+  { id: "sessions", label: "Stop machines" },
+  { id: "keys", label: "Revoke API keys" },
+  { id: "plan", label: "Cancel plan" },
+  { id: "confirm", label: "Confirm close" },
+];
+
+/**
+ * @param {Record<string, unknown>|null} progress
+ * @returns {{ current: string, ready: boolean, remaining: number }}
+ */
+function closePhase(progress) {
+  if (!progress) {
+    // Status fetch failed — fail open on Confirm (server still enforces ready).
+    return { current: "confirm", ready: true, remaining: 0 };
+  }
+  const remaining = Number(progress.sessions_remaining ?? 0);
+  const ready = Boolean(progress.ready);
+  if (remaining > 0) return { current: "sessions", ready, remaining };
+  if (!ready) return { current: "plan", ready, remaining: 0 };
+  return { current: "confirm", ready, remaining: 0 };
+}
 
 /**
  * @param {HTMLElement} panel
@@ -105,42 +130,75 @@ export function renderSettings(panel, account, ctx) {
   closeBlock.append(h3c, note, closeInfo, closeActions);
   panel.append(closeBlock);
 
-  /**
-   * Populate the closing-state detail and gate Confirm on `ready`. `progress` is
-   * the AccountCloseProgress, or null when the status fetch failed — in which case
-   * Confirm stays enabled and the server still enforces readiness.
-   * @param {Record<string, unknown>|null} progress
-   */
-  const renderClosing = (progress) => {
-    const detail = document.createElement("p");
-    detail.textContent = "This account is closing.";
-    closeInfo.append(detail);
+  // Stable closing chrome — built once, updated in place on each poll so the
+  // action row (and focus) aren't torn down every 5s.
+  /** @type {{
+   *   steps: HTMLElement,
+   *   stepEls: Map<string, HTMLElement>,
+   *   detailEls: Map<string, HTMLElement>,
+   *   confirmBtn: HTMLButtonElement,
+   *   cancelBtn: HTMLButtonElement,
+   *   manage: HTMLAnchorElement,
+   * }|null} */
+  let closingUi = null;
 
-    const ready = progress ? Boolean(progress.ready) : true;
-    const remaining = Number(progress?.sessions_remaining ?? 0);
-    // The platform tears sessions down for you (reaper), then cancels the plan;
-    // `ready` gates on both. Surface whichever step is still pending as a wait —
-    // never "stop them yourself". We don't split out sessions_stopping.
-    if (remaining > 0) {
-      const line = document.createElement("p");
-      line.className = "portal-muted";
-      line.textContent = `Waiting for ${remaining} session${
-        remaining === 1 ? "" : "s"
-      } to stop.`;
-      closeInfo.append(line);
-    } else if (progress && !ready) {
-      const line = document.createElement("p");
-      line.className = "portal-muted";
-      line.textContent = "Waiting for plan cancel to finish.";
-      closeInfo.append(line);
+  const clearCloseChrome = () => {
+    closingUi = null;
+    closeInfo.replaceChildren();
+    closeActions.replaceChildren();
+  };
+
+  /** Build the stepper + action buttons once for the closing state. */
+  const ensureClosingUi = () => {
+    if (closingUi) return closingUi;
+
+    clearCloseChrome();
+
+    const lead = document.createElement("p");
+    lead.textContent = "This account is closing.";
+    closeInfo.append(lead);
+
+    const steps = document.createElement("ol");
+    steps.className = "portal-close-steps";
+    steps.setAttribute("aria-label", "Closing progress");
+    /** @type {Map<string, HTMLElement>} */
+    const stepEls = new Map();
+    /** @type {Map<string, HTMLElement>} */
+    const detailEls = new Map();
+    for (const step of CLOSE_STEPS) {
+      const li = document.createElement("li");
+      li.className = "portal-close-step";
+      li.dataset.step = step.id;
+
+      const rail = document.createElement("span");
+      rail.className = "portal-close-step-rail";
+      rail.setAttribute("aria-hidden", "true");
+      const dot = document.createElement("span");
+      dot.className = "portal-close-step-dot";
+      rail.append(dot);
+
+      const body = document.createElement("div");
+      body.className = "portal-close-step-body";
+      const label = document.createElement("span");
+      label.className = "portal-close-step-label";
+      label.textContent = step.label;
+      const detail = document.createElement("span");
+      detail.className = "portal-close-step-detail";
+      detail.setAttribute("aria-live", "polite");
+      detail.hidden = true;
+      body.append(label, detail);
+
+      li.append(rail, body);
+      steps.append(li);
+      stepEls.set(step.id, li);
+      detailEls.set(step.id, detail);
     }
+    closeInfo.append(steps);
 
     const confirmBtn = document.createElement("button");
     confirmBtn.type = "button";
     confirmBtn.className = "btn btn-ghost portal-btn-danger";
     confirmBtn.textContent = "Confirm close";
-    confirmBtn.disabled = !ready;
-    if (!ready) confirmBtn.title = "Sessions or plan cancel aren't done yet.";
     confirmBtn.addEventListener("click", () => void onConfirmClose());
 
     const cancelBtn = document.createElement("button");
@@ -148,16 +206,84 @@ export function renderSettings(panel, account, ctx) {
     cancelBtn.className = "btn btn-primary";
     cancelBtn.textContent = "Cancel closing";
     cancelBtn.addEventListener("click", () => void onCancelClose());
-    closeActions.append(confirmBtn, cancelBtn);
+
+    const manage = document.createElement("a");
+    manage.className = "btn btn-ghost";
+    manage.target = "_blank";
+    manage.rel = "noopener noreferrer";
+    manage.textContent = "Manage billing";
+    manage.hidden = true;
+
+    closeActions.append(confirmBtn, cancelBtn, manage);
+    closingUi = { steps, stepEls, detailEls, confirmBtn, cancelBtn, manage };
+    return closingUi;
+  };
+
+  /**
+   * In-place update of stepper highlight + Confirm gate. `progress` is the
+   * AccountCloseProgress, or null when the status fetch failed.
+   * @param {Record<string, unknown>|null} progress
+   */
+  const updateClosing = (progress) => {
+    const ui = ensureClosingUi();
+    const { current, ready, remaining } = closePhase(progress);
+    const order = CLOSE_STEPS.map((s) => s.id);
+    const currentIdx = order.indexOf(current);
+
+    for (let i = 0; i < CLOSE_STEPS.length; i++) {
+      const step = CLOSE_STEPS[i];
+      const el = ui.stepEls.get(step.id);
+      const detail = ui.detailEls.get(step.id);
+      if (!el || !detail) continue;
+
+      /** @type {"pending"|"current"|"done"|"ready"} */
+      let state = "pending";
+      if (ready) {
+        // Teardown finished — prior steps done, Confirm is the ready action.
+        state = step.id === "confirm" ? "ready" : "done";
+      } else if (i < currentIdx) {
+        state = "done";
+      } else if (i === currentIdx) {
+        state = "current";
+      }
+
+      el.dataset.state = state;
+      el.classList.toggle("is-done", state === "done");
+      el.classList.toggle("is-current", state === "current" || state === "ready");
+      el.classList.toggle("is-pending", state === "pending");
+      el.classList.toggle("is-ready", state === "ready");
+      if (state === "current" || state === "ready") {
+        el.setAttribute("aria-current", "step");
+      } else {
+        el.removeAttribute("aria-current");
+      }
+
+      // keys is never "current" (no distinct API phase) — only pending→done.
+      let detailText = "";
+      if (state === "current" && step.id === "sessions") {
+        detailText = `Waiting for ${remaining} session${
+          remaining === 1 ? "" : "s"
+        } to stop.`;
+      } else if (state === "current" && step.id === "plan") {
+        detailText = "Waiting for plan cancel to finish.";
+      } else if (state === "ready" && step.id === "confirm") {
+        detailText = "Ready when you are.";
+      }
+      detail.textContent = detailText;
+      detail.hidden = !detailText;
+    }
+
+    ui.confirmBtn.disabled = !ready;
+    ui.confirmBtn.title = ready
+      ? ""
+      : "Sessions or plan cancel aren't done yet.";
 
     if (progress?.portal_url) {
-      const manage = document.createElement("a");
-      manage.className = "btn btn-ghost";
-      manage.href = String(progress.portal_url);
-      manage.target = "_blank";
-      manage.rel = "noopener noreferrer";
-      manage.textContent = "Manage billing";
-      closeActions.append(manage);
+      ui.manage.hidden = false;
+      ui.manage.href = String(progress.portal_url);
+    } else {
+      ui.manage.hidden = true;
+      ui.manage.removeAttribute("href");
     }
   };
 
@@ -196,11 +322,8 @@ export function renderSettings(panel, account, ctx) {
       if (progress) status = String(progress.status || status);
     }
 
-    closeInfo.replaceChildren();
-    closeActions.replaceChildren();
-
     if (status === "closing") {
-      renderClosing(progress);
+      updateClosing(progress);
       // Keep advancing teardown until ready; stop once the panel is gone.
       if (progress && !progress.ready) {
         pollTimer = window.setTimeout(() => {
@@ -209,6 +332,8 @@ export function renderSettings(panel, account, ctx) {
       }
       return;
     }
+
+    clearCloseChrome();
 
     if (status === "closed") {
       const done = document.createElement("p");
