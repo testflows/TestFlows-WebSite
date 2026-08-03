@@ -13,11 +13,11 @@ import {
   tokenCreate,
   tokenRevoke,
   tokenUpdate,
-} from "../api.js?v=0b7804b627a3";
-import { setStatus, showSpinner } from "../ui.js?v=0b7804b627a3";
-import { compactDatetime, expiresWithDays } from "./format.js?v=0b7804b627a3";
-import { runConfirm, runPrompt } from "./modal.js?v=0b7804b627a3";
-import { runStepUp } from "./stepup.js?v=0b7804b627a3";
+} from "../api.js?v=08f0a1b4e18a";
+import { setStatus, showSpinner } from "../ui.js?v=08f0a1b4e18a";
+import { compactDatetime, expiresWithDays } from "./format.js?v=08f0a1b4e18a";
+import { runConfirm, runPrompt } from "./modal.js?v=08f0a1b4e18a";
+import { runStepUp } from "./stepup.js?v=08f0a1b4e18a";
 
 /**
  * CLI-parity expiry: positive day count → ISO UTC, or null if invalid.

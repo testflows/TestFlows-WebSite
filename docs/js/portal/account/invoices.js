@@ -6,11 +6,11 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=0b7804b627a3";
-import { setStatus, showSpinner } from "../ui.js?v=0b7804b627a3";
-import { compactDatetime, eur, titleCase } from "./format.js?v=0b7804b627a3";
-import { makePager } from "./pager.js?v=0b7804b627a3";
-import { paintEmpty } from "./table.js?v=0b7804b627a3";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=08f0a1b4e18a";
+import { setStatus, showSpinner } from "../ui.js?v=08f0a1b4e18a";
+import { compactDatetime, eur, titleCase } from "./format.js?v=08f0a1b4e18a";
+import { makePager } from "./pager.js?v=08f0a1b4e18a";
+import { paintEmpty } from "./table.js?v=08f0a1b4e18a";
 
 /**
  * @param {HTMLElement} panel
