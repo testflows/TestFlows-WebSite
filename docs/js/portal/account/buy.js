@@ -15,10 +15,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=6e72d7cd2916";
-import { setStatus, showSpinner } from "../ui.js?v=6e72d7cd2916";
-import { eur, titleCase } from "./format.js?v=6e72d7cd2916";
-import { tierRank } from "./plans.js?v=6e72d7cd2916";
+} from "../api.js?v=0b7804b627a3";
+import { setStatus, showSpinner } from "../ui.js?v=0b7804b627a3";
+import { eur, titleCase } from "./format.js?v=0b7804b627a3";
+import { tierRank } from "./plans.js?v=0b7804b627a3";
 
 /**
  * @param {string|undefined} url

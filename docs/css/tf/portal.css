@@ -353,8 +353,119 @@
     margin: 0.25rem 0 0.6rem;
 }
 
-.portal-close-info p {
-    margin: 0.15rem 0;
+.portal-close-info > p {
+    margin: 0.15rem 0 0.65rem;
+}
+
+/* Vertical closing workflow — dots + connectors; updated in place on poll. */
+.portal-close-steps {
+    list-style: none;
+    margin: 0 0 0.85rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--tf-card-border);
+    border-radius: 0.65rem;
+    background: rgba(var(--tf-fg-rgb), 0.03);
+}
+
+.portal-close-step {
+    display: grid;
+    grid-template-columns: 0.85rem minmax(0, 1fr);
+    column-gap: 0.75rem;
+    align-items: start;
+}
+
+.portal-close-step:last-child .portal-close-step-rail::after {
+    display: none;
+}
+
+.portal-close-step-rail {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 0.85rem;
+    min-height: 1.35rem;
+    padding-top: 0.35rem;
+}
+
+.portal-close-step-rail::after {
+    content: "";
+    position: absolute;
+    top: 1.05rem;
+    bottom: -0.35rem;
+    left: 50%;
+    width: 1px;
+    transform: translateX(-50%);
+    background: var(--tf-card-border);
+}
+
+.portal-close-step.is-done .portal-close-step-rail::after,
+.portal-close-step.is-ready .portal-close-step-rail::after {
+    background: var(--tf-accent);
+}
+
+.portal-close-step-dot {
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--tf-text-muted);
+    background: var(--tf-card-bg);
+}
+
+.portal-close-step.is-pending .portal-close-step-dot {
+    opacity: 0.55;
+}
+
+.portal-close-step.is-current .portal-close-step-dot,
+.portal-close-step.is-ready .portal-close-step-dot {
+    border-color: var(--tf-accent);
+    background: var(--tf-accent);
+}
+
+.portal-close-step.is-done .portal-close-step-dot {
+    border-color: var(--tf-accent);
+    background: var(--tf-accent);
+}
+
+.portal-close-step-body {
+    min-width: 0;
+    padding: 0.15rem 0 0.7rem;
+}
+
+.portal-close-step:last-child .portal-close-step-body {
+    padding-bottom: 0.1rem;
+}
+
+.portal-close-step-label {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.35;
+    color: var(--tf-text-muted);
+}
+
+.portal-close-step.is-current .portal-close-step-label,
+.portal-close-step.is-ready .portal-close-step-label {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+}
+
+.portal-close-step.is-done .portal-close-step-label {
+    color: var(--tf-text);
+}
+
+.portal-close-step-detail {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    color: var(--tf-text-muted);
+}
+
+.portal-close-step-detail[hidden] {
+    display: none !important;
 }
 
 .portal-status {

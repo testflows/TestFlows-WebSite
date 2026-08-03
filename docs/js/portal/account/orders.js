@@ -11,12 +11,12 @@ import {
   cancelBillingOrder,
   getBillingOrders,
   resumeBillingOrder,
-} from "../api.js?v=6e72d7cd2916";
-import { setStatus, showSpinner } from "../ui.js?v=6e72d7cd2916";
-import { compactDatetime, eur, titleCase } from "./format.js?v=6e72d7cd2916";
-import { runConfirm } from "./modal.js?v=6e72d7cd2916";
-import { makePager } from "./pager.js?v=6e72d7cd2916";
-import { paintEmpty } from "./table.js?v=6e72d7cd2916";
+} from "../api.js?v=0b7804b627a3";
+import { setStatus, showSpinner } from "../ui.js?v=0b7804b627a3";
+import { compactDatetime, eur, titleCase } from "./format.js?v=0b7804b627a3";
+import { runConfirm } from "./modal.js?v=0b7804b627a3";
+import { makePager } from "./pager.js?v=0b7804b627a3";
+import { paintEmpty } from "./table.js?v=0b7804b627a3";
 
 /**
  * @param {HTMLElement} panel
