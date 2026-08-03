@@ -19,6 +19,7 @@ import {
 } from "../api.js";
 import { clearSession } from "../session.js";
 import { setStatus, showSpinner } from "../ui.js";
+import { runConfirm } from "./modal.js";
 import { runStepUp } from "./stepup.js";
 
 /**
@@ -145,13 +146,13 @@ export function renderSettings(panel, account, ctx) {
   };
 
   const onStartClose = async () => {
-    if (
-      !window.confirm(
-        "Start closing this account? You’ll need a second confirmation to finish."
-      )
-    ) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Start closing",
+      body: "Start closing this account? You'll need a second confirmation to finish.",
+      confirmLabel: "Start closing",
+      danger: true,
+    });
+    if (!proceed) return;
     const ok = await runStepUp({
       title: "Start closing account",
       hint: "We'll email a code to begin closing.",
@@ -170,13 +171,13 @@ export function renderSettings(panel, account, ctx) {
   };
 
   const onConfirmClose = async () => {
-    if (
-      !window.confirm(
-        "Permanently close this account? This can’t be undone after it finishes."
-      )
-    ) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Close account",
+      body: "Permanently close this account? This can't be undone after it finishes.",
+      confirmLabel: "Close account",
+      danger: true,
+    });
+    if (!proceed) return;
     const ok = await runStepUp({
       title: "Confirm account close",
       hint: "We'll email a final confirmation code.",

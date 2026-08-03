@@ -11,11 +11,12 @@ import {
   cancelBillingOrder,
   getBillingOrders,
   resumeBillingOrder,
-} from "../api.js?v=ffb8907cf590";
-import { setStatus, showSpinner } from "../ui.js?v=ffb8907cf590";
-import { compactDatetime, eur, titleCase } from "./format.js?v=ffb8907cf590";
-import { makePager } from "./pager.js?v=ffb8907cf590";
-import { paintEmpty } from "./table.js?v=ffb8907cf590";
+} from "../api.js?v=18b54629821c";
+import { setStatus, showSpinner } from "../ui.js?v=18b54629821c";
+import { compactDatetime, eur, titleCase } from "./format.js?v=18b54629821c";
+import { runConfirm } from "./modal.js?v=18b54629821c";
+import { makePager } from "./pager.js?v=18b54629821c";
+import { paintEmpty } from "./table.js?v=18b54629821c";
 
 /**
  * @param {HTMLElement} panel
@@ -183,9 +184,13 @@ export function renderOrders(panel, ctx) {
    * @param {HTMLButtonElement} btn
    */
   const onCancel = async (orderId, btn) => {
-    if (!window.confirm("Cancel this pending checkout?")) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Cancel order",
+      body: "Cancel this pending checkout?",
+      confirmLabel: "Cancel order",
+      danger: true,
+    });
+    if (!proceed) return;
     btn.disabled = true;
     showSpinner(ctx.statusEl, "Canceling order");
     try {

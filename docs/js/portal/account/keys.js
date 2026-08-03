@@ -13,10 +13,11 @@ import {
   tokenCreate,
   tokenRevoke,
   tokenUpdate,
-} from "../api.js?v=ffb8907cf590";
-import { setStatus, showSpinner } from "../ui.js?v=ffb8907cf590";
-import { compactDatetime } from "./format.js?v=ffb8907cf590";
-import { runStepUp } from "./stepup.js?v=ffb8907cf590";
+} from "../api.js?v=18b54629821c";
+import { setStatus, showSpinner } from "../ui.js?v=18b54629821c";
+import { compactDatetime } from "./format.js?v=18b54629821c";
+import { runConfirm } from "./modal.js?v=18b54629821c";
+import { runStepUp } from "./stepup.js?v=18b54629821c";
 
 /**
  * @param {HTMLElement} panel
@@ -220,9 +221,13 @@ export function renderKeys(panel, ctx) {
    * @param {string} name
    */
   const onDelete = async (tokenId, name) => {
-    if (!window.confirm(`Delete API key “${name}”? This can’t be undone.`)) {
-      return;
-    }
+    const proceed = await runConfirm({
+      title: "Delete API key",
+      body: `Delete API key “${name}”? This can't be undone.`,
+      confirmLabel: "Delete",
+      danger: true,
+    });
+    if (!proceed) return;
     const ok = await runStepUp({
       title: "Delete API key",
       hint: "We'll email a code to confirm deletion.",
