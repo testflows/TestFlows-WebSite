@@ -125,11 +125,46 @@ async function onCodeSubmit(event) {
   }
 }
 
+// Notes shown after a machine-api confirm link redirects back here.
+const SIGNUP_STATUS = {
+  activated: ["Your account is activated. Sign in below to continue.", "ok"],
+  reopened: ["Welcome back. Sign in below to continue.", "ok"],
+  invalid: ["That activation link is invalid or expired. Sign up again.", "err"],
+  full: ["This email domain has reached its account limit.", "err"],
+  error: ["Couldn't finish activation. Open the link again in a moment.", "err"],
+};
+
+const EMAIL_STATUS = {
+  changed: ["Your email is changed. Sign in with your new address.", "ok"],
+  taken: ["That address is already in use. Change it again from your account.", "err"],
+  full: ["This email domain has reached its account limit.", "err"],
+  invalid: ["That confirmation link is invalid or expired.", "err"],
+  error: ["Couldn't update your email. Open the link again in a moment.", "err"],
+};
+
+/** Read ?<param>=<outcome> from a confirm redirect, show the note, scrub the param. */
+function showConfirmStatus(param, statusMap) {
+  const params = new URLSearchParams(window.location.search);
+  const outcome = params.get(param);
+  if (!outcome) return;
+  params.delete(param);
+  const qs = params.toString();
+  window.history.replaceState(
+    {},
+    "",
+    window.location.pathname + (qs ? `?${qs}` : "") + window.location.hash
+  );
+  const entry = statusMap[outcome];
+  if (entry) setStatus($("portal-login-status"), entry[0], entry[1]);
+}
+
 function init() {
   if (isSignedIn()) {
     window.location.replace(ACCOUNT_HREF);
     return;
   }
+  showConfirmStatus("signup", SIGNUP_STATUS);
+  showConfirmStatus("email", EMAIL_STATUS);
   const emailInput = $("portal-login-email");
   const saved = getEmail();
   if (emailInput && saved) {
