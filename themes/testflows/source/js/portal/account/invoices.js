@@ -75,7 +75,7 @@ export function renderInvoices(panel, ctx) {
       });
       capNote.hidden = !data.capped;
     } catch (err) {
-      paintEmpty(tableWrap, "No invoices");
+      tableWrap.replaceChildren();
       pg.hide();
       capNote.hidden = true;
       setStatus(

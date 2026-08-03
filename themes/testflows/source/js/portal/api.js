@@ -300,6 +300,15 @@ export async function getDevices() {
   fail(resp, "Could not load devices.");
 }
 
+/** Live cloud sessions (ephemeral VMs), newest first. */
+export async function getSessions() {
+  const resp = await request("GET", "/sessions", null);
+  if (resp.status === 200 && Array.isArray(resp.data)) {
+    return resp.data;
+  }
+  fail(resp, "Could not load sessions.");
+}
+
 /** Sign out one device by its session id. @param {string} sessionId */
 export async function revokeDevice(sessionId) {
   const resp = await request(

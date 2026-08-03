@@ -152,17 +152,32 @@ export function duration(secs) {
 }
 
 /**
+ * Seconds between two instants — `endTs` defaults to now. Null if either is
+ * unparseable; never negative (clock skew clamps to 0). Single source for both
+ * duration display (`elapsed`) and accrued cost (`cost_so_far`), so the two can
+ * never disagree on how a span is parsed. Mirrors client/core/format.py
+ * `seconds_between`.
+ * @param {string} startTs
+ * @param {string} [endTs]
+ * @returns {number|null}
+ */
+export function secondsBetween(startTs, endTs) {
+  const start = parseDt(startTs);
+  if (!start) return null;
+  const end = endTs ? parseDt(endTs) : new Date();
+  if (!end) return null;
+  return Math.max(0, (end.getTime() - start.getTime()) / 1000);
+}
+
+/**
  * Compact span between two ISO instants — mirrors client/core/format.py `elapsed`.
  * @param {string} startTs
  * @param {string} [endTs]
  * @returns {string}
  */
 export function elapsed(startTs, endTs) {
-  const start = parseDt(startTs);
-  if (!start) return "";
-  const end = endTs ? parseDt(endTs) : new Date();
-  if (!end) return "";
-  return duration((end.getTime() - start.getTime()) / 1000);
+  const secs = secondsBetween(startTs, endTs);
+  return secs == null ? "" : duration(secs);
 }
 
 /**

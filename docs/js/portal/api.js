@@ -21,9 +21,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=9943371cc422";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=9943371cc422";
-import { setSession, clearSession } from "./session.js?v=9943371cc422";
+import { solve, currentBucket } from "./hashcash.js?v=ffb8907cf590";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=ffb8907cf590";
+import { setSession, clearSession } from "./session.js?v=ffb8907cf590";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -298,6 +298,15 @@ export async function getDevices() {
     return resp.data;
   }
   fail(resp, "Could not load devices.");
+}
+
+/** Live cloud sessions (ephemeral VMs), newest first. */
+export async function getSessions() {
+  const resp = await request("GET", "/sessions", null);
+  if (resp.status === 200 && Array.isArray(resp.data)) {
+    return resp.data;
+  }
+  fail(resp, "Could not load sessions.");
 }
 
 /** Sign out one device by its session id. @param {string} sessionId */

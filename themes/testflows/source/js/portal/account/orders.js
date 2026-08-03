@@ -71,7 +71,7 @@ export function renderOrders(panel, ctx) {
         to: offset + page.length,
       });
     } catch (err) {
-      paintEmpty(tableWrap, "No orders");
+      tableWrap.replaceChildren();
       pg.hide();
       setStatus(
         ctx.statusEl,

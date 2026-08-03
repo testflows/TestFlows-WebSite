@@ -8,27 +8,29 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=9943371cc422";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=9943371cc422";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=9943371cc422";
-import { renderOverview } from "./overview.js?v=9943371cc422";
-import { renderCredits } from "./credits.js?v=9943371cc422";
-import { renderActivity } from "./activity.js?v=9943371cc422";
-import { renderBuy } from "./buy.js?v=9943371cc422";
-import { renderBilling } from "./billing.js?v=9943371cc422";
-import { renderInvoices } from "./invoices.js?v=9943371cc422";
-import { renderOrders } from "./orders.js?v=9943371cc422";
-import { renderKeys } from "./keys.js?v=9943371cc422";
-import { renderDevices } from "./devices.js?v=9943371cc422";
-import { renderStorage } from "./storage.js?v=9943371cc422";
-import { renderSettings } from "./settings.js?v=9943371cc422";
-import { enhanceSelects } from "./select.js?v=9943371cc422";
-import { todayDate } from "./format.js?v=9943371cc422";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=ffb8907cf590";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=ffb8907cf590";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=ffb8907cf590";
+import { renderOverview } from "./overview.js?v=ffb8907cf590";
+import { renderSessions } from "./sessions.js?v=ffb8907cf590";
+import { renderCredits } from "./credits.js?v=ffb8907cf590";
+import { renderActivity } from "./activity.js?v=ffb8907cf590";
+import { renderBuy } from "./buy.js?v=ffb8907cf590";
+import { renderBilling } from "./billing.js?v=ffb8907cf590";
+import { renderInvoices } from "./invoices.js?v=ffb8907cf590";
+import { renderOrders } from "./orders.js?v=ffb8907cf590";
+import { renderKeys } from "./keys.js?v=ffb8907cf590";
+import { renderDevices } from "./devices.js?v=ffb8907cf590";
+import { renderStorage } from "./storage.js?v=ffb8907cf590";
+import { renderSettings } from "./settings.js?v=ffb8907cf590";
+import { enhanceSelects } from "./select.js?v=ffb8907cf590";
+import { todayDate } from "./format.js?v=ffb8907cf590";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
 const SECTIONS = [
   "overview",
+  "sessions",
   "credits",
   "activity",
   "buy",
@@ -46,6 +48,10 @@ const SECTION_CHROME = {
   overview: {
     title: "Overview",
     lead: "Identity, plan, credits, and quotas.",
+  },
+  sessions: {
+    title: "Sessions",
+    lead: "Active sessions and estimated cost.",
   },
   credits: {
     title: "Credits",
@@ -209,6 +215,9 @@ async function showSection(section, force = false) {
     switch (id) {
       case "overview":
         renderOverview(panel, acct);
+        break;
+      case "sessions":
+        renderSessions(panel, ctx);
         break;
       case "credits":
         renderCredits(panel, acct);

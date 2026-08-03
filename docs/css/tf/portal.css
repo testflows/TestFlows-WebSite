@@ -1361,15 +1361,30 @@
     text-align: left;
 }
 
+.portal-table .portal-num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.portal-table-total td {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    border-bottom: 0;
+    padding-top: 0.75rem;
+}
+
 /* Dense activity statement: never wrap cells (keeps -€0.10 / rates / periods intact).
    Fill the wrap; scroll only if columns still exceed the viewport. */
-.portal-table--activity {
+.portal-table--activity,
+.portal-table--sessions {
     width: 100%;
     min-width: max-content;
 }
 
 .portal-table--activity th,
-.portal-table--activity td {
+.portal-table--activity td,
+.portal-table--sessions th,
+.portal-table--sessions td {
     white-space: nowrap;
 }
 
