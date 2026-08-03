@@ -63,7 +63,7 @@ fullwidth: true
                         </div>
                         <input type="hidden" id="firstname" value="">
                         <input type="hidden" id="lastname" value="">
-                        <p class="contact-privacy">By clicking Submit, you acknowledge that Katteli Inc. will process your personal information in accordance with our privacy policy.</p>
+                        <p class="contact-privacy">By clicking Submit, you acknowledge that Katteli Inc. will process your personal information in accordance with our <a href="/legal/privacy-policy/">privacy policy</a>.</p>
                         <p class="contact-error failed-submission d-none"><span role="error-message">Something went wrong while submitting.</span> Try again, or write us at <strong>contact@testflows.com</strong>.</p>
                         <button class="btn contact-submit" id="submit" type="submit" disabled>
                             <span role="submit">Submit <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
