@@ -200,7 +200,7 @@ export function renderActivity(panel, ctx) {
         to: offset + page.length,
       });
     } catch (err) {
-      paintEmpty(tableWrap, "No transactions");
+      tableWrap.replaceChildren();
       pg.hide();
       setStatus(
         ctx.statusEl,

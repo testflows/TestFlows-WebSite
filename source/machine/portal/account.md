@@ -19,6 +19,7 @@ permalink: machine/portal/account/index.html
                 <span class="visually-hidden">Section</span>
                 <select id="portal-dash-select" class="form-control portal-select">
                     <option value="overview" data-portal-nav="overview">Overview</option>
+                    <option value="sessions" data-portal-nav="sessions">Sessions</option>
                     <option value="credits" data-portal-nav="credits">Credits</option>
                     <option value="activity" data-portal-nav="activity">Activity</option>
                     <option value="buy" data-portal-nav="buy">Buy</option>
@@ -33,6 +34,7 @@ permalink: machine/portal/account/index.html
             </label>
             <nav class="portal-dash-nav">
                 <a href="#overview" data-portal-nav="overview"><span class="fas fa-fw fa-house" aria-hidden="true"></span><span>Overview</span></a>
+                <a href="#sessions" data-portal-nav="sessions"><span class="fas fa-fw fa-server" aria-hidden="true"></span><span>Sessions</span></a>
                 <a href="#credits" data-portal-nav="credits"><span class="fas fa-fw fa-coins" aria-hidden="true"></span><span>Credits</span></a>
                 <a href="#activity" data-portal-nav="activity"><span class="fas fa-fw fa-clock-rotate-left" aria-hidden="true"></span><span>Activity</span></a>
                 <a href="#buy" data-portal-nav="buy"><span class="fas fa-fw fa-cart-shopping" aria-hidden="true"></span><span>Buy</span></a>
@@ -59,6 +61,7 @@ permalink: machine/portal/account/index.html
                 </button>
             </div>
             <div class="portal-dash-panel" data-portal-panel="overview"></div>
+            <div class="portal-dash-panel" data-portal-panel="sessions" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="credits" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="activity" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="buy" hidden></div>

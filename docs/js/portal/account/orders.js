@@ -11,11 +11,11 @@ import {
   cancelBillingOrder,
   getBillingOrders,
   resumeBillingOrder,
-} from "../api.js?v=9943371cc422";
-import { setStatus, showSpinner } from "../ui.js?v=9943371cc422";
-import { compactDatetime, eur, titleCase } from "./format.js?v=9943371cc422";
-import { makePager } from "./pager.js?v=9943371cc422";
-import { paintEmpty } from "./table.js?v=9943371cc422";
+} from "../api.js?v=ffb8907cf590";
+import { setStatus, showSpinner } from "../ui.js?v=ffb8907cf590";
+import { compactDatetime, eur, titleCase } from "./format.js?v=ffb8907cf590";
+import { makePager } from "./pager.js?v=ffb8907cf590";
+import { paintEmpty } from "./table.js?v=ffb8907cf590";
 
 /**
  * @param {HTMLElement} panel
@@ -71,7 +71,7 @@ export function renderOrders(panel, ctx) {
         to: offset + page.length,
       });
     } catch (err) {
-      paintEmpty(tableWrap, "No orders");
+      tableWrap.replaceChildren();
       pg.hide();
       setStatus(
         ctx.statusEl,

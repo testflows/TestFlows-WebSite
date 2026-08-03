@@ -12,6 +12,7 @@ import { ApiError, getAccount, logout, refreshSession } from "../api.js";
 import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js";
 import { setRefreshBusy, setStatus, showSpinner } from "../ui.js";
 import { renderOverview } from "./overview.js";
+import { renderSessions } from "./sessions.js";
 import { renderCredits } from "./credits.js";
 import { renderActivity } from "./activity.js";
 import { renderBuy } from "./buy.js";
@@ -29,6 +30,7 @@ const LOGIN_HREF = "/machine/portal/login/";
 
 const SECTIONS = [
   "overview",
+  "sessions",
   "credits",
   "activity",
   "buy",
@@ -46,6 +48,10 @@ const SECTION_CHROME = {
   overview: {
     title: "Overview",
     lead: "Identity, plan, credits, and quotas.",
+  },
+  sessions: {
+    title: "Sessions",
+    lead: "Active sessions and estimated cost.",
   },
   credits: {
     title: "Credits",
@@ -209,6 +215,9 @@ async function showSection(section, force = false) {
     switch (id) {
       case "overview":
         renderOverview(panel, acct);
+        break;
+      case "sessions":
+        renderSessions(panel, ctx);
         break;
       case "credits":
         renderCredits(panel, acct);

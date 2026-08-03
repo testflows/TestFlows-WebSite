@@ -6,11 +6,11 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=9943371cc422";
-import { setStatus, showSpinner } from "../ui.js?v=9943371cc422";
-import { compactDatetime, eur, titleCase } from "./format.js?v=9943371cc422";
-import { makePager } from "./pager.js?v=9943371cc422";
-import { paintEmpty } from "./table.js?v=9943371cc422";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=ffb8907cf590";
+import { setStatus, showSpinner } from "../ui.js?v=ffb8907cf590";
+import { compactDatetime, eur, titleCase } from "./format.js?v=ffb8907cf590";
+import { makePager } from "./pager.js?v=ffb8907cf590";
+import { paintEmpty } from "./table.js?v=ffb8907cf590";
 
 /**
  * @param {HTMLElement} panel
@@ -75,7 +75,7 @@ export function renderInvoices(panel, ctx) {
       });
       capNote.hidden = !data.capped;
     } catch (err) {
-      paintEmpty(tableWrap, "No invoices");
+      tableWrap.replaceChildren();
       pg.hide();
       capNote.hidden = true;
       setStatus(
