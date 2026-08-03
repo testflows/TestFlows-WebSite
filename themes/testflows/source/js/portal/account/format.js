@@ -213,6 +213,22 @@ export function compactDatetime(ts) {
 }
 
 /**
+ * Compact expiry with remaining days — e.g. `Sep 2, 1:04 PM (30 days)`.
+ * Day count matches CLI api-keys list (ceil, min 1; `expired` when past).
+ * @param {string} ts
+ * @returns {string}
+ */
+export function expiresWithDays(ts) {
+  const dt = parseDt(ts);
+  if (!dt) return String(ts || "");
+  const when = compactDatetime(ts);
+  const secs = (dt.getTime() - Date.now()) / 1000;
+  if (secs <= 0) return `${when} (expired)`;
+  const days = Math.max(1, Math.ceil(secs / 86400));
+  return days === 1 ? `${when} (1 day)` : `${when} (${days} days)`;
+}
+
+/**
  * @param {number} used
  * @param {number} total
  * @returns {number}

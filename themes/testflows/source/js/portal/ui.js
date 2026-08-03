@@ -57,18 +57,18 @@ export function setStatus(el, message, kind) {
 }
 
 /**
- * Busy status label + Refresh indicator (no status icon).
+ * Busy status label. Docked account toolbar uses the Refresh icon; everything
+ * else (login/signup/modals) gets an inline spinner in the status field.
  * @param {HTMLElement|null} el
  * @param {string} [label] e.g. "Sending a code"
  */
 export function showSpinner(el, label) {
   const text = label || "Working";
+  const docked = Boolean(el?.classList.contains("portal-status--dock"));
   if (el) {
     el.classList.remove("portal-status--ok", "portal-status--err");
     el.replaceChildren();
-    // Pages without the account Refresh indicator (login / signup) get an inline
-    // spinner so busy still animates; the account dashboard uses the Refresh icon.
-    if (!refreshButton()) {
+    if (!docked) {
       const spin = document.createElement("span");
       spin.className = "portal-status-spinner";
       spin.setAttribute("aria-hidden", "true");
@@ -83,5 +83,6 @@ export function showSpinner(el, label) {
     el.setAttribute("aria-live", "polite");
     el.setAttribute("aria-label", text);
   }
-  setRefreshBusy(true);
+  // Don't spin the page Refresh control for modal-local busy states.
+  setRefreshBusy(docked);
 }

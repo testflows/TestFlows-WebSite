@@ -448,21 +448,25 @@
     font-size: 0.8em;
 }
 
-/* Busy status: text only on the account dashboard (indicator is the Refresh
-   fa-spinner). Pages without a Refresh button (login/signup) get the inline
-   .portal-status-spinner below. */
+/* Busy status: docked toolbar is text-only (Refresh spins); login/signup/modals
+   use an inline .portal-status-spinner in the status field. */
 .portal-status--busy {
     color: var(--tf-text-muted);
     font-weight: 500;
 }
 
-/* Inline busy spinner for pages that have no Refresh indicator (login/signup). */
+.portal-status--busy:not(.portal-status--dock) {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+/* Inline busy spinner for status fields that are the busy surface. */
 .portal-status-spinner {
     display: inline-block;
+    flex: 0 0 auto;
     width: 0.8em;
     height: 0.8em;
-    margin-right: 0.45em;
-    vertical-align: -0.08em;
     border: 2px solid currentColor;
     border-top-color: var(--tf-accent);
     border-radius: 50%;
@@ -1553,6 +1557,12 @@
     color: var(--tf-text-strong);
 }
 
+.portal-secret-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
 .portal-modal {
     position: fixed;
     inset: 0;
@@ -1588,6 +1598,14 @@
     margin: 0 0 0.4rem;
     font-size: 1.2rem;
     color: var(--tf-text-strong);
+}
+
+.portal-modal-card .portal-field {
+    margin: 0.85rem 0 0.35rem;
+}
+
+.portal-modal-card .portal-status {
+    margin: 0.35rem 0 0;
 }
 
 @media (max-width: 767.98px) {

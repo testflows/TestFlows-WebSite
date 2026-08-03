@@ -19,7 +19,9 @@ function $(id) {
 }
 
 function setBusy(busy) {
-  const buttons = document.querySelectorAll(".portal-form button[type='submit']");
+  const buttons = document.querySelectorAll(
+    ".portal-form button[type='submit'], #portal-login-resend"
+  );
   buttons.forEach((b) => {
     b.disabled = busy;
   });
@@ -47,8 +49,10 @@ function makePow(status, label) {
   return () => showSpinner(status, label);
 }
 
-async function onEmailSubmit(event) {
-  event.preventDefault();
+/**
+ * @param {boolean} [resend]
+ */
+async function sendCode(resend = false) {
   const emailInput = $("portal-login-email");
   const status = $("portal-login-status");
   const email = (emailInput && emailInput.value.trim()) || "";
@@ -61,10 +65,16 @@ async function onEmailSubmit(event) {
     return;
   }
   setBusy(true);
-  showSpinner(status, "Sending a code");
+  showSpinner(status, resend ? "Resending code" : "Sending a code");
   try {
     await loginStart(email, makePow(status, "Working"));
-    setStatus(status, `Check ${email} for a sign-in code.`, "ok");
+    setStatus(
+      status,
+      resend
+        ? `New code sent to ${email}.`
+        : `Check ${email} for a sign-in code.`,
+      "ok"
+    );
     showCodeStep();
   } catch (err) {
     const msg =
@@ -75,6 +85,15 @@ async function onEmailSubmit(event) {
   } finally {
     setBusy(false);
   }
+}
+
+async function onEmailSubmit(event) {
+  event.preventDefault();
+  await sendCode(false);
+}
+
+async function onResend() {
+  await sendCode(true);
 }
 
 async function onCodeSubmit(event) {
@@ -118,8 +137,10 @@ function init() {
   }
   const emailForm = $("portal-login-email-form");
   const codeForm = $("portal-login-code-form");
+  const resendBtn = $("portal-login-resend");
   if (emailForm) emailForm.addEventListener("submit", onEmailSubmit);
   if (codeForm) codeForm.addEventListener("submit", onCodeSubmit);
+  if (resendBtn) resendBtn.addEventListener("click", () => void onResend());
   const signupLink = $("portal-login-signup-link");
   if (signupLink) signupLink.href = SIGNUP_HREF;
 }

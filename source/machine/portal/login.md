@@ -33,6 +33,7 @@ permalink: machine/portal/login/index.html
                     </div>
                     <div class="portal-actions">
                         <button type="submit" class="btn btn-primary">Sign in</button>
+                        <button type="button" class="btn btn-ghost" id="portal-login-resend">Resend code</button>
                     </div>
                     <p class="portal-hint">
                         No email? You may not have an account yet.
