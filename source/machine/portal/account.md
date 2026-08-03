@@ -99,6 +99,11 @@ permalink: machine/portal/account/index.html
     <div class="portal-modal-card">
         <h2 id="portal-confirm-title">Confirm</h2>
         <p id="portal-confirm-body" class="portal-muted"></p>
+        <label id="portal-confirm-field" class="portal-field" hidden>
+            <span id="portal-confirm-field-label">Value</span>
+            <input id="portal-confirm-input" class="form-control" type="text" autocomplete="off" />
+        </label>
+        <p id="portal-confirm-error" class="portal-status portal-status--err" hidden role="alert"></p>
         <div class="portal-actions">
             <button type="button" class="btn btn-primary" id="portal-confirm-ok">Confirm</button>
             <button type="button" class="btn btn-ghost" id="portal-confirm-cancel">Cancel</button>

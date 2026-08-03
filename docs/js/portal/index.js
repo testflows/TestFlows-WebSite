@@ -6,7 +6,7 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { isSignedIn } from "./session.js?v=18b54629821c";
+import { isSignedIn } from "./session.js?v=93e847ddf11c";
 
 window.location.replace(
   isSignedIn() ? "/machine/portal/account/" : "/machine/portal/login/"

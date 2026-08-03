@@ -6,7 +6,7 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-/** Shared portal modals — confirm dialog and billing plan picker. */
+/** Shared portal modals — confirm, text prompt, and billing plan picker. */
 
 /**
  * @typedef {{
@@ -16,6 +16,18 @@
  *   danger?: boolean,
  *   dismissOnly?: boolean,
  * }} ConfirmOptions
+ */
+
+/**
+ * @typedef {{
+ *   title: string,
+ *   body: string,
+ *   label: string,
+ *   placeholder?: string,
+ *   initial?: string,
+ *   confirmLabel?: string,
+ *   validate?: (value: string) => string|null,
+ * }} PromptOptions
  */
 
 /**
@@ -60,6 +72,106 @@ function trapTab(root, ev) {
 }
 
 /**
+ * Shared open/close wiring for the confirm modal shell.
+ * @returns {{
+ *   root: HTMLElement,
+ *   title: HTMLElement,
+ *   body: HTMLElement,
+ *   field: HTMLElement,
+ *   fieldLabel: HTMLElement,
+ *   input: HTMLInputElement,
+ *   error: HTMLElement,
+ *   okBtn: HTMLButtonElement,
+ *   cancelBtn: HTMLButtonElement,
+ *   prevFocus: HTMLElement|null,
+ * }|null}
+ */
+function confirmShell() {
+  const root = document.getElementById("portal-confirm");
+  const title = document.getElementById("portal-confirm-title");
+  const body = document.getElementById("portal-confirm-body");
+  const field = document.getElementById("portal-confirm-field");
+  const fieldLabel = document.getElementById("portal-confirm-field-label");
+  const input = /** @type {HTMLInputElement|null} */ (
+    document.getElementById("portal-confirm-input")
+  );
+  const error = document.getElementById("portal-confirm-error");
+  const okBtn = /** @type {HTMLButtonElement|null} */ (
+    document.getElementById("portal-confirm-ok")
+  );
+  const cancelBtn = /** @type {HTMLButtonElement|null} */ (
+    document.getElementById("portal-confirm-cancel")
+  );
+  if (
+    !root ||
+    !title ||
+    !body ||
+    !field ||
+    !fieldLabel ||
+    !input ||
+    !error ||
+    !okBtn ||
+    !cancelBtn
+  ) {
+    return null;
+  }
+  const prevFocus =
+    document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
+  return {
+    root,
+    title,
+    body,
+    field,
+    fieldLabel,
+    input,
+    error,
+    okBtn,
+    cancelBtn,
+    prevFocus,
+  };
+}
+
+/**
+ * @param {ReturnType<typeof confirmShell>} shell
+ * @param {() => void} onCancel
+ * @param {(ev: KeyboardEvent) => void} onKey
+ */
+function bindConfirmChrome(shell, onCancel, onKey) {
+  if (!shell) return;
+  shell.cancelBtn.addEventListener("click", onCancel);
+  shell.root.querySelectorAll("[data-portal-confirm-dismiss]").forEach((el) => {
+    el.addEventListener("click", onCancel);
+  });
+  shell.root.addEventListener("keydown", onKey);
+}
+
+/**
+ * @param {ReturnType<typeof confirmShell>} shell
+ * @param {() => void} onCancel
+ * @param {(ev: KeyboardEvent) => void} onKey
+ * @param {() => void} onOk
+ */
+function unbindConfirmChrome(shell, onCancel, onKey, onOk) {
+  if (!shell) return;
+  shell.okBtn.removeEventListener("click", onOk);
+  shell.cancelBtn.removeEventListener("click", onCancel);
+  shell.root.removeEventListener("keydown", onKey);
+  shell.root.querySelectorAll("[data-portal-confirm-dismiss]").forEach((el) => {
+    el.removeEventListener("click", onCancel);
+  });
+  shell.okBtn.className = "btn btn-primary";
+  shell.cancelBtn.hidden = false;
+  shell.field.hidden = true;
+  shell.input.hidden = true;
+  shell.error.hidden = true;
+  shell.error.textContent = "";
+  shell.input.value = "";
+  shell.input.removeAttribute("aria-invalid");
+}
+
+/**
  * @param {ConfirmOptions} opts
  * @returns {Promise<boolean>}
  */
@@ -69,44 +181,24 @@ export function runConfirm(opts) {
       resolve(false);
       return;
     }
-    const root = document.getElementById("portal-confirm");
-    const title = document.getElementById("portal-confirm-title");
-    const body = document.getElementById("portal-confirm-body");
-    const okBtn = /** @type {HTMLButtonElement|null} */ (
-      document.getElementById("portal-confirm-ok")
-    );
-    const cancelBtn = /** @type {HTMLButtonElement|null} */ (
-      document.getElementById("portal-confirm-cancel")
-    );
-    if (!root || !title || !body || !okBtn || !cancelBtn) {
+    const shell = confirmShell();
+    if (!shell) {
       resolve(false);
       return;
     }
 
     modalOpen = true;
-    const prevFocus =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
-
     let settled = false;
     /** @param {boolean} ok */
     const finish = (ok) => {
       if (settled) return;
       settled = true;
       modalOpen = false;
-      root.hidden = true;
-      root.setAttribute("aria-hidden", "true");
-      okBtn.removeEventListener("click", onOk);
-      cancelBtn.removeEventListener("click", onCancel);
-      root.removeEventListener("keydown", onKey);
-      root.querySelectorAll("[data-portal-confirm-dismiss]").forEach((el) => {
-        el.removeEventListener("click", onCancel);
-      });
-      okBtn.className = "btn btn-primary";
-      cancelBtn.hidden = false;
-      if (prevFocus && document.contains(prevFocus)) {
-        prevFocus.focus();
+      shell.root.hidden = true;
+      shell.root.setAttribute("aria-hidden", "true");
+      unbindConfirmChrome(shell, onCancel, onKey, onOk);
+      if (shell.prevFocus && document.contains(shell.prevFocus)) {
+        shell.prevFocus.focus();
       }
       resolve(ok);
     };
@@ -118,29 +210,117 @@ export function runConfirm(opts) {
         ev.preventDefault();
         finish(false);
       } else if (ev.key === "Tab") {
-        trapTab(root, ev);
+        trapTab(shell.root, ev);
       }
     };
 
-    title.textContent = opts.title;
-    body.textContent = opts.body;
-    okBtn.textContent = opts.confirmLabel || "Confirm";
-    okBtn.className = opts.danger
+    shell.title.textContent = opts.title;
+    shell.body.textContent = opts.body;
+    shell.field.hidden = true;
+    shell.input.hidden = true;
+    shell.error.hidden = true;
+    shell.error.textContent = "";
+    shell.okBtn.textContent = opts.confirmLabel || "Confirm";
+    shell.okBtn.className = opts.danger
       ? "btn btn-ghost portal-btn-danger"
       : "btn btn-primary";
-    cancelBtn.hidden = Boolean(opts.dismissOnly);
+    shell.cancelBtn.hidden = Boolean(opts.dismissOnly);
 
-    root.hidden = false;
-    root.setAttribute("aria-hidden", "false");
-    okBtn.addEventListener("click", onOk);
-    cancelBtn.addEventListener("click", onCancel);
-    root.querySelectorAll("[data-portal-confirm-dismiss]").forEach((el) => {
-      el.addEventListener("click", onCancel);
-    });
-    root.addEventListener("keydown", onKey);
+    shell.root.hidden = false;
+    shell.root.setAttribute("aria-hidden", "false");
+    shell.okBtn.addEventListener("click", onOk);
+    bindConfirmChrome(shell, onCancel, onKey);
     // Danger: focus Cancel so Enter doesn't fire the destructive action.
     // dismissOnly / normal: focus OK.
-    (opts.danger && !opts.dismissOnly ? cancelBtn : okBtn).focus();
+    (opts.danger && !opts.dismissOnly ? shell.cancelBtn : shell.okBtn).focus();
+  });
+}
+
+/**
+ * Text prompt on the confirm modal shell. Returns trimmed value, or null if cancelled.
+ * @param {PromptOptions} opts
+ * @returns {Promise<string|null>}
+ */
+export function runPrompt(opts) {
+  return new Promise((resolve) => {
+    if (modalOpen) {
+      resolve(null);
+      return;
+    }
+    const shell = confirmShell();
+    if (!shell) {
+      resolve(null);
+      return;
+    }
+
+    modalOpen = true;
+    let settled = false;
+    /** @param {string|null} value */
+    const finish = (value) => {
+      if (settled) return;
+      settled = true;
+      modalOpen = false;
+      shell.root.hidden = true;
+      shell.root.setAttribute("aria-hidden", "true");
+      unbindConfirmChrome(shell, onCancel, onKey, onOk);
+      shell.input.removeEventListener("keydown", onInputKey);
+      if (shell.prevFocus && document.contains(shell.prevFocus)) {
+        shell.prevFocus.focus();
+      }
+      resolve(value);
+    };
+
+    const showError = (msg) => {
+      shell.error.hidden = !msg;
+      shell.error.textContent = msg || "";
+      shell.input.setAttribute("aria-invalid", msg ? "true" : "false");
+    };
+
+    const onOk = () => {
+      const value = shell.input.value.trim();
+      const err = opts.validate ? opts.validate(value) : null;
+      if (err) {
+        showError(err);
+        shell.input.focus();
+        return;
+      }
+      finish(value);
+    };
+    const onCancel = () => finish(null);
+    const onKey = (ev) => {
+      if (ev.key === "Escape") {
+        ev.preventDefault();
+        finish(null);
+      } else if (ev.key === "Tab") {
+        trapTab(shell.root, ev);
+      }
+    };
+    const onInputKey = (ev) => {
+      if (ev.key === "Enter") {
+        ev.preventDefault();
+        onOk();
+      }
+    };
+
+    shell.title.textContent = opts.title;
+    shell.body.textContent = opts.body;
+    shell.field.hidden = false;
+    shell.input.hidden = false;
+    shell.fieldLabel.textContent = opts.label;
+    shell.input.value = opts.initial || "";
+    shell.input.placeholder = opts.placeholder || "";
+    showError("");
+    shell.okBtn.textContent = opts.confirmLabel || "Continue";
+    shell.okBtn.className = "btn btn-primary";
+    shell.cancelBtn.hidden = false;
+
+    shell.root.hidden = false;
+    shell.root.setAttribute("aria-hidden", "false");
+    shell.okBtn.addEventListener("click", onOk);
+    shell.input.addEventListener("keydown", onInputKey);
+    bindConfirmChrome(shell, onCancel, onKey);
+    shell.input.focus();
+    shell.input.select();
   });
 }
 
