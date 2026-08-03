@@ -33,6 +33,12 @@ permalink: machine/portal/signup/index.html
         <p class="portal-foot" id="portal-signup-foot">
             Already have an account? <a id="portal-signup-login-link" href="/machine/portal/login/">Sign in</a>
         </p>
+        <p class="portal-legal">
+            By creating an account you agree to the
+            <a href="/machine/legal/terms-of-service/">Terms of Service</a>
+            and
+            <a href="/machine/legal/privacy-policy/">Privacy Policy</a>.
+        </p>
     </div>
 </section>
 <script type="module" src="/js/portal/signup.js"></script>
