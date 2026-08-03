@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
+  
   <url>
-    <loc>https://testflows.com/legal/terms-of-use/index.html</loc>
+    <loc>https://testflows.com/legal/privacy-policy/index.html</loc>
     
     <lastmod>2026-08-03</lastmod>
     
@@ -20,6 +21,19 @@
   </url>
   
   <url>
+    <loc>https://testflows.com/legal/terms-of-use/index.html</loc>
+    
+    <lastmod>2026-08-03</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  
+  
+  
+  
+  <url>
     <loc>https://testflows.com/contact.html</loc>
     
     <lastmod>2026-08-03</lastmod>
@@ -28,68 +42,7 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>https://testflows.com/legal/privacy-policy/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   
-  <url>
-    <loc>https://testflows.com/machine/legal/usage-credit/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/machine/legal/acceptable-use/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/machine/legal/privacy-policy/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/machine/legal/terms-of-service/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/machine/portal/account/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://testflows.com/machine/portal/purchase/index.html</loc>
-    
-    <lastmod>2026-08-03</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   
   <url>
     <loc>https://testflows.com/handbook/index.html</loc>
@@ -118,32 +71,8 @@
     <priority>0.6</priority>
   </url>
   
-  <url>
-    <loc>https://testflows.com/machine/portal/signup/index.html</loc>
-    
-    <lastmod>2026-07-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   
-  <url>
-    <loc>https://testflows.com/machine/portal/login/index.html</loc>
-    
-    <lastmod>2026-07-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   
-  <url>
-    <loc>https://testflows.com/machine/portal/index.html</loc>
-    
-    <lastmod>2026-07-31</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   
   <url>
     <loc>https://testflows.com/blog/index.html</loc>
