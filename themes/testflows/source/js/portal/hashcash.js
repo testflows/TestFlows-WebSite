@@ -16,6 +16,12 @@
 const VERSION = "1";
 const DIGEST_BITS = 256;
 const YIELD_EVERY = 4096;
+//: Upper bound on solver workers — the nonce space is tiny per shard past this,
+//: and each worker has spawn cost. Actual count is min(this, hardwareConcurrency).
+const MAX_WORKERS = 8;
+//: One reused encoder — `new TextEncoder()` per hash was a big allocation cost in
+//: the inner search loop (millions of hashes per solve).
+const ENCODER = new TextEncoder();
 
 /** @param {Uint8Array} digest @param {number} bits */
 function meetsDifficulty(digest, bits) {
@@ -41,7 +47,7 @@ function sha256Bytes(message) {
     0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
     0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
   ]);
-  const bytes = typeof message === "string" ? new TextEncoder().encode(message) : message;
+  const bytes = typeof message === "string" ? ENCODER.encode(message) : message;
   const bitLen = bytes.length * 8;
   const withOne = bytes.length + 1;
   const padLen = (withOne % 64 <= 56 ? 56 : 120) - (withOne % 64);
@@ -132,14 +138,24 @@ function randomHex16() {
 }
 
 /**
- * Search a nonce for a valid stamp. Yields to the event loop periodically.
- * @param {string} value opaque subject from the server
- * @param {number} bits required difficulty
- * @param {number} bucket time bucket
- * @returns {Promise<string>} stamp for X-Tf-Pow
+ * Synchronous nonce search over the subsequence start, start+stride, … Runs to
+ * completion (worker context — no yielding). Stamp format matches the server.
+ * @param {string} value @param {number} bits @param {number} bucket
+ * @param {string} rand @param {number} start @param {number} stride
+ * @returns {string}
  */
-export async function solve(value, bits, bucket) {
-  const rand = randomHex16();
+export function solveRange(value, bits, bucket, rand, start, stride) {
+  if (stride < 1) throw new RangeError("stride must be >= 1");
+  for (let nonce = start; ; nonce += stride) {
+    const n = nonce.toString(16);
+    if (meetsDifficulty(digest(bits, bucket, value, rand, n), bits)) {
+      return `${VERSION}:${bits}:${bucket}:${rand}:${n}`;
+    }
+  }
+}
+
+/** Single-thread fallback: the classic loop, yielding so the UI can breathe. */
+async function solveInline(value, bits, bucket, rand) {
   let nonce = 0;
   while (true) {
     for (let i = 0; i < YIELD_EVERY; i++, nonce++) {
@@ -150,4 +166,67 @@ export async function solve(value, bits, bucket) {
     }
     await new Promise((r) => setTimeout(r, 0));
   }
+}
+
+/**
+ * Fan the nonce space across a Web Worker pool — disjoint subsequences, shared
+ * rand; first valid stamp wins and the rest are terminated. Rejects if the worker
+ * path is unavailable so `solve` can fall back.
+ * @returns {Promise<string>}
+ */
+function solveWithWorkers(value, bits, bucket, rand, count) {
+  return new Promise((resolve, reject) => {
+    // Carry hashcash.js's ?v= cache key onto the worker URL so a code change busts
+    // both together (GitHub Pages ignores the query, so it's purely a cache key).
+    const base = new URL(import.meta.url);
+    const url = new URL("./hashcash.worker.js", base);
+    url.search = base.search;
+    /** @type {Worker[]} */
+    const pool = [];
+    let settled = false;
+    /** @param {(v: any) => void} fn @param {any} arg */
+    const finish = (fn, arg) => {
+      if (settled) return;
+      settled = true;
+      for (const w of pool) w.terminate();
+      fn(arg);
+    };
+    for (let i = 0; i < count; i++) {
+      let worker;
+      try {
+        worker = new Worker(url, { type: "module" });
+      } catch (err) {
+        finish(reject, err);
+        return;
+      }
+      worker.onmessage = (e) => finish(resolve, String(e.data));
+      worker.onerror = (e) => finish(reject, e);
+      pool.push(worker);
+      worker.postMessage({ value, bits, bucket, rand, start: i, stride: count });
+    }
+  });
+}
+
+/**
+ * Search a nonce for a valid stamp. Parallelizes across Web Workers when
+ * available (keeping the UI thread free); falls back to a yielding loop.
+ * @param {string} value opaque subject from the server
+ * @param {number} bits required difficulty
+ * @param {number} bucket time bucket
+ * @returns {Promise<string>} stamp for X-Tf-Pow
+ */
+export async function solve(value, bits, bucket) {
+  const rand = randomHex16();
+  if (typeof Worker !== "undefined") {
+    const count = Math.max(
+      1,
+      Math.min(MAX_WORKERS, navigator.hardwareConcurrency || 4)
+    );
+    try {
+      return await solveWithWorkers(value, bits, bucket, rand, count);
+    } catch {
+      /* worker path unavailable — fall through to the inline solver */
+    }
+  }
+  return solveInline(value, bits, bucket, rand);
 }

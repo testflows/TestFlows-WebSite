@@ -6,10 +6,10 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getSessions } from "../api.js?v=0b7804b627a3";
-import { setStatus, showSpinner } from "../ui.js?v=0b7804b627a3";
-import { elapsed, eur, secondsBetween, titleCase } from "./format.js?v=0b7804b627a3";
-import { paintEmpty } from "./table.js?v=0b7804b627a3";
+import { ApiError, getSessions } from "../api.js?v=08f0a1b4e18a";
+import { setStatus, showSpinner } from "../ui.js?v=08f0a1b4e18a";
+import { elapsed, eur, secondsBetween, titleCase } from "./format.js?v=08f0a1b4e18a";
+import { paintEmpty } from "./table.js?v=08f0a1b4e18a";
 
 /** @type {Record<string, string>} */
 const STATE_TONE = {
