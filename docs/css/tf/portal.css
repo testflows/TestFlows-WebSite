@@ -349,6 +349,14 @@
     margin-top: 0.25rem;
 }
 
+.portal-close-info {
+    margin: 0.25rem 0 0.6rem;
+}
+
+.portal-close-info p {
+    margin: 0.15rem 0;
+}
+
 .portal-status {
     margin: 0 0 1rem;
     padding: 0.65rem 0.75rem;

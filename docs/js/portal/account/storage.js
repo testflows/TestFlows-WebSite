@@ -6,9 +6,9 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getAccount, provisionStorage } from "../api.js?v=93e847ddf11c";
-import { setStatus, showSpinner } from "../ui.js?v=93e847ddf11c";
-import { fillPct, humanSize, renderFillBar } from "./format.js?v=93e847ddf11c";
+import { ApiError, getAccount, provisionStorage } from "../api.js?v=6e72d7cd2916";
+import { setStatus, showSpinner } from "../ui.js?v=6e72d7cd2916";
+import { fillPct, humanSize, renderFillBar } from "./format.js?v=6e72d7cd2916";
 
 const POLL_MS = 2500;
 const MAX_POLLS = 40;
