@@ -8,22 +8,22 @@
  */
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=0f5c00e0c3af";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=0f5c00e0c3af";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=0f5c00e0c3af";
-import { renderOverview } from "./overview.js?v=0f5c00e0c3af";
-import { renderCredits } from "./credits.js?v=0f5c00e0c3af";
-import { renderActivity } from "./activity.js?v=0f5c00e0c3af";
-import { renderBuy } from "./buy.js?v=0f5c00e0c3af";
-import { renderBilling } from "./billing.js?v=0f5c00e0c3af";
-import { renderInvoices } from "./invoices.js?v=0f5c00e0c3af";
-import { renderOrders } from "./orders.js?v=0f5c00e0c3af";
-import { renderKeys } from "./keys.js?v=0f5c00e0c3af";
-import { renderDevices } from "./devices.js?v=0f5c00e0c3af";
-import { renderStorage } from "./storage.js?v=0f5c00e0c3af";
-import { renderSettings } from "./settings.js?v=0f5c00e0c3af";
-import { enhanceSelects } from "./select.js?v=0f5c00e0c3af";
-import { todayDate } from "./format.js?v=0f5c00e0c3af";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=48a6fbd25698";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=48a6fbd25698";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=48a6fbd25698";
+import { renderOverview } from "./overview.js?v=48a6fbd25698";
+import { renderCredits } from "./credits.js?v=48a6fbd25698";
+import { renderActivity } from "./activity.js?v=48a6fbd25698";
+import { renderBuy } from "./buy.js?v=48a6fbd25698";
+import { renderBilling } from "./billing.js?v=48a6fbd25698";
+import { renderInvoices } from "./invoices.js?v=48a6fbd25698";
+import { renderOrders } from "./orders.js?v=48a6fbd25698";
+import { renderKeys } from "./keys.js?v=48a6fbd25698";
+import { renderDevices } from "./devices.js?v=48a6fbd25698";
+import { renderStorage } from "./storage.js?v=48a6fbd25698";
+import { renderSettings } from "./settings.js?v=48a6fbd25698";
+import { enhanceSelects } from "./select.js?v=48a6fbd25698";
+import { todayDate } from "./format.js?v=48a6fbd25698";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -369,4 +369,30 @@ export async function bootAccountDashboard() {
     }
   }
   await showSection(currentSection(), true);
+  showPurchaseReturn();
+}
+
+/** Surface a Stripe return (?purchase=success|cancelled) as a status note, then
+ * scrub the param so a reload doesn't repeat it. Boot already reloaded the
+ * account fresh; a webhook-driven grant may lag a moment, hence the wording. */
+function showPurchaseReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const purchase = (params.get("purchase") || "").toLowerCase();
+  if (!purchase) return;
+  params.delete("purchase");
+  const qs = params.toString();
+  window.history.replaceState(
+    {},
+    "",
+    window.location.pathname + (qs ? `?${qs}` : "")
+  );
+  if (purchase === "success") {
+    setStatus(
+      statusEl(),
+      "Payment received — your balance updates in a moment.",
+      "ok"
+    );
+  } else if (purchase === "cancelled") {
+    setStatus(statusEl(), "Checkout cancelled — no charge was made.", "info");
+  }
 }

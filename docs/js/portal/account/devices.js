@@ -6,10 +6,10 @@
  * Authors:
  *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
  */
-import { ApiError, getDevices, logout, revokeDevice } from "../api.js?v=0f5c00e0c3af";
-import { clearSession } from "../session.js?v=0f5c00e0c3af";
-import { setStatus, showSpinner } from "../ui.js?v=0f5c00e0c3af";
-import { ago } from "./format.js?v=0f5c00e0c3af";
+import { ApiError, getDevices, logout, revokeDevice } from "../api.js?v=48a6fbd25698";
+import { clearSession } from "../session.js?v=48a6fbd25698";
+import { setStatus, showSpinner } from "../ui.js?v=48a6fbd25698";
+import { ago } from "./format.js?v=48a6fbd25698";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
