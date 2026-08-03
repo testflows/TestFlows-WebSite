@@ -357,21 +357,28 @@
     margin: 0.15rem 0 0.65rem;
 }
 
-/* Vertical closing workflow — dots + connectors; updated in place on poll. */
+/* Vertical closing workflow — CSS marker rail (ring / check / pulse). */
 .portal-close-steps {
+    --close-marker: 1.125rem;
+    --close-halo: 4px;
+    /* Rail wider than the disc so halos aren't clipped by the card edge. */
+    --close-rail: calc(var(--close-marker) + 2 * var(--close-halo));
+    --close-rail-top: 0.15rem;
     list-style: none;
     margin: 0 0 0.85rem;
-    padding: 0.85rem 1rem;
+    padding: 0.9rem 1.05rem;
     border: 1px solid var(--tf-card-border);
     border-radius: 0.65rem;
     background: rgba(var(--tf-fg-rgb), 0.03);
+    overflow: visible;
 }
 
 .portal-close-step {
     display: grid;
-    grid-template-columns: 0.85rem minmax(0, 1fr);
-    column-gap: 0.75rem;
-    align-items: start;
+    grid-template-columns: var(--close-rail) minmax(0, 1fr);
+    column-gap: 0.85rem;
+    align-items: stretch;
+    overflow: visible;
 }
 
 .portal-close-step:last-child .portal-close-step-rail::after {
@@ -382,56 +389,123 @@
     position: relative;
     display: flex;
     justify-content: center;
-    width: 0.85rem;
-    min-height: 1.35rem;
-    padding-top: 0.35rem;
+    align-items: flex-start;
+    width: var(--close-rail);
+    min-height: 100%;
+    padding-top: var(--close-rail-top);
+    overflow: visible;
 }
 
+/* Center-to-center track: stretches with the row, tucks under both markers. */
 .portal-close-step-rail::after {
     content: "";
     position: absolute;
-    top: 1.05rem;
-    bottom: -0.35rem;
+    top: calc(var(--close-rail-top) + var(--close-marker) / 2);
+    bottom: calc(-1 * (var(--close-rail-top) + var(--close-marker) / 2));
     left: 50%;
-    width: 1px;
+    width: 2px;
     transform: translateX(-50%);
-    background: var(--tf-card-border);
+    border-radius: 1px;
+    background: rgba(var(--tf-fg-rgb), 0.14);
+    z-index: 0;
 }
 
-.portal-close-step.is-done .portal-close-step-rail::after,
-.portal-close-step.is-ready .portal-close-step-rail::after {
-    background: var(--tf-accent);
+/* Green only when BOTH ends of the segment are accent-marked. */
+.portal-close-step.is-done:has(+ .portal-close-step.is-done) .portal-close-step-rail::after,
+.portal-close-step.is-done:has(+ .portal-close-step.is-current) .portal-close-step-rail::after,
+.portal-close-step.is-done:has(+ .portal-close-step.is-ready) .portal-close-step-rail::after {
+    background: color-mix(in srgb, var(--tf-accent) 72%, transparent);
 }
 
 .portal-close-step-dot {
     position: relative;
     z-index: 1;
     box-sizing: border-box;
-    width: 0.55rem;
-    height: 0.55rem;
+    width: var(--close-marker);
+    height: var(--close-marker);
+    flex: 0 0 var(--close-marker);
     border-radius: 50%;
-    border: 1.5px solid var(--tf-text-muted);
+    border: 0;
     background: var(--tf-card-bg);
 }
 
+/* Pending — hollow ring via inset shadow (no border; border clips the disc). */
 .portal-close-step.is-pending .portal-close-step-dot {
-    opacity: 0.55;
+    background: transparent;
+    box-shadow: inset 0 0 0 2px rgba(var(--tf-fg-rgb), 0.22);
 }
 
-.portal-close-step.is-current .portal-close-step-dot,
+/* In progress — accent ring + inner disc, soft halo (pulses). */
+.portal-close-step.is-current .portal-close-step-dot {
+    background: var(--tf-card-bg);
+    box-shadow:
+        inset 0 0 0 2px var(--tf-accent),
+        0 0 0 3px color-mix(in srgb, var(--tf-accent) 20%, transparent);
+}
+
+.portal-close-step.is-current .portal-close-step-dot::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--tf-accent);
+}
+
+.portal-close-step.is-current:not(.is-ready) .portal-close-step-dot {
+    animation: portal-close-pulse 1.8s ease-in-out infinite;
+}
+
+/* Ready to confirm — solid accent marker + halo (no pulse). */
 .portal-close-step.is-ready .portal-close-step-dot {
-    border-color: var(--tf-accent);
     background: var(--tf-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--tf-accent) 22%, transparent);
+    animation: none;
 }
 
+.portal-close-step.is-ready .portal-close-step-dot::before {
+    content: none;
+}
+
+/* Done — filled marker with CSS check. */
 .portal-close-step.is-done .portal-close-step-dot {
-    border-color: var(--tf-accent);
     background: var(--tf-accent);
+    box-shadow: none;
+}
+
+.portal-close-step.is-done .portal-close-step-dot::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    width: 0.28rem;
+    height: 0.5rem;
+    border: solid var(--tf-ink-on-primary);
+    border-width: 0 2px 2px 0;
+    border-radius: 0;
+    background: transparent;
+    inset: auto;
+    transform: translate(-50%, -58%) rotate(45deg);
+}
+
+@keyframes portal-close-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--tf-accent) 18%, transparent);
+    }
+    50% {
+        box-shadow: 0 0 0 5px color-mix(in srgb, var(--tf-accent) 8%, transparent);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .portal-close-step.is-current:not(.is-ready) .portal-close-step-dot {
+        animation: none;
+    }
 }
 
 .portal-close-step-body {
     min-width: 0;
-    padding: 0.15rem 0 0.7rem;
+    padding: 0.12rem 0 0.85rem;
 }
 
 .portal-close-step:last-child .portal-close-step-body {
@@ -439,7 +513,10 @@
 }
 
 .portal-close-step-label {
-    display: block;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.4rem;
     font-size: 0.92rem;
     font-weight: 500;
     line-height: 1.35;
@@ -454,6 +531,19 @@
 
 .portal-close-step.is-done .portal-close-step-label {
     color: var(--tf-text);
+}
+
+/* Trailing check — only after the step has completed. */
+.portal-close-step.is-done .portal-close-step-label::after {
+    content: "";
+    display: inline-block;
+    width: 0.32rem;
+    height: 0.55rem;
+    margin-left: 0.1rem;
+    border: solid var(--tf-accent);
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg) translateY(-0.05rem);
+    flex: 0 0 auto;
 }
 
 .portal-close-step-detail {
