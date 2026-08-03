@@ -5,6 +5,7 @@ date: 2026-07-31 00:00:00
 fullwidth: true
 hide_footer: true
 portal_nav: true
+portal_auth_gate: true
 permalink: machine/portal/account/index.html
 ---
 

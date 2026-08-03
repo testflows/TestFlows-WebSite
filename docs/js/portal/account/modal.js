@@ -14,6 +14,7 @@
  *   body: string,
  *   confirmLabel?: string,
  *   danger?: boolean,
+ *   dismissOnly?: boolean,
  * }} ConfirmOptions
  */
 
@@ -30,13 +31,21 @@
  * }} PlanPickOptions
  */
 
+/** True while a confirm or plan-pick dialog is open (blocks stacking). */
+let modalOpen = false;
+
+/** @returns {boolean} */
+export function isModalOpen() {
+  return modalOpen;
+}
+
 /**
  * Keep Tab focus inside an open modal — wrap at the ends so it can't escape to
  * the page behind. @param {HTMLElement} root @param {KeyboardEvent} ev
  */
 function trapTab(root, ev) {
   const focusable = root.querySelectorAll(
-    'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    'button:not([disabled]):not([hidden]), input:not([disabled]):not([hidden]), [tabindex]:not([tabindex="-1"])'
   );
   if (!focusable.length) return;
   const first = /** @type {HTMLElement} */ (focusable[0]);
@@ -56,6 +65,10 @@ function trapTab(root, ev) {
  */
 export function runConfirm(opts) {
   return new Promise((resolve) => {
+    if (modalOpen) {
+      resolve(false);
+      return;
+    }
     const root = document.getElementById("portal-confirm");
     const title = document.getElementById("portal-confirm-title");
     const body = document.getElementById("portal-confirm-body");
@@ -70,11 +83,18 @@ export function runConfirm(opts) {
       return;
     }
 
+    modalOpen = true;
+    const prevFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
     let settled = false;
     /** @param {boolean} ok */
     const finish = (ok) => {
       if (settled) return;
       settled = true;
+      modalOpen = false;
       root.hidden = true;
       root.setAttribute("aria-hidden", "true");
       okBtn.removeEventListener("click", onOk);
@@ -84,6 +104,10 @@ export function runConfirm(opts) {
         el.removeEventListener("click", onCancel);
       });
       okBtn.className = "btn btn-primary";
+      cancelBtn.hidden = false;
+      if (prevFocus && document.contains(prevFocus)) {
+        prevFocus.focus();
+      }
       resolve(ok);
     };
 
@@ -104,6 +128,7 @@ export function runConfirm(opts) {
     okBtn.className = opts.danger
       ? "btn btn-ghost portal-btn-danger"
       : "btn btn-primary";
+    cancelBtn.hidden = Boolean(opts.dismissOnly);
 
     root.hidden = false;
     root.setAttribute("aria-hidden", "false");
@@ -113,7 +138,9 @@ export function runConfirm(opts) {
       el.addEventListener("click", onCancel);
     });
     root.addEventListener("keydown", onKey);
-    okBtn.focus();
+    // Danger: focus Cancel so Enter doesn't fire the destructive action.
+    // dismissOnly / normal: focus OK.
+    (opts.danger && !opts.dismissOnly ? cancelBtn : okBtn).focus();
   });
 }
 
@@ -123,6 +150,10 @@ export function runConfirm(opts) {
  */
 export function runPlanPick(opts) {
   return new Promise((resolve) => {
+    if (modalOpen) {
+      resolve(null);
+      return;
+    }
     const root = document.getElementById("portal-billing-plan");
     const title = document.getElementById("portal-billing-plan-title");
     const note = document.getElementById("portal-billing-plan-note");
@@ -138,11 +169,18 @@ export function runPlanPick(opts) {
       return;
     }
 
+    modalOpen = true;
+    const prevFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
     let settled = false;
     /** @param {string|null} value */
     const finish = (value) => {
       if (settled) return;
       settled = true;
+      modalOpen = false;
       root.hidden = true;
       root.setAttribute("aria-hidden", "true");
       okBtn.removeEventListener("click", onOk);
@@ -152,6 +190,9 @@ export function runPlanPick(opts) {
         el.removeEventListener("click", onCancel);
       });
       fieldset.replaceChildren();
+      if (prevFocus && document.contains(prevFocus)) {
+        prevFocus.focus();
+      }
       resolve(value);
     };
 
@@ -186,6 +227,8 @@ export function runPlanPick(opts) {
       opts.selected && opts.options.some((o) => o.value === opts.selected)
         ? opts.selected
         : opts.options[0]?.value || "";
+    /** @type {HTMLInputElement|null} */
+    let selectedInput = null;
     for (const opt of opts.options) {
       const label = document.createElement("label");
       label.className = "portal-plan-option";
@@ -194,6 +237,7 @@ export function runPlanPick(opts) {
       input.name = "portal-billing-plan";
       input.value = opt.value;
       input.checked = opt.value === selected;
+      if (input.checked) selectedInput = input;
       const text = document.createElement("span");
       text.textContent = opt.label;
       label.append(input, text);
@@ -208,6 +252,6 @@ export function runPlanPick(opts) {
       el.addEventListener("click", onCancel);
     });
     root.addEventListener("keydown", onKey);
-    okBtn.focus();
+    (selectedInput || okBtn).focus();
   });
 }

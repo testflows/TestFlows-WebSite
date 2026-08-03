@@ -10,6 +10,7 @@ import { ApiError, getDevices, logout, revokeDevice } from "../api.js";
 import { clearSession } from "../session.js";
 import { setStatus, showSpinner } from "../ui.js";
 import { ago } from "./format.js";
+import { runConfirm } from "./modal.js";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -215,11 +216,14 @@ export function renderDevices(panel, ctx) {
 
   /** @param {string} sessionId @param {boolean} current @param {HTMLButtonElement} btn */
   const onRevoke = async (sessionId, current, btn) => {
-    const ok = window.confirm(
-      current
+    const ok = await runConfirm({
+      title: "Revoke token",
+      body: current
         ? "Revoke this sign-in token? You'll be signed out here."
-        : "Revoke this sign-in token?"
-    );
+        : "Revoke this sign-in token?",
+      confirmLabel: "Revoke",
+      danger: true,
+    });
     if (!ok) return;
     btn.disabled = true;
     showSpinner(ctx.statusEl, "Revoking token");
@@ -245,9 +249,12 @@ export function renderDevices(panel, ctx) {
 
   /** @param {HTMLButtonElement} btn */
   const onRevokeAll = async (btn) => {
-    const ok = window.confirm(
-      "Revoke all sign-in tokens, including this one? You'll be signed out here."
-    );
+    const ok = await runConfirm({
+      title: "Revoke all tokens",
+      body: "Revoke all sign-in tokens, including this one? You'll be signed out here.",
+      confirmLabel: "Revoke all",
+      danger: true,
+    });
     if (!ok) return;
     btn.disabled = true;
     everywhereBtn.disabled = true;

@@ -15,10 +15,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=48a6fbd25698";
-import { setStatus, showSpinner } from "../ui.js?v=48a6fbd25698";
-import { eur, titleCase } from "./format.js?v=48a6fbd25698";
-import { tierRank } from "./plans.js?v=48a6fbd25698";
+} from "../api.js?v=9943371cc422";
+import { setStatus, showSpinner } from "../ui.js?v=9943371cc422";
+import { eur, titleCase } from "./format.js?v=9943371cc422";
+import { tierRank } from "./plans.js?v=9943371cc422";
 
 /**
  * @param {string|undefined} url
@@ -52,6 +52,17 @@ export function renderBuy(panel, account, ctx) {
 
   /** @type {string} */
   let currentTier = String(account.tier || "").toLowerCase();
+  /** @type {Record<string, unknown>|null} */
+  let lastCatalog = null;
+  let busy = false;
+
+  /** @param {boolean} on */
+  const setBusy = (on) => {
+    busy = on;
+    panel.querySelectorAll(".portal-product .btn").forEach((el) => {
+      if (el instanceof HTMLButtonElement) el.disabled = on;
+    });
+  };
 
   const load = async () => {
     showSpinner(ctx.statusEl, "Loading products");
@@ -61,6 +72,7 @@ export function renderBuy(panel, account, ctx) {
         getAccount(),
       ]);
       currentTier = String(acct.tier || "").toLowerCase();
+      lastCatalog = catalog;
       if (ctx.onAccount) ctx.onAccount(acct);
       setStatus(ctx.statusEl, "", "");
       paint(catalog);
@@ -74,6 +86,22 @@ export function renderBuy(panel, account, ctx) {
           : "Could not load products. Try again shortly.",
         "err"
       );
+    }
+  };
+
+  /** Re-fetch account (and catalog) so Subscribed / Upgrade labels stay current. */
+  const refreshAfterPurchase = async () => {
+    try {
+      const [catalog, acct] = await Promise.all([
+        getBillingProducts(),
+        getAccount(),
+      ]);
+      currentTier = String(acct.tier || "").toLowerCase();
+      lastCatalog = catalog;
+      if (ctx.onAccount) ctx.onAccount(acct);
+      paint(catalog);
+    } catch {
+      if (lastCatalog) paint(lastCatalog);
     }
   };
 
@@ -162,8 +190,8 @@ export function renderBuy(panel, account, ctx) {
                 : "Subscribe";
           btn.addEventListener("click", () =>
             flow
-              ? void startSwitch(flow, tier, btn)
-              : void startCheckout(priceId, "plan", btn)
+              ? void startSwitch(flow, tier)
+              : void startCheckout(priceId, "plan")
           );
           card.append(btn);
         }
@@ -200,9 +228,7 @@ export function renderBuy(panel, account, ctx) {
         btn.type = "button";
         btn.className = "btn btn-ghost";
         btn.textContent = "Buy";
-        btn.addEventListener("click", () =>
-          void startCheckout(priceId, "pack", btn)
-        );
+        btn.addEventListener("click", () => void startCheckout(priceId, "pack"));
         card.append(title, meta, btn);
         packsList.append(card);
       }
@@ -217,18 +243,13 @@ export function renderBuy(panel, account, ctx) {
   };
 
   /**
-   * @param {string} priceId
-   * @param {"pack"|"plan"} kind
-   * @param {HTMLButtonElement} btn
-   */
-  /**
    * Upgrade/downgrade an existing subscription via the Stripe portal.
    * @param {"upgrade"|"downgrade"} flow
    * @param {string} tier
-   * @param {HTMLButtonElement} btn
    */
-  const startSwitch = async (flow, tier, btn) => {
-    btn.disabled = true;
+  const startSwitch = async (flow, tier) => {
+    if (busy) return;
+    setBusy(true);
     showSpinner(ctx.statusEl, "Opening Stripe");
     try {
       const data = await billingPortal(flow, { plan: tier });
@@ -236,8 +257,6 @@ export function renderBuy(panel, account, ctx) {
       if (url) {
         openStripe(url);
         setStatus(ctx.statusEl, "Continue in Stripe.", "ok");
-      } else {
-        setStatus(ctx.statusEl, `${titleCase(flow)} started.`, "ok");
       }
     } catch (err) {
       setStatus(
@@ -248,13 +267,17 @@ export function renderBuy(panel, account, ctx) {
         "err"
       );
     } finally {
-      btn.disabled = false;
+      setBusy(false);
     }
   };
 
-  const startCheckout = async (priceId, kind, btn) => {
-    if (!priceId) return;
-    btn.disabled = true;
+  /**
+   * @param {string} priceId
+   * @param {"pack"|"plan"} kind
+   */
+  const startCheckout = async (priceId, kind) => {
+    if (!priceId || busy) return;
+    setBusy(true);
     showSpinner(ctx.statusEl, "Opening Stripe");
     try {
       const requestId = newRequestId();
@@ -286,7 +309,7 @@ export function renderBuy(panel, account, ctx) {
         "err"
       );
     } finally {
-      btn.disabled = false;
+      setBusy(false);
     }
   };
 
@@ -301,6 +324,7 @@ export function renderBuy(panel, account, ctx) {
         const st = String(order.status || "");
         if (st === "paid" || st === "fulfilled" || st === "credited") {
           setStatus(ctx.statusEl, "Purchase completed.", "ok");
+          await refreshAfterPurchase();
           return;
         }
         if (st === "canceled" || st === "cancelled" || st === "failed") {
