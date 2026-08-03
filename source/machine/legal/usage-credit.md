@@ -1,6 +1,6 @@
 ---
 title: "TestFlows Machine: Usage Credit Terms"
-description: Usage Credit Terms for the TestFlows Machine cloud service.
+description: Usage Credit Terms for the TestFlows Machine service.
 layout: page
 permalink: machine/legal/usage-credit/index.html
 ---

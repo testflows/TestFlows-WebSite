@@ -14,11 +14,10 @@ testflows.com website and its subdomains (the “**Site**”). These Website Ter
 of Use (the “**Terms**”) govern your access to and use of the Site.
 
 These Terms cover the Site and its content, including documentation, the
-handbook, and the blog. They do not govern the TestFlows Machine cloud service,
-which is provided under the
-[Machine Terms of Service](/machine/legal/terms-of-service/), or the open-source
-TestFlows testing framework, which is licensed under its own open-source license
-in the project source repository. By using the Site you agree to these Terms; if
+handbook, and the blog. They do not govern the TestFlows Machine service, which
+is provided under its own separate terms, or the open-source TestFlows testing
+framework, which is licensed under its own open-source license in the project
+source repository. By using the Site you agree to these Terms; if
 you do not agree, do not use the Site.
 
 ## 1. Use of the Site
@@ -71,8 +70,8 @@ you accept them.
 
 ## 8. Governing law
 
-These Terms are governed by the laws that apply to Katteli Inc., without regard
-to conflict-of-laws rules.
+These Terms are governed by the laws of the Province of Ontario and the federal
+laws of Canada applicable therein, without regard to conflict-of-law principles.
 
 ## 9. Contact
 

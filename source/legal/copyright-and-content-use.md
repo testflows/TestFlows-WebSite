@@ -15,8 +15,8 @@ This notice explains who owns the content on the testflows.com website (the
 “**Site**”) and how you may use it. It covers the Site and its content. The
 open-source TestFlows testing framework is licensed under its own open-source
 license in the project source repository, and that license, not this notice,
-governs the framework’s source code. Use of the TestFlows Machine cloud service
-is governed by the [Machine Terms of Service](/machine/legal/terms-of-service/).
+governs the framework’s source code. Use of the TestFlows Machine service
+is governed by its own separate terms.
 
 ## 1. Ownership
 

@@ -1,6 +1,6 @@
 ---
 title: "TestFlows Machine: Privacy Policy"
-description: Privacy Policy for the TestFlows Machine cloud service.
+description: Privacy Policy for the TestFlows Machine service.
 layout: page
 permalink: machine/legal/privacy-policy/index.html
 ---

@@ -1,13 +1,13 @@
 ---
 title: "TestFlows Machine: Acceptable Use Policy"
-description: Acceptable Use Policy for the TestFlows Machine cloud service.
+description: Acceptable Use Policy for the TestFlows Machine service.
 layout: page
 permalink: machine/legal/acceptable-use/index.html
 ---
 
 # TestFlows Machine™: Acceptable Use Policy
 
-Last updated: 26 July 2026
+Last updated: 2 August 2026
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -29,23 +29,40 @@ general-purpose compute or hosting.
 
 You may not use the Services for any illegal activity.
 
-## 3. Platform integrity
+## 3. Prohibited technical use
+
+Because the Services run virtual machines, you must not use them to direct abuse
+at third parties or the wider internet. In particular, you may not use the
+Services to:
+
+- create, host, or distribute malware, phishing pages, or botnet
+  command-and-control;
+- run port scanning, penetration testing, or denial-of-service attacks against
+  systems you do not own or have permission to test;
+- operate open mail relays, anonymizing proxies, or other services whose use
+  gets our addresses blocklisted;
+- run cryptocurrency mining or other workloads whose purpose is to consume
+  compute rather than to test software;
+- store or transmit child sexual abuse material or other content that is illegal
+  to possess or host.
+
+## 4. Platform integrity
 
 You may not attack or interfere with our infrastructure or other customers’
 use of the Services, bypass Free-tier or billing limits, or abuse our staff.
 
-## 4. Your content
+## 5. Your content
 
 You must have the rights needed for Customer Content you upload or run, and
 you are responsible for personal data you place in workloads.
 
-## 5. Enforcement
+## 6. Enforcement
 
 We may investigate suspected violations and decide, in our reasonable judgment,
 whether conduct violates this Policy. We may suspend or terminate sessions or
 accounts, remove access, and report activity to authorities or payment partners.
 We may act without prior notice when risk is urgent.
 
-## 6. Reporting
+## 7. Reporting
 
 Report abuse or violations of this Policy to `abuse@testflows.com`.
