@@ -1,21 +1,20 @@
 ---
 title: "TestFlows Website: Privacy Policy"
 description: How Katteli Inc. handles personal information on the testflows.com website.
-layout: page
+layout: legal
+legal_family: website
 permalink: legal/privacy-policy/index.html
 ---
 
-# TestFlows Website: Privacy Policy
+# Privacy Policy
 
-Last updated: 2 August 2026
+<p class="legal-updated">Last updated: 2 August 2026</p>
 
 Katteli Inc. (“**we**,” “**us**,” or “**our**”) respects your
 privacy. This Privacy Policy explains how we handle personal information on the
 testflows.com website and its subdomains (the “**Site**”).
 
 This policy covers the Site, including its documentation and contact form.
-Personal information processed as part of the TestFlows Machine service is
-governed by its own separate privacy policy.
 
 ## 1. Information we collect
 
@@ -82,10 +81,7 @@ posted, as shown by the “Last updated” date above.
 
 Questions about this Privacy Policy, or want to exercise a privacy right?
 
-Katteli Inc.  
-110 Didsbury Rd  
-Kanata, ON K2T 0C2  
-Canada
+Katteli Inc.
 
 Privacy: `privacy@testflows.com`  
 Website: `https://testflows.com`

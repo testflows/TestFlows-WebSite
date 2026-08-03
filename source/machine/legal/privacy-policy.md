@@ -1,13 +1,14 @@
 ---
 title: "TestFlows Machine: Privacy Policy"
 description: Privacy Policy for the TestFlows Machine service.
-layout: page
+layout: legal
+legal_family: machine
 permalink: machine/legal/privacy-policy/index.html
 ---
 
-# TestFlows Machine™: Privacy Policy
+# Privacy Policy
 
-Last updated: 26 July 2026
+<p class="legal-updated">Last updated: 26 July 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -119,10 +120,7 @@ where required.
 
 ## 10. Contact
 
-Katteli Inc.  
-110 Didsbury Rd  
-Kanata, ON K2T 0C2  
-Canada
+Katteli Inc.
 
 Privacy: `privacy@testflows.com`  
 Legal: `legal@testflows.com`  
