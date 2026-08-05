@@ -812,10 +812,6 @@
     }
 }
 
-#main-nav.portal-navbar .navbar-logo {
-    height: 2.1rem;
-}
-
 #main-nav.portal-navbar .navbar-theme {
     flex-shrink: 0;
     margin-left: 0;
@@ -1321,6 +1317,8 @@
     border-radius: 0.5rem;
     margin: 0 0 1.15rem;
     font-size: 0.95rem;
+    /* body uses text-wrap:balance, which wraps early for even lines */
+    text-wrap: wrap;
 }
 
 .portal-banner--warn {
@@ -1330,6 +1328,18 @@
 
 [data-theme="light"] .portal-banner--warn {
     color: #8a6800;
+}
+
+.portal-banner a {
+    color: inherit;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.portal-banner a:hover,
+.portal-banner a:focus {
+    color: var(--tf-text-strong);
+    text-decoration: none;
 }
 
 .portal-credit-cards {

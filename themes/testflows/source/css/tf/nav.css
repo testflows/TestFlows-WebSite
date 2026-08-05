@@ -95,11 +95,14 @@
     line-height: 0;
 }
 
+/* Logos share one canvas size — lock the box so TestFlows ↔ Machine never shifts */
 #main-nav .navbar-logo {
     display: block;
     height: 2.45rem;
-    width: auto;
+    width: 12.25rem; /* height × (canvasW / canvasH); update if assets change */
     max-height: calc(var(--tf-nav-height) - 0.6rem);
+    object-fit: contain;
+    object-position: left center;
 }
 
 #main-nav .navbar-theme {
@@ -353,8 +356,8 @@
 
     #main-nav .navbar-logo {
         height: 2rem;
+        width: 10rem; /* height × (canvasW / canvasH); update if assets change */
         max-width: 100%;
-        width: auto;
         object-fit: contain;
         object-position: left center;
     }
@@ -424,6 +427,25 @@
         #main-nav .navbar-github:hover,
         #main-nav .navbar-github:focus {
             border-color: rgba(var(--tf-fg-rgb), 0.22);
+        }
+
+        /* Machine: Sign in is text-only — keep the label visible */
+        #main-nav.machine-navbar .navbar-signin {
+            width: auto;
+            height: auto;
+            padding: 0.35rem 0.65rem;
+            margin-left: 0;
+        }
+
+        #main-nav.machine-navbar .navbar-signin .navbar-github-label {
+            position: static;
+            width: auto;
+            height: auto;
+            padding: 0;
+            margin: 0;
+            overflow: visible;
+            clip: auto;
+            white-space: nowrap;
         }
     }
 

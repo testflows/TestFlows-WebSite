@@ -1,3 +1,8 @@
+<%
+var isMachineSurface = page.path && page.path.indexOf('machine/') === 0;
+var footerContact = isMachineSurface ? '/machine/contact/' : '/contact.html';
+var footerLegal = isMachineSurface ? '/machine/legal/' : '/legal/';
+%>
 <div class="container">
     <div class="site-footer-grid row">
         <div class="col-6 col-md-3 site-footer-col">
@@ -20,15 +25,20 @@
             <h3>Company</h3>
             <ul>
                 <li><a href="<%- url_for('/about.html') %>">About</a></li>
-                <li><a href="<%- url_for('/contact.html') %>">Contact</a></li>
-                <li><a href="<%- url_for('/legal/') %>">Legal</a></li>
+                <li><a href="<%- url_for(footerContact) %>">Contact</a></li>
+                <li><a href="<%- url_for(footerLegal) %>">Legal</a></li>
             </ul>
         </div>
         <div class="col-6 col-md-3 site-footer-col">
             <h3>Get started</h3>
             <ul>
+                <% if (isMachineSurface) { %>
+                <li><a href="<%- url_for('/machine/portal/signup/') %>">Create account</a></li>
+                <li><a href="<%- url_for('/machine/contact/') %>">Request early access</a></li>
+                <% } else { %>
                 <li><a href="https://pypi.org/project/testflows/">pip3 install testflows</a></li>
                 <li><a href="<%- url_for('/handbook/') %>">Read the handbook</a></li>
+                <% } %>
             </ul>
         </div>
     </div>
