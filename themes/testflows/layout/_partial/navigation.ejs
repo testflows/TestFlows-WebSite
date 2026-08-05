@@ -1,4 +1,7 @@
-<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+<%
+var isMachineSurface = page.path && page.path.indexOf('machine/') === 0;
+%>
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top<%= isMachineSurface ? ' machine-navbar' : '' %>" role="navigation">
     <div class="container navbar-inner">
         <a class="navbar-brand" href="<%- config.root %>">
             <img
@@ -66,10 +69,16 @@
                 <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
             </button>
             <span class="navbar-github-sep" aria-hidden="true">|</span>
+            <% if (isMachineSurface) { %>
+            <a class="navbar-github navbar-signin" href="<%- url_for('machine/portal/login/') %>">
+                <span class="navbar-github-label">Sign in</span>
+            </a>
+            <% } else { %>
             <a class="navbar-github" href="https://github.com/testflows">
                 <span class="fab fa-github" aria-hidden="true"></span>
                 <span class="navbar-github-label">GitHub</span>
             </a>
+            <% } %>
         </div>
     </div>
 </nav>

@@ -12,6 +12,7 @@ permalink: machine/portal/signup/index.html
             <h1>Sign up</h1>
             <p>We'll email you an activation link.</p>
         </header>
+        <p class="portal-banner portal-banner--warn" role="note">TestFlows Machine is in private beta. <a href="/machine/contact/">Contact us</a> for early access.</p>
         <div class="portal-card">
             <div id="portal-signup-status" class="portal-status" hidden></div>
             <form id="portal-signup-form" class="portal-form" novalidate>

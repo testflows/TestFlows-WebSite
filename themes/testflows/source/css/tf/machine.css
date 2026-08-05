@@ -1,0 +1,289 @@
+/* ==========================================================================
+   Machine landing — /machine/
+   ========================================================================== */
+
+/* One full viewport below the nav: copy, visual, closing line */
+.machine-banner.banner {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-height: calc(100dvh - var(--tf-nav-height));
+    height: calc(100dvh - var(--tf-nav-height));
+    max-height: calc(100dvh - var(--tf-nav-height));
+    padding: 1rem 0 1.15rem;
+    overflow: hidden;
+}
+
+.machine-banner .banner-inner {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+}
+
+.machine-banner-text {
+    flex: 0 0 auto;
+    padding-bottom: 0.65rem;
+}
+
+.machine-banner-text h1 {
+    opacity: 0;
+    animation: machine-fade-up 0.75s ease forwards;
+}
+
+.machine-banner-text > p {
+    max-width: 36rem;
+    opacity: 0;
+    animation: machine-fade-up 0.75s ease 0.1s forwards;
+}
+
+.machine-banner-text .banner-actions {
+    opacity: 0;
+    animation: machine-fade-up 0.75s ease 0.2s forwards;
+}
+
+.machine-banner-visual {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding-top: 0.35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.machine-hero-frame {
+    position: relative;
+    /* Fill the banner container width; height follows the visual slot */
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: auto;
+    background: #0a0d0b;
+    /* Transform-only — ancestor opacity kills backdrop-filter in Chrome */
+    transform: translateY(0.75rem);
+    animation: machine-hero-in 0.9s ease 0.25s forwards;
+}
+
+.machine-banner-close {
+    flex: 0 0 auto;
+    margin: 1.25rem 0 0;
+    padding: 0.35rem 0 0;
+    text-align: center;
+    color: var(--tf-text-strong);
+    font-family: var(--tf-font);
+    font-size: clamp(1rem, 1.6vw, 1.2rem);
+    font-weight: 400;
+    line-height: 1.4;
+    opacity: 0;
+    animation: machine-fade-up 0.75s ease 0.35s forwards;
+}
+
+.machine-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 45%;
+}
+
+/* Console overlay — our terminal chrome on the hero
+   Glass lives on this element (not children). Do not animate `opacity`
+   here: Chrome then ignores backdrop-filter and rgba looks fully clear. */
+.machine-hero-term {
+    --machine-term-alpha: 0.85;
+    position: absolute;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    width: 90%;
+    height: 90%;
+    max-height: none;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1.25rem 1.25rem 0.65rem 0.65rem;
+    overflow: hidden;
+    background: rgba(11, 13, 12, var(--machine-term-alpha));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    border: 1px solid rgba(var(--tf-terminal-fg-rgb), 0.28);
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.05) inset,
+        0 22px 48px rgba(0, 0, 0, 0.55),
+        0 8px 22px rgba(0, 0, 0, 0.35);
+    transform: translate(-50%, calc(-50% + 0.4rem));
+    animation: machine-hero-term-in 0.7s ease 0.55s forwards;
+}
+
+.machine-hero-term .index-start-step-file {
+    flex: 0 0 auto;
+    border-radius: 0;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgba(var(--tf-terminal-fg-rgb), 0.12);
+}
+
+.machine-hero-term-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    margin: 0;
+    padding: 0.7rem 0.95rem 0.95rem;
+    overflow-x: auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    color: #e8f5f2;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+        "Courier New", monospace;
+    font-size: clamp(0.62rem, 1.15vw, 0.78rem);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+    /* Keep scroll; hide the scrollbar chrome */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.machine-hero-term-body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+}
+
+.machine-hero-term-pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: inherit;
+    font: inherit;
+    line-height: 1.4;
+    white-space: pre;
+    min-width: max-content;
+}
+
+.machine-hero-term-pre .index-code-caret {
+    background: #06f996;
+}
+
+@keyframes machine-hero-term-in {
+    from {
+        transform: translate(-50%, calc(-50% + 0.4rem));
+    }
+    to {
+        transform: translate(-50%, -50%);
+    }
+}
+
+@media (max-width: 991.98px) {
+    .machine-hero-term {
+        width: 88%;
+        height: 70%;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .machine-hero-term {
+        width: 92%;
+        height: 68%;
+        border-radius: 1rem 1rem 0.55rem 0.55rem;
+    }
+
+    .machine-hero-term .index-start-step-file {
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .machine-hero-term-body {
+        font-size: 0.6rem;
+        padding: 0.55rem 0.7rem 0.75rem;
+    }
+}
+
+/* Why — flat three-up, no cards */
+.machine-why {
+    position: relative;
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    padding: 4rem 0 5rem;
+}
+
+.machine-why .index-block-title {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: clamp(2rem, 4vw, 2.65rem);
+    margin: 0 0 2.5rem;
+    text-align: center;
+}
+
+.machine-why-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem 2.5rem;
+    max-width: 56rem;
+    margin: 0 auto;
+    text-align: center;
+}
+
+@media (min-width: 768px) {
+    .machine-why-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.machine-why-item h3 {
+    color: var(--tf-text-strong);
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin: 0 0 0.45rem;
+}
+
+.machine-why-item p {
+    color: var(--tf-text-muted);
+    font-size: 1.02rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+@keyframes machine-fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(0.55rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes machine-hero-in {
+    from {
+        transform: translateY(0.75rem);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .machine-banner-text h1,
+    .machine-banner-text > p,
+    .machine-banner-text .banner-actions,
+    .machine-banner-close {
+        opacity: 1;
+        transform: none;
+        animation: none;
+    }
+
+    .machine-hero-frame {
+        transform: none;
+        animation: none;
+    }
+
+    .machine-hero-term {
+        transform: translate(-50%, -50%);
+        animation: none;
+    }
+
+    .machine-hero-term-pre .index-code-caret {
+        display: none;
+    }
+}
