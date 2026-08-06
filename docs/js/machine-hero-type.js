@@ -12,13 +12,12 @@
 /**
  * Machine landing hero: typewrite console log over the hero image when it
  * scrolls into view (same IntersectionObserver pattern as index demos).
- * Loads `/images/machine-hero.log` (keep ASCII out of Markdown — marked
- * turns the logo block into headings).
+ * Boot log ships in the terminal element's `data-boot-log` (base64 UTF-8)
+ * so it stays in the HTML without a fetch, and Markdown cannot mangle it.
  */
 (function () {
   "use strict";
 
-  var LOG_URL = "/images/machine-hero.log";
   var START_DELAY_MS = 480;
   var CHAR_MS_MIN = 3;
   var CHAR_MS_MAX = 10;
@@ -54,17 +53,40 @@
   }
 
   /**
-   * @returns {Promise<string>}
+   * @param {string} b64
+   * @returns {string}
    */
-  function loadLog() {
-    return fetch(LOG_URL).then(function (resp) {
-      if (!resp.ok) {
-        throw new Error("log fetch failed");
+  function decodeBootLog(b64) {
+    var bin = window.atob(b64);
+    if (typeof TextDecoder === "function") {
+      var bytes = new Uint8Array(bin.length);
+      for (var i = 0; i < bin.length; i++) {
+        bytes[i] = bin.charCodeAt(i);
       }
-      return resp.text().then(function (text) {
-        return text.replace(/\r\n/g, "\n").replace(/\s+$/, "") + "\n";
-      });
-    });
+      return new TextDecoder("utf-8").decode(bytes);
+    }
+    /* Fallback for very old browsers */
+    try {
+      return decodeURIComponent(escape(bin));
+    } catch (e) {
+      return bin;
+    }
+  }
+
+  /**
+   * @param {HTMLElement} root
+   * @returns {string}
+   */
+  function loadLog(root) {
+    var b64 = root.getAttribute("data-boot-log");
+    if (!b64) {
+      return "";
+    }
+    try {
+      return decodeBootLog(b64).replace(/\r\n/g, "\n").replace(/\s+$/, "") + "\n";
+    } catch (e) {
+      return "";
+    }
   }
 
   /**
@@ -181,13 +203,11 @@
       return;
     }
 
-    loadLog()
-      .then(function (text) {
-        watch(root, text);
-      })
-      .catch(function () {
-        /* leave empty chrome if the log cannot load */
-      });
+    var text = loadLog(root);
+    if (!text) {
+      return;
+    }
+    watch(root, text);
   }
 
   if (document.readyState === "loading") {

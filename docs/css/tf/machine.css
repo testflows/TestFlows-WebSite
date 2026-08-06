@@ -95,8 +95,8 @@
     z-index: 2;
     left: 50%;
     top: 50%;
-    width: 90%;
-    height: 90%;
+    width: 94%;
+    height: 94%;
     max-height: none;
     display: flex;
     flex-direction: column;
@@ -176,15 +176,15 @@
 
 @media (max-width: 991.98px) {
     .machine-hero-term {
-        width: 88%;
-        height: 70%;
+        width: 92%;
+        height: 78%;
     }
 }
 
 @media (max-width: 575.98px) {
     .machine-hero-term {
-        width: 92%;
-        height: 68%;
+        width: 95%;
+        height: 76%;
         border-radius: 1rem 1rem 0.55rem 0.55rem;
     }
 
