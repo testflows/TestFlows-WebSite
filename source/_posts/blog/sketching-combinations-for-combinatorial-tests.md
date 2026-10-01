@@ -289,11 +289,11 @@ to get a glimpse of how {% testflows %} can make your testing flow. Be sure to t
 combinatorial [Sketch]es for a spin. You will have fun!
 
 
-[Sketch]: /handbook/#Using-Sketches
-[either()]: /handbook/#Using-either
-[Cartesian product]: /handbook/#Cartesian-Product
-[Combinatorial Tests]: /handbook/#Combinatorial-Tests
-[Handbook]: /handbook
+[Sketch]: /docs/framework/#Using-Sketches
+[either()]: /docs/framework/#Using-either
+[Cartesian product]: /docs/framework/#Cartesian-Product
+[Combinatorial Tests]: /docs/framework/#Combinatorial-Tests
+[Handbook]: /docs/framework
 
 
 

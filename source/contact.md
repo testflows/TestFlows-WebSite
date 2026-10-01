@@ -9,7 +9,7 @@ fullwidth: true
     <div class="container contact-page-inner">
         <header class="contact-page-header">
             <h1>Talk to our team</h1>
-            <p>Questions about TestFlows, support for your test program, or partnerships — we are happy to hear from you.</p>
+            <p>Questions about Framework or Machine, early access, support, or partnerships.</p>
             <div class="contact-visual-links">
                 <a class="contact-visual-link" href="mailto:contact@testflows.com">
                     <span class="fas fa-envelope" aria-hidden="true"></span>
@@ -34,11 +34,19 @@ fullwidth: true
                             <label for="subject">Topic</label>
                             <select class="form-control contact-topic" id="subject" required>
                                 <option value="" selected disabled>What's on your mind?</option>
-                                <option value="General question">General question</option>
-                                <option value="Product support">Product support</option>
-                                <option value="Partnership">Partnership</option>
-                                <option value="Licensing or pricing">Licensing or pricing</option>
-                                <option value="Something else">Something else</option>
+                                <optgroup label="Framework">
+                                    <option value="General question">General question</option>
+                                    <option value="Framework support">Framework support</option>
+                                </optgroup>
+                                <optgroup label="Machine">
+                                    <option value="Machine early access">Early access</option>
+                                    <option value="Machine product question">Product question</option>
+                                </optgroup>
+                                <optgroup label="Either">
+                                    <option value="Partnership">Partnership</option>
+                                    <option value="Licensing or pricing">Licensing or pricing</option>
+                                    <option value="Something else">Something else</option>
+                                </optgroup>
                             </select>
                             <div class="invalid-feedback">Please choose a topic</div>
                         </div>
@@ -63,7 +71,7 @@ fullwidth: true
                         </div>
                         <input type="hidden" id="firstname" value="">
                         <input type="hidden" id="lastname" value="">
-                        <p class="contact-privacy">By clicking Submit, you acknowledge that Katteli Inc. will process your personal information in accordance with our <a href="/legal/privacy-policy/">privacy policy</a>.</p>
+                        <p class="contact-privacy">By clicking Submit, you acknowledge that Katteli Inc. will process your personal information in accordance with our <a id="contact-privacy-link" href="/legal/privacy-policy/">privacy policy</a>.</p>
                         <p class="contact-error failed-submission d-none"><span role="error-message">Something went wrong while submitting.</span> Try again, or write us at <strong>contact@testflows.com</strong>.</p>
                         <button class="btn contact-submit" id="submit" type="submit" disabled>
                             <span role="submit">Submit <i class="fas fa-arrow-right" aria-hidden="true"></i></span>

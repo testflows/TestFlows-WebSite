@@ -1,5 +1,5 @@
 ---
-title: "TestFlows Website: Terms of Use"
+title: "Terms of Use"
 description: Terms governing use of the testflows.com website and its content.
 layout: legal
 legal_family: website
@@ -16,8 +16,7 @@ of Use (the “**Terms**”) govern your access to and use of the Site.
 
 These Terms cover the Site and its content, including documentation, the
 handbook, and the blog. They do not govern the open-source TestFlows testing
-framework, which is licensed under its own open-source license in the project
-source repository. By using the Site you agree to these Terms; if
+framework, which is licensed under its own open-source license in the [project source repository](https://github.com/testflows/testflows). By using the Site you agree to these Terms; if
 you do not agree, do not use the Site.
 
 ## 1. Use of the Site

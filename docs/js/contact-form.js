@@ -43,8 +43,36 @@ function continueContactUs(form) {
     return false
 }
 
+var MACHINE_TOPICS = ["Machine early access", "Machine product question"]
+
+/* Machine enquiries are covered by the Machine privacy policy; everything else by the website's. */
+function syncContactPrivacy(form) {
+    var link = form.querySelector("#contact-privacy-link")
+    var subject = form.querySelector("#subject")
+    if (!link || !subject) return
+    link.setAttribute("href", MACHINE_TOPICS.indexOf(subject.value) >= 0
+        ? "/machine/legal/privacy-policy/"
+        : "/legal/privacy-policy/")
+}
+
+/* ?topic=machine (or an exact topic value) pre-selects the topic, e.g. from Machine CTAs. */
+function prefillContactTopic(form) {
+    var subject = form.querySelector("#subject")
+    var wanted = new URLSearchParams(window.location.search).get("topic")
+    if (!subject || !wanted) return
+    if (wanted === "machine") wanted = "Machine early access"
+    var option = Array.prototype.find.call(subject.options, function(o) { return o.value === wanted })
+    if (option) subject.value = option.value
+}
+
 document.addEventListener("DOMContentLoaded", function() {
     var form = document.querySelector("form.contact-us")
+    if (form) {
+        prefillContactTopic(form)
+        syncContactPrivacy(form)
+        var topic = form.querySelector("#subject")
+        if (topic) topic.addEventListener("change", function() { syncContactPrivacy(form) })
+    }
     var continueBtn = document.getElementById("contact-continue")
     if (continueBtn && form) {
         continueBtn.addEventListener("click", function(e) {

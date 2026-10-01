@@ -209,7 +209,7 @@ This Cartesian product represents all possible subsets {%katex%} M \subseteq AP_
 Let's use a simple memory function as an example to demonstrate the application of atomic propositions and equivalence classes in a practical context. This memory function will allow us to see how these concepts work together in organizing and testing input scenarios based on expected behaviors.
 
 
-<img class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
+<img alt="Diagram of the memory function: the inputs addr, value, mode and default go into a table of keys, and a single value comes out" class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
 
 In Python, we'll define the `memory` function as follows:
 
@@ -293,7 +293,7 @@ for p1 in ['p1','¬p1']:
         (p1, p2, p3, p4)
 ```
 
-In a [TestSketch](https://testflows.com/handbook/#Using-Sketches) which supports the [either()](https://testflows.com/handbook/#Using-either) function, the same Cartesian product can be naturally defined as possibilities as follows:
+In a [TestSketch](https://testflows.com/docs/framework/#Using-Sketches) which supports the [either()](https://testflows.com/docs/framework/#Using-either) function, the same Cartesian product can be naturally defined as possibilities as follows:
 
 ```python
 @TestSketch

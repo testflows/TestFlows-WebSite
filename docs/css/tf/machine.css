@@ -2,14 +2,14 @@
    Machine landing — /machine/
    ========================================================================== */
 
-/* One full viewport below the nav: copy, visual, closing line */
+/* Copy on top, then the console visual (75% of the screen height), then the closing line. */
 .machine-banner.banner {
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
     min-height: calc(100dvh - var(--tf-nav-height));
-    height: calc(100dvh - var(--tf-nav-height));
-    max-height: calc(100dvh - var(--tf-nav-height));
+    height: auto;
+    max-height: none;
     padding: 1rem 0 1.15rem;
     overflow: hidden;
 }
@@ -19,7 +19,6 @@
     display: flex;
     flex-direction: column;
     min-height: 0;
-    height: 100%;
 }
 
 .machine-banner-text {
@@ -44,8 +43,10 @@
 }
 
 .machine-banner-visual {
-    flex: 1 1 auto;
-    min-height: 0;
+    flex: 0 0 auto;
+    /* Three quarters of the screen height */
+    height: 75dvh;
+    min-height: 26rem;
     padding-top: 0.35rem;
     display: flex;
     align-items: center;
@@ -286,4 +287,12 @@
     .machine-hero-term-pre .index-code-caret {
         display: none;
     }
+}
+
+/* Closing call to action: centered button row */
+.section-close-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem 1rem;
 }

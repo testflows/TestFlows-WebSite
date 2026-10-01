@@ -23,7 +23,7 @@ The simple train control system we’ll discuss here is a **Ceiling Speed Monito
 The controller interface consists of the following inputs and outputs:
 
 <div class="text-left">
-<img style="width: 75%" src="/images/ceiling-speed-monitoring-interface.png">
+<img alt="Ceiling Speed Monitoring Controller block with inputs, outputs and an internal state" style="width: 75%" src="/images/ceiling-speed-monitoring-interface.png">
 <div class="text-secondary text-bold"><br>Diagram: Ceiling Speed Monitoring I/O Interface</div>
 </div><br>
 
@@ -41,7 +41,7 @@ The controller interface consists of the following inputs and outputs:
 The system operates in three internal states {%katex%}\ell {%endkatex%}, where ({%katex%}\ell = \{NS, WS, EB\} {%endkatex%}), as shown in the diagram below:
 
 <div class="text-left">
-<img style="width: 75%" src="/images/ceiling-speed-monitoring-chart.png">
+<img alt="State diagram with three states: Normal Status, Warning Status and Intervention Status" style="width: 75%" src="/images/ceiling-speed-monitoring-chart.png">
 <div class="text-secondary text-bold"><br>Diagram: Ceiling Speed Monitoring State Diagram</div>
 </div><br>
 

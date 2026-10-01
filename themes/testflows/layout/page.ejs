@@ -1,3 +1,6 @@
+<% if (page.docs_nav) { %>
+<%- partial('_partial/docs_switch') %>
+<% } %>
 <% if (page.fullwidth) { %>
 <%- page.content %>
 <% } else { %>

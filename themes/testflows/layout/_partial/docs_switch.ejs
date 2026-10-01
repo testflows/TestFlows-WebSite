@@ -1,0 +1,13 @@
+<%
+var dsPath = '/' + String(page.path || '').replace(/index\.html$/, '');
+var dsMachine = dsPath.indexOf('/docs/machine') === 0;
+var dsFramework = dsPath.indexOf('/docs/framework') === 0;
+%>
+<nav class="docs-switch" aria-label="Documentation">
+    <div class="container docs-switch-inner">
+        <a class="docs-switch-home" href="<%- url_for('/docs/') %>">Docs</a>
+        <span class="docs-switch-sep" aria-hidden="true">/</span>
+        <a class="docs-switch-tab<%= dsFramework ? ' is-active' : '' %>" href="<%- url_for('/docs/framework/') %>"<%- dsFramework ? ' aria-current="page"' : '' %>>Framework</a>
+        <a class="docs-switch-tab<%= dsMachine ? ' is-active' : '' %>" href="<%- url_for('/docs/machine/') %>"<%- dsMachine ? ' aria-current="page"' : '' %>>Machine</a>
+    </div>
+</nav>

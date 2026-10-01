@@ -1,6 +1,6 @@
 ---
-title: "TestFlows Machine: Terms of Service"
-description: Terms of Service for the TestFlows Machine service.
+title: "Terms of Service"
+description: Terms of Service for the TestFlows™ Machine service.
 layout: legal
 legal_family: machine
 permalink: machine/legal/terms-of-service/index.html
@@ -15,7 +15,7 @@ Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 ## 1. Agreement
 
 By creating an account, accepting these terms, completing a purchase, or using
-TestFlows Machine websites, APIs, clients, or related services (the
+TestFlows™ Machine websites, APIs, clients, or related services (the
 “**Services**”), you (“**Customer**,” “**you**”) agree to these Terms of Service
 (the “**Terms**”), the [Acceptable Use Policy](/machine/legal/acceptable-use/), the
 [Privacy Policy](/machine/legal/privacy-policy/), and the
@@ -29,7 +29,7 @@ You confirm that you are receiving the Services for a **business activity** and
 
 ## 2. The Services
 
-TestFlows Machine provides a deterministic execution environment for software
+TestFlows™ Machine provides a deterministic execution environment for software
 testing and related engineering workflows. Subject to the Agreement and payment
 of applicable fees, we grant you a limited, non-exclusive, non-transferable,
 non-sublicensable right to use the Services for your internal business purposes

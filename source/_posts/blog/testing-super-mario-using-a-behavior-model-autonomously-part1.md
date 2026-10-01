@@ -52,7 +52,7 @@ def generate_input(starting_byte, flip_probability, input_length):
 This random mutation approach treats game inputs (right, left, jump, action, down, enter) as bytes, where each bit represents whether a given key is pressed (1) or not (0). The algorithm randomly flips individual bits with a small probability (typically around 10%) by XORing the current input with a random mask—flipping bits where the mask is 1 while preserving bits where the mask is 0. By flipping bits, the algorithm generates variations of input sequences, exploring different paths through the game.
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-1.png">
+<img alt="Random input generation: the current input is combined with a random flip mask using XOR to produce a new input" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-1.png">
 <div class="text-secondary text-bold"><br>Input: Random input generation</div>
 </div><br>
 
@@ -70,7 +70,7 @@ The path selection requires a fitness function. For *Super Mario*, a simple crit
 To overcome this problem, it's not enough to keep just the best path we've found so far. Instead, we need to maintain a collection of paths with different fitness scores and use a probability distribution function to pick the next path to explore. This way, we're more likely to pick paths with higher scores while still giving paths with lower scores a chance to be explored.
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-2.png">
+<img alt="Selecting a path: paths ranked by score feed a probability distribution that picks one selected path" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-2.png">
 <div class="text-secondary text-bold"><br>Paths: Selecting path</div>
 </div><br>
 

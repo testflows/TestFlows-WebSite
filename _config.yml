@@ -3,8 +3,8 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: TestFlows - Python Testing Framework
-description: Python testing libary for writing test programs"
+title: TestFlows
+description: Python library for writing test programs
 keywords:
 author: TestFlows
 language: en
@@ -14,15 +14,18 @@ image: "img/logo.png"
 
 # Header
 menu:
-  Handbook:
-    path: /handbook
+  Framework:
+    path: /framework/
+    icon: fas fa-code
+  Machine:
+    path: /machine/
+    icon: fas fa-cube
+  Docs:
+    path: /docs/
     icon: fas fa-book
   Blog:
     path: /blog
     icon: fas fa-blog
-  About:
-    path: /about.html
-    icon: fas fa-info-circle
   Contact:
     path: /contact.html
     icon: fas fa-envelope-open-text

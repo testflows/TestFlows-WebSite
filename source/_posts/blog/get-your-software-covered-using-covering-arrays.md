@@ -141,15 +141,15 @@ Dumping covering arrays is useful for debugging and to get a general understandi
 
 Combinatorial testing is an exciting topic, and in this article, I
 have introduced you to covering arrays and shown you
-how the new [CoveringArray class](https://testflows.com/handbook/#Covering-Arrays-Pairwise-N-wise-Testing) allows you to
+how the new [CoveringArray class](https://testflows.com/docs/framework/#Covering-Arrays-Pairwise-N-wise-Testing) allows you to
 calculate covering arrays for your tests. We have looked at how you can
 generate, check, and dump covering arrays. Covering arrays
 are critical for combinatorial testing, and {% testflows %} now brings
 them to your test programs without using any third-party libraries.
 
 If you are interested in seeing how you can implement your combinatorial tests
-with the TestFlows.com open-source testing framework, check out the [Combinatorial Tests](https://testflows.com/handbook/#Combinatorial-Tests)
-section in the [Handbook](https://testflows.com/handbook/). Until next time,
+with the TestFlows.com open-source testing framework, check out the [Combinatorial Tests](https://testflows.com/docs/framework/#Combinatorial-Tests)
+section in the [Handbook](https://testflows.com/docs/framework/). Until next time,
 happy combinatorial testing using covering arrays!
 
 [IPOG]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a

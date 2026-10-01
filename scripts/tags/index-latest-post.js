@@ -24,6 +24,26 @@ function escapeHtml(value) {
     .replace(/"/g, '&quot;');
 }
 
+/**
+ * The post's excerpt. On a cold build (no db.json cache) pages render before posts do,
+ * so `post.excerpt` is still empty; fall back to rendering the text before <!-- more -->.
+ */
+function excerptOf(post) {
+  if (post.excerpt) {
+    return post.excerpt;
+  }
+  var raw = String(post._content || post.raw || '');
+  var cut = raw.indexOf('<!-- more -->');
+  if (cut < 0) {
+    return '';
+  }
+  try {
+    return hexo.render.renderSync({ text: raw.slice(0, cut), engine: 'markdown' });
+  } catch (e) {
+    return '';
+  }
+}
+
 hexo.extend.tag.register('index_latest_post', function () {
   var posts = hexo.locals.get('posts');
   if (!posts || !posts.length) {
@@ -73,10 +93,11 @@ hexo.extend.tag.register('index_latest_post', function () {
     title +
     '</a></h3>';
 
-  if (latest.excerpt) {
+  var excerpt = excerptOf(latest);
+  if (excerpt) {
     html +=
       '<div class="index-journal-excerpt">' +
-      latest.excerpt +
+      excerpt +
       '<i class="post-summary-more">...</i></div>';
   }
 

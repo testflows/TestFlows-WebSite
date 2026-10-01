@@ -15,15 +15,13 @@
   })();
   </script>
   
-  <title>Testing Super Mario Using a Behavior Model (Part 1) | TestFlows</title>
+  
+  <title>Testing Super Mario Using a Behavior Model (Part 1) | Blog</title>
   <meta name="description" content="An article about testing Super Mario game using a behavior model (Part 1).">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Vitaliy Zakaznikov">
   <meta name="og:site_name" content="TestFlows">
   <meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-part1.png">
-  
-  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
-  
   
   <meta name="image" property="og:image" content="https://testflows.com/">
 <meta name="publish_date" property="og:publish_date" content="2025-09-17T00:00:00-0000">
@@ -42,38 +40,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790894648579" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790894648579" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785980727996" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790894648579" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790894648579" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -127,18 +127,23 @@
                     
                     
                         <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
-                            <a class="nav-link" href="/handbook">Handbook</a>
+                            <a class="nav-link" href="/docs/">Docs</a>
                         </li>
                     
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
-                            <a class="nav-link" href="/blog">Blog</a>
-                        </li>
-                    
-                        <li class="nav-item">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7.5h.01"/></svg></span>
-                            <a class="nav-link" href="/about.html">About</a>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
                         </li>
                     
                         <li class="nav-item">
@@ -149,6 +154,10 @@
                 </ul>
             </div>
             <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
                 <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
                     <span class="fab fa-python" aria-hidden="true"></span>
                     <span class="site-menu-action-label">pip3 install testflows</span>
@@ -164,12 +173,20 @@
                 <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
                 <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
             </button>
-            <span class="navbar-github-sep" aria-hidden="true">|</span>
-            
-            <a class="navbar-github" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
                 <span class="fab fa-github" aria-hidden="true"></span>
                 <span class="navbar-github-label">GitHub</span>
             </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
             
         </div>
     </div>
@@ -202,7 +219,7 @@
             </div>
         </div>
         <div class="post-image col-lg-6 m-auto">
-            <img src="/images/testing-super-mario-using-a-behavior-model-part1.png"></img>
+            <img src="/images/testing-super-mario-using-a-behavior-model-part1.png" alt="Testing Super Mario Using a Behavior Model (Part 1)">
             <span class="post-image-credit"></span>
         </div>
     </div>
@@ -241,7 +258,7 @@ that you can find in our <a target="_blank" rel="noopener external nofollow nore
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 main.py</span><br></pre></td></tr></table></figure>
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
+<img alt="Super Mario Bros. being played manually" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Playing the game manually</div>
 </div><br>
 
@@ -265,7 +282,7 @@ Additionally, we need to make a clear distinction between what a game developer 
 <li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/load_screen.py#L50">TIME_OUT</a></strong> – The state when the level timer runs out (a type of load screen).</li>
 </ul>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
+<img alt="The game state classes: MAIN_MENU, LOAD_SCREEN, TIME_OUT, LEVEL and GAME_OVER" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
 <div class="text-secondary text-bold"><br>Super Mario: State Classes</div>
 </div><br>
 
@@ -273,7 +290,7 @@ Additionally, we need to make a clear distinction between what a game developer 
 <p>Each of these is a subclass of the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15">State</a> class, that implements the state machine architecture. The transitions between states are managed using the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L20">next</a> attribute, which determines the next game state.</p>
 <h3 id="The-actual-game-states"><a href="#The-actual-game-states" class="headerlink" title="The actual game states"></a>The actual game states</h3><p>However, these <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/tree/v1.0/SuperMario/source/states">state</a> classes actually present clusters of <strong>states</strong>, where each cluster contains its own <strong>actual states</strong>. These <strong>actual states</strong> are defined by the specific values of the attributes of these <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15">State</a> classes. You can think of them as shown in the following diagram. However, the transition edges between states are relative. In the real system, we don’t really know which transitions are possible. Some of these states or state transitions might be a bug!</p>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
+<img alt="The same five state classes drawn as clusters of connected states with random transition lines" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
 <div class="text-secondary text-bold"><br>Super Mario: Clusters of States (transition lines are random)</div>
 </div><br>
 
@@ -341,7 +358,7 @@ is not explicitly defined using state-driven code.</p>
 
 <p>The game loop operates in discrete time steps, where each tick of the clock produces a new frame. The FPS value determines the number of frames generated per second, with each frame representing the game’s state at a specific point in time. While the game might appear to run continuously, it is actually discrete, advancing in small, well-defined steps. Here is a graphical representation of the loop’s actions along with their descriptions:</p>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
+<img alt="Game loop flowchart: event_loop(), update(), display.update() and clock.tick(), each with a comment describing its step" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
 <div class="text-secondary text-bold"><br>Super Mario: Game Loop</div>
 </div><br>
 
@@ -354,7 +371,7 @@ When we start the game, we also want to be able to wait for the game
 to be ready to play which means that we want to pass the <code>MAIN_MENU</code> states and
 enter the first <code>LEVEL</code> state. It also makes sense to always cleanly
 stop the game using <code>pygame.quit()</code> call, so we’ll define this action as
-a <a href="https://testflows.com/handbook/#Given-With-yield">Given with yield</a> step that supports combining setup and clean up in one step.  </p>
+a <a href="https://testflows.com/docs/framework/#Given-With-yield">Given with yield</a> step that supports combining setup and clean up in one step.  </p>
 <p>Most of the code to implement this action will be similar to the game’s <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/main.py#L8">main()</a> function. We’ll just add <code>yield</code>ing the game’s object, clean up using <code>pygame.quit()</code> call and call to <code>wait_ready(game)</code> to enter playable state with the default Mario player selected. The stubs for the <code>start()</code> and <code>wait_ready()</code> actions will be the following: </p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestStep(<span class="params">When</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">wait_ready</span>(<span class="params">self, game, seconds=<span class="number">3</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Wait for game to be loaded and ready.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestStep(<span class="params">Given</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">start</span>(<span class="params">self, ready=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Start the game and wait for it to be ready.&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
 
@@ -463,7 +480,7 @@ a <strong>behavior model</strong> that we can use with manual, semi-automated, o
 
 <p>If Mario <strong>doesn’t move</strong>, we’ll know something’s off. But if everything works, our test passes. Here’s a video of this test in action with the red boxes added to Mario’s start and end positions for visual confirmation.</p>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
+<img alt="Animation of Mario moving right in the classic Move Right test, with boxes marking the start and end positions" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Move Right Classic Test</div>
 </div><br>
 
@@ -478,7 +495,7 @@ we press the left key. </p>
 
 <p>Here is a video of the test:</p>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
+<img alt="Animation of Mario moving left in the classic Move Left test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Move Left Classic Test</div>
 </div><br>
 
@@ -509,7 +526,7 @@ Why? Because screen’s <strong>y-coordinates</strong> start at <code>0</code> o
 
 <p>Here is the video of the test:</p>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
+<img alt="Animation of Mario jumping for one second in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Jump For 1 Second Classic Test</div>
 </div><br>
 
@@ -526,7 +543,7 @@ we modify test’s action to hold the jump key for <code>0.2</code> seconds inst
 
 <p>Here is what we have now:</p>
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
+<img alt="Animation of Mario jumping for 0.2 seconds in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Jump For 0.2 Seconds Classic Test</div>
 </div><br>
 
@@ -893,40 +910,36 @@ In many cases, writing a good test...
   </div>
   
   <div class="container-footer" id="container-footer">
-    <footer> 
-<div class="container">
+    <footer> <div class="container">
     <div class="site-footer-grid row">
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
         <div class="col-6 col-md-3 site-footer-col">
             <h3>Developers</h3>
             <ul>
-                <li><a href="/handbook/">Handbook</a></li>
+                <li><a href="/docs/">Docs</a></li>
                 <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
             </ul>
         </div>
         <div class="col-6 col-md-3 site-footer-col">
             <h3>Community</h3>
             <ul>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Company</h3>
-            <ul>
-                <li><a href="/about.html">About</a></li>
-                <li><a href="/contact.html">Contact</a></li>
-                <li><a href="/legal/">Legal</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Get started</h3>
-            <ul>
-                
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">pip3 install testflows</a></li>
-                <li><a href="/handbook/">Read the handbook</a></li>
-                
             </ul>
         </div>
     </div>
@@ -948,8 +961,8 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1785980727996"></script>
-<script src="/js/machine-hero-type.js?v=1785980727996"></script>
+<script src="/js/index-code-type.js?v=1790894648580"></script>
+<script src="/js/machine-hero-type.js?v=1790894648580"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

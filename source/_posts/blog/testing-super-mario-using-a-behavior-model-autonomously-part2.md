@@ -75,7 +75,7 @@ This is where bidirectional testing comes in. Unlike traditional testing where o
 This creates a self-correcting feedback loop:
 
 <div class="text-center">
-<img style="width: 55%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-3.png">
+<img alt="Bidirectional testing: the model tests the game and the game tests the model" style="width: 55%" src="/images/testing-super-mario-using-a-behavior-model-autonomously-pic-3.png">
 <div class="text-secondary text-bold"><br>Bidirectional testing</div>
 </div>
 

@@ -1,27 +1,18 @@
 <%
-var family = page.legal_family;
-if (!family) {
-    family = (page.path && page.path.indexOf('machine/legal') === 0) ? 'machine' : 'website';
-}
+/* One legal centre: the rail always lists both document families, grouped. */
 
 var websiteDocs = [
-    { href: '/legal/', label: 'Overview' },
     { href: '/legal/terms-of-use/', label: 'Terms of Use' },
     { href: '/legal/privacy-policy/', label: 'Privacy Policy' },
     { href: '/legal/copyright-and-content-use/', label: 'Copyright' }
 ];
 
 var machineDocs = [
-    { href: '/machine/legal/', label: 'Overview' },
     { href: '/machine/legal/terms-of-service/', label: 'Terms of Service' },
     { href: '/machine/legal/acceptable-use/', label: 'Acceptable Use' },
     { href: '/machine/legal/privacy-policy/', label: 'Privacy Policy' },
     { href: '/machine/legal/usage-credit/', label: 'Usage Credits' }
 ];
-
-var docs = family === 'machine' ? machineDocs : websiteDocs;
-var railTitle = family === 'machine' ? 'TestFlows Machine' : 'Website';
-var showWebsiteCrossLink = family === 'machine';
 
 function legalPathActive(href) {
     var current = '/' + String(page.path || '').replace(/index\.html$/, '');
@@ -33,19 +24,18 @@ function legalPathActive(href) {
 <section class="legal-page">
     <div class="container legal-page-inner">
         <div class="legal-layout">
-            <aside class="legal-rail" aria-label="<%- railTitle %> documents">
-                <p class="legal-rail-label"><%- railTitle %></p>
+            <aside class="legal-rail" aria-label="Legal documents">
                 <nav class="legal-rail-nav">
-                    <% docs.forEach(function (doc) { %>
+                    <a class="legal-rail-link<%= legalPathActive('/legal/') ? ' is-active' : '' %>" href="<%- url_for('/legal/') %>"<%- legalPathActive('/legal/') ? ' aria-current="page"' : '' %>>Overview</a>
+                </nav>
+                <% [['Website', websiteDocs], ['Machine', machineDocs]].forEach(function (group) { %>
+                <p class="legal-rail-label legal-rail-label--other"><%- group[0] %></p>
+                <nav class="legal-rail-nav">
+                    <% group[1].forEach(function (doc) { %>
                     <a class="legal-rail-link<%= legalPathActive(doc.href) ? ' is-active' : '' %>" href="<%- url_for(doc.href) %>"<%- legalPathActive(doc.href) ? ' aria-current="page"' : '' %>><%- doc.label %></a>
                     <% }); %>
                 </nav>
-                <% if (showWebsiteCrossLink) { %>
-                <p class="legal-rail-label legal-rail-label--other">Also</p>
-                <nav class="legal-rail-nav">
-                    <a class="legal-rail-link" href="<%- url_for('/legal/') %>">Website</a>
-                </nav>
-                <% } %>
+                <% }); %>
             </aside>
             <div class="legal-main">
                 <%- page.content %>

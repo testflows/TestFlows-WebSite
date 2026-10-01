@@ -604,7 +604,7 @@ Let's run it:
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-9.gif">
+<img alt="Animation of the behavior model driven Move Right test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-9.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Right Test</div>
 </div><br>
 
@@ -973,7 +973,7 @@ Let's run our new with model **move left** test first right after the **move rig
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-10.gif">
+<img alt="Animation of the behavior model driven test that moves left after moving right" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-10.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Left After Move Right Test</div>
 </div><br>
 
@@ -1314,7 +1314,7 @@ However, what happens when we just run the [`move left`](https://github.com/test
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-11.gif">
+<img alt="Animation of the behavior model driven Move Left test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-11.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Left Test</div>
 </div><br>
 
@@ -1707,7 +1707,7 @@ Let's first run our jump test by itself:
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-12.gif">
+<img alt="Animation of the behavior model driven Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-12.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Jump Test</div>
 </div><br>
 
@@ -1831,7 +1831,7 @@ def scenario(self):
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-13.gif">
+<img alt="Animation of the behavior model driven Jump test held for one second" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-13.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Move Jump Test For 1 Second</div>
 </div><br>
 
@@ -2249,7 +2249,7 @@ Run it with:
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-14.gif">
+<img alt="Animation of manual play driven by the behavior model" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-14.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Behavior Model-Driven Manual Play</div>
 </div><br>
 

@@ -42,7 +42,7 @@ The initial state is {%katex%}(small=0, big=0){%endkatex%}.
 To help us understand states better we can visualize the *"Die Hard water jug problem"* using the following state diagram that shows all the reachable states and all possible state transitions:
 
 <div class="text-center">
-<img style="width: 90%" src="/images/die-hard-states.png">
+<img alt="State diagram of the Die Hard water jug problem, with each state shown as a pair of jug volumes" style="width: 90%" src="/images/die-hard-states.png">
 <div class="text-secondary text-bold"><br>The Die Hard Water Jug Problem: State Diagram</div>
 </div><br>
 

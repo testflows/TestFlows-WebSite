@@ -320,7 +320,7 @@ If we graph this formula for the {%katex%}v=2{%endkatex%} case, with the x-axis 
 number of parameters, {%katex%}n{%endkatex%}, and the y-axis being the number of combinations, {%katex%}N{%endkatex%},
 then it will look as follows:
 
-<img class="img-fluid" src="/images/combinatorial-explosion.png" height="400" style="display:block; margin:auto">
+<img alt="Graph of an exponential curve that rises steeply as the number of parameters grows" class="img-fluid" src="/images/combinatorial-explosion.png" height="400" style="display:block; margin:auto">
 
 To make it even worse, the line gets even steeper as we increase the value of {%katex%}v{%endkatex%}!
 
@@ -342,4 +342,4 @@ exhaustive testing of all possible combinations became infeasible. Nonetheless,
 the principles of combinatorial testing were applied successfully. Working around the combinatorial explosion problem is not trivial, but techniques such as using covering arrays can help us make combinatorial testing practical.
 
 If you want to know more, read our introductory article on covering arrays titled [Get Your Software Covered Using Covering Arrays](/blog/get-your-software-covered-using-covering-arrays/).
-For more in-depth overview of combinatorial testing, please read an excellent article provided by NIST titled [Practical Combinatorial Testing](https://csrc.nist.gov/pubs/sp/800/142/final). Also, read the [Combinatorial Tests](/handbook/#Combinatorial-Tests) section in the [Handbook](/handbook) to find out more about how {% testflows %} supports combinatorial tests.
+For more in-depth overview of combinatorial testing, please read an excellent article provided by NIST titled [Practical Combinatorial Testing](https://csrc.nist.gov/pubs/sp/800/142/final). Also, read the [Combinatorial Tests](/docs/framework/#Combinatorial-Tests) section in the [Handbook](/docs/framework) to find out more about how {% testflows %} supports combinatorial tests.

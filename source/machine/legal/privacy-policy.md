@@ -1,6 +1,6 @@
 ---
-title: "TestFlows Machine: Privacy Policy"
-description: Privacy Policy for the TestFlows Machine service.
+title: "Privacy Policy"
+description: Privacy Policy for the TestFlows™ Machine service.
 layout: legal
 legal_family: machine
 permalink: machine/legal/privacy-policy/index.html
@@ -13,7 +13,7 @@ permalink: machine/legal/privacy-policy/index.html
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
 This Privacy Policy explains how we collect, use, share, and protect personal
-information when you use TestFlows Machine websites, APIs, clients, and related
+information when you use TestFlows™ Machine websites, APIs, clients, and related
 services (the “**Services**”). See also our [Terms of Service](/machine/legal/terms-of-service/).
 
 This Policy covers account, billing, and control-plane data. It does **not**
