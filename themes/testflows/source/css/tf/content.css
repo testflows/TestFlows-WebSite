@@ -58,6 +58,15 @@ blockquote::-webkit-scrollbar {
     color: var(--tf-text-muted);
 }
 
+/* Docs Contents: full length and part of the page, not a screen-height pane with a hidden scroll */
+@media (min-width: 992px) {
+    .handbook #sidebar {
+        position: static;
+        overflow-y: visible;
+        max-height: none;
+    }
+}
+
 @media (min-width: 992px) {
     .post-summary {
         padding: 3em;
@@ -595,3 +604,79 @@ blockquote::-webkit-scrollbar {
     display: none;
 }
 
+
+/* Contents: collapsible major sections. The chevron is the control: it expands or collapses, the title jumps. */
+.handbook .toc > .toc-level-1 {
+    position: relative;
+    padding-left: 1.75rem;
+}
+
+.handbook .toc-toggle {
+    position: absolute;
+    left: 0;
+    top: 0.05rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 0.35rem;
+    background: none;
+    color: var(--tf-text-strong);
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.handbook .toc-toggle::before {
+    content: "";
+    width: 0.5rem;
+    height: 0.5rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-0.1rem) rotate(45deg);
+    transition: transform 0.15s ease;
+}
+
+.handbook .toc-toggle:hover,
+.handbook .toc-toggle:focus-visible {
+    color: var(--tf-accent);
+    border-color: var(--tf-card-border-hover);
+    background: var(--tf-ghost-hover-bg);
+}
+
+/* Open points down (v), collapsed points right (>) */
+.handbook .toc-level-1.is-collapsed > .toc-toggle::before { transform: translateX(-0.1rem) rotate(-45deg); }
+.handbook .toc-level-1.is-collapsed > .toc-child { display: none; }
+
+/* Small screens: the whole Contents folds away behind its heading */
+@media (max-width: 991.98px) {
+    .js .handbook-toc .handbook-toc-header { padding-top: 0.5rem; margin-bottom: 0.5rem; }
+
+    .js .handbook-toc .handbook-toc-header h2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--tf-card-border);
+        border-radius: var(--tf-radius);
+        cursor: pointer;
+    }
+
+    .js .handbook-toc .handbook-toc-header h2::after {
+        content: "";
+        width: 0.5rem;
+        height: 0.5rem;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        transform: rotate(45deg);
+        transition: transform 0.15s ease;
+    }
+
+    .js .handbook-toc.is-open .handbook-toc-header h2::after { transform: rotate(-135deg); }
+    .js .handbook-toc:not(.is-open) .handbook-toc-body { display: none; }
+    .js .handbook-toc .handbook-toc-body { padding-left: 0.4rem; }
+    .handbook .toc-toggle { width: 2.25rem; height: 2.25rem; top: -0.3rem; }
+    .handbook .toc > .toc-level-1 { padding-left: 2.5rem; }
+}
