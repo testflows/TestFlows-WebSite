@@ -15,15 +15,13 @@
   })();
   </script>
   
-  <title>Using Atomic Propositions and Equivalence Classes (Part 1) | TestFlows</title>
+  
+  <title>Using Atomic Propositions and Equivalence Classes (Part 1) | Blog</title>
   <meta name="description" content="An article about how to apply atomic propositions and equivalence classes in testing a simple stateful system such as a memory function (part 1).">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Vitaliy Zakaznikov">
   <meta name="og:site_name" content="TestFlows">
   <meta property="og:image" content="https://testflows.com/images/using-atomic-propositions-and-equivalence-classes-part1.png">
-  
-  <link rel="preload" as="image" href="https://testflows.com/img/logo.png">
-  
   
   <meta name="image" property="og:image" content="https://testflows.com/">
 <meta name="publish_date" property="og:publish_date" content="2024-10-17T00:00:00-0000">
@@ -42,38 +40,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790894648592" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/about.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790894648592" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1785980728012" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790894648592" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790894648592" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -127,18 +127,23 @@
                     
                     
                         <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
-                            <a class="nav-link" href="/handbook">Handbook</a>
+                            <a class="nav-link" href="/docs/">Docs</a>
                         </li>
                     
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
-                            <a class="nav-link" href="/blog">Blog</a>
-                        </li>
-                    
-                        <li class="nav-item">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 10v6"/><path d="M12 7.5h.01"/></svg></span>
-                            <a class="nav-link" href="/about.html">About</a>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
                         </li>
                     
                         <li class="nav-item">
@@ -149,6 +154,10 @@
                 </ul>
             </div>
             <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
                 <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
                     <span class="fab fa-python" aria-hidden="true"></span>
                     <span class="site-menu-action-label">pip3 install testflows</span>
@@ -164,12 +173,20 @@
                 <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
                 <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
             </button>
-            <span class="navbar-github-sep" aria-hidden="true">|</span>
-            
-            <a class="navbar-github" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
                 <span class="fab fa-github" aria-hidden="true"></span>
                 <span class="navbar-github-label">GitHub</span>
             </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
             
         </div>
     </div>
@@ -202,7 +219,7 @@
             </div>
         </div>
         <div class="post-image col-lg-6 m-auto">
-            <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png"></img>
+            <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
             <span class="post-image-credit"></span>
         </div>
     </div>
@@ -349,7 +366,7 @@ we get a simplified expression:</p>
 </blockquote>
 <p>This Cartesian product represents all possible subsets <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>⊆</mo><mi>A</mi><msub><mi>P</mi><mi>I</mi></msub></mrow><annotation encoding="application/x-tex">M \subseteq AP_I </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8193em;vertical-align:-0.136em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⊆</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord mathnormal">A</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.1389em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0785em;">I</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, where for each subset <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span>, the propositions in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span> are true, and those not in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span> are false. By evaluating the truth of the propositions for all possible subsets <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi></mrow><annotation encoding="application/x-tex">M </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">M</span></span></span></span>, we generate all possible truth value assignments across the set of atomic propositions.</p>
 <h1 id="The-memory-function"><a href="#The-memory-function" class="headerlink" title="The memory function"></a>The memory function</h1><p>Let’s use a simple memory function as an example to demonstrate the application of atomic propositions and equivalence classes in a practical context. This memory function will allow us to see how these concepts work together in organizing and testing input scenarios based on expected behaviors.</p>
-<img class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
+<img alt="Diagram of the memory function: the inputs addr, value, mode and default go into a table of keys, and a single value comes out" class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
 
 <p>In Python, we’ll define the <code>memory</code> function as follows:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">memory</span>(<span class="params">addr, value=<span class="number">0</span>, mode=<span class="string">&quot;r&quot;</span>, default=<span class="number">0</span>, mem_=&#123;&#125;</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Read or write a value into memory at a given address.</span></span><br><span class="line"><span class="string">    The mode is a combination of flags: &#x27;r&#x27; for read, &#x27;w&#x27; for write,</span></span><br><span class="line"><span class="string">    or &#x27;e&#x27; for erase all. The default mode is &#x27;r&#x27;.&quot;&quot;&quot;</span></span><br><span class="line">    _value = default</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;r&quot;</span> <span class="keyword">in</span> mode:</span><br><span class="line">        _value = mem_.get(addr, _value)</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;e&quot;</span> <span class="keyword">in</span> mode:</span><br><span class="line">        mem_.clear()</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&quot;w&quot;</span> <span class="keyword">in</span> mode:</span><br><span class="line">        mem_[addr] = value</span><br><span class="line">    <span class="keyword">return</span> _value</span><br></pre></td></tr></table></figure>
@@ -442,7 +459,7 @@ we get a simplified expression:</p>
 <p>If you don’t remember how a Cartesian product works, recall that a Cartesian product can be represented using nested for-loops as follows:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> p1 <span class="keyword">in</span> [<span class="string">&#x27;p1&#x27;</span>,<span class="string">&#x27;¬p1&#x27;</span>]:</span><br><span class="line">  <span class="keyword">for</span> p2 <span class="keyword">in</span> [<span class="string">&#x27;p2&#x27;</span>,<span class="string">&#x27;¬p2&#x27;</span>]:</span><br><span class="line">    <span class="keyword">for</span> p3 <span class="keyword">in</span> [<span class="string">&#x27;p3&#x27;</span>,<span class="string">&#x27;¬p3&#x27;</span>]:</span><br><span class="line">      <span class="keyword">for</span> p4 <span class="keyword">in</span> [<span class="string">&#x27;p4&#x27;</span>,<span class="string">&#x27;¬p4&#x27;</span>]:</span><br><span class="line">        (p1, p2, p3, p4)</span><br></pre></td></tr></table></figure>
 
-<p>In a <a href="https://testflows.com/handbook/#Using-Sketches">TestSketch</a> which supports the <a href="https://testflows.com/handbook/#Using-either">either()</a> function, the same Cartesian product can be naturally defined as possibilities as follows:</p>
+<p>In a <a href="https://testflows.com/docs/framework/#Using-Sketches">TestSketch</a> which supports the <a href="https://testflows.com/docs/framework/#Using-either">either()</a> function, the same Cartesian product can be naturally defined as possibilities as follows:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSketch</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">combinatorial_test</span>(<span class="params">self</span>):</span><br><span class="line">    p1 = either(<span class="string">&#x27;p1&#x27;</span>, <span class="string">&#x27;¬p1&#x27;</span>) <span class="comment"># p1 is either &#x27;p1&#x27; or &#x27;¬p1&#x27;</span></span><br><span class="line">    p2 = either(<span class="string">&#x27;p2&#x27;</span>, <span class="string">&#x27;¬p2&#x27;</span>) <span class="comment"># ...</span></span><br><span class="line">    p3 = either(<span class="string">&#x27;p3&#x27;</span>, <span class="string">&#x27;¬p3&#x27;</span>) <span class="comment"># ...</span></span><br><span class="line">    p4 = either(<span class="string">&#x27;p4&#x27;</span>, <span class="string">&#x27;¬p4&#x27;</span>) <span class="comment"># ...</span></span><br><span class="line">    (p1, p2, p3, p4)</span><br></pre></td></tr></table></figure>
 
 <h2 id="Defining-the-meaning-of-each-proposition-and-its-negation"><a href="#Defining-the-meaning-of-each-proposition-and-its-negation" class="headerlink" title="Defining the meaning of each proposition and its negation"></a>Defining the meaning of each proposition and its negation</h2><p>Having defined the first four high-level propositions and the equivalent classes derived from them, we need to give meaning to what it actually means for a given input to be valid or invalid. For this, we need to look at each input individually, as what it means to be valid or invalid for one input does not apply to another. We’ll define an input to be invalid when the memory function raises an exception; otherwise, we’ll consider any value that does not lead to an exception to be valid. Therefore, now we just need to think if there are any values for each input that would cause the memory function to raise an exception.</p>
@@ -1742,40 +1759,36 @@ In many cases, writing a good test...
   </div>
   
   <div class="container-footer" id="container-footer">
-    <footer> 
-<div class="container">
+    <footer> <div class="container">
     <div class="site-footer-grid row">
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
         <div class="col-6 col-md-3 site-footer-col">
             <h3>Developers</h3>
             <ul>
-                <li><a href="/handbook/">Handbook</a></li>
+                <li><a href="/docs/">Docs</a></li>
                 <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md-3 site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
             </ul>
         </div>
         <div class="col-6 col-md-3 site-footer-col">
             <h3>Community</h3>
             <ul>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Company</h3>
-            <ul>
-                <li><a href="/about.html">About</a></li>
-                <li><a href="/contact.html">Contact</a></li>
-                <li><a href="/legal/">Legal</a></li>
-            </ul>
-        </div>
-        <div class="col-6 col-md-3 site-footer-col">
-            <h3>Get started</h3>
-            <ul>
-                
-                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">pip3 install testflows</a></li>
-                <li><a href="/handbook/">Read the handbook</a></li>
-                
             </ul>
         </div>
     </div>
@@ -1797,8 +1810,8 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1785980728012"></script>
-<script src="/js/machine-hero-type.js?v=1785980728012"></script>
+<script src="/js/index-code-type.js?v=1790894648592"></script>
+<script src="/js/machine-hero-type.js?v=1790894648592"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -1,0 +1,251 @@
+/* ==========================================================================
+   Home — company landing: one hero, one card per product
+   ========================================================================== */
+
+.home-banner .banner-text { padding-bottom: 0.5rem; }
+
+.home-banner .banner-text h1 { font-size: clamp(2.1rem, 5vw, 3.6rem); }
+
+.home-banner .banner-text > p { max-width: 44rem; }
+
+.home-products {
+    position: relative;
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    padding: 2rem 0 3.5rem;
+}
+
+.home-product-col { min-width: 0; }
+
+.home-product {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    padding: 2rem;
+    transition: border-color 0.15s ease;
+}
+
+.home-product:hover { border-color: var(--tf-card-border-hover); }
+
+.home-product-eyebrow {
+    color: var(--tf-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+}
+
+.home-product h2 {
+    font-size: clamp(1.7rem, 3vw, 2.1rem);
+    font-weight: 600;
+    margin: 0 0 0.6rem;
+}
+
+.home-product h2 a,
+.home-product h2 a:hover { color: var(--tf-text-strong) !important; text-decoration: none !important; }
+
+.home-product h2 a:hover { color: var(--tf-accent) !important; }
+
+.home-product-lead {
+    color: var(--tf-text-strong);
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin: 0 0 1.5rem;
+}
+
+.home-product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: auto;
+    padding-top: 1.25rem;
+}
+
+.home-product-actions > a { margin: 0; }
+
+@media (max-width: 575.98px) {
+    .home-product { padding: 1.4rem; }
+}
+
+/* The shared hero fills the viewport; the home hero is text only and hands over to the product cards. */
+.banner.home-banner { min-height: 0; }
+
+.home-product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+}
+
+@media (max-width: 991.98px) {
+    .home-product-grid { grid-template-columns: 1fr; }
+}
+
+/* Framework demo: the real "Everything is code" panels, stacked and scaled down */
+.home-demo.index-start { padding: 0; }
+
+.home-demo .index-start-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+    margin: 0;
+}
+
+.home-demo .index-start-step {
+    margin: 0;
+    padding: 0;
+}
+
+.home-demo .index-start-step figure.highlight {
+    min-height: 0;
+    margin: 0;
+    font-size: 0.78rem;
+}
+
+.home-demo .index-start-step-file { border-radius: 0.9rem 0.9rem 0 0; }
+
+/* Machine demo: the real boot console over the hero painting, fixed height */
+.home-machine-demo {
+    flex: 1 1 auto;
+    min-height: 19rem;
+    display: flex;
+}
+
+.home-machine-demo .machine-hero-frame {
+    height: auto;
+    min-height: 19rem;
+    flex: 1 1 auto;
+    aspect-ratio: auto;
+}
+
+.home-machine-demo .machine-hero-term {
+    width: 92%;
+    height: 88%;
+    border-radius: 0.9rem 0.9rem 0.5rem 0.5rem;
+}
+
+.home-machine-demo .machine-hero-term .index-start-step-file { border-radius: 0.9rem 0.9rem 0 0; }
+
+.home-machine-demo .machine-hero-term-body {
+    font-size: 0.7rem;
+    padding: 0.6rem 0.8rem 0.8rem;
+}
+
+.home-demo .index-start-step figure.highlight { padding-top: 0.5rem; padding-bottom: 0.6rem; }
+.home-demo .index-start-step figure.highlight .line { line-height: 1.45; }
+.home-demo .index-start-step figure.highlight .code pre { height: auto; }
+
+/* 404 */
+.notfound {
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    padding: 3rem 0 5rem;
+    min-height: calc(100vh - var(--tf-nav-height, 4rem));
+    box-sizing: border-box;
+}
+
+.notfound-head {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 2.5rem;
+    margin-bottom: 1.75rem;
+}
+
+.notfound-code {
+    color: var(--tf-accent);
+    font-size: clamp(6rem, 17vw, 11rem);
+    font-weight: 700;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin: 0;
+}
+
+.notfound-copy { flex: 1 1 18rem; min-width: 0; }
+
+.notfound h1 {
+    color: var(--tf-text-strong);
+    font-size: clamp(2.1rem, 4.5vw, 3.1rem);
+    font-weight: 700;
+    margin: 0 0 0.8rem;
+}
+
+.notfound-lead {
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 38rem;
+    overflow-wrap: anywhere;
+}
+
+.notfound-lead code {
+    color: var(--tf-text-strong);
+    background: var(--tf-ghost-hover-bg);
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.4rem;
+}
+
+.notfound-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 3rem; }
+.notfound-actions > a { margin: 0; }
+
+.notfound-links h2 {
+    color: var(--tf-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0 0 0.5rem;
+}
+
+.notfound-links ul { list-style: none; margin: 0; padding: 0; max-width: 38rem; }
+
+.notfound-links li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--tf-card-border);
+}
+
+.notfound-links li:last-child { border-bottom: 1px solid var(--tf-card-border); }
+.notfound-links li a { color: var(--tf-accent); font-weight: 600; min-width: 11rem; }
+.notfound-links li span { color: var(--tf-text-muted); }
+
+/* 404 ostrich: pixel-art canvas, runs in and buries its head when it stops (ostrich.js) */
+.ostrich-wrap { max-width: 56rem; margin: 0 0 2.25rem; }
+
+.ostrich-scene {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    background: var(--tf-card-bg);
+}
+
+.ostrich-canvas {
+    display: block;
+    color: var(--tf-text-strong);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+}
+
+.ostrich-hint {
+    margin: 0.75rem 0 0;
+    color: var(--tf-text-muted);
+    font-size: 0.9rem;
+}
+
+@media (min-width: 992px) {
+    .ostrich-scene { height: 250px; }
+}
+
+.home-product-lead { text-wrap: pretty; }
+
+/* Home: the blog heading has no lead under it, so align it with the other sections */
+.home-journal .index-journal-heading,
+.home-journal .index-block-title { text-align: left; }

@@ -1,5 +1,5 @@
 ---
-title: "TestFlows Website: Privacy Policy"
+title: "Privacy Policy"
 description: How Katteli Inc. handles personal information on the testflows.com website.
 layout: legal
 legal_family: website

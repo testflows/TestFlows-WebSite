@@ -223,3 +223,35 @@
         --banner-radius: 1rem;
     }
 }
+
+/* Framework hero: the IDE demo sits on the impressionist painting (same as Machine).
+   The demo fills the frame apart from a band of painting around it. */
+.framework-hero-frame {
+    aspect-ratio: auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 1.75rem 1.1rem 0;
+    background-color: #0a0d0b;
+    /* The same untinted painting and crop as the Machine hero */
+    background-image: url("/images/machine-hero.jpg");
+    background-size: cover;
+    background-position: center 45%;
+}
+
+.framework-hero-gif {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1998 / 1249;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-bottom: none;
+    border-radius: 0.9rem 0.9rem 0 0;
+    box-shadow:
+        0 22px 48px rgba(0, 0, 0, 0.55),
+        0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+@media (max-width: 991.98px) {
+    .framework-hero-frame { padding: 1rem 0.6rem 0; }
+    .framework-hero-gif { width: 100%; border-radius: 0.7rem 0.7rem 0 0; }
+}

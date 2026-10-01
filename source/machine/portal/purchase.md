@@ -1,6 +1,6 @@
 ---
 title: Purchase
-description: TestFlows Machine purchase
+description: Machine purchase
 date: 2026-08-02 00:00:00
 fullwidth: true
 permalink: machine/portal/purchase/index.html

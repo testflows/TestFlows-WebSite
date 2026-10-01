@@ -18,7 +18,7 @@ To demystify behavior models, we will explore the development of such a model fo
 
 To illustrate the approach, we’ll use a memory function as our system under test. This system is straightforward to understand, yet the technique is easily adaptable to more complex, real-world systems.
 
-<img class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
+<img alt="Diagram of the memory function: the inputs addr, value, mode and default go into a table of keys, and a single value comes out" class="img-fluid" src="/images/memory-function-diagram.png" height="500px" style="display:block; margin:auto">
 
 In Python, we'll define the `memory` function as follows:
 
@@ -388,8 +388,8 @@ Total time 4s 217ms
 
 This output demonstrates that increasing the number of sequential memory calls results in an exponential increase in the number of combinations covered, ensuring even more comprehensive test coverage. In this case, the test program executed {%katex%}3136{%endkatex%} different combinations giving us greater confidence in the correctness of the memory function for longer sequences of calls.
 
-[TestSketch]: https://testflows.com/handbook/#Sketch
-[either()]: https://testflows.com/handbook/#Using-either
+[TestSketch]: https://testflows.com/docs/framework/#Sketch
+[either()]: https://testflows.com/docs/framework/#Using-either
 
 # Determining the minimum number of calls
 

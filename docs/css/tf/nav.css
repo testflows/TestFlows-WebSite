@@ -430,14 +430,14 @@
         }
 
         /* Machine: Sign in is text-only — keep the label visible */
-        #main-nav.machine-navbar .navbar-signin {
+        #main-nav .navbar-signin {
             width: auto;
             height: auto;
             padding: 0.35rem 0.65rem;
             margin-left: 0;
         }
 
-        #main-nav.machine-navbar .navbar-signin .navbar-github-label {
+        #main-nav .navbar-signin .navbar-github-label {
             position: static;
             width: auto;
             height: auto;
@@ -698,4 +698,48 @@ body.menu-open {
 
 a.header-anchor {
     color: inherit;
+}
+
+/* Unified chrome: theme | GitHub icon | Sign in (primary). Current section is marked. */
+#main-nav .navbar-github-icon {
+    width: 2.35rem;
+    height: 2.35rem;
+    padding: 0;
+    justify-content: center;
+    border-color: transparent;
+}
+
+#main-nav .navbar-github-icon .navbar-github-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+#main-nav .navbar-signin-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    padding: 0.4rem 1rem;
+    border-radius: var(--tf-radius-pill);
+    background: var(--tf-primary);
+    color: var(--tf-ink-on-primary) !important;
+    font-family: var(--tf-font);
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    text-decoration: none !important;
+    transition: opacity 0.15s ease;
+}
+
+#main-nav .navbar-signin-btn:hover,
+#main-nav .navbar-signin-btn:focus {
+    opacity: 0.88;
+    color: var(--tf-ink-on-primary) !important;
+}
+
+#main-nav .site-menu .nav-item.active .nav-link {
+    color: var(--tf-accent) !important;
 }

@@ -123,7 +123,7 @@ with Module("Top Test"):
 
 When executed, will form this tree structure.
 
-<img style="width: 75%" src="/images/writing-test-programs-not-just-tests-pic-1.png">
+<img alt="Test program tree: a top test, Suite A, Test A and Test B, and their steps, each labelled with its path" style="width: 75%" src="/images/writing-test-programs-not-just-tests-pic-1.png">
 
 This structure isn’t discovered by magic—it’s directed by your test program code.
 
@@ -179,9 +179,9 @@ When reusability isn’t needed, you can define everything inline. In practice, 
 
 For reusability:  
 
-* A suite can be defined with the [@TestSuite](/handbook/#Suite) decorator.  
-* A scenario can be defined with the [@TestScenario](/handbook/#Scenario) decorator.  
-* A step can be defined with the [@TestStep](/handbook/#Step) decorator.  
+* A suite can be defined with the [@TestSuite](/docs/framework/#Suite) decorator.  
+* A scenario can be defined with the [@TestScenario](/docs/framework/#Scenario) decorator.  
+* A step can be defined with the [@TestStep](/docs/framework/#Step) decorator.  
 
 This makes tests uniform, consistent, and naturally composable. Suites can call scenarios, scenarios can call steps, and steps themselves can wrap other steps.  
 
@@ -358,5 +358,5 @@ with Scenario("test"):
     note("Hello World")
 ```
 
-For more information, read the [Handbook](/handbook) or explore and contribute on [GitHub](https://github.com/testflows/TestFlows-Core).
+For more information, read the [Handbook](/docs/framework) or explore and contribute on [GitHub](https://github.com/testflows/TestFlows-Core).
 And remember: no runner required—it’s just Python.

@@ -58,7 +58,6 @@ body > .container-fluid {
 }
 
 .content:has(.contact-page),
-.content:has(.about-page),
 .content:has(.blog-page),
 .content:has(.handbook),
 .content:has(.legal-page) {

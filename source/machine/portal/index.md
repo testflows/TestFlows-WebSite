@@ -1,6 +1,6 @@
 ---
-title: Machine portal
-description: TestFlows Machine account portal
+title: Portal
+description: Machine account portal
 date: 2026-07-31 00:00:00
 fullwidth: true
 permalink: machine/portal/index.html

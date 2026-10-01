@@ -71,7 +71,7 @@ python3 main.py
 ```
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
+<img alt="Super Mario Bros. being played manually" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Playing the game manually</div>
 </div><br>
 
@@ -111,7 +111,7 @@ The game is implemented as an explicit **state-driven system**, where different 
 - **[TIME_OUT](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/load_screen.py#L50)** – The state when the level timer runs out (a type of load screen).
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
+<img alt="The game state classes: MAIN_MENU, LOAD_SCREEN, TIME_OUT, LEVEL and GAME_OVER" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
 <div class="text-secondary text-bold"><br>Super Mario: State Classes</div>
 </div><br>
 
@@ -123,7 +123,7 @@ Each of these is a subclass of the [State](https://github.com/testflows/Examples
 However, these [state](https://github.com/testflows/Examples/tree/v1.0/SuperMario/source/states) classes actually present clusters of **states**, where each cluster contains its own **actual states**. These **actual states** are defined by the specific values of the attributes of these [State](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15) classes. You can think of them as shown in the following diagram. However, the transition edges between states are relative. In the real system, we don't really know which transitions are possible. Some of these states or state transitions might be a bug!
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
+<img alt="The same five state classes drawn as clusters of connected states with random transition lines" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
 <div class="text-secondary text-bold"><br>Super Mario: Clusters of States (transition lines are random)</div>
 </div><br>
 
@@ -237,7 +237,7 @@ The [game loop](https://github.com/testflows/Examples/blob/v1.0/SuperMario/sourc
 The game loop operates in discrete time steps, where each tick of the clock produces a new frame. The FPS value determines the number of frames generated per second, with each frame representing the game's state at a specific point in time. While the game might appear to run continuously, it is actually discrete, advancing in small, well-defined steps. Here is a graphical representation of the loop’s actions along with their descriptions:
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
+<img alt="Game loop flowchart: event_loop(), update(), display.update() and clock.tick(), each with a comment describing its step" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
 <div class="text-secondary text-bold"><br>Super Mario: Game Loop</div>
 </div><br>
 
@@ -256,7 +256,7 @@ When we start the game, we also want to be able to wait for the game
 to be ready to play which means that we want to pass the `MAIN_MENU` states and
 enter the first `LEVEL` state. It also makes sense to always cleanly
 stop the game using `pygame.quit()` call, so we'll define this action as
-a [Given with yield](https://testflows.com/handbook/#Given-With-yield) step that supports combining setup and clean up in one step.  
+a [Given with yield](https://testflows.com/docs/framework/#Given-With-yield) step that supports combining setup and clean up in one step.  
 
 Most of the code to implement this action will be similar to the game's [main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/main.py#L8) function. We'll just add `yield`ing the game's object, clean up using `pygame.quit()` call and call to `wait_ready(game)` to enter playable state with the default Mario player selected. The stubs for the `start()` and `wait_ready()` actions will be the following: 
 
@@ -525,7 +525,7 @@ def scenario(self):
 If Mario **doesn’t move**, we’ll know something’s off. But if everything works, our test passes. Here's a video of this test in action with the red boxes added to Mario's start and end positions for visual confirmation.
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
+<img alt="Animation of Mario moving right in the classic Move Right test, with boxes marking the start and end positions" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Move Right Classic Test</div>
 </div><br>
 
@@ -567,7 +567,7 @@ def scenario(self):
 Here is a video of the test:
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
+<img alt="Animation of Mario moving left in the classic Move Left test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Move Left Classic Test</div>
 </div><br>
 
@@ -629,7 +629,7 @@ def scenario(self):
 Here is the video of the test:
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
+<img alt="Animation of Mario jumping for one second in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Jump For 1 Second Classic Test</div>
 </div><br>
 
@@ -653,7 +653,7 @@ we modify test's action to hold the jump key for `0.2` seconds instead of `1`.
 Here is what we have now:
 
 <div class="text-center">
-<img style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
+<img alt="Animation of Mario jumping for 0.2 seconds in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Jump For 0.2 Seconds Classic Test</div>
 </div><br>
 

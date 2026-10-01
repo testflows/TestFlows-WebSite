@@ -188,7 +188,7 @@ IECP = \{ V_{\text{est}} = 0, \neg(V_{\text{est}} = 0) \} \times \\
 
 Now, we can construct a table explicitly listing all {%katex%} 2^5 = 32 {%endkatex%} possible classes. From this set, we can then filter out combinations that have logical conflicts and select specific values for {%katex%} V_{\text{est}} {%endkatex%} and {%katex%} V_{\text{MRSP}} {%endkatex%} that satisfy each class. Alternatively, we could visualize these combinations graphically, as shown below.
 
-<img class="img-fluid" src="/images/testing-simple-train-control-system-v_est.png">
+<img alt="Two speed scales split into green, yellow, orange and red zones, each with a marker at 110 in a different position" class="img-fluid" src="/images/testing-simple-train-control-system-v_est.png">
 
 <br><br>
 For {%katex%} V_{\text{MRSP}} > 110 {%endkatex%}, we can use the following values:

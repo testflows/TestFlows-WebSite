@@ -26,15 +26,22 @@
   })();
   </script>
   <% } %>
-  <title><% if (page.path === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | TestFlows<% } %></title>
+  <%
+  /* Tab title: "Page | TestFlows" for landing pages, "Page | Area" for pages inside an area. */
+  var tPath = String(page.path || '');
+  var tArea = '';
+  if (tPath.indexOf('docs/framework/') === 0 || tPath.indexOf('docs/machine/') === 0) tArea = 'Docs';
+  else if (tPath.indexOf('machine/portal/') === 0) tArea = 'Machine';
+  else if (tPath.indexOf('machine/legal/') === 0 && tPath !== 'machine/legal/index.html') tArea = 'Machine Legal';
+  else if (tPath.indexOf('legal/') === 0 && tPath !== 'legal/index.html') tArea = 'Legal';
+  else if (page.post) tArea = 'Blog';
+  %>
+  <title><% if (tPath === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | <%- tArea || 'TestFlows' %><% } %></title>
   <meta name="description" content="<%- page.description || config.description %>">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="<%- page.author || 'TestFlows'%>">
   <meta name="og:site_name" content="TestFlows">
   <meta property="og:image" content="<%- full_url_for(page.image || config.social_share) %>">
-  <% if (config.image) { %>
-  <link rel="preload" as="image" href="<%- full_url_for(config.image) %>">
-  <% } %>
   <% if (page.post) { %>
   <%- partial('_partial/post_meta') %>
   <% } %>
@@ -46,7 +53,7 @@
   <link rel="stylesheet" href="<%- config.root %>css/highlight.css?v=<%- Date.now() %>" media="screen" type="text/css">
   <link rel="stylesheet" href="<%- config.root %>css/fontawesome/css/all.css?v=1.0" type="text/css">
   <% /* Theme modules — order: tokens → base → chrome → pages */ %>
-  <% var tfCss = ['tokens','base','nav','footer','hero','index','machine','blog','about','contact','legal','portal','content','misc']; %>
+  <% var tfCss = ['tokens','base','nav','footer','hero','index','machine','blog','contact','legal','docs','home','portal','content','misc']; %>
   <% tfCss.forEach(function (name) { %>
   <link rel="stylesheet" href="<%- config.root %>css/tf/<%= name %>.css?v=<%- Date.now() %>" media="screen" type="text/css">
   <% }); %>

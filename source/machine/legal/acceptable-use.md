@@ -1,6 +1,6 @@
 ---
-title: "TestFlows Machine: Acceptable Use Policy"
-description: Acceptable Use Policy for the TestFlows Machine service.
+title: "Acceptable Use Policy"
+description: Acceptable Use Policy for the TestFlows™ Machine service.
 layout: legal
 legal_family: machine
 permalink: machine/legal/acceptable-use/index.html

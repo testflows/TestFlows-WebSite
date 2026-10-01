@@ -1,3 +1,4 @@
+<%- partial('_partial/docs_switch') %>
 <div class="handbook">
     <div class="container handbook-inner">
         <div class="handbook-layout row">
@@ -23,10 +24,10 @@
                 <div class="handbook-divider"></div>
                 <div class="handbook-nav">
                     <% if (page.prev) { %>
-                        <a class="handbook-nav-link handbook-nav-prev" href="/handbook<%- url_for(page.prev) %>.html#Contents"><span class="fas fa-arrow-left" aria-hidden="true"></span> Back</a>
+                        <a class="handbook-nav-link handbook-nav-prev" href="/docs/framework<%- url_for(page.prev) %>.html#Contents"><span class="fas fa-arrow-left" aria-hidden="true"></span> Back</a>
                     <% } %>
                     <% if (page.next) { %>
-                        <a class="handbook-nav-link handbook-nav-next" href="/handbook<%- url_for(page.next) %>.html#Contents">Next <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                        <a class="handbook-nav-link handbook-nav-next" href="/docs/framework<%- url_for(page.next) %>.html#Contents">Next <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
                     <% } %>
                 </div>
             </div>

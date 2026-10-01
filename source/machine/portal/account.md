@@ -1,6 +1,6 @@
 ---
 title: Account
-description: Your TestFlows Machine account
+description: Your Machine account
 date: 2026-07-31 00:00:00
 fullwidth: true
 hide_footer: true
