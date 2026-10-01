@@ -19,6 +19,66 @@
                     <% }); %>
                 </div>
             </nav>
+            <script>
+            /* Contents setup runs here, as soon as the list exists, so nothing flashes open before it folds. */
+            (function () {
+                var sidebar = document.getElementById("sidebar");
+                var heading = sidebar.querySelector(".handbook-toc-header h2");
+                var small = window.matchMedia("(max-width: 991.98px)");
+
+                /* Major sections expand and collapse: open on wide screens, collapsed on small ones. */
+                sidebar.querySelectorAll(".toc > .toc-level-1").forEach(function (item) {
+                    if (!item.querySelector(":scope > .toc-child")) {
+                        return;
+                    }
+                    var button = document.createElement("button");
+                    button.type = "button";
+                    button.className = "toc-toggle";
+                    item.insertBefore(button, item.firstChild);
+                    function setCollapsed(collapsed) {
+                        item.classList.toggle("is-collapsed", collapsed);
+                        button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+                        button.setAttribute("aria-label", (collapsed ? "Expand " : "Collapse ") + item.querySelector(":scope > .toc-link .toc-text").textContent);
+                    }
+                    setCollapsed(small.matches);
+                    button.addEventListener("click", function () {
+                        setCollapsed(!item.classList.contains("is-collapsed"));
+                    });
+                    /* Going to a section opens it. */
+                    item.querySelector(":scope > .toc-link").addEventListener("click", function () {
+                        setCollapsed(false);
+                    });
+                });
+
+                /* On small screens the whole Contents folds away behind its heading (closed from first paint, see CSS). */
+                function setOpen(open) {
+                    sidebar.classList.toggle("is-open", open);
+                    heading.setAttribute("aria-expanded", open ? "true" : "false");
+                }
+                heading.setAttribute("role", "button");
+                heading.setAttribute("tabindex", "0");
+                setOpen(!small.matches || window.location.hash === "#Contents");
+                small.addEventListener("change", function () { setOpen(!small.matches); });
+                heading.addEventListener("click", function () {
+                    if (small.matches) { setOpen(!sidebar.classList.contains("is-open")); }
+                });
+                heading.addEventListener("keydown", function (event) {
+                    if ((event.key === "Enter" || event.key === " ") && small.matches) {
+                        event.preventDefault();
+                        setOpen(!sidebar.classList.contains("is-open"));
+                    }
+                });
+                window.addEventListener("hashchange", function () {
+                    if (window.location.hash === "#Contents" && small.matches) { setOpen(true); }
+                });
+                /* Picking an entry gets the list out of the way so the section is visible. */
+                sidebar.querySelectorAll(".toc-link").forEach(function (link) {
+                    link.addEventListener("click", function () {
+                        if (small.matches) { setOpen(false); }
+                    });
+                });
+            })();
+            </script>
             <div class="col-lg-8 handbook-article">
                 <%- page.content %>
                 <div class="handbook-divider"></div>
@@ -41,6 +101,10 @@
 </div>
 <script>
     window.addEventListener("load", function(){
+        var sidebar = document.getElementById("sidebar");
+        var small = window.matchMedia("(max-width: 991.98px)");
+
+        /* Clicking a heading in the text jumps back to its entry in the Contents. */
         document.querySelectorAll(".handbook h1, .handbook h2, .handbook h3, .handbook h4, .handbook h5, .handbook h6").forEach(function(element){
             element.addEventListener("click", function(event){
                 var element_id = element.getAttribute("id");
@@ -48,6 +112,13 @@
                 if (!toc_element) {
                     return;
                 }
+                var section = toc_element.closest(".toc-level-1");
+                if (section) {
+                    section.classList.remove("is-collapsed");
+                    var toggle = section.querySelector(":scope > .toc-toggle");
+                    if (toggle) { toggle.setAttribute("aria-expanded", "true"); }
+                }
+                if (sidebar && small.matches) { sidebar.classList.add("is-open"); }
                 toc_element.scrollIntoView({block: 'center'});
                 toc_element.classList.add("active");
                 setTimeout(function(){
