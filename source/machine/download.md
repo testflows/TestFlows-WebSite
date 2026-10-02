@@ -22,7 +22,8 @@ permalink: machine/download/index.html
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It downloads the client, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root. If that folder isn't on your <code>PATH</code> yet, it tells you what to add. Run the same command again to update.</p>
+<p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
+<p>On its first run the client unpacks itself into <code>~/.cache/machine/</code>, about 80 MB. An update removes what older versions unpacked there.</p>
 </div>
 
 <div class="download-section">
@@ -41,17 +42,17 @@ curl https://testflows.com/machine/install -fsS | bash
 
 <div class="download-section">
 <h2>Check the download</h2>
-<p>The installer already checks what it downloads. To check it yourself, compare the checksum of your file with the one published for its version.</p>
-<p>First, find your version. It is on the banner line, like <code>20261002-0022</code>.</p>
+<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check a file yourself, compare its checksum with the one published for its version.</p>
+<p>First, find your version. It is on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>.</p>
 
 ```bash
 machine --version
 ```
 
-<p>Then print the checksum published for that version, and the checksum of your file. Put your version in place of the one shown.</p>
+<p>Then print the checksum published for that version, and the checksum of your file. Put your version in place of <code>YYYYMMDD-HHMM</code>.</p>
 
 ```bash
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=20261002-0022 bash -s -- --checksum
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum
 sha256sum "$(command -v machine)"
 ```
 
@@ -60,18 +61,26 @@ sha256sum "$(command -v machine)"
 
 <div class="download-section">
 <h2>A specific version</h2>
-<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code>, for example:</p>
+<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code> to it, in place of <code>YYYYMMDD-HHMM</code>:</p>
 
 ```bash
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=20261002-0022 bash
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash
 ```
 
 <p><code>MACHINE_INSTALL_DIR</code> installs somewhere other than <code>~/.local/bin</code>. <code>machine --version</code> tells you which version you have.</p>
 </div>
 
 <div class="download-section">
-<h2>Uninstall</h2>
-<p>Delete the file: <code>rm ~/.local/bin/machine</code>. The installer changes nothing else on your system.</p>
+<h2 id="Uninstall">Uninstall</h2>
+<p>Sign out, so the session ends on the server too, then delete the client, what it unpacked, and its sign-in and keys:</p>
+
+```bash
+machine logout
+rm ~/.local/bin/machine
+rm -rf ~/.cache/machine ~/.testflows/machine
+```
+
+<p>Nothing else on your system is changed.</p>
 </div>
 
 <div class="download-section download-next">

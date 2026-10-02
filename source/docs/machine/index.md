@@ -90,11 +90,12 @@ command:
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-That downloads a single binary named `machine`, checks it against the SHA-256
-checksum published next to it, and puts it in `~/.local/bin`. If the checksum
-doesn't match, nothing is installed. If that folder isn't on your `PATH` yet, the
-installer says so and shows the line to add. Run the same command again whenever
-you want to update.
+That downloads a single binary named `machine` over HTTPS, checks it against the
+SHA-256 checksum published next to it, and puts it in `~/.local/bin`. If the
+checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
+yet, the installer says so and shows the line to add for your shell. Run the same
+command again whenever you want to update. On its first run the client unpacks
+itself into `~/.cache/machine/`, about 80 MB.
 
 **Supported systems.** The client runs on Linux with an x86_64 processor. It is
 one static program, so it needs nothing else installed, and the installer never
@@ -113,7 +114,8 @@ curl https://testflows.com/machine/install -fsS | less
 
 Two environment variables change what the installer does. `MACHINE_INSTALL_DIR`
 picks a different folder, and `MACHINE_VERSION` installs a specific version
-instead of the latest, like `20261002-0022`. To uninstall, delete the file.
+instead of the latest; a version is a date and time, `YYYYMMDD-HHMM`. The
+[download page](/machine/download/#Uninstall) says how to uninstall.
 
 Run `machine` with no arguments, or with `--help`, to see every command. Each
 command has its own `--help` too, and that is the place to look when a flag here
@@ -134,7 +136,7 @@ machine --version
   ---- o o o ----
  |   o       o   |
  | 1 o 10010 o 0 |
- |   o       o   |  TestFlows Machine Client 20261002-0022
+ |   o       o   |  TestFlows Machine Client 20261002-0104
   ---  o o oxx --
  /           xx   \
 /  ^^^        xx   \
