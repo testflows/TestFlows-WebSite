@@ -1,0 +1,30 @@
+# TestFlows
+
+> TestFlows makes tools for testing software. TestFlows Framework is an open-source Python library for writing test programs. You write tests and define the test flow explicitly as Python code, with everything treated as a test, for functional, integration, acceptance and unit testing. It produces test reports and ties tests to requirements for coverage. TestFlows Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+
+## Instructions
+
+- [Guide for AI agents](https://testflows.com/agents.md): How the website is laid out and where to look.
+
+## Pages
+
+- [Home](https://testflows.com/index.md): The two products and where to start.
+- [Framework](https://testflows.com/framework.md): What the Framework is, what sets it apart, and a first test.
+- [Machine](https://testflows.com/machine.md): What Machine is: record, replay and branch your runs.
+- [Download the client](https://testflows.com/machine/download.md): Install the `machine` client, supported systems and how to check the download.
+- [Documentation](https://testflows.com/docs.md): The Framework and Machine docs, and where each is in Markdown.
+- [Blog](https://testflows.com/blog.md): An index of the blog, one Markdown page per article.
+- [Contact](https://testflows.com/contact.md): How to reach us.
+
+## Machine
+
+- [Machine docs, in Markdown](https://testflows.com/docs/machine.md): An index of the Machine docs with one plain Markdown page per section: concepts, the `machine` client, the Python SDK.
+
+## Framework
+
+- [Framework docs, in Markdown](https://testflows.com/docs/framework.md): An index of the Framework docs with one plain Markdown page per part: writing and running tests, requirements, reports, combinatorial tests and more.
+- [Framework on PyPI](https://pypi.org/project/testflows/): Install with `pip3 install testflows`.
+
+## Optional
+
+- [Legal documents](https://testflows.com/legal.md): The terms, privacy policy and content use for the website, and the terms of service, acceptable use, privacy and usage credit for Machine.

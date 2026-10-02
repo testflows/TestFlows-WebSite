@@ -21,6 +21,11 @@
   <meta name="description" content="Documentation for Machine.">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/docs/machine.md">
+
+
   <meta name="og:site_name" content="TestFlows">
   <meta property="og:image" content="https://testflows.com/img/social-share.png">
   
@@ -29,40 +34,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790958789920" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790958789920" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790958789920" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790958789920" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790958789920" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790958789921" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790914170034" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790958789921" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -182,6 +187,10 @@
 </nav>
 
   
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/docs/machine.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
   <div class="container-fluid p-0">
     <div class="content">
       
@@ -339,10 +348,6 @@ is handy. Record the failing run once, then replay it as often as you need.</p>
 the <a href="#Python-SDK">SDK</a>. Both do the same things. This page starts with the
 client and ends with the SDK. To begin, <a href="#The-client">install the client</a>. It is
 one command.</p>
-<blockquote>
-<p><strong>&#9995;</strong> Machine is in private beta. If you don’t have access yet,
-<a href="/contact.html?topic=machine">contact us</a>.</p>
-</blockquote>
 <h1 id="Concepts"><a href="#Concepts" class="headerlink" title="Concepts"></a>Concepts</h1><p>There are only a few of them, and the rest of this page builds on them.</p>
 <p><strong>Disk.</strong> What a machine boots. It is your program (or a whole application)
 packaged with a small Linux system. You build one with <code>machine disks build</code>.</p>
@@ -862,6 +867,7 @@ still running, and <code>--depth</code> keeps one level of the tree.</p>
 written with a percent sign.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine console %crashed</span><br></pre></td></tr></table></figure>
 
+
 <h1 id="Replay"><a href="#Replay" class="headerlink" title="Replay"></a>Replay</h1><p>Replay is what makes a recording useful. A branch can play back what its
 parent recorded and Machine checks, step by step, that it gets the same result.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine replay app/try-1</span><br></pre></td></tr></table></figure>
@@ -885,6 +891,7 @@ divergence. It is for when you want to see what happened, not whether it
 repeated. By default it plays the parent’s log, so it needs a branch. To play
 another run’s log, name it: <code>machine play app/try-1 app</code>.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine play app/try-1 -n 16240:16243</span><br><span class="line">machine play app/try-1 --include irq random</span><br></pre></td></tr></table></figure>
+
 
 <h1 id="Steering-programs"><a href="#Steering-programs" class="headerlink" title="Steering programs"></a>Steering programs</h1><p>By default Machine lets the guest schedule itself. Sometimes that isn’t what
 you want. A bug that needs one thread to run past another will not show up
@@ -981,6 +988,7 @@ pinned to a snapshot, so they never change how the machine executes.</p>
 <p>Add <code>@ref</code> to the run to read the disk as it was at a checkpoint or an entry.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine artifacts <span class="built_in">cat</span> app@booted /etc/hostname</span><br><span class="line">machine artifacts <span class="built_in">ls</span> app@4200 /tmp</span><br></pre></td></tr></table></figure>
 
+
 <h1 id="Account-and-billing"><a href="#Account-and-billing" class="headerlink" title="Account and billing"></a>Account and billing</h1><p>Most of what the account page on the website does, the client does too.</p>
 <table>
 <thead>
@@ -1071,6 +1079,7 @@ prune.</p>
 <li>Waiting commands exit with 3 on a timeout and 2 on an error.</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine -q --<span class="built_in">timeout</span> 300 run app --<span class="keyword">until</span> tasks || <span class="built_in">echo</span> <span class="string">&quot;boot did not finish&quot;</span></span><br></pre></td></tr></table></figure>
+
 
 <h1 id="Python-SDK"><a href="#Python-SDK" class="headerlink" title="Python SDK"></a>Python SDK</h1><p>The SDK does what the client does, from Python. If you can type it in a
 terminal, you can call it from a program.</p>
@@ -1419,14 +1428,14 @@ went wrong.</p>
   <div class="container-footer" id="container-footer">
     <footer> <div class="container">
     <div class="site-footer-grid row">
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Products</h3>
             <ul>
                 <li><a href="/framework/">Framework</a></li>
                 <li><a href="/machine/">Machine</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Developers</h3>
             <ul>
                 <li><a href="/docs/">Docs</a></li>
@@ -1434,19 +1443,29 @@ went wrong.</p>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Company</h3>
             <ul>
                 <li><a href="/contact.html">Contact</a></li>
                 <li><a href="/legal/">Legal</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Community</h3>
             <ul>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/docs/machine.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
             </ul>
         </div>
     </div>
@@ -1468,9 +1487,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790914170034"></script>
-<script src="/js/machine-hero-type.js?v=1790914170034"></script>
-<script src="/js/download-platforms.js?v=1790914170034"></script>
+<script src="/js/index-code-type.js?v=1790958789921"></script>
+<script src="/js/machine-hero-type.js?v=1790958789921"></script>
+<script src="/js/download-platforms.js?v=1790958789921"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
