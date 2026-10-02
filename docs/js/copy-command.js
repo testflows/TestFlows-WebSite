@@ -17,9 +17,11 @@
  *     <button type="button" class="install-copy" data-copy>Copy</button>
  *   </div>
  *
- * A click copies the text of the <code> beside the button, or every <code> in the
- * box, one per line, for a few commands (never the prompt, which is drawn by CSS) and the button says "Copied" for a moment. Works on touch
- * screens, where there is no hover. Falls back to a hidden textarea where the
+ * A click on the button, or anywhere on the box, copies the text of every <code> in
+ * the box, one per line (never the prompt, which is drawn by CSS), and the button
+ * says "Copied" for a moment. Dragging to select part of a command copies nothing,
+ * so a partial selection can still be copied by hand. Works on touch screens,
+ * where there is no hover. Falls back to a hidden textarea where the
  * async clipboard API is not available (plain http, old browsers).
  */
 (function () {
@@ -72,12 +74,12 @@
   });
 
   document.addEventListener("click", function (event) {
-    var button = event.target.closest && event.target.closest("[data-copy]");
+    var box = event.target.closest && event.target.closest(".install-cmd");
+    var button = box && box.querySelector("[data-copy]");
     if (!button) {
       return;
     }
-    var box = button.closest(".install-cmd");
-    var lines = box ? box.querySelectorAll("code") : [];
+    var lines = box.querySelectorAll("code");
     if (!lines.length) {
       return;
     }
@@ -85,6 +87,11 @@
     var text = Array.prototype.map.call(lines, function (line) {
       return line.textContent.trim();
     }).join("\n");
+    /* Someone dragging to select part of the command is not asking to copy it all. */
+    var picked = String(window.getSelection ? window.getSelection() : "").trim();
+    if (picked && picked !== text && event.target.closest("[data-copy]") !== button) {
+      return;
+    }
     copyText(text).then(
       function () {
         flash(button, "Copied");
@@ -96,7 +103,7 @@
         var selection = window.getSelection();
         selection.removeAllRanges();
         selection.addRange(range);
-        flash(button, "Press Ctrl-C");
+        flash(button, "Ctrl-C");
       }
     );
   });
