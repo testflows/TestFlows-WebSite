@@ -1,11 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 /** Previous/Next pager shared by the paginated account panels (activity, orders,
  * invoices). UI only: the panel owns paging state and data loading and passes the
  * click intents; this renders the control, disables it while a page is loading (so

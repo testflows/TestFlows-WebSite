@@ -61,7 +61,7 @@ machine --version
   ---- o o o ----
  |   o       o   |
  | 1 o 10010 o 0 |
- |   o       o   |  TestFlows Machine Client 20261002-0104
+ |   o       o   |  TestFlows Machine Client YYYYMMDD-HHMM
   ---  o o oxx --
  /           xx   \
 /  ^^^        xx   \
