@@ -34,26 +34,49 @@ permalink: machine/download/index.html
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root, and needs <code>curl</code> or <code>wget</code>. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
-<p>The client unpacks itself into <code>~/.cache/machine/</code> on its first run. An update removes what older versions left there.</p>
+<p>It verifies the download and puts the client in <code>~/.local/bin</code>. It never asks for root. Run the same command again to update.</p>
 </div>
 
 <div class="download-section">
 <h2>Check the download</h2>
-<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check the installed client yourself, compare its checksum with the one published for its version. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
 
 ```bash
-machine --version
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum
-sha256sum "$(command -v machine)"
+mkdir machine-check && cd machine-check
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --download
 ```
 
-<p>The last two lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+<p>That fetches <code>machine</code>, its checksum, and two signatures of the checksum. We sign only the checksum, so verify the signature first, with either tool.</p>
+
+<p>With GPG, the key's fingerprint must match the <a href="/machine/keys/machine-client-gpg.fingerprint">GPG fingerprint</a>. gpg then prints <code>Good signature</code>; its warning that the key is not certified is normal.</p>
+
+```bash
+curl -fsSO https://testflows.com/machine/keys/machine-client-gpg.asc
+gpg --show-keys --fingerprint machine-client-gpg.asc
+gpg --import machine-client-gpg.asc
+gpg --verify machine.sha256.asc machine.sha256
+```
+
+<p>With openssl, a good signature prints <code>Verified OK</code>:</p>
+
+```bash
+curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem
+openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine.sha256.sig machine.sha256
+```
+
+<p>Last, check the file against the checksum, and against the client you installed. If a check fails, delete the client and install again.</p>
+
+```bash
+sha256sum -c machine.sha256
+cmp machine "$(command -v machine)"
+```
+
+<p>To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
 <h2>Uninstall</h2>
-<p>Sign out, so the session ends on the server too, then delete the client, what it unpacked, and its sign-in and keys. Nothing else on your system is changed.</p>
+<p>Sign out, then delete the client and what it stored.</p>
 
 ```bash
 machine logout
@@ -74,13 +97,12 @@ rm -rf ~/.cache/machine ~/.testflows/machine
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root, and needs <code>curl</code> or <code>wget</code>. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
-<p>The client unpacks itself into <code>~/.cache/machine/</code> on its first run. An update removes what older versions left there.</p>
+<p>It verifies the download and puts the client in <code>~/.local/bin</code>. It never asks for root. Run the same command again to update.</p>
 </div>
 
 <div class="download-section download-note">
 <h2>Disks hold x86_64 programs</h2>
-<p>A machine is an x86_64 computer, so the disks you build hold <code>linux/amd64</code> programs. Docker on arm64 builds and pulls <code>arm64</code> images by default; ask it for <code>linux/amd64</code>:</p>
+<p>A machine is an x86_64 computer, so its disks hold <code>linux/amd64</code> programs. Docker on ARM builds <code>arm64</code> images by default, so ask for <code>linux/amd64</code>:</p>
 
 ```bash
 docker build --platform linux/amd64 -t myapp:latest .
@@ -92,20 +114,44 @@ docker pull --platform linux/amd64 myapp:latest
 
 <div class="download-section">
 <h2>Check the download</h2>
-<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check the installed client yourself, compare its checksum with the one published for its version. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
 
 ```bash
-machine --version
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum
-sha256sum "$(command -v machine)"
+mkdir machine-check && cd machine-check
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --download
 ```
 
-<p>The last two lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+<p>That fetches <code>machine-linux-arm64</code>, its checksum, and two signatures of the checksum. We sign only the checksum, so verify the signature first, with either tool.</p>
+
+<p>With GPG, the key's fingerprint must match the <a href="/machine/keys/machine-client-gpg.fingerprint">GPG fingerprint</a>. gpg then prints <code>Good signature</code>; its warning that the key is not certified is normal.</p>
+
+```bash
+curl -fsSO https://testflows.com/machine/keys/machine-client-gpg.asc
+gpg --show-keys --fingerprint machine-client-gpg.asc
+gpg --import machine-client-gpg.asc
+gpg --verify machine-linux-arm64.sha256.asc machine-linux-arm64.sha256
+```
+
+<p>With openssl, a good signature prints <code>Verified OK</code>:</p>
+
+```bash
+curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem
+openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine-linux-arm64.sha256.sig machine-linux-arm64.sha256
+```
+
+<p>Last, check the file against the checksum, and against the client you installed. If a check fails, delete the client and install again.</p>
+
+```bash
+sha256sum -c machine-linux-arm64.sha256
+cmp machine-linux-arm64 "$(command -v machine)"
+```
+
+<p>To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
 <h2>Uninstall</h2>
-<p>Sign out, so the session ends on the server too, then delete the client, what it unpacked, and its sign-in and keys. Nothing else on your system is changed.</p>
+<p>Sign out, then delete the client and what it stored.</p>
 
 ```bash
 machine logout
@@ -126,13 +172,13 @@ rm -rf ~/.cache/machine ~/.testflows/machine
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, unpacks it into <code>~/.local/share/machine/</code>, and links <code>~/.local/bin/machine</code> to it. It never asks for your password. If <code>~/.local/bin</code> isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update; an update removes the older version.</p>
+<p>It verifies the download, installs the client under <code>~/.local/share/machine/</code>, and links it from <code>~/.local/bin</code>. It never asks for your password. Run the same command again to update.</p>
 <p>Macs with an Intel processor are not supported.</p>
 </div>
 
 <div class="download-section download-note">
 <h2>Disks hold x86_64 programs</h2>
-<p>A machine is an x86_64 computer, so the disks you build hold <code>linux/amd64</code> programs. Docker on Apple Silicon builds and pulls <code>arm64</code> images by default; ask it for <code>linux/amd64</code>:</p>
+<p>A machine is an x86_64 computer, so its disks hold <code>linux/amd64</code> programs. Docker on ARM builds <code>arm64</code> images by default, so ask for <code>linux/amd64</code>:</p>
 
 ```bash
 docker build --platform linux/amd64 -t myapp:latest .
@@ -144,21 +190,43 @@ docker pull --platform linux/amd64 myapp:latest
 
 <div class="download-section">
 <h2>Check the download</h2>
-<p>The installer checks the archive it downloads against its published SHA-256 checksum before it unpacks it. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check it yourself, download the archive and its checksum for your version and compare them. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
 
 ```bash
-machine --version
-curl -fsSO https://testflows-machine-client.fsn1.your-objectstorage.com/YYYYMMDD-HHMM/machine-darwin-arm64.tar.gz
-curl -fsSO https://testflows-machine-client.fsn1.your-objectstorage.com/YYYYMMDD-HHMM/machine-darwin-arm64.tar.gz.sha256
+mkdir machine-check && cd machine-check
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --download
+```
+
+<p>That fetches <code>machine-darwin-arm64.tar.gz</code>, its checksum, and two signatures of the checksum. We sign only the checksum, so verify the signature first, with either tool. Macs ship with openssl but not gpg.</p>
+
+<p>With GPG, the key's fingerprint must match the <a href="/machine/keys/machine-client-gpg.fingerprint">GPG fingerprint</a>. gpg then prints <code>Good signature</code>; its warning that the key is not certified is normal.</p>
+
+```bash
+curl -fsSO https://testflows.com/machine/keys/machine-client-gpg.asc
+gpg --show-keys --fingerprint machine-client-gpg.asc
+gpg --import machine-client-gpg.asc
+gpg --verify machine-darwin-arm64.tar.gz.sha256.asc machine-darwin-arm64.tar.gz.sha256
+```
+
+<p>With openssl, a good signature prints <code>Verified OK</code>:</p>
+
+```bash
+curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem
+openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine-darwin-arm64.tar.gz.sha256.sig machine-darwin-arm64.tar.gz.sha256
+```
+
+<p>Last, check the archive against the checksum. If it fails, delete it and install again.</p>
+
+```bash
 shasum -a 256 -c machine-darwin-arm64.tar.gz.sha256
 ```
 
-<p>The last line should print <code>machine-darwin-arm64.tar.gz: OK</code>. If it doesn't, install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+<p>To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
 <h2>Uninstall</h2>
-<p>Sign out, so the session ends on the server too, then delete the client and its sign-in and keys. Nothing else on your Mac is changed.</p>
+<p>Sign out, then delete the client and what it stored.</p>
 
 ```bash
 machine logout
@@ -173,13 +241,13 @@ rm -rf ~/.local/share/machine ~/.testflows/machine
 
 <div class="download-section">
 <h2>Install</h2>
-<p>The client runs inside WSL, the Linux that comes with Windows; there is no native Windows build. If you don't have WSL yet, install it from PowerShell, then restart:</p>
+<p>The client runs inside WSL, the Linux that comes with Windows. If you don't have WSL yet, install it from PowerShell, then restart:</p>
 
 ```powershell
 wsl --install
 ```
 
-<p>Open your Linux distribution, Ubuntu by default, and install the client there with the Linux steps: <a href="#linux-x86_64">Linux (x64)</a> on most PCs, or <a href="#linux-arm64">Linux (ARM64)</a> on Windows on ARM. Not sure which? Run <code>uname -m</code> in WSL: <code>x86_64</code> or <code>aarch64</code>.</p>
+<p>Open your Linux distribution and follow the steps for <a href="#linux-x86_64">Linux (x64)</a>, or <a href="#linux-arm64">Linux (ARM64)</a> on Windows on ARM. Not sure which? <code>uname -m</code> prints <code>x86_64</code> or <code>aarch64</code>.</p>
 </div>
 </div>
 
@@ -187,7 +255,7 @@ wsl --install
 
 <div class="download-section">
 <h2>Other systems</h2>
-<p>The client runs on Linux (x64 and ARM64) and on Macs with Apple Silicon. Macs with an Intel processor are not supported, and there is no native Windows build; on Windows, use <a href="#windows">WSL</a>.</p>
+<p>Linux (x64 and ARM64) and Macs with Apple Silicon are supported. On Windows, use <a href="#windows">WSL</a>.</p>
 <p>Need another platform? <a href="/contact.html?topic=machine">Tell us which one</a>.</p>
 </div>
 </div>
@@ -195,14 +263,20 @@ wsl --install
 </div>
 
 <div class="download-section">
+<h2>Release keys</h2>
+<p>Every release's checksum is signed with two keys: a <a href="/machine/keys/machine-client-gpg.asc">GPG key</a>, whose fingerprint is published as the <a href="/machine/keys/machine-client-gpg.fingerprint">GPG fingerprint</a>, and an <a href="/machine/keys/machine-client-rsa.pub.pem">RSA key</a> for openssl.</p>
+<p>If the keys change, this page and the installer carry the new ones. A check that fails with an old key should pass once you download again.</p>
+</div>
+
+<div class="download-section">
 <h2>A specific version</h2>
-<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code> to it, in place of <code>YYYYMMDD-HHMM</code>:</p>
+<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code>:</p>
 
 ```bash
 curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash
 ```
 
-<p><code>MACHINE_INSTALL_DIR</code> installs somewhere other than <code>~/.local/bin</code>. <code>machine --version</code> tells you which version you have.</p>
+<p>Set <code>MACHINE_INSTALL_DIR</code> to install somewhere other than <code>~/.local/bin</code>. <code>--no-signature</code> and <code>--no-checksum</code> skip checks; a normal install needs neither.</p>
 </div>
 
 <div class="download-section download-next">
