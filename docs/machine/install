@@ -5,8 +5,9 @@
 #
 # It downloads one file, the `machine` binary, checks it against the SHA-256
 # checksum published next to it, and puts it in ~/.local/bin. It never asks for
-# root. The checksum catches a corrupt or cut-short download; the download
-# itself is protected by HTTPS, which is the only protocol it will use unless
+# root. The checksum is signed with the release keys below, GPG and RSA, and the
+# signature is checked before the checksum is trusted: with gpg where there is one,
+# else with openssl, which every Mac has. The download itself is protected by HTTPS, which is the only protocol it will use unless
 # MACHINE_BASE_URL is set to an http:// address, as a local mirror for testing.
 #
 # On first run the client unpacks itself into ~/.cache/machine/.
@@ -28,6 +29,62 @@
 set -euo pipefail
 
 BASE_URL="${MACHINE_BASE_URL:-https://testflows-machine-client.fsn1.your-objectstorage.com}"
+# A release from the official server must be signed; a mirror named by MACHINE_BASE_URL,
+# a test server, may not be, and is only warned about.
+OFFICIAL=true
+[ -n "${MACHINE_BASE_URL:-}" ] && OFFICIAL=false
+
+# The release signing keys. Every release's checksum files are signed with both: the GPG
+# key for gpg, the RSA key for openssl. Fingerprint 5F3621A5081FF68BFF2581FDB280231700CCCA66.
+GPG_PUBLIC_KEY="$(cat <<'KEY'
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+mQINBGq/Iq8BEADJBFZKdQx+QHDgEQW3HX+9MiiV/kiUc/uHeamYTJEjKPnkSp6n
+Uu+pkwcr6vVy9GUTd7Pu8+LAqnoi37Lyt3QbMTNHBdyfTNTD6pRKojXbrh18CznV
+SUYKoVDFb9yELEY47qWJec0v8XuwRAYQW8zLaWHRLemNewPMdc+ts7rcN2H8C78Q
+TXAUw0XZphaAdMmetNxFY4R2TRxHAY5LBPwbGi+eSFgfqJFkVVEB8+Mfa7kWpPhy
+HC9Tbd714G+sk/3YeYUOF7OEqS9tnziWQ9z/CGMDggOVdoxASdPUS7ZfCbKYbjfl
+adzkcPEuw/jguwTkz3AhBzZHjgEww8JU3/jnXarJWyvujlGOawhsz07xoCgPpsEe
+MmiwgIkmtw00/rVv8Ds4fjTQsBpOPSV+Z3by0OfYTeh0v0OsQFSJmYkVH1uYJGtB
+FJb/xE0EqaeG0QCW4E8Sj/k7Yi+vLwlPjNAikt4pVEVG0POKzHI+AdsyO0Dx+vwJ
+6sc+nSuWF/3QI7dFs4qxjbTuWrNsj6CK1bVFkqbIMKt/3W296DcvjHjeowfYgyyI
+LQ4D2F/xkG/sDRVDARWPoEholVZuLFpfi4GzAOVbdO9IsWEjroZ+LZYPcKbi/SwG
+1SHqXM0xhQLnWwPviJOCYUI1wVvHT9m88HON6GxcwrSZULh30qQkoh867wARAQAB
+tDlUZXN0Rmxvd3MgTWFjaGluZSBDbGllbnQgUmVsZWFzZXMgPGNvbnRhY3RAdGVz
+dGZsb3dzLmNvbT6JAlEEEwEKADsWIQRfNiGlCB/2i/8lgf2ygCMXAMzKZgUCar8i
+rwIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCRCygCMXAMzKZp9JD/4q
+HZZLmkpyGb2VVp7R7ODKy0WT6IlSfkLJmaeP70u18R2TCX2F2UHNVT+MldJGabhA
+9iTOuegCErFK7rtA5xE/XiG/9UM3JPU1htb1bxulOjbvmXLNUBohCKq4GcY8IZkn
+xpt9Yi/yd1VoOFjOvVHPFcNG3167VDEcw+Xre2i2gg8HQ6MGb2KzZ7s//i1Agib1
+vShupxP1ZpyT1LxXL4mOVruP/Lzvq141kWUKGkjKjFCj0zX9RgoCooQwZROZgxQj
+nOyA68PcpM7aEKQ3+42pxtQ0ENbH+Cr6blQmXv8p7BP+dHh/houOATbJv0820s9H
+czvsF5+N0pW/GR1qYdv+52W8cAo02C6/UO7ao4o4zVgEoJZ2dr0UNWZ5U0IUggnL
+sZSC+N7ZON9fs3bmErYACgPk9MVMM9NncAfQRLheEZwjyiJM3YhBHSFPyJgsEaUZ
+ufITA0U6E7ySz5oeAWspv4+tO8TnR/6dh2dRXjicYuRAZYvcU9IRTDaOzWTT7eCr
+jh3lhzextVbTBG0nOCwE1FZ9mZjxJc2Xin9CyjNKhOPDz4ohm5GqvIt93AzznFSu
+vJKYDfexEZGJg6/QIFUM+1GD1dvvyizE/wOD3b4Wwty3t2mfCqosAGeAB+8fJ7d/
+QqEGgIQpq4OhqE0jCNkSkJXT71WS18x+DE+QWcQ3kw==
+=nKxh
+-----END PGP PUBLIC KEY BLOCK-----
+KEY
+)"
+RSA_PUBLIC_KEY="$(cat <<'KEY'
+-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAnqKBaOQUJL9SgeEWI1mu
+Rgq7LQwXzFHuf7rmWOoqLayqyWI4N09Ce+mnmUXr66R0jBFPms4fHS3LWmsyEUsT
+LIt1nj5ptib6q6piU89fhu2UMWf1dJetRq5ycny/NfjWfzjFb7BTC0fNPKGmNFwE
+PaLQwItiMS3MllWdU8UQMcisJ6Mo3qVxKmHjozcY6CiezxwoPoTjrlevn/oqS9FW
+SQMkmaurspM++i70MIExh2+SJBGkvlGLAKnD73vyZRGq8kxHbJJwRPsQ+Du0MMCN
+uwtFsSiz93a6nqv9A9logP+wtpJPtEvzX3PpsEXNoD+0LxaR4QgoFZXXDpH6mgYj
+k+RtZ/eJApHE6H3Mq8IpgPUdPKo8rbua8Y6kHqyW3o7IEwYKShLIQzQn/kzp2LoA
+MIKYx9Z2Hba76g/JVsc3jPeHh7L+j7mZRjLjuO2dIPh/1ZgeWLWmlUyozidyUKsZ
+FgywOOQnAsGOVZc/YTW+IGMLkxmmQU/KZt6LNXq7lzNjCnrjoj6D+jSOd9AN6FJw
+ltbzBsLSdpAroNaQ0WtP+v6/DW7eyJpZScuDGDcaduI4SVLBGRtEjYB7JWdcqcCm
+knYR7j6LRccvyTus2W+4NAIMgEf/2I0o2RRmjhGNfKpP9YcitqZWHmgJvmjNIbJV
+EdYmQm3kt5csap5+Zr7qebkCAwEAAQ==
+-----END PUBLIC KEY-----
+KEY
+)"
 # HTTPS only, so no redirect can downgrade the download. Plain HTTP only when the
 # person running this asked for an http:// mirror themselves.
 PROTOCOLS="=https"
@@ -141,8 +198,12 @@ Install the TestFlows Machine client.
   curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
 
 Options:
-  --checksum   print the published SHA-256 checksum instead of installing
-  -h, --help   show this help
+  --checksum      print the published SHA-256 checksum instead of installing
+  --download      download this system's file, its checksum and their signatures
+                  into the current folder instead of installing, to check by hand
+  --no-signature  install without checking the release signature
+  --no-checksum   install without checking the checksum, or the signature
+  -h, --help      show this help
 
 Environment:
   MACHINE_INSTALL_DIR   where to put the binary (default: ~/.local/bin)
@@ -184,6 +245,87 @@ checksum_from() {
     esac
     [ "${#want}" -eq 64 ] || die "The published checksum isn't valid."
     printf '%s' "$want"
+}
+
+# Set by --no-signature and --no-checksum; both are said aloud when used.
+NO_SIGNATURE=false
+NO_CHECKSUM=false
+# What the install checked, for the line that reports it.
+SIGNED_WITH=""
+CHECKSUM_CHECKED=""
+
+# check_signature SUMFILE URL: check the signature on the checksum file downloaded from
+# URL with the release keys, before the checksum is trusted. gpg checks URL.asc; without
+# gpg, openssl checks URL.sig. A missing or bad signature on an official release stops
+# the install: one that could be removed from the server would protect nothing. Sets
+# SIGNED_WITH to what checked it, or leaves it empty when nothing could.
+check_signature() {
+    local sumfile="$1" url="$2" tool sig home ring key
+    SIGNED_WITH=""
+    if $NO_SIGNATURE; then
+        warn "--no-signature: the release signature was not checked."
+        return 0
+    fi
+    if command -v gpg >/dev/null 2>&1; then
+        tool="gpg"; sig="$sumfile.asc"
+    elif command -v openssl >/dev/null 2>&1; then
+        tool="openssl"; sig="$sumfile.sig"
+    else
+        warn "Neither gpg nor openssl is installed, so the release signature was not checked."
+        return 0
+    fi
+    if ! fetch "$url.${sig##*.}" "$sig" 2>/dev/null; then
+        rm -f "$sig"
+        if $OFFICIAL; then
+            die "This release's signature could not be downloaded, so it was not installed." \
+                "Run this again, and write to contact@testflows.com if it keeps happening."
+        fi
+        warn "The mirror has no signature for this release; it was not checked."
+        return 0
+    fi
+    # Each check is an if, not a bare command: under set -e a failing one would end the
+    # script before it could say why.
+    local verified=false
+    if [ "$tool" = "gpg" ]; then
+        home="$(mktemp -d)" || die "Could not create a temporary folder."
+        chmod 700 "$home"
+        ring="$home/release.gpg"
+        if printf '%s\n' "$GPG_PUBLIC_KEY" | GNUPGHOME="$home" gpg --batch --quiet --dearmor > "$ring" 2>/dev/null \
+            && GNUPGHOME="$home" gpg --batch --quiet --no-default-keyring --keyring "$ring" \
+                --verify "$sig" "$sumfile" >/dev/null 2>&1; then
+            verified=true
+        fi
+        rm -rf "$home"
+    else
+        key="$(mktemp)" || die "Could not create a temporary file."
+        printf '%s\n' "$RSA_PUBLIC_KEY" > "$key"
+        if openssl dgst -sha256 -verify "$key" -signature "$sig" "$sumfile" >/dev/null 2>&1; then
+            verified=true
+        fi
+        rm -f "$key"
+    fi
+    rm -f "$sig"
+    $verified || die "This release's checksum is not signed by TestFlows, so it was not installed." \
+        "Its signature does not match the release key. Write to contact@testflows.com."
+    SIGNED_WITH="$tool"
+}
+
+# verify_download URL: check the download TMP against the checksum published at
+# URL.sha256, once that checksum's signature is checked.
+verify_download() {
+    local url="$1" want got
+    fetch "$url.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
+        "The install is stopped rather than trusting a file it can't check."
+    check_signature "$SUMFILE" "$url.sha256"
+    want="$(checksum_from "$SUMFILE")"
+    got="$(sha256_of "$TMP")"
+    if [ "$got" != "$want" ]; then
+        die "The download doesn't match its published checksum, so it was not installed." \
+            "expected $want" \
+            "got      $got" \
+            "Run this again, and write to contact@testflows.com if it keeps happening."
+    fi
+    CHECKSUM_CHECKED=true
 }
 
 # sha256_of FILE: the SHA-256 of a file, in lower case.
@@ -265,10 +407,28 @@ download_failed() {
 print_checksum() {
     local sum
     TMP="$(mktemp)" || die "Could not create a temporary file."
-    trap 'rm -f "$TMP"' EXIT
+    trap 'rm -f "$TMP" "$TMP.asc" "$TMP.sig"' EXIT
     fetch "$BASE_URL/$1/$ASSET.sha256" "$TMP" || download_failed "$1"
+    check_signature "$TMP" "$BASE_URL/$1/$ASSET.sha256"
     sum="$(checksum_from "$TMP")"
     printf '%s  %s\n' "$sum" "$ASSET"
+}
+
+# download_files RELEASE: put this system's file of RELEASE, its checksum and the
+# checksum's two signatures in the current folder, for checking by hand with gpg,
+# openssl and sha256sum or shasum. Nothing is checked or installed here: the point is to
+# check them yourself.
+download_files() {
+    local release="$1" name
+    say "${BOLD}Downloading the Machine client${RESET} ${DIM}($release, $PLATFORM)${RESET}"
+    for name in "$ASSET" "$ASSET.sha256" "$ASSET.sha256.asc" "$ASSET.sha256.sig"; do
+        fetch "$BASE_URL/$release/$name" "$name" || {
+            rm -f "$name"
+            download_failed "$release"
+        }
+    done
+    ok "Downloaded $ASSET, $ASSET.sha256, $ASSET.sha256.asc and $ASSET.sha256.sig"
+    say "  Check them as the Download page shows: https://testflows.com/machine/download/"
 }
 
 # The cache folder a machine binary unpacks into: the build key is the second
@@ -376,6 +536,9 @@ main() {
     for arg in "$@"; do
         case "$arg" in
             --checksum) mode="checksum" ;;
+            --download) mode="download" ;;
+            --no-signature) NO_SIGNATURE=true ;;
+            --no-checksum) NO_CHECKSUM=true; NO_SIGNATURE=true ;;
             -h | --help) usage; exit 0 ;;
             *) die "Unknown option: $arg" "Run it with --help to see what it accepts." ;;
         esac
@@ -383,7 +546,7 @@ main() {
 
     # Before any download: on a system it doesn't run on, say so, not a network error.
     # --checksum runs anywhere, for checking a file by hand; off a supported system it
-    # prints the Linux x86_64 file's.
+    # prints the Linux x86_64 file's. --download fetches this system's files.
     if [ "$mode" = "checksum" ]; then
         platform_asset || { ASSET="machine"; KIND="binary"; PLATFORM="Linux x86_64"; }
     else
@@ -403,6 +566,10 @@ main() {
 
     if [ "$mode" = "checksum" ]; then
         print_checksum "$release"
+        return 0
+    fi
+    if [ "$mode" = "download" ]; then
+        download_files "$release"
         return 0
     fi
 
@@ -431,21 +598,15 @@ main() {
     TMP="$(mktemp "$downloads/.machine.XXXXXX")" || die "Could not write to $(tilde "$downloads")."
     SUMFILE="$TMP.sha256"
     STAGE=""
-    trap 'rm -rf "$TMP" "$SUMFILE" ${STAGE:+"$STAGE"}' EXIT
+    trap 'rm -rf "$TMP" "$SUMFILE" "$SUMFILE.asc" "$SUMFILE.sig" ${STAGE:+"$STAGE"}' EXIT
 
     fetch "$url" "$TMP" || download_failed "$release"
     [ -s "$TMP" ] || die "The download was empty."
 
-    local want got
-    fetch "$url.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
-        "The install is stopped rather than trusting a file it can't check."
-    want="$(checksum_from "$SUMFILE")"
-    got="$(sha256_of "$TMP")"
-    if [ "$got" != "$want" ]; then
-        die "The download doesn't match its published checksum, so it was not installed." \
-            "expected $want" \
-            "got      $got" \
-            "Run this again, and write to contact@testflows.com if it keeps happening."
+    if $NO_CHECKSUM; then
+        warn "--no-checksum: neither the checksum nor the signature was checked."
+    else
+        verify_download "$url"
     fi
 
     local after
@@ -463,7 +624,7 @@ main() {
     trap - EXIT
 
     if [ -z "$before" ]; then
-        ok "Installed machine $after to $(tilde "$target") ${DIM}(checksum verified)${RESET}"
+        ok "Installed machine $after to $(tilde "$target")${CHECKSUM_CHECKED:+ ${DIM}(${SIGNED_WITH:+signed and }checksum verified)${RESET}}"
     elif [ "$before" = "$after" ]; then
         ok "machine $after was already installed. Reinstalled it at $(tilde "$target")"
     else
