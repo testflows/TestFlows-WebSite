@@ -856,6 +856,27 @@
     text-align: left;
 }
 
+#main-nav.portal-navbar .portal-navbar-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-shrink: 0;
+    margin-right: 0.35rem;
+    color: var(--tf-text-strong) !important;
+    font-family: var(--tf-font);
+    font-weight: 500;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    text-decoration: none !important;
+}
+
+@media (max-width: 575.98px) {
+    #main-nav.portal-navbar .portal-navbar-download-more { display: none; }
+}
+
+#main-nav.portal-navbar .portal-navbar-download:hover,
+#main-nav.portal-navbar .portal-navbar-download:focus { color: var(--tf-accent) !important; }
+
 #main-nav.portal-navbar .portal-navbar-email:empty {
     display: none;
 }
@@ -883,10 +904,10 @@
 
     #main-nav.portal-navbar .portal-navbar-inner {
         display: grid;
-        grid-template-columns: 1fr auto;
+        grid-template-columns: 1fr auto auto;
         grid-template-areas:
-            "brand theme"
-            "email signout";
+            "brand download theme"
+            "email email signout";
         column-gap: 0.75rem;
         row-gap: 0.35rem;
         align-items: center;
@@ -913,6 +934,12 @@
 
     #main-nav.portal-navbar .portal-navbar-actions::before {
         display: none;
+    }
+
+    #main-nav.portal-navbar .portal-navbar-download {
+        grid-area: download;
+        justify-self: end;
+        margin-right: 0;
     }
 
     #main-nav.portal-navbar .portal-navbar-email {

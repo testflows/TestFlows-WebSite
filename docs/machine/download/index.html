@@ -17,8 +17,8 @@
   </script>
   
   
-  <title>TestFlows | TestFlows</title>
-  <meta name="description" content="Python library for writing test programs">
+  <title>Download | Machine</title>
+  <meta name="description" content="Download the Machine client for Linux.">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="TestFlows">
   <meta name="og:site_name" content="TestFlows">
@@ -29,40 +29,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790903957248" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790903957248" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790903957274" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790903957248" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -120,9 +120,9 @@
                             <a class="nav-link" href="/framework/">Framework</a>
                         </li>
                     
-                        <li class="nav-item">
+                        <li class="nav-item active">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
-                            <a class="nav-link" href="/machine/">Machine</a>
+                            <a class="nav-link" href="/machine/" aria-current="page">Machine</a>
                         </li>
                     
                         <li class="nav-item">
@@ -186,6 +186,71 @@
     <div class="content">
       
 
+<section class="download-page">
+<div class="container">
+
+<header class="download-header">
+<h1>Download client</h1>
+<p>The Machine client is one small program called <code>machine</code>. It runs on Linux (x86_64).</p>
+</header>
+
+<div class="download-section">
+<h2>Install</h2>
+<p>Run this in a terminal.</p>
+<div class="install-cmd"><code>curl https://testflows.com/machine/install -fsS | bash</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+<p>It downloads the client, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root. If that folder isn't on your <code>PATH</code> yet, it tells you what to add. Run the same command again to update.</p>
+</div>
+
+<div class="download-section">
+<h2>Supported systems</h2>
+<table class="download-table">
+<thead><tr><th>System</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Linux, x86_64</td><td class="is-yes">Supported</td></tr>
+<tr><td>Windows</td><td>Use it inside WSL, which is Linux. No native build yet.</td></tr>
+<tr><td>macOS</td><td>Not available yet</td></tr>
+<tr><td>Linux, ARM64</td><td>Not available yet</td></tr>
+</tbody>
+</table>
+<p>Need another platform? <a href="/contact.html?topic=machine">Tell us which one</a>.</p>
+</div>
+
+<div class="download-section">
+<h2>Check the download</h2>
+<p>The installer already checks what it downloads. To check it yourself, compare the checksum of your file with the one published for its version.</p>
+<p>First, find your version. It is on the banner line, like <code>20261002-0022</code>.</p>
+<div class="install-cmd"><code>machine --version</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+<p>Then print the checksum published for that version, and the checksum of your file. Put your version in place of the one shown.</p>
+<div class="install-cmd install-cmd--steps"><div class="install-lines"><code>curl https://testflows.com/machine/install <span class="nw">-fsS</span> | MACHINE_VERSION=20261002-0022 bash -s -- --checksum</code><code>sha256sum "$(command -v machine)"</code></div><button type="button" class="install-copy" data-copy>Copy</button></div>
+<p>Both lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+</div>
+
+<div class="download-section">
+<h2>A specific version</h2>
+<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code>, for example:</p>
+<div class="install-cmd"><code>curl https://testflows.com/machine/install <span class="nw">-fsS</span> | MACHINE_VERSION=20261002-0022 bash</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+<p><code>MACHINE_INSTALL_DIR</code> installs somewhere other than <code>~/.local/bin</code>. <code>machine --version</code> tells you which version you have.</p>
+</div>
+
+<div class="download-section">
+<h2>Uninstall</h2>
+<p>Delete the file: <code>rm ~/.local/bin/machine</code>. The installer changes nothing else on your system.</p>
+</div>
+
+<div class="download-section download-next">
+<h2>Then</h2>
+<p>Sign in with <code>machine login</code>, or create an account first. The docs walk through your first run.</p>
+<div class="download-actions">
+<a class="section-cta" href="/machine/portal/signup/">Create account</a>
+<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
+</div>
+</div>
+
+</div>
+</section>
+
+
+
     </div>
   </div>
   
@@ -241,9 +306,9 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790903957274"></script>
-<script src="/js/machine-hero-type.js?v=1790903957274"></script>
-<script src="/js/copy-command.js?v=1790903957274"></script>
+<script src="/js/index-code-type.js?v=1790903957248"></script>
+<script src="/js/machine-hero-type.js?v=1790903957248"></script>
+<script src="/js/copy-command.js?v=1790903957248"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

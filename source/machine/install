@@ -1,0 +1,276 @@
+#!/usr/bin/env bash
+# Install the TestFlows Machine client.
+#
+#   curl https://testflows.com/machine/install -fsS | bash
+#
+# It downloads one file, the `machine` binary, checks it against the SHA-256
+# checksum published next to it, and puts it in $HOME/.local/bin. It never asks
+# for root and it changes nothing else on your system.
+#
+# To check a download yourself, print the checksum published for a version and
+# compare it with `sha256sum` of your file:
+#
+#   curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
+#
+# Environment:
+#   MACHINE_INSTALL_DIR   where to put the binary (default: $HOME/.local/bin)
+#   MACHINE_VERSION       a version to install, like 20261002-0022
+#                         (default: the latest)
+#   MACHINE_BASE_URL      where releases are downloaded from
+#
+# Everything happens inside main(), which is only called on the last line. If the
+# download is cut short, bash never reaches that line and nothing runs.
+
+set -euo pipefail
+
+BASE_URL="${MACHINE_BASE_URL:-https://testflows-machine-client.fsn1.your-objectstorage.com}"
+
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
+    BOLD=$'\033[1m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; RED=$'\033[31m'; DIM=$'\033[2m'; RESET=$'\033[0m'
+else
+    BOLD=""; GREEN=""; YELLOW=""; RED=""; DIM=""; RESET=""
+fi
+
+say()  { printf '%s\n' "$*"; }
+ok()   { printf '%s✔%s %s\n' "$GREEN" "$RESET" "$*"; }
+warn() { printf '%s!%s %s\n' "$YELLOW" "$RESET" "$*" >&2; }
+die()  { printf '%s✗%s %s\n' "$RED" "$RESET" "$1" >&2; shift; for line in "$@"; do printf '  %s\n' "$line" >&2; done; exit 1; }
+
+# The version a machine binary reports, or nothing if it doesn't run.
+version_of() {
+    "$1" -o json --version 2>/dev/null | sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' | head -n 1
+}
+
+# fetch URL DEST: download with curl, or wget when there is no curl.
+fetch() {
+    if command -v curl >/dev/null 2>&1; then
+        if [ -t 2 ]; then
+            curl -fL --connect-timeout 15 --progress-bar -o "$2" "$1"
+        else
+            curl -fsSL --connect-timeout 15 -o "$2" "$1"
+        fi
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q -O "$2" "$1"
+    else
+        die "Neither curl nor wget is installed." "Install one of them and run this again."
+    fi
+}
+
+usage() {
+    cat <<'USAGE'
+Install the TestFlows Machine client.
+
+  curl https://testflows.com/machine/install -fsS | bash
+  curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
+
+Options:
+  --checksum   print the published SHA-256 checksum instead of installing
+  -h, --help   show this help
+
+Environment:
+  MACHINE_INSTALL_DIR   where to put the binary (default: $HOME/.local/bin)
+  MACHINE_VERSION       a version to use, like 20261002-0022 (default: the latest)
+USAGE
+}
+
+# checksum_from FILE: the SHA-256 in a published checksum file. It is a sha256sum
+# line ("<hash>  machine") or a bare hash; either way the hash is the first word.
+checksum_from() {
+    local want
+    want="$(tr -d '\r' < "$1" | head -n 1 | tr -s ' \t' ' ' | cut -d ' ' -f 1 | tr 'A-F' 'a-f')"
+    case "$want" in
+        *[!0-9a-f]* | "") die "The published checksum isn't valid." ;;
+    esac
+    [ "${#want}" -eq 64 ] || die "The published checksum isn't valid."
+    printf '%s' "$want"
+}
+
+# sha256_of FILE: the SHA-256 of a file, in lower case.
+sha256_of() {
+    if command -v sha256sum >/dev/null 2>&1; then
+        sha256sum "$1" | cut -d ' ' -f 1
+    elif command -v shasum >/dev/null 2>&1; then
+        shasum -a 256 "$1" | cut -d ' ' -f 1
+    elif command -v openssl >/dev/null 2>&1; then
+        openssl dgst -sha256 "$1" | sed 's/^.*= *//'
+    else
+        die "Cannot check the download: none of sha256sum, shasum or openssl is installed." \
+            "Install one of them and run this again."
+    fi
+}
+
+# fetch_retrying URL DEST: a dropped connection is worth another try. Three in all.
+fetch_retrying() {
+    local attempt
+    for attempt in 1 2 3; do
+        if fetch "$1" "$2"; then
+            return 0
+        fi
+        [ "$attempt" -lt 3 ] && { warn "The download failed. Trying again."; sleep 2; }
+    done
+    return 1
+}
+
+check_platform() {
+    local os arch
+    os="$(uname -s)"
+    arch="$(uname -m)"
+
+    case "$os" in
+        Linux) ;;
+        Darwin)
+            die "The Machine client doesn't run on macOS yet." \
+                "It is available for Linux (x86_64) only, for now." \
+                "Need another platform? Write to contact@testflows.com and tell us which."
+            ;;
+        MINGW* | MSYS* | CYGWIN*)
+            die "The Machine client doesn't run on Windows." \
+                "Inside WSL, which is Linux, it does." \
+                "Need another platform? Write to contact@testflows.com and tell us which."
+            ;;
+        *)
+            die "The Machine client doesn't run on $os." \
+                "It is available for Linux (x86_64) only, for now." \
+                "Need another platform? Write to contact@testflows.com and tell us which."
+            ;;
+    esac
+
+    case "$arch" in
+        x86_64 | amd64) ;;
+        *)
+            die "The Machine client doesn't run on $arch processors." \
+                "It is available for x86_64 only, for now." \
+                "Need another platform? Write to contact@testflows.com and tell us which."
+            ;;
+    esac
+}
+
+# print_checksum URL RELEASE: print the published checksum of a release and stop.
+print_checksum() {
+    local sum
+    TMP="$(mktemp)" || die "Could not create a temporary file."
+    trap 'rm -f "$TMP"' EXIT
+    if ! fetch_retrying "$1.sha256" "$TMP"; then
+        if [ "$2" = "latest" ]; then
+            die "Could not download the checksum." "Check your connection and try again."
+        else
+            die "Could not find a checksum for version $2." \
+                "Is it a released version? Leave MACHINE_VERSION unset for the latest."
+        fi
+    fi
+    sum="$(checksum_from "$TMP")"
+    printf '%s  machine\n' "$sum"
+}
+
+main() {
+    local mode="install" arg
+    for arg in "$@"; do
+        case "$arg" in
+            --checksum) mode="checksum" ;;
+            -h | --help) usage; exit 0 ;;
+            *) die "Unknown option: $arg" "Run it with --help to see what it accepts." ;;
+        esac
+    done
+
+    local release="latest"
+    if [ -n "${MACHINE_VERSION:-}" ]; then
+        case "$MACHINE_VERSION" in
+            [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]) release="$MACHINE_VERSION" ;;
+            *) die "'$MACHINE_VERSION' is not a version." "A version looks like 20261002-0022." ;;
+        esac
+    fi
+    local url="$BASE_URL/$release/machine"
+
+    if [ "$mode" = "checksum" ]; then
+        print_checksum "$url" "$release"
+        return 0
+    fi
+
+    check_platform
+
+    local dir="${MACHINE_INSTALL_DIR:-${HOME:-}/.local/bin}"
+    [ -n "${HOME:-}${MACHINE_INSTALL_DIR:-}" ] || die "HOME is not set." "Set MACHINE_INSTALL_DIR to say where to install."
+    local target="$dir/machine"
+
+    local before=""
+    if [ -x "$target" ]; then
+        before="$(version_of "$target" || true)"
+    fi
+
+    say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
+    mkdir -p "$dir" || die "Could not create $dir."
+
+    # Download next to the final spot so the last step is an atomic rename.
+    # TMP is global so the EXIT trap can still see it when die() exits from here.
+    TMP="$(mktemp "$dir/.machine.XXXXXX")" || die "Could not write to $dir."
+    SUMFILE="$TMP.sha256"
+    trap 'rm -f "$TMP" "$SUMFILE"' EXIT
+
+    if ! fetch_retrying "$url" "$TMP"; then
+        if [ "$release" = "latest" ]; then
+            die "Could not download $url" "Check your connection and try again."
+        else
+            die "Could not download version $release." \
+                "Is it a released version? Leave MACHINE_VERSION unset to get the latest."
+        fi
+    fi
+    [ -s "$TMP" ] || die "The download was empty."
+    chmod +x "$TMP"
+
+    # The checksum published next to the binary.
+    local want got
+    fetch_retrying "$url.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
+        "The install is stopped rather than trusting a file it can't check."
+    want="$(checksum_from "$SUMFILE")"
+
+    got="$(sha256_of "$TMP")"
+    if [ "$got" != "$want" ]; then
+        die "The download doesn't match its published checksum, so it was not installed." \
+            "expected $want" \
+            "got      $got" \
+            "This can happen while a new release is being published. Run this again in a minute," \
+            "and write to contact@testflows.com if it keeps happening."
+    fi
+
+    local after
+    after="$(version_of "$TMP" || true)"
+    [ -n "$after" ] || die "The downloaded file doesn't run on this system." \
+        "It is a static Linux x86_64 program, so this usually means it was cut short." \
+        "Run this again, and write to contact@testflows.com if it keeps happening."
+
+    mv -f "$TMP" "$target"
+    rm -f "$SUMFILE"
+    trap - EXIT
+
+    if [ -z "$before" ]; then
+        ok "Installed machine $after to $target ${DIM}(checksum verified)${RESET}"
+    elif [ "$before" = "$after" ]; then
+        ok "machine $after was already installed. Reinstalled it at $target"
+    else
+        ok "Updated machine $before → $after at $target"
+    fi
+
+    # Make sure typing `machine` finds the one we just installed.
+    local found
+    found="$(command -v machine 2>/dev/null || true)"
+    if [ -z "$found" ]; then
+        say ""
+        warn "$dir is not on your PATH, so your shell can't find machine yet."
+        say "  Add this line to your shell profile (~/.bashrc, ~/.zshrc), then open a new terminal:"
+        say ""
+        say "    export PATH=\"$dir:\$PATH\""
+    elif [ "$found" != "$target" ]; then
+        say ""
+        warn "Another machine comes first on your PATH: $found"
+        say "  Run $target directly, or put $dir earlier in your PATH."
+    fi
+
+    say ""
+    say "Next:"
+    say "  machine login         sign in (or  machine account signup  to create an account)"
+    say "  machine --help        see every command"
+    say ""
+    say "Docs: https://testflows.com/docs/machine/"
+}
+
+main "$@"

@@ -17,6 +17,7 @@ image: images/machine-hero.jpg
     <p>Record, replay, and branch your runs. Create account to get started.</p>
     <div class="banner-actions">
         <a class="btn banner-cta" href="/machine/portal/signup/">Create account</a>
+        <a class="btn banner-cta banner-cta-ghost" href="/machine/download/">Download client</a>
         <a class="btn banner-cta banner-cta-ghost" href="/docs/machine/">Docs</a>
     </div>
 </div>

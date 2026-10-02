@@ -3,6 +3,17 @@
   
   
   <url>
+    <loc>https://testflows.com/contact.html</loc>
+    
+    <lastmod>2026-10-02</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  
+  
+  <url>
     <loc>https://testflows.com/docs/index.html</loc>
     
     <lastmod>2026-10-01</lastmod>
@@ -10,7 +21,6 @@
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  
   
   <url>
     <loc>https://testflows.com/index.html</loc>
@@ -181,16 +191,6 @@
   
   
   
-  
-  
-  <url>
-    <loc>https://testflows.com/contact.html</loc>
-    
-    <lastmod>2026-10-01</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
   
   <url>
     <loc>https://testflows.com/blog/working-with-requirements-just-like-with-code/</loc>

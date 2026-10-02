@@ -31,8 +31,9 @@ permalink: machine/portal/signup/index.html
                 </div>
             </div>
         </div>
-        <p class="portal-foot" id="portal-signup-foot">
-            Already have an account? <a id="portal-signup-login-link" href="/machine/portal/login/">Sign in</a>
+        <p class="portal-foot">
+            Next, <a href="/machine/download/">download the client</a>.
+            <span id="portal-signup-foot">Already have an account? <a id="portal-signup-login-link" href="/machine/portal/login/">Sign in</a></span>
         </p>
         <p class="portal-legal">
             By creating an account you agree to the
