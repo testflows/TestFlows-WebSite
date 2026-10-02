@@ -52,6 +52,8 @@ skip_render:
   - 'docs/framework/!(index).md'
   # Instructions for AI agents, served as plain Markdown (see .claude/skills/docs-markdown)
   - 'agents.md'
+  # Install guide for AI agents, served as plain Markdown
+  - 'install.md'
 
 # Writing
 new_post_name: :title.md # File name of new posts

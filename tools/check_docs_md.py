@@ -285,6 +285,7 @@ def check_roots(root_llms, root_agents):
                 problems.append(f"{label}: the summary {HINT}")
                 break
         wanted = [u for p in PRODUCTS.values() for u in (p["page_url"], p["hub_url"])]
+        wanted += [SITE + "/install.md"]
         wanted += [SITE + "/llms.txt"] if label == "source/agents.md" else [SITE + "/agents.md"]
         for url in wanted:
             if url not in text:
@@ -336,13 +337,13 @@ def check_private_beta():
     return [f"{f} says 'private beta'; only source/machine/portal/signup.md should" for f in sorted(set(found))]
 
 
-# Pages for people, to act on: the sign-up and the contact form. They have no Markdown version.
+# Pages for people, to act on: the sign-up and account pages and the contact form. They have no Markdown version.
 PEOPLE_ONLY = ("/machine/portal/", "/contact.html")
 
 
 def check_markdown_links():
     """Every link to a page of this site, in the files agents read, is a link to its Markdown version."""
-    files = ["source/agents.md", "source/llms.txt"] + sorted(str(f) for f in Path("source/_md").rglob("*.md"))
+    files = ["source/agents.md", "source/llms.txt", "source/install.md"] + sorted(str(f) for f in Path("source/_md").rglob("*.md"))
     problems = []
     for f in files:
         for n, line in enumerate(Path(f).read_text().split("\n"), 1):
@@ -350,6 +351,56 @@ def check_markdown_links():
                 path = m.group(1).rstrip(".,;").split("#")[0].split("?")[0]
                 if (path.endswith("/") or path.endswith(".html")) and not path.startswith(PEOPLE_ONLY):
                     problems.append(f"{f}:{n}: links the page {m.group(1).rstrip('.,;')}; link its Markdown version instead")
+    return problems
+
+
+def check_install(doc_texts):
+    """install.md is a guide an agent can follow: its parts are there, and what it runs exists in the docs."""
+    path = Path("source/install.md")
+    if not path.exists():
+        return ["source/install.md is missing"]
+    text = path.read_text()
+    problems = []
+    if not text.startswith("# testflows\n"):
+        problems.append("source/install.md: the first line must be '# testflows'")
+    intro = text.split("\n## ")[0]
+    if not re.search(r"^> ", intro, re.M) or MACHINE not in intro or FRAMEWORK not in intro:
+        problems.append(f"source/install.md: the summary {HINT}")
+    for heading in ("OBJECTIVE", "DONE WHEN", "TODO", "EXECUTE NOW"):
+        if f"\n## {heading}\n" not in text:
+            problems.append(f"source/install.md: it needs a '## {heading}' section")
+    steps = re.findall(r"^## Step (\d+)", text, re.M)
+    todo = re.findall(r"^- \[ \] Step (\d+)", text, re.M)
+    if steps != todo:
+        problems.append(f"source/install.md: the TODO list has steps {todo}, the sections are {steps}")
+    framework, machine = doc_texts.get("framework", ""), doc_texts.get("machine", "")
+    lines = [ln for code, c in split_fences(text) if code for ln in c.split("\n")]
+    for ln in lines:
+        ln = ln.strip()
+        m = re.match(r"machine((?:\s+\S+)+)", ln)
+        if m:
+            toks, i, cmd = m.group(1).split(), 0, None
+            while i < len(toks):
+                if toks[i] in VALUE_FLAGS:
+                    i += 2
+                elif toks[i].startswith("-"):
+                    i += 1
+                else:
+                    cmd = toks[i]
+                    break
+            if cmd and re.fullmatch(r"[a-z][a-z-]*", cmd) and f"machine {cmd}" not in machine:
+                problems.append(f"source/install.md: 'machine {cmd}' is not a command the docs use")
+            if cmd in GROUPS and i + 1 < len(toks) and re.fullmatch(r"[a-z][a-z-]*", toks[i + 1]) \
+                    and f"machine {cmd} {toks[i + 1]}" not in machine:
+                problems.append(f"source/install.md: 'machine {cmd} {toks[i + 1]}' is not a command the docs use")
+        for pkg in re.findall(r"pip3 install (\S+)", ln):
+            if f"pip3 install {pkg}" not in framework:
+                problems.append(f"source/install.md: 'pip3 install {pkg}' does not appear in the Framework docs")
+        if "testflows.com/machine/install" in ln and "testflows.com/machine/install" not in machine:
+            problems.append("source/install.md: the Machine installer command does not appear in the Machine docs")
+    for var in sorted(set(re.findall(r"\bTESTFLOWS_MACHINE_[A-Z_]+\b", text))):
+        if var not in machine:
+            problems.append(f"source/install.md: {var} does not appear in the Machine docs")
     return problems
 
 
@@ -449,11 +500,12 @@ def main():
     args = parser.parse_args()
     PRODUCTS["machine"]["dir"], PRODUCTS["framework"]["dir"] = args.machine_dir, args.framework_dir
 
-    problems, notes, summary = [], [], []
+    problems, notes, summary, doc_texts = [], [], [], {}
     for key, p in PRODUCTS.items():
         if args.only and args.only != key:
             continue
         pr, nt, order, texts, titles = check_sections(p)
+        doc_texts[key] = "\n".join(texts.values())
         problems += pr + check_hub(p, order, titles)
         notes += nt
         summary.append(f"{len(order)} {p['name']} files")
@@ -463,9 +515,12 @@ def main():
             problems += check_built(p, order, extra)
     problems += check_roots(Path(args.root_llms), Path(args.root_agents))
     if not args.only:
+        problems += check_install(doc_texts)
+    if not args.only:
         problems += check_twins(Path(args.root_llms), "source/blog") + check_top_level_only() + check_private_beta() + check_markdown_links()
     if args.built:
-        for src, dst in ((Path(args.root_llms), Path("docs/llms.txt")), (Path(args.root_agents), Path("docs/agents.md"))):
+        for src, dst in ((Path(args.root_llms), Path("docs/llms.txt")), (Path(args.root_agents), Path("docs/agents.md")),
+                         (Path("source/install.md"), Path("docs/install.md"))):
             if not dst.exists() or src.read_text() != dst.read_text():
                 problems.append(f"{dst} is missing or differs from {src}; run npx hexo generate")
 

@@ -6,6 +6,7 @@ Every page has a Markdown version at the same address with `.md` in place of the
 
 ## Start here
 
+- To install Framework, the Machine client or both, follow this guide: https://testflows.com/install.md
 - Framework, how to install it, write and run tests, and avoid the common mistakes: https://testflows.com/framework.md
 - Machine, how to install the client, sign in, run a machine, and control cost: https://testflows.com/machine.md
 - All the pages, listed: https://testflows.com/llms.txt
@@ -23,4 +24,4 @@ Every page has a Markdown version at the same address with `.md` in place of the
 
 ## For people only
 
-The sign-up, sign-in and account pages, under `/machine/portal/`, are for people and have no Markdown version. Give your person the link instead of filling them in.
+The sign-up, sign-in and account pages, under `/machine/portal/`, are for people and have no Markdown version. Give your person the link instead of filling them in. `machine login` must be run by your person, locally.
