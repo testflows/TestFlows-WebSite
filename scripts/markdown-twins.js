@@ -1,15 +1,4 @@
 /*
- * Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL. This file contains trade secrets and
- * confidential information of Katteli Inc. Unauthorized copying, disclosure,
- * distribution, or use of this file, via any medium, is strictly prohibited
- * without express written authorization from Katteli Inc.
- *
- * Authors:
- * Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- *
  * Every content page has a Markdown version at a path that follows from the page's own, with the
  * trailing slash dropped and .md added:
  *
