@@ -9,7 +9,7 @@
 # itself is protected by HTTPS, which is the only protocol it will use unless
 # MACHINE_BASE_URL is set to an http:// address, as a local mirror for testing.
 #
-# On first run the client unpacks itself into ~/.cache/machine/, about 80 MB.
+# On first run the client unpacks itself into ~/.cache/machine/.
 # After an update this script removes the folders older versions unpacked.
 #
 # To check a download yourself, print the checksum published for a version and
@@ -285,7 +285,7 @@ unpack_dir_of() {
 }
 
 # Remove the folders older versions unpacked into, keeping the current one and any
-# a running machine still uses: each is about 80 MB and nothing else removes them.
+# a running machine still uses: nothing else removes them.
 remove_old_unpacks() {
     local keep="$1" parent dir exe in_use freed=0
     [ -n "$keep" ] || return 0
