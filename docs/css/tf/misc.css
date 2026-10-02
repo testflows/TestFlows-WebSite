@@ -171,6 +171,9 @@ hr {
 
 .platform-content + .download-section { margin-top: 1rem; }
 
+/* The system tabs sit close to the section that leads into them. */
+.download-section + .platform-tabs { margin-top: -0.9rem; }
+
 /* The x86_64-disks note on the ARM tabs: set apart from the steps around it. */
 .download-section.download-note {
     border-top: 0;
