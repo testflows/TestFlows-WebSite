@@ -21,6 +21,11 @@
   <meta name="description" content="An article about testing Super Mario game using a behavior model (Part 2).">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Vitaliy Zakaznikov">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2.md">
+
+
   <meta name="og:site_name" content="TestFlows">
   <meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-part2.png">
   
@@ -41,40 +46,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790914170041" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790958789943" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790958789943" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790914170042" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790958789943" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -194,6 +199,10 @@
 </nav>
 
   
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part2.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
   <div class="container-fluid p-0">
     <div class="content">
       <div class="container" style="padding-bottom: 2em !important">
@@ -954,14 +963,14 @@ In many cases, writing a good test...
   <div class="container-footer" id="container-footer">
     <footer> <div class="container">
     <div class="site-footer-grid row">
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Products</h3>
             <ul>
                 <li><a href="/framework/">Framework</a></li>
                 <li><a href="/machine/">Machine</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Developers</h3>
             <ul>
                 <li><a href="/docs/">Docs</a></li>
@@ -969,19 +978,29 @@ In many cases, writing a good test...
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Company</h3>
             <ul>
                 <li><a href="/contact.html">Contact</a></li>
                 <li><a href="/legal/">Legal</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Community</h3>
             <ul>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
                 <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/blog/testing-super-mario-using-a-behavior-model-part2.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
             </ul>
         </div>
     </div>
@@ -1003,9 +1022,9 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790914170042"></script>
-<script src="/js/machine-hero-type.js?v=1790914170042"></script>
-<script src="/js/download-platforms.js?v=1790914170042"></script>
+<script src="/js/index-code-type.js?v=1790958789944"></script>
+<script src="/js/machine-hero-type.js?v=1790958789944"></script>
+<script src="/js/download-platforms.js?v=1790958789944"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
