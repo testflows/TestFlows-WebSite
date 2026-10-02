@@ -2,19 +2,11 @@
 
 # Download client
 
-> The Machine client is one small program called `machine`.
+> The Machine client is one small program called `machine`. Pick your system.
 
 TestFlows Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
-## Install with an AI agent
-
-A person can hand an AI agent the install guide, https://testflows.com/install.md. It installs the Machine client and, if wanted, the Framework. The command for Claude Code:
-
-```bash
-curl -fsSL https://testflows.com/install.md | claude
-```
-
-## Install it yourself
+## Install
 
 Run this in a terminal.
 
