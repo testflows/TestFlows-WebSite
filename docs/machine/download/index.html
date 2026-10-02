@@ -29,40 +29,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790907734824" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790907734824" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790905660312" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790907734824" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -191,7 +191,7 @@
 
 <header class="download-header">
 <h1>Download client</h1>
-<p>The Machine client is one small program called <code>machine</code>. It runs on Linux (x86_64).</p>
+<p>The Machine client is one small program called <code>machine</code>. It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon.</p>
 </header>
 
 <div class="download-section">
@@ -201,7 +201,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash</span><br></pre></td></tr></table></figure>
 
 <p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root, and needs <code>curl</code> or <code>wget</code>. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
-<p>On its first run the client unpacks itself into <code>~/.cache/machine/</code>, about 80 MB. An update removes what older versions unpacked there.</p>
+<p>On Linux the client unpacks itself into <code>~/.cache/machine/</code> on its first run, about 80 MB. On a Mac the installer unpacks it into <code>~/.local/share/machine/</code> and links <code>~/.local/bin/machine</code> to it. An update removes what older versions left there.</p>
 </div>
 
 <div class="download-section">
@@ -210,9 +210,10 @@
 <thead><tr><th>System</th><th>Status</th></tr></thead>
 <tbody>
 <tr><td>Linux, x86_64</td><td class="is-yes">Supported</td></tr>
+<tr><td>Linux, arm64</td><td class="is-yes">Supported</td></tr>
+<tr><td>macOS, Apple Silicon</td><td class="is-yes">Supported, with cloud sessions; a local session needs Linux with KVM</td></tr>
+<tr><td>macOS, Intel</td><td>Not available</td></tr>
 <tr><td>Windows</td><td>Use it inside WSL, which is Linux. No native build yet.</td></tr>
-<tr><td>macOS</td><td>Not available yet</td></tr>
-<tr><td>Linux, ARM64</td><td>Not available yet</td></tr>
 </tbody>
 </table>
 <p>Need another platform? <a href="/contact.html?topic=machine">Tell us which one</a>.</p>
@@ -245,7 +246,7 @@
 <h2 id="Uninstall">Uninstall</h2>
 <p>Sign out, so the session ends on the server too, then delete the client, what it unpacked, and its sign-in and keys:</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/machine ~/.local/share/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
 
 <p>Nothing else on your system is changed.</p>
 </div>
@@ -319,8 +320,8 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790905660313"></script>
-<script src="/js/machine-hero-type.js?v=1790905660313"></script>
+<script src="/js/index-code-type.js?v=1790907734824"></script>
+<script src="/js/machine-hero-type.js?v=1790907734824"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
