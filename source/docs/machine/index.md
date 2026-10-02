@@ -119,7 +119,7 @@ curl https://testflows.com/machine/install -fsS | less
 Two environment variables change what the installer does. `MACHINE_INSTALL_DIR`
 picks a different folder, and `MACHINE_VERSION` installs a specific version
 instead of the latest; a version is a date and time, `YYYYMMDD-HHMM`. The
-[download page](/machine/download/#Uninstall) says how to uninstall.
+[download page](/machine/download/) says how to uninstall.
 
 Run `machine` with no arguments, or with `--help`, to see every command. Each
 command has its own `--help` too, and that is the place to look when a flag here
