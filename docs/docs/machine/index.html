@@ -29,40 +29,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790905084758" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790905084758" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790904797131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790905084758" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -411,11 +411,12 @@ nearest checkpoint before it and replays the rest of the way for you.</p>
 command:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash</span><br></pre></td></tr></table></figure>
 
-<p>That downloads a single binary named <code>machine</code>, checks it against the SHA-256
-checksum published next to it, and puts it in <code>~/.local/bin</code>. If the checksum
-doesn’t match, nothing is installed. If that folder isn’t on your <code>PATH</code> yet, the
-installer says so and shows the line to add. Run the same command again whenever
-you want to update.</p>
+<p>That downloads a single binary named <code>machine</code> over HTTPS, checks it against the
+SHA-256 checksum published next to it, and puts it in <code>~/.local/bin</code>. If the
+checksum doesn’t match, nothing is installed. If that folder isn’t on your <code>PATH</code>
+yet, the installer says so and shows the line to add for your shell. Run the same
+command again whenever you want to update. On its first run the client unpacks
+itself into <code>~/.cache/machine/</code>, about 80 MB.</p>
 <p><strong>Supported systems.</strong> The client runs on Linux with an x86_64 processor. It is
 one static program, so it needs nothing else installed, and the installer never
 asks for root. It doesn’t run on macOS, Windows or ARM yet. On Windows you can
@@ -429,7 +430,8 @@ instead of <code>bash</code>.</p>
 
 <p>Two environment variables change what the installer does. <code>MACHINE_INSTALL_DIR</code>
 picks a different folder, and <code>MACHINE_VERSION</code> installs a specific version
-instead of the latest, like <code>20261002-0022</code>. To uninstall, delete the file.</p>
+instead of the latest; a version is a date and time, <code>YYYYMMDD-HHMM</code>. The
+<a href="/machine/download/#Uninstall">download page</a> says how to uninstall.</p>
 <p>Run <code>machine</code> with no arguments, or with <code>--help</code>, to see every command. Each
 command has its own <code>--help</code> too, and that is the place to look when a flag here
 is not enough.</p>
@@ -438,7 +440,7 @@ is not enough.</p>
 <p><code>machine --version</code> prints the client’s version and its license. Include the
 version when you report a problem.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine --version</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">  ---- o o o ----</span><br><span class="line"> |   o       o   |</span><br><span class="line"> | 1 o 10010 o 0 |</span><br><span class="line"> |   o       o   |  TestFlows Machine Client 20261002-0022</span><br><span class="line">  ---  o o oxx --</span><br><span class="line"> /           xx   \</span><br><span class="line">/  ^^^        xx   \</span><br><span class="line"> ------------------</span><br><span class="line"></span><br><span class="line">Copyright (C) 2026 Katteli Inc. All rights reserved.</span><br><span class="line">TestFlows.com Open-Source Software Testing Framework (https://testflows.com)</span><br><span class="line"></span><br><span class="line">THE SOFTWARE IS PROVIDED <span class="string">&quot;AS IS&quot;</span>, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span><br><span class="line">IMPLIED, ...</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">  ---- o o o ----</span><br><span class="line"> |   o       o   |</span><br><span class="line"> | 1 o 10010 o 0 |</span><br><span class="line"> |   o       o   |  TestFlows Machine Client 20261002-0104</span><br><span class="line">  ---  o o oxx --</span><br><span class="line"> /           xx   \</span><br><span class="line">/  ^^^        xx   \</span><br><span class="line"> ------------------</span><br><span class="line"></span><br><span class="line">Copyright (C) 2026 Katteli Inc. All rights reserved.</span><br><span class="line">TestFlows.com Open-Source Software Testing Framework (https://testflows.com)</span><br><span class="line"></span><br><span class="line">THE SOFTWARE IS PROVIDED <span class="string">&quot;AS IS&quot;</span>, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span><br><span class="line">IMPLIED, ...</span><br></pre></td></tr></table></figure>
 
 <p>If something does not work, <code>machine ping</code> checks that you can reach the
 service and your sessions, and how long the round trip takes.</p>
@@ -1451,8 +1453,8 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790904797132"></script>
-<script src="/js/machine-hero-type.js?v=1790904797132"></script>
+<script src="/js/index-code-type.js?v=1790905084758"></script>
+<script src="/js/machine-hero-type.js?v=1790905084758"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
