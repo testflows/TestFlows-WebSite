@@ -1,0 +1,772 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  <title>TestFlows | Docs</title>
+  <meta name="description" content="Python library for writing test programs">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+
+
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/img/social-share.png">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790967011393" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790967011393" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790967011393" media="screen" type="text/css">
+  
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-current="page">Docs</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog">Blog</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
+            
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      
+
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="row">
+        <div class="col">
+            <!-- agents: TestFlows Framework docs, one part. Index: https://testflows.com/docs/framework.md . Names in [brackets] are links, defined in https://testflows.com/docs/framework/references.md -->
+
+<h1 id="Command-Line-Arguments"><a href="#Command-Line-Arguments" class="headerlink" title="Command Line Arguments"></a>Command Line Arguments</h1><p>You can add command line arguments to the top level test either by setting [argparser] parameter of the inline test
+or using [ArgumentParser] decorator if top test is defined as a decorated function.</p>
+<h2 id="argparser"><a href="#argparser" class="headerlink" title="argparser"></a>argparser</h2><p>The [argparser] parameter can be used to set a custom command line argument parser by passing it a function that takes <code>parser</code> as the first
+parameter. This function will be called with an instance of [argparse] parser instance as the argument for the <code>parser</code> parameter.
+The values of the command line arguments can be accessed using the <code>attributes</code> attribute of the test.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that all arguments of the top level test become its <code>attributes</code>.</p>
+</blockquote>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">argparser</span>(<span class="params">parser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Custom command line arguments.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param parser: an instance of argparse parser.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg0&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 0&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg1&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 1&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>, argparser=argparser) <span class="keyword">as</span> module:</span><br><span class="line">    note(module.attributes[<span class="string">&quot;arg0&quot;</span>].value)</span><br><span class="line">    note(module.attributes[<span class="string">&quot;arg1&quot;</span>].value)</span><br></pre></td></tr></table></figure>
+
+<h2 id="ArgumentParser"><a href="#ArgumentParser" class="headerlink" title="ArgumentParser"></a>ArgumentParser</h2><p>If [Module] is defined using a decorated function then [ArgumentParser] decorator can be used to set custom command line argument parser.
+The values of the custom command line arguments will be passed to the decorated function as test arguments and therefore
+the decorated function must take the first parameters with the same name as command line arguments.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">argparser</span>(<span class="params">parser</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Custom command line arguments.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    :param parser: an instance of argparse parser.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg0&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 0&quot;</span>)</span><br><span class="line">    parser.add_argument(<span class="string">&quot;--arg1&quot;</span>, action=<span class="string">&quot;store_true&quot;</span>,</span><br><span class="line">        <span class="built_in">help</span>=<span class="string">&quot;argument 1&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@ArgumentParser(<span class="params">argparser</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">regression</span>(<span class="params">self, arg0, arg1</span>):</span><br><span class="line">    note(arg0)</span><br><span class="line">    note(arg1)</span><br></pre></td></tr></table></figure>
+
+<p>When custom command line argument parser is defined then the help messages obtained using <code>-h</code> or <code>--help</code> option will include
+the description of the custom arguments. For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./test.py --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="built_in">test</span> arguments:</span><br><span class="line">  --arg0                                          argument 0</span><br><span class="line">  --arg1                                          argument 1</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="Filtering-Tests-By-Name"><a href="#Filtering-Tests-By-Name" class="headerlink" title="Filtering Tests By Name"></a>Filtering Tests By Name</h1><p><strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> allows you to control which tests to run during any
+specific test program run using advanced test filtering [pattern]s.
+Test filters can be either specified in the code or controlled using command line
+options.</p>
+<p>In both cases test filtering is performed by setting <code>skips</code>, <code>onlys</code>, <code>skip_tags</code>
+and <code>only_tags</code> attributes of a test. These attributes are propagated down
+to sub-tests as long as filtering [pattern] has a chance of matching
+test name. Therefore, parent test filtering attributes, if specified,
+always override the same attributes of any of its sub-tests if the parent test
+filter is applicable to the sub-test and could match either the sub-test name
+or any of the sub-test children names.</p>
+<p>Test are filtered using a [pattern].
+The [pattern] is used to match test names and <strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> uses
+[unix-like file path pattern]s that support wildcards where</p>
+<ul>
+<li><code>/</code> is path level separator</li>
+<li><code>*</code> matches anything (zero or more characters)</li>
+<li><code>?</code> matches any single character</li>
+<li><code>[seq]</code> matches any character in seq</li>
+<li><code>[!seq]</code> matches any character not in seq</li>
+<li><code>:</code> matches one or more characters only at the current path level</li>
+</ul>
+<blockquote>
+<p><strong>&#9995;</strong> Note that for a literal match, you must wrap the meta-characters in brackets
+where <code>[?]</code> matches the character <code>?</code>.</p>
+</blockquote>
+<p>It is important to remember that execution of test program results in a [Tree] where
+each test is node and test name being a unique path to this node in the [Tree].
+The [unix-like file path pattern]s work well because test program
+execution [Tree] is similar to the structure of a file system.</p>
+<p>Filtering tests is then nothing but selecting which nodes in the tree should be
+selected and which shall be skipped. Filtering is performed by matching the [pattern]
+to the test name. See [Test Program Tree].</p>
+<p>Skipping a test then means that the body of the test is skipped along with the sub-tree
+that is below the corresponding test node.</p>
+<p>When we want to include a test
+it usually means that we also want to execute the test along with all the tests
+that form the sub-tree below the coresponding test node and therefore
+the [pattern] that indicates which tests should be included most of the time ends with <code>/*</code>.</p>
+<p>For example,</p>
+<blockquote>
+<p><code>/Top Test/Suite A/Test A/*</code> [pattern] will match <code>/Top Test/Suite A/Test A</code>
+and all its sub-tests which are <code>/Top Test/Suite A/Test A/Step A</code> and
+<code>/Top Test/Suite A/Test A/Step B</code> because they also match the specified [pattern] as
+it ends with <code>/*</code> where <code>*</code> matches any zero or more characters.</p>
+</blockquote>
+<p>Internally <strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> converts all [pattern]s into
+regular expressions but these expressions become very complex and therefore
+not practical to be specified explicitly.</p>
+<p>Let’s see how test filtering can be specified either using command line or inside the
+test program code.</p>
+<h2 id="–only-option"><a href="#–only-option" class="headerlink" title="[–only] option"></a>[–only] option</h2><p>You can specify which tests you want to include in your test run using [–only]
+option. This option takes one or more test name [pattern]s that if not matched
+will cause the test to be skipped.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--only pattern [pattern ...]                    run only selected tests</span><br></pre></td></tr></table></figure>
+
+<p>If you pass a relative pattern, any pattern that does not start with <code>/</code>,
+then the pattern will be anchored to the top level test.
+For example, [pattern] <code>Suite A/*</code> for the example below will become
+<code>/Top Test/Suite A/*</code>.</p>
+<p>Let’s practice. Given this example test program,</p>
+<blockquote>
+<p><code>test.py</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">   <span class="keyword">with</span> Step(<span class="string">&quot;Step A&quot;</span>):</span><br><span class="line">       <span class="keyword">pass</span></span><br><span class="line">   <span class="keyword">with</span> Step(<span class="string">&quot;Step B&quot;</span>):</span><br><span class="line">       <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_suite</span>(<span class="params">self</span>):</span><br><span class="line">   Scenario(<span class="string">&quot;Test A&quot;</span>, run=my_scenario)</span><br><span class="line">   Scenario(<span class="string">&quot;Test B&quot;</span>, run=my_scenario)</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Top Test&quot;</span>):</span><br><span class="line">   Suite(<span class="string">&quot;Suite A&quot;</span>, run=my_suite)</span><br><span class="line">   Suite(<span class="string">&quot;Suite B&quot;</span>, run=my_suite)</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>the following command will run only <code>Suite A</code> and its sub-tests.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;Suite A/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>To select only running <code>Test A</code> in <code>Suite A</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;/Top Test/Suite A/Test A/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>To select running any test at second level that ends with letter <code>B</code>.
+This will select every test in <code>Suite B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 filtering.py --only <span class="string">&quot;/Top Test/:B/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>To run only <code>Test A</code> in <code>Suite A</code> and <code>Test B</code> in <code>Suite B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;/Top Test/Suite A/Test A/*&quot;</span> <span class="string">&quot;/Top Test/Suite B/Test B/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>If you forget to specify <code>/*</code> at the end your test [pattern] then
+tests that are not mandatory will be skipped.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>From the output below you can see that steps inside <code>Test A</code> which
+are <code>Step A</code> and <code>Step B</code> are skipped as these tests don’t have
+[MANDATORY] flag set.</p>
+<blockquote>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Sep 27,2021 14:19:46   ⟥  Module Top Test</span><br><span class="line">Sep 27,2021 14:19:46     ⟥  Suite Suite A</span><br><span class="line">Sep 27,2021 14:19:46       ⟥  Scenario Test A</span><br><span class="line">                3ms       ⟥⟤ OK Test A, /Top Test/Suite A/Test A</span><br><span class="line">                6ms     ⟥⟤ OK Suite A, /Top Test/Suite A</span><br><span class="line">               18ms   ⟥⟤ OK Top Test, /Top Test</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p><strong>&#9995;</strong> Remember that tests with [MANDATORY] flag cannot be skipped and
+[Given] and [Finally] steps always have [MANDATORY] flag set.</p>
+</blockquote>
+<p>If you want to see which tests where skipped you can specify [–show-skipped] option.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span> --show-skipped</span><br></pre></td></tr></table></figure>
+
+<h2 id="–skip-option"><a href="#–skip-option" class="headerlink" title="[–skip] option"></a>[–skip] option</h2><p>You can specify which tests you want to skip in your test run using [–skip]
+option. This option takes one of more test name [pattern]s that
+if match will cause the test be skipped.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--skip pattern [pattern ...]                    skip selected tests</span><br></pre></td></tr></table></figure>
+
+<p>Skipping test means that a [SKIP] flag will be added to the test, the body
+of the test will not be executed and the result of the test will be set to [Skip].
+By default, most output formats do not show [Skip]ped tests and thus you must
+use [–show-skipped] option to see them.</p>
+<p>Just like for [–only option], if you pass a relative pattern, any pattern that does not start with <code>/</code>,
+then the [pattern] will be anchored to the top level test.
+For example, the [pattern] <code>Suite A/*</code> for the example below will become
+<code>/Top Test/Suite A/*</code>.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Remember that tests with [MANDATORY] flag cannot be skipped and
+[Given] and [Finally] steps always have [MANDATORY] flag set.</p>
+</blockquote>
+<p>Here are a couple of examples that are based on the same example test program
+that is used in the [–only option] section above.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Unlike for the [–only option] the [pattern]s for [–skip]
+do not have to end with <code>/*</code> as skipping a test automatically
+skips any sub-tests of the test being skipped.</p>
+</blockquote>
+<p>To skip running <code>Test A</code> in <code>Suite A</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>To skip running any test at second level that ends with letter <code>B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 filtering.py --skip <span class="string">&quot;/Top Test/:B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>Here is an example of combining [–only] option with [–show-skipped] option
+to show [Skip]ped tests.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip <span class="string">&quot;/Top Test/Suite A/Test A&quot;</span> --show-skipped</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ [ Skip ] /Top Test/Suite A/Test A</span><br></pre></td></tr></table></figure>
+
+<p>Now let’s skip <code>Test A</code> in either <code>Suite A</code> or <code>Suite B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip <span class="string">&quot;/Top Test/:/Test A&quot;</span> --show-skipped</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ [ Skip ] /Top Test/Suite A/Test A</span><br><span class="line">✔ [ Skip ] /Top Test/Suite B/Test A</span><br></pre></td></tr></table></figure>
+
+<h2 id="–only-and-–skip"><a href="#–only-and-–skip" class="headerlink" title="[–only] and [–skip]"></a>[–only] and [–skip]</h2><p>You can combine selecting and skipping tests by specifying both [–only] and
+[–skip] options. See [–only option] and [–skip option] sections above.</p>
+<p>When [–only] and [–skip] are specified at the same time the [–only] option
+is applied first and selects a list of tests that will be run. If [–skip] option
+is present then it can only filter down the selected tests.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Remember that tests with [MANDATORY] flag cannot be skipped and
+[Given] and [Finally] steps always have [MANDATORY] flag set.</p>
+</blockquote>
+<p>For example, using example test program found in [–only option] section
+we can select to run <code>Test A</code> in either <code>Suite A</code> or <code>Suite B</code> but then
+skip <code>Test A</code> in <code>Suite B</code> using [–skip option] as follows.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;/Top Test/:/Test A&quot;</span> --skip <span class="string">&quot;Suite B/Test A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Top Test/Suite A/Test A</span><br><span class="line">✔ [ OK ] /Top Test/Suite A</span><br><span class="line">✔ [ OK ] /Top Test/Suite B</span><br><span class="line">✔ [ OK ] /Top Test</span><br></pre></td></tr></table></figure>
+
+<p>As you can see from the output above the <code>Suite B</code> gets started but all its tests are skipped
+as <code>Test B</code> did not match the [pattern] specified to the [–only]
+and <code>Test A</code> was skipped by the [–skip].</p>
+<h2 id="Filtering-Tests-in-Code"><a href="#Filtering-Tests-in-Code" class="headerlink" title="Filtering Tests in Code"></a>Filtering Tests in Code</h2><p>In your test program you can filter child tests to control what tests are included or skipped
+by setting <code>only</code> and <code>skip</code> test attributes.</p>
+<h3 id="only-and-skip-Arguments"><a href="#only-and-skip-Arguments" class="headerlink" title="only and skip Arguments"></a><code>only</code> and <code>skip</code> Arguments</h3><p>When test is defined inline you can explicitly set filtering using <code>only</code> and <code>skip</code>
+arguments. These arguments either take a list of [pattern]s or you can use
+[Onlys class] or [Skips class] respectively.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Onlys(pattern, ...)</span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Skips(pattern,...)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>&#9995;</strong> [Onlys class] or [Skips class] can also act as decorators
+to set <code>only</code> and <code>skip</code> attributes of decorated tests.
+See <a href="#Onlys-and-Skips-Decorators"><code>Onlys</code> and <code>Skips</code> Decorators</a>.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my tests&quot;</span>, only=[pattern,...], skip=[pattern,...])</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my tests&quot;</span>, only=Onlys(pattern,...), skip=Skips(pattern,...))</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step A&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step B&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Scenario(<span class="string">&quot;Test A&quot;</span>, only=[<span class="string">&quot;Step B&quot;</span>]): <span class="comment"># run only &quot;Step B&quot;</span></span><br><span class="line">        my_scenario()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Scenario(<span class="string">&quot;Test B&quot;</span>, skip=Skips(<span class="string">&quot;Step B&quot;</span>)): <span class="comment"># run only &quot;Step A&quot;</span></span><br><span class="line">        my_scenario()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> main():</span><br><span class="line">    my_suite()</span><br></pre></td></tr></table></figure>
+
+<h3 id="Onlys-and-Skips-Decorators"><a href="#Onlys-and-Skips-Decorators" class="headerlink" title="Onlys and Skips Decorators"></a><code>Onlys</code> and <code>Skips</code> Decorators</h3><p>You can also specify <code>only</code> and <code>skip</code> attributes of decorated tests
+using [Onlys class] and [Skips class] that can act as decorators to
+set <code>only</code> and <code>skip</code> attributes of a decorated test respectively.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Onlys(<span class="params">pattern, ...</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Skips(<span class="params">pattern,...</span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step A&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;Step B&quot;</span>):</span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Onlys(<span class="params"><span class="string">&quot;Step B&quot;</span></span>) </span><span class="comment"># run only &quot;Step B&quot;</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_A</span>(<span class="params">self</span>):</span><br><span class="line">    my_scenario()</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Skips(<span class="params"><span class="string">&quot;Step B&quot;</span></span>) </span><span class="comment"># run only &quot;Step A</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_B</span>(<span class="params">self</span>):</span><br><span class="line">    my_scenario()</span><br></pre></td></tr></table></figure>
+
+<h1 id="Filtering-Tests-By-Tags"><a href="#Filtering-Tests-By-Tags" class="headerlink" title="Filtering Tests By Tags"></a>Filtering Tests By Tags</h1><p>In addition to filtering test by name you can also filter them by tags.
+When you filter by tags, you must specify a <code>type</code> to indicate which test [Types]
+should have the tag.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Filtering test [Step]s by tags is not supported.</p>
+</blockquote>
+<h2 id="Tags-Filtering-type"><a href="#Tags-Filtering-type" class="headerlink" title="Tags Filtering type"></a>Tags Filtering <code>type</code></h2><p>The <code>type</code> can be one of the following:</p>
+<ul>
+<li><code>test</code> will require all tests with [Test Type] to have the tag<ul>
+<li><code>scenario</code> is just an alias for <code>test</code></li>
+</ul>
+</li>
+<li><code>suite</code> will require all tests with [Suite Type] to have the tag<ul>
+<li><code>feature</code> is just an alias for <code>suite</code></li>
+</ul>
+</li>
+<li><code>module</code> will require all tests with [Module Type] to have the tag</li>
+<li><code>any</code> will require all test with either [Test Type], [Suite Type] or [Module Type] to have the tag</li>
+</ul>
+<h2 id="only-tags-option"><a href="#only-tags-option" class="headerlink" title="--only-tags option"></a><code>--only-tags</code> option</h2><p>If you assign tags to your tests then [–only-tags] option can be used to select
+only the tests that match a particular tag. This option takes values
+of the form <code>type:tag1</code> where <a href="#Tags-Filtering-type">type</a> is used to specify a test type
+of the tests that must have the specified tag.</p>
+<p>If you want to select tests that must have more than one tag use <code>type:tag1,tag2,...</code> form.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--only-tags <span class="built_in">type</span>:tag,... [<span class="built_in">type</span>:tag,... ...]     run only tests with selected tags</span><br></pre></td></tr></table></figure>
+
+<p>For example, you can select all tests with [Suite Type] that have <code>tag A</code> tag
+as follows.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only-tags suite:<span class="string">&quot;tag A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>You can select all tests with [Test Type] that either have <code>tag A</code> <strong>OR</strong> <code>tag B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only-tags <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span> <span class="built_in">test</span>:<span class="string">&quot;tag B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>You can select all tests with [Test Type] that have both <code>tag A</code> <strong>AND</strong> <code>tag B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only-tags <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span>,<span class="string">&quot;tag B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>You can select all tests with [Test Type] that must have either <code>tag A</code> <strong>OR</strong> (<code>tag A</code> <strong>AND</strong> <code>tag B</code>).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only-tags <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span> <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span>,<span class="string">&quot;tag B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="skip-tags-option"><a href="#skip-tags-option" class="headerlink" title="--skip-tags option"></a><code>--skip-tags</code> option</h2><p>If you assign tags to your tests, then you can also use [–skip-tags] option to select
+which tests should be skipped based on tests matching a particular tag.
+Similar to [–only-tags] option, it also takes values
+of the form <code>type:tag</code> where <a href="#Tags-Filtering-type">type</a> is used to specify a test type
+of the tests that must have the specified tags.</p>
+<p>If you want to skip tests that must have more than one tag use <code>type:tag1,tag2,...</code> form.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">--skip-tags <span class="built_in">type</span>:tag,... [<span class="built_in">type</span>:tag,... ...]     skip tests with selected tags</span><br></pre></td></tr></table></figure>
+
+<p>For example, you can skip all tests with [Suite Type] that have <code>tag A</code> tag
+as follows.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip-tags suite:<span class="string">&quot;tag A&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>You can skip all tests with [Test Type] that either have <code>tag A</code> <strong>OR</strong> <code>tag B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip-tags <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span> <span class="built_in">test</span>:<span class="string">&quot;tag B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>You can skip all tests with [Test Type] that have both <code>tag A</code> <strong>AND</strong> <code>tag B</code>.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip-tags <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span>,<span class="string">&quot;tag B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>You can skip all tests with [Test Type] that must have either <code>tag A</code> <strong>OR</strong> (<code>tag A</code> <strong>AND</strong> <code>tag B</code>).</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --skip-tags <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span> <span class="built_in">test</span>:<span class="string">&quot;tag A&quot;</span>,<span class="string">&quot;tag B&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Filtering-by-Tags-in-Code"><a href="#Filtering-by-Tags-in-Code" class="headerlink" title="Filtering by Tags in Code"></a>Filtering by Tags in Code</h2><p>In your test program, you can filter child tests by tags to control which tests are included or skipped
+by setting <code>only_tags</code> and <code>skip_tags</code> test attributes.</p>
+<h3 id="only-tags-and-skip-tags-Arguments"><a href="#only-tags-and-skip-tags-Arguments" class="headerlink" title="only_tags and skip_tags Arguments"></a><code>only_tags</code> and <code>skip_tags</code> Arguments</h3><p>When test is defined inline you can explicitly set filtering by tags using <code>only_tags</code> and <code>skip_tags</code>
+arguments. These arguments take [OnlyTags class] or [SkipTags class] object instances, respectively,
+that provide a convenient way to set these filters.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">OnlyTags(</span><br><span class="line">   test=[tagA,(tagA,tagB),...],</span><br><span class="line">   suite=[...],</span><br><span class="line">   module=[...],</span><br><span class="line">   <span class="built_in">any</span>=[...]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>or similarly</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">SkipTags(</span><br><span class="line">   test=[tagA,(tagA,tagB),...],</span><br><span class="line">   suite=[...],</span><br><span class="line">   module=[...],</span><br><span class="line">   <span class="built_in">any</span>=[...]</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>&#9995;</strong> [OnlyTags class] or [SkipTags class] can also act as decorators
+to set <code>only_tags</code> and <code>skip_tags</code> attributes of decorated tests.
+See <a href="#OnlyTags-and-SkipTags-Decorators"><code>OnlyTags</code> and <code>SkipTags</code> Decorators</a>.</p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my tests&quot;</span>, only_tags=OnlyTags(test=[<span class="string">&quot;tag1&quot;</span>,(<span class="string">&quot;tag1&quot;</span>,<span class="string">&quot;tag2&quot;</span>),...]), skip_tags=SkipTags(suite=[<span class="string">&quot;tag2&quot;</span>,...])</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="OnlyTags-and-SkipTags-Decorators"><a href="#OnlyTags-and-SkipTags-Decorators" class="headerlink" title="OnlyTags and SkipTags Decorators"></a><code>OnlyTags</code> and <code>SkipTags</code> Decorators</h3><p>You can also specify <code>only_tags</code> and <code>skip_tags</code> attributes of the decorated tests
+using [OnlyTags class] and [SkipTags class] that can act as decorators to
+set <code>only_tags</code> and <code>skip_tags</code> attributes of a decorated test, respectively.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@OnlyTags(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="meta">   test=[tagA,(<span class="params">tagA,tagB</span>),...],</span></span></span><br><span class="line"><span class="params"><span class="meta">   suite=[...],</span></span></span><br><span class="line"><span class="params"><span class="meta">   module=[...],</span></span></span><br><span class="line"><span class="params"><span class="meta">   <span class="built_in">any</span>=[...]</span></span></span><br><span class="line"><span class="params"><span class="meta"></span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>or similarly</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SkipTags(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="meta">   test=[tagA,(<span class="params">tagA,tagB</span>),...],</span></span></span><br><span class="line"><span class="params"><span class="meta">   suite=[...],</span></span></span><br><span class="line"><span class="params"><span class="meta">   module=[...],</span></span></span><br><span class="line"><span class="params"><span class="meta">   <span class="built_in">any</span>=[...]</span></span></span><br><span class="line"><span class="params"><span class="meta"></span>)</span></span><br></pre></td></tr></table></figure>
+
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Tags(<span class="params"><span class="string">&quot;Tag A&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_A</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Tags(<span class="params"><span class="string">&quot;Tag B&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_B</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="meta">@OnlyTags(<span class="params">test=[<span class="string">&quot;tag A&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> scenario <span class="keyword">in</span> loads(current_module(), Scenario):</span><br><span class="line">        scenario()</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestSuite</span></span><br><span class="line"><span class="meta">@SkipTags(<span class="params">test=[<span class="string">&quot;tag A&quot;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_other_suite</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">for</span> scenario <span class="keyword">in</span> loads(current_module(), Scenario):</span><br><span class="line">        scenario()</span><br></pre></td></tr></table></figure>
+
+<h1 id="Pausing-Tests"><a href="#Pausing-Tests" class="headerlink" title="Pausing Tests"></a>Pausing Tests</h1><p>When tests perform complex automated actions, it is often useful to pause a test either
+right before it starts executing its body or right after its completion.
+Pausing a test means that the test execution will be halted and input in the form
+of pressing <code>Enter</code> will be requested from the user. This pause allows
+time to manually examine the system under test as well as the test environment.</p>
+<p>Pausing either before or after a test is controlled by setting either [PAUSE_BEFORE]
+or [PAUSE_AFTER] flags, respectively. You can also conditionally pause
+after test execution on passing or failing result using [PAUSE_ON_PASS] or [PAUSE_ON_FAIL].</p>
+<blockquote>
+<p><em>&#9995;</em> [PAUSE_BEFORE], [PAUSE_AFTER], [PAUSE_ON_PASS], and [PAUSE_ON_FAIL]
+flags can be applied to any test except the [Top Level Test] test.
+For [Top Level Test] test these flags are ignored.</p>
+</blockquote>
+<h2 id="Pausing-Using-Command-Line"><a href="#Pausing-Using-Command-Line" class="headerlink" title="Pausing Using Command Line"></a>Pausing Using Command Line</h2><p>Most of the time, the most convenient way to pause a test program is to specify at which
+test, the program should pause using [–pause-before], [–pause-after],
+[–pause-on-pass], and [–pause-on-fail] arguments.</p>
+<p>These arguments accept one or more test names [pattern]s. Any test name
+that matches the pattern except for the [Top Level Test] will be paused.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">--pause-before pattern [pattern ...]            pause before executing selected tests</span><br><span class="line">--pause-after pattern [pattern ...]             pause after executing selected tests</span><br><span class="line">--pause-on-fail pattern [pattern ...]           pause after selected tests on failing result</span><br><span class="line">--pause-on-pass pattern [pattern ...]           pause after selected tests on passing result</span><br></pre></td></tr></table></figure>
+
+
+<p>For example, if we have the following test program.</p>
+<blockquote>
+<p><code>pause.py</code></p>
+</blockquote>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 1&quot;</span>):</span><br><span class="line">        note(<span class="string">&quot;my step 1&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 2&quot;</span>):</span><br><span class="line">        note(<span class="string">&quot;my step 2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Then, if we want to pause before executing the body of <code>my step 1</code> and right after
+executing <code>my step 2</code> we can execute our test program as follows.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 pause.py --pause-before <span class="string">&quot;/my test/my step 1&quot;</span> --pause-after <span class="string">&quot;/my test/my step 2&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>This will cause the test program to be halted twice, requesting <code>Enter</code> input
+from the user to continue execution.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"> Sep 25,2021 8:34:45   ⟥  Test my <span class="built_in">test</span></span><br><span class="line"> Sep 25,2021 8:34:45     ⟥  Step my step 1, flags:PAUSE_BEFORE</span><br><span class="line">✋ Paused, enter any key to <span class="built_in">continue</span>...</span><br><span class="line">               830ms     ⟥    [note] my step 1</span><br><span class="line">               830ms     ⟥⟤ OK my step 1, /my <span class="built_in">test</span>/my step 1</span><br><span class="line"> Sep 25,2021 8:34:45     ⟥  Step my step 2, flags:PAUSE_AFTER</span><br><span class="line">               609us     ⟥    [note] my step 2</span><br><span class="line">               753us     ⟥⟤ OK my step 2, /my <span class="built_in">test</span>/my step 2</span><br><span class="line">✋ Paused, enter any key to <span class="built_in">continue</span>...</span><br><span class="line">            1s 490ms   ⟥⟤ OK my <span class="built_in">test</span>, /my <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Pausing-In-Code"><a href="#Pausing-In-Code" class="headerlink" title="Pausing In Code"></a>Pausing In Code</h2><p>You can explicitly specify [PAUSE_BEFORE], [PAUSE_AFTER], [PAUSE_ON_PASS] and
+[PAUSE_ON_FAIL] flags inside your test program.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;my test&quot;</span>):</span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 1&quot;</span>, flags=PAUSE_BEFORE):</span><br><span class="line">        note(<span class="string">&quot;my step 1&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 2&quot;</span>, flags=PAUSE_AFTER):</span><br><span class="line">        note(<span class="string">&quot;my step 2&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 2&quot;</span>, flags=PAUSE_ON_PASS):</span><br><span class="line">        note(<span class="string">&quot;my step 2&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> Step(<span class="string">&quot;my step 2&quot;</span>, flags=PAUSE_ON_FAIL):</span><br><span class="line">        note(<span class="string">&quot;my step 2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>For decorated tests [Flags] decorator can be used to set these flags.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">PAUSE_BEFORE|PAUSE_AFTER</span>) </span><span class="comment"># pause before and after this test</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_scenario</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Using-pause"><a href="#Using-pause" class="headerlink" title="Using pause()"></a>Using <code>pause()</code></h3><p>You can also use [pause() function] to explicitly pause the test during test program
+execution.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pause(test=<span class="literal">None</span>)</span><br></pre></td></tr></table></figure>
+
+<p>where</p>
+<ul>
+<li><code>test</code> the test instance in which the test program will be paused, default: current test</li>
+</ul>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;my scenario&quot;</span>):</span><br><span class="line">    pause()</span><br></pre></td></tr></table></figure>
+
+<p>when executed the test program is paused.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Nov 15,2021 17:31:58   ⟥  Scenario my scenario</span><br><span class="line">✋ Paused, enter any key to <span class="built_in">continue</span>...</span><br><span class="line">             1s 55ms   ⟥⟤ OK my scenario, /my scenario</span><br></pre></td></tr></table></figure>
+
+        </div>
+    </div>
+</div>
+
+
+    </div>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1790967011393"></script>
+<script src="/js/machine-hero-type.js?v=1790967011393"></script>
+<script src="/js/download-platforms.js?v=1790967011393"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

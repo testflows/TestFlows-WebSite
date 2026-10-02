@@ -1,11 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 import {
   eur,
   fillPct,
@@ -14,7 +6,7 @@ import {
   since,
   titleCase,
   until,
-} from "./format.js?v=9468f117fdf7";
+} from "./format.js?v=4c80ba13c4ed";
 
 /**
  * @param {HTMLElement} panel

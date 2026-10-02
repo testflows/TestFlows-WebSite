@@ -1,15 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL. This file contains trade secrets and
- * confidential information of Katteli Inc. Unauthorized copying, disclosure,
- * distribution, or use of this file, via any medium, is strictly prohibited
- * without express written authorization from Katteli Inc.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
-
 /* The Download page's platform tabs, Bootstrap tabs: this only picks which one opens first,
  * the visitor's own system, and keeps the address in step. A link to #linux-x86_64,
  * #linux-arm64, #macos, #windows or #others opens that tab, from another page or this one. The panes' ids carry a "platform-" prefix so the

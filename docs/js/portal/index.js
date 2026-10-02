@@ -1,12 +1,4 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
-import { isSignedIn } from "./session.js?v=9468f117fdf7";
+import { isSignedIn } from "./session.js?v=4c80ba13c4ed";
 
 window.location.replace(
   isSignedIn() ? "/machine/portal/account/" : "/machine/portal/login/"

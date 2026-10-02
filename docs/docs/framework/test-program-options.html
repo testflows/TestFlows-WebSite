@@ -1,0 +1,537 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  <title>TestFlows | Docs</title>
+  <meta name="description" content="Python library for writing test programs">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+
+
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/img/social-share.png">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790967011401" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790967011401" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790967011401" media="screen" type="text/css">
+  
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-current="page">Docs</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog">Blog</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
+            
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      
+
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="row">
+        <div class="col">
+            <!-- agents: TestFlows Framework docs, one part. Index: https://testflows.com/docs/framework.md . Names in [brackets] are links, defined in https://testflows.com/docs/framework/references.md -->
+
+<h1 id="Test-Program-Options"><a href="#Test-Program-Options" class="headerlink" title="Test Program Options"></a>Test Program Options</h1><h2 id="Options"><a href="#Options" class="headerlink" title="Options"></a>Options</h2><h3 id="h-–help"><a href="#h-–help" class="headerlink" title="-h, –help"></a>-h, –help</h3><p>The <code>-h</code>, <code>--help</code> option can be used to obtain a help message that describes all the command line
+options a test can accept. For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">help</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="l-–log"><a href="#l-–log" class="headerlink" title="-l, –log"></a>-l, –log</h3><p>The <code>-l</code>, <code>--log</code> option can be used to specify the path of the file where the test log will be saved.
+For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">log</span> ./test.log</span><br></pre></td></tr></table></figure>
+
+<h3 id="–name"><a href="#–name" class="headerlink" title="–name"></a>–name</h3><p>The <code>--name</code> option can be used to specify the name of the top level test.
+For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --name <span class="string">&quot;My custom top level test name&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="–tag"><a href="#–tag" class="headerlink" title="–tag"></a>–tag</h3><p>The <code>--tag</code> option can be used to specify one or more tags for the top level test.
+For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --tag <span class="string">&quot;tag0&quot;</span> <span class="string">&quot;tag1&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="–attr"><a href="#–attr" class="headerlink" title="–attr"></a>–attr</h3><p>The <code>--attr</code> option can be used to specify one or more attributes for the top level test.
+For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --attr attr0=value0 attr1=value1</span><br></pre></td></tr></table></figure>
+
+<h3 id="–debug"><a href="#–debug" class="headerlink" title="–debug"></a>–debug</h3><p>Enable debugging mode. Turned off by default.</p>
+<h3 id="–output"><a href="#–output" class="headerlink" title="–output"></a>–output</h3><p>The <code>--output</code> option can be used to control the output format of messages printed to <code>stdout</code>.</p>
+<h3 id="–no-colors"><a href="#–no-colors" class="headerlink" title="–no-colors"></a>–no-colors</h3><p>The <code>--no-colors</code> option can be used to turn off terminal color highlighting.</p>
+<h3 id="–id"><a href="#–id" class="headerlink" title="–id"></a>–id</h3><p>The <code>--id</code> option can be used to specify a custom [Top Level Test] id.</p>
+<h3 id="–show-skipped"><a href="#–show-skipped" class="headerlink" title="–show-skipped"></a>–show-skipped</h3><p>Show skipped tests.</p>
+<h3 id="–show-retries"><a href="#–show-retries" class="headerlink" title="–show-retries"></a>–show-retries</h3><p>Show retried tests.</p>
+<h3 id="–test-to-end"><a href="#–test-to-end" class="headerlink" title="–test-to-end"></a>–test-to-end</h3><p>Force all tests to be completed and continue the run even if one of the tests fails.</p>
+<h3 id="–first-fail"><a href="#–first-fail" class="headerlink" title="–first-fail"></a>–first-fail</h3><p>Force all tests to fail and stop the run on the first failing test.</p>
+<h3 id="Filtering"><a href="#Filtering" class="headerlink" title="Filtering"></a>Filtering</h3><h4 id="pattern"><a href="#pattern" class="headerlink" title="pattern"></a>pattern</h4><p>Options such as [–only], [–skip], [–start], [–end] as well as
+[–pause-before] and [–pause-after] take a [pattern] to specify the exact test
+which the option will be applied.</p>
+<p>The [pattern] is used to match test names using a [unix-like file path pattern] that supports wildcards</p>
+<ul>
+<li><code>/</code> path level separator</li>
+<li><code>*</code> matches everything</li>
+<li><code>?</code> matches any single character</li>
+<li><code>[seq]</code> matches any character in seq</li>
+<li><code>[!seq]</code> matches any character not in seq</li>
+<li><code>:</code> matches anything at the current path level</li>
+</ul>
+<blockquote>
+<p><strong>&#9995;</strong> Note that for a literal match, you must wrap the meta-characters in brackets
+where <code>[?]</code> matches the character <code>?</code>.</p>
+</blockquote>
+<h4 id="–only"><a href="#–only" class="headerlink" title="–only"></a>–only</h4><p>The <code>--only</code> option can be used to filter the test flow so that only the specified tests
+are executed.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
+</blockquote>
+<blockquote>
+<p><strong>&#9995;</strong> Note that most of the time the [pattern] should end with <code>/*</code> so that
+any steps or sub-tests are executed inside the selected test.</p>
+</blockquote>
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --only <span class="string">&quot;/my test/*&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="–skip"><a href="#–skip" class="headerlink" title="–skip"></a>–skip</h4><p>The <code>--skip</code> option can be used to filter the test flow so that the specified tests
+are skipped.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
+</blockquote>
+<h4 id="–start"><a href="#–start" class="headerlink" title="–start"></a>–start</h4><p>The <code>--start</code> option can be used to filter the test flow so that the test flow starts at
+the specified test.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
+</blockquote>
+<h4 id="–only-tags"><a href="#–only-tags" class="headerlink" title="–only-tags"></a>–only-tags</h4><p>The <code>--only-tags</code> option can be used to filter the test flow so that only
+tests with a particular tag are selected to run and others are skipped.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
+</blockquote>
+<h4 id="–skip-tags"><a href="#–skip-tags" class="headerlink" title="–skip-tags"></a>–skip-tags</h4><p>The <code>--skip-tags</code> option can be used to filter the test flow so that only
+tests with a particular tag are skipped.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
+</blockquote>
+<h4 id="–end"><a href="#–end" class="headerlink" title="–end"></a>–end</h4><p>The <code>--end</code> option can be used to filter the test flow so that the test flow ends at
+the specified tests.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that mandatory tests will still be run.</p>
+</blockquote>
+<h4 id="–pause-before"><a href="#–pause-before" class="headerlink" title="–pause-before"></a>–pause-before</h4><p>The <code>--pause-before</code> option can be used to specify the tests before which the test flow
+will be paused.</p>
+<h4 id="–pause-after"><a href="#–pause-after" class="headerlink" title="–pause-after"></a>–pause-after</h4><p>The <code>--pause-after</code> option can be used to specify the tests after which the test flow
+will be paused.</p>
+<h4 id="–pause-on-pass"><a href="#–pause-on-pass" class="headerlink" title="–pause-on-pass"></a>–pause-on-pass</h4><p>The <code>--pause-on-pass</code> option can be used to specify the tests after which the test flow
+will be paused if the test has a passing result.</p>
+<h4 id="–pause-on-fail"><a href="#–pause-on-fail" class="headerlink" title="–pause-on-fail"></a>–pause-on-fail</h4><p>The <code>--pause-on-fail</code> option can be used to specify the tests after which the test flow
+will be paused if the test has a failing result.</p>
+<h4 id="–repeat"><a href="#–repeat" class="headerlink" title="–repeat"></a>–repeat</h4><p>The <code>--repeat</code> option can be used to specify the tests to be repeated.</p>
+<h4 id="–retry"><a href="#–retry" class="headerlink" title="–retry"></a>–retry</h4><p>The <code>--retry</code> option can be used to specify the tests to be retried.</p>
+<h4 id="–strict-names"><a href="#–strict-names" class="headerlink" title="–strict-names"></a>–strict-names</h4><p>The <code>--strict-names</code> option can be used to force strict test names by disallowing using any restricted characters.</p>
+<h1 id="Test-Flags"><a href="#Test-Flags" class="headerlink" title="Test Flags"></a>Test Flags</h1><p><strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> supports the following test flags.</p>
+<h2 id="TE"><a href="#TE" class="headerlink" title="TE"></a>TE</h2><p>Test to end flag. Continues executing tests even if this test fails.</p>
+<h2 id="UT"><a href="#UT" class="headerlink" title="UT"></a>UT</h2><p>Utility test flags. Marks test as utility for reporting.</p>
+<h2 id="SKIP"><a href="#SKIP" class="headerlink" title="SKIP"></a>SKIP</h2><p>Skip test flag. Skips the test during execution.</p>
+<h2 id="EOK"><a href="#EOK" class="headerlink" title="EOK"></a>EOK</h2><p>Expected [OK] flag. Test result will be set to [Fail] if the test result is not [OK] otherwise [OK].</p>
+<h2 id="EFAIL"><a href="#EFAIL" class="headerlink" title="EFAIL"></a>EFAIL</h2><p>Expected [Fail] flag. Test result will be set to [Fail] if the test result is not [Fail] otherwise [OK].</p>
+<h2 id="EERROR"><a href="#EERROR" class="headerlink" title="EERROR"></a>EERROR</h2><p>Expected [Error] flag. Test result will be set to [Fail] if the test result is not [Error] otherwise [OK].</p>
+<h2 id="ESKIP"><a href="#ESKIP" class="headerlink" title="ESKIP"></a>ESKIP</h2><p>Expected [Skip] flag. Test result will be set to [Fail] if the test result is not [Skip] otherwise [OK].</p>
+<h2 id="XOK"><a href="#XOK" class="headerlink" title="XOK"></a>XOK</h2><p>Cross out [OK] flag. Test result will be set to [XOK] if the test result is [OK].</p>
+<h2 id="XFAIL"><a href="#XFAIL" class="headerlink" title="XFAIL"></a>XFAIL</h2><p>Cross out [Fail] flag. Test result will be set to [XFail] if the test result is [Fail].</p>
+<h2 id="XERROR"><a href="#XERROR" class="headerlink" title="XERROR"></a>XERROR</h2><p>Cross out [Error] flag. Test result will be set to [XError] if the test result is [Error].</p>
+<h2 id="XNULL"><a href="#XNULL" class="headerlink" title="XNULL"></a>XNULL</h2><p>Cross out [Null] flag. Test result will be set to [XNull] if the test result is [Null].</p>
+<h2 id="FAIL-NOT-COUNTED"><a href="#FAIL-NOT-COUNTED" class="headerlink" title="FAIL_NOT_COUNTED"></a>FAIL_NOT_COUNTED</h2><p>[Fail] not counted. [Fail] result will not be counted.</p>
+<h2 id="ERROR-NOT-COUNTED"><a href="#ERROR-NOT-COUNTED" class="headerlink" title="ERROR_NOT_COUNTED"></a>ERROR_NOT_COUNTED</h2><p>[Error] not counted. [Error] result will not be counted.</p>
+<h2 id="NULL-NOT-COUNTED"><a href="#NULL-NOT-COUNTED" class="headerlink" title="NULL_NOT_COUNTED"></a>NULL_NOT_COUNTED</h2><p>[Null] not counted. [Null] result will not be counted.</p>
+<h2 id="PAUSE-BEFORE"><a href="#PAUSE-BEFORE" class="headerlink" title="PAUSE_BEFORE"></a>PAUSE_BEFORE</h2><p>Pause before test execution.</p>
+<h2 id="PAUSE"><a href="#PAUSE" class="headerlink" title="PAUSE"></a>PAUSE</h2><p>Pause before test execution short form. See [PAUSE_BEFORE].</p>
+<h2 id="PAUSE-AFTER"><a href="#PAUSE-AFTER" class="headerlink" title="PAUSE_AFTER"></a>PAUSE_AFTER</h2><p>Pause after test execution.</p>
+<h2 id="PAUSE-ON-PASS"><a href="#PAUSE-ON-PASS" class="headerlink" title="PAUSE_ON_PASS"></a>PAUSE_ON_PASS</h2><p>Pause after test execution on passing result.</p>
+<h2 id="PAUSE-ON-FAIL"><a href="#PAUSE-ON-FAIL" class="headerlink" title="PAUSE_ON_FAIL"></a>PAUSE_ON_FAIL</h2><p>Pause after test execution on failing result.</p>
+<h2 id="REPORT"><a href="#REPORT" class="headerlink" title="REPORT"></a>REPORT</h2><p>Report flag. Mark test to be included for reporting.</p>
+<h2 id="DOCUMENT"><a href="#DOCUMENT" class="headerlink" title="DOCUMENT"></a>DOCUMENT</h2><p>Document flag. Mark test to be included in the documentation.</p>
+<h2 id="MANDATORY"><a href="#MANDATORY" class="headerlink" title="MANDATORY"></a>MANDATORY</h2><p>Mandatory flag. Mark test as mandatory such that it can’t be skipped.</p>
+<h2 id="ASYNC"><a href="#ASYNC" class="headerlink" title="ASYNC"></a>ASYNC</h2><p>Asynchronous test flag. This flag is set for all asynchronous tests.</p>
+<h2 id="PARALLEL"><a href="#PARALLEL" class="headerlink" title="PARALLEL"></a>PARALLEL</h2><p>Parallel test flag. This flag is set if test is running in parallel.</p>
+<h2 id="MANUAL"><a href="#MANUAL" class="headerlink" title="MANUAL"></a>MANUAL</h2><p>Manual test flag. This flag indicates that test is manual.</p>
+<h2 id="AUTO"><a href="#AUTO" class="headerlink" title="AUTO"></a>AUTO</h2><p>Automated test flag. This flag indicates that the test is automated
+when parent test has [MANUAL] flag set.</p>
+<h2 id="LAST-RETRY"><a href="#LAST-RETRY" class="headerlink" title="LAST_RETRY"></a>LAST_RETRY</h2><p>Last retry flag. This flag is auto-set for the last retry iteration.</p>
+
+        </div>
+    </div>
+</div>
+
+
+    </div>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1790967011401"></script>
+<script src="/js/machine-hero-type.js?v=1790967011401"></script>
+<script src="/js/download-platforms.js?v=1790967011401"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

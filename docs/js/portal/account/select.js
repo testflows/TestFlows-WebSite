@@ -1,11 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 /** Custom portal dropdown — native <select> popups are OS-drawn and unstyleable. */
 
 /** @type {HTMLElement|null} */

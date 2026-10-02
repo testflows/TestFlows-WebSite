@@ -1,14 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL. This file contains trade secrets and
- * confidential information of Katteli Inc. Unauthorized copying, disclosure,
- * distribution, or use of this file, via any medium, is strictly prohibited
- * without express written authorization from Katteli Inc.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 /**
  * 404 page ostrich, drawn as 1-bit pixel art (think Chrome's offline dino). It runs
  * in from the left, stops in the middle and buries its head. Left/Right (or A/D)
