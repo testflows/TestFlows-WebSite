@@ -202,12 +202,13 @@ sha256_of() {
 
 # platform_asset: the file each release publishes for this system, and how it installs:
 # "binary", one self-extracting file, or "tree", a .tar.gz unpacked into its own folder.
-# Sets ASSET and KIND; fails for a system no release is built for.
+# Sets ASSET, KIND and PLATFORM, its name for messages; fails for a system no release is
+# built for.
 platform_asset() {
     case "$(uname -s)-$(uname -m)" in
-        Linux-x86_64 | Linux-amd64)  ASSET="machine";                     KIND="binary" ;;
-        Linux-aarch64 | Linux-arm64) ASSET="machine-linux-arm64";         KIND="binary" ;;
-        Darwin-arm64)                ASSET="machine-darwin-arm64.tar.gz"; KIND="tree" ;;
+        Linux-x86_64 | Linux-amd64)  ASSET="machine";                     KIND="binary"; PLATFORM="Linux x86_64" ;;
+        Linux-aarch64 | Linux-arm64) ASSET="machine-linux-arm64";         KIND="binary"; PLATFORM="Linux arm64" ;;
+        Darwin-arm64)                ASSET="machine-darwin-arm64.tar.gz"; KIND="tree";   PLATFORM="macOS on Apple Silicon" ;;
         *) return 1 ;;
     esac
 }
@@ -236,13 +237,36 @@ check_platform() {
     esac
 }
 
+# download_failed RELEASE: say why this platform's file of RELEASE could not be had. A
+# release published before this platform was built has files for others only; that is
+# told apart from a version never released by its Linux x86_64 checksum, which every
+# release has.
+download_failed() {
+    local release="$1" probe
+    if [ "$FETCH_STATUS" = "final" ]; then
+        probe="$(mktemp)" || die "Could not create a temporary file."
+        if fetch_once "$BASE_URL/$release/machine.sha256" "$probe" 2>/dev/null; then
+            rm -f "$probe"
+            if [ -n "${MACHINE_VERSION:-}" ]; then
+                die "Version $release has no build for $PLATFORM." \
+                    "Install the latest instead: leave MACHINE_VERSION unset."
+            fi
+            die "The latest release, $release, has no build for $PLATFORM yet." \
+                "Write to contact@testflows.com if it doesn't appear soon."
+        fi
+        rm -f "$probe"
+        die "Version $release isn't a released version." \
+            "Leave MACHINE_VERSION unset to install the latest."
+    fi
+    die "Could not download version $release." "Check your connection and try again."
+}
+
 # print_checksum RELEASE: print the published checksum of a release and stop.
 print_checksum() {
     local sum
     TMP="$(mktemp)" || die "Could not create a temporary file."
     trap 'rm -f "$TMP"' EXIT
-    fetch "$BASE_URL/$1/$ASSET.sha256" "$TMP" || die "Could not find a checksum for version $1." \
-        "Is it a released version? Leave MACHINE_VERSION unset for the latest."
+    fetch "$BASE_URL/$1/$ASSET.sha256" "$TMP" || download_failed "$1"
     sum="$(checksum_from "$TMP")"
     printf '%s  %s\n' "$sum" "$ASSET"
 }
@@ -361,7 +385,7 @@ main() {
     # --checksum runs anywhere, for checking a file by hand; off a supported system it
     # prints the Linux x86_64 file's.
     if [ "$mode" = "checksum" ]; then
-        platform_asset || { ASSET="machine"; KIND="binary"; }
+        platform_asset || { ASSET="machine"; KIND="binary"; PLATFORM="Linux x86_64"; }
     else
         check_platform
     fi
@@ -409,8 +433,7 @@ main() {
     STAGE=""
     trap 'rm -rf "$TMP" "$SUMFILE" ${STAGE:+"$STAGE"}' EXIT
 
-    fetch "$url" "$TMP" || die "Could not download version $release." \
-        "Check your connection and try again. A pinned MACHINE_VERSION must be a released version."
+    fetch "$url" "$TMP" || download_failed "$release"
     [ -s "$TMP" ] || die "The download was empty."
 
     local want got
@@ -451,6 +474,14 @@ main() {
         remove_old_trees "$share" "$release"
     else
         remove_old_unpacks "$(unpack_dir_of "$target")"
+    fi
+
+    # A machine is x86_64: on an ARM system, Docker's default arm64 images cannot be disks.
+    if [ "$ASSET" != "machine" ]; then
+        say ""
+        warn "This is an ARM system, and a machine runs x86_64. Build disks from"
+        warn "linux/amd64 images: docker build or docker pull with --platform linux/amd64."
+        say "  ${DIM}https://testflows.com/docs/machine/#Building-disks-on-an-ARM-machine${RESET}"
     fi
 
     # Make sure typing `machine` finds the one just installed.

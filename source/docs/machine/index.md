@@ -102,7 +102,10 @@ unpacks it into `~/.local/share/machine/`.
 with Apple Silicon. It needs nothing else installed, and the installer never
 asks for root. It doesn't run on Intel Macs or natively on Windows; on Windows
 you can use it inside WSL. On a Mac the client works with cloud sessions; a
-local session needs Linux with KVM. If you need another platform,
+local session needs Linux with KVM. On an ARM machine, a Mac with Apple Silicon
+or arm64 Linux, the disks you build must still hold x86_64 programs; see
+[building disks on an ARM machine](#Building-disks-on-an-ARM-machine). If you
+need another platform,
 [contact us](/contact.html?topic=machine) and tell us which one. The
 [download page](/machine/download/) has the full list, and a way to check the
 download yourself.
@@ -306,6 +309,27 @@ argument `3`:
 ```bash
 machine disks build --binary ./data-race race -- 3
 ```
+
+## Building disks on an ARM machine
+
+A machine is an x86_64 computer, so a disk holds `linux/amd64` programs, whatever
+machine you build it on. On a Mac with Apple Silicon or on arm64 Linux, Docker
+builds and pulls `arm64` images by default, and those cannot run in a machine.
+`machine disks build` checks every image and refuses one that is not
+`linux/amd64` before uploading anything. Ask Docker for `linux/amd64`:
+
+```bash
+docker pull --platform linux/amd64 myapp:latest
+docker build --platform linux/amd64 -t myapp:latest .
+DOCKER_DEFAULT_PLATFORM=linux/amd64 docker compose -f ./deploy/compose.yaml build
+```
+
+The last one builds a Compose project's images for `linux/amd64`; setting
+`platform: linux/amd64` on each service does the same. Docker builds them under
+emulation, which is slower than a native build but works. For `--binary`,
+compile for x86_64 Linux, for example `GOOS=linux GOARCH=amd64 go build`.
+
+## Disk size
 
 By default Machine measures what the disk holds and adds a gigabyte. Use
 `--size` to set the size you want. Not sure how big it will be? `--dry-run`
