@@ -17,7 +17,11 @@ permalink: machine/download/index.html
 <div class="download-section">
 <h2>Install</h2>
 <p>Run this in a terminal.</p>
-<div class="install-cmd"><code>curl https://testflows.com/machine/install -fsS | bash</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+
+```bash
+curl https://testflows.com/machine/install -fsS | bash
+```
+
 <p>It downloads the client, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root. If that folder isn't on your <code>PATH</code> yet, it tells you what to add. Run the same command again to update.</p>
 </div>
 
@@ -39,16 +43,29 @@ permalink: machine/download/index.html
 <h2>Check the download</h2>
 <p>The installer already checks what it downloads. To check it yourself, compare the checksum of your file with the one published for its version.</p>
 <p>First, find your version. It is on the banner line, like <code>20261002-0022</code>.</p>
-<div class="install-cmd"><code>machine --version</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+
+```bash
+machine --version
+```
+
 <p>Then print the checksum published for that version, and the checksum of your file. Put your version in place of the one shown.</p>
-<div class="install-cmd install-cmd--steps"><div class="install-lines"><code>curl https://testflows.com/machine/install <span class="nw">-fsS</span> | MACHINE_VERSION=20261002-0022 bash -s -- --checksum</code><code>sha256sum "$(command -v machine)"</code></div><button type="button" class="install-copy" data-copy>Copy</button></div>
+
+```bash
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=20261002-0022 bash -s -- --checksum
+sha256sum "$(command -v machine)"
+```
+
 <p>Both lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
 <h2>A specific version</h2>
 <p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code>, for example:</p>
-<div class="install-cmd"><code>curl https://testflows.com/machine/install <span class="nw">-fsS</span> | MACHINE_VERSION=20261002-0022 bash</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+
+```bash
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=20261002-0022 bash
+```
+
 <p><code>MACHINE_INSTALL_DIR</code> installs somewhere other than <code>~/.local/bin</code>. <code>machine --version</code> tells you which version you have.</p>
 </div>
 

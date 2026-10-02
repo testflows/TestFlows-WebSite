@@ -86,7 +86,9 @@ nearest checkpoint before it and replays the rest of the way for you.
 You work with Machine through a client called `machine`. Install it with one
 command:
 
-<div class="install-cmd"><code>curl https://testflows.com/machine/install -fsS | bash</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+```bash
+curl https://testflows.com/machine/install -fsS | bash
+```
 
 That downloads a single binary named `machine`, checks it against the SHA-256
 checksum published next to it, and puts it in `~/.local/bin`. If the checksum
