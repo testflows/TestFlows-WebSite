@@ -4,6 +4,7 @@
 
 ## Instructions
 
+- [Install](https://testflows.com/install.md): Install Framework and the Machine client step by step, and what your person has to do for the Machine account.
 - [Guide for AI agents](https://testflows.com/agents.md): How the website is laid out and where to look.
 
 ## Pages

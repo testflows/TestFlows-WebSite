@@ -121,4 +121,4 @@ rm -rf ~/.local/share/machine ~/.testflows/machine
 
 ## Then
 
-Sign in with `machine login`, or create an account first: https://testflows.com/machine/portal/signup/. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
+Create an account at https://testflows.com/machine/portal/signup/, then sign in with `machine login`. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md

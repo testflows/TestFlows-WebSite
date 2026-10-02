@@ -36,6 +36,7 @@ TestFlows Machine is a deterministic execution machine in the cloud, provided as
 Run your programs deterministically: record a run, replay it exactly, and branch from any point.
 
 - Create an account: https://testflows.com/machine/portal/signup/
+- Install Framework or the Machine client, step by step: https://testflows.com/install.md
 - Download the client: https://testflows.com/machine/download.md
 - The docs, by part: https://testflows.com/docs/machine.md
 - The Machine page: https://testflows.com/machine.md
