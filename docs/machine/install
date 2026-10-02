@@ -4,8 +4,12 @@
 #   curl https://testflows.com/machine/install -fsS | bash
 #
 # It downloads one file, the `machine` binary, checks it against the SHA-256
-# checksum published next to it, and puts it in $HOME/.local/bin. It never asks
-# for root and it changes nothing else on your system.
+# checksum published next to it, and puts it in ~/.local/bin. It never asks for
+# root. The checksum catches a corrupt or cut-short download; the download
+# itself is protected by HTTPS, which is the only protocol it will use.
+#
+# On first run the client unpacks itself into ~/.cache/machine/, about 80 MB.
+# After an update this script removes the folders older versions unpacked.
 #
 # To check a download yourself, print the checksum published for a version and
 # compare it with `sha256sum` of your file:
@@ -13,9 +17,8 @@
 #   curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
 #
 # Environment:
-#   MACHINE_INSTALL_DIR   where to put the binary (default: $HOME/.local/bin)
-#   MACHINE_VERSION       a version to install, like 20261002-0022
-#                         (default: the latest)
+#   MACHINE_INSTALL_DIR   where to put the binary (default: ~/.local/bin)
+#   MACHINE_VERSION       a version to install, YYYYMMDD-HHMM (default: the latest)
 #   MACHINE_BASE_URL      where releases are downloaded from
 #
 # Everything happens inside main(), which is only called on the last line. If the
@@ -36,21 +39,29 @@ ok()   { printf '%s✔%s %s\n' "$GREEN" "$RESET" "$*"; }
 warn() { printf '%s!%s %s\n' "$YELLOW" "$RESET" "$*" >&2; }
 die()  { printf '%s✗%s %s\n' "$RED" "$RESET" "$1" >&2; shift; for line in "$@"; do printf '  %s\n' "$line" >&2; done; exit 1; }
 
+# A path with $HOME shown as ~, for messages.
+tilde() {
+    case "$1" in
+        "${HOME:-/nonexistent}"/*) printf '~%s' "${1#"$HOME"}" ;;
+        *) printf '%s' "$1" ;;
+    esac
+}
+
 # The version a machine binary reports, or nothing if it doesn't run.
 version_of() {
     "$1" -o json --version 2>/dev/null | sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' | head -n 1
 }
 
-# fetch URL DEST: download with curl, or wget when there is no curl.
+# fetch URL DEST: download over HTTPS only. curl retries what can recover (a
+# timeout, a dropped connection, a 5xx) and not what cannot (a 403 or 404).
 fetch() {
     if command -v curl >/dev/null 2>&1; then
-        if [ -t 2 ]; then
-            curl -fL --connect-timeout 15 --progress-bar -o "$2" "$1"
-        else
-            curl -fsSL --connect-timeout 15 -o "$2" "$1"
-        fi
+        local progress="-sS"
+        [ -t 2 ] && progress="--progress-bar"
+        curl -fL --proto '=https' --tlsv1.2 --connect-timeout 15 \
+            --retry 3 --retry-delay 2 $progress -o "$2" "$1"
     elif command -v wget >/dev/null 2>&1; then
-        wget -q -O "$2" "$1"
+        wget -q --https-only --tries=3 --timeout=15 -O "$2" "$1"
     else
         die "Neither curl nor wget is installed." "Install one of them and run this again."
     fi
@@ -68,9 +79,33 @@ Options:
   -h, --help   show this help
 
 Environment:
-  MACHINE_INSTALL_DIR   where to put the binary (default: $HOME/.local/bin)
-  MACHINE_VERSION       a version to use, like 20261002-0022 (default: the latest)
+  MACHINE_INSTALL_DIR   where to put the binary (default: ~/.local/bin)
+  MACHINE_VERSION       a version to use, YYYYMMDD-HHMM (default: the latest)
 USAGE
+}
+
+# version_valid VERSION: whether it is a release version, YYYYMMDD-HHMM.
+version_valid() {
+    case "$1" in
+        [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# latest_version: the version latest/version names. The installer then downloads
+# that version's own files, which never change, so a release published meanwhile
+# cannot pair one release's binary with another's checksum.
+latest_version() {
+    local file version
+    file="$(mktemp)" || die "Could not create a temporary file."
+    if ! fetch "$BASE_URL/latest/version" "$file"; then
+        rm -f "$file"
+        die "Could not find the latest version." "Check your connection and try again."
+    fi
+    version="$(tr -d ' \t\r\n' < "$file")"
+    rm -f "$file"
+    version_valid "$version" || die "The published latest version isn't valid."
+    printf '%s' "$version"
 }
 
 # checksum_from FILE: the SHA-256 in a published checksum file. It is a sha256sum
@@ -97,18 +132,6 @@ sha256_of() {
         die "Cannot check the download: none of sha256sum, shasum or openssl is installed." \
             "Install one of them and run this again."
     fi
-}
-
-# fetch_retrying URL DEST: a dropped connection is worth another try. Three in all.
-fetch_retrying() {
-    local attempt
-    for attempt in 1 2 3; do
-        if fetch "$1" "$2"; then
-            return 0
-        fi
-        [ "$attempt" -lt 3 ] && { warn "The download failed. Trying again."; sleep 2; }
-    done
-    return 1
 }
 
 check_platform() {
@@ -145,21 +168,90 @@ check_platform() {
     esac
 }
 
-# print_checksum URL RELEASE: print the published checksum of a release and stop.
+# print_checksum RELEASE: print the published checksum of a release and stop.
 print_checksum() {
     local sum
     TMP="$(mktemp)" || die "Could not create a temporary file."
     trap 'rm -f "$TMP"' EXIT
-    if ! fetch_retrying "$1.sha256" "$TMP"; then
-        if [ "$2" = "latest" ]; then
-            die "Could not download the checksum." "Check your connection and try again."
-        else
-            die "Could not find a checksum for version $2." \
-                "Is it a released version? Leave MACHINE_VERSION unset for the latest."
-        fi
-    fi
+    fetch "$BASE_URL/$1/machine.sha256" "$TMP" || die "Could not find a checksum for version $1." \
+        "Is it a released version? Leave MACHINE_VERSION unset for the latest."
     sum="$(checksum_from "$TMP")"
     printf '%s  machine\n' "$sum"
+}
+
+# The cache folder a machine binary unpacks into: the build key is the second
+# 64-byte field of the 152-byte trailer at its end, ahead of the magic TFSFX.
+unpack_dir_of() {
+    local key magic
+    magic="$(tail -c 8 "$1" | head -c 5)"
+    [ "$magic" = "TFSFX" ] || return 0
+    key="$(tail -c 152 "$1" | head -c 128 | tail -c 64 | tr -d '\0')"
+    case "$key" in
+        *[!0-9a-f]* | "") return 0 ;;
+    esac
+    printf '%s/machine/%s' "${XDG_CACHE_HOME:-${HOME:-}/.cache}" "$key"
+}
+
+# Remove the folders older versions unpacked into, keeping the current one and any
+# a running machine still uses: each is about 80 MB and nothing else removes them.
+remove_old_unpacks() {
+    local keep="$1" parent dir exe in_use freed=0
+    [ -n "$keep" ] || return 0
+    parent="$(dirname "$keep")"
+    [ -d "$parent" ] || return 0
+    for dir in "$parent"/*/; do
+        dir="${dir%/}"
+        [ -d "$dir" ] && [ "$dir" != "$keep" ] || continue
+        case "$(basename "$dir")" in
+            *[!0-9a-f]*) continue ;;
+        esac
+        in_use=false
+        for exe in /proc/[0-9]*/exe; do
+            case "$(readlink "$exe" 2>/dev/null)" in
+                "$dir"/*) in_use=true; break ;;
+            esac
+        done
+        $in_use && continue
+        rm -rf "$dir" && freed=$((freed + 1))
+    done
+    case "$freed" in
+        0) ;;
+        1) ok "Removed an older version's unpacked files from $(tilde "$parent")" ;;
+        *) ok "Removed $freed older versions' unpacked files from $(tilde "$parent")" ;;
+    esac
+}
+
+# How to put DIR on PATH, as lines to paste, for the shells this user has.
+path_hint() {
+    local dir="$1" shown shell_name any=false
+    shown="$(tilde "$dir")"
+    [ "$shown" != "$dir" ] && shown="\$HOME${shown#\~}"
+    shell_name="$(basename "${SHELL:-}")"
+    say ""
+    warn "$(tilde "$dir") is not on your PATH, so your shell can't find machine yet."
+    say "  Run the lines for your shell, then open a new terminal:"
+    if [ "$shell_name" = "bash" ] || [ -f "${HOME:-}/.bashrc" ]; then
+        say ""
+        say "  ${DIM}bash${RESET}"
+        say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.bashrc"
+        any=true
+    fi
+    if [ "$shell_name" = "zsh" ] || [ -f "${HOME:-}/.zshrc" ]; then
+        say ""
+        say "  ${DIM}zsh${RESET}"
+        say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.zshrc"
+        any=true
+    fi
+    if [ "$shell_name" = "fish" ] || [ -f "${HOME:-}/.config/fish/config.fish" ]; then
+        say ""
+        say "  ${DIM}fish${RESET}"
+        say "    fish_add_path $shown"
+        any=true
+    fi
+    if ! $any; then
+        say ""
+        say "    export PATH=\"$shown:\$PATH\""
+    fi
 }
 
 main() {
@@ -172,25 +264,27 @@ main() {
         esac
     done
 
-    local release="latest"
+    local release
     if [ -n "${MACHINE_VERSION:-}" ]; then
-        case "$MACHINE_VERSION" in
-            [0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]-[0-9][0-9][0-9][0-9]) release="$MACHINE_VERSION" ;;
-            *) die "'$MACHINE_VERSION' is not a version." "A version looks like 20261002-0022." ;;
-        esac
+        version_valid "$MACHINE_VERSION" \
+            || die "'$MACHINE_VERSION' is not a version." "A version looks like YYYYMMDD-HHMM."
+        release="$MACHINE_VERSION"
+    else
+        release="$(latest_version)"
     fi
-    local url="$BASE_URL/$release/machine"
 
     if [ "$mode" = "checksum" ]; then
-        print_checksum "$url" "$release"
+        print_checksum "$release"
         return 0
     fi
 
     check_platform
 
-    local dir="${MACHINE_INSTALL_DIR:-${HOME:-}/.local/bin}"
-    [ -n "${HOME:-}${MACHINE_INSTALL_DIR:-}" ] || die "HOME is not set." "Set MACHINE_INSTALL_DIR to say where to install."
+    # The client keeps its sign-in and unpacks itself under HOME, so it needs one.
+    [ -n "${HOME:-}" ] || die "HOME is not set." "The client needs a home directory to run."
+    local dir="${MACHINE_INSTALL_DIR:-$HOME/.local/bin}"
     local target="$dir/machine"
+    local url="$BASE_URL/$release/machine"
 
     local before=""
     if [ -x "$target" ]; then
@@ -198,71 +292,59 @@ main() {
     fi
 
     say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
-    mkdir -p "$dir" || die "Could not create $dir."
+    mkdir -p "$dir" || die "Could not create $(tilde "$dir")."
 
     # Download next to the final spot so the last step is an atomic rename.
     # TMP is global so the EXIT trap can still see it when die() exits from here.
-    TMP="$(mktemp "$dir/.machine.XXXXXX")" || die "Could not write to $dir."
+    TMP="$(mktemp "$dir/.machine.XXXXXX")" || die "Could not write to $(tilde "$dir")."
     SUMFILE="$TMP.sha256"
     trap 'rm -f "$TMP" "$SUMFILE"' EXIT
 
-    if ! fetch_retrying "$url" "$TMP"; then
-        if [ "$release" = "latest" ]; then
-            die "Could not download $url" "Check your connection and try again."
-        else
-            die "Could not download version $release." \
-                "Is it a released version? Leave MACHINE_VERSION unset to get the latest."
-        fi
-    fi
+    fetch "$url" "$TMP" || die "Could not download version $release." \
+        "Check your connection and try again. A pinned MACHINE_VERSION must be a released version."
     [ -s "$TMP" ] || die "The download was empty."
-    chmod +x "$TMP"
 
-    # The checksum published next to the binary.
     local want got
-    fetch_retrying "$url.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
+    fetch "$url.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
         "The install is stopped rather than trusting a file it can't check."
     want="$(checksum_from "$SUMFILE")"
-
     got="$(sha256_of "$TMP")"
     if [ "$got" != "$want" ]; then
         die "The download doesn't match its published checksum, so it was not installed." \
             "expected $want" \
             "got      $got" \
-            "This can happen while a new release is being published. Run this again in a minute," \
-            "and write to contact@testflows.com if it keeps happening."
+            "Run this again, and write to contact@testflows.com if it keeps happening."
     fi
+    chmod +x "$TMP"
 
     local after
     after="$(version_of "$TMP" || true)"
     [ -n "$after" ] || die "The downloaded file doesn't run on this system." \
-        "It is a static Linux x86_64 program, so this usually means it was cut short." \
-        "Run this again, and write to contact@testflows.com if it keeps happening."
+        "It is a static Linux x86_64 program. Write to contact@testflows.com with the output of uname -a."
 
     mv -f "$TMP" "$target"
     rm -f "$SUMFILE"
     trap - EXIT
 
     if [ -z "$before" ]; then
-        ok "Installed machine $after to $target ${DIM}(checksum verified)${RESET}"
+        ok "Installed machine $after to $(tilde "$target") ${DIM}(checksum verified)${RESET}"
     elif [ "$before" = "$after" ]; then
-        ok "machine $after was already installed. Reinstalled it at $target"
+        ok "machine $after was already installed. Reinstalled it at $(tilde "$target")"
     else
-        ok "Updated machine $before → $after at $target"
+        ok "Updated machine $before → $after at $(tilde "$target")"
     fi
 
-    # Make sure typing `machine` finds the one we just installed.
+    remove_old_unpacks "$(unpack_dir_of "$target")"
+
+    # Make sure typing `machine` finds the one just installed.
     local found
     found="$(command -v machine 2>/dev/null || true)"
     if [ -z "$found" ]; then
+        path_hint "$dir"
+    elif ! [ "$found" -ef "$target" ]; then
         say ""
-        warn "$dir is not on your PATH, so your shell can't find machine yet."
-        say "  Add this line to your shell profile (~/.bashrc, ~/.zshrc), then open a new terminal:"
-        say ""
-        say "    export PATH=\"$dir:\$PATH\""
-    elif [ "$found" != "$target" ]; then
-        say ""
-        warn "Another machine comes first on your PATH: $found"
-        say "  Run $target directly, or put $dir earlier in your PATH."
+        warn "Another machine comes first on your PATH: $(tilde "$found")"
+        say "  Run $(tilde "$target") directly, or put $(tilde "$dir") earlier in your PATH."
     fi
 
     say ""
