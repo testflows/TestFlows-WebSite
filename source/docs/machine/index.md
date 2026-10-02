@@ -95,7 +95,7 @@ SHA-256 checksum published next to it, and puts it in `~/.local/bin`. If the
 checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
 yet, the installer says so and shows the line to add for your shell. Run the same
 command again whenever you want to update. On Linux the client unpacks itself
-into `~/.cache/machine/` on its first run, about 80 MB; on a Mac the installer
+into `~/.cache/machine/` on its first run; on a Mac the installer
 unpacks it into `~/.local/share/machine/`.
 
 **Supported systems.** The client runs on Linux, x86_64 and arm64, and on Macs
