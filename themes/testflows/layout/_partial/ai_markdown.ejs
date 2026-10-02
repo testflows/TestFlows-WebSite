@@ -1,0 +1,20 @@
+<%
+/* Tells AI agents where this page's Markdown version is, where the site's Markdown pages are
+   listed, and where the instructions for agents are (see scripts/markdown-twins.js): the page's
+   own Markdown at its path with the slash dropped and .md added, and the two top-level files,
+   /llms.txt and /agents.md.
+   part = 'head' writes the <link> tags, part = 'body' writes the message. The message is in
+   the page text for agents that read the converted page, and out of sight (and out of
+   the accessibility tree) for everyone else. */
+if (!page.portal_nav && !page.path.startsWith('assets') && !page.path.startsWith('machine/portal/')) {
+  var aiLlms = full_url_for('/llms.txt');
+  var aiAgents = full_url_for('/agents.md');
+  var aiTwin = markdown_twin(page);
+  if (part === 'head') { %>
+  <link rel="describedby" href="<%- aiLlms %>">
+<%  if (aiTwin) { %>  <link rel="alternate" type="text/markdown" href="<%- full_url_for(aiTwin) %>">
+<%  }
+  } else { %>
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: <% if (aiTwin) { %>this page is available as Markdown at <%- full_url_for(aiTwin) %>. <% } %>Markdown versions of this site's pages are listed in <%- aiLlms %>. Instructions for agents: <%- aiAgents %>.</p>
+<% }
+} %>

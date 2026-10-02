@@ -12,7 +12,7 @@ permalink: framework/index.html
 
 <div class="banner-text">
 <h1>Not a typical<br>framework</h1>
-<p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic control, structured steps, parallel execution, properties, behavior models, combinatorial and autonomous exploration, and more. Written for humans. Loved by the AI agents.</p>
+<p>A Python library for <strong>testing as code</strong>. Write full test programs with dynamic control, structured steps, parallel execution, properties, behavior models, combinatorial and autonomous exploration, and more. Written for humans. Loved by the <a href="/framework.md" title="Guide for AI agents">AI agents</a>.</p>
 <div class="banner-actions">
 <a class="btn banner-cta" href="https://pypi.org/project/testflows/">pip3 install testflows</a>
 <a class="btn banner-cta banner-cta-ghost" href="/docs/framework/">Read handbook</a>

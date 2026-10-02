@@ -91,6 +91,18 @@
     color: var(--tf-text-strong);
 }
 
+/* A link inside hero text (buttons are .btn and keep their own look) */
+.banner-text p a:not(.btn) {
+    color: var(--tf-accent);
+    text-decoration: none;
+}
+
+.banner-text p a:not(.btn):hover,
+.banner-text p a:not(.btn):focus {
+    color: var(--tf-accent);
+    text-decoration: underline;
+}
+
 .banner-actions {
     display: flex;
     flex-wrap: wrap;
