@@ -143,6 +143,50 @@ hr {
 
 .download-table td.is-yes { color: var(--tf-accent); font-weight: 600; }
 
+/* The platform tabs are Bootstrap's nav-tabs; these only give them the site's colours, in
+ * both themes. download-platforms.js opens the visitor's system. */
+.download-page .nav-tabs { border-bottom-color: var(--tf-card-border); margin-bottom: 0.4rem; }
+
+.download-page .nav-tabs .nav-link {
+    color: var(--tf-text-muted);
+    font-weight: 600;
+    border-color: transparent;
+}
+
+.download-page .nav-tabs .nav-link .fab { margin-right: 0.3rem; font-size: 1.05em; }
+
+.download-page .nav-tabs .nav-link:hover,
+.download-page .nav-tabs .nav-link:focus {
+    color: var(--tf-text-strong);
+    border-color: var(--tf-card-border) var(--tf-card-border) transparent;
+}
+
+.download-page .nav-tabs .nav-link.active {
+    color: var(--tf-accent);
+    background-color: var(--tf-bg);
+    border-color: var(--tf-card-border) var(--tf-card-border) var(--tf-bg);
+}
+
+.download-page .tab-pane > .download-section:first-child { border-top: 0; }
+
+.platform-content + .download-section { margin-top: 1rem; }
+
+/* The x86_64-disks note on the ARM tabs: set apart from the steps around it. */
+.download-section.download-note {
+    border-top: 0;
+    border-left: 3px solid var(--tf-accent);
+    padding: 0.4rem 0 0.4rem 1.1rem;
+    margin: 0.4rem 0 1.2rem;
+}
+
+.download-section.download-note h2 { font-size: 1.1rem; }
+
+@media (max-width: 540px) {
+    /* One row, scrolled sideways if it must: a wrapped tab reads as a second tab bar. */
+    .download-page .nav-tabs { flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden; }
+    .download-page .nav-tabs .nav-link { padding: 0.5rem 0.65rem; font-size: 0.9rem; white-space: nowrap; }
+}
+
 .download-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
 .download-actions .section-cta { margin: 0; color: inherit; }
 .download-actions .section-cta:not(.section-cta-ghost) { color: var(--tf-ink-on-primary); }
