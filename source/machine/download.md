@@ -39,6 +39,19 @@ curl https://testflows.com/machine/install -fsS | bash
 </div>
 
 <div class="download-section">
+<h2>Check the download</h2>
+<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check the installed client yourself, compare its checksum with the one published for its version. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+
+```bash
+machine --version
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum
+sha256sum "$(command -v machine)"
+```
+
+<p>The last two lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+</div>
+
+<div class="download-section">
 <h2>Uninstall</h2>
 <p>Sign out, so the session ends on the server too, then delete the client, what it unpacked, and its sign-in and keys. Nothing else on your system is changed.</p>
 
@@ -75,6 +88,19 @@ docker pull --platform linux/amd64 myapp:latest
 ```
 
 <p>The <a href="/docs/machine/#Building-disks-on-an-ARM-machine">docs</a> cover Compose projects and binaries.</p>
+</div>
+
+<div class="download-section">
+<h2>Check the download</h2>
+<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check the installed client yourself, compare its checksum with the one published for its version. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+
+```bash
+machine --version
+curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum
+sha256sum "$(command -v machine)"
+```
+
+<p>The last two lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
@@ -117,6 +143,20 @@ docker pull --platform linux/amd64 myapp:latest
 </div>
 
 <div class="download-section">
+<h2>Check the download</h2>
+<p>The installer checks the archive it downloads against its published SHA-256 checksum before it unpacks it. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check it yourself, download the archive and its checksum for your version and compare them. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+
+```bash
+machine --version
+curl -fsSO https://testflows-machine-client.fsn1.your-objectstorage.com/YYYYMMDD-HHMM/machine-darwin-arm64.tar.gz
+curl -fsSO https://testflows-machine-client.fsn1.your-objectstorage.com/YYYYMMDD-HHMM/machine-darwin-arm64.tar.gz.sha256
+shasum -a 256 -c machine-darwin-arm64.tar.gz.sha256
+```
+
+<p>The last line should print <code>machine-darwin-arm64.tar.gz: OK</code>. If it doesn't, install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+</div>
+
+<div class="download-section">
 <h2>Uninstall</h2>
 <p>Sign out, so the session ends on the server too, then delete the client and its sign-in and keys. Nothing else on your Mac is changed.</p>
 
@@ -152,25 +192,6 @@ wsl --install
 </div>
 </div>
 
-</div>
-
-<div class="download-section">
-<h2>Check the download</h2>
-<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check a file yourself, compare its checksum with the one published for its version.</p>
-<p>First, find your version. It is on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>.</p>
-
-```bash
-machine --version
-```
-
-<p>Then print the checksum published for that version, and the checksum of your file. Put your version in place of <code>YYYYMMDD-HHMM</code>.</p>
-
-```bash
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum
-sha256sum "$(command -v machine)"
-```
-
-<p>Both lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
