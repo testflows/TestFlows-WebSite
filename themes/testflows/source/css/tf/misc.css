@@ -70,89 +70,6 @@ hr {
     border: none;
 }
 
-/* Command box with a Copy button (copy-command.js): the install one-liner */
-.install-cmd {
-    display: flex;
-    align-items: stretch;
-    gap: 0;
-    /* Fit the command, so Copy sits right after it; long ones wrap or scroll at the max */
-    width: fit-content;
-    max-width: min(44rem, 100%);
-    margin: 1rem 0;
-    background: var(--tf-terminal-bg);
-    border: 1px solid var(--tf-card-border-hover);
-    border-radius: var(--tf-radius);
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.install-cmd code {
-    flex: 0 1 auto;
-    min-width: 0;
-    margin: 0;
-    padding: 1rem 1.1rem;
-    background: transparent;
-    border: 0;
-    color: rgba(var(--tf-terminal-fg-rgb), 0.95);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-    font-size: 0.95rem;
-    line-height: 1.4;
-    white-space: nowrap;
-    overflow-x: auto;
-    user-select: all;
-    -webkit-user-select: all;
-}
-
-/* The prompt is decoration: drawn by CSS, so it is never selected or copied */
-.install-cmd code::before {
-    content: "$ ";
-    color: var(--tf-accent);
-    user-select: none;
-    -webkit-user-select: none;
-}
-
-.install-copy {
-    flex: 0 0 auto;
-    align-self: center;
-    margin: 0 0.85rem 0 0;
-    /* One width for every label (Copy, Copied, Ctrl-C), so the box never resizes */
-    box-sizing: border-box;
-    width: 4.6rem;
-    padding: 0.25rem 0;
-    text-align: center;
-    border: 0;
-    border-radius: var(--tf-radius-pill);
-    background: #e9efea;
-    color: #101512;
-    font-family: var(--tf-font);
-    font-size: 0.8rem;
-    font-weight: 700;
-    line-height: 1.2;
-    cursor: pointer;
-    transition: filter 0.15s ease;
-}
-.install-copy:hover,
-.install-copy:focus-visible { filter: brightness(0.92); }
-.install-copy.is-copied { background: var(--tf-accent); color: #07140d; }
-
-@media (max-width: 575.98px) {
-    /* Show the whole command on a phone instead of a sideways scroll. */
-    .install-cmd code,
-    .download-section .install-cmd code { font-size: 0.82rem; padding: 0.9rem 0.8rem; white-space: normal; overflow-wrap: anywhere; }
-    .install-copy { margin: 0 0.65rem 0 0; width: 4.4rem; padding: 0.3rem 0; }
-}
-
-/* Several commands in one box (the by-hand steps) */
-.install-cmd--steps .install-lines {
-    flex: 0 1 auto;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    padding: 0.7rem 0;
-}
-
-.install-cmd--steps .install-lines code { padding: 0.28rem 1.1rem; }
-
 /* The Download page */
 .download-page {
     color: var(--tf-text);
@@ -201,17 +118,6 @@ hr {
     font-size: 0.9em;
 }
 
-/* Inside the command boxes the code is plain terminal text */
-.download-section .install-cmd code {
-    color: rgba(var(--tf-terminal-fg-rgb), 0.95);
-    background: transparent;
-    border-radius: 0;
-    font-size: 0.95rem;
-    padding: 1rem 1.1rem;
-}
-
-.download-section .install-cmd--steps .install-lines code { font-size: 0.88rem; padding: 0.28rem 1.1rem; }
-
 .download-table {
     width: 100%;
     max-width: 44rem;
@@ -240,10 +146,3 @@ hr {
 .download-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
 .download-actions .section-cta { margin: 0; color: inherit; }
 .download-actions .section-cta:not(.section-cta-ghost) { color: var(--tf-ink-on-primary); }
-
-/* The Download page's boxes are full width and wrap long commands instead of clipping them */
-.download-section .install-cmd { max-width: 100%; }
-.download-section .install-cmd code { white-space: normal; overflow-wrap: break-word; }
-
-/* Keep a flag like -fsS in one piece when a command wraps */
-.nw { white-space: nowrap; }

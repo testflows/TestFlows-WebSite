@@ -579,28 +579,32 @@ blockquote::-webkit-scrollbar {
 }
 
 /* Code blocks in posts — surface from highlight.css theme tokens */
-.post-body figure.highlight {
+.post-body figure.highlight,
+.download-page figure.highlight {
     position: relative;
     margin: 1em 0;
     border: 1px solid var(--tf-card-border);
     border-radius: var(--tf-radius);
-    padding: 0.85rem 1rem;
+    padding: 1.05rem 1rem;
     overflow: auto;
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset;
 }
 
-[data-theme="light"] .post-body figure.highlight {
+[data-theme="light"] .post-body figure.highlight,
+[data-theme="light"] .download-page figure.highlight {
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
 }
 
-.post-body figure.highlight table {
+.post-body figure.highlight table,
+.download-page figure.highlight table {
     font-size: 1.05em;
     display: block;
     overflow: auto;
     max-height: 35em;
 }
 
-.post-body figure.highlight table::-webkit-scrollbar {
+.post-body figure.highlight table::-webkit-scrollbar,
+.download-page figure.highlight table::-webkit-scrollbar {
     display: none;
 }
 
@@ -680,3 +684,4 @@ blockquote::-webkit-scrollbar {
     .handbook .toc-toggle { width: 2.25rem; height: 2.25rem; top: -0.3rem; }
     .handbook .toc > .toc-level-1 { padding-left: 2.5rem; }
 }
+

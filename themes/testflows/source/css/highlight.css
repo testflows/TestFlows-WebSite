@@ -54,6 +54,13 @@ figure.highlight {
     position: relative;
     margin-left: 0;
     margin-right: 0;
+    /* Tall enough that the copy button (top-right, on hover) fits beside a one-line block */
+    box-sizing: border-box;
+    min-height: 3.4rem;
+    /* Centre a one-line block in that height */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 /* Copy control — top-right on hover */
