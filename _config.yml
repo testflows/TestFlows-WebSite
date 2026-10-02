@@ -46,6 +46,11 @@ archive_dir: archives
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
+# Hexo ignores dotfiles. This one tells GitHub Pages to serve docs/ as it is: without it Jekyll
+# renders the Markdown pages as templates and the build fails on the {% ... %} in them.
+include:
+  - '.nojekyll'
+
 skip_render:
   # The docs parts, served as the Markdown files they are (see .claude/skills/docs-markdown)
   - 'docs/machine/!(index).md'
