@@ -101,8 +101,7 @@ unpacks it into `~/.local/share/machine/`.
 **Supported systems.** The client runs on Linux, x86_64 and arm64, and on Macs
 with Apple Silicon. It needs nothing else installed, and the installer never
 asks for root. It doesn't run on Intel Macs or natively on Windows; on Windows
-you can use it inside WSL. On a Mac the client works with cloud sessions; a
-local session needs Linux with KVM. On an ARM machine, a Mac with Apple Silicon
+you can use it inside WSL. On an ARM machine, a Mac with Apple Silicon
 or arm64 Linux, the disks you build must still hold x86_64 programs; see
 [building disks on an ARM machine](#Building-disks-on-an-ARM-machine). If you
 need another platform,

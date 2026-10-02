@@ -33,7 +33,7 @@ curl https://testflows.com/machine/install -fsS | bash
 <tbody>
 <tr><td>Linux, x86_64</td><td class="is-yes">Supported</td></tr>
 <tr><td>Linux, arm64</td><td class="is-yes">Supported</td></tr>
-<tr><td>macOS, Apple Silicon</td><td class="is-yes">Supported, with cloud sessions; a local session needs Linux with KVM</td></tr>
+<tr><td>macOS, Apple Silicon</td><td class="is-yes">Supported</td></tr>
 <tr><td>macOS, Intel</td><td>Not available</td></tr>
 <tr><td>Windows</td><td>Use it inside WSL, which is Linux. No native build yet.</td></tr>
 </tbody>
