@@ -22,7 +22,7 @@ permalink: machine/download/index.html
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root, and needs <code>curl</code> or GNU <code>wget</code>. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
+<p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root, and needs <code>curl</code> or <code>wget</code>. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
 <p>On its first run the client unpacks itself into <code>~/.cache/machine/</code>, about 80 MB. An update removes what older versions unpacked there.</p>
 </div>
 
