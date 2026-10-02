@@ -94,13 +94,15 @@ That downloads a single binary named `machine` over HTTPS, checks it against the
 SHA-256 checksum published next to it, and puts it in `~/.local/bin`. If the
 checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
 yet, the installer says so and shows the line to add for your shell. Run the same
-command again whenever you want to update. On its first run the client unpacks
-itself into `~/.cache/machine/`, about 80 MB.
+command again whenever you want to update. On Linux the client unpacks itself
+into `~/.cache/machine/` on its first run, about 80 MB; on a Mac the installer
+unpacks it into `~/.local/share/machine/`.
 
-**Supported systems.** The client runs on Linux with an x86_64 processor. It is
-one static program, so it needs nothing else installed, and the installer never
-asks for root. It doesn't run on macOS, Windows or ARM yet. On Windows you can
-use it inside WSL. If you need another platform,
+**Supported systems.** The client runs on Linux, x86_64 and arm64, and on Macs
+with Apple Silicon. It needs nothing else installed, and the installer never
+asks for root. It doesn't run on Intel Macs or natively on Windows; on Windows
+you can use it inside WSL. On a Mac the client works with cloud sessions; a
+local session needs Linux with KVM. If you need another platform,
 [contact us](/contact.html?topic=machine) and tell us which one. The
 [download page](/machine/download/) has the full list, and a way to check the
 download yourself.
