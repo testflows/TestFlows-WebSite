@@ -6,7 +6,8 @@
 # It downloads one file, the `machine` binary, checks it against the SHA-256
 # checksum published next to it, and puts it in ~/.local/bin. It never asks for
 # root. The checksum catches a corrupt or cut-short download; the download
-# itself is protected by HTTPS, which is the only protocol it will use.
+# itself is protected by HTTPS, which is the only protocol it will use unless
+# MACHINE_BASE_URL is set to an http:// address, as a local mirror for testing.
 #
 # On first run the client unpacks itself into ~/.cache/machine/, about 80 MB.
 # After an update this script removes the folders older versions unpacked.
@@ -27,6 +28,15 @@
 set -euo pipefail
 
 BASE_URL="${MACHINE_BASE_URL:-https://testflows-machine-client.fsn1.your-objectstorage.com}"
+# HTTPS only, so no redirect can downgrade the download. Plain HTTP only when the
+# person running this asked for an http:// mirror themselves.
+PROTOCOLS="=https"
+case "$BASE_URL" in
+    http://*) PROTOCOLS="=http,https" ;;
+esac
+# Tries per download. A dropped connection or a 5xx is worth another; a 403 or
+# 404 is not, and stops at once.
+FETCH_TRIES=3
 
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ]; then
     BOLD=$'\033[1m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'; RED=$'\033[31m'; DIM=$'\033[2m'; RESET=$'\033[0m'
@@ -52,16 +62,50 @@ version_of() {
     "$1" -o json --version 2>/dev/null | sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' | head -n 1
 }
 
-# fetch URL DEST: download over HTTPS only. curl retries what can recover (a
-# timeout, a dropped connection, a 5xx) and not what cannot (a 403 or 404).
+# fetch URL DEST: download with curl, or wget when there is no curl, retrying a
+# failure that can recover. The loop is ours rather than curl --retry, which does
+# not retry a reset connection; --retry-all-errors would, but needs curl 7.71,
+# newer than Ubuntu 20.04 ships.
 fetch() {
+    local attempt
+    for ((attempt = 1; attempt <= FETCH_TRIES; attempt++)); do
+        fetch_once "$1" "$2" && return 0
+        [ "$FETCH_STATUS" = "final" ] && return 1
+        [ "$attempt" -lt "$FETCH_TRIES" ] && { warn "The download failed. Trying again."; sleep 2; }
+    done
+    return 1
+}
+
+# fetch_once URL DEST: one try. On failure FETCH_STATUS is "final" for an HTTP
+# answer no retry changes (4xx but 408 and 429), else "retry".
+fetch_once() {
+    FETCH_STATUS="retry"
     if command -v curl >/dev/null 2>&1; then
-        local progress="-sS"
+        local progress="-sS" code
         [ -t 2 ] && progress="--progress-bar"
-        curl -fL --proto '=https' --tlsv1.2 --connect-timeout 15 \
-            --retry 3 --retry-delay 2 $progress -o "$2" "$1"
+        if code="$(curl -fL --proto "$PROTOCOLS" --proto-redir "$PROTOCOLS" --tlsv1.2 \
+            --connect-timeout 15 $progress -w '%{http_code}' -o "$2" "$1")"; then
+            return 0
+        fi
+        case "$code" in
+            408 | 429) ;;
+            4??) FETCH_STATUS="final" ;;
+        esac
+        return 1
     elif command -v wget >/dev/null 2>&1; then
-        wget -q --https-only --tries=3 --timeout=15 -O "$2" "$1"
+        # GNU wget only. BusyBox wget does not check the server's TLS certificate
+        # ("TLS certificate validation not implemented"), so anyone on the path
+        # could serve a binary and a checksum that match each other.
+        # Read whole first: grep -q would stop wget with SIGPIPE, which pipefail
+        # reports as a failure even when the option is there.
+        local help
+        help="$(wget --help 2>&1 || true)"
+        [[ "$help" == *--https-only* ]] \
+            || die "This wget can't verify HTTPS certificates, so the download can't be trusted." \
+                "Install curl and run this again."
+        local https_only=()
+        [ "$PROTOCOLS" = "=https" ] && https_only=(--https-only)
+        wget -q --tries=1 --timeout=15 "${https_only[@]}" -O "$2" "$1"
     else
         die "Neither curl nor wget is installed." "Install one of them and run this again."
     fi
@@ -100,7 +144,7 @@ latest_version() {
     file="$(mktemp)" || die "Could not create a temporary file."
     if ! fetch "$BASE_URL/latest/version" "$file"; then
         rm -f "$file"
-        die "Could not find the latest version." "Check your connection and try again."
+        die "Could not download $BASE_URL/latest/version" "Check your connection and try again."
     fi
     version="$(tr -d ' \t\r\n' < "$file")"
     rm -f "$file"
@@ -221,37 +265,22 @@ remove_old_unpacks() {
     esac
 }
 
-# How to put DIR on PATH, as lines to paste, for the shells this user has.
+# How to put DIR on PATH: the line to paste for the shell this user runs.
 path_hint() {
-    local dir="$1" shown shell_name any=false
+    local dir="$1" shown
     shown="$(tilde "$dir")"
     [ "$shown" != "$dir" ] && shown="\$HOME${shown#\~}"
-    shell_name="$(basename "${SHELL:-}")"
     say ""
     warn "$(tilde "$dir") is not on your PATH, so your shell can't find machine yet."
-    say "  Run the lines for your shell, then open a new terminal:"
-    if [ "$shell_name" = "bash" ] || [ -f "${HOME:-}/.bashrc" ]; then
-        say ""
-        say "  ${DIM}bash${RESET}"
-        say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.bashrc"
-        any=true
-    fi
-    if [ "$shell_name" = "zsh" ] || [ -f "${HOME:-}/.zshrc" ]; then
-        say ""
-        say "  ${DIM}zsh${RESET}"
-        say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.zshrc"
-        any=true
-    fi
-    if [ "$shell_name" = "fish" ] || [ -f "${HOME:-}/.config/fish/config.fish" ]; then
-        say ""
-        say "  ${DIM}fish${RESET}"
-        say "    fish_add_path $shown"
-        any=true
-    fi
-    if ! $any; then
-        say ""
-        say "    export PATH=\"$shown:\$PATH\""
-    fi
+    say "  Run this, then open a new terminal:"
+    say ""
+    case "$(basename "${SHELL:-}")" in
+        bash) say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.bashrc" ;;
+        zsh)  say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.zshrc" ;;
+        fish) say "    fish_add_path \"$shown\"" ;;
+        *)    say "  Add this line to your shell's startup file:"
+              say "    export PATH=\"$shown:\$PATH\"" ;;
+    esac
 }
 
 main() {
@@ -263,6 +292,10 @@ main() {
             *) die "Unknown option: $arg" "Run it with --help to see what it accepts." ;;
         esac
     done
+
+    # Before any download: on a system it doesn't run on, say so, not a network error.
+    [ "$mode" = "checksum" ] || check_platform
+    [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as MACHINE_BASE_URL asks."
 
     local release
     if [ -n "${MACHINE_VERSION:-}" ]; then
@@ -277,8 +310,6 @@ main() {
         print_checksum "$release"
         return 0
     fi
-
-    check_platform
 
     # The client keeps its sign-in and unpacks itself under HOME, so it needs one.
     [ -n "${HOME:-}" ] || die "HOME is not set." "The client needs a home directory to run."
