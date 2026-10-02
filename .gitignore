@@ -5,3 +5,6 @@ db.json
 node_modules/
 public/
 .deploy*/
+__pycache__/
+claude-session
+.claude/settings.local.json

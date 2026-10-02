@@ -1,13 +1,13 @@
 <div class="container">
     <div class="site-footer-grid row">
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Products</h3>
             <ul>
                 <li><a href="<%- url_for('/framework/') %>">Framework</a></li>
                 <li><a href="<%- url_for('/machine/') %>">Machine</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Developers</h3>
             <ul>
                 <li><a href="<%- url_for('/docs/') %>">Docs</a></li>
@@ -15,19 +15,29 @@
                 <li><a href="https://pypi.org/project/testflows/">PyPI</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Company</h3>
             <ul>
                 <li><a href="<%- url_for('/contact.html') %>">Contact</a></li>
                 <li><a href="<%- url_for('/legal/') %>">Legal</a></li>
             </ul>
         </div>
-        <div class="col-6 col-md-3 site-footer-col">
+        <div class="col-6 col-md site-footer-col">
             <h3>Community</h3>
             <ul>
                 <li><a href="https://github.com/testflows">GitHub</a></li>
                 <li><a href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
                 <li><a href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                <% var footerTwin = markdown_twin(page); if (footerTwin) { %>
+                <li><a href="<%- url_for(footerTwin) %>" title="This page in Markdown">Markdown</a></li>
+                <% } %>
+                <li><a href="<%- url_for('/llms.txt') %>" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="<%- url_for('/agents.md') %>" title="Guide for agents (agents.md)">Guide</a></li>
             </ul>
         </div>
     </div>

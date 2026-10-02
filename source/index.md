@@ -8,7 +8,7 @@ fullwidth: true
 <div class="container banner-inner">
 <div class="banner-text">
 <h1>Write test programs.<br>Explore in a deterministic machine.</h1>
-<p>Built for humans and AI agents.</p>
+<p>Built for humans and <a href="/agents.md" title="Guide for AI agents">AI agents</a>.</p>
 </div>
 </div>
 </div>

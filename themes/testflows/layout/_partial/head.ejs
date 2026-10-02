@@ -41,6 +41,7 @@
   <meta name="description" content="<%- page.description || config.description %>">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="<%- page.author || 'TestFlows'%>">
+<%- partial('_partial/ai_markdown', {part: 'head'}) %>
   <meta name="og:site_name" content="TestFlows">
   <meta property="og:image" content="<%- full_url_for(page.image || config.social_share) %>">
   <% if (page.post) { %>
