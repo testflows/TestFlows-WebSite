@@ -125,7 +125,9 @@ fetch_once() {
     elif [ "$DOWNLOADER" = "wget" ]; then
         local https_only=()
         [ "$PROTOCOLS" = "=https" ] && https_only=(--https-only)
-        wget -q --tries=1 --timeout=15 "${https_only[@]}" -O "$2" "$1"
+        # ${...[@]+...}: macOS runs this under bash 3.2, where set -u calls an empty array
+        # unbound.
+        wget -q --tries=1 --timeout=15 ${https_only[@]+"${https_only[@]}"} -O "$2" "$1"
     else
         wget -q -T 15 -O "$2" "$1"
     fi
