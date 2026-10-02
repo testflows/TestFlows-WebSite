@@ -96,7 +96,7 @@ Total time 2ms
     </div>
 </section>
 
-<section class="index-close">
+<section class="index-close home-close">
     <div class="container section-close">
         <h1>Talk to our team</h1>
         <div class="section-close-actions">

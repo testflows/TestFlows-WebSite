@@ -11,24 +11,8 @@ permalink: machine/download/index.html
 
 <header class="download-header">
 <h1>Download client</h1>
-<p>The Machine client is one small program called <code>machine</code>.</p>
+<p>The Machine client is one small program called <code>machine</code>. Pick your system.</p>
 </header>
-
-<div class="download-section">
-<h2>Install with an AI agent</h2>
-<p>Give your AI agent the install guide. It installs the Machine client and, if you want it, the open-source Framework.</p>
-
-```bash
-curl -fsSL https://testflows.com/install.md | claude
-```
-
-<p>Or start your agent and ask it to follow <a href="/install.md">testflows.com/install.md</a>.</p>
-</div>
-
-<div class="download-section">
-<h2>Install it yourself</h2>
-<p>Pick your system.</p>
-</div>
 
 <ul class="nav nav-tabs platform-tabs" role="tablist" aria-label="Your system">
 <li class="nav-item"><a class="nav-link active" id="tab-linux-x86_64" data-toggle="tab" href="#platform-linux-x86_64" role="tab" aria-controls="platform-linux-x86_64" aria-selected="true"><i class="fab fa-linux" aria-hidden="true"></i> Linux (x64)</a></li>
