@@ -7,6 +7,8 @@ hide_footer: true
 portal_nav: true
 portal_auth_gate: true
 permalink: machine/portal/account/index.html
+sitemap: false
+noindex: true
 ---
 
 <section class="portal-page portal-dash">

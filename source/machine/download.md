@@ -2,7 +2,6 @@
 title: Download
 description: Download the Machine client for Linux and macOS.
 fullwidth: true
-sitemap: false
 permalink: machine/download/index.html
 ---
 

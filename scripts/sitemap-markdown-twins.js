@@ -2,25 +2,18 @@
  * List each page's Markdown version in the sitemap beside the page, so crawlers find the
  * Markdown as well as llms.txt and the pages' rel="alternate" links do.
  *
- * Runs after sitemap-exclude-machine.js (a later priority), so a page that script keeps out
- * of the sitemap keeps its Markdown version out too. Only versions the build actually
- * produced are listed: the Markdown path follows from the page's path, as in
- * markdown-twins.js, and is listed only if that route exists.
+ * Only versions the build actually produced are listed: the Markdown path follows from the
+ * page's path, as in markdown-twins.js, and is listed only if that route exists. A page kept
+ * out of the sitemap, by `sitemap: false`, keeps its Markdown version out too.
  *
  * Markdown with no page of its own is listed too: install.md, agents.md and the docs' parts,
- * such as docs/framework/writing-tests.md. Those follow the same pre-release rule: a file
- * whose page address would be under /machine/ is left out, as its page would be.
+ * such as docs/framework/writing-tests.md.
  */
 
 "use strict";
 
 const SITEMAP_XML = "sitemap.xml";
 const SITEMAP_TXT = "sitemap.txt";
-// Later than sitemap-exclude-machine.js, which registers at the default priority, 10.
-const AFTER_EXCLUSIONS = 20;
-// sitemap-exclude-machine.js's rule: a page whose address holds this is kept out while
-// Machine is pre-release. Delete with that script.
-const PRE_RELEASE = "/machine/";
 
 /** Read a Hexo route's full content to a string (null if the route is absent). */
 function readRoute(hexo, routePath) {
@@ -70,25 +63,31 @@ function addTwinsXml(xml, root, routes) {
   return [out, added];
 }
 
-/** Whether a Markdown route stands for a pre-release page: machine.md is /machine/,
- * docs/machine/disks.md is /docs/machine/disks/. */
-function preRelease(route) {
-  return ("/" + route.replace(/\.md$/, "/")).includes(PRE_RELEASE);
+/** The Markdown routes of pages kept out of the sitemap by `sitemap: false`. */
+function hiddenTwins(hexo, root) {
+  const hidden = new Set();
+  for (const kind of ["pages", "posts"]) {
+    hexo.locals.get(kind).forEach((page) => {
+      const route = page.sitemap === false && twinRoute(page.permalink, root);
+      if (route) hidden.add(route);
+    });
+  }
+  return hidden;
 }
 
 /** The public Markdown routes the sitemap does not list yet, as URLs. */
-function unlistedMarkdown(root, routes, listed) {
+function unlistedMarkdown(root, routes, listed, hidden) {
   return [...routes]
-    .filter((r) => r.endsWith(".md") && !preRelease(r))
+    .filter((r) => r.endsWith(".md") && !hidden.has(r))
     .map((r) => root + encodeURI(r))
     .filter((url) => !listed.has(url))
     .sort();
 }
 
 /** Add a <url> block for each Markdown file that has no page of its own. */
-function addUnlistedXml(xml, root, routes, now) {
+function addUnlistedXml(xml, root, routes, hidden, now) {
   const listed = new Set([...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]));
-  const urls = unlistedMarkdown(root, routes, listed);
+  const urls = unlistedMarkdown(root, routes, listed, hidden);
   const blocks = urls
     .map((url) => `  <url>\n    <loc>${url}</loc>\n    <lastmod>${now}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.5</priority>\n  </url>\n`)
     .join("");
@@ -96,9 +95,9 @@ function addUnlistedXml(xml, root, routes, now) {
 }
 
 /** Add a line for each Markdown file that has no page of its own. */
-function addUnlistedTxt(txt, root, routes) {
+function addUnlistedTxt(txt, root, routes, hidden) {
   const listed = new Set(txt.split("\n"));
-  const urls = unlistedMarkdown(root, routes, listed);
+  const urls = unlistedMarkdown(root, routes, listed, hidden);
   return [txt.replace(/\n*$/, "\n") + urls.map((u) => u + "\n").join(""), urls.length];
 }
 
@@ -126,6 +125,7 @@ hexo.extend.filter.register(
     const root = this.config.url.replace(/\/$/, "") + "/";
     const routes = new Set(this.route.list());
     const now = new Date().toISOString();
+    const hidden = hiddenTwins(this, root);
     let twins = 0;
     let unlisted = 0;
     for (const routePath of [SITEMAP_XML, SITEMAP_TXT]) {
@@ -136,8 +136,8 @@ hexo.extend.filter.register(
         ? addTwinsXml(content, root, routes)
         : addTwinsTxt(content, root, routes);
       const [complete, unlistedCount] = xml
-        ? addUnlistedXml(withTwins, root, routes, now)
-        : addUnlistedTxt(withTwins, root, routes);
+        ? addUnlistedXml(withTwins, root, routes, hidden, now)
+        : addUnlistedTxt(withTwins, root, routes, hidden);
       this.route.set(routePath, complete);
       if (xml) {
         twins = twinCount;
@@ -145,6 +145,5 @@ hexo.extend.filter.register(
       }
     }
     this.log.info(`sitemap: listed ${twins} Markdown versions beside their pages and ${unlisted} Markdown-only files`);
-  },
-  AFTER_EXCLUSIONS
+  }
 );
