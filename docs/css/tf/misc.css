@@ -75,19 +75,22 @@ hr {
     display: flex;
     align-items: stretch;
     gap: 0;
-    max-width: 44rem;
+    /* Fit the command, so Copy sits right after it; long ones wrap or scroll at the max */
+    width: fit-content;
+    max-width: min(44rem, 100%);
     margin: 1rem 0;
     background: var(--tf-terminal-bg);
     border: 1px solid var(--tf-card-border-hover);
     border-radius: var(--tf-radius);
     overflow: hidden;
+    cursor: pointer;
 }
 
 .install-cmd code {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     min-width: 0;
     margin: 0;
-    padding: 0.95rem 1.1rem;
+    padding: 1rem 1.1rem;
     background: transparent;
     border: 0;
     color: rgba(var(--tf-terminal-fg-rgb), 0.95);
@@ -110,36 +113,42 @@ hr {
 
 .install-copy {
     flex: 0 0 auto;
-    min-width: 6.5rem;
-    padding: 0 1.1rem;
+    align-self: center;
+    margin: 0 0.85rem 0 0;
+    /* One width for every label (Copy, Copied, Ctrl-C), so the box never resizes */
+    box-sizing: border-box;
+    width: 4.6rem;
+    padding: 0.25rem 0;
+    text-align: center;
     border: 0;
-    border-left: 1px solid var(--tf-card-border-hover);
-    background: rgba(var(--tf-terminal-fg-rgb), 0.06);
-    color: rgba(var(--tf-terminal-fg-rgb), 0.95);
+    border-radius: var(--tf-radius-pill);
+    background: #e9efea;
+    color: #101512;
     font-family: var(--tf-font);
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 700;
+    line-height: 1.2;
     cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
+    transition: filter 0.15s ease;
 }
-
 .install-copy:hover,
-.install-copy:focus-visible { background: rgba(var(--tf-terminal-fg-rgb), 0.14); }
-.install-copy.is-copied { color: var(--tf-accent); }
+.install-copy:focus-visible { filter: brightness(0.92); }
+.install-copy.is-copied { background: var(--tf-accent); color: #07140d; }
 
 @media (max-width: 575.98px) {
     /* Show the whole command on a phone instead of a sideways scroll. */
-    .install-cmd code { font-size: 0.82rem; padding: 0.85rem 0.8rem; white-space: normal; overflow-wrap: anywhere; }
-    .install-copy { min-width: 4.8rem; padding: 0 0.8rem; }
+    .install-cmd code,
+    .download-section .install-cmd code { font-size: 0.82rem; padding: 0.9rem 0.8rem; white-space: normal; overflow-wrap: anywhere; }
+    .install-copy { margin: 0 0.65rem 0 0; width: 4.4rem; padding: 0.3rem 0; }
 }
 
 /* Several commands in one box (the by-hand steps) */
 .install-cmd--steps .install-lines {
-    flex: 1 1 auto;
+    flex: 0 1 auto;
     min-width: 0;
     display: flex;
     flex-direction: column;
-    padding: 0.55rem 0;
+    padding: 0.7rem 0;
 }
 
 .install-cmd--steps .install-lines code { padding: 0.28rem 1.1rem; }
@@ -198,9 +207,10 @@ hr {
     background: transparent;
     border-radius: 0;
     font-size: 0.95rem;
+    padding: 1rem 1.1rem;
 }
 
-.download-section .install-cmd--steps .install-lines code { font-size: 0.88rem; }
+.download-section .install-cmd--steps .install-lines code { font-size: 0.88rem; padding: 0.28rem 1.1rem; }
 
 .download-table {
     width: 100%;
