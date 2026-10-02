@@ -29,40 +29,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790910686451" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790910686451" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790910473630" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790910686451" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -217,6 +217,15 @@
 </div>
 
 <div class="download-section">
+<h2>Check the download</h2>
+<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check the installed client yourself, compare its checksum with the one published for its version. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine --version</span><br><span class="line">curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum</span><br><span class="line"><span class="built_in">sha256sum</span> <span class="string">&quot;<span class="subst">$(command -v machine)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The last two lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+</div>
+
+<div class="download-section">
 <h2>Uninstall</h2>
 <p>Sign out, so the session ends on the server too, then delete the client, what it unpacked, and its sign-in and keys. Nothing else on your system is changed.</p>
 
@@ -244,6 +253,15 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build --platform linux/amd64 -t myapp:latest .</span><br><span class="line">docker pull --platform linux/amd64 myapp:latest</span><br></pre></td></tr></table></figure>
 
 <p>The <a href="/docs/machine/#Building-disks-on-an-ARM-machine">docs</a> cover Compose projects and binaries.</p>
+</div>
+
+<div class="download-section">
+<h2>Check the download</h2>
+<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check the installed client yourself, compare its checksum with the one published for its version. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine --version</span><br><span class="line">curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum</span><br><span class="line"><span class="built_in">sha256sum</span> <span class="string">&quot;<span class="subst">$(command -v machine)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>The last two lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
@@ -277,6 +295,15 @@
 </div>
 
 <div class="download-section">
+<h2>Check the download</h2>
+<p>The installer checks the archive it downloads against its published SHA-256 checksum before it unpacks it. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check it yourself, download the archive and its checksum for your version and compare them. Find your version on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>, then put it in place of <code>YYYYMMDD-HHMM</code> below.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine --version</span><br><span class="line">curl -fsSO https://testflows-machine-client.fsn1.your-objectstorage.com/YYYYMMDD-HHMM/machine-darwin-arm64.tar.gz</span><br><span class="line">curl -fsSO https://testflows-machine-client.fsn1.your-objectstorage.com/YYYYMMDD-HHMM/machine-darwin-arm64.tar.gz.sha256</span><br><span class="line">shasum -a 256 -c machine-darwin-arm64.tar.gz.sha256</span><br></pre></td></tr></table></figure>
+
+<p>The last line should print <code>machine-darwin-arm64.tar.gz: OK</code>. If it doesn't, install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
+</div>
+
+<div class="download-section">
 <h2>Uninstall</h2>
 <p>Sign out, so the session ends on the server too, then delete the client and its sign-in and keys. Nothing else on your Mac is changed.</p>
 
@@ -306,20 +333,6 @@
 </div>
 </div>
 
-</div>
-
-<div class="download-section">
-<h2>Check the download</h2>
-<p>The installer already checks what it downloads. The checksum catches a corrupt or cut-short download; HTTPS is what protects the download itself. To check a file yourself, compare its checksum with the one published for its version.</p>
-<p>First, find your version. It is on the banner line, a date and time like <code>YYYYMMDD-HHMM</code>.</p>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine --version</span><br></pre></td></tr></table></figure>
-
-<p>Then print the checksum published for that version, and the checksum of your file. Put your version in place of <code>YYYYMMDD-HHMM</code>.</p>
-
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --checksum</span><br><span class="line"><span class="built_in">sha256sum</span> <span class="string">&quot;<span class="subst">$(command -v machine)</span>&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>Both lines should start with the same 64 characters. If they don't, delete the file and install again. To read the installer before you run it, pipe it to <code>less</code> instead of <code>bash</code>.</p>
 </div>
 
 <div class="download-section">
@@ -400,9 +413,9 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790910473631"></script>
-<script src="/js/machine-hero-type.js?v=1790910473631"></script>
-<script src="/js/download-platforms.js?v=1790910473631"></script>
+<script src="/js/index-code-type.js?v=1790910686451"></script>
+<script src="/js/machine-hero-type.js?v=1790910686451"></script>
+<script src="/js/download-platforms.js?v=1790910686451"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
