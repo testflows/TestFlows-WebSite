@@ -114,6 +114,29 @@ machine --help
 machine fork --help
 ```
 
+`machine --version` prints the client's version and its license. Include the
+version when you report a problem.
+
+```bash
+machine --version
+```
+```bash
+  ---- o o o ----
+ |   o       o   |
+ | 1 o 10010 o 0 |
+ |   o       o   |  🛸 TestFlows Machine Client v0.1.0
+  ---  o o oxx --
+ /           xx   \
+/  ^^^        xx   \
+ ------------------
+
+Copyright (C) 2026 Katteli Inc. All rights reserved.
+TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, ...
+```
+
 If something does not work, `machine ping` checks that you can reach the
 service and your sessions, and how long the round trip takes.
 
