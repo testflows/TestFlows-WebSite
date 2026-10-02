@@ -198,16 +198,27 @@ sha256_of() {
     fi
 }
 
+# platform_asset: the file each release publishes for this system, and how it installs:
+# "binary", one self-extracting file, or "tree", a .tar.gz unpacked into its own folder.
+# Sets ASSET and KIND; fails for a system no release is built for.
+platform_asset() {
+    case "$(uname -s)-$(uname -m)" in
+        Linux-x86_64 | Linux-amd64)  ASSET="machine";                     KIND="binary" ;;
+        Linux-aarch64 | Linux-arm64) ASSET="machine-linux-arm64";         KIND="binary" ;;
+        Darwin-arm64)                ASSET="machine-darwin-arm64.tar.gz"; KIND="tree" ;;
+        *) return 1 ;;
+    esac
+}
+
 check_platform() {
+    platform_asset && return 0
     local os arch
     os="$(uname -s)"
     arch="$(uname -m)"
-
     case "$os" in
-        Linux) ;;
         Darwin)
-            die "The Machine client doesn't run on macOS yet." \
-                "It is available for Linux (x86_64) only, for now." \
+            die "The Machine client doesn't run on Intel Macs." \
+                "It runs on Macs with Apple Silicon, and on Linux (x86_64 and arm64)." \
                 "Need another platform? Write to contact@testflows.com and tell us which."
             ;;
         MINGW* | MSYS* | CYGWIN*)
@@ -216,17 +227,8 @@ check_platform() {
                 "Need another platform? Write to contact@testflows.com and tell us which."
             ;;
         *)
-            die "The Machine client doesn't run on $os." \
-                "It is available for Linux (x86_64) only, for now." \
-                "Need another platform? Write to contact@testflows.com and tell us which."
-            ;;
-    esac
-
-    case "$arch" in
-        x86_64 | amd64) ;;
-        *)
-            die "The Machine client doesn't run on $arch processors." \
-                "It is available for x86_64 only, for now." \
+            die "The Machine client doesn't run on $os $arch." \
+                "It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon." \
                 "Need another platform? Write to contact@testflows.com and tell us which."
             ;;
     esac
@@ -237,10 +239,10 @@ print_checksum() {
     local sum
     TMP="$(mktemp)" || die "Could not create a temporary file."
     trap 'rm -f "$TMP"' EXIT
-    fetch "$BASE_URL/$1/machine.sha256" "$TMP" || die "Could not find a checksum for version $1." \
+    fetch "$BASE_URL/$1/$ASSET.sha256" "$TMP" || die "Could not find a checksum for version $1." \
         "Is it a released version? Leave MACHINE_VERSION unset for the latest."
     sum="$(checksum_from "$TMP")"
-    printf '%s  machine\n' "$sum"
+    printf '%s  %s\n' "$sum" "$ASSET"
 }
 
 # The cache folder a machine binary unpacks into: the build key is the second
@@ -285,6 +287,46 @@ remove_old_unpacks() {
     esac
 }
 
+# install_tree RELEASE SHARE TARGET: unpack the verified download TMP into SHARE/RELEASE and
+# point TARGET at the executable in it. The tree is unpacked beside its final folder and
+# renamed into place, and the link replaced by a rename, so a cut-off install leaves the
+# previous one working. Sets INSTALLED to the version the unpacked client reports.
+install_tree() {
+    local release="$1" share="$2" target="$3" link
+    STAGE="$(mktemp -d "$share/.unpack.XXXXXX")" || die "Could not write to $(tilde "$share")."
+    tar -xzf "$TMP" -C "$STAGE" || die "The download couldn't be unpacked." \
+        "Run this again, and write to contact@testflows.com if it keeps happening."
+    INSTALLED="$(version_of "$STAGE/machine/machine" || true)"
+    [ -n "$INSTALLED" ] || die "The downloaded client doesn't run on this system." \
+        "Write to contact@testflows.com with the output of uname -a and sw_vers."
+    rm -rf "${share:?}/$release"
+    mv "$STAGE/machine" "$share/$release"
+    rmdir "$STAGE"
+    STAGE=""
+    link="$(mktemp -u "$(dirname "$target")/.machine-link.XXXXXX")"
+    ln -s "$share/$release/machine" "$link"
+    mv -f "$link" "$target"
+}
+
+# remove_old_trees SHARE KEEP: remove the folders older versions were unpacked into, except
+# one a running machine uses.
+remove_old_trees() {
+    local share="$1" keep="$2" dir freed=0
+    for dir in "$share"/*/; do
+        dir="${dir%/}"
+        [ -d "$dir" ] || continue
+        version_valid "$(basename "$dir")" || continue
+        [ "$(basename "$dir")" = "$keep" ] && continue
+        pgrep -f "$dir/machine" > /dev/null 2>&1 && continue
+        rm -rf "$dir" && freed=$((freed + 1))
+    done
+    case "$freed" in
+        0) ;;
+        1) ok "Removed an older version from $(tilde "$share")" ;;
+        *) ok "Removed $freed older versions from $(tilde "$share")" ;;
+    esac
+}
+
 # How to put DIR on PATH: the line to paste for the shell this user runs.
 path_hint() {
     local dir="$1" shown
@@ -314,7 +356,13 @@ main() {
     done
 
     # Before any download: on a system it doesn't run on, say so, not a network error.
-    [ "$mode" = "checksum" ] || check_platform
+    # --checksum runs anywhere, for checking a file by hand; off a supported system it
+    # prints the Linux x86_64 file's.
+    if [ "$mode" = "checksum" ]; then
+        platform_asset || { ASSET="machine"; KIND="binary"; }
+    else
+        check_platform
+    fi
     choose_downloader
     [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as MACHINE_BASE_URL asks."
 
@@ -336,7 +384,8 @@ main() {
     [ -n "${HOME:-}" ] || die "HOME is not set." "The client needs a home directory to run."
     local dir="${MACHINE_INSTALL_DIR:-$HOME/.local/bin}"
     local target="$dir/machine"
-    local url="$BASE_URL/$release/machine"
+    local url="$BASE_URL/$release/$ASSET"
+    local share="${XDG_DATA_HOME:-$HOME/.local/share}/machine"
 
     local before=""
     if [ -x "$target" ]; then
@@ -346,11 +395,17 @@ main() {
     say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
     mkdir -p "$dir" || die "Could not create $(tilde "$dir")."
 
-    # Download next to the final spot so the last step is an atomic rename.
-    # TMP is global so the EXIT trap can still see it when die() exits from here.
-    TMP="$(mktemp "$dir/.machine.XXXXXX")" || die "Could not write to $(tilde "$dir")."
+    # Download next to where it ends up, so the last step is a rename. TMP, SUMFILE and
+    # STAGE are global so the EXIT trap can still see them when die() exits from here.
+    local downloads="$dir"
+    if [ "$KIND" = "tree" ]; then
+        downloads="$share"
+        mkdir -p "$share" || die "Could not create $(tilde "$share")."
+    fi
+    TMP="$(mktemp "$downloads/.machine.XXXXXX")" || die "Could not write to $(tilde "$downloads")."
     SUMFILE="$TMP.sha256"
-    trap 'rm -f "$TMP" "$SUMFILE"' EXIT
+    STAGE=""
+    trap 'rm -rf "$TMP" "$SUMFILE" ${STAGE:+"$STAGE"}' EXIT
 
     fetch "$url" "$TMP" || die "Could not download version $release." \
         "Check your connection and try again. A pinned MACHINE_VERSION must be a released version."
@@ -367,14 +422,18 @@ main() {
             "got      $got" \
             "Run this again, and write to contact@testflows.com if it keeps happening."
     fi
-    chmod +x "$TMP"
 
     local after
-    after="$(version_of "$TMP" || true)"
-    [ -n "$after" ] || die "The downloaded file doesn't run on this system." \
-        "It is a static Linux x86_64 program. Write to contact@testflows.com with the output of uname -a."
-
-    mv -f "$TMP" "$target"
+    if [ "$KIND" = "tree" ]; then
+        install_tree "$release" "$share" "$target"
+        after="$INSTALLED"
+    else
+        chmod +x "$TMP"
+        after="$(version_of "$TMP" || true)"
+        [ -n "$after" ] || die "The downloaded file doesn't run on this system." \
+            "Write to contact@testflows.com with the output of uname -a."
+        mv -f "$TMP" "$target"
+    fi
     rm -f "$SUMFILE"
     trap - EXIT
 
@@ -386,7 +445,11 @@ main() {
         ok "Updated machine $before → $after at $(tilde "$target")"
     fi
 
-    remove_old_unpacks "$(unpack_dir_of "$target")"
+    if [ "$KIND" = "tree" ]; then
+        remove_old_trees "$share" "$release"
+    else
+        remove_old_unpacks "$(unpack_dir_of "$target")"
+    fi
 
     # Make sure typing `machine` finds the one just installed.
     local found

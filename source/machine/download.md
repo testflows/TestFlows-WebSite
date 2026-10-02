@@ -11,7 +11,7 @@ permalink: machine/download/index.html
 
 <header class="download-header">
 <h1>Download client</h1>
-<p>The Machine client is one small program called <code>machine</code>. It runs on Linux (x86_64).</p>
+<p>The Machine client is one small program called <code>machine</code>. It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon.</p>
 </header>
 
 <div class="download-section">
@@ -23,7 +23,7 @@ curl https://testflows.com/machine/install -fsS | bash
 ```
 
 <p>It downloads the client over HTTPS, checks it against its published SHA-256 checksum, and puts it in <code>~/.local/bin</code>. It never asks for root, and needs <code>curl</code> or <code>wget</code>. If that folder isn't on your <code>PATH</code> yet, it shows the line to add for your shell. Run the same command again to update.</p>
-<p>On its first run the client unpacks itself into <code>~/.cache/machine/</code>, about 80 MB. An update removes what older versions unpacked there.</p>
+<p>On Linux the client unpacks itself into <code>~/.cache/machine/</code> on its first run, about 80 MB. On a Mac the installer unpacks it into <code>~/.local/share/machine/</code> and links <code>~/.local/bin/machine</code> to it. An update removes what older versions left there.</p>
 </div>
 
 <div class="download-section">
@@ -32,9 +32,10 @@ curl https://testflows.com/machine/install -fsS | bash
 <thead><tr><th>System</th><th>Status</th></tr></thead>
 <tbody>
 <tr><td>Linux, x86_64</td><td class="is-yes">Supported</td></tr>
+<tr><td>Linux, arm64</td><td class="is-yes">Supported</td></tr>
+<tr><td>macOS, Apple Silicon</td><td class="is-yes">Supported</td></tr>
+<tr><td>macOS, Intel</td><td>Not available</td></tr>
 <tr><td>Windows</td><td>Use it inside WSL, which is Linux. No native build yet.</td></tr>
-<tr><td>macOS</td><td>Not available yet</td></tr>
-<tr><td>Linux, ARM64</td><td>Not available yet</td></tr>
 </tbody>
 </table>
 <p>Need another platform? <a href="/contact.html?topic=machine">Tell us which one</a>.</p>
@@ -77,7 +78,7 @@ curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM 
 ```bash
 machine logout
 rm ~/.local/bin/machine
-rm -rf ~/.cache/machine ~/.testflows/machine
+rm -rf ~/.cache/machine ~/.local/share/machine ~/.testflows/machine
 ```
 
 <p>Nothing else on your system is changed.</p>
