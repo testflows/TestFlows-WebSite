@@ -33,13 +33,15 @@
   var tArea = '';
   if (tPath.indexOf('docs/framework/') === 0 || tPath.indexOf('docs/machine/') === 0) tArea = 'Docs';
   else if (tPath.indexOf('machine/portal/') === 0 || tPath === 'machine/download/index.html') tArea = 'Machine';
-  else if (tPath.indexOf('machine/legal/') === 0 && tPath !== 'machine/legal/index.html') tArea = 'Machine Legal';
+  else if (tPath.indexOf('machine/legal/') === 0) tArea = 'Machine Legal';
   else if (tPath.indexOf('legal/') === 0 && tPath !== 'legal/index.html') tArea = 'Legal';
   else if (page.post) tArea = 'Blog';
   %>
   <title><% if (tPath === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | <%- tArea || 'TestFlows' %><% } %></title>
   <meta name="description" content="<%- page.description || config.description %>">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <%# noindex: true in a page's front matter, for pages that are nothing until you sign in. %>
+  <% if (page.noindex) { %><meta name="robots" content="noindex"><% } %>
   <meta name="author" content="<%- page.author || 'TestFlows'%>">
 <%- partial('_partial/ai_markdown', {part: 'head'}) %>
   <meta name="og:site_name" content="TestFlows">
