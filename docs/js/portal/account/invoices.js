@@ -1,16 +1,8 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=9468f117fdf7";
-import { setStatus, showSpinner } from "../ui.js?v=9468f117fdf7";
-import { compactDatetime, eur, titleCase } from "./format.js?v=9468f117fdf7";
-import { makePager } from "./pager.js?v=9468f117fdf7";
-import { paintEmpty } from "./table.js?v=9468f117fdf7";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=4c80ba13c4ed";
+import { setStatus, showSpinner } from "../ui.js?v=4c80ba13c4ed";
+import { compactDatetime, eur, titleCase } from "./format.js?v=4c80ba13c4ed";
+import { makePager } from "./pager.js?v=4c80ba13c4ed";
+import { paintEmpty } from "./table.js?v=4c80ba13c4ed";
 
 /**
  * @param {HTMLElement} panel

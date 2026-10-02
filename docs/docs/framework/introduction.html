@@ -1,0 +1,590 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  <title>TestFlows | Docs</title>
+  <meta name="description" content="Python library for writing test programs">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+
+
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/img/social-share.png">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790967011382" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790967011382" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790967011382" media="screen" type="text/css">
+  
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-current="page">Docs</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog">Blog</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
+            
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      
+
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="row">
+        <div class="col">
+            <!-- agents: TestFlows Framework docs, one part. Index: https://testflows.com/docs/framework.md . Names in [brackets] are links, defined in https://testflows.com/docs/framework/references.md -->
+
+<h1 id="What-is-it"><a href="#What-is-it" class="headerlink" title="What is it?"></a>What is it?</h1><p><strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> is an open-source software testing framework that can be used for functional,
+integration, acceptance and unit testing across various teams. It is designed to provide
+complete control of how tests are written and executed by allowing you to write tests and
+define test <a href="concepts-and-types.md#Flow-is">flow</a> explicitly as [Python] code. It uses [everything is a test] approach
+with the focus on giving test authors flexibility in writing and running their tests.
+It’s designed to meet the needs of small QA groups at software startup companies
+while providing the tools to meet the formalities of the large enterprise QA groups
+producing professional test process documentation that includes detailed test and
+software requirements specifications as well as requirements coverage, official test
+and metrics reports. Designed for large scale test analytics processing using
+[ClickHouse] and [Grafana] and built on top of a messaging protocol to allow
+writing advanced parallel tests that require test-to-test communication
+and could be executed in a hive mode on multi-node clusters.</p>
+<h1 id="Differentiating-Features"><a href="#Differentiating-Features" class="headerlink" title="Differentiating Features"></a>Differentiating Features</h1><p><strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> has the following differentiating features that make
+it stand out from plenty of other open and closed source test frameworks.</p>
+<div class="heading-h2">Flexible</div>
+
+<p>The framework has many advanced features but it allows you to use only
+the pieces that you need. For example, if you don’t want to use requirements
+you don’t have to, or if you don’t want to break your tests into steps or
+use behavior driven step keywords, that is perfectly fine.
+At the heart, it is just a collection of Python modules so you are always
+in control and you are not forced to use anything that you don’t need.</p>
+<div class="heading-h2">Requirements oriented</div>
+
+<p>An enterprise quality assurance process must always revolve around <em><strong>requirements</strong></em>.
+However, requirements are most often ignored in software development groups even at
+large companies. The framework is designed to break that trend
+and allows you to write and work with requirements just like you work with code.
+However, if you are not ready to use requirements then you don’t have to.</p>
+<p>Whether you realize it or not the only <strong>true purpose of writing any test is
+to verify one or more requirements</strong> and it does not really matter if you have
+clearly identified these requirements or not. Tests verify requirements and
+each requirement must be verified by either fully automated, semi-automated or
+manual test. If you don’t have any tests to verify some requirement
+then you can’t be sure that requirement is met or that the next version
+of your software does not break it.</p>
+<p>With <strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong>, you don’t have to wait for your company’s culture to change in relation
+to handling and managing requirements. You are able
+to write and manage requirements yourself, just like code. Requirements are simply
+written in a [Markdown] document, where each requirement has a unique identifier and version.
+These documents are the source of the requirements that you can convert to Python requirement objects,
+which you can easily link with your tests. To match the complexities of real world requirement verification,
+<strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> allows one-to-one, one-to-many, many-to-one, or many-to-many test-to-requirement
+relationships.</p>
+<div class="heading-h2">Programs and not just tests</div>
+
+<p>Write [Python] <strong>test programs</strong> and not just tests. A test program
+can execute any number of tests. This provides the unrivalled flexibility to meet the needs of any project.
+Tests are not decoupled from test flow where the flow defines a precise order of
+how tests are executed. However, you can write many kinds of test runners
+using the framework if you need them. For example, you can write test programs
+that read test cases from databases, API endpoints, or file systems and trigger
+your test cases based on any condition. By writing a test program you are in total control
+of how you want to structure and approach the testing of a given project.</p>
+<p>Through its flexibility, <strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> helps to avoid test tool fragmentation
+where each project in a company eventually starts to use their own test framework
+and nobody knows how to run tests written by other groups and reporting across
+groups becomes inconsistent and difficult to follow.</p>
+<div class="heading-h2">Self-documenting tests</div>
+
+<p>Provides tools for test authors to break tests into test [Step]s and
+use behavior driven step keywords such as [Given], [When], [Then] and others to make
+tests and test procedures pleasantly readable. Breaking tests into steps brings an advantage
+of test code becoming self-documenting, it provides an easy way to auto-generate
+formal documentation such as a test specification without doing any extra work,
+produces detailed test logs and facilitates test failure debugging.</p>
+<p>Test steps can also be made reusable, allowing test authors to create reusable
+steps modules that greatly simplify writing new test scenarios. Just
+like you write regular programs by using function calls you can
+modularize tests by using reusable test steps. Using reusable steps
+produces clean test code and greatly improves readability and maintainability
+of tests.</p>
+<div class="heading-h2">Auto-generate test specifications</div>
+
+<p>If your test process or your manager requires you to produce formal test
+specifications that must describe the procedure of each test, then you can easily
+auto-generate them.</p>
+<div class="heading-h2">Asynchronous tests</div>
+
+<p>Writing asynchronous tests is as easy as writing regular tests.
+The framework even allows you to run asynchronous and synchronous test code
+in the same test program.</p>
+<div class="heading-h2">Semi-automated and manual tests</div>
+
+<p>Testing real-world applications is usually not done only with fully automated test scenarios.
+Most often, verification requires a mix of automated, semi-automated, and manual tests.</p>
+<p>The framework allows you to unify your testing and provides uniform test reporting
+no matter what type of tests you need for your project by natively supporting the
+authoring of automated, semi-automated, and manual tests.</p>
+<div class="heading-h2">Parallel tests and execution</div>
+
+<p>Native support for authoring parallel tests and
+executing them in parallel, with fine-grain control over what and where runs in parallel.
+Asynchronous tests are also supported and allow for thousands of concurrent
+tests to be run at the same time. Mixing parallel and asynchronous tests is also supported.</p>
+<div class="heading-h2">Combinatorial tests and covering arrays</div>
+
+<p>Combinatorial tests are supported by allowing you to define tests and steps that can take arguments,
+as well as allowing you to easily and naturally define tests that check different combinations using [TestSketch]es
+without writing any nested for-loops or calculating combinations beforehand.</p>
+<p>In addition, a convenient collection of tools used for combinatorial testing is provided
+including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.</p>
+<div class="heading-h2">Everything-is-a-test</div>
+
+<p>It uses everything-is-a-test approach that allows unified treatment
+of any code that is executed during testing. There is no second class test code.
+If a test fails during setup, teardown or execution of one of its actions,
+the failure is handled identically. This avoids mixing analysis of why the test failed
+with test execution and results in a clean and uniform approach to testing.</p>
+<div class="heading-h2">Message-based protocol</div>
+
+<p>It is built on top of a messaging protocol. This brings
+many benefits, including the ability to transform test output and logs into a variety of
+different formats as well as enable advanced parallel testing.</p>
+<div class="heading-h2">Log storage and analytics</div>
+
+<p>Test logs were designed to be easily stored in [ClickHouse].
+Given that testing produces huge amounts of data, this integration
+brings test data analytics right to your fingertips.</p>
+<div class="heading-h2">Visualization</div>
+
+<p>Standard [Grafana] dashboards are available to visualize your test data
+stored in [ClickHouse]. Additional dashboards can be easily created in [Grafana]
+to highlight test results that are the most important for your project.</p>
+<div class="heading-h2">No unnecessary abstractions</div>
+
+<p>Avoids unnecessary abstraction layers, such
+as when test runners are decoupled from tests or the usage of behavior driven
+(BDD) keywords is always tied to Gherkin specifications. These abstractions,
+while providing some benefit, in most cases lead to more problems than
+solutions when applied to real-world projects.</p>
+<h1 id="Using-Handbook"><a href="#Using-Handbook" class="headerlink" title="Using Handbook"></a>Using Handbook</h1><p>This handbook is a one-page document that you can search using standard
+browser search (<code>Ctrl-F</code>).</p>
+<p>For ease of navigation, you can always click any heading to go back to the table of contents.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Try clicking <code>Using Handbook</code> heading and you will see that the page
+will scroll up and the corresponding entry in the table of contents
+will be highlighted in red. This handy feature will make sure you are never lost!</p>
+</blockquote>
+<p>There is also <span><a class="fas fa-chevron-up" style="color: orange" href="#Contents"></a><span>
+icon on the bottom right of the page to allow you to quickly scroll to the top.</p>
+<p>Also, feel free to click on any internal or external references, as you can
+use your browser’s &#8678; back button to return to where you were.</p>
+<blockquote>
+<p> <strong>&#9995;</strong> Try clicking <a href="#Using-Handbook">Using Handbook</a> link and then
+use your browser’s &#8678; back button to return to the same scroll position in the handbook.</p>
+</blockquote>
+<p>If you find any errors or would like to add documentation for something that is
+still not documented, then submit a pull request
+with your changes to <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/TestFlows-WebSite/blob/master/source/handbook/index.md">handbook source file</a>.</p>
+<h1 id="Supported-Environment"><a href="#Supported-Environment" class="headerlink" title="Supported Environment"></a>Supported Environment</h1><ul>
+<li>[Ubuntu] 20.04</li>
+<li>[Python 3] &gt;&#x3D; 3.8</li>
+</ul>
+<blockquote>
+<p><strong>&#9995;</strong> Known to run on other systems such as MacOS.</p>
+</blockquote>
+<h1 id="Installation"><a href="#Installation" class="headerlink" title="Installation"></a>Installation</h1><p>You can install the framework using [pip3]</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install testflows</span><br></pre></td></tr></table></figure>
+
+<p>or from sources</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/testflows/TestFlows.git</span><br><span class="line"><span class="built_in">cd</span> TestFlows</span><br><span class="line">./build ; ./install</span><br></pre></td></tr></table></figure>
+
+<h2 id="Upgrading"><a href="#Upgrading" class="headerlink" title="Upgrading"></a>Upgrading</h2><p>If you already have <span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> installed, you can upgrade it to the latest version
+using the <code>--upgrade</code> option when executing <code>pip3 install</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install --upgrade testflows</span><br></pre></td></tr></table></figure>
+
+<h1 id="Hello-World"><a href="#Hello-World" class="headerlink" title="Hello World"></a>Hello World</h1><p>You can write an inline test scenario in just three lines.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Scenario</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Scenario(<span class="string">&quot;Hello World!&quot;</span>):</span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure>
+
+<p>and simply run it using <code>python3</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 ./test.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Jun 28,2020 14:47:02   ⟥  Scenario Hello World!</span><br><span class="line">                 2ms   ⟥⟤ OK Hello World!, /Hello World!</span><br><span class="line"></span><br><span class="line">Passing</span><br><span class="line"></span><br><span class="line">✔ [ OK ] /Hello World!</span><br><span class="line"></span><br><span class="line">1 scenario (1 ok)</span><br></pre></td></tr></table></figure>
+
+        </div>
+    </div>
+</div>
+
+
+    </div>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1790967011382"></script>
+<script src="/js/machine-hero-type.js?v=1790967011382"></script>
+<script src="/js/download-platforms.js?v=1790967011382"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

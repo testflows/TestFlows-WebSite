@@ -1,11 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 /**
  * Client-side Hashcash proof-of-work.
  * MUST mirror Machine client/api/hashcash.py and cloud/api/hashcash.py.

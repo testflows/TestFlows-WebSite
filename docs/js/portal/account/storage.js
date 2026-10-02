@@ -1,14 +1,6 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
-import { ApiError, getAccount, provisionStorage } from "../api.js?v=9468f117fdf7";
-import { setStatus, showSpinner } from "../ui.js?v=9468f117fdf7";
-import { fillPct, humanSize, renderFillBar } from "./format.js?v=9468f117fdf7";
+import { ApiError, getAccount, provisionStorage } from "../api.js?v=4c80ba13c4ed";
+import { setStatus, showSpinner } from "../ui.js?v=4c80ba13c4ed";
+import { fillPct, humanSize, renderFillBar } from "./format.js?v=4c80ba13c4ed";
 
 const POLL_MS = 2500;
 const MAX_POLLS = 40;

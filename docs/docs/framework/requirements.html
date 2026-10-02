@@ -1,0 +1,571 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  <title>TestFlows | Docs</title>
+  <meta name="description" content="Python library for writing test programs">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+
+
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/img/social-share.png">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790967011385" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790967011385" media="screen" type="text/css">
+  
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-current="page">Docs</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog">Blog</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
+            
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      
+
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="row">
+        <div class="col">
+            <!-- agents: TestFlows Framework docs, one part. Index: https://testflows.com/docs/framework.md . Names in [brackets] are links, defined in https://testflows.com/docs/framework/references.md -->
+
+<h1 id="Working-With-Requirements"><a href="#Working-With-Requirements" class="headerlink" title="Working With Requirements"></a>Working With Requirements</h1><p>Requirements must be at the core of any enterprise QA process. There exist numerous proprietary and complex
+systems for handling requirements. This complexity is usually not necessary,
+and <strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> provides a way to work with requirements just like with code
+and leverage the same development tools to enable easy linking of requirements to your tests.</p>
+<p>In general, when writing requirements, you should think about how they will be tested.
+Requirements can either be high level or low level. High level
+requirements are usually verified by [Feature]s or [Module]s and low level requirements
+by individual [Test]s or [Scenario]s.</p>
+<p>Writing untestable requirements is not very useful. Keep this in mind during
+your software testing process.</p>
+<blockquote>
+<p><em>When writing requirements, you should be thinking about tests or test suites that would verify them, and
+when writing tests or test suites, you should think about which requirements they will verify.</em></p>
+</blockquote>
+<p>The ideal requirement to test a relationship is one-to-one. Where one requirement
+is verified by one test. However, in practice, the relationship can be
+one-to-many, many-to-one, and many-to-many, and <strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> supports
+all of these cases.</p>
+<p>In many cases, don’t be afraid to modify and restructure your requirements once you
+start writing tests. It is natural to refactor requirements during test development
+process that helps better align requirements to tests and vice versa.</p>
+<blockquote>
+<p><em>Writing requirements is hard, but developing enterprise software without requirements
+is even harder.</em></p>
+</blockquote>
+<h2 id="Requirement-Documents"><a href="#Requirement-Documents" class="headerlink" title="Requirement Documents"></a>Requirement Documents</h2><p>Working with requirements just like with code is very convenient, but it does not necessarily mean
+that we need to write requirements as [Python] code.</p>
+<p>Requirements form documents such as SRS (Software Requirements Specification)
+where, in addition to the requirements, you might find additional sections
+such as introductions, diagrams, references, etc. Therefore, the most
+convenient way to define requirements is inside a document.</p>
+<p><strong><span><img alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span></strong> allows you to write requirements as a [Markdown]
+document that serves as the source of all the requirements. The document is the source
+and is stored just like code in the source control repository such as <a target="_blank" rel="noopener external nofollow noreferrer" href="https://git-scm.com/">Git</a>.
+This allows the same process to be applied to requirements as to the code.
+For example, you can use the same review process and the same tools. You also receive full
+traceability of when and who defined the requirement and keep track of any changes
+just like for your other source files.</p>
+<p>For example, a simple requirements document in [Markdown] can be defined as follows.</p>
+<blockquote>
+<p>requirements.md</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># SRS001 `ls` Unix Command Utility</span></span><br><span class="line"><span class="section"># Software Requirements Specification</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Introduction</span></span><br><span class="line"></span><br><span class="line">This software requirements specification covers the behavior of the standard</span><br><span class="line">Unix <span class="code">`ls`</span> utility.</span><br><span class="line"></span><br><span class="line"><span class="section">## Requirements</span></span><br><span class="line"></span><br><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL list the contents of a directory.</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>The above document serves as the source of all the requirements and can be
+used to generate corresponding [Requirement class] objects that can be linked with tests
+using <code>tfs requirements generate</code> command. See <a href="#Generating-Requirements-Objects">Generating Requirements Objects</a>.</p>
+<p>Each requirement is defined as a heading that starts with <code>RQ.</code> prefix and contains
+attributes such as <code>version</code>, <code>priority</code>, <code>group</code>, <code>type</code> and <code>uid</code> defined
+on the following line, which must be followed by an empty line.</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br></pre></td></tr></table></figure>
+
+<p>Only the <code>version</code> attribute is always required, and the others are optional.
+The <code>version</code> attribute allows for tracking material changes to the requirement over
+lifetime of the product and makes sure the tests get updated when a requirement has been
+updated to a new version.</p>
+<p>Any text found before the next section is considered to be the description of the requirement.</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">This is the first paragraph of the requirement description.</span><br><span class="line"></span><br><span class="line">This is the second paragraph.</span><br></pre></td></tr></table></figure>
+
+<p>Here is an example where multiple requirements are defined.</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL list the contents of a directory.</span><br><span class="line"></span><br><span class="line"><span class="section">### RQ.SRS001-CU.LS.ListHiddenEntries</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL accept <span class="code">`-a, --all`</span> option that SHALL cause the output</span><br><span class="line">to list entries starting with <span class="code">`.`</span> that SHALL be considered to be hidden.</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>&#9995;</strong> Except for the basic format to define the requirements described above,
+you can structure and organize the document in any way that is the most appropriate for
+your case.</p>
+</blockquote>
+<p>Each requirement must be given a unique name. The most common convention
+is to start with the SRS number as a prefix, followed by a dot separated
+name. The <code>.</code> separator serves to implicitly group the requirements.
+It is usually best to align these groups with the corresponding document sections.</p>
+<p>For example, we can create <code>Options</code> section where we would add requirements
+for the supported options. Then all the requirements in this section would have
+<code>RQ.SRS001-CU.LS.Options.</code> prefix.</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### Options</span></span><br><span class="line"></span><br><span class="line"><span class="section">#### RQ.SRS001-CU.LS.Options.ListHiddenEntries</span></span><br><span class="line">version: 1.0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>&#9995;</strong> Names are usually preferred over numbers to facilitate the movement of requirements between
+different parts of the document.</p>
+</blockquote>
+<h2 id="Generating-Requirement-Objects"><a href="#Generating-Requirement-Objects" class="headerlink" title="Generating Requirement Objects"></a>Generating Requirement Objects</h2><p>[Requirement class] objects can be auto generated from the [Markdown] requirements source files
+using <code>tfs requirements generate</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tfs requirements generate -h</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usage: tfs requirements generate [-h] [input] [output]</span><br><span class="line"></span><br><span class="line">Generate requirements from an SRS document.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  input       input file, default: stdin</span><br><span class="line">  output      output file, default: stdout</span><br></pre></td></tr></table></figure>
+
+<p>For example, given <code>requirements.md</code> file having the following content.</p>
+<blockquote>
+<p>requirements.md</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># SRS001 `ls` Unix Command Utility</span></span><br><span class="line"><span class="section"># Software Requirements Specification</span></span><br><span class="line"></span><br><span class="line"><span class="section">## Introduction</span></span><br><span class="line"></span><br><span class="line">This software requirements specification covers the behavior of the standard</span><br><span class="line">Unix <span class="code">`ls`</span> utility.</span><br><span class="line"></span><br><span class="line"><span class="section">## Requirements</span></span><br><span class="line"></span><br><span class="line"><span class="section">### RQ.SRS001-CU.LS</span></span><br><span class="line">version: 1.0</span><br><span class="line"></span><br><span class="line">The [<span class="string">ls</span>](<span class="link">#ls</span>) utility SHALL list the contents of a directory.</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>You can generate <code>requirements.py</code> file from it using the following command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> srs.md | tfs requirements generate &gt; requirements.py</span><br></pre></td></tr></table></figure>
+
+<p>The <code>requirements.py</code> will have the following content.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># These requirements were auto generated</span></span><br><span class="line"><span class="comment"># from software requirements specification (SRS)</span></span><br><span class="line"><span class="comment"># document by TestFlows v1.7.211105.1001849.</span></span><br><span class="line"><span class="comment"># Do not edit by hand but re-generate instead</span></span><br><span class="line"><span class="comment"># using &#x27;tfs requirements generate&#x27; command.</span></span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Specification</span><br><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> Requirement</span><br><span class="line"></span><br><span class="line">Heading = Specification.Heading</span><br><span class="line"></span><br><span class="line">RQ_SRS001_CU_LS = Requirement(</span><br><span class="line">    name=<span class="string">&#x27;RQ.SRS001-CU.LS&#x27;</span>,</span><br><span class="line">    version=<span class="string">&#x27;1.0&#x27;</span>,</span><br><span class="line">    priority=<span class="literal">None</span>,</span><br><span class="line">    group=<span class="literal">None</span>,</span><br><span class="line">    <span class="built_in">type</span>=<span class="literal">None</span>,</span><br><span class="line">    uid=<span class="literal">None</span>,</span><br><span class="line">    description=(</span><br><span class="line">        <span class="string">&#x27;The [ls](#ls) utility SHALL list the contents of a directory.\n&#x27;</span></span><br><span class="line">        ),</span><br><span class="line">    link=<span class="literal">None</span>,</span><br><span class="line">    level=<span class="number">2</span>,</span><br><span class="line">    num=<span class="string">&#x27;2.1&#x27;</span>)</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>For each requirement, a corresponding [Requirement class] object will be
+defined in addition to the [Specification class] object that describes the
+full requirements specification document.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SRS001_ls_Unix_Command_Utility = Specification(</span><br><span class="line">    name=<span class="string">&#x27;SRS001 `ls` Unix Command Utility&#x27;</span>,</span><br><span class="line">    description=<span class="literal">None</span>,</span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+
+<p>The objects defined in the <code>requirements.py</code> can now be imported into test
+source files and used to link with tests.</p>
+<h2 id="Linking-Requirements"><a href="#Linking-Requirements" class="headerlink" title="Linking Requirements"></a>Linking Requirements</h2><p>Once you have written your requirements in a [Markdown] document as described in <a href="#Requirements-As-Code">Requirements As Code</a>
+and have generated [Requirement class] objects from the requirements source file using <code>tfs requirements generate</code>
+command as described in <a href="#Generating-Requirements-Objects">Generating Requirements Objects</a>
+you can link the requirements to any of the tests by either setting
+<a href="test-properties.md#requirements">requirements</a> attribute of the inline test or using <a href="test-properties.md#Requirements">Requirements</a>
+decorator for decorated tests.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> RQ_SRS001_CU_LS</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;My test&quot;</span>, requirements=[RQ_SRS001_CU_LS(<span class="string">&quot;1.0&quot;</span>)] <span class="keyword">as</span> test:</span><br><span class="line">    note(test.requirements)</span><br></pre></td></tr></table></figure>
+
+<p>The <code>requirements</code> argument takes a list of requirements, so you can link
+any number of requirements to a single test.</p>
+<p>Instead of passing a list, you can also pass [Requirements] object directly as follows,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> RQ_SRS001_CU_LS</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Test(<span class="string">&quot;My test&quot;</span>, requirements=Requirements(RQ_SRS001_CU_LS(<span class="string">&quot;1.0&quot;</span>)) <span class="keyword">as</span> test:</span><br><span class="line">    note(test.requirements)</span><br></pre></td></tr></table></figure>
+
+<p>where [Requirements] can be passed one or more requirements.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Note that when linking requirements to test you should
+<strong>always</strong> call the requirement
+with the version that the test is verifying. If the version does not match
+the actual requirement version <code>RequirementError</code> exception will be raised.
+See <a href="test-properties.md#Test-Requirements">Test Requirements</a>.</p>
+</blockquote>
+<p>For decorated tests, [Requirements] class can also act as a decorator.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> RQ_SRS001_CU_LS</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="meta">@Requirements(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="meta">  RQ_SRS001_CU_LS(<span class="params"><span class="string">&quot;1.0&quot;</span></span>)</span></span></span><br><span class="line"><span class="params"><span class="meta"></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">my_test</span>(<span class="params">self</span>):</span><br><span class="line">    note(self.requirements)</span><br></pre></td></tr></table></figure>
+
+<h2 id="Linking-Specifications"><a href="#Linking-Specifications" class="headerlink" title="Linking Specifications"></a>Linking Specifications</h2><p>When generating requirements, in addition to the [Requirement class] objects created
+for each requirement, a [Specification class] object is also generated that describes
+the whole requirements specification document. This object can be
+linked to higher level tests so that a coverage report can be easily calculated
+for a specific test program run.</p>
+<p>To link [Specification class] object to a test, either use
+[specifications] parameter for inline tests or [Specifications] decorator
+for decorated tests.</p>
+<blockquote>
+<p><strong>&#9995;</strong> Specifications are usually linked to higher level tests such as
+[Feature], [Suite], or [Module].</p>
+</blockquote>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> SRS001_ls_Unix_Command_Utility</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>, specifications=[SRS001_ls_Unix_Command_Utility]) <span class="keyword">as</span> test:</span><br><span class="line">   note(test.specifications)</span><br></pre></td></tr></table></figure>
+
+<p>One or more specifications can be linked.</p>
+<p>Instead of passing a list, you can also pass [Specifications] object directly as follows,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> SRS001_ls_Unix_Command_Utility</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;regression&quot;</span>, specifications=Specifications(SRS001_ls_Unix_Command_Utility)) <span class="keyword">as</span> test:</span><br><span class="line">   note(test.specifications)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>&#9995;</strong> Note that [Specification class] object call also be
+called with a specific version, just like [Requirement class] objects.</p>
+</blockquote>
+<p>If a higher level test is defined using a decorated function, then you can use [Specifications]
+decorator.</p>
+<p>For example,</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> requirements <span class="keyword">import</span> SRS001_ls_Unix_Command_Utility</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestModule</span></span><br><span class="line"><span class="meta">@Specifications(<span class="params"></span></span></span><br><span class="line"><span class="params"><span class="meta">  SRS001_ls_Unix_Command_Utility</span></span></span><br><span class="line"><span class="params"><span class="meta"></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">regression</span>(<span class="params">self</span>):</span><br><span class="line">    note(self.specifications)</span><br></pre></td></tr></table></figure>
+
+        </div>
+    </div>
+</div>
+
+
+    </div>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1790967011385"></script>
+<script src="/js/machine-hero-type.js?v=1790967011385"></script>
+<script src="/js/download-platforms.js?v=1790967011385"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

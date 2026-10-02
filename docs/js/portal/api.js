@@ -1,11 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 /** Machine API client — cookie-native browser session.
  *
  * The access token lives in the HttpOnly `tf_session` cookie the API sets; JS never
@@ -21,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=9468f117fdf7";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=9468f117fdf7";
-import { setSession, clearSession } from "./session.js?v=9468f117fdf7";
+import { solve, currentBucket } from "./hashcash.js?v=4c80ba13c4ed";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=4c80ba13c4ed";
+import { setSession, clearSession } from "./session.js?v=4c80ba13c4ed";
 
 const MAX_POW_ROUNDS = 5;
 

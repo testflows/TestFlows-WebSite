@@ -1,0 +1,509 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  <title>TestFlows | Docs</title>
+  <meta name="description" content="Python library for writing test programs">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+
+
+  <meta name="og:site_name" content="TestFlows">
+  <meta property="og:image" content="https://testflows.com/img/social-share.png">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790967011385" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790967011385" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790967011385" media="screen" type="text/css">
+  
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-current="page">Docs</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog">Blog</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
+            
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <div class="content">
+      
+
+<div class="container" style="padding-bottom: 2em !important">
+    <div class="row">
+        <div class="col">
+            <!-- agents: TestFlows Framework docs, one part. Index: https://testflows.com/docs/framework.md . Names in [brackets] are links, defined in https://testflows.com/docs/framework/references.md -->
+
+<h1 id="Logs"><a href="#Logs" class="headerlink" title="Logs"></a>Logs</h1><p>The framework produces [LZMA] compressed logs that contains [JSON] encoded messages. For example,
+<br>
+<br></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;message_keyword&quot;</span><span class="punctuation">:</span><span class="string">&quot;TEST&quot;</span><span class="punctuation">,</span><span class="attr">&quot;message_hash&quot;</span><span class="punctuation">:</span><span class="string">&quot;ccd1ad1f&quot;</span><span class="punctuation">,</span><span class="attr">&quot;message_object&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span><span class="attr">&quot;message_num&quot;</span><span class="punctuation">:</span><span class="number">2</span><span class="punctuation">,</span><span class="attr">&quot;message_stream&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span><span class="attr">&quot;message_level&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span><span class="attr">&quot;message_time&quot;</span><span class="punctuation">:</span><span class="number">1593887847.045375</span><span class="punctuation">,</span><span class="attr">&quot;message_rtime&quot;</span><span class="punctuation">:</span><span class="number">0.001051</span><span class="punctuation">,</span><span class="attr">&quot;test_type&quot;</span><span class="punctuation">:</span><span class="string">&quot;Test&quot;</span><span class="punctuation">,</span><span class="attr">&quot;test_subtype&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span><span class="attr">&quot;test_id&quot;</span><span class="punctuation">:</span><span class="string">&quot;/68b96288-be25-11ea-8e14-2477034de0ec&quot;</span><span class="punctuation">,</span><span class="attr">&quot;test_name&quot;</span><span class="punctuation">:</span><span class="string">&quot;/My test&quot;</span><span class="punctuation">,</span><span class="attr">&quot;test_flags&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span><span class="attr">&quot;test_cflags&quot;</span><span class="punctuation">:</span><span class="number">0</span><span class="punctuation">,</span><span class="attr">&quot;test_level&quot;</span><span class="punctuation">:</span><span class="number">1</span><span class="punctuation">,</span><span class="attr">&quot;test_uid&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">,</span><span class="attr">&quot;test_description&quot;</span><span class="punctuation">:</span><span class="literal"><span class="keyword">null</span></span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>Each message is a [JSON] object. Object fields depend on the type of message that is specified by the <code>message_keyword</code>.</p>
+<p>Logs can be decompressed using either the standard <code>xzcat</code> utility</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xzcat test.log</span><br></pre></td></tr></table></figure>
+
+<p>or <code>tfs transform decompress</code> command</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs transform decompress</span><br></pre></td></tr></table></figure>
+
+<h2 id="Saving-Log-File"><a href="#Saving-Log-File" class="headerlink" title="Saving Log File"></a>Saving Log File</h2><p>Test log can be saved into a file by specifying <code>-l</code> or <code>--log</code> option when running the test. For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 test.py --<span class="built_in">log</span> test.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="Transforming-Logs"><a href="#Transforming-Logs" class="headerlink" title="Transforming Logs"></a>Transforming Logs</h2><p>Test logs can be transformed using <code>tfs transform</code> command. See <code>tfs transform --help</code>
+for a detailed list of available transformations.</p>
+<h3 id="nice"><a href="#nice" class="headerlink" title="nice"></a>nice</h3><p>The <code>tfs transform nice</code> command can be used to transform test log into a <code>nice</code> output format which the default output
+used for the <code>stdout</code>.</p>
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs transform <span class="built_in">nice</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Jul 04,2020 19:20:21   ⟥  Module filters</span><br><span class="line">Jul 04,2020 19:20:21     ⟥  Scenario test_0</span><br><span class="line">Jul 04,2020 19:20:21       ⟥  Step first step</span><br><span class="line">               596us       ⟥⟤ OK first step, /filters/test_0/first step</span><br><span class="line">                 1ms     ⟥⟤ OK test_0, /filters/test_0</span><br><span class="line">Jul 04,2020 19:20:21     ⟥  Suite suite 0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="short"><a href="#short" class="headerlink" title="short"></a>short</h3><p>The <code>tfs transform short</code> command can be used to transform test log into a <code>short</code> output format that contains test procedures
+and test results.</p>
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs transform short</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Module filters</span><br><span class="line">  Scenario test_0</span><br><span class="line">    Step first step</span><br><span class="line">    OK</span><br><span class="line">  OK</span><br><span class="line">  Suite suite 0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="slick"><a href="#slick" class="headerlink" title="slick"></a>slick</h3><p>The <code>tfs transform slick</code> command can be used to transform test log into a <code>slick</code> output format that contains only test names
+with results provided as icons in front of the test name. This output format is very concise.</p>
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs transform slick</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">➤ Module filters</span><br><span class="line">  ✔ Scenario test_0</span><br><span class="line">  ➤ Suite suite 0</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="dots"><a href="#dots" class="headerlink" title="dots"></a>dots</h3><p>The <code>tfs transform dots</code> command can be used to transform test log into a <code>dots</code> output format, which outputs dots
+for each executed test.</p>
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs transform dots</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.........................</span><br></pre></td></tr></table></figure>
+
+<h3 id="raw"><a href="#raw" class="headerlink" title="raw"></a>raw</h3><p>The <code>tfs transform raw</code> command can be used to transform a test log into a <code>raw</code> output format that contains raw [JSON]
+messages.</p>
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs transform raw</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;message_keyword&quot;</span>:<span class="string">&quot;PROTOCOL&quot;</span>,<span class="string">&quot;message_hash&quot;</span>:<span class="string">&quot;489eeba5&quot;</span>,<span class="string">&quot;message_object&quot;</span>:0,<span class="string">&quot;message_num&quot;</span>:0,<span class="string">&quot;message_stream&quot;</span>:null,<span class="string">&quot;message_level&quot;</span>:1,<span class="string">&quot;message_time&quot;</span>:1593904821.784232,<span class="string">&quot;message_rtime&quot;</span>:0.001027,<span class="string">&quot;test_type&quot;</span>:<span class="string">&quot;Module&quot;</span>,<span class="string">&quot;test_subtype&quot;</span>:null,<span class="string">&quot;test_id&quot;</span>:<span class="string">&quot;/ee772b86-be4c-11ea-8e14-2477034de0ec&quot;</span>,<span class="string">&quot;test_name&quot;</span>:<span class="string">&quot;/filters&quot;</span>,<span class="string">&quot;test_flags&quot;</span>:0,<span class="string">&quot;test_cflags&quot;</span>:0,<span class="string">&quot;test_level&quot;</span>:1,<span class="string">&quot;protocol_version&quot;</span>:<span class="string">&quot;TFSPv2.1&quot;</span>&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h3 id="compact"><a href="#compact" class="headerlink" title="compact"></a>compact</h3><p>The <code>tfs transform compact</code> command can be used to transform a test log into a <code>compact</code> format that only contains
+raw [JSON] test definition and result messages while omitting all messages for the steps.
+It is used to create compact test logs used for comparison reports.</p>
+<h3 id="compress"><a href="#compress" class="headerlink" title="compress"></a>compress</h3><p>The <code>tfs transform compress</code> command is used to compress a test log with [LZMA] compression algorithm.</p>
+<h3 id="decompress"><a href="#decompress" class="headerlink" title="decompress"></a>decompress</h3><p>The <code>tfs transform decompress</code> command is used to decompress a test log compressed with [LZMA] compression algorithm.</p>
+<h1 id="Creating-Reports"><a href="#Creating-Reports" class="headerlink" title="Creating Reports"></a>Creating Reports</h1><p>Test logs can be used to create reports using <code>tfs report</code> command. See <code>tfs report --help</code> for a list of available reports.</p>
+<h2 id="Results-Report"><a href="#Results-Report" class="headerlink" title="Results Report"></a>Results Report</h2><p>A results report can be generated from a test log using <code>tfs report results</code> command.
+The report can be generated in either [Markdown] format (default) or [JSON] format
+by specifying <code>--format json</code> option.
+The report in [Markdown] can be converted to [HTML] using <code>tfs document convert</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Generate results report.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  input                      input <span class="built_in">log</span>, default: stdin</span><br><span class="line">  output                     output file, default: stdout</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>                 show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  -a <span class="built_in">link</span>, --artifacts <span class="built_in">link</span>  <span class="built_in">link</span> to the artifacts</span><br><span class="line">  --format <span class="built_in">type</span>              output format choices: <span class="string">&#x27;md&#x27;</span>, <span class="string">&#x27;json&#x27;</span>, default: md (Markdown)</span><br><span class="line">  --copyright name           add copyright notice</span><br><span class="line">  --confidential             mark as confidential</span><br><span class="line">  --logo path                use logo image (.png)</span><br><span class="line">  --title name               custom title</span><br></pre></td></tr></table></figure>
+
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs report results | tfs document convert &gt; report.html</span><br></pre></td></tr></table></figure>
+
+<h2 id="Coverage-Report"><a href="#Coverage-Report" class="headerlink" title="Coverage Report"></a>Coverage Report</h2><p>Requirements coverage report can be generated from a test log using <code>tfs report coverage</code> command. The report is created in [Markdown]
+and can be converted to [HTML] using <code>tfs document convert</code> command. For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Generate requirements coverage report.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  requirements                requirements <span class="built_in">source</span> file, default: <span class="string">&#x27;-&#x27;</span> (from input <span class="built_in">log</span>)</span><br><span class="line">  input                       input <span class="built_in">log</span>, default: stdin</span><br><span class="line">  output                      output file, default: stdout</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>                  show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  --show status [status ...]  verification status. Choices: <span class="string">&#x27;satisfied&#x27;</span>, <span class="string">&#x27;unsatisfied&#x27;</span>, <span class="string">&#x27;untested&#x27;</span></span><br><span class="line">  --input-link attribute      attribute that is used as a <span class="built_in">link</span> to the input <span class="built_in">log</span>, default: job.url</span><br><span class="line">  --format <span class="built_in">type</span>               output format, default: md (Markdown)</span><br><span class="line">  --copyright name            add copyright notice</span><br><span class="line">  --confidential              mark as confidential</span><br><span class="line">  --logo path                 use logo image (.png)</span><br><span class="line">  --title name                custom title</span><br><span class="line">  --only name [name ...]      name of one or more specifications <span class="keyword">for</span> <span class="built_in">which</span> to generate coverage</span><br><span class="line">                              report, default: include all specifications. Only a unique part of the</span><br><span class="line">                              name can be specified.</span><br></pre></td></tr></table></figure>
+
+<p>For example,</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> test.log | tfs report coverage requirements.py | tfs document convert &gt; coverage.html</span><br></pre></td></tr></table></figure>
+
+<h2 id="Metrics-Report"><a href="#Metrics-Report" class="headerlink" title="Metrics Report"></a>Metrics Report</h2><p>You can generate metrics report using <code>tfs report metrics</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Generate metrics report.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  input          input <span class="built_in">log</span>, default: stdin</span><br><span class="line">  output         output file, default: stdout</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>     show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  --format <span class="built_in">type</span>  output format choices: <span class="string">&#x27;openmetrics&#x27;</span>, <span class="string">&#x27;csv&#x27;</span> default: openmetrics</span><br></pre></td></tr></table></figure>
+
+<h2 id="Comparison-Reports"><a href="#Comparison-Reports" class="headerlink" title="Comparison Reports"></a>Comparison Reports</h2><p>A comparison report can be generated using one of the <code>tfs report compare</code> commands.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Generate comparison report between runs.</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>  show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line"></span><br><span class="line">commands:</span><br><span class="line">  <span class="built_in">command</span></span><br><span class="line">    results   results report</span><br><span class="line">    metrics   metrics report</span><br></pre></td></tr></table></figure>
+
+<h3 id="Compare-Results"><a href="#Compare-Results" class="headerlink" title="Compare Results"></a>Compare Results</h3><p>A results comparison report can be generated using <code>tfs report compare results</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">Generate results comparison report.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  output                        output file, default: stdout</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>                    show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  --<span class="built_in">log</span> pattern [pattern ...]   <span class="built_in">log</span> file pattern</span><br><span class="line">  --log-link attribute          attribute that is used as a <span class="built_in">link</span> <span class="keyword">for</span> the <span class="built_in">log</span>, default: job.url</span><br><span class="line">  --only pattern [pattern ...]  compare only selected tests</span><br><span class="line">  --order-by attribute          attribute that is used to order the logs</span><br><span class="line">  --<span class="built_in">sort</span> direction              <span class="built_in">sort</span> direction. Either <span class="string">&#x27;asc&#x27;</span> or <span class="string">&#x27;desc&#x27;</span>, default: asc</span><br><span class="line">  --format <span class="built_in">type</span>                 output format, default: md (Markdown)</span><br><span class="line">  --copyright name              add copyright notice</span><br><span class="line">  --confidential                mark as confidential</span><br><span class="line">  --logo path                   use logo image (.png)</span><br></pre></td></tr></table></figure>
+
+<h3 id="Compare-Metrics"><a href="#Compare-Metrics" class="headerlink" title="Compare Metrics"></a>Compare Metrics</h3><p>A metrics comparison report can be generated using <code>tfs report compare metrics</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">Generate metrics comparison report.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  output                        output file, default: stdout</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>                    show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  --<span class="built_in">log</span> pattern [pattern ...]   <span class="built_in">log</span> file pattern</span><br><span class="line">  --log-link attribute          attribute that is used as a <span class="built_in">link</span> <span class="keyword">for</span> the <span class="built_in">log</span>, default: job.url</span><br><span class="line">  --only pattern [pattern ...]  compare only selected tests</span><br><span class="line">  --order-by attribute          attribute that is used to order the logs</span><br><span class="line">  --<span class="built_in">sort</span> direction              <span class="built_in">sort</span> direction. Either <span class="string">&#x27;asc&#x27;</span> or <span class="string">&#x27;desc&#x27;</span>, default: asc</span><br><span class="line">  --format <span class="built_in">type</span>                 output format, default: md (Markdown)</span><br><span class="line">  --copyright name              add copyright notice</span><br><span class="line">  --confidential                mark as confidential</span><br><span class="line">  --logo path                   use logo image (.png)</span><br><span class="line">  --name name [name ...]        metrics name, default: test-time</span><br></pre></td></tr></table></figure>
+
+<h2 id="Specification-Report"><a href="#Specification-Report" class="headerlink" title="Specification Report"></a>Specification Report</h2><p>A test specification for the test run can be generated using <code>tfs report specification</code> command.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Generate specifiction report.</span><br><span class="line"></span><br><span class="line">positional arguments:</span><br><span class="line">  input             input <span class="built_in">log</span>, default: stdin</span><br><span class="line">  output            output file, default: stdout</span><br><span class="line"></span><br><span class="line">optional arguments:</span><br><span class="line">  -h, --<span class="built_in">help</span>        show this <span class="built_in">help</span> message and <span class="built_in">exit</span></span><br><span class="line">  --copyright name  add copyright notice</span><br><span class="line">  --confidential    mark as confidential</span><br><span class="line">  --logo path       use logo image (.png)</span><br><span class="line">  --title name      custom title</span><br></pre></td></tr></table></figure>
+
+<h1 id="Test-Results"><a href="#Test-Results" class="headerlink" title="Test Results"></a>Test Results</h1><p>Any given test will have one of the following results.</p>
+<h2 id="OK"><a href="#OK" class="headerlink" title="OK"></a>OK</h2><p>Test has passed.</p>
+<h2 id="Fail"><a href="#Fail" class="headerlink" title="Fail"></a>Fail</h2><p>Test has failed.</p>
+<h2 id="Error"><a href="#Error" class="headerlink" title="Error"></a>Error</h2><p>Test produced an error.</p>
+<h2 id="Null"><a href="#Null" class="headerlink" title="Null"></a>Null</h2><p>Test result was not set.</p>
+<h2 id="Skip"><a href="#Skip" class="headerlink" title="Skip"></a>Skip</h2><p>Test was skipped.</p>
+<h2 id="XOK"><a href="#XOK" class="headerlink" title="XOK"></a>XOK</h2><p>[OK] result was crossed out. Result is considered as passing.</p>
+<h2 id="XFail"><a href="#XFail" class="headerlink" title="XFail"></a>XFail</h2><p>[Fail] result was crossed out. Result is considered as passing.</p>
+<h2 id="XError"><a href="#XError" class="headerlink" title="XError"></a>XError</h2><p>[Error] result was crossed out. Result is considered as passing.</p>
+<h2 id="XNull"><a href="#XNull" class="headerlink" title="XNull"></a>XNull</h2><p>[Null] result was crossed out. Result is considred as passing.</p>
+
+        </div>
+    </div>
+</div>
+
+
+    </div>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1790967011390"></script>
+<script src="/js/machine-hero-type.js?v=1790967011390"></script>
+<script src="/js/download-platforms.js?v=1790967011390"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

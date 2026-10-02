@@ -1,11 +1,3 @@
-/* Copyright (C) 2026 Katteli Inc. All rights reserved.
- * TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
- *
- * PROPRIETARY AND CONFIDENTIAL.
- *
- * Authors:
- *   Vitaliy Zakaznikov <vzakaznikov@testflows.com>
- */
 /** Stripe return page for CLI/TUI buyers (no portal session in this browser).
  * Adapts the message to ?status: success (default), cancelled, or a bare return
  * (e.g. after managing billing). The Sign In button links to the portal. */
