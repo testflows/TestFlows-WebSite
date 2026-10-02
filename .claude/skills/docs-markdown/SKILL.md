@@ -7,18 +7,37 @@ description: Use whenever a page of the site changes that agents can read as Mar
 
 ## The convention
 
-Three files at the top of the site are special, and **everything else is an ordinary Markdown page**:
+Four files at the top of the site are special, and **everything else is an ordinary Markdown page**:
 
 | File | What it is |
 |---|---|
 | `/llms.txt` | The index. It guides an agent to the Markdown pages. |
 | `/agents.md` | A short overview of the site and instructions for agents. |
 | `/index.md` | The Markdown version of the home page. |
+| `/install.md` | A guide an agent follows to install Framework and the Machine client, with the steps only a person can do. |
 
 `llms.txt` and `agents.md` exist **only at the top**. A folder never gets its own: the list of a folder's parts is
 an ordinary page, such as `/docs/machine.md`, and the instructions for working with a product are on the product's
 own page, `/framework.md` or `/machine.md`. The checker fails if either special name appears anywhere else under
 `source/`. One place is easy for an agent to find and easy to move if a standard changes.
+
+## `/install.md`: the install guide
+
+`source/install.md` is served as it is (`skip_render` in `_config.yml`) and has no HTML page. It follows the
+structure of Mintlify's install.md standard so any agent can run it: `# testflows`, a summary with the standard
+descriptions, `## OBJECTIVE`, `## DONE WHEN`, `## TODO` (a checklist), `## Step N: ...` sections, and
+`## EXECUTE NOW`. It covers the Framework (`pip3 install testflows`, a first test), the Machine client (the
+installer and `machine --version`) and what only the person can do: sign up, then `machine login` or an API key.
+
+- **To add a step**, such as installing our skills later, add a `## Step N: ...` section, a matching
+  `- [ ] Step N: ...` line in the TODO list and, if it has a result to check, a line in DONE WHEN. Run every command
+  in it first, in a clean environment, and write down what it prints. The checker fails if the TODO list and the
+  steps differ.
+- **Update it** when the install command, the supported systems, the sign-in or API key steps, or the first test
+  change. Every command and environment variable in it is checked against the docs.
+- It is linked from `source/llms.txt` and `source/agents.md`; the checker requires both links.
+- To use it, give an agent its address, `https://testflows.com/install.md`, for example `curl -fsSL
+  https://testflows.com/install.md | claude`. I did not run that exact pipe against the Claude CLI.
 
 ## Every content page has a Markdown version, at a fixed path
 
@@ -155,7 +174,10 @@ It checks that:
   commands, options, variables and install lines that the docs use, and their links resolve; the Machine page is
   checked for `machine` commands and `TESTFLOWS_MACHINE_*` variables, the Framework page for options, `tfs` commands
   and the install line;
-- the root files link everything they should;
+- the root files link everything they should, including `install.md`;
+- `install.md` has its required sections, its TODO list matches its steps, its summary uses the standard
+  descriptions, and every `machine` command, `pip3 install` line, installer command and `TESTFLOWS_MACHINE_*`
+  variable in it appears in the docs;
 - with `--built`, the served files equal the sources and each page has a heading for every part, so it is not
   stale; every content page has a Markdown version it points at, with no `index.md` next to it; and every
   Markdown file named in `llms.txt` or a parts page exists.
@@ -163,8 +185,8 @@ It checks that:
 It does not check facts such as an exit code, a Python version or a supported system on those pages; read
 those against the docs when either changes.
 
-Commit the part files, `index.md`, the `source/_md/` pages, `source/llms.txt`, `source/agents.md` you
-changed, and the rebuilt `docs/` together.
+Commit the part files, `index.md`, the `source/_md/` pages, `source/llms.txt`, `source/agents.md` and
+`source/install.md` you changed, and the rebuilt `docs/` together.
 
 ## If you change how the page is assembled
 
