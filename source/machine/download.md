@@ -38,6 +38,7 @@ curl https://testflows.com/machine/install -fsS | bash
 <tr><td>Windows</td><td>Use it inside WSL, which is Linux. No native build yet.</td></tr>
 </tbody>
 </table>
+<p>On an ARM machine, a Mac with Apple Silicon or arm64 Linux, the disks you build must still hold x86_64 programs: build or pull your Docker images with <code>--platform linux/amd64</code>. The <a href="/docs/machine/#Building-disks-on-an-ARM-machine">docs</a> show how.</p>
 <p>Need another platform? <a href="/contact.html?topic=machine">Tell us which one</a>.</p>
 </div>
 
