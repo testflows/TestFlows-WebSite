@@ -73,14 +73,44 @@ fetch() {
         [ "$FETCH_STATUS" = "final" ] && return 1
         [ "$attempt" -lt "$FETCH_TRIES" ] && { warn "The download failed. Trying again."; sleep 2; }
     done
+    # BusyBox wget reaches HTTPS servers through the openssl command; its own TLS
+    # is refused by the release server. Say what fixes it, not "check your connection".
+    if [ "$DOWNLOADER" = "busybox-wget" ] && [ "$FETCH_STATUS" != "final" ]; then
+        warn "BusyBox wget couldn't connect over HTTPS. Installing curl (or openssl) fixes"
+        warn "that, for example: apk add curl"
+    fi
     return 1
+}
+
+# choose_downloader: curl, else GNU wget, else BusyBox wget, which works but does
+# not check the server's HTTPS certificate; that is said once, up front, so the
+# person installing knows what was not checked.
+choose_downloader() {
+    if command -v curl >/dev/null 2>&1; then
+        DOWNLOADER="curl"
+    elif command -v wget >/dev/null 2>&1; then
+        # Read whole first: grep -q would stop wget with SIGPIPE, which pipefail
+        # reports as a failure even when the option is there.
+        local help
+        help="$(wget --help 2>&1 || true)"
+        if [[ "$help" == *--https-only* ]]; then
+            DOWNLOADER="wget"
+        else
+            DOWNLOADER="busybox-wget"
+            warn "This wget doesn't check the server's HTTPS certificate. The download is"
+            warn "still checked against its published checksum. With curl, the connection"
+            warn "is checked too."
+        fi
+    else
+        die "Neither curl nor wget is installed." "Install one of them and run this again."
+    fi
 }
 
 # fetch_once URL DEST: one try. On failure FETCH_STATUS is "final" for an HTTP
 # answer no retry changes (4xx but 408 and 429), else "retry".
 fetch_once() {
     FETCH_STATUS="retry"
-    if command -v curl >/dev/null 2>&1; then
+    if [ "$DOWNLOADER" = "curl" ]; then
         local progress="-sS" code
         [ -t 2 ] && progress="--progress-bar"
         if code="$(curl -fL --proto "$PROTOCOLS" --proto-redir "$PROTOCOLS" --tlsv1.2 \
@@ -92,22 +122,12 @@ fetch_once() {
             4??) FETCH_STATUS="final" ;;
         esac
         return 1
-    elif command -v wget >/dev/null 2>&1; then
-        # GNU wget only. BusyBox wget does not check the server's TLS certificate
-        # ("TLS certificate validation not implemented"), so anyone on the path
-        # could serve a binary and a checksum that match each other.
-        # Read whole first: grep -q would stop wget with SIGPIPE, which pipefail
-        # reports as a failure even when the option is there.
-        local help
-        help="$(wget --help 2>&1 || true)"
-        [[ "$help" == *--https-only* ]] \
-            || die "This wget can't verify HTTPS certificates, so the download can't be trusted." \
-                "Install curl and run this again."
+    elif [ "$DOWNLOADER" = "wget" ]; then
         local https_only=()
         [ "$PROTOCOLS" = "=https" ] && https_only=(--https-only)
         wget -q --tries=1 --timeout=15 "${https_only[@]}" -O "$2" "$1"
     else
-        die "Neither curl nor wget is installed." "Install one of them and run this again."
+        wget -q -T 15 -O "$2" "$1"
     fi
 }
 
@@ -295,6 +315,7 @@ main() {
 
     # Before any download: on a system it doesn't run on, say so, not a network error.
     [ "$mode" = "checksum" ] || check_platform
+    choose_downloader
     [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as MACHINE_BASE_URL asks."
 
     local release
