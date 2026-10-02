@@ -32,7 +32,7 @@
   var tPath = String(page.path || '');
   var tArea = '';
   if (tPath.indexOf('docs/framework/') === 0 || tPath.indexOf('docs/machine/') === 0) tArea = 'Docs';
-  else if (tPath.indexOf('machine/portal/') === 0) tArea = 'Machine';
+  else if (tPath.indexOf('machine/portal/') === 0 || tPath === 'machine/download/index.html') tArea = 'Machine';
   else if (tPath.indexOf('machine/legal/') === 0 && tPath !== 'machine/legal/index.html') tArea = 'Machine Legal';
   else if (tPath.indexOf('legal/') === 0 && tPath !== 'legal/index.html') tArea = 'Legal';
   else if (page.post) tArea = 'Blog';

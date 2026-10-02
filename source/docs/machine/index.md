@@ -24,7 +24,8 @@ is handy. Record the failing run once, then replay it as often as you need.
 
 You work with Machine through a client called `machine`, or from Python using
 the [SDK](#Python-SDK). Both do the same things. This page starts with the
-client and ends with the SDK.
+client and ends with the SDK. To begin, [install the client](#The-client). It is
+one command.
 
 > **{% attention %}** Machine is in private beta. If you don't have access yet,
 > [contact us](/contact.html?topic=machine).
@@ -80,34 +81,41 @@ nearest checkpoint before it and replays the rest of the way for you.
 
 # Getting started
 
-## Signing up
-
-Create your account on the [sign-up page](/machine/portal/signup/), or from
-the terminal with `machine account signup`. Then sign in.
-
-```bash
-machine login
-```
-
-Machine emails you a one-time code and asks for it. You stay signed in until
-you sign out with `machine logout`. `machine account show` tells you who you
-are signed in as.
-
-For scripts and CI there is no need to sign in at all. Create an API key and
-put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
-
-```bash
-machine account api-keys create ci --expiry 90
-```
-
 ## The client
 
-You get Machine as a single binary named `machine`. Put it somewhere on your
-`PATH`.
+You work with Machine through a client called `machine`. Install it with one
+command:
 
-Run it with no arguments, or with `--help`, to see every command. Each command
-has its own `--help` too, and that is the place to look when a flag here is
-not enough.
+<div class="install-cmd"><code>curl https://testflows.com/machine/install -fsS | bash</code><button type="button" class="install-copy" data-copy>Copy</button></div>
+
+That downloads a single binary named `machine`, checks it against the SHA-256
+checksum published next to it, and puts it in `~/.local/bin`. If the checksum
+doesn't match, nothing is installed. If that folder isn't on your `PATH` yet, the
+installer says so and shows the line to add. Run the same command again whenever
+you want to update.
+
+**Supported systems.** The client runs on Linux with an x86_64 processor. It is
+one static program, so it needs nothing else installed, and the installer never
+asks for root. It doesn't run on macOS, Windows or ARM yet. On Windows you can
+use it inside WSL. If you need another platform,
+[contact us](/contact.html?topic=machine) and tell us which one. The
+[download page](/machine/download/) has the full list, and a way to check the
+download yourself.
+
+If you would like to read the installer before you run it, pipe it to `less`
+instead of `bash`.
+
+```bash
+curl https://testflows.com/machine/install -fsS | less
+```
+
+Two environment variables change what the installer does. `MACHINE_INSTALL_DIR`
+picks a different folder, and `MACHINE_VERSION` installs a specific version
+instead of the latest, like `20261002-0022`. To uninstall, delete the file.
+
+Run `machine` with no arguments, or with `--help`, to see every command. Each
+command has its own `--help` too, and that is the place to look when a flag here
+is not enough.
 
 ```bash
 machine --help
@@ -124,7 +132,7 @@ machine --version
   ---- o o o ----
  |   o       o   |
  | 1 o 10010 o 0 |
- |   o       o   |  🛸 TestFlows Machine Client v0.1.0
+ |   o       o   |  TestFlows Machine Client 20261002-0022
   ---  o o oxx --
  /           xx   \
 /  ^^^        xx   \
@@ -139,6 +147,26 @@ IMPLIED, ...
 
 If something does not work, `machine ping` checks that you can reach the
 service and your sessions, and how long the round trip takes.
+
+## Signing up
+
+Create your account on the [sign-up page](/machine/portal/signup/), or from
+the terminal with `machine account signup`. Then sign in from the terminal.
+
+```bash
+machine login
+```
+
+Machine emails you a one-time code and asks for it. You stay signed in until
+you sign out with `machine logout`. `machine account show` tells you who you
+are signed in as.
+
+For scripts and CI there is no need to sign in at all. Create an API key and
+put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
+
+```bash
+machine account api-keys create ci --expiry 90
+```
 
 ## Your first run
 
@@ -853,8 +881,9 @@ terminal, you can call it from a program.
 pip3 install testflows.machine
 ```
 
-It needs Python 3.11 or later on Linux x86_64. pip installs the Machine core
-that the SDK runs on, `testflows.machine.core`, along with it.
+It needs Python 3.11 or later on Linux x86_64, the same systems as the client. If
+you need another platform, [contact us](/contact.html?topic=machine). pip installs
+the Machine core that the SDK runs on, `testflows.machine.core`, along with it.
 
 ## Hello Machine
 

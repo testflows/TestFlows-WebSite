@@ -1,3 +1,4 @@
+https://testflows.com/contact.html
 https://testflows.com/docs/index.html
 https://testflows.com/index.html
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part1/
@@ -17,7 +18,6 @@ https://testflows.com/legal/copyright-and-content-use/index.html
 https://testflows.com/legal/privacy-policy/index.html
 https://testflows.com/legal/terms-of-use/index.html
 https://testflows.com/legal/index.html
-https://testflows.com/contact.html
 https://testflows.com/blog/working-with-requirements-just-like-with-code/
 https://testflows.com/blog/using-atomic-propositions-and-equivalence-classes-part2/
 https://testflows.com/blog/transforming-testing-behavior-models-into-formal-models/
