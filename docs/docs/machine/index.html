@@ -36,40 +36,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791040209222" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791040209222" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791040062072" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791040209222" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -535,7 +535,7 @@ it exactly one source.</p>
 </thead>
 <tbody><tr>
 <td><code>--binary path</code></td>
-<td>a static x86_64 executable, wrapped in a small image</td>
+<td>a static x86_64 executable, wrapped in a <code>scratch</code> image</td>
 </tr>
 <tr>
 <td><code>--image ref</code></td>
@@ -546,8 +546,14 @@ it exactly one source.</p>
 <td>a Compose project directory and the images its services name</td>
 </tr>
 </tbody></table>
-<p>A binary or an image runs as one container. A Compose project runs every
-service in it.</p>
+<p>Everything a machine runs runs in Docker Compose, inside the machine. A
+Compose project is one container for each of its services. An image or a binary
+is a project of one service, and <code>--entrypoint</code> and the arguments after <code>--</code> are
+that service’s entrypoint and command. A binary is no exception: <code>--binary</code>
+wraps the executable in a <code>scratch</code> image, one layer holding that file and
+nothing else, with no base image, no loader and no libraries, and the machine
+runs that image as its one service. <code>machine</code> writes this image itself, so
+<code>--binary</code> needs no Docker on your computer.</p>
 <h2 id="Docker-and-Compose"><a href="#Docker-and-Compose" class="headerlink" title="Docker and Compose"></a>Docker and Compose</h2><p>An image needs <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.docker.com/">Docker</a>. A Compose project also needs
 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.docker.com/compose/">Docker Compose</a>. <a href="#machine-disks-build"><code>machine disks build</code></a>
 <code>--binary</code> wraps a static executable and nothing else, so a program you compile
@@ -5504,9 +5510,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791040062073"></script>
-<script src="/js/machine-hero-type.js?v=1791040062073"></script>
-<script src="/js/download-platforms.js?v=1791040062073"></script>
+<script src="/js/index-code-type.js?v=1791040209222"></script>
+<script src="/js/machine-hero-type.js?v=1791040209222"></script>
+<script src="/js/download-platforms.js?v=1791040209222"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

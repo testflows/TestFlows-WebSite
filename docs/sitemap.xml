@@ -644,265 +644,265 @@
   
   <url>
     <loc>https://testflows.com/agents.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/async-and-parallel-tests.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/combinatorial-tests.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/command-line-and-filtering.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/concepts-and-types.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/contexts-and-setups.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/controlling-output.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/crossing-out-and-forcing-results.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/defining-tests.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/expected-failures.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/introduction.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/loading-tests.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/logs-and-reports.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/manual-tests.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/messages-metrics-and-input.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/references.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/repeating-and-retrying.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/requirements.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/test-definition-classes.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/test-flow-control.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/test-parameters-and-naming.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/test-program-options.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/test-properties.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/test-structure.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/testing-documentation.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/timeouts-and-conditions.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/timing-out.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/using-secrets.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/writing-tests.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/framework/yml-config-files.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/account-and-billing.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/checkpoints-and-branches.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/commands.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/disks.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/getting-started.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/overview.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/python-sdk.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/reading-the-disk.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/replay.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/running-a-machine.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/scripting.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/sessions.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/docs/machine/steering-programs.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://testflows.com/install.md</loc>
-    <lastmod>2026-10-03T15:07:41.722Z</lastmod>
+    <lastmod>2026-10-03T15:10:08.917Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
