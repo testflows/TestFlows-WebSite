@@ -51,7 +51,7 @@ machine --help
 machine fork --help
 ```
 
-`machine --version` prints the client's version and its license. Include the
+[`machine --version`](commands.md#options) prints the client's version and its license. Include the
 version when you report a problem.
 
 ```bash
@@ -74,21 +74,27 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, ...
 ```
 
-If something does not work, `machine ping` checks that you can reach the
+If something does not work, [`machine ping`](commands.md#machine-ping) checks that you can reach the
 service and your sessions, and how long the round trip takes.
 
 ## Signing up
 
 Create your account on the [sign-up page](/machine/portal/signup/), or from
-the terminal with `machine account signup`. Then sign in from the terminal.
+the terminal with [`machine account signup`](commands.md#machine-account-signup). Then sign in from the terminal.
 
 ```bash
 machine login
 ```
 
 Machine emails you a one-time code and asks for it. You stay signed in until
-you sign out with `machine logout`. `machine account show` tells you who you
+you sign out with [`machine logout`](commands.md#machine-logout). [`machine account show`](commands.md#machine-account-show) tells you who you
 are signed in as.
+
+Then set up account storage with [`machine account provision`](commands.md#machine-account-provision). The first session cannot be created until this is done.
+
+```bash
+machine account provision
+```
 
 For scripts and CI there is no need to sign in at all. Create an API key and
 put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
@@ -99,8 +105,11 @@ machine account api-keys create ci --expiry 90
 
 ## Your first run
 
-Here is a whole trip, from nothing to a branch. You will need a program
-built as a static x86_64 Linux executable. We'll call it `hello`.
+Here is a whole trip, from nothing to a branch. The disk can come from the
+`hello-world` example if you have [Docker](disks.md#docker-and-compose), or from a small program you compile
+if you do not.
+
+Before you can start your first session, you need to provision account storage with [`machine account provision`](commands.md#machine-account-provision).
 
 First, create a session and make it the one your commands use.
 
@@ -119,13 +128,37 @@ machine sessions use first
 ✔ Now using session first in this terminal.
 ```
 
-Next, build a disk around your program.
+Next, build a disk named `hello`. Take one of the two paths.
+
+If you have Docker, pull the hello-world example and build the disk from
+that image. The `--platform` flag asks Docker for the x86_64 image a machine
+runs.
 
 ```bash
+docker pull --platform linux/amd64 testflows/machine-examples:latest
+machine disks build --image testflows/machine-examples:latest hello
+```
+
+If you do not, compile `hello_world.c`. [`machine disks build`](commands.md#machine-disks-build) `--binary` wraps the executable, so Docker is not needed.
+
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("hello, world\n");
+    return 0;
+}
+```
+
+```bash
+gcc -static -o hello hello_world.c
 machine disks build --binary ./hello hello
 ```
 
-Create a run from the disk. The machine waits for your commands. With
+On an ARM machine that binary still has to be x86_64 Linux. See
+[building disks on an ARM machine](disks.md#building-disks-on-an-arm-machine).
+
+Either way, create a run from the disk. The machine waits for your commands. With
 `--no-daemon` it would boot and run to the end by itself.
 
 ```bash
@@ -135,7 +168,7 @@ machine create hello-run --disk hello
 ✔ Started hello-run (whUxdR33Zad9Qxc0ASfig)
 ```
 
-Now the run is waiting. It only moves when you drive it, and `machine run` is how
+Now the run is waiting. It only moves when you drive it, and [`machine run`](commands.md#machine-run) is how
 you drive it. The `--until tasks` part means "keep going until Linux is up."
 
 ```bash
@@ -148,7 +181,7 @@ VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP    
 0     HYPERCALL  16238  271990491  190026  271990491  0x785930775efa707  0xffffffff81f9eeda  43778048  16092
 ```
 
-Read what the machine printed.
+Read the last five lines the machine printed.
 
 ```bash
 machine console hello-run -n 5
@@ -160,6 +193,8 @@ thermal_sys: Registered thermal governor 'step_wise'
 thermal_sys: Registered thermal governor 'user_space'
 cpuidle: using governor ladder
 ```
+
+To see the full console log, use `-n :`. Ranges use the same colon as a Python slice. Lines are numbered from 1 and both ends count, so `-n 1:` is the first line through the last.
 
 Save the machine's state so you can come back to it, and start a branch from
 that point.

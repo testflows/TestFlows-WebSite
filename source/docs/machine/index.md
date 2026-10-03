@@ -28,4 +28,6 @@ permalink: docs/machine/index.html
 
 <!-- include: scripting.md -->
 
+<!-- include: commands.md -->
+
 <!-- include: python-sdk.md -->

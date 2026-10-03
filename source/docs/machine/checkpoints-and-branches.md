@@ -17,11 +17,11 @@ are how you mark points you plan to come back to, like "just after boot" or
 "right before the request".
 
 Machine takes some of its own as well, named after the entry they were taken at
-(like `10000`), so `machine checkpoints app` lists yours next to those.
+(like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.
 
 ## Starting a branch
 
-`machine fork` creates a new branch at a point. The branch runs in its own
+[`machine fork`](commands.md#machine-fork) creates a new branch at a point. The branch runs in its own
 machine, alongside its parent, and the parent keeps running.
 
 ```bash
@@ -34,22 +34,22 @@ Give a branch a name with `--name`. If you don't, it is named after the
 entry it landed on. Add `--no-start` to create the branch without starting it.
 
 A branch's full name is its parent's name, a slash, and the name you gave it. So
-`machine fork app --name try-1` makes `app/try-1`, and that full name is what
-you use in every other command. `machine lineage try-1` says
-`Run not found`, and `machine lineage app/try-1` works.
+[`machine fork app --name try-1`](commands.md#machine-fork) makes `app/try-1`, and that full name is what
+you use in every other command. [`machine lineage try-1`](commands.md#machine-lineage) says
+`Run not found`, and [`machine lineage app/try-1`](commands.md#machine-lineage) works.
 
 ## Moving around
 
-`machine fork` gives the new branch a machine of its own and leaves you where
+[`machine fork`](commands.md#machine-fork) gives the new branch a machine of its own and leaves you where
 you were. `go`, `switch` and `rewind` work in place instead: they change the
 machine you are on. `detach` is the odd one out, and is explained below.
 
 | Command | Does |
 |---|---|
-| `machine go app ^booted` | creates a branch at a point and switches this machine onto it, in place |
-| `machine switch app app/try-1` | moves the machine onto a branch that already exists, and never creates one |
-| `machine detach app --at ^booted` | copies a point into a new root, a self-contained run in a tree of its own |
-| `machine rewind app to ^booted` | puts the run back at a point and throws away what came after |
+| [`machine go app ^booted`](commands.md#machine-go) | creates a branch at a point and switches this machine onto it, in place |
+| [`machine switch app app/try-1`](commands.md#machine-switch) | moves the machine onto a branch that already exists, and never creates one |
+| [`machine detach app --at ^booted`](commands.md#machine-detach) | copies a point into a new root, a self-contained run in a tree of its own |
+| [`machine rewind app to ^booted`](commands.md#machine-rewind) | puts the run back at a point and throws away what came after |
 
 `go` is the one you will use most. It creates a branch the way `fork` does, but
 it doesn't start another machine. It moves the one you are on, in place.
@@ -62,7 +62,7 @@ machine go app ^booted --name g1
 ```
 
 After a `go` or a `switch`, the run you moved away from is listed as `switched`
-and no longer running. `machine start app` brings it back at its tip, and tells
+and no longer running. [`machine start app`](commands.md#machine-start) brings it back at its tip, and tells
 you how many entries it had to replay to get there. The machine you moved is now
 the new branch, so talk to it by that name: `app/g1`.
 
@@ -84,7 +84,7 @@ slower than a fork, so only reach for it when you want to get rid of the
 original.
 
 If you only want a branch to have its own copy of the data, run
-`machine fork --rebase`, which is quicker. Add `--lean` and Machine drops the
+[`machine fork --rebase`](commands.md#machine-fork), which is quicker. Add `--lean` and Machine drops the
 history it copied, so the runs it came from can be deleted.
 
 ## Seeing the tree

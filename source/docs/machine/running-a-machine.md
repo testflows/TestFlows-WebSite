@@ -4,7 +4,7 @@
 
 ## Creating a run
 
-`machine create` makes a run from a disk and boots it. The run's name goes
+[`machine create`](commands.md#machine-create) makes a run from a disk and boots it. The run's name goes
 first and is optional. Without one, Machine makes up a name.
 
 ```bash
@@ -20,18 +20,18 @@ knowing about:
 | `--pin-cpu n` | run on host CPU `n`, for this start only (the default picks the least-loaded) |
 | `--like run` | start from another run's options, then apply the ones you give |
 | `--label name=value` | attach a label to the run, as many times as you like |
-| `--rng`, `--rng-seed n` | give the guest random numbers, seeded with `n` (the default is 0) |
+| `--rng`, `--rng-seed n` | give the machine random numbers, seeded with `n` (the default is 0) |
 | `--fs-sync` | write to the disk as the program writes, instead of later |
 | `--no-wait` | return as soon as the request is accepted |
 
 Change the seed and the program sees different random numbers. Keep it and it
 sees the same ones every time. This one is only about the random numbers the
-guest asks for. For exploring thread schedules there is another seed, on
-`machine run`, covered next.
+machine asks for. For exploring thread schedules there is another seed, on
+[`machine run`](commands.md#machine-run), covered next.
 
 ## Driving it
 
-A run executes only while you drive it. `machine run` is the way, and `--until`
+A run executes only while you drive it. [`machine run`](commands.md#machine-run) is the way, and `--until`
 says when to stop. (A run created with `--no-daemon` answers
 `✗ Machine not in control mode`, because the machine isn't waiting for you.)
 
@@ -39,13 +39,13 @@ says when to stop. (A run created with `--no-daemon` answers
 machine run app --until tasks
 ```
 
-Each batch of work ends when the guest talks to Machine, so a plain
-`machine run` can stop sooner than you expect. With `--until`, Machine keeps
+Each batch of work ends when the program talks to Machine, so a plain
+[`machine run`](commands.md#machine-run) can stop sooner than you expect. With `--until`, Machine keeps
 going, batch after batch, until what you asked for is true. If it never gets
 there, the command exits with status 3.
 
-These are the conditions you can wait for. `machine run --until` and
-`machine wait --for` take the same ones.
+These are the conditions you can wait for. [`machine run`](commands.md#machine-run) `--until` and
+[`machine wait`](commands.md#machine-wait) `--for` take the same ones.
 
 | Condition | True when |
 |---|---|
@@ -74,7 +74,7 @@ repeatable.
 machine run app --until /usr/bin/app:exit --mode step,fast --step 1:200 --seed 1
 ```
 
-`--mode` is how the guest runs: `fast`, `step`, `step-into` or `free`, or a
+`--mode` is how the machine runs: `fast`, `step`, `step-into` or `free`, or a
 comma list to draw from. `--step` and `--fast` give the length of a stretch in
 each mode, as a number or a range like `1:200`. `--strategy` sets how the
 draws are made, `random` (the default), `golden` or `sweep`, and `--seed` is the
@@ -87,12 +87,12 @@ own seed, and keep the ones that crash. The `explore_seeds.py` example in the
 A run takes checkpoints for you too. `--auto-checkpoints N` takes one every N
 entries, and 0 turns them off.
 
-If a drive or a checkpoint is taking too long, `machine cancel app` cancels
+If a drive or a checkpoint is taking too long, [`machine cancel app`](commands.md#machine-cancel) cancels
 whichever one is in progress.
 
 ## Waiting
 
-`machine wait` doesn't drive anything. It watches a run, or several, and
+[`machine wait`](commands.md#machine-wait) doesn't drive anything. It watches a run, or several, and
 returns when a condition holds.
 
 ```bash
@@ -110,17 +110,17 @@ machine was waiting for commands.`
 
 | Command | Shows |
 |---|---|
-| `machine runs` | your runs, newest first (`-w` keeps the list live) |
-| `machine describe app` | the full configuration of a run |
-| `machine state app` | its state |
-| `machine now app` | the last entry it recorded, and the time on the guest's clock |
-| `machine console app` | what the guest printed (`-f` follows, `-n 20` shows the last 20 lines) |
-| `machine entries app` | the entries in its log |
-| `machine ops` | operations on runs (checkpoints, branches, switches) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed |
-| `machine debug log app` | the debug output of a run (`debug err` shows its error and crash log) |
-| `machine dump app` | the guest's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one) |
+| [`machine runs`](commands.md#machine-runs) | your runs, newest first (`-w` keeps the list live) |
+| [`machine describe app`](commands.md#machine-describe) | the full configuration of a run |
+| [`machine state app`](commands.md#machine-state) | its state |
+| [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
+| [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n 20` shows the last 20 lines) |
+| [`machine entries app`](commands.md#machine-entries) | the entries in its log |
+| [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed |
+| [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
+| [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one) |
 
-`machine console` also takes `--entries`, if you only want what a few
+[`machine console`](commands.md#machine-console) also takes `--entries`, if you only want what a few
 entries printed.
 
 ## Interactive mode
@@ -134,7 +134,7 @@ machine control app
 You issue commands to the run as slash commands, like `/checkpoint`,
 `/branches` or `/rewind`. Most of the commands on this page have one. Type
 `/help` to see them all. `-c` runs a single slash command and exits, as in
-`machine control app -c '/state'`, and `machine control log app` prints the
+[`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) prints the
 history of the commands you have issued.
 
 ## Stopping and starting
@@ -162,7 +162,7 @@ at all.
 A run remembers the options you created it with: `--no-daemon`,
 `--single-step`, `--limit` and `--backstop-limit`. Every `start` and `fork`
 repeats them, so you type them once. `start` takes the same flags to change
-them for that start only, so `machine start app --daemon` gives you a machine
+them for that start only, so [`machine start app --daemon`](commands.md#machine-start) gives you a machine
 to drive on a run created with `--no-daemon`. `fork` and `detach` take them
 too, and the new run keeps what you gave. `--pin-cpu` is the exception: no run
 remembers a CPU, so each `start` and `fork` picks the least-loaded one unless
@@ -170,7 +170,7 @@ you name it.
 
 `delete` only removes stopped runs, unless you add `--stop`. It also refuses to
 remove a run that has branches, unless you add `--recursive`. And since
-`machine delete --all` removes every run, it asks you first.
+[`machine delete --all`](commands.md#machine-delete) removes every run, it asks you first.
 
 To continue a run in a different session, publish it first from the session that has it.
 
@@ -179,7 +179,7 @@ machine sync app
 ```
 
 To have a run or a disk waiting in a session before you need it, preload it.
-Going the other way, `machine offload` lists the copies in this session that
+Going the other way, [`machine offload`](commands.md#machine-offload) lists the copies in this session that
 can be dropped to free space, and `-a` drops every one that isn't in use. The
 durable copy stays, and starting the run brings it back.
 
@@ -189,5 +189,5 @@ machine preload disk app
 machine offload
 ```
 
-`machine cleanup` removes stale runs and other leftovers, and `--force` also
+[`machine cleanup`](commands.md#machine-cleanup) removes stale runs and other leftovers, and `--force` also
 kills machines that have been orphaned.
