@@ -7,12 +7,18 @@ it exactly one source.
 
 | Source | What it takes |
 |---|---|
-| `--binary path` | a static x86_64 executable, wrapped in a small image |
+| `--binary path` | a static x86_64 executable, wrapped in a `scratch` image |
 | `--image ref` | a Docker image, as a save tar or a name in your local Docker |
 | `--compose dir` | a Compose project directory and the images its services name |
 
-A binary or an image runs as one container. A Compose project runs every
-service in it.
+Everything a machine runs runs in Docker Compose, inside the machine. A
+Compose project is one container for each of its services. An image or a binary
+is a project of one service, and `--entrypoint` and the arguments after `--` are
+that service's entrypoint and command. A binary is no exception: `--binary`
+wraps the executable in a `scratch` image, one layer holding that file and
+nothing else, with no base image, no loader and no libraries, and the machine
+runs that image as its one service. `machine` writes this image itself, so
+`--binary` needs no Docker on your computer.
 
 ## Docker and Compose
 
