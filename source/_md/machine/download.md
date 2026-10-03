@@ -37,7 +37,7 @@ The second form runs one command in that environment and starts no shell, for sc
 
 **On macOS, use it.** macOS ships `/usr/bin/machine`, which prints the processor type, such as `arm64`. Typing `machine` runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. `machine-env` avoids both. To see which `machine` you get, run `which machine`: `~/.local/bin/machine` is this client and `/usr/bin/machine` is the system's. If `machine --version` prints a processor type instead of a version, you are running the system command. If your shell cannot find `machine-env` either, run `~/.local/bin/machine-env`.
 
-On Linux nothing else is called `machine` by default, so you rarely need it.
+On Linux, if another command on your system is also named `machine`, use `machine-env`. `which machine` shows which one you get.
 
 ### Windows
 
