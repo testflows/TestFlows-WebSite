@@ -40,7 +40,7 @@ machine disks build --binary ./data-race race -- 3
 
 A program that is not a static executable needs an image that already contains
 what it runs. The same approach works for anything that needs its own runtime.
-A complex application, several services together, is a [Compose](disks.md#compose-project) project.
+A complex application, several services together, is a [Compose project](disks.md#compose-projects).
 
 ### Python program
 
@@ -80,24 +80,111 @@ docker build --platform linux/amd64 -t hello-node:latest .
 machine disks build --image hello-node:latest hello-node
 ```
 
-### Compose project
+## Compose projects
 
-A complex application is a Compose project. Each service names an image, with
-a tag, that already contains what it runs. [`machine disks build`](commands.md#machine-disks-build)
-`--compose` takes the project directory and runs every service in it. Save
-this as `compose.yaml`.
+[Machine-Examples](https://github.com/testflows/Machine-Examples) has Compose
+environments under `compose/`. Clone it, pull each image for `linux/amd64`
+into the local Docker, then build the disk from the project directory.
+[`machine disks build`](commands.md#machine-disks-build) `--compose` packs
+those images and the project. The machine runs the project with
+`--abort-on-container-exit`, so it ends when a service exits.
+
+```bash
+git clone https://github.com/testflows/Machine-Examples.git
+cd Machine-Examples
+```
+
+The same project can be run on this computer first, from its own directory,
+which is how to fix it without waiting for a boot. The build commands below
+are from the repository root.
+
+### Two services project
+
+`compose/two-services` is a busybox server and a client that fetches a file
+from it by the service name `server`. Services in a project reach each other
+by name, on the network Compose gives the project.
+
+`depends_on` only orders the start. The client retries, because nothing waits
+for the server to accept connections. A service that takes time to become
+ready should use a healthcheck, and `depends_on` with
+`condition: service_healthy`.
+
+```bash
+docker pull --platform linux/amd64 busybox:1.36
+machine disks build --compose compose/two-services two
+```
+
+To run it on this computer first:
+
+```bash
+cd compose/two-services
+docker compose up --abort-on-container-exit
+```
+
+### ClickHouse project
+
+`compose/clickhouse` is a ClickHouse server and a client that queries it.
+Both services use one image, so the disk carries that image once. The client
+waits until the server is healthy, prints its result, and exits, which ends
+the project.
+
+The server takes tens of seconds of machine time before it accepts a query,
+so the project uses a healthcheck rather than a sleep. `config.xml` in the
+project replaces the image's config. It listens on IPv4 only, because the
+machine's kernel has no IPv6, and it caps the background pools, because the
+image's defaults hang startup in a small machine. `CLICKHOUSE_SKIP_USER_SETUP`
+stops the entrypoint from restricting the `default` user to loopback, which
+would refuse the client.
+
+The config is mounted from `./config.xml`, a path inside the project. A bind
+mount from outside the project directory is refused. A named volume or a
+tmpfs is created empty when the machine boots.
+
+```bash
+docker pull --platform linux/amd64 clickhouse/clickhouse-server:24.8.14.39-alpine
+machine disks build --compose compose/clickhouse ch
+```
+
+### Carrying images
+
+A service can start containers of its own, through the machine's Docker. The
+images it starts are named by no service this project runs, and a machine
+reaches no registry, so an image that is not named here is not on the disk.
+
+`scale: 0` names an image and starts nothing. The build packs every image the
+project names, including these, and Compose starts none of them.
+`compose/clickhouse-regression` carries the images its suite starts this way.
+Another image, such as ZooKeeper or MinIO, is another service.
 
 ```yaml
 services:
-  web:
-    image: hello-py:latest
-  db:
-    image: postgres:16
+  regression:
+    image: regression-runner:local
+    working_dir: /opt/compose
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./:/opt/compose
+  carried_server:
+    image: clickhouse/clickhouse-server:24.8.14.39-alpine
+    scale: 0
 ```
 
-```bash
-machine disks build --compose . app
-```
+The socket is `/var/run/docker.sock`. `/run/docker.sock` is not the machine's
+socket, and the build refuses it.
+
+`./` is mounted at `/opt/compose`, the path the machine runs the project from.
+Compose resolves a bind on the machine's filesystem, not inside the container
+that asked for it, so the two paths have to be the same. The images still have
+to be in the local Docker, under those names, before the build.
+
+### What a project must satisfy
+
+Every service names an `image` with a tag or a digest. An image with no tag
+is a different image tomorrow, and a service that only has `build` has nothing
+to pack. Build the image, then set `image`.
+
+The images have to be `linux/amd64` and already in the local Docker. A
+logging driver, if the project sets one, is `json-file`, `local`, or `none`.
 
 ## Building disks on an ARM machine
 
