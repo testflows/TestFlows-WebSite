@@ -561,6 +561,16 @@
     margin-bottom: 1.5rem;
 }
 
+/* The row already lines up with the heading, so the outer columns add no padding of their own */
+.index-journal-feature > .index-journal-col:first-child { padding-left: 0; }
+
+.index-journal-feature > .index-journal-col:last-child { padding-right: 0; }
+
+/* Stacked on a phone, both columns are as wide as the heading and the cards */
+@media (max-width: 767.98px) {
+    .index-journal-feature > .index-journal-col { padding-left: 0; padding-right: 0; }
+}
+
 .index-journal-media {
     display: block;
     width: 100%;
