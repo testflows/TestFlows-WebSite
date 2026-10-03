@@ -24,4 +24,4 @@ Every page has a Markdown version at the same address with `.md` in place of the
 
 ## For people only
 
-The sign-up, sign-in and account pages, under `/machine/portal/`, are for people and have no Markdown version. Give your person the link instead of filling them in. `machine login` must be run by your person, locally.
+The sign-up, sign-in and account pages, under `/machine/portal/`, are for people and have no Markdown version. Give your person the link instead of filling them in. `machine login` must be run by your person, locally. After they are signed in, `machine account provision` sets up account storage. The first session cannot be created until that is done.

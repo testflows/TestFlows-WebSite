@@ -15,7 +15,7 @@ again from the nearest checkpoint before it, twice by default. Use `--retry`
 to change that, or `--retry 0` to try each entry once. `--to` stops at a given
 entry instead of the end.
 
-If a run does diverge, `machine diff` shows how.
+If a run does diverge, [`machine diff`](commands.md#machine-diff) shows how.
 
 ```bash
 machine diff app/try-1
@@ -29,10 +29,10 @@ sections in its help: registers, stack, page tables, timers, devices,
 memory and more. Name another run to compare two recordings. A difference
 there only means the recordings differ. It says nothing about determinism.
 
-There is also `machine play`, which plays a log back without checking for
+There is also [`machine play`](commands.md#machine-play), which plays a log back without checking for
 divergence. It is for when you want to see what happened, not whether it
 repeated. By default it plays the parent's log, so it needs a branch. To play
-another run's log, name it: `machine play app/try-1 app`.
+another run's log, name it: [`machine play app/try-1 app`](commands.md#machine-play).
 
 ```bash
 machine play app/try-1 -n 16240:16243

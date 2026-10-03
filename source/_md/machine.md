@@ -27,7 +27,7 @@ curl https://testflows.com/machine/install -fsS | bash
 machine account show
 ```
 
-It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. A person signs in once: `machine login` on the same computer, which they must run themselves, locally, or an API key in `TESTFLOWS_MACHINE_API_KEY` for a sandbox or CI, made with `machine account api-keys create <name> --expiry 30`. If you get `Not signed in`, ask the person.
+It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. A person signs in once: `machine login` on the same computer, which they must run themselves, locally, or an API key in `TESTFLOWS_MACHINE_API_KEY` for a sandbox or CI, made with `machine account api-keys create <name> --expiry 30`. If you get `Not signed in`, ask the person. After they are signed in, run `machine account provision` once to set up account storage. The first session cannot be created until that is done.
 
 ## In scripts
 

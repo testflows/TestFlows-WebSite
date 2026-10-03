@@ -2,7 +2,8 @@
 
 # Sessions
 
-Runs live in a session, and you create one with `machine sessions create`.
+Runs live in a session, and you create one with [`machine sessions create`](commands.md#machine-sessions-create).
+Set up account storage first with [`machine account provision`](commands.md#machine-account-provision). The first session cannot be created until that is done.
 Pick its size when you create it.
 
 ```bash
@@ -20,9 +21,9 @@ Creating a session doesn't switch you to it. Tell Machine which one to use.
 machine sessions use ci-1
 ```
 
-`machine sessions use` applies to the terminal you ran it in. For scripts, set
+[`machine sessions use`](commands.md#machine-sessions-use) applies to the terminal you ran it in. For scripts, set
 `TESTFLOWS_MACHINE_SESSION=ci-1` instead, and every command goes to that session.
-If you only have one session, `machine sessions use` needs no name at all.
+If you only have one session, [`machine sessions use`](commands.md#machine-sessions-use) needs no name at all.
 After that, every command that needs a machine goes to `ci-1`. You can
 send one command somewhere else with `-s`, for example
 `machine -s ci-2 runs`.
