@@ -804,6 +804,18 @@
     gap: 0.9rem;
 }
 
+/* The logo and the label share a baseline: the bottom of the lettering in the logo is the bottom of the
+   label's letters. The logo image has empty canvas around its lettering, so it is nudged to meet the label's
+   baseline, by the pixels measured at each size. Update if the logo or the label's type changes. */
+#main-nav.portal-navbar .portal-navbar-brand .navbar-logo {
+    position: relative;
+    top: 1px;
+}
+
+@media (min-width: 900px) and (max-width: 991.98px) {
+    #main-nav.portal-navbar .portal-navbar-brand .navbar-logo { top: 2px; }
+}
+
 /* The logo image has empty canvas on its right (a quarter of its width), so the label is pulled back
    over it; update the margins if the logo changes. */
 #main-nav.portal-navbar .portal-navbar-title {
