@@ -18,6 +18,7 @@
 .home-product-col { min-width: 0; }
 
 .home-product {
+    position: relative; /* the title link stretches over the whole card */
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -29,6 +30,9 @@
 }
 
 .home-product:hover { border-color: var(--tf-card-border-hover); }
+
+/* The card goes to its product. The buttons sit above the stretched title link. */
+.home-product-actions a { position: relative; z-index: 1; }
 
 .home-product-eyebrow {
     color: var(--tf-text-muted);
