@@ -45,8 +45,8 @@ The second form runs one command in that environment and starts no shell, which
 suits scripts and CI. To see which `machine` you get, run `which machine`:
 `~/.local/bin/machine` is the client and `/usr/bin/machine` is the system's. If
 `machine --version` prints a processor type instead of a version, you are
-running the system command. On Linux nothing else is called
-`machine`, so `machine-env` is optional there.
+running the system command. On Linux, if another command on your system is
+also named `machine`, use `machine-env` the same way.
 
 To read the installer first, install a specific version or into another folder,
 check the download by hand, or uninstall, see the [download page](/machine/download/).

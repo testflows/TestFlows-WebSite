@@ -38,7 +38,7 @@ curl https://testflows.com/machine/install -fsS | bash
 
 <div class="download-section download-note">
 <h2>machine-env</h2>
-<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. Linux has no other <code>machine</code> by default, so you rarely need it. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
 ```bash
 machine-env
@@ -113,7 +113,7 @@ curl https://testflows.com/machine/install -fsS | bash
 
 <div class="download-section download-note">
 <h2>machine-env</h2>
-<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. Linux has no other <code>machine</code> by default, so you rarely need it. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
 ```bash
 machine-env
