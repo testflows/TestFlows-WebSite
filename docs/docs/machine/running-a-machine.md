@@ -16,7 +16,8 @@ knowing about:
 
 | Option | What it does |
 |---|---|
-| `--daemon` | wait for your commands, so you can drive the run (without it the machine boots and runs to the end by itself) |
+| `--no-daemon` | boot and run to the end by itself, instead of waiting for your commands |
+| `--pin-cpu n` | run on host CPU `n`, for this start only (the default picks the least-loaded) |
 | `--like run` | start from another run's options, then apply the ones you give |
 | `--label name=value` | attach a label to the run, as many times as you like |
 | `--rng`, `--rng-seed n` | give the guest random numbers, seeded with `n` (the default is 0) |
@@ -30,8 +31,8 @@ guest asks for. For exploring thread schedules there is another seed, on
 
 ## Driving it
 
-A run created with `--daemon` executes only while you drive it. `machine run` is
-the way, and `--until` says when to stop. (Without `--daemon` you get
+A run executes only while you drive it. `machine run` is the way, and `--until`
+says when to stop. (A run created with `--no-daemon` answers
 `✗ Machine not in control mode`, because the machine isn't waiting for you.)
 
 ```bash
@@ -157,6 +158,15 @@ refuse instead.
 `start` can also take a run back to an earlier point. `--at` replays from an
 earlier checkpoint, and `--read-only` opens a checkpoint without running it
 at all.
+
+A run remembers the options you created it with: `--no-daemon`,
+`--single-step`, `--limit` and `--backstop-limit`. Every `start` and `fork`
+repeats them, so you type them once. `start` takes the same flags to change
+them for that start only, so `machine start app --daemon` gives you a machine
+to drive on a run created with `--no-daemon`. `fork` and `detach` take them
+too, and the new run keeps what you gave. `--pin-cpu` is the exception: no run
+remembers a CPU, so each `start` and `fork` picks the least-loaded one unless
+you name it.
 
 `delete` only removes stopped runs, unless you add `--stop`. It also refuses to
 remove a run that has branches, unless you add `--recursive`. And since
