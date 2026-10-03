@@ -21,7 +21,7 @@ fullwidth: true
 <div class="home-product-col">
 <article class="home-product">
 <p class="home-product-eyebrow">Open-source</p>
-<h2><a href="/framework/">Framework</a></h2>
+<h2><a class="stretched-link" href="/framework/">Framework</a></h2>
 <p class="home-product-lead">Python library for writing test programs.<br>Using everything is code approach.</p>
 <div class="index-start home-demo">
 <div class="index-start-steps">
@@ -58,7 +58,7 @@ Total time 2ms
 <div class="home-product-col">
 <article class="home-product">
 <p class="home-product-eyebrow">Deterministic</p>
-<h2><a href="/machine/">Machine</a></h2>
+<h2><a class="stretched-link" href="/machine/">Machine</a></h2>
 <p class="home-product-lead">Run your programs deterministically: record a run, replay it exactly, and branch from any point.</p>
 <div class="home-machine-demo">
 <div class="banner-sphere-frame machine-hero-frame">
