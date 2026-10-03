@@ -15,8 +15,9 @@ export function looksLikeEmail(value) {
 }
 
 /**
- * Stable API `error` strings (and a few status-only cases) → UX copy.
- * Human sentences from the API pass through unchanged (see below).
+ * API error `code`s, and stable `error` strings from responses that carry no
+ * code yet, → UX copy. Human sentences from the API pass through unchanged
+ * (see below).
  */
 const ERROR_COPY = {
   invalid_request: "Check what you entered and try again.",
@@ -25,7 +26,8 @@ const ERROR_COPY = {
   "invalid or expired code": "Wrong or expired code.",
   "invalid or expired token": "Not signed in (token invalid or expired).",
   "account not active": "This account isn't active.",
-  "account_closing": "Account is closing. Finish or cancel closing first.",
+  account_closing: "Account is closing. Finish or cancel closing first.",
+  account_inactive: "This account isn't active.",
   "missing bearer token": "Not signed in.",
   "invalid email": "Enter a valid email address.",
   "email not allowed": "That email isn't allowed.",
@@ -52,7 +54,7 @@ const ERROR_COPY = {
 };
 
 /**
- * @param {unknown} data JSON body (`{ error: string }` or PoW challenge)
+ * @param {unknown} data JSON body (`{ error: string, code?: string }` or PoW challenge)
  * @param {number} [status] HTTP status
  * @param {string} [fallback]
  */
@@ -61,7 +63,16 @@ export function friendlyApiError(data, status, fallback) {
     data && typeof data === "object" && typeof data.error === "string"
       ? data.error
       : "";
+  // The cause, when the API names one: the status is the class of failure
+  // and `code` says which. Keyed first, so copy never depends on a sentence.
+  const cause =
+    data && typeof data === "object" && typeof data.code === "string"
+      ? data.code
+      : "";
 
+  if (cause && Object.prototype.hasOwnProperty.call(ERROR_COPY, cause)) {
+    return ERROR_COPY[cause];
+  }
   if (code && Object.prototype.hasOwnProperty.call(ERROR_COPY, code)) {
     return ERROR_COPY[code];
   }

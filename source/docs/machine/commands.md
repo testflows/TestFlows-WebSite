@@ -13,12 +13,11 @@ takes further commands, those follow it, so each one has a heading.
 | `-o`, `--output` | Output format: text, wide, raw, or json. The default is text. Wide adds columns to list output. |
 | `--version` | Show version and license. |
 | `--no-colors` | Disable terminal color highlighting. |
-| `--debug` | Show IPC protocol messages. |
+| `--debug` | Show the messages exchanged with the service. |
 | `--api-url` | Cloud API base URL. Overrides `TESTFLOWS_MACHINE_API_URL` and the default. |
 | `-s`, `--session` | Target session, by name, id, or unique prefix. |
 | `--timeout` | Give up after S seconds, for commands that wait. The default is no limit. 0 means check once. |
 | `-q`, `--quiet` | No progress or spinners. |
-| `--local` | Use the local session. |
 
 ## machine runs
 
@@ -717,7 +716,7 @@ usage: machine tasks [-h] [--vcpu n] [--focused] run {cgroups,exits,hold,yield,r
 
 ### machine tasks cgroups
 
-List the cgroups those tasks are in. See [Holding threads](steering-programs.md#holding-threads).
+List the tasks grouped by cgroup. See [Holding threads](steering-programs.md#holding-threads).
 
 ```
 usage: machine tasks run cgroups [-h] [--vcpu n]
@@ -871,7 +870,7 @@ usage: machine focus run add [-h] path|cgroup=path|tgid=n [+syscalls|+ints ...]
 
 ### machine focus remove
 
-Stop steering one. See [Focus](steering-programs.md#focus).
+Stop steering a program. See [Focus](steering-programs.md#focus).
 
 ```
 usage: machine focus run remove [-h] path|cgroup=path|tgid=n
@@ -948,24 +947,24 @@ usage: machine vtime [-h] run {rate,add} ...
 Set the rate. See [Interrupts and time](steering-programs.md#interrupts-and-time).
 
 ```
-usage: machine vtime run rate [-h] n
+usage: machine vtime run rate [-h] rate
 ```
 
 | Argument | Does |
 |---|---|
-| `n` | Rate, or num/den |
+| `rate` | Rate, or num/den |
 
 ### machine vtime add
 
 Push the clock forward. See [Interrupts and time](steering-programs.md#interrupts-and-time).
 
 ```
-usage: machine vtime run add [-h] ns
+usage: machine vtime run add [-h] time
 ```
 
 | Argument | Does |
 |---|---|
-| `ns` | Nanoseconds to add |
+| `time` | Time to add, such as 1s or 250ms; a bare number is nanoseconds |
 
 ## machine checkpoints
 
@@ -1039,17 +1038,17 @@ usage: machine debug log [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Last NUM lines, +NUM from line, or START:END range |
+| `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
 | `-f, --follow` | Follow new output (like tail `-f`) |
 
 ```
 line selection (-n):
-  -n 20          Last 20 lines
-  -n +50         From line 50 to end
+  -n -20         Last 20 lines
+  -n 20          Line 20
   -n 100:200     Lines 100 through 200
-  -n :50         First 50 lines
-  -n 50:         From line 50 to end
-  -n=-5:         Last 5 (use = for negative ranges)
+  -n 50:         From line 50 to the end
+  -n :50         Lines 1 through 50
+  -n :           Every line
 ```
 
 ### machine debug err
@@ -1070,17 +1069,17 @@ usage: machine debug err [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Last NUM lines, +NUM from line, or START:END range |
+| `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
 | `-f, --follow` | Follow new output (like tail `-f`) |
 
 ```
 line selection (-n):
-  -n 20          Last 20 lines
-  -n +50         From line 50 to end
+  -n -20         Last 20 lines
+  -n 20          Line 20
   -n 100:200     Lines 100 through 200
-  -n :50         First 50 lines
-  -n 50:         From line 50 to end
-  -n=-5:         Last 5 (use = for negative ranges)
+  -n 50:         From line 50 to the end
+  -n :50         Lines 1 through 50
+  -n :           Every line
 ```
 
 ## machine run
@@ -1441,13 +1440,13 @@ line. A point that is not a checkpoint is reached by forking at the nearest one
 at or before it and replaying the difference.
 
 ```
-usage: machine go [-h] [--name name] [--rebase] [--depth n] [--lean] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait] run point [point ...]
+usage: machine go [options] <run> <point>
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | The running machine that moves |
-| `point` | Where to cut: a time, -10ms back, #entry, ^checkpoint, now, parent [n], root, or %mark |
+| `point` | Where to fork: a time, -10ms back, #entry, ^checkpoint, now, parent [n], root, or %mark |
 
 | Option | Does |
 |---|---|
@@ -1503,8 +1502,7 @@ Play entries from a run log. See [Replay](replay.md).
 Scripted playback from a run's log. No divergence checking.
 
 The source must be in this run's tree, the same bound replay takes. Divergence
-is not checked here, so a wrong source is played rather than refused. Use = for
-range values starting with -, such as `-n`=-10:.
+is not checked here, so a wrong source is played rather than refused.
 
 ```
 usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type ...]] run [source]
@@ -1517,7 +1515,7 @@ usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type 
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entry range: N, +N, START:END, `-N`: (use `-n`=`-N`:) |
+| `-n, --entries range` | Entry N, A:B, A:, :B or :, or -N for the last N entries |
 | `--include type [type ...]` | Include only these event types: run, irq, exception, random, device_in, block_done, input, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid |
 | `--exclude type [type ...]` | Exclude these event types |
 
@@ -1554,8 +1552,9 @@ Interactive control mode. See [Interactive mode](running-a-machine.md#interactiv
 
 Enter interactive command mode for rapid vCPU control.
 
-Use `control log <run>` to read the command history instead of driving the
-machine, and `--entries` to select the commands issued at given run entries.
+Use `control log` with a run to read the command history instead of driving
+the machine, `--entries` to select the commands issued at given run entries,
+and `-n` to select commands by number.
 
 ```
 usage: machine control [-h] [--entries range] [-n range] [-c cmd] run|log [run]
@@ -1564,22 +1563,22 @@ usage: machine control [-h] [--entries range] [-n range] [-c cmd] run|log [run]
 | Argument | Does |
 |---|---|
 | `run\|log` | Run name, or `log` to read history |
-| `run` | With `log`: the run whose history to read |
+| `run` | With log: the run whose history to read |
 
 | Option | Does |
 |---|---|
-| `--entries range` | With `log`: commands at one entry, or an inclusive range |
-| `-n, --lines range` | With `log`: last NUM commands, +NUM from, or START:END range |
+| `--entries range` | With log: commands at one entry, or an inclusive range |
+| `-n, --lines range` | With log: command N, A:B, A:, :B or :, or -N for the last N commands |
 | `-c, --command cmd` | Slash command (e.g. "/s=0@10") |
 
 ```
 command selection (-n):
-  -n 20          Last 20 commands
-  -n +50         From command 50 to end
+  -n -20         Last 20 commands
+  -n 20          Command 20
   -n 100:200     Commands 100 through 200
-  -n :50         First 50 commands
-  -n 50:         From command 50 to end
-  -n=-5:         Last 5 (use = for negative ranges)
+  -n 50:         From command 50 to the end
+  -n :50         Commands 1 through 50
+  -n :           Every command
 ```
 
 ## machine wait
@@ -1647,18 +1646,18 @@ usage: machine console [-h] [-n range] [--entries range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Last NUM lines, +NUM from line, or START:END range |
+| `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail `-f`) |
 
 ```
 line selection (-n):
-  -n 20          Last 20 lines
-  -n +50         From line 50 to end
+  -n -20         Last 20 lines
+  -n 20          Line 20
   -n 100:200     Lines 100 through 200
-  -n :50         First 50 lines
-  -n 50:         From line 50 to end
-  -n=-5:         Last 5 (use = for negative ranges)
+  -n 50:         From line 50 to the end
+  -n :50         Lines 1 through 50
+  -n :           Every line
 ```
 
 ## machine entries
@@ -1679,19 +1678,17 @@ usage: machine entries [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entry id or range (N, N:M, `-N` for last N) |
+| `-n, --entries range` | Entry N, A:B, A:, :B or :, or -N for the last N entries |
 | `-f, --follow` | Follow new output (like tail `-f`) |
 
 ```
 entry selection (-n):
-  -n 20            last 20 entries
-  -n 181743        entry_id 181743
-  -n 181740:181745 entry_id range
-  -n 181743:       from entry_id to end
-  -n -20           last 20 entries
-
-A bare number <= 1000 is a COUNT (last N); above it, an entry id.
-Unambiguous either way: -N is always a tail, N: and N:M always ids.
+  -n -20           Last 20 entries
+  -n 181743        Entry 181743
+  -n 181740:181745 Entries 181740 through 181745
+  -n 181743:       From entry 181743 to the end
+  -n :200          Entries 0 through 200
+  -n :             Every entry
 ```
 
 ## machine sessions
@@ -1951,7 +1948,7 @@ usage: machine disks build [-h] (--binary path | --image ref | --compose dir) [-
 
 ### machine disks show
 
-Show details. See [Disks](disks.md).
+Show a disk. See [Disks](disks.md).
 
 Shows disk details.
 
@@ -2022,7 +2019,7 @@ usage: machine disks rename [-h] name new-name
 
 ### machine disks cancel
 
-Cancel transfer. See [Disks](disks.md).
+Cancel a transfer. See [Disks](disks.md).
 
 Cancels an in-flight transfer.
 
@@ -2204,7 +2201,7 @@ usage: machine account [-h] {devices,buy,upgrade,downgrade,payment,portal,invoic
 
 ### machine account devices
 
-List signed-in devices. See [Account and billing](account-and-billing.md).
+List the devices signed in to the account. See [Account and billing](account-and-billing.md).
 
 Lists signed-in devices.
 
@@ -2242,7 +2239,7 @@ usage: machine account buy usage [-h] [-y] eur
 
 | Argument | Does |
 |---|---|
-| `eur` | Pack size in euros (see `account products`) |
+| `eur` | Pack size in euros, as account products lists it |
 
 | Option | Does |
 |---|---|
@@ -2500,7 +2497,7 @@ usage: machine account activity [-h] [--since date|age] [--until date|age] [--pe
 
 | Argument | Does |
 |---|---|
-| `session` | Focus on one session — its transactions (name, id, or id prefix) |
+| `session` | Show one session's transactions, by name, id or id prefix |
 
 | Option | Does |
 |---|---|
@@ -2632,7 +2629,7 @@ usage: machine account api-keys delete [-h] id
 
 | Argument | Does |
 |---|---|
-| `id` | Key id (from `account api-keys`) |
+| `id` | Key id, as account api-keys lists it |
 
 #### machine account api-keys update
 
@@ -2648,7 +2645,7 @@ usage: machine account api-keys update [-h] id days|never
 
 | Argument | Does |
 |---|---|
-| `id` | Key id (from `account api-keys`) |
+| `id` | Key id, as account api-keys lists it |
 | `days\|never` | Number of days from now (e.g. 30) or "never" |
 
 ### machine account provision

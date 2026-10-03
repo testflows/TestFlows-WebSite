@@ -171,7 +171,7 @@ VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP    
 Read the last five lines the machine printed.
 
 ```bash
-machine console hello-run -n 5
+machine console hello-run -n -5
 ```
 ```bash
 futex hash table entries: 256 (order: 2, 16384 bytes, linear)
