@@ -12,8 +12,8 @@ curl https://testflows.com/machine/install -fsS | bash
 ```
 
 That downloads a single binary named `machine` over HTTPS, checks it against the
-SHA-256 checksum published next to it, and puts it in `~/.local/bin`. If the
-checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
+SHA-256 checksum published next to it, and puts it in `~/.local/bin`, with
+`machine-env` beside it. If the checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
 yet, the installer says so and shows the line to add for your shell. Run the same
 command again whenever you want to update.
 
@@ -27,6 +27,26 @@ need another platform,
 [contact us](/contact.html?topic=machine) and tell us which one. The
 [download page](/machine/download/) has the full list, and a way to check the
 download yourself.
+
+**On a Mac, use `machine-env`.** macOS ships its own `/usr/bin/machine`, which
+prints the processor type, so typing `machine` may not run the client. Putting
+the client first on your `PATH` would hide the system command for every other
+program. `machine-env`, which the installer writes on every system, starts a
+shell in which `machine` is the client and changes nothing else. Its prompt
+starts with `(machine)`, your usual shell setup is loaded, and `exit` leaves. It
+supports zsh and bash.
+
+```bash
+machine-env
+machine-env -- machine --version
+```
+
+The second form runs one command in that environment and starts no shell, which
+suits scripts and CI. To see which `machine` you get, run `which machine`:
+`~/.local/bin/machine` is the client and `/usr/bin/machine` is the system's. If
+`machine --version` prints a processor type instead of a version, you are
+running the system command. On Linux, if another command on your system is
+also named `machine`, use `machine-env` the same way.
 
 To read the installer first, install a specific version or into another folder,
 check the download by hand, or uninstall, see the [download page](/machine/download/).

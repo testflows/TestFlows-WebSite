@@ -14,15 +14,30 @@ Run this in a terminal.
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-It verifies the download and puts the client in `~/.local/bin`. It never asks for root. Run the same command again to update.
+It verifies the download and puts the client in `~/.local/bin`, with `machine-env` beside it. It never asks for root. Run the same command again to update.
 
 | System | Status |
 |---|---|
 | Linux, x86_64 | Supported |
 | Linux, ARM64 | Supported. See the note about disks below. |
-| Mac, Apple Silicon (ARM64) | Supported. The installer installs under `~/.local/share/machine/` and links it from `~/.local/bin`. It never asks for your password. Macs with an Intel processor are not supported. |
+| Mac, Apple Silicon (ARM64) | Supported. The installer installs under `~/.local/share/machine/` and links it from `~/.local/bin`, with `machine-env` beside the link. It never asks for your password. macOS already has a `machine` command, so use `machine-env` below. Macs with an Intel processor are not supported. |
 | Windows | Use WSL, the Linux that comes with Windows. There is no native Windows build. |
 | Other | Not supported. Tell us which one: https://testflows.com/contact.html?topic=machine |
+
+### machine-env
+
+The installer writes `machine-env` beside `machine` on every system. It starts a shell in which `machine` is this client, ahead of any other `machine` on your PATH. The prompt starts with `(machine)`, your usual shell setup is loaded, and `exit` leaves. It supports zsh and bash.
+
+```bash
+machine-env
+machine-env -- machine --version
+```
+
+The second form runs one command in that environment and starts no shell, for scripts and CI.
+
+**On macOS, use it.** macOS ships `/usr/bin/machine`, which prints the processor type, such as `arm64`. Typing `machine` runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. `machine-env` avoids both. To see which `machine` you get, run `which machine`: `~/.local/bin/machine` is this client and `/usr/bin/machine` is the system's. If `machine --version` prints a processor type instead of a version, you are running the system command. If your shell cannot find `machine-env` either, run `~/.local/bin/machine-env`.
+
+On Linux, if another command on your system is also named `machine`, use `machine-env`. `which machine` shows which one you get.
 
 ### Windows
 
@@ -107,7 +122,7 @@ Sign out, then delete the client and what it stored.
 
 ```bash
 machine logout
-rm ~/.local/bin/machine
+rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.cache/machine ~/.testflows/machine
 ```
 
@@ -115,7 +130,7 @@ On a Mac the client is under `~/.local/share/machine`, not `~/.cache/machine`:
 
 ```bash
 machine logout
-rm ~/.local/bin/machine
+rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.local/share/machine ~/.testflows/machine
 ```
 

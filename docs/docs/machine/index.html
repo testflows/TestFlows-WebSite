@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791060454877" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791060454877" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791057768323" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791060454877" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -430,8 +430,8 @@ command:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash</span><br></pre></td></tr></table></figure>
 
 <p>That downloads a single binary named <code>machine</code> over HTTPS, checks it against the
-SHA-256 checksum published next to it, and puts it in <code>~/.local/bin</code>. If the
-checksum doesn’t match, nothing is installed. If that folder isn’t on your <code>PATH</code>
+SHA-256 checksum published next to it, and puts it in <code>~/.local/bin</code>, with
+<code>machine-env</code> beside it. If the checksum doesn’t match, nothing is installed. If that folder isn’t on your <code>PATH</code>
 yet, the installer says so and shows the line to add for your shell. Run the same
 command again whenever you want to update.</p>
 <p><strong>Supported systems.</strong> The client runs on Linux, x86_64 and arm64, and on Macs
@@ -444,6 +444,21 @@ need another platform,
 <a href="/contact.html?topic=machine">contact us</a> and tell us which one. The
 <a href="/machine/download/">download page</a> has the full list, and a way to check the
 download yourself.</p>
+<p><strong>On a Mac, use <code>machine-env</code>.</strong> macOS ships its own <code>/usr/bin/machine</code>, which
+prints the processor type, so typing <code>machine</code> may not run the client. Putting
+the client first on your <code>PATH</code> would hide the system command for every other
+program. <code>machine-env</code>, which the installer writes on every system, starts a
+shell in which <code>machine</code> is the client and changes nothing else. Its prompt
+starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It
+supports zsh and bash.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>The second form runs one command in that environment and starts no shell, which
+suits scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>:
+<code>~/.local/bin/machine</code> is the client and <code>/usr/bin/machine</code> is the system’s. If
+<code>machine --version</code> prints a processor type instead of a version, you are
+running the system command. On Linux, if another command on your system is
+also named <code>machine</code>, use <code>machine-env</code> the same way.</p>
 <p>To read the installer first, install a specific version or into another folder,
 check the download by hand, or uninstall, see the <a href="/machine/download/">download page</a>.</p>
 <p>Run <code>machine</code> with no arguments, or with <code>--help</code>, to see every command. Each
@@ -5516,9 +5531,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791057768324"></script>
-<script src="/js/machine-hero-type.js?v=1791057768324"></script>
-<script src="/js/download-platforms.js?v=1791057768324"></script>
+<script src="/js/index-code-type.js?v=1791060454877"></script>
+<script src="/js/machine-hero-type.js?v=1791060454877"></script>
+<script src="/js/download-platforms.js?v=1791060454877"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
