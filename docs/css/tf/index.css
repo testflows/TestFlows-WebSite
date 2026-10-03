@@ -750,7 +750,7 @@
     text-align: center;
 }
 
-.index-close .section-close h1 {
+.index-close .section-close h2 {
     color: var(--tf-text-strong);
     font-weight: 600;
     font-size: clamp(1.75rem, 3.5vw, 2.4rem);

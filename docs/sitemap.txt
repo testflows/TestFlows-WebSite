@@ -1,11 +1,11 @@
+https://testflows.com/framework/index.html
+https://testflows.com/framework.md
 https://testflows.com/index.html
 https://testflows.com/index.md
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
 https://testflows.com/docs/machine/index.html
 https://testflows.com/docs/machine.md
-https://testflows.com/framework/index.html
-https://testflows.com/framework.md
 https://testflows.com/docs/framework/index.html
 https://testflows.com/docs/framework.md
 https://testflows.com/contact.html

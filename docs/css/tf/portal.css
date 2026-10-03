@@ -797,6 +797,36 @@
     z-index: 1050;
 }
 
+/* The default logo, and what this is next to it */
+#main-nav.portal-navbar .portal-navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+/* The logo image has empty canvas on its right (a quarter of its width), so the label is pulled back
+   over it; update the margins if the logo changes. */
+#main-nav.portal-navbar .portal-navbar-title {
+    margin-left: -3rem;
+    padding-left: 0.9rem;
+    border-left: 1px solid var(--tf-card-border);
+    color: var(--tf-text-strong);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.7;
+    white-space: nowrap;
+}
+
+@media (max-width: 991.98px) {
+    #main-nav.portal-navbar .portal-navbar-title { margin-left: -2.5rem; }
+}
+
+/* No room for the label: on a phone the logo, Download and the theme switch fill the row, and just
+   above 768px the row is full of the account buttons */
+@media (max-width: 575.98px), (min-width: 768px) and (max-width: 899.98px) {
+    #main-nav.portal-navbar .portal-navbar-title { display: none; }
+}
+
 /* Beat site mobile nav order / gutters — portal owns its layout */
 @media (max-width: 991.98px) {
     #main-nav.portal-navbar .navbar-inner.portal-navbar-inner {

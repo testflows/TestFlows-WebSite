@@ -19,6 +19,9 @@
   
   <title>Decoding Formal Description of a Simple Train Control System | Blog</title>
   <meta name="description" content="An article about how to read formal mathematical descriptions of a simple train control system.">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/decoding-formal-description-simple-train-control-system/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   
@@ -28,60 +31,61 @@
   <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/decoding-formal-description-simple-train-control-system.md">
 
 
-  <meta name="og:site_name" content="TestFlows">
-  <meta property="og:image" content="https://testflows.com/images/decoding-formal-description-simple-train-control-system.png">
+  <meta property="og:site_name" content="TestFlows">
   
-  <meta name="image" property="og:image" content="https://testflows.com/">
+  
 <meta name="publish_date" property="og:publish_date" content="2024-10-30T00:00:00-0000">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2024-10-30T00:00:00-0000" />
 <meta property="og:title" content="Decoding Formal Description of a Simple Train Control System">
-<meta property="og:image" content="https://testflows.com/">
 <meta property="og:description" content="An article about how to read formal mathematical descriptions of a simple train control system.">
+<meta property="og:url" content="https://testflows.com/blog/decoding-formal-description-simple-train-control-system/">
+<meta property="og:image" content="https://testflows.com/images/decoding-formal-description-simple-train-control-system.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Decoding Formal Description of a Simple Train Control System">
 <meta name="twitter:description" content="An article about how to read formal mathematical descriptions of a simple train control system.">
-<meta name="twitter:image" content="https://testflows.com/">
+<meta name="twitter:image" content="https://testflows.com/images/decoding-formal-description-simple-train-control-system.png">
+
   
   
   <link href="https://testflows.com/img/favicon.ico" rel="icon">
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791048192916" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791048192916" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791041675759" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791048192916" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -95,6 +99,7 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 <body>
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
   
   
 <nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
@@ -206,7 +211,7 @@
 
 
   <div class="container-fluid p-0">
-    <div class="content">
+    <main class="content" id="main" tabindex="-1">
       <div class="container" style="padding-bottom: 2em !important">
     <div class="post-header row">
         <div class="post-summary col-lg-6 mt-auto mb-auto">
@@ -231,7 +236,7 @@
             </div>
         </div>
         <div class="post-image col-lg-6 m-auto">
-            <img src="/images/decoding-formal-description-simple-train-control-system.png" alt="Decoding Formal Description of a Simple Train Control System">
+            <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" alt="Decoding Formal Description of a Simple Train Control System">
             <span class="post-image-credit"></span>
         </div>
     </div>
@@ -245,7 +250,7 @@
 <h1 id="Ceiling-speed-monitoring-controller"><a href="#Ceiling-speed-monitoring-controller" class="headerlink" title="Ceiling speed monitoring controller"></a>Ceiling speed monitoring controller</h1><p>The simple train control system we’ll discuss here is a <strong>Ceiling Speed Monitoring Controller</strong>, described in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://link.springer.com/chapter/10.1007/978-3-642-41707-8_4"><em>Exhaustive Model-Based Equivalence Class Testing</em> by W. Huang and J. Peleska, 2013</a>. This system, derived from the European Train Control System (ETCS), ensures that a train’s speed remains within safe limits by continuously comparing the train’s estimated speed (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mtext>est</mtext></msub></mrow><annotation encoding="application/x-tex">V_{\text{est}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">est</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>) with a pre-set maximum speed, known as the Most Restrictive Speed Profile (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>V</mi><mtext>MRSP</mtext></msub></mrow><annotation encoding="application/x-tex">V_{\text{MRSP}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.2222em;">V</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.2222em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">MRSP</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>).</p>
 <p>The controller interface consists of the following inputs and outputs:</p>
 <div class="text-left">
-<img alt="Ceiling Speed Monitoring Controller block with inputs, outputs and an internal state" style="width: 75%" src="/images/ceiling-speed-monitoring-interface.png">
+<img loading="lazy" decoding="async" alt="Ceiling Speed Monitoring Controller block with inputs, outputs and an internal state" style="width: 75%" src="/images/ceiling-speed-monitoring-interface.png">
 <div class="text-secondary text-bold"><br>Diagram: Ceiling Speed Monitoring I/O Interface</div>
 </div><br>
 
@@ -282,7 +287,7 @@
 
 <p>The system operates in three internal states <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">ℓ</mi></mrow><annotation encoding="application/x-tex">\ell </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">ℓ</span></span></span></span>, where (<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">ℓ</mi><mo>=</mo><mo stretchy="false">{</mo><mi>N</mi><mi>S</mi><mo separator="true">,</mo><mi>W</mi><mi>S</mi><mo separator="true">,</mo><mi>E</mi><mi>B</mi><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">\ell = \{NS, WS, EB\} </annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">ℓ</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">{</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">W</span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">}</span></span></span></span>), as shown in the diagram below:</p>
 <div class="text-left">
-<img alt="State diagram with three states: Normal Status, Warning Status and Intervention Status" style="width: 75%" src="/images/ceiling-speed-monitoring-chart.png">
+<img loading="lazy" decoding="async" alt="State diagram with three states: Normal Status, Warning Status and Intervention Status" style="width: 75%" src="/images/ceiling-speed-monitoring-chart.png">
 <div class="text-secondary text-bold"><br>Diagram: Ceiling Speed Monitoring State Diagram</div>
 </div><br>
 
@@ -660,7 +665,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
                                             <p class="card-text flex-grow-1">
@@ -672,7 +677,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
                                             <p class="card-text flex-grow-1">
@@ -690,7 +695,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
                                             <p class="card-text flex-grow-1">
@@ -702,7 +707,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
                                             <p class="card-text flex-grow-1">
@@ -720,7 +725,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
                                             <p class="card-text flex-grow-1">
@@ -732,7 +737,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
                                             <p class="card-text flex-grow-1">
@@ -750,7 +755,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
                                             <p class="card-text flex-grow-1">
@@ -762,7 +767,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
                                             <p class="card-text flex-grow-1">
@@ -780,7 +785,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
                                             <p class="card-text flex-grow-1">
@@ -792,7 +797,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
                                             <p class="card-text flex-grow-1">
@@ -810,7 +815,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
                                             <p class="card-text flex-grow-1">
@@ -822,7 +827,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
                                             <p class="card-text flex-grow-1">
@@ -840,7 +845,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
                                             <p class="card-text flex-grow-1">
@@ -852,7 +857,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
                                             <p class="card-text flex-grow-1">
@@ -870,7 +875,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
                                             <p class="card-text flex-grow-1">
@@ -882,7 +887,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
                                             <p class="card-text flex-grow-1">
@@ -900,7 +905,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Working With Requirements Just Like With Code</h3>
                                             <p class="card-text flex-grow-1">
@@ -912,7 +917,7 @@ AP = \{ V_{\text{est}} = 0, V_{\text{est}} &gt; V_{\text{MRSP}}, V_{\text{MRSP}}
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
                                             <p class="card-text flex-grow-1">
@@ -982,7 +987,7 @@ In many cases, writing a good test...
     });
 </script>
 
-    </div>
+    </main>
   </div>
   
   <div class="container-footer" id="container-footer">
@@ -1047,9 +1052,9 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791041675759"></script>
-<script src="/js/machine-hero-type.js?v=1791041675759"></script>
-<script src="/js/download-platforms.js?v=1791041675759"></script>
+<script src="/js/index-code-type.js?v=1791048192916"></script>
+<script src="/js/machine-hero-type.js?v=1791048192916"></script>
+<script src="/js/download-platforms.js?v=1791048192916"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
