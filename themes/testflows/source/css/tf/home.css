@@ -250,22 +250,7 @@
 
 .home-product-lead { text-wrap: pretty; }
 
-/* Home: the blog heading has no lead under it, so align it with the other sections */
-.home-journal .index-journal-heading,
-.home-journal .index-block-title { text-align: left; }
-
-/* Home: "Read the blog" is a card, like the product cards, and "Talk to our team" is a band of its own,
-   so neither blends into the section above it */
-.home-journal .index-journal-cta-card {
-    margin-top: 1rem;
-    padding: 2rem;
-    background: var(--tf-card-bg);
-    border: 1px solid var(--tf-card-border);
-    border-radius: var(--tf-radius);
-}
-
-.home-journal .index-journal-cta-card p { margin-bottom: 1.5rem; }
-
+/* Home: "Talk to our team" is a band of its own, so it does not blend into the blog section above it */
 .home-close {
     background: var(--tf-card-bg);
     border-top: 1px solid var(--tf-card-border);
