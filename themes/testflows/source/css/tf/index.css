@@ -536,19 +536,19 @@
     margin: 0 0 2.75rem;
     padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--tf-card-border);
-    text-align: right;
+    text-align: left;
 }
 
 .index-journal .index-block-title {
     margin: 0 0 0.75rem;
-    text-align: right;
+    text-align: left;
 }
 
 .index-journal .index-block-lead {
     width: 100%;
     max-width: none;
     margin: 0;
-    text-align: right;
+    text-align: left;
 }
 
 .index-journal-feature {
@@ -680,12 +680,12 @@
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
-    margin-top: 0.5rem;
-    padding: 2rem 0 0 1.25rem;
+    margin-top: 1rem;
+    padding: 2rem;
     text-align: left;
-    border: none;
-    border-radius: 0;
-    background: transparent;
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    background: var(--tf-card-bg);
     box-sizing: border-box;
 }
 
@@ -701,7 +701,7 @@
     color: var(--tf-text-muted);
     font-size: 1.1rem;
     line-height: 1.55;
-    margin: 0 0 1.75rem;
+    margin: 0 0 1.5rem;
     max-width: none;
     width: 100%;
 }
