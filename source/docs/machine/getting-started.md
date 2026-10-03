@@ -18,8 +18,10 @@ yet, the installer says so and shows the line to add for your shell. Run the sam
 command again whenever you want to update.
 
 **Supported systems.** The client runs on Linux, x86_64 and arm64, and on Macs
-with Apple Silicon. It needs nothing else installed, and the installer never
-asks for root. It doesn't run on Intel Macs or natively on Windows; on Windows
+with Apple Silicon. It needs only the OpenSSH client, which macOS and most
+Linux systems already have, and the installer never asks for root. If `ssh` is
+missing, install it with your package manager, for example
+`sudo apt install openssh-client` on Debian and Ubuntu. It doesn't run on Intel Macs or natively on Windows; on Windows
 you can use it inside WSL. On an ARM machine, a Mac with Apple Silicon
 or arm64 Linux, the disks you build must still hold x86_64 programs; see
 [building disks on an ARM machine](disks.md#building-disks-on-an-arm-machine). If you

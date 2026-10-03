@@ -16,6 +16,8 @@ curl https://testflows.com/machine/install -fsS | bash
 
 It verifies the download and puts the client in `~/.local/bin`, with `machine-env` beside it. It never asks for root. Run the same command again to update.
 
+The client needs the OpenSSH client, `ssh`, which macOS and most Linux systems have. If yours does not, run `sudo apt install openssh-client` on Debian and Ubuntu.
+
 | System | Status |
 |---|---|
 | Linux, x86_64 | Supported |

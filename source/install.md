@@ -70,7 +70,7 @@ uname -sm
 
 The client runs on `Linux x86_64`, `Linux aarch64` and `Darwin arm64`, which is a Mac with Apple Silicon. It does not run on an Intel Mac or natively on Windows; on Windows, use WSL and treat it as Linux. On any other system, stop and tell your person.
 
-Install it. It never asks for root:
+It needs the OpenSSH client, `ssh`, which macOS and most Linux systems have. If `ssh` is missing, install it first, for example `sudo apt install openssh-client` on Debian and Ubuntu. Install the client. It never asks for root:
 
 ```bash
 curl https://testflows.com/machine/install -fsS | bash
