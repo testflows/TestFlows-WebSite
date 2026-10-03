@@ -88,6 +88,12 @@ Check it:
 machine --version
 ```
 
+On a Mac this can run the system's own `/usr/bin/machine` instead, which prints a processor type such as `arm64` and not a version. `which machine` says which one you get: `~/.local/bin/machine` is the client. The installer writes `machine-env` beside the client for that. Run the check through it, and run every later `machine` command the same way, as `machine-env -- machine <arguments>`:
+
+```bash
+machine-env -- machine --version
+```
+
 ## Step 4: the Machine account, which needs your person
 
 You cannot do this step for your person. Do not buy credits or create or delete API keys unless they ask you to. Never print an API key or commit one.

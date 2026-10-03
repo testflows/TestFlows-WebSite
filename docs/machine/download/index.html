@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791060454874" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791060454874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791057768320" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791060454874" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -238,7 +238,16 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash</span><br></pre></td></tr></table></figure>
 
-<p>It verifies the download and puts the client in <code>~/.local/bin</code>. It never asks for root. Run the same command again to update.</p>
+<p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>machine-env</h2>
+<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section">
@@ -268,7 +277,7 @@
 <h2>Uninstall</h2>
 <p>Sign out, then delete the client and what it stored.</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine ~/.local/bin/machine-env</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
 
 </div>
 </div>
@@ -281,7 +290,16 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash</span><br></pre></td></tr></table></figure>
 
-<p>It verifies the download and puts the client in <code>~/.local/bin</code>. It never asks for root. Run the same command again to update.</p>
+<p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>machine-env</h2>
+<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section download-note">
@@ -320,7 +338,7 @@
 <h2>Uninstall</h2>
 <p>Sign out, then delete the client and what it stored.</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine ~/.local/bin/machine-env</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.cache/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
 
 </div>
 </div>
@@ -333,8 +351,18 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash</span><br></pre></td></tr></table></figure>
 
-<p>It verifies the download, installs the client under <code>~/.local/share/machine/</code>, and links it from <code>~/.local/bin</code>. It never asks for your password. Run the same command again to update.</p>
+<p>It verifies the download, installs the client under <code>~/.local/share/machine/</code>, and links it from <code>~/.local/bin</code>, with <code>machine-env</code> beside the link. It never asks for your password. Run the same command again to update.</p>
 <p>Macs with an Intel processor are not supported.</p>
+<p><strong>macOS already has a <code>machine</code> command.</strong> Use <code>machine-env</code>, below, to run this one.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>macOS has its own machine command</h2>
+<p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>The second form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
 </div>
 
 <div class="download-section download-note">
@@ -373,7 +401,7 @@
 <h2>Uninstall</h2>
 <p>Sign out, then delete the client and what it stored.</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.local/share/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">logout</span></span><br><span class="line"><span class="built_in">rm</span> ~/.local/bin/machine ~/.local/bin/machine-env</span><br><span class="line"><span class="built_in">rm</span> -rf ~/.local/share/machine ~/.testflows/machine</span><br></pre></td></tr></table></figure>
 
 </div>
 </div>
@@ -495,9 +523,9 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791057768321"></script>
-<script src="/js/machine-hero-type.js?v=1791057768321"></script>
-<script src="/js/download-platforms.js?v=1791057768321"></script>
+<script src="/js/index-code-type.js?v=1791060454874"></script>
+<script src="/js/machine-hero-type.js?v=1791060454874"></script>
+<script src="/js/download-platforms.js?v=1791060454874"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
