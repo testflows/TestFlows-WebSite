@@ -361,8 +361,8 @@ def check_install(doc_texts):
         return ["source/install.md is missing"]
     text = path.read_text()
     problems = []
-    if not text.startswith("# testflows\n"):
-        problems.append("source/install.md: the first line must be '# testflows'")
+    if not text.startswith("# TestFlows\n"):
+        problems.append("source/install.md: the first line must be '# TestFlows'")
     intro = text.split("\n## ")[0]
     if not re.search(r"^> ", intro, re.M) or MACHINE not in intro or FRAMEWORK not in intro:
         problems.append(f"source/install.md: the summary {HINT}")

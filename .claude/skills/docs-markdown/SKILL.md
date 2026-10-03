@@ -24,7 +24,7 @@ own page, `/framework.md` or `/machine.md`. The checker fails if either special 
 ## `/install.md`: the install guide
 
 `source/install.md` is served as it is (`skip_render` in `_config.yml`) and has no HTML page. It follows the
-structure of Mintlify's install.md standard so any agent can run it: `# testflows`, a summary with the standard
+structure of Mintlify's install.md standard so any agent can run it: `# TestFlows`, a summary with the standard
 descriptions, `## OBJECTIVE`, `## DONE WHEN`, `## TODO` (a checklist), `## Step N: ...` sections, and
 `## EXECUTE NOW`. It covers the Framework (`pip3 install testflows`, a first test), the Machine client (the
 installer and `machine --version`) and what only the person can do: sign up, then `machine login` or an API key.
