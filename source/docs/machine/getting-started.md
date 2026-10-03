@@ -125,11 +125,11 @@ Next, build a disk around your program.
 machine disks build --binary ./hello hello
 ```
 
-Create a run from the disk. The `--daemon` flag tells the machine to wait for
-your commands. Without it, the machine would boot and run to the end by itself.
+Create a run from the disk. The machine waits for your commands. With
+`--no-daemon` it would boot and run to the end by itself.
 
 ```bash
-machine create hello-run --daemon --disk hello
+machine create hello-run --disk hello
 ```
 ```bash
 ✔ Started hello-run (whUxdR33Zad9Qxc0ASfig)
