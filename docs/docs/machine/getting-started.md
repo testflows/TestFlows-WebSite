@@ -15,9 +15,7 @@ That downloads a single binary named `machine` over HTTPS, checks it against the
 SHA-256 checksum published next to it, and puts it in `~/.local/bin`. If the
 checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
 yet, the installer says so and shows the line to add for your shell. Run the same
-command again whenever you want to update. On Linux the client unpacks itself
-into `~/.cache/machine/` on its first run; on a Mac the installer
-unpacks it into `~/.local/share/machine/`.
+command again whenever you want to update.
 
 **Supported systems.** The client runs on Linux, x86_64 and arm64, and on Macs
 with Apple Silicon. It needs nothing else installed, and the installer never
@@ -30,17 +28,8 @@ need another platform,
 [download page](/machine/download/) has the full list, and a way to check the
 download yourself.
 
-If you would like to read the installer before you run it, pipe it to `less`
-instead of `bash`.
-
-```bash
-curl https://testflows.com/machine/install -fsS | less
-```
-
-Two environment variables change what the installer does. `MACHINE_INSTALL_DIR`
-picks a different folder, and `MACHINE_VERSION` installs a specific version
-instead of the latest; a version is a date and time, `YYYYMMDD-HHMM`. The
-[download page](/machine/download/) says how to uninstall.
+To read the installer first, install a specific version or into another folder,
+check the download by hand, or uninstall, see the [download page](/machine/download/).
 
 Run `machine` with no arguments, or with `--help`, to see every command. Each
 command has its own `--help` too, and that is the place to look when a flag here
@@ -108,8 +97,6 @@ machine account api-keys create ci --expiry 90
 Here is a whole trip, from nothing to a branch. The disk can come from the
 `hello-world` example if you have [Docker](disks.md#docker-and-compose), or from a small program you compile
 if you do not.
-
-Before you can start your first session, you need to provision account storage with [`machine account provision`](commands.md#machine-account-provision).
 
 First, create a session and make it the one your commands use.
 

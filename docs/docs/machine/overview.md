@@ -19,16 +19,15 @@ You work with Machine through a client called `machine`, or from Python using
 the [SDK](python-sdk.md). To begin, [install the client](getting-started.md#the-client). It is
 one command.
 
-# Concepts
+## Concepts
 
 There are only a few of them, and the rest builds on them.
 
 **Disk.** What a machine boots. It is your program (or a whole application)
 packaged with a small Linux system. You build one with [`machine disks build`](commands.md#machine-disks-build).
 
-**Session.** A deterministic execution environment with allocated vCPUs and RAM.
-You execute one or more runs in it. It is the billable unit and consumes plan
-and usage credits.
+**Session.** The vCPUs and RAM you allocate, which one or more runs execute in.
+It is the billable unit and consumes plan and usage credits.
 
 **Run.** A deterministic machine booting a disk inside a session. Every run has a
 name. Nearly every action is something you do to a run.
@@ -48,7 +47,7 @@ tree.
 says where a branch started. A mark says what it turned out to be,
 like `crashed`.
 
-## Points
+### Points
 
 A lot of commands take a point, which is a place in a run's history. You can
 name one in several ways.
