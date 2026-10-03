@@ -43,6 +43,22 @@ body > .container-fluid {
     width: 100%;
 }
 
+/* The page's main landmark takes focus from the skip link; it is not a control, so no focus ring */
+.content:focus { outline: none; }
+
+/* Skip to content: shown to a keyboard user on the first Tab */
+.skip-link:focus {
+    position: fixed;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 3000;
+    padding: 0.5rem 1rem;
+    color: var(--tf-bg);
+    background: var(--tf-text-strong);
+    border-radius: var(--tf-radius);
+    text-decoration: none;
+}
+
 .content {
     flex: 1 0 auto;
     display: flex;

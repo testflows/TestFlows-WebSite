@@ -19,6 +19,9 @@
   
   <title>Testing Super Mario Using a Behavior Model (Part 1) | Blog</title>
   <meta name="description" content="An article about testing Super Mario game using a behavior model (Part 1).">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   
@@ -28,60 +31,61 @@
   <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1.md">
 
 
-  <meta name="og:site_name" content="TestFlows">
-  <meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-part1.png">
+  <meta property="og:site_name" content="TestFlows">
   
-  <meta name="image" property="og:image" content="https://testflows.com/">
+  
 <meta name="publish_date" property="og:publish_date" content="2025-09-17T00:00:00-0000">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2025-09-17T00:00:00-0000" />
 <meta property="og:title" content="Testing Super Mario Using a Behavior Model (Part 1)">
-<meta property="og:image" content="https://testflows.com/">
 <meta property="og:description" content="An article about testing Super Mario game using a behavior model (Part 1).">
+<meta property="og:url" content="https://testflows.com/blog/testing-super-mario-using-a-behavior-model-part1/">
+<meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-part1.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Testing Super Mario Using a Behavior Model (Part 1)">
 <meta name="twitter:description" content="An article about testing Super Mario game using a behavior model (Part 1).">
-<meta name="twitter:image" content="https://testflows.com/">
+<meta name="twitter:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-part1.png">
+
   
   
   <link href="https://testflows.com/img/favicon.ico" rel="icon">
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791048192908" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791048192908" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791041675752" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791048192908" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -95,6 +99,7 @@
 <!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
 
 <body>
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
   
   
 <nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
@@ -206,7 +211,7 @@
 
 
   <div class="container-fluid p-0">
-    <div class="content">
+    <main class="content" id="main" tabindex="-1">
       <div class="container" style="padding-bottom: 2em !important">
     <div class="post-header row">
         <div class="post-summary col-lg-6 mt-auto mb-auto">
@@ -231,7 +236,7 @@
             </div>
         </div>
         <div class="post-image col-lg-6 m-auto">
-            <img src="/images/testing-super-mario-using-a-behavior-model-part1.png" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+            <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" alt="Testing Super Mario Using a Behavior Model (Part 1)">
             <span class="post-image-credit"></span>
         </div>
     </div>
@@ -270,7 +275,7 @@ that you can find in our <a target="_blank" rel="noopener external nofollow nore
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python3 main.py</span><br></pre></td></tr></table></figure>
 
 <div class="text-center">
-<img alt="Super Mario Bros. being played manually" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
+<img loading="lazy" decoding="async" alt="Super Mario Bros. being played manually" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-1.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Playing the game manually</div>
 </div><br>
 
@@ -294,7 +299,7 @@ Additionally, we need to make a clear distinction between what a game developer 
 <li><strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/states/load_screen.py#L50">TIME_OUT</a></strong> – The state when the level timer runs out (a type of load screen).</li>
 </ul>
 <div class="text-center">
-<img alt="The game state classes: MAIN_MENU, LOAD_SCREEN, TIME_OUT, LEVEL and GAME_OVER" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
+<img loading="lazy" decoding="async" alt="The game state classes: MAIN_MENU, LOAD_SCREEN, TIME_OUT, LEVEL and GAME_OVER" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-2.png">
 <div class="text-secondary text-bold"><br>Super Mario: State Classes</div>
 </div><br>
 
@@ -302,7 +307,7 @@ Additionally, we need to make a clear distinction between what a game developer 
 <p>Each of these is a subclass of the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15">State</a> class, that implements the state machine architecture. The transitions between states are managed using the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L20">next</a> attribute, which determines the next game state.</p>
 <h3 id="The-actual-game-states"><a href="#The-actual-game-states" class="headerlink" title="The actual game states"></a>The actual game states</h3><p>However, these <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/tree/v1.0/SuperMario/source/states">state</a> classes actually present clusters of <strong>states</strong>, where each cluster contains its own <strong>actual states</strong>. These <strong>actual states</strong> are defined by the specific values of the attributes of these <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/tools.py#L15">State</a> classes. You can think of them as shown in the following diagram. However, the transition edges between states are relative. In the real system, we don’t really know which transitions are possible. Some of these states or state transitions might be a bug!</p>
 <div class="text-center">
-<img alt="The same five state classes drawn as clusters of connected states with random transition lines" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
+<img loading="lazy" decoding="async" alt="The same five state classes drawn as clusters of connected states with random transition lines" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-3.png">
 <div class="text-secondary text-bold"><br>Super Mario: Clusters of States (transition lines are random)</div>
 </div><br>
 
@@ -370,7 +375,7 @@ is not explicitly defined using state-driven code.</p>
 
 <p>The game loop operates in discrete time steps, where each tick of the clock produces a new frame. The FPS value determines the number of frames generated per second, with each frame representing the game’s state at a specific point in time. While the game might appear to run continuously, it is actually discrete, advancing in small, well-defined steps. Here is a graphical representation of the loop’s actions along with their descriptions:</p>
 <div class="text-center">
-<img alt="Game loop flowchart: event_loop(), update(), display.update() and clock.tick(), each with a comment describing its step" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
+<img loading="lazy" decoding="async" alt="Game loop flowchart: event_loop(), update(), display.update() and clock.tick(), each with a comment describing its step" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-4.png">
 <div class="text-secondary text-bold"><br>Super Mario: Game Loop</div>
 </div><br>
 
@@ -492,7 +497,7 @@ a <strong>behavior model</strong> that we can use with manual, semi-automated, o
 
 <p>If Mario <strong>doesn’t move</strong>, we’ll know something’s off. But if everything works, our test passes. Here’s a video of this test in action with the red boxes added to Mario’s start and end positions for visual confirmation.</p>
 <div class="text-center">
-<img alt="Animation of Mario moving right in the classic Move Right test, with boxes marking the start and end positions" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
+<img loading="lazy" decoding="async" alt="Animation of Mario moving right in the classic Move Right test, with boxes marking the start and end positions" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-5.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Move Right Classic Test</div>
 </div><br>
 
@@ -507,7 +512,7 @@ we press the left key. </p>
 
 <p>Here is a video of the test:</p>
 <div class="text-center">
-<img alt="Animation of Mario moving left in the classic Move Left test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
+<img loading="lazy" decoding="async" alt="Animation of Mario moving left in the classic Move Left test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-6.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Move Left Classic Test</div>
 </div><br>
 
@@ -538,7 +543,7 @@ Why? Because screen’s <strong>y-coordinates</strong> start at <code>0</code> o
 
 <p>Here is the video of the test:</p>
 <div class="text-center">
-<img alt="Animation of Mario jumping for one second in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
+<img loading="lazy" decoding="async" alt="Animation of Mario jumping for one second in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-7.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Jump For 1 Second Classic Test</div>
 </div><br>
 
@@ -555,7 +560,7 @@ we modify test’s action to hold the jump key for <code>0.2</code> seconds inst
 
 <p>Here is what we have now:</p>
 <div class="text-center">
-<img alt="Animation of Mario jumping for 0.2 seconds in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
+<img loading="lazy" decoding="async" alt="Animation of Mario jumping for 0.2 seconds in the classic Jump test" style="width: 75%" src="/images/testing-super-mario-using-a-behavior-model-pic-8.gif">
 <div class="text-secondary text-bold"><br>Super Mario: Jump For 0.2 Seconds Classic Test</div>
 </div><br>
 
@@ -596,7 +601,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
                                             <p class="card-text flex-grow-1">
@@ -608,7 +613,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
                                             <p class="card-text flex-grow-1">
@@ -626,7 +631,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
                                             <p class="card-text flex-grow-1">
@@ -638,7 +643,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
                                             <p class="card-text flex-grow-1">
@@ -656,7 +661,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
                                             <p class="card-text flex-grow-1">
@@ -668,7 +673,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
                                             <p class="card-text flex-grow-1">
@@ -686,7 +691,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
                                             <p class="card-text flex-grow-1">
@@ -698,7 +703,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
                                             <p class="card-text flex-grow-1">
@@ -716,7 +721,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
                                             <p class="card-text flex-grow-1">
@@ -728,7 +733,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
                                             <p class="card-text flex-grow-1">
@@ -746,7 +751,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
                                             <p class="card-text flex-grow-1">
@@ -758,7 +763,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
                                             <p class="card-text flex-grow-1">
@@ -776,7 +781,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
                                             <p class="card-text flex-grow-1">
@@ -788,7 +793,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
                                             <p class="card-text flex-grow-1">
@@ -806,7 +811,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
                                             <p class="card-text flex-grow-1">
@@ -818,7 +823,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
                                             <p class="card-text flex-grow-1">
@@ -836,7 +841,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Working With Requirements Just Like With Code</h3>
                                             <p class="card-text flex-grow-1">
@@ -848,7 +853,7 @@ see Mario going straight up.</p>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
-                                        <img src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
                                         <div class="card-body d-flex flex-column">
                                             <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
                                             <p class="card-text flex-grow-1">
@@ -918,7 +923,7 @@ In many cases, writing a good test...
     });
 </script>
 
-    </div>
+    </main>
   </div>
   
   <div class="container-footer" id="container-footer">
@@ -983,9 +988,9 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791041675753"></script>
-<script src="/js/machine-hero-type.js?v=1791041675753"></script>
-<script src="/js/download-platforms.js?v=1791041675753"></script>
+<script src="/js/index-code-type.js?v=1791048192909"></script>
+<script src="/js/machine-hero-type.js?v=1791048192909"></script>
+<script src="/js/download-platforms.js?v=1791048192909"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
