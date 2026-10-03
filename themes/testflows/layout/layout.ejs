@@ -3,6 +3,7 @@
 <html lang="en">
 <%- partial('_partial/head') %>
 <body>
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
   <% if (page.portal_nav) { %>
   <%- partial('_partial/navigation_portal') %>
   <% } else { %>
@@ -10,9 +11,9 @@
   <% } %>
   <%- partial('_partial/ai_markdown', {part: 'body'}) %>
   <div class="container-fluid p-0">
-    <div class="content">
+    <main class="content" id="main" tabindex="-1">
       <%- body %>
-    </div>
+    </main>
   </div>
   <% if (!page.hide_footer) { %>
   <div class="container-footer" id="container-footer">

@@ -54,7 +54,7 @@ noindex: true
                 <time class="portal-dash-mark-date" id="portal-dash-mark-date" datetime=""></time>
             </p>
         </aside>
-        <main class="portal-dash-main">
+        <div class="portal-dash-main">
             <div class="portal-dash-toolbar">
                 <div id="portal-account-status" class="portal-status portal-status--dock" hidden role="status" aria-live="polite"></div>
                 <button type="button" class="btn btn-ghost portal-dash-refresh" id="portal-account-refresh">
@@ -74,7 +74,7 @@ noindex: true
             <div class="portal-dash-panel" data-portal-panel="devices" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="storage" hidden></div>
             <div class="portal-dash-panel" data-portal-panel="settings" hidden></div>
-        </main>
+        </div>
     </div>
 </section>
 

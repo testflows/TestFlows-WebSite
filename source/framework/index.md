@@ -220,7 +220,7 @@ def my_scenario(self):
 
 <section class="index-close">
     <div class="container section-close">
-        <h1>Ready to build better tests?</h1>
+        <h2>Ready to build better tests?</h2>
         <a class="section-cta section-cta-ghost section-cta-lg" href="https://github.com/testflows">Join us on GitHub</a>
     </div>
 </section>
