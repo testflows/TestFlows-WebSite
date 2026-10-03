@@ -84,10 +84,13 @@ hexo.extend.tag.register('index_latest_post', function () {
 
   var excerpt = excerptOf(latest);
   if (excerpt) {
-    html +=
-      '<div class="index-journal-excerpt">' +
-      excerpt +
-      '<i class="post-summary-more">...</i></div>';
+    // The ellipsis ends the last paragraph, not a line of its own below it.
+    var more = ' <i class="post-summary-more">...</i>';
+    var trimmed = excerpt.replace(/\s+$/, '');
+    excerpt = /<\/p>$/.test(trimmed)
+      ? trimmed.replace(/<\/p>$/, more + '</p>')
+      : trimmed + more;
+    html += '<div class="index-journal-excerpt">' + excerpt + '</div>';
   }
 
   html += '<div class="index-journal-meta">';

@@ -101,7 +101,6 @@ Total time 2ms
         <h1>Talk to our team</h1>
         <div class="section-close-actions">
             <a class="section-cta section-cta-lg" href="/contact.html">Contact</a>
-            <a class="section-cta section-cta-ghost section-cta-lg" href="https://github.com/testflows">GitHub</a>
         </div>
     </div>
 </section>
