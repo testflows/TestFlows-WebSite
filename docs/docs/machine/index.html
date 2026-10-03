@@ -36,40 +36,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1790997378585" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1790997378585" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1790967340913" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1790997378585" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -534,9 +534,9 @@ built as a static x86_64 Linux executable. We’ll call it <code>hello</code>.</
 <p>Next, build a disk around your program.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --binary ./hello hello</span><br></pre></td></tr></table></figure>
 
-<p>Create a run from the disk. The <code>--daemon</code> flag tells the machine to wait for
-your commands. Without it, the machine would boot and run to the end by itself.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine create hello-run --daemon --disk hello</span><br></pre></td></tr></table></figure>
+<p>Create a run from the disk. The machine waits for your commands. With
+<code>--no-daemon</code> it would boot and run to the end by itself.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine create hello-run --disk hello</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Started hello-run (whUxdR33Zad9Qxc0ASfig)</span><br></pre></td></tr></table></figure>
 
 <p>Now the run is waiting. It only moves when you drive it, and <code>machine run</code> is how
@@ -659,8 +659,12 @@ knowing about:</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>--daemon</code></td>
-<td>wait for your commands, so you can drive the run (without it the machine boots and runs to the end by itself)</td>
+<td><code>--no-daemon</code></td>
+<td>boot and run to the end by itself, instead of waiting for your commands</td>
+</tr>
+<tr>
+<td><code>--pin-cpu n</code></td>
+<td>run on host CPU <code>n</code>, for this start only (the default picks the least-loaded)</td>
 </tr>
 <tr>
 <td><code>--like run</code></td>
@@ -687,8 +691,8 @@ knowing about:</p>
 sees the same ones every time. This one is only about the random numbers the
 guest asks for. For exploring thread schedules there is another seed, on
 <code>machine run</code>, covered next.</p>
-<h2 id="Driving-it"><a href="#Driving-it" class="headerlink" title="Driving it"></a>Driving it</h2><p>A run created with <code>--daemon</code> executes only while you drive it. <code>machine run</code> is
-the way, and <code>--until</code> says when to stop. (Without <code>--daemon</code> you get
+<h2 id="Driving-it"><a href="#Driving-it" class="headerlink" title="Driving it"></a>Driving it</h2><p>A run executes only while you drive it. <code>machine run</code> is the way, and <code>--until</code>
+says when to stop. (A run created with <code>--no-daemon</code> answers
 <code>✗ Machine not in control mode</code>, because the machine isn’t waiting for you.)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> tasks</span><br></pre></td></tr></table></figure>
 
@@ -829,6 +833,14 @@ refuse instead.</p>
 <p><code>start</code> can also take a run back to an earlier point. <code>--at</code> replays from an
 earlier checkpoint, and <code>--read-only</code> opens a checkpoint without running it
 at all.</p>
+<p>A run remembers the options you created it with: <code>--no-daemon</code>,
+<code>--single-step</code>, <code>--limit</code> and <code>--backstop-limit</code>. Every <code>start</code> and <code>fork</code>
+repeats them, so you type them once. <code>start</code> takes the same flags to change
+them for that start only, so <code>machine start app --daemon</code> gives you a machine
+to drive on a run created with <code>--no-daemon</code>. <code>fork</code> and <code>detach</code> take them
+too, and the new run keeps what you gave. <code>--pin-cpu</code> is the exception: no run
+remembers a CPU, so each <code>start</code> and <code>fork</code> picks the least-loaded one unless
+you name it.</p>
 <p><code>delete</code> only removes stopped runs, unless you add <code>--stop</code>. It also refuses to
 remove a run that has branches, unless you add <code>--recursive</code>. And since
 <code>machine delete --all</code> removes every run, it asks you first.</p>
@@ -1149,8 +1161,9 @@ the Machine core that the SDK runs on, <code>testflows.machine.core</code>, alon
 <h2 id="Hello-Machine"><a href="#Hello-Machine" class="headerlink" title="Hello Machine"></a>Hello Machine</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.machine.v1 <span class="keyword">as</span> machine</span><br><span class="line"></span><br><span class="line">client = machine.Client()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> client.sessions.create(cpus=<span class="number">1</span>) <span class="keyword">as</span> session:</span><br><span class="line">    client.sessions.use(session)</span><br><span class="line">    <span class="keyword">with</span> client.create(disk=<span class="string">&quot;hello&quot;</span>) <span class="keyword">as</span> run:</span><br><span class="line">        run.run(until=<span class="string">&quot;tasks&quot;</span>, timeout=<span class="number">300</span>)</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> run.console(lines=<span class="number">20</span>):</span><br><span class="line">            <span class="built_in">print</span>(line)</span><br></pre></td></tr></table></figure>
 
 <p>This creates a session, boots a run from the disk <code>hello</code> and prints the last
-twenty lines of its console. Runs the SDK creates always wait for commands, as
-if you had passed <code>--daemon</code>, so they move only when you call <code>run.run(...)</code>.
+twenty lines of its console. A run waits for commands, so it moves only when
+you call <code>run.run(...)</code>; pass <code>daemon=False</code> to have it run to the end by
+itself.
 Leaving a <code>with</code> block deletes what it created, whether the block ends normally
 or with an error. That is how you make sure a session never outlives your
 program.</p>
@@ -1545,9 +1558,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1790967340913"></script>
-<script src="/js/machine-hero-type.js?v=1790967340913"></script>
-<script src="/js/download-platforms.js?v=1790967340913"></script>
+<script src="/js/index-code-type.js?v=1790997378585"></script>
+<script src="/js/machine-hero-type.js?v=1790997378585"></script>
+<script src="/js/download-platforms.js?v=1790997378585"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

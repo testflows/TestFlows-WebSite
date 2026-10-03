@@ -31,8 +31,9 @@ with client.sessions.create(cpus=1) as session:
 ```
 
 This creates a session, boots a run from the disk `hello` and prints the last
-twenty lines of its console. Runs the SDK creates always wait for commands, as
-if you had passed `--daemon`, so they move only when you call `run.run(...)`.
+twenty lines of its console. A run waits for commands, so it moves only when
+you call `run.run(...)`; pass `daemon=False` to have it run to the end by
+itself.
 Leaving a `with` block deletes what it created, whether the block ends normally
 or with an error. That is how you make sure a session never outlives your
 program.
