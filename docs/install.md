@@ -19,7 +19,7 @@ Install what your person asks for: the open-source Framework, which is a Python 
 - [ ] Step 1: ask your person which to install.
 - [ ] Step 2: Framework: check Python, install it, run the Hello World test.
 - [ ] Step 3: Machine client: check the system, run the installer, check the version.
-- [ ] Step 4: Machine account: your person signs up and signs in, or gives you an API key.
+- [ ] Step 4: Machine account: your person signs up and signs in, or gives you an API key, and account storage is set up.
 - [ ] Step 5: tell your person what is installed and what is left.
 
 ## Step 1: choose
@@ -96,7 +96,13 @@ You cannot do this step for your person. Do not buy credits or create or delete 
 2. They sign in, in one of two ways:
    - **On this computer:** they run `machine login` themselves and type the one-time code that is emailed to them. They stay signed in until `machine logout`.
    - **With an API key,** for a sandbox or CI where they cannot sign in: they run `machine account api-keys create <name> --expiry 30`, which needs a sign-in code, copy the secret, which is shown once, and put it in the environment variable `TESTFLOWS_MACHINE_API_KEY` for you.
-3. Check it:
+3. Set up account storage. The first session cannot be created until this is done. You can run it once they are signed in:
+
+```bash
+machine account provision
+```
+
+4. Check it:
 
 ```bash
 machine account show

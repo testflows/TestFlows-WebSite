@@ -1,11 +1,11 @@
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
+https://testflows.com/docs/machine/index.html
+https://testflows.com/docs/machine.md
 https://testflows.com/index.html
 https://testflows.com/index.md
 https://testflows.com/framework/index.html
 https://testflows.com/framework.md
-https://testflows.com/docs/machine/index.html
-https://testflows.com/docs/machine.md
 https://testflows.com/docs/framework/index.html
 https://testflows.com/docs/framework.md
 https://testflows.com/contact.html
@@ -105,6 +105,7 @@ https://testflows.com/docs/framework/writing-tests.md
 https://testflows.com/docs/framework/yml-config-files.md
 https://testflows.com/docs/machine/account-and-billing.md
 https://testflows.com/docs/machine/checkpoints-and-branches.md
+https://testflows.com/docs/machine/commands.md
 https://testflows.com/docs/machine/disks.md
 https://testflows.com/docs/machine/getting-started.md
 https://testflows.com/docs/machine/overview.md

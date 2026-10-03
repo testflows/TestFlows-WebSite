@@ -2,7 +2,7 @@
 
 # Disks
 
-A disk is what a machine boots, and `machine disks build` makes one. You give
+A disk is what a machine boots, and [`machine disks build`](commands.md#machine-disks-build) makes one. You give
 it exactly one source.
 
 | Source | What it takes |
@@ -13,6 +13,13 @@ it exactly one source.
 
 A binary or an image runs as one container. A Compose project runs every
 service in it.
+
+## Docker and Compose
+
+An image needs [Docker](https://www.docker.com/). A Compose project also needs
+[Docker Compose](https://docs.docker.com/compose/). [`machine disks build`](commands.md#machine-disks-build)
+`--binary` wraps the executable itself, so a program you compile does not need
+either.
 
 ```bash
 machine disks build --image myapp:latest app
@@ -33,7 +40,7 @@ machine disks build --binary ./data-race race -- 3
 A machine is an x86_64 computer, so a disk holds `linux/amd64` programs, whatever
 machine you build it on. On a Mac with Apple Silicon or on arm64 Linux, Docker
 builds and pulls `arm64` images by default, and those cannot run in a machine.
-`machine disks build` checks every image and refuses one that is not
+[`machine disks build`](commands.md#machine-disks-build) checks every image and refuses one that is not
 `linux/amd64` before uploading anything. Ask Docker for `linux/amd64`:
 
 ```bash
@@ -64,5 +71,5 @@ machine disks delete app-v2
 
 Deleting a disk is permanent. Machine refuses to delete one that a run still
 boots, and `--force` deletes it anyway and takes those runs with it.
-`machine disks transfers` shows the transfers in progress, and
-`machine disks cancel` stops one.
+[`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
+[`machine disks cancel`](commands.md#machine-disks-cancel) stops one.
