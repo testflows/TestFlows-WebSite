@@ -139,7 +139,7 @@ docker pull --platform linux/amd64 testflows/machine-examples:latest
 machine disks build --image testflows/machine-examples:latest hello
 ```
 
-If you do not, compile `hello_world.c`. [`machine disks build`](commands.md#machine-disks-build) `--binary` wraps the executable, so Docker is not needed.
+If you do not, compile `hello_world.c` as a static executable. [`machine disks build`](commands.md#machine-disks-build) `--binary` wraps that one file, so Docker is not needed. For a program that is not static, such as Python or Node.js, see [When the program is not static](disks.md#when-the-program-is-not-static).
 
 ```c
 #include <stdio.h>
