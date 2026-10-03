@@ -39,7 +39,7 @@ says when to stop. (A run created with `--no-daemon` answers
 machine run app --until tasks
 ```
 
-Each batch of work ends when the program talks to Machine, so a plain
+Each batch of work ends when the machine's kernel talks to Machine, so a plain
 [`machine run`](commands.md#machine-run) can stop sooner than you expect. With `--until`, Machine keeps
 going, batch after batch, until what you asked for is true. If it never gets
 there, the command exits with status 3.
@@ -114,7 +114,7 @@ machine was waiting for commands.`
 | [`machine describe app`](commands.md#machine-describe) | the full configuration of a run |
 | [`machine state app`](commands.md#machine-state) | its state |
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
-| [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n 20` shows the last 20 lines) |
+| [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
 | [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |

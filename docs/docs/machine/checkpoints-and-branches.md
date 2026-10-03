@@ -12,9 +12,13 @@ machine checkpoint app booted
 machine checkpoints app
 ```
 
-The name is optional. Leave it off and Machine makes one up. Checkpoints
-are how you mark points you plan to come back to, like "just after boot" or
-"right before the request".
+The name is optional. Leave it off and the checkpoint is named after the entry
+it was taken at. Checkpoints are how you mark points you plan to come back to,
+like "just after boot" or "right before the request".
+
+A name uses letters, digits, `.`, `-` and `_`, and starts with a letter or
+digit. It can't be a number, because numbers name the checkpoints taken without
+one, and it can't read as a time, like `10ms`, because a time names a point too.
 
 Machine takes some of its own as well, named after the entry they were taken at
 (like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.

@@ -26,7 +26,7 @@ with client.sessions.create(cpus=1) as session:
     client.sessions.use(session)
     with client.create(disk="hello") as run:
         run.run(until="tasks", timeout=300)
-        for line in run.console(lines=20):
+        for line in run.console(lines=-20):
             print(line)
 ```
 
@@ -149,7 +149,8 @@ Be careful with the last row. A pair and a string include both ends, the way
 Machine's own messages do. A slice is Python's, so it stops before the end.
 That makes `(100, 200)` one entry longer than `slice(100, 200)`.
 
-`lines=` works the same way for lines of output.
+`lines=` selects lines of output in the same grammar: `20` is line 20, `-20`
+the last 20, and `0` none, which starts a follow at the end.
 
 ## Cleaning up
 
