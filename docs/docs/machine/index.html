@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791067133417" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791067133417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791060454877" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791067133417" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -435,8 +435,10 @@ SHA-256 checksum published next to it, and puts it in <code>~/.local/bin</code>,
 yet, the installer says so and shows the line to add for your shell. Run the same
 command again whenever you want to update.</p>
 <p><strong>Supported systems.</strong> The client runs on Linux, x86_64 and arm64, and on Macs
-with Apple Silicon. It needs nothing else installed, and the installer never
-asks for root. It doesn’t run on Intel Macs or natively on Windows; on Windows
+with Apple Silicon. It needs only the OpenSSH client, which macOS and most
+Linux systems already have, and the installer never asks for root. If <code>ssh</code> is
+missing, install it with your package manager, for example
+<code>sudo apt install openssh-client</code> on Debian and Ubuntu. It doesn’t run on Intel Macs or natively on Windows; on Windows
 you can use it inside WSL. On an ARM machine, a Mac with Apple Silicon
 or arm64 Linux, the disks you build must still hold x86_64 programs; see
 <a href="#Building-disks-on-an-ARM-machine">building disks on an ARM machine</a>. If you
@@ -5531,9 +5533,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791060454877"></script>
-<script src="/js/machine-hero-type.js?v=1791060454877"></script>
-<script src="/js/download-platforms.js?v=1791060454877"></script>
+<script src="/js/index-code-type.js?v=1791067133418"></script>
+<script src="/js/machine-hero-type.js?v=1791067133418"></script>
+<script src="/js/download-platforms.js?v=1791067133418"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
