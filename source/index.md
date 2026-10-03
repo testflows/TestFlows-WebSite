@@ -98,7 +98,7 @@ Total time 2ms
 
 <section class="index-close home-close">
     <div class="container section-close">
-        <h1>Talk to our team</h1>
+        <h2>Talk to our team</h2>
         <div class="section-close-actions">
             <a class="section-cta section-cta-lg" href="/contact.html">Contact</a>
         </div>

@@ -39,15 +39,29 @@
   %>
   <title><% if (tPath === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | <%- tArea || 'TestFlows' %><% } %></title>
   <meta name="description" content="<%- page.description || config.description %>">
+  <%# The address a page answers to, for search engines. Not for the 404 page or pages that are nothing until you sign in. %>
+  <% var tCanon = full_url_for(tPath.replace(/index\.html$/, '')); %>
+  <% if (tPath !== '404.html' && !page.noindex) { %><link rel="canonical" href="<%- tCanon %>"><% } %>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <%# noindex: true in a page's front matter, for pages that are nothing until you sign in. %>
   <% if (page.noindex) { %><meta name="robots" content="noindex"><% } %>
   <meta name="author" content="<%- page.author || 'TestFlows'%>">
 <%- partial('_partial/ai_markdown', {part: 'head'}) %>
-  <meta name="og:site_name" content="TestFlows">
-  <meta property="og:image" content="<%- full_url_for(page.image || config.social_share) %>">
+  <meta property="og:site_name" content="TestFlows">
   <% if (page.post) { %>
   <%- partial('_partial/post_meta') %>
+  <% } else { %>
+  <%# How a page looks when it is shared. A post says it in post_meta, with its own image. %>
+  <% var tShare = tPath === 'index.html' ? 'TestFlows' : (page.title || config.title); var tShareDesc = page.description || config.description; var tShareImg = full_url_for(page.image || config.social_share); %>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="<%= tShare %>">
+  <meta property="og:description" content="<%= tShareDesc %>">
+  <meta property="og:url" content="<%- tCanon %>">
+  <meta property="og:image" content="<%- tShareImg %>">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<%= tShare %>">
+  <meta name="twitter:description" content="<%= tShareDesc %>">
+  <meta name="twitter:image" content="<%- tShareImg %>">
   <% } %>
   <% if (theme.favicon){ %>
   <link href="<%- full_url_for(theme.favicon) %>" rel="icon">
