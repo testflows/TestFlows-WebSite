@@ -45,20 +45,20 @@ rule.
 
 | In the client | In the SDK |
 |---|---|
-| a top-level command, `machine create --disk app` | a method on the client, `client.create(disk="app")` |
-| a group, `machine sessions use ci-1` | an attribute of the client, `client.sessions.use("ci-1")` |
-| a command that takes a run, `machine fork app --at ^boot` | a method on the run, `run.fork(at="^boot")` |
-| a group that takes a run, `machine tasks app hold 56` | an attribute of the run, `run.tasks.hold(56)` |
+| a top-level command, [`machine create --disk app`](commands.md#machine-create) | a method on the client, `client.create(disk="app")` |
+| a group, [`machine sessions use ci-1`](commands.md#machine-sessions-use) | an attribute of the client, `client.sessions.use("ci-1")` |
+| a command that takes a run, [`machine fork app --at ^boot`](commands.md#machine-fork) | a method on the run, `run.fork(at="^boot")` |
+| a group that takes a run, [`machine tasks app hold 56`](commands.md#machine-tasks-hold) | an attribute of the run, `run.tasks.hold(56)` |
 | a positional argument | a positional argument |
 | a flag like `--no-wait`, `-w` or `-f` | a keyword argument like `wait=False`, `watch=True` or `follow=True` |
 
-So once you know the client, you know most of the SDK. The client's `--help`
-is the reference for what each call takes.
+So once you know the client, you know most of the SDK. [Commands](commands.md)
+lists them, and the client's `--help` says what each call takes.
 
 ## Signing in
 
 The SDK signs in with an API key from `TESTFLOWS_MACHINE_API_KEY` if it is set.
-If it isn't, it uses the login that `machine login` stored, which it shares
+If it isn't, it uses the login that [`machine login`](commands.md#machine-login) stored, which it shares
 with the client.
 
 A program can sign in on its own too. The one-time code arrives by email.
@@ -104,7 +104,7 @@ And the calls you will reach for most often:
 
 | Call | Does |
 |---|---|
-| `client.create(name, disk=..., cpus=..., ...)` | creates a run and boots it; takes every option `machine create` does |
+| `client.create(name, disk=..., cpus=..., ...)` | creates a run and boots it; takes every option [`machine create`](commands.md#machine-create) does |
 | `client.runs()`, `client.runs["app"]` | lists runs, or finds one by name |
 | `run.run(until=..., iters=...)`, `run.plan(file)` | drives it |
 | `run.checkpoint(name)`, `run.checkpoints()` | saves a checkpoint, lists them |
@@ -113,7 +113,7 @@ And the calls you will reach for most often:
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.console(...)` | reads what it printed |
 | `run.artifacts.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk |
-| `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the guest |
+| `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 
 Every call returns a record with named fields, such as a `RunInfo` from
@@ -203,7 +203,7 @@ The SDK comes with small scripts. Each one runs as
 | `watch_and_follow.py` | watches a listing and follows a console |
 | `syscall_profile.py` | counts a program's system calls and interrupts |
 | `read_artifacts.py` | reads and copies files from a checkpoint's disk |
-| `virtual_time.py` | changes the guest's clock rate and pushes it forward |
+| `machine_time.py` | changes the machine's clock (vtime) rate and pushes it forward |
 | `inject_interrupt.py` | injects an interrupt and replays it |
 | `stop_and_resume.py` | what `stop`, `kill`, `start` and `sync` keep |
 | `resume_elsewhere.py` | stops a run in one session and starts it in another |
