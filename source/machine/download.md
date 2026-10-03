@@ -34,6 +34,7 @@ curl https://testflows.com/machine/install -fsS | bash
 ```
 
 <p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
+<p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
 
 <div class="download-section download-note">
@@ -109,6 +110,7 @@ curl https://testflows.com/machine/install -fsS | bash
 ```
 
 <p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
+<p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
 
 <div class="download-section download-note">
