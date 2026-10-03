@@ -3,7 +3,7 @@
 # Reading the disk
 
 You can read files from a run's disk without touching the run. Reads are
-pinned to a snapshot, so they never change how the machine executes.
+pinned to a checkpoint, so they never change how the machine executes.
 
 ```bash
 machine artifacts ls app /var/log

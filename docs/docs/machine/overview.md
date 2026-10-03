@@ -27,7 +27,8 @@ There are only a few of them, and the rest builds on them.
 packaged with a small Linux system. You build one with [`machine disks build`](commands.md#machine-disks-build).
 
 **Session.** The vCPUs and RAM you allocate, which one or more runs execute in.
-It is the billable unit and consumes plan and usage credits.
+It is what you are billed for, from the moment you create it until you delete
+it, so delete it when you are done.
 
 **Run.** A deterministic machine booting a disk inside a session. Every run has a
 name. Nearly every action is something you do to a run.

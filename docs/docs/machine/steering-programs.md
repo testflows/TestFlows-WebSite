@@ -106,7 +106,7 @@ changes how fast it passes, and [`machine vtime app add`](commands.md#machine-vt
 without running anything.
 
 ```bash
-machine vtime app add 5000000000    # five seconds, in nanoseconds
+machine vtime app add 5s
 ```
 
 There is no way back. The machine's clock only goes forward, so to return to an

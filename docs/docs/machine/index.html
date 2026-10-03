@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791057768323" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791057768323" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791048573555" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791057768323" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -363,7 +363,8 @@ one command.</p>
 <p><strong>Disk.</strong> What a machine boots. It is your program (or a whole application)
 packaged with a small Linux system. You build one with <a href="#machine-disks-build"><code>machine disks build</code></a>.</p>
 <p><strong>Session.</strong> The vCPUs and RAM you allocate, which one or more runs execute in.
-It is the billable unit and consumes plan and usage credits.</p>
+It is what you are billed for, from the moment you create it until you delete
+it, so delete it when you are done.</p>
 <p><strong>Run.</strong> A deterministic machine booting a disk inside a session. Every run has a
 name. Nearly every action is something you do to a run.</p>
 <p><strong>Entry.</strong> A run writes its history as a log. Each item in the log is
@@ -505,7 +506,7 @@ you drive it. The <code>--until tasks</code> part means “keep going until Linu
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iterations: 16093  run ic: 271990491  checkpoints: 1</span><br><span class="line"></span><br><span class="line">VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP                 RCX       ITER</span><br><span class="line">0     HYPERCALL  16238  271990491  190026  271990491  0x785930775efa707  0xffffffff81f9eeda  43778048  16092</span><br></pre></td></tr></table></figure>
 
 <p>Read the last five lines the machine printed.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine console hello-run -n 5</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine console hello-run -n -5</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">futex <span class="built_in">hash</span> table entries: 256 (order: 2, 16384 bytes, linear)</span><br><span class="line">NET: Registered PF_NETLINK/PF_ROUTE protocol family</span><br><span class="line">thermal_sys: Registered thermal governor <span class="string">&#x27;step_wise&#x27;</span></span><br><span class="line">thermal_sys: Registered thermal governor <span class="string">&#x27;user_space&#x27;</span></span><br><span class="line">cpuidle: using governor ladder</span><br></pre></td></tr></table></figure>
 
 <p>To see the full console log, use <code>-n :</code>. Ranges use the same colon as a Python slice. Lines are numbered from 1 and both ends count, so <code>-n 1:</code> is the first line through the last.</p>
@@ -745,7 +746,7 @@ says when to stop. (A run created with <code>--no-daemon</code> answers
 <code>✗ Machine not in control mode</code>, because the machine isn’t waiting for you.)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> tasks</span><br></pre></td></tr></table></figure>
 
-<p>Each batch of work ends when the program talks to Machine, so a plain
+<p>Each batch of work ends when the machine’s kernel talks to Machine, so a plain
 <a href="#machine-run"><code>machine run</code></a> can stop sooner than you expect. With <code>--until</code>, Machine keeps
 going, batch after batch, until what you asked for is true. If it never gets
 there, the command exits with status 3.</p>
@@ -842,7 +843,7 @@ With <code>--timeout 0</code> it checks once, and the message tells you why it f
 </tr>
 <tr>
 <td><a href="#machine-console"><code>machine console app</code></a></td>
-<td>what the machine printed (<code>-f</code> follows, <code>-n 20</code> shows the last 20 lines)</td>
+<td>what the machine printed (<code>-f</code> follows, <code>-n -20</code> shows the last 20 lines)</td>
 </tr>
 <tr>
 <td><a href="#machine-entries"><code>machine entries app</code></a></td>
@@ -908,9 +909,12 @@ kills machines that have been orphaned.</p>
 copying it. That is what makes it practical to try many things from one point.</p>
 <h2 id="Checkpoints"><a href="#Checkpoints" class="headerlink" title="Checkpoints"></a>Checkpoints</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine checkpoint app booted</span><br><span class="line">machine checkpoints app</span><br></pre></td></tr></table></figure>
 
-<p>The name is optional. Leave it off and Machine makes one up. Checkpoints
-are how you mark points you plan to come back to, like “just after boot” or
-“right before the request”.</p>
+<p>The name is optional. Leave it off and the checkpoint is named after the entry
+it was taken at. Checkpoints are how you mark points you plan to come back to,
+like “just after boot” or “right before the request”.</p>
+<p>A name uses letters, digits, <code>.</code>, <code>-</code> and <code>_</code>, and starts with a letter or
+digit. It can’t be a number, because numbers name the checkpoints taken without
+one, and it can’t read as a time, like <code>10ms</code>, because a time names a point too.</p>
 <p>Machine takes some of its own as well, named after the entry they were taken at
 (like <code>10000</code>), so <a href="#machine-checkpoints"><code>machine checkpoints app</code></a> lists yours next to those.</p>
 <h2 id="Starting-a-branch"><a href="#Starting-a-branch" class="headerlink" title="Starting a branch"></a>Starting a branch</h2><p><a href="#machine-fork"><code>machine fork</code></a> creates a new branch at a point. The branch runs in its own
@@ -1097,12 +1101,12 @@ there, so a replay delivers it at the same place.</p>
 <p>Machine time is not the host’s. <a href="#machine-vtime-rate"><code>machine vtime app rate</code></a>
 changes how fast it passes, and <a href="#machine-vtime-add"><code>machine vtime app add</code></a> pushes it forward
 without running anything.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine vtime app add 5000000000    <span class="comment"># five seconds, in nanoseconds</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine vtime app add 5s</span><br></pre></td></tr></table></figure>
 
 <p>There is no way back. The machine’s clock only goes forward, so to return to an
 earlier time, branch there with <a href="#machine-go"><code>machine go app 1.5s</code></a>.</p>
 <h1 id="Reading-the-disk"><a href="#Reading-the-disk" class="headerlink" title="Reading the disk"></a>Reading the disk</h1><p>You can read files from a run’s disk without touching the run. Reads are
-pinned to a snapshot, so they never change how the machine executes.</p>
+pinned to a checkpoint, so they never change how the machine executes.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine artifacts <span class="built_in">ls</span> app /var/log</span><br><span class="line">machine artifacts <span class="built_in">cat</span> app /var/log/app.log</span><br><span class="line">machine artifacts <span class="built_in">cp</span> -r app /results ./results</span><br></pre></td></tr></table></figure>
 
 <p>Add <code>@ref</code> to the run to read the disk as it was at a checkpoint or an entry.</p>
@@ -1229,7 +1233,7 @@ takes further commands, those follow it, so each one has a heading.</p>
 </tr>
 <tr>
 <td><code>--debug</code></td>
-<td>Show IPC protocol messages.</td>
+<td>Show the messages exchanged with the service.</td>
 </tr>
 <tr>
 <td><code>--api-url</code></td>
@@ -1246,10 +1250,6 @@ takes further commands, those follow it, so each one has a heading.</p>
 <tr>
 <td><code>-q</code>, <code>--quiet</code></td>
 <td>No progress or spinners.</td>
-</tr>
-<tr>
-<td><code>--local</code></td>
-<td>Use the local session.</td>
 </tr>
 </tbody></table>
 <h2 id="machine-runs"><a href="#machine-runs" class="headerlink" title="machine runs"></a>machine runs</h2><p>List runs. See <a href="#Looking-at-it">Looking at it</a>.</p>
@@ -2396,7 +2396,7 @@ a replay; it keeps a bounded number and says how many it dropped.</p>
 <td>Only the tasks focus is steering</td>
 </tr>
 </tbody></table>
-<h3 id="machine-tasks-cgroups"><a href="#machine-tasks-cgroups" class="headerlink" title="machine tasks cgroups"></a>machine tasks cgroups</h3><p>List the cgroups those tasks are in. See <a href="#Holding-threads">Holding threads</a>.</p>
+<h3 id="machine-tasks-cgroups"><a href="#machine-tasks-cgroups" class="headerlink" title="machine tasks cgroups"></a>machine tasks cgroups</h3><p>List the tasks grouped by cgroup. See <a href="#Holding-threads">Holding threads</a>.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine tasks run cgroups [-h] [--vcpu n]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2584,7 +2584,7 @@ shown in tasks). Use add and remove to change the list and clear to empty it.</p
 <td>Count this program’s syscalls or interrupts</td>
 </tr>
 </tbody></table>
-<h3 id="machine-focus-remove"><a href="#machine-focus-remove" class="headerlink" title="machine focus remove"></a>machine focus remove</h3><p>Stop steering one. See <a href="#Focus">Focus</a>.</p>
+<h3 id="machine-focus-remove"><a href="#machine-focus-remove" class="headerlink" title="machine focus remove"></a>machine focus remove</h3><p>Stop steering a program. See <a href="#Focus">Focus</a>.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine focus run remove [-h] path|cgroup=path|tgid=n</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2671,7 +2671,7 @@ to an earlier point.</p>
 </tr>
 </tbody></table>
 <h3 id="machine-vtime-rate"><a href="#machine-vtime-rate" class="headerlink" title="machine vtime rate"></a>machine vtime rate</h3><p>Set the rate. See <a href="#Interrupts-and-time">Interrupts and time</a>.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine vtime run rate [-h] n</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine vtime run rate [-h] rate</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -2681,12 +2681,12 @@ to an earlier point.</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>n</code></td>
+<td><code>rate</code></td>
 <td>Rate, or num&#x2F;den</td>
 </tr>
 </tbody></table>
 <h3 id="machine-vtime-add"><a href="#machine-vtime-add" class="headerlink" title="machine vtime add"></a>machine vtime add</h3><p>Push the clock forward. See <a href="#Interrupts-and-time">Interrupts and time</a>.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine vtime run add [-h] ns</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine vtime run add [-h] time</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -2696,8 +2696,8 @@ to an earlier point.</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>ns</code></td>
-<td>Nanoseconds to add</td>
+<td><code>time</code></td>
+<td>Time to add, such as 1s or 250ms; a bare number is nanoseconds</td>
 </tr>
 </tbody></table>
 <h2 id="machine-checkpoints"><a href="#machine-checkpoints" class="headerlink" title="machine checkpoints"></a>machine checkpoints</h2><p>List checkpoints. See <a href="#Checkpoints">Checkpoints</a>.</p>
@@ -2806,14 +2806,14 @@ for an object of run_id, hosted and checkpoints rather than a bare list.</p>
 </thead>
 <tbody><tr>
 <td><code>-n, --lines range</code></td>
-<td>Last NUM lines, +NUM from line, or START:END range</td>
+<td>Line N, A:B, A:, :B or :, or -N for the last N lines</td>
 </tr>
 <tr>
 <td><code>-f, --follow</code></td>
 <td>Follow new output (like tail <code>-f</code>)</td>
 </tr>
 </tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">line selection (-n):</span><br><span class="line">  -n 20          Last 20 lines</span><br><span class="line">  -n +50         From line 50 to end</span><br><span class="line">  -n 100:200     Lines 100 through 200</span><br><span class="line">  -n :50         First 50 lines</span><br><span class="line">  -n 50:         From line 50 to end</span><br><span class="line">  -n=-5:         Last 5 (use = for negative ranges)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">line selection (-n):</span><br><span class="line">  -n -20         Last 20 lines</span><br><span class="line">  -n 20          Line 20</span><br><span class="line">  -n 100:200     Lines 100 through 200</span><br><span class="line">  -n 50:         From line 50 to the end</span><br><span class="line">  -n :50         Lines 1 through 50</span><br><span class="line">  -n :           Every line</span><br></pre></td></tr></table></figure>
 
 <h3 id="machine-debug-err"><a href="#machine-debug-err" class="headerlink" title="machine debug err"></a>machine debug err</h3><p>Show the error and crash log. See <a href="#Looking-at-it">Looking at it</a>.</p>
 <p>Shows the error and crash log of a run.</p>
@@ -2841,14 +2841,14 @@ for an object of run_id, hosted and checkpoints rather than a bare list.</p>
 </thead>
 <tbody><tr>
 <td><code>-n, --lines range</code></td>
-<td>Last NUM lines, +NUM from line, or START:END range</td>
+<td>Line N, A:B, A:, :B or :, or -N for the last N lines</td>
 </tr>
 <tr>
 <td><code>-f, --follow</code></td>
 <td>Follow new output (like tail <code>-f</code>)</td>
 </tr>
 </tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">line selection (-n):</span><br><span class="line">  -n 20          Last 20 lines</span><br><span class="line">  -n +50         From line 50 to end</span><br><span class="line">  -n 100:200     Lines 100 through 200</span><br><span class="line">  -n :50         First 50 lines</span><br><span class="line">  -n 50:         From line 50 to end</span><br><span class="line">  -n=-5:         Last 5 (use = for negative ranges)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">line selection (-n):</span><br><span class="line">  -n -20         Last 20 lines</span><br><span class="line">  -n 20          Line 20</span><br><span class="line">  -n 100:200     Lines 100 through 200</span><br><span class="line">  -n 50:         From line 50 to the end</span><br><span class="line">  -n :50         Lines 1 through 50</span><br><span class="line">  -n :           Every line</span><br></pre></td></tr></table></figure>
 
 <h2 id="machine-run"><a href="#machine-run" class="headerlink" title="machine run"></a>machine run</h2><p>Run vCPU(s). See <a href="#Driving-it">Driving it</a>.</p>
 <p>Runs one or more vCPU iterations.</p>
@@ -3405,7 +3405,7 @@ step. The point may be a time, -10ms back, #entry, ^checkpoint, now, parent [n],
 root, or a mark written %mark; each of them names a point on this run’s own
 line. A point that is not a checkpoint is reached by forking at the nearest one
 at or before it and replaying the difference.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine go [-h] [--name name] [--rebase] [--depth n] [--lean] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait] run point [point ...]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine go [options] &lt;run&gt; &lt;point&gt;</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -3420,7 +3420,7 @@ at or before it and replaying the difference.</p>
 </tr>
 <tr>
 <td><code>point</code></td>
-<td>Where to cut: a time, -10ms back, #entry, ^checkpoint, now, parent [n], root, or %mark</td>
+<td>Where to fork: a time, -10ms back, #entry, ^checkpoint, now, parent [n], root, or %mark</td>
 </tr>
 </tbody></table>
 <table>
@@ -3520,8 +3520,7 @@ closer, which makes a miss likely, to test what follows one.</p>
 <h2 id="machine-play"><a href="#machine-play" class="headerlink" title="machine play"></a>machine play</h2><p>Play entries from a run log. See <a href="#Replay">Replay</a>.</p>
 <p>Scripted playback from a run’s log. No divergence checking.</p>
 <p>The source must be in this run’s tree, the same bound replay takes. Divergence
-is not checked here, so a wrong source is played rather than refused. Use &#x3D; for
-range values starting with -, such as <code>-n</code>&#x3D;-10:.</p>
+is not checked here, so a wrong source is played rather than refused.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type ...]] run [source]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3549,7 +3548,7 @@ range values starting with -, such as <code>-n</code>&#x3D;-10:.</p>
 </thead>
 <tbody><tr>
 <td><code>-n, --entries range</code></td>
-<td>Entry range: N, +N, START:END, <code>-N</code>: (use <code>-n</code>&#x3D;<code>-N</code>:)</td>
+<td>Entry N, A:B, A:, :B or :, or -N for the last N entries</td>
 </tr>
 <tr>
 <td><code>--include type [type ...]</code></td>
@@ -3607,8 +3606,9 @@ differ and says nothing about determinism.</p>
 </tbody></table>
 <h2 id="machine-control"><a href="#machine-control" class="headerlink" title="machine control"></a>machine control</h2><p>Interactive control mode. See <a href="#Interactive-mode">Interactive mode</a>.</p>
 <p>Enter interactive command mode for rapid vCPU control.</p>
-<p>Use <code>control log &lt;run&gt;</code> to read the command history instead of driving the
-machine, and <code>--entries</code> to select the commands issued at given run entries.</p>
+<p>Use <code>control log</code> with a run to read the command history instead of driving
+the machine, <code>--entries</code> to select the commands issued at given run entries,
+and <code>-n</code> to select commands by number.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine control [-h] [--entries range] [-n range] [-c cmd] run|log [run]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3624,7 +3624,7 @@ machine, and <code>--entries</code> to select the commands issued at given run e
 </tr>
 <tr>
 <td><code>run</code></td>
-<td>With <code>log</code>: the run whose history to read</td>
+<td>With log: the run whose history to read</td>
 </tr>
 </tbody></table>
 <table>
@@ -3636,18 +3636,18 @@ machine, and <code>--entries</code> to select the commands issued at given run e
 </thead>
 <tbody><tr>
 <td><code>--entries range</code></td>
-<td>With <code>log</code>: commands at one entry, or an inclusive range</td>
+<td>With log: commands at one entry, or an inclusive range</td>
 </tr>
 <tr>
 <td><code>-n, --lines range</code></td>
-<td>With <code>log</code>: last NUM commands, +NUM from, or START:END range</td>
+<td>With log: command N, A:B, A:, :B or :, or -N for the last N commands</td>
 </tr>
 <tr>
 <td><code>-c, --command cmd</code></td>
 <td>Slash command (e.g. “&#x2F;s&#x3D;0@10”)</td>
 </tr>
 </tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">command selection (-n):</span><br><span class="line">  -n 20          Last 20 commands</span><br><span class="line">  -n +50         From command 50 to end</span><br><span class="line">  -n 100:200     Commands 100 through 200</span><br><span class="line">  -n :50         First 50 commands</span><br><span class="line">  -n 50:         From command 50 to end</span><br><span class="line">  -n=-5:         Last 5 (use = for negative ranges)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">command selection (-n):</span><br><span class="line">  -n -20         Last 20 commands</span><br><span class="line">  -n 20          Command 20</span><br><span class="line">  -n 100:200     Commands 100 through 200</span><br><span class="line">  -n 50:         From command 50 to the end</span><br><span class="line">  -n :50         Commands 1 through 50</span><br><span class="line">  -n :           Every command</span><br></pre></td></tr></table></figure>
 
 <h2 id="machine-wait"><a href="#machine-wait" class="headerlink" title="machine wait"></a>machine wait</h2><p>Wait until a run satisfies a predicate. See <a href="#Waiting">Waiting</a>.</p>
 <p>Block until a run satisfies a <code>--for</code> predicate.</p>
@@ -3732,7 +3732,7 @@ it.</p>
 </thead>
 <tbody><tr>
 <td><code>-n, --lines range</code></td>
-<td>Last NUM lines, +NUM from line, or START:END range</td>
+<td>Line N, A:B, A:, :B or :, or -N for the last N lines</td>
 </tr>
 <tr>
 <td><code>--entries range</code></td>
@@ -3743,7 +3743,7 @@ it.</p>
 <td>Follow new output (like tail <code>-f</code>)</td>
 </tr>
 </tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">line selection (-n):</span><br><span class="line">  -n 20          Last 20 lines</span><br><span class="line">  -n +50         From line 50 to end</span><br><span class="line">  -n 100:200     Lines 100 through 200</span><br><span class="line">  -n :50         First 50 lines</span><br><span class="line">  -n 50:         From line 50 to end</span><br><span class="line">  -n=-5:         Last 5 (use = for negative ranges)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">line selection (-n):</span><br><span class="line">  -n -20         Last 20 lines</span><br><span class="line">  -n 20          Line 20</span><br><span class="line">  -n 100:200     Lines 100 through 200</span><br><span class="line">  -n 50:         From line 50 to the end</span><br><span class="line">  -n :50         Lines 1 through 50</span><br><span class="line">  -n :           Every line</span><br></pre></td></tr></table></figure>
 
 <h2 id="machine-entries"><a href="#machine-entries" class="headerlink" title="machine entries"></a>machine entries</h2><p>View run log entries. See <a href="#Looking-at-it">Looking at it</a>.</p>
 <p>Shows run log entries.</p>
@@ -3771,14 +3771,14 @@ it.</p>
 </thead>
 <tbody><tr>
 <td><code>-n, --entries range</code></td>
-<td>Entry id or range (N, N:M, <code>-N</code> for last N)</td>
+<td>Entry N, A:B, A:, :B or :, or -N for the last N entries</td>
 </tr>
 <tr>
 <td><code>-f, --follow</code></td>
 <td>Follow new output (like tail <code>-f</code>)</td>
 </tr>
 </tbody></table>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">entry selection (-n):</span><br><span class="line">  -n 20            last 20 entries</span><br><span class="line">  -n 181743        entry_id 181743</span><br><span class="line">  -n 181740:181745 entry_id range</span><br><span class="line">  -n 181743:       from entry_id to end</span><br><span class="line">  -n -20           last 20 entries</span><br><span class="line"></span><br><span class="line">A bare number &lt;= 1000 is a COUNT (last N); above it, an entry id.</span><br><span class="line">Unambiguous either way: -N is always a tail, N: and N:M always ids.</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">entry selection (-n):</span><br><span class="line">  -n -20           Last 20 entries</span><br><span class="line">  -n 181743        Entry 181743</span><br><span class="line">  -n 181740:181745 Entries 181740 through 181745</span><br><span class="line">  -n 181743:       From entry 181743 to the end</span><br><span class="line">  -n :200          Entries 0 through 200</span><br><span class="line">  -n :             Every entry</span><br></pre></td></tr></table></figure>
 
 <h2 id="machine-sessions"><a href="#machine-sessions" class="headerlink" title="machine sessions"></a>machine sessions</h2><p>List and manage sessions. See <a href="#Sessions">Sessions</a>.</p>
 <p>Lists and manages sessions.</p>
@@ -4172,7 +4172,7 @@ those numbers without building anything.</p>
 <td>Attach a label, repeatable; an empty value removes one the name carried</td>
 </tr>
 </tbody></table>
-<h3 id="machine-disks-show"><a href="#machine-disks-show" class="headerlink" title="machine disks show"></a>machine disks show</h3><p>Show details. See <a href="#Disks">Disks</a>.</p>
+<h3 id="machine-disks-show"><a href="#machine-disks-show" class="headerlink" title="machine disks show"></a>machine disks show</h3><p>Show a disk. See <a href="#Disks">Disks</a>.</p>
 <p>Shows disk details.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine disks show [-h] name</span><br></pre></td></tr></table></figure>
 
@@ -4269,7 +4269,7 @@ refused; use <code>--force</code> to delete it anyway and lose those runs.</p>
 <td>New disk name</td>
 </tr>
 </tbody></table>
-<h3 id="machine-disks-cancel"><a href="#machine-disks-cancel" class="headerlink" title="machine disks cancel"></a>machine disks cancel</h3><p>Cancel transfer. See <a href="#Disks">Disks</a>.</p>
+<h3 id="machine-disks-cancel"><a href="#machine-disks-cancel" class="headerlink" title="machine disks cancel"></a>machine disks cancel</h3><p>Cancel a transfer. See <a href="#Disks">Disks</a>.</p>
 <p>Cancels an in-flight transfer.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine disks cancel [-h] name</span><br></pre></td></tr></table></figure>
 
@@ -4506,7 +4506,7 @@ by machine ops, and they answer with no session.</p>
 <p>Shows and manages the account.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account [-h] &#123;devices,buy,upgrade,downgrade,payment,portal,invoices,cancel,email,products,show,credits,activity,orders,api-keys,provision,signup,close&#125; ...</span><br></pre></td></tr></table></figure>
 
-<h3 id="machine-account-devices"><a href="#machine-account-devices" class="headerlink" title="machine account devices"></a>machine account devices</h3><p>List signed-in devices. See <a href="#Account-and-billing">Account and billing</a>.</p>
+<h3 id="machine-account-devices"><a href="#machine-account-devices" class="headerlink" title="machine account devices"></a>machine account devices</h3><p>List the devices signed in to the account. See <a href="#Account-and-billing">Account and billing</a>.</p>
 <p>Lists signed-in devices.</p>
 <p>Use <code>--revoke</code> to sign out one device by id.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account devices [-h] [--revoke id]</span><br></pre></td></tr></table></figure>
@@ -4541,7 +4541,7 @@ by machine ops, and they answer with no session.</p>
 </thead>
 <tbody><tr>
 <td><code>eur</code></td>
-<td>Pack size in euros (see <code>account products</code>)</td>
+<td>Pack size in euros, as account products lists it</td>
 </tr>
 </tbody></table>
 <table>
@@ -4869,7 +4869,7 @@ a session focuses the listing on that session.</p>
 </thead>
 <tbody><tr>
 <td><code>session</code></td>
-<td>Focus on one session — its transactions (name, id, or id prefix)</td>
+<td>Show one session’s transactions, by name, id or id prefix</td>
 </tr>
 </tbody></table>
 <table>
@@ -5029,7 +5029,7 @@ opening a browser.</p>
 </thead>
 <tbody><tr>
 <td><code>id</code></td>
-<td>Key id (from <code>account api-keys</code>)</td>
+<td>Key id, as account api-keys lists it</td>
 </tr>
 </tbody></table>
 <h4 id="machine-account-api-keys-update"><a href="#machine-account-api-keys-update" class="headerlink" title="machine account api-keys update"></a>machine account api-keys update</h4><p>Set an API key’s expiry. See <a href="#Account-and-billing">Account and billing</a>.</p>
@@ -5046,7 +5046,7 @@ opening a browser.</p>
 </thead>
 <tbody><tr>
 <td><code>id</code></td>
-<td>Key id (from <code>account api-keys</code>)</td>
+<td>Key id, as account api-keys lists it</td>
 </tr>
 <tr>
 <td><code>days|never</code></td>
@@ -5115,7 +5115,7 @@ terminal, you can call it from a program.</p>
 <p>It needs Python 3.11 or later on Linux x86_64, the same systems as the client. If
 you need another platform, <a href="/contact.html?topic=machine">contact us</a>. pip installs
 the Machine core that the SDK runs on, <code>testflows.machine.core</code>, along with it.</p>
-<h2 id="Hello-Machine"><a href="#Hello-Machine" class="headerlink" title="Hello Machine"></a>Hello Machine</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.machine.v1 <span class="keyword">as</span> machine</span><br><span class="line"></span><br><span class="line">client = machine.Client()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> client.sessions.create(cpus=<span class="number">1</span>) <span class="keyword">as</span> session:</span><br><span class="line">    client.sessions.use(session)</span><br><span class="line">    <span class="keyword">with</span> client.create(disk=<span class="string">&quot;hello&quot;</span>) <span class="keyword">as</span> run:</span><br><span class="line">        run.run(until=<span class="string">&quot;tasks&quot;</span>, timeout=<span class="number">300</span>)</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> run.console(lines=<span class="number">20</span>):</span><br><span class="line">            <span class="built_in">print</span>(line)</span><br></pre></td></tr></table></figure>
+<h2 id="Hello-Machine"><a href="#Hello-Machine" class="headerlink" title="Hello Machine"></a>Hello Machine</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.machine.v1 <span class="keyword">as</span> machine</span><br><span class="line"></span><br><span class="line">client = machine.Client()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> client.sessions.create(cpus=<span class="number">1</span>) <span class="keyword">as</span> session:</span><br><span class="line">    client.sessions.use(session)</span><br><span class="line">    <span class="keyword">with</span> client.create(disk=<span class="string">&quot;hello&quot;</span>) <span class="keyword">as</span> run:</span><br><span class="line">        run.run(until=<span class="string">&quot;tasks&quot;</span>, timeout=<span class="number">300</span>)</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> run.console(lines=-<span class="number">20</span>):</span><br><span class="line">            <span class="built_in">print</span>(line)</span><br></pre></td></tr></table></figure>
 
 <p>This creates a session, boots a run from the disk <code>hello</code> and prints the last
 twenty lines of its console. A run waits for commands, so it moves only when
@@ -5267,7 +5267,8 @@ come, like <code>tail -f</code>.</p>
 <p>Be careful with the last row. A pair and a string include both ends, the way
 Machine’s own messages do. A slice is Python’s, so it stops before the end.
 That makes <code>(100, 200)</code> one entry longer than <code>slice(100, 200)</code>.</p>
-<p><code>lines=</code> works the same way for lines of output.</p>
+<p><code>lines=</code> selects lines of output in the same grammar: <code>20</code> is line 20, <code>-20</code>
+the last 20, and <code>0</code> none, which starts a follow at the end.</p>
 <h2 id="Cleaning-up"><a href="#Cleaning-up" class="headerlink" title="Cleaning up"></a>Cleaning up</h2><p>A session costs from the moment you create it, and a run keeps its log and
 checkpoints until you delete it. Both can be used as context managers, as
 in the first example, and deleting a run takes its branches with it.</p>
@@ -5515,9 +5516,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791048573555"></script>
-<script src="/js/machine-hero-type.js?v=1791048573555"></script>
-<script src="/js/download-platforms.js?v=1791048573555"></script>
+<script src="/js/index-code-type.js?v=1791057768324"></script>
+<script src="/js/machine-hero-type.js?v=1791057768324"></script>
+<script src="/js/download-platforms.js?v=1791057768324"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
