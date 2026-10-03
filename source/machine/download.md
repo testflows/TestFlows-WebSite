@@ -33,7 +33,19 @@ permalink: machine/download/index.html
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It verifies the download and puts the client in <code>~/.local/bin</code>. It never asks for root. Run the same command again to update.</p>
+<p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>machine-env</h2>
+<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. Linux has no other <code>machine</code> by default, so you rarely need it. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+
+```bash
+machine-env
+machine-env -- machine --version
+```
+
+<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section">
@@ -79,7 +91,7 @@ cmp machine "$(command -v machine)"
 
 ```bash
 machine logout
-rm ~/.local/bin/machine
+rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.cache/machine ~/.testflows/machine
 ```
 
@@ -96,7 +108,19 @@ rm -rf ~/.cache/machine ~/.testflows/machine
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It verifies the download and puts the client in <code>~/.local/bin</code>. It never asks for root. Run the same command again to update.</p>
+<p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>machine-env</h2>
+<p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. Linux has no other <code>machine</code> by default, so you rarely need it. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+
+```bash
+machine-env
+machine-env -- machine --version
+```
+
+<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section download-note">
@@ -154,7 +178,7 @@ cmp machine-linux-arm64 "$(command -v machine)"
 
 ```bash
 machine logout
-rm ~/.local/bin/machine
+rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.cache/machine ~/.testflows/machine
 ```
 
@@ -171,8 +195,21 @@ rm -rf ~/.cache/machine ~/.testflows/machine
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It verifies the download, installs the client under <code>~/.local/share/machine/</code>, and links it from <code>~/.local/bin</code>. It never asks for your password. Run the same command again to update.</p>
+<p>It verifies the download, installs the client under <code>~/.local/share/machine/</code>, and links it from <code>~/.local/bin</code>, with <code>machine-env</code> beside the link. It never asks for your password. Run the same command again to update.</p>
 <p>Macs with an Intel processor are not supported.</p>
+<p><strong>macOS already has a <code>machine</code> command.</strong> Use <code>machine-env</code>, below, to run this one.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>macOS has its own machine command</h2>
+<p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+
+```bash
+machine-env
+machine-env -- machine --version
+```
+
+<p>The second form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
 </div>
 
 <div class="download-section download-note">
@@ -229,7 +266,7 @@ shasum -a 256 -c machine-darwin-arm64.tar.gz.sha256
 
 ```bash
 machine logout
-rm ~/.local/bin/machine
+rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.local/share/machine ~/.testflows/machine
 ```
 

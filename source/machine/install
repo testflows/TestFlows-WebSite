@@ -4,7 +4,8 @@
 #   curl https://testflows.com/machine/install -fsS | bash
 #
 # It downloads one file, the `machine` binary, checks it against the SHA-256
-# checksum published next to it, and puts it in ~/.local/bin. It never asks for
+# checksum published next to it, and puts it in ~/.local/bin. It also writes
+# machine-env there, a shell in which `machine` is this client. It never asks for
 # root. The checksum is signed with the release keys below, GPG and RSA, and the
 # signature is checked before the checksum is trusted: with gpg where there is one,
 # else with openssl, which every Mac has. The download itself is protected by HTTPS, which is the only protocol it will use unless
@@ -19,7 +20,7 @@
 #   curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
 #
 # Environment:
-#   MACHINE_INSTALL_DIR   where to put the binary (default: ~/.local/bin)
+#   MACHINE_INSTALL_DIR   where to put machine and machine-env (default: ~/.local/bin)
 #   MACHINE_VERSION       a version to install, YYYYMMDD-HHMM (default: the latest)
 #   MACHINE_BASE_URL      where releases are downloaded from
 #
@@ -206,7 +207,7 @@ Options:
   -h, --help      show this help
 
 Environment:
-  MACHINE_INSTALL_DIR   where to put the binary (default: ~/.local/bin)
+  MACHINE_INSTALL_DIR   where to put machine and machine-env (default: ~/.local/bin)
   MACHINE_VERSION       a version to use, YYYYMMDD-HHMM (default: the latest)
 USAGE
 }
@@ -514,6 +515,200 @@ remove_old_trees() {
 }
 
 # How to put DIR on PATH: the line to paste for the shell this user runs.
+# install_env DIR: write machine-env into DIR, executable, beside machine. It is written on
+# every run, so a machine installed before machine-env existed gets it on the next one, and
+# it is replaced by a rename like the client, so a cut-off write leaves the old one working.
+# machine-env finds machine through its own location, which is why the two share DIR.
+install_env() {
+    local dir="$1" tmp
+    tmp="$(mktemp "$dir/.machine-env.XXXXXX")" || return 1
+    cat >"$tmp" <<'END_OF_MACHINE_ENV' || { rm -f "$tmp"; return 1; }
+#!/bin/bash
+# machine-env: a shell in which `machine` is TestFlows Machine.
+#
+# macOS ships /usr/bin/machine, which prints the CPU architecture, so a plain
+# PATH entry for the client loses to it or shadows it for good. This starts a
+# child shell with the client's directory first on PATH. The parent shell is
+# never touched: `exit` leaves, and there is nothing to deactivate.
+#
+# One file for every platform, installed beside `machine`. Linux has no
+# /usr/bin/machine, so there it only makes the client's directory the first
+# match.
+#
+# Runs on bash 3.2, the bash macOS ships.
+
+set -u
+
+PROMPT_TAG="(machine) "
+INSTALL_CMD="curl -fsS https://testflows.com/machine/install | bash"
+ONE_COMMAND="machine-env -- machine --version"
+
+usage() {
+    cat <<EOF
+Usage: machine-env
+       machine-env -- command [argument ...]
+
+Starts a shell in which machine is TestFlows Machine, ahead of any other
+machine on PATH, and prefixes its prompt with $PROMPT_TAG. The shell loads the
+usual configuration first. Leave it with exit.
+
+With a command, runs it in that environment and starts no shell.
+
+Supported shells: zsh and bash.
+EOF
+}
+
+# Verdict first, one hint per line, the shape every machine message has.
+refuse() {
+    printf '✗ %s\n' "$1" >&2
+    shift
+    local hint
+    for hint in "$@"; do
+        printf '  %s\n' "$hint" >&2
+    done
+    exit 1
+}
+
+# The directory this script was started from: where `machine` sits beside it.
+# Not resolved through symlinks, so a link in ~/.local/bin names that directory
+# and survives the version folder it points into being replaced.
+bin_dir() {
+    (cd "$(dirname "$0")" && pwd)
+}
+
+require_machine() {
+    [ -x "$1/machine" ] ||
+        refuse "No machine beside machine-env: $1" \
+            "Reinstall the client $INSTALL_CMD"
+}
+
+# Everything that follows the user's own shell setup, as the shell's own syntax.
+# PATH is set here and not before the shell starts: a profile that prepends its
+# own directories would otherwise put them in front of the client.
+
+start_bash() {
+    local tmp="$1" rc="$1/rcfile"
+    # An interactive bash that is not a login shell reads ~/.bashrc only. A macOS
+    # user whose setup is in ~/.bash_profile would get none of it, so it is the
+    # fallback.
+    cat >"$rc" <<'EOF'
+if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+elif [ -f ~/.bash_profile ]; then
+    . ~/.bash_profile
+fi
+PATH="$MACHINE_ENV:$PATH"
+export PATH
+# At every prompt and last, because prompts that rebuild PS1 would drop it.
+__machine_env_prompt() {
+    case "$PS1" in
+    "(machine) "*) ;;
+    *) PS1="(machine) $PS1" ;;
+    esac
+}
+PROMPT_COMMAND="${PROMPT_COMMAND:+$PROMPT_COMMAND;}__machine_env_prompt"
+__machine_env_prompt
+EOF
+    "$SHELL" --rcfile "$rc" -i
+}
+
+start_zsh() {
+    local tmp="$1"
+    # zsh reads its startup files from $ZDOTDIR. Pointing it at a directory of
+    # ours is the only way to run after the user's .zshrc, so each file there
+    # runs the user's own and puts ZDOTDIR back before the shell reads on.
+    MACHINE_ENV_ZDOTDIR="${ZDOTDIR:-$HOME}"
+    MACHINE_ENV_ZDOTDIR_UNSET=""
+    [ -n "${ZDOTDIR:-}" ] || MACHINE_ENV_ZDOTDIR_UNSET=1
+    MACHINE_ENV_TMP="$tmp"
+    export MACHINE_ENV_ZDOTDIR MACHINE_ENV_ZDOTDIR_UNSET MACHINE_ENV_TMP
+    cat >"$tmp/.zshenv" <<'EOF'
+ZDOTDIR="$MACHINE_ENV_ZDOTDIR"
+[[ -f $ZDOTDIR/.zshenv ]] && source "$ZDOTDIR/.zshenv"
+MACHINE_ENV_ZDOTDIR="$ZDOTDIR"
+ZDOTDIR="$MACHINE_ENV_TMP"
+EOF
+    cat >"$tmp/.zshrc" <<'EOF'
+ZDOTDIR="$MACHINE_ENV_ZDOTDIR"
+[[ -f $ZDOTDIR/.zshrc ]] && source "$ZDOTDIR/.zshrc"
+[[ -n $MACHINE_ENV_ZDOTDIR_UNSET ]] && unset ZDOTDIR
+unset MACHINE_ENV_ZDOTDIR MACHINE_ENV_ZDOTDIR_UNSET MACHINE_ENV_TMP
+path=("$MACHINE_ENV" $path)
+# At every prompt and last, because prompts that rebuild PROMPT would drop it.
+__machine_env_prompt() {
+    [[ $PROMPT == "(machine) "* ]] || PROMPT="(machine) $PROMPT"
+}
+precmd_functions+=(__machine_env_prompt)
+__machine_env_prompt
+EOF
+    ZDOTDIR="$tmp" "$SHELL" -i
+}
+
+# A shell of the user's, in the environment. A child and not an exec, so the
+# directory of startup files is removed when it exits, however it ends: a closed
+# terminal hangs this script up, and only a trap runs then. STARTUP_DIR is global
+# for the trap to see it.
+start_shell() {
+    STARTUP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/machine-env.XXXXXX")" ||
+        refuse "Cannot create a temporary directory."
+    trap 'rm -rf "$STARTUP_DIR"' EXIT
+    case "$(basename "$SHELL")" in
+    zsh) start_zsh "$STARTUP_DIR" ;;
+    bash) start_bash "$STARTUP_DIR" ;;
+    esac
+    exit $?
+}
+
+run_command() {
+    [ $# -gt 0 ] || refuse "Command required." "Run one command $ONE_COMMAND"
+    PATH="$BIN:$PATH"
+    export PATH MACHINE_ENV
+    exec "$@"
+}
+
+main() {
+    case "${1:-}" in
+    -h | --help)
+        usage
+        exit 0
+        ;;
+    --)
+        shift
+        BIN="$(bin_dir)"
+        require_machine "$BIN"
+        MACHINE_ENV="$BIN"
+        run_command "$@"
+        ;;
+    "") ;;
+    *) refuse "Unknown argument: $1." "Run one command $ONE_COMMAND" ;;
+    esac
+
+    [ -z "${MACHINE_ENV:-}" ] ||
+        refuse "Already in the Machine environment." \
+            "Leave the environment exit"
+    case "$(basename "${SHELL:-}")" in
+    zsh | bash) ;;
+    *)
+        refuse "Unsupported shell: ${SHELL:-not set}." \
+            "Run one command $ONE_COMMAND"
+        ;;
+    esac
+    [ -t 0 ] && [ -t 1 ] ||
+        refuse "Not a terminal." "Run one command $ONE_COMMAND"
+
+    BIN="$(bin_dir)"
+    require_machine "$BIN"
+    MACHINE_ENV="$BIN"
+    export MACHINE_ENV
+    start_shell
+}
+
+# Everything runs in main, called last: a cut-off copy executes nothing.
+main "$@"
+END_OF_MACHINE_ENV
+    chmod 755 "$tmp" && mv -f "$tmp" "$dir/machine-env" || { rm -f "$tmp"; return 1; }
+}
+
 path_hint() {
     local dir="$1" shown
     shown="$(tilde "$dir")"
@@ -623,6 +818,8 @@ main() {
     rm -f "$SUMFILE"
     trap - EXIT
 
+    install_env "$dir" || warn "Could not write $(tilde "$dir/machine-env")."
+
     if [ -z "$before" ]; then
         ok "Installed machine $after to $(tilde "$target")${CHECKSUM_CHECKED:+ ${DIM}(${SIGNED_WITH:+signed and }checksum verified)${RESET}}"
     elif [ "$before" = "$after" ]; then
@@ -653,7 +850,8 @@ main() {
     elif ! [ "$found" -ef "$target" ]; then
         say ""
         warn "Another machine comes first on your PATH: $(tilde "$found")"
-        say "  Run $(tilde "$target") directly, or put $(tilde "$dir") earlier in your PATH."
+        say "  Run $(tilde "$dir/machine-env") for a shell where machine is this one,"
+        say "  or put $(tilde "$dir") earlier in your PATH."
     fi
 
     say ""
