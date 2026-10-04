@@ -37,6 +37,8 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
 
+<!-- include: _download-next.md -->
+
 <div class="download-section download-note">
 <h2>machine-env</h2>
 <p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
@@ -112,6 +114,8 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
 <p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
+
+<!-- include: _download-next.md -->
 
 <div class="download-section download-note">
 <h2>machine-env</h2>
@@ -202,6 +206,8 @@ curl https://testflows.com/machine/install -fsS | bash
 <p><strong>macOS already has a <code>machine</code> command.</strong> Use <code>machine-env</code>, below, to run this one.</p>
 </div>
 
+<!-- include: _download-next.md -->
+
 <div class="download-section download-note">
 <h2>macOS has its own machine command</h2>
 <p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
@@ -287,6 +293,8 @@ wsl --install
 
 <p>Open your Linux distribution and follow the steps for <a href="#linux-x86_64">Linux (x64)</a>, or <a href="#linux-arm64">Linux (ARM64)</a> on Windows on ARM. Not sure which? <code>uname -m</code> prints <code>x86_64</code> or <code>aarch64</code>.</p>
 </div>
+
+<!-- include: _download-next.md -->
 </div>
 
 <div class="tab-pane fade" role="tabpanel" id="platform-others" aria-labelledby="tab-others">
@@ -315,15 +323,6 @@ curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM 
 ```
 
 <p>Set <code>MACHINE_INSTALL_DIR</code> to install somewhere other than <code>~/.local/bin</code>. <code>--no-signature</code> and <code>--no-checksum</code> skip checks; a normal install needs neither.</p>
-</div>
-
-<div class="download-section download-next">
-<h2>Then</h2>
-<p>Sign in with <code>machine login</code>, or create an account first. Then run <code>machine account provision</code> to set up account storage. The first session cannot be created until that is done. The docs walk through your first run.</p>
-<div class="download-actions">
-<a class="section-cta" href="/machine/portal/signup/">Create account</a>
-<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
-</div>
 </div>
 
 </div>

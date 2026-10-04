@@ -116,6 +116,8 @@ machine account api-keys create ci --expiry 90
 
 ## Your first run
 
+If you have not yet signed up, signed in and set up account storage, do that first: see [Signing up](getting-started.md#signing-up).
+
 Here is a whole trip, from nothing to a branch. The disk can come from the
 `hello-world` example if you have [Docker](disks.md#docker-and-compose), or from a small program you compile
 if you do not.
