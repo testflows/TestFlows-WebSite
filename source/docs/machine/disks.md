@@ -136,42 +136,12 @@ app-1  | 2026-03-01 00:00:50.435 UTC [1] LOG:  database system is ready to accep
 ```
 
 The server keeps running after the queries, so this machine does not end by
-itself. The disk holds each `--env` value as written, and a value is not
-changed on the way: a `$` in it arrives as a `$`.
+itself. To run queries and have the machine end, use the
+[PostgreSQL project](disks.md#postgresql-project). The disk holds each `--env`
+value as written, and a value is not changed on the way: a `$` in it arrives
+as a `$`.
 
-To run the queries and exit, start the server from a script. Save this as
-`run.sh`.
-
-```bash
-#!/bin/sh
-set -e
-export PGDATA=/tmp/pgdata
-gosu postgres initdb --auth=trust > /dev/null
-gosu postgres pg_ctl -o "-c listen_addresses=''" -w start > /dev/null
-gosu postgres psql -f queries.sql
-```
-
-The image runs as root and PostgreSQL refuses to, so each command goes through
-`gosu postgres`, which the image has. The server listens on its Unix socket
-only.
-
-```bash
-machine disks build --from postgres:17 --add run.sh --add queries.sql \
-  --entrypoint sh pg-sql -- run.sh
-```
-
-```
-app-1  | CREATE TABLE
-app-1  | INSERT 0 3
-app-1  |  customer | total
-app-1  | ----------+-------
-app-1  |  ada      |    55
-app-1  |  grace    |    45
-app-1  | (2 rows)
-app-1 exited with code 0
-```
-
-All three ran in a machine with 1024MB of memory. A server that other services
+Both ran in a machine with 1024MB of memory. A server that other services
 connect to is a [Compose project](disks.md#compose-projects).
 
 ### Where added files go
@@ -278,6 +248,35 @@ tmpfs is created empty when the machine boots.
 ```bash
 docker pull --platform linux/amd64 clickhouse/clickhouse-server:24.8.14.39-alpine
 machine disks build --compose compose/clickhouse ch
+```
+
+### PostgreSQL project
+
+`compose/postgres` is a PostgreSQL server and a client that runs
+`queries.sql` against it. Both services use one image. The client prints the
+results and exits, which ends the project, so this is how to run queries
+against PostgreSQL and have the machine end.
+
+The client waits until the server is healthy. The healthcheck asks over TCP,
+because the image first starts a temporary server on its Unix socket alone to
+set the database up, and a check on the socket would pass before the real
+server is listening. `ON_ERROR_STOP` makes a failed query the client's exit
+code. `queries.sql` is mounted from the project directory.
+
+```bash
+docker pull --platform linux/amd64 postgres:17
+machine disks build --compose compose/postgres pg
+```
+
+```
+client-1    | CREATE TABLE
+client-1    | INSERT 0 3
+client-1    |  customer | total
+client-1    | ----------+-------
+client-1    |  ada      |    55
+client-1    |  grace    |    45
+client-1    | (2 rows)
+client-1 exited with code 0
 ```
 
 ### Carrying images
