@@ -221,11 +221,15 @@ Forks a new branch from a run and starts it alongside the parent.
 
 The parent keeps running and the terminal stays attached to it. Without `--at`,
 the branch is forked at the current point, reusing a checkpoint there if one
-exists. The branch keeps the parent's run options; `--daemon`, `--single-step`,
+exists.
+
+The branch keeps the parent's run options; `--daemon`, `--single-step`,
 `--limit` and `--backstop-limit` replace them, and the branch keeps those
 instead. Its machine runs on the least-loaded host CPU unless `--pin-cpu` names
-one. Waits until the branch accepts commands. Use `--timeout` to bound the wait,
-or `--no-wait` to return once the request is accepted.
+one.
+
+Waits until the branch accepts commands. Use `--timeout` to bound the wait, or
+`--no-wait` to return once the request is accepted.
 
 ```
 usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait] [--daemon | --no-daemon]
@@ -354,14 +358,16 @@ A stopped run resumes at its tip. A run that stopped past its last checkpoint
 replays its recorded tail from that checkpoint to reach the tip, and says how
 many entries it replayed; `--no-recover` refuses instead, for callers that
 expect every run saved. A branch that was created but never ran begins its first
-life in a new process, leaving its parent running. The machine runs with the
-run's own run options; `--daemon`, `--single-step`, `--limit` and
-`--backstop-limit` replace them for this start only, and `--pin-cpu` names the
-host CPU, the least-loaded by default. Waits until the machine accepts commands.
-Use `--at` to replay from an earlier checkpoint, `--read-only` to open a
-checkpoint without replaying, `--force` to stop a running instance first,
-`--timeout` to bound the wait, or `--no-wait` to return once the request is
-accepted.
+life in a new process, leaving its parent running.
+
+The machine runs with the run's own run options; `--daemon`, `--single-step`,
+`--limit` and `--backstop-limit` replace them for this start only, and
+`--pin-cpu` names the host CPU, the least-loaded by default.
+
+Waits until the machine accepts commands. Use `--at` to replay from an earlier
+checkpoint, `--read-only` to open a checkpoint without replaying, `--force` to
+stop a running instance first, `--timeout` to bound the wait, or `--no-wait` to
+return once the request is accepted.
 
 ```
 usage: machine start [-h] [-f] [--read-only] [--recover | --no-recover] [--at checkpoint] [--parents mode] [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n] [--backstop-limit n] [--pin-cpu n] [--no-wait] run
@@ -1350,12 +1356,16 @@ Detaches a new self-contained root from a run and starts it.
 
 Without `--at`, the root is detached at the current point. The copy includes
 everything the root still owns, which makes it substantially slower than fork
-`--rebase`; use it to leave the origin tree behind. The new root is named for
-the run it copied and the point, since a root has no tree to be qualified by; a
-second copy of one point suffixes rather than refusing. The new root keeps the
-run options of the run it copied; `--daemon`, `--single-step`, `--limit` and
-`--backstop-limit` replace them, and the root keeps those instead. Its machine
-runs on the least-loaded host CPU unless `--pin-cpu` names one.
+`--rebase`; use it to leave the origin tree behind.
+
+The new root is named for the run it copied and the point, since a root has no
+tree to be qualified by; a second copy of one point suffixes rather than
+refusing.
+
+The new root keeps the run options of the run it copied; `--daemon`,
+`--single-step`, `--limit` and `--backstop-limit` replace them, and the root
+keeps those instead. Its machine runs on the least-loaded host CPU unless
+`--pin-cpu` names one.
 
 ```
 usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
@@ -1412,13 +1422,17 @@ Put a run back at a point, discarding the tail. See [Moving around](checkpoints-
 Puts a run back at a point and discards what came after it.
 
 The run keeps its id and its name; only its tail is gone, which is what makes
-this the way to take a replay again. The point is required and is any entry from
-`#0` to the tip, named as the other verbs name one: by entry id after `#`, by
-checkpoint name after ^, or by machine time. It is landed on exactly and becomes
-a checkpoint. The tip changes nothing unless a replay diverged there. A point
-before the run was forked moves the run back along the line it came from, which
-replay then follows again. A run with a branch forked after the point is
-refused, since that branch's line claims entries that would no longer exist.
+this the way to take a replay again.
+
+The point is required and is any entry from `#0` to the tip, named as the other
+verbs name one: by entry id after `#`, by checkpoint name after ^, or by machine
+time. It is landed on exactly and becomes a checkpoint. The tip changes nothing
+unless a replay diverged there.
+
+A point before the run was forked moves the run back along the line it came
+from, which replay then follows again. A run with a branch forked after the
+point is refused, since that branch's line claims entries that would no longer
+exist.
 
 ```
 usage: machine rewind <run> to <point>
@@ -1470,11 +1484,12 @@ Name a line to follow it instead of the parent's. Windows are half open, so a
 fork at an entry leaves that entry with the parent and starts the child at the
 next one; two runs forked at the same point are siblings, and a sibling's future
 is not the parent's to give. The parent's window ends at the fork, so replaying
-it there reports no forward entries. Naming a run walks the line that leads to
-it, hop by hop; the hops belong to that line rather than to this run, so the
-bound is the tree and not the lineage. A wrong line inside the tree is not
-refused, because replay is strict and diverges on the first entry that does not
-reproduce.
+it there reports no forward entries.
+
+Naming a run walks the line that leads to it, hop by hop; the hops belong to
+that line rather than to this run, so the bound is the tree and not the lineage.
+A wrong line inside the tree is not refused, because replay is strict and
+diverges on the first entry that does not reproduce.
 
 An entry that diverges is replayed again from the newest checkpoint before it,
 twice at most, and not again once it diverges the same way twice. An entry the
@@ -1929,6 +1944,7 @@ around it, `--image` takes a Docker image as a save tar or a name in the local
 Docker, and `--compose` takes a project directory and the images its services
 name. A binary or an image runs as one container; a project runs every service
 in it. Use `--entrypoint` to set the executable, and pass arguments after `--`.
+
 The name defaults to what the source is called, and the size to what the pack
 holds loaded plus a gigabyte, rounded up to a whole GB. Use `--dry-run` to see
 those numbers without building anything.
