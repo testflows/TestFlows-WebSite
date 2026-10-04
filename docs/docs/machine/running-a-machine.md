@@ -63,6 +63,16 @@ under [Steering programs](steering-programs.md).
 `--iters` limits how many iterations a drive may spend, and the global
 `--timeout` limits how long you are willing to wait. Whichever hits first wins.
 
+Now and then the computer running Machine takes a firmware interrupt in the
+middle of an entry, which makes that entry's instruction and branch counts
+unusable. Machine does not record such an entry. It goes back to the entry
+before, checkpoints there and records the entry again, so the recording stays
+one a replay can follow. You see nothing except a short pause. `--retry` sets
+how many more times one entry is tried, 2 by default. If they are all
+interrupted the run stops with `Host interrupted the run at entry N. It is not
+recorded.` and the [`machine rewind`](commands.md#machine-rewind) command that puts the run back at the
+entry before.
+
 ## Trying different schedules
 
 A program that uses threads can behave differently depending on how they
