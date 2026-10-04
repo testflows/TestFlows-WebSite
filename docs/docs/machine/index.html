@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791085784748" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791086041316" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791086041316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791085784749" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791086041316" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1678,11 +1678,13 @@ wait, or <code>--no-wait</code> to return once the request is accepted.</p>
 <p>Forks a new branch from a run and starts it alongside the parent.</p>
 <p>The parent keeps running and the terminal stays attached to it. Without <code>--at</code>,
 the branch is forked at the current point, reusing a checkpoint there if one
-exists. The branch keeps the parent’s run options; <code>--daemon</code>, <code>--single-step</code>,
+exists.</p>
+<p>The branch keeps the parent’s run options; <code>--daemon</code>, <code>--single-step</code>,
 <code>--limit</code> and <code>--backstop-limit</code> replace them, and the branch keeps those
 instead. Its machine runs on the least-loaded host CPU unless <code>--pin-cpu</code> names
-one. Waits until the branch accepts commands. Use <code>--timeout</code> to bound the wait,
-or <code>--no-wait</code> to return once the request is accepted.</p>
+one.</p>
+<p>Waits until the branch accepts commands. Use <code>--timeout</code> to bound the wait, or
+<code>--no-wait</code> to return once the request is accepted.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait] [--daemon | --no-daemon]</span><br><span class="line">                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                    run</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -1899,14 +1901,14 @@ the next start, and kill says so. Waits until it is gone, the same as wait
 replays its recorded tail from that checkpoint to reach the tip, and says how
 many entries it replayed; <code>--no-recover</code> refuses instead, for callers that
 expect every run saved. A branch that was created but never ran begins its first
-life in a new process, leaving its parent running. The machine runs with the
-run’s own run options; <code>--daemon</code>, <code>--single-step</code>, <code>--limit</code> and
-<code>--backstop-limit</code> replace them for this start only, and <code>--pin-cpu</code> names the
-host CPU, the least-loaded by default. Waits until the machine accepts commands.
-Use <code>--at</code> to replay from an earlier checkpoint, <code>--read-only</code> to open a
-checkpoint without replaying, <code>--force</code> to stop a running instance first,
-<code>--timeout</code> to bound the wait, or <code>--no-wait</code> to return once the request is
-accepted.</p>
+life in a new process, leaving its parent running.</p>
+<p>The machine runs with the run’s own run options; <code>--daemon</code>, <code>--single-step</code>,
+<code>--limit</code> and <code>--backstop-limit</code> replace them for this start only, and
+<code>--pin-cpu</code> names the host CPU, the least-loaded by default.</p>
+<p>Waits until the machine accepts commands. Use <code>--at</code> to replay from an earlier
+checkpoint, <code>--read-only</code> to open a checkpoint without replaying, <code>--force</code> to
+stop a running instance first, <code>--timeout</code> to bound the wait, or <code>--no-wait</code> to
+return once the request is accepted.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine start [-h] [-f] [--read-only] [--recover | --no-recover] [--at checkpoint] [--parents mode] [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n] [--backstop-limit n] [--pin-cpu n] [--no-wait] run</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3302,12 +3304,14 @@ holds the folder.</p>
 <p>Detaches a new self-contained root from a run and starts it.</p>
 <p>Without <code>--at</code>, the root is detached at the current point. The copy includes
 everything the root still owns, which makes it substantially slower than fork
-<code>--rebase</code>; use it to leave the origin tree behind. The new root is named for
-the run it copied and the point, since a root has no tree to be qualified by; a
-second copy of one point suffixes rather than refusing. The new root keeps the
-run options of the run it copied; <code>--daemon</code>, <code>--single-step</code>, <code>--limit</code> and
-<code>--backstop-limit</code> replace them, and the root keeps those instead. Its machine
-runs on the least-loaded host CPU unless <code>--pin-cpu</code> names one.</p>
+<code>--rebase</code>; use it to leave the origin tree behind.</p>
+<p>The new root is named for the run it copied and the point, since a root has no
+tree to be qualified by; a second copy of one point suffixes rather than
+refusing.</p>
+<p>The new root keeps the run options of the run it copied; <code>--daemon</code>,
+<code>--single-step</code>, <code>--limit</code> and <code>--backstop-limit</code> replace them, and the root
+keeps those instead. Its machine runs on the least-loaded host CPU unless
+<code>--pin-cpu</code> names one.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]</span><br><span class="line">                      [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                      run</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3413,13 +3417,15 @@ without switching is fork.</p>
 <h2 id="machine-rewind"><a href="#machine-rewind" class="headerlink" title="machine rewind"></a>machine rewind</h2><p>Put a run back at a point, discarding the tail. See <a href="#Moving-around">Moving around</a>.</p>
 <p>Puts a run back at a point and discards what came after it.</p>
 <p>The run keeps its id and its name; only its tail is gone, which is what makes
-this the way to take a replay again. The point is required and is any entry from
-<code>#0</code> to the tip, named as the other verbs name one: by entry id after <code>#</code>, by
-checkpoint name after ^, or by machine time. It is landed on exactly and becomes
-a checkpoint. The tip changes nothing unless a replay diverged there. A point
-before the run was forked moves the run back along the line it came from, which
-replay then follows again. A run with a branch forked after the point is
-refused, since that branch’s line claims entries that would no longer exist.</p>
+this the way to take a replay again.</p>
+<p>The point is required and is any entry from <code>#0</code> to the tip, named as the other
+verbs name one: by entry id after <code>#</code>, by checkpoint name after ^, or by machine
+time. It is landed on exactly and becomes a checkpoint. The tip changes nothing
+unless a replay diverged there.</p>
+<p>A point before the run was forked moves the run back along the line it came
+from, which replay then follows again. A run with a branch forked after the
+point is refused, since that branch’s line claims entries that would no longer
+exist.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine rewind &lt;run&gt; to &lt;point&gt;</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3505,11 +3511,11 @@ at or before it and replaying the difference.</p>
 fork at an entry leaves that entry with the parent and starts the child at the
 next one; two runs forked at the same point are siblings, and a sibling’s future
 is not the parent’s to give. The parent’s window ends at the fork, so replaying
-it there reports no forward entries. Naming a run walks the line that leads to
-it, hop by hop; the hops belong to that line rather than to this run, so the
-bound is the tree and not the lineage. A wrong line inside the tree is not
-refused, because replay is strict and diverges on the first entry that does not
-reproduce.</p>
+it there reports no forward entries.</p>
+<p>Naming a run walks the line that leads to it, hop by hop; the hops belong to
+that line rather than to this run, so the bound is the tree and not the lineage.
+A wrong line inside the tree is not refused, because replay is strict and
+diverges on the first entry that does not reproduce.</p>
 <p>An entry that diverges is replayed again from the newest checkpoint before it,
 twice at most, and not again once it diverges the same way twice. An entry the
 host interrupted is replayed again the same way and is not a divergence. Use
@@ -4156,8 +4162,8 @@ terminal loses it.</p>
 around it, <code>--image</code> takes a Docker image as a save tar or a name in the local
 Docker, and <code>--compose</code> takes a project directory and the images its services
 name. A binary or an image runs as one container; a project runs every service
-in it. Use <code>--entrypoint</code> to set the executable, and pass arguments after <code>--</code>.
-The name defaults to what the source is called, and the size to what the pack
+in it. Use <code>--entrypoint</code> to set the executable, and pass arguments after <code>--</code>.</p>
+<p>The name defaults to what the source is called, and the size to what the pack
 holds loaded plus a gigabyte, rounded up to a whole GB. Use <code>--dry-run</code> to see
 those numbers without building anything.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine disks build [-h] (--binary path | --image ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--label name=value] [name] [-- args ...]</span><br></pre></td></tr></table></figure>
@@ -5558,9 +5564,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791085784749"></script>
-<script src="/js/machine-hero-type.js?v=1791085784749"></script>
-<script src="/js/download-platforms.js?v=1791085784749"></script>
+<script src="/js/index-code-type.js?v=1791086041316"></script>
+<script src="/js/machine-hero-type.js?v=1791086041316"></script>
+<script src="/js/download-platforms.js?v=1791086041316"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
