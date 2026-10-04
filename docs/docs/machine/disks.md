@@ -91,16 +91,27 @@ the public one. You can repeat it.
 | `--add conf` | the working directory, as the directory `conf` |
 | `--add hello.py:/app/` | `/app/hello.py` |
 | `--add hello.py:/app/main.py` | `/app/main.py` |
+| `--add conf:/etc/app/` | `/etc/app/conf`, the directory inside `/etc/app` |
+| `--add conf:/etc/app` | `/etc/app`, the directory's contents |
+
+The rule is the one `cp -r` follows: a destination that ends in `/` is a
+directory the path goes into, and any other destination is what the path
+becomes. A Dockerfile `ADD` of a directory copies its contents; the last row is
+how you write that here.
 
 A script that was executable still is. `--add` works with `--binary` too, for
 a program that reads a file beside it.
 
 The image is the one the name pointed at when you ran the build. The build
 records its digest and pulls exactly that, so a tag that moves later does not
-change your disk.
+change your disk. You can name a digest yourself, as `python@sha256:…` or the
+`python:3.12@sha256:…` that `docker pull` prints.
 
-`--from` takes public images only. For a private image, or one you build
-yourself, use `--image`:
+The disk's size defaults to what the image needs plus a gigabyte. Use
+`--dry-run` to see the numbers, and `--size` for more room.
+
+`--from` takes public images of up to 5GB as they download. For a private
+image, a larger one, or one you build yourself, use `--image`:
 
 ```bash
 docker build --platform linux/amd64 -t myapp:latest .

@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791122958476" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791122958476" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791119552050" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791122958476" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -638,14 +638,29 @@ the public one. You can repeat it.</p>
 <td><code>--add hello.py:/app/main.py</code></td>
 <td><code>/app/main.py</code></td>
 </tr>
+<tr>
+<td><code>--add conf:/etc/app/</code></td>
+<td><code>/etc/app/conf</code>, the directory inside <code>/etc/app</code></td>
+</tr>
+<tr>
+<td><code>--add conf:/etc/app</code></td>
+<td><code>/etc/app</code>, the directory’s contents</td>
+</tr>
 </tbody></table>
+<p>The rule is the one <code>cp -r</code> follows: a destination that ends in <code>/</code> is a
+directory the path goes into, and any other destination is what the path
+becomes. A Dockerfile <code>ADD</code> of a directory copies its contents; the last row is
+how you write that here.</p>
 <p>A script that was executable still is. <code>--add</code> works with <code>--binary</code> too, for
 a program that reads a file beside it.</p>
 <p>The image is the one the name pointed at when you ran the build. The build
 records its digest and pulls exactly that, so a tag that moves later does not
-change your disk.</p>
-<p><code>--from</code> takes public images only. For a private image, or one you build
-yourself, use <code>--image</code>:</p>
+change your disk. You can name a digest yourself, as <code>python@sha256:…</code> or the
+<code>python:3.12@sha256:…</code> that <code>docker pull</code> prints.</p>
+<p>The disk’s size defaults to what the image needs plus a gigabyte. Use
+<code>--dry-run</code> to see the numbers, and <code>--size</code> for more room.</p>
+<p><code>--from</code> takes public images of up to 5GB as they download. For a private
+image, a larger one, or one you build yourself, use <code>--image</code>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build --platform linux/amd64 -t myapp:latest .</span><br><span class="line">machine disks build --image myapp:latest app</span><br></pre></td></tr></table></figure>
 
 <p>An image that needs environment variables or more than one service, such as a
@@ -5608,9 +5623,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791119552050"></script>
-<script src="/js/machine-hero-type.js?v=1791119552050"></script>
-<script src="/js/download-platforms.js?v=1791119552050"></script>
+<script src="/js/index-code-type.js?v=1791122958476"></script>
+<script src="/js/machine-hero-type.js?v=1791122958476"></script>
+<script src="/js/download-platforms.js?v=1791122958476"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
