@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791086371266" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791086371266" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791086041316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791086371266" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1899,9 +1899,8 @@ the next start, and kill says so. Waits until it is gone, the same as wait
 <p>Starts an existing run.</p>
 <p>A stopped run resumes at its tip. A run that stopped past its last checkpoint
 replays its recorded tail from that checkpoint to reach the tip, and says how
-many entries it replayed; <code>--no-recover</code> refuses instead, for callers that
-expect every run saved. A branch that was created but never ran begins its first
-life in a new process, leaving its parent running.</p>
+many entries it replayed; <code>--no-recover</code> refuses instead. A branch that was
+created but never ran starts in a new process, and its parent keeps running.</p>
 <p>The machine runs with the run’s own run options; <code>--daemon</code>, <code>--single-step</code>,
 <code>--limit</code> and <code>--backstop-limit</code> replace them for this start only, and
 <code>--pin-cpu</code> names the host CPU, the least-loaded by default.</p>
@@ -2314,11 +2313,9 @@ run in a tree, root or branch, limits the listing to that tree.</p>
 </tbody></table>
 <h2 id="machine-marks"><a href="#machine-marks" class="headerlink" title="machine marks"></a>machine marks</h2><p>List marks. See <a href="#Marks">Marks</a>.</p>
 <p>Lists marks.</p>
-<p>A mark is a second name a branch earns after the fact; the generated name says
-where a branch was forked from, a mark says what it turned out to be. Marks are
-unique within a tree, which is what lets one select a branch anywhere a run is
-named, written %mark. Bare, this lists every tree’s marks; name a run to list
-that run’s tree. Read from the database, so no active run is required.</p>
+<p>A mark is a second name for a branch, unique within its tree. Written %mark, it
+names the branch anywhere a run is named. Without a run, every tree’s marks are
+listed; with one, the marks of that run’s tree. No running machine is needed.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine marks [-h] &#123;list,add,remove&#125; ...</span><br></pre></td></tr></table></figure>
 
 <h3 id="machine-marks-list"><a href="#machine-marks-list" class="headerlink" title="machine marks list"></a>machine marks list</h3><p>List marks. See <a href="#Marks">Marks</a>.</p>
@@ -2340,9 +2337,8 @@ that run’s tree. Read from the database, so no active run is required.</p>
 </tbody></table>
 <h3 id="machine-marks-add"><a href="#machine-marks-add" class="headerlink" title="machine marks add"></a>machine marks add</h3><p>Add a mark. See <a href="#Marks">Marks</a>.</p>
 <p>Puts a mark on a branch.</p>
-<p>Marking twice is not an error. A word already spent in that tree names the
-branch holding it rather than moving, since a mark that named two branches would
-name neither.</p>
+<p>Marking a branch again with the same word succeeds. A word another branch in the
+tree already holds is refused and stays with that branch.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine marks add [-h] run mark</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2638,16 +2634,14 @@ shown in tasks). Use add and remove to change the list and clear to empty it.</p
 
 <h2 id="machine-irq"><a href="#machine-irq" class="headerlink" title="machine irq"></a>machine irq</h2><p>Inject an interrupt into a machine. See <a href="#Interrupts-and-time">Interrupts and time</a>.</p>
 <p>Injects an interrupt into a machine’s vCPUs.</p>
-<p>Names come from the kernel’s irq_vectors.h, so preempt is 0xf5 and reschedule
-is 0xfd, which are two different reschedules: ours and the kernel’s own. A
-number works everywhere a name does.</p>
-<p>The vector is not interpreted. 0xf5 reaches a reschedule only because the
-kernel wires a handler there; any other vector reaches whatever the machine has
-wired, and a vector it has not wired is a spurious interrupt. Vectors below 32
-are CPU exceptions and are refused.</p>
-<p>Queued, not delivered when the command returns. The machine drains its interrupt
-queue at the next dispatch boundary, which is where the injection is recorded
-and therefore where a replay repeats it. Step first to choose that boundary.</p>
+<p>The vector is a name from the kernel’s irq_vectors.h or a number. preempt is
+0xf5, the machine’s reschedule; reschedule is 0xfd, the kernel’s own.</p>
+<p>The vector is delivered as given. It reaches the handler the machine’s kernel
+has installed for it, and a vector with no handler is a spurious interrupt.
+Vectors below 32 are CPU exceptions and are refused.</p>
+<p>The interrupt is queued when the command returns. It is delivered and recorded
+at the next dispatch boundary, and a replay repeats it there. Step first to
+choose that boundary.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine irq [-h] [--vcpu n] [--nmi] run [vector]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2890,11 +2884,10 @@ for an object of run_id, hosted and checkpoints rather than a bare list.</p>
 boot-done; halted and activity&#x3D;idle do not. Use <code>--timeout</code> before the command
 to cancel the in-flight run. The default is no limit; 0 checks once without
 batching.</p>
-<p><code>--iters</code> is an upper bound, not a count. A batch also ends whenever the program
-talks to the machine, which it does on every context switch of a focused task;
-without <code>--until</code> that ends the run, and with it the drive continues from the
-next batch. It ends too where a task reaches its own code, which is what on
-waits for, and the response reports how many iterations actually ran.</p>
+<p><code>--iters</code> is an upper bound, not a count. A batch also ends at every context
+switch of a focused task and where a task reaches its own code. Without
+<code>--until</code> that ends the run; with it the drive continues from the next batch.
+The response reports how many iterations ran.</p>
 <p>An iteration is ONE vCPU dispatch, and every parameter is drawn for it: the
 mode, the limit, the task marks and the interrupt all apply to the task on that
 one vCPU. Without <code>--vcpu</code> a scheduling cycle dispatches every vCPU, so it
@@ -3303,11 +3296,10 @@ holds the folder.</p>
 <h2 id="machine-detach"><a href="#machine-detach" class="headerlink" title="machine detach"></a>machine detach</h2><p>Detach into a new root. See <a href="#Moving-around">Moving around</a>.</p>
 <p>Detaches a new self-contained root from a run and starts it.</p>
 <p>Without <code>--at</code>, the root is detached at the current point. The copy includes
-everything the root still owns, which makes it substantially slower than fork
-<code>--rebase</code>; use it to leave the origin tree behind.</p>
-<p>The new root is named for the run it copied and the point, since a root has no
-tree to be qualified by; a second copy of one point suffixes rather than
-refusing.</p>
+everything the root still owns and shares nothing with the origin tree. It is
+slower than fork <code>--rebase</code>.</p>
+<p>The new root is named for the run it copied and the point. A second copy of the
+same point gets a suffix.</p>
 <p>The new root keeps the run options of the run it copied; <code>--daemon</code>,
 <code>--single-step</code>, <code>--limit</code> and <code>--backstop-limit</code> replace them, and the root
 keeps those instead. Its machine runs on the least-loaded host CPU unless
@@ -3416,16 +3408,14 @@ without switching is fork.</p>
 </tbody></table>
 <h2 id="machine-rewind"><a href="#machine-rewind" class="headerlink" title="machine rewind"></a>machine rewind</h2><p>Put a run back at a point, discarding the tail. See <a href="#Moving-around">Moving around</a>.</p>
 <p>Puts a run back at a point and discards what came after it.</p>
-<p>The run keeps its id and its name; only its tail is gone, which is what makes
-this the way to take a replay again.</p>
-<p>The point is required and is any entry from <code>#0</code> to the tip, named as the other
-verbs name one: by entry id after <code>#</code>, by checkpoint name after ^, or by machine
-time. It is landed on exactly and becomes a checkpoint. The tip changes nothing
-unless a replay diverged there.</p>
-<p>A point before the run was forked moves the run back along the line it came
-from, which replay then follows again. A run with a branch forked after the
-point is refused, since that branch’s line claims entries that would no longer
-exist.</p>
+<p>The run keeps its id and its name. The entries, checkpoints and console output
+after the point are discarded.</p>
+<p>The point is required and is any entry from <code>#0</code> to the tip: an entry id after
+<code>#</code>, a checkpoint name after ^, or a machine time. The run lands on it exactly,
+and the point becomes a checkpoint. Rewinding to the tip changes nothing unless
+a replay diverged there.</p>
+<p>A point before the run was forked moves the run back along the line it was
+forked from. A run with a branch forked after the point is refused.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine rewind &lt;run&gt; to &lt;point&gt;</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3507,22 +3497,20 @@ at or before it and replaying the difference.</p>
 </tbody></table>
 <h2 id="machine-replay"><a href="#machine-replay" class="headerlink" title="machine replay"></a>machine replay</h2><p>Replay parent entries. See <a href="#Replay">Replay</a>.</p>
 <p>Replays recorded entries from the parent lineage.</p>
-<p>Name a line to follow it instead of the parent’s. Windows are half open, so a
-fork at an entry leaves that entry with the parent and starts the child at the
-next one; two runs forked at the same point are siblings, and a sibling’s future
-is not the parent’s to give. The parent’s window ends at the fork, so replaying
-it there reports no forward entries.</p>
-<p>Naming a run walks the line that leads to it, hop by hop; the hops belong to
-that line rather than to this run, so the bound is the tree and not the lineage.
-A wrong line inside the tree is not refused, because replay is strict and
-diverges on the first entry that does not reproduce.</p>
+<p>Without a line, the parent’s entries are replayed. A fork at an entry leaves
+that entry with the parent and starts the branch at the next one, so the
+parent’s entries end at the fork. Replaying past them reports no forward
+entries.</p>
+<p>Naming a line replays the entries that lead to that run, across every fork on
+the way. The run must be in the same tree. A line that is not this run’s own is
+not refused; the replay diverges at the first entry that does not reproduce.</p>
 <p>An entry that diverges is replayed again from the newest checkpoint before it,
 twice at most, and not again once it diverges the same way twice. An entry the
 host interrupted is replayed again the same way and is not a divergence. Use
 <code>--retry</code> to set how many retries; <code>--retry</code> 0 replays each entry once.</p>
 <p>The replay aims its interrupt short of each recorded stop by the machine’s
 default skid, so an interrupt that skids less still lands in time. Use <code>--skid</code>
-to aim closer, which makes a miss likely, to test what follows one.</p>
+to aim closer. A smaller skid makes a miss more likely.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3567,8 +3555,8 @@ to aim closer, which makes a miss likely, to test what follows one.</p>
 </tbody></table>
 <h2 id="machine-play"><a href="#machine-play" class="headerlink" title="machine play"></a>machine play</h2><p>Play entries from a run log. See <a href="#Replay">Replay</a>.</p>
 <p>Scripted playback from a run’s log. No divergence checking.</p>
-<p>The source must be in this run’s tree, the same bound replay takes. Divergence
-is not checked here, so a wrong source is played rather than refused.</p>
+<p>The source must be in this run’s tree. Divergence is not checked, so a source
+that is not this run’s own line is played and not refused.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type ...]] run [source]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3610,10 +3598,9 @@ is not checked here, so a wrong source is played rather than refused.</p>
 <h2 id="machine-diff"><a href="#machine-diff" class="headerlink" title="machine diff"></a>machine diff</h2><p>Show replay divergence details. See <a href="#Replay">Replay</a>.</p>
 <p>Compares a run log entry against another.</p>
 <p>With no second operand the entry is compared against the run it was replayed
-from, which it names itself, and the answer is a convergence check. Naming a run
-compares against that run instead, at its own entry when one is given as
-other:m; that is a comparison of two recordings, so a difference means they
-differ and says nothing about determinism.</p>
+from, and the answer says whether the replay converged. Naming a run compares
+against that run, at its own entry when one is given as other:m. A difference
+between two recordings says that they differ, not that a replay diverged.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine diff [-h] [--show sections] [--entry n] [--context n] run [other[:m]]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3712,9 +3699,9 @@ Three are STATES, a partition: on while the thread is on cpu in its own code, at
 CPL 3, which is where a forced decision can land between two of its own
 instructions; kernel while that thread is on cpu in the kernel; off while it is
 not the task on cpu at all.</p>
-<p>A path or cgroup subject means the PROCESS, and tgid&#x3D;N means the process for
-exit and any of its threads for exec, because a process starts once and grows
-many times. machine focus names the task that stopped the wait.</p>
+<p>A path or cgroup subject means the process. tgid&#x3D;N means the process for exit
+and any of its threads for exec. machine focus names the task that stopped the
+wait.</p>
 <p>Named runs must be in the current session. Use <code>--all</code> to wait for every run in
 it.</p>
 <p>Use <code>--timeout</code> before the command. The default is no limit; 0 checks once.</p>
@@ -5564,9 +5551,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791086041316"></script>
-<script src="/js/machine-hero-type.js?v=1791086041316"></script>
-<script src="/js/download-platforms.js?v=1791086041316"></script>
+<script src="/js/index-code-type.js?v=1791086371267"></script>
+<script src="/js/machine-hero-type.js?v=1791086371267"></script>
+<script src="/js/download-platforms.js?v=1791086371267"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
