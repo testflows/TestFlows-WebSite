@@ -80,6 +80,74 @@ console.log("hello, world")
 machine disks build --from node:22 --add hello.js hello-node -- node hello.js
 ```
 
+### ClickHouse queries
+
+The ClickHouse image has `clickhouse local`, which runs SQL with no server.
+Save this as `queries.sql`.
+
+```sql
+CREATE TABLE orders (id UInt32, customer String, amount UInt32) ENGINE = Memory;
+INSERT INTO orders VALUES (1, 'ada', 30), (2, 'grace', 45), (3, 'ada', 25);
+SELECT customer, sum(amount) AS total FROM orders GROUP BY customer ORDER BY customer;
+```
+
+```bash
+machine disks build --from clickhouse/clickhouse-server:24.8 --add queries.sql \
+  --entrypoint clickhouse ch-sql -- local --queries-file queries.sql
+```
+
+The machine's console shows the result, and the machine ends when the queries
+do.
+
+```
+app-1  | ada	55
+app-1  | grace	45
+app-1 exited with code 0
+```
+
+### PostgreSQL queries
+
+PostgreSQL has no mode without a server, so a script starts one in the
+container, runs the queries, and exits. Save this as `run.sh`.
+
+```bash
+#!/bin/sh
+set -e
+export PGDATA=/tmp/pgdata
+gosu postgres initdb --auth=trust > /dev/null
+gosu postgres pg_ctl -o "-c listen_addresses=''" -w start > /dev/null
+gosu postgres psql -f queries.sql
+```
+
+The image runs as root and PostgreSQL refuses to, so each command goes through
+`gosu postgres`, which the image has. The server listens on its Unix socket
+only. Save the queries as `queries.sql`.
+
+```sql
+CREATE TABLE orders (id int, customer text, amount numeric);
+INSERT INTO orders VALUES (1, 'ada', 30), (2, 'grace', 45), (3, 'ada', 25);
+SELECT customer, sum(amount) AS total FROM orders GROUP BY customer ORDER BY customer;
+```
+
+```bash
+machine disks build --from postgres:17 --add run.sh --add queries.sql \
+  --entrypoint sh pg-sql -- run.sh
+```
+
+```
+app-1  | CREATE TABLE
+app-1  | INSERT 0 3
+app-1  |  customer | total
+app-1  | ----------+-------
+app-1  |  ada      |    55
+app-1  |  grace    |    45
+app-1  | (2 rows)
+app-1 exited with code 0
+```
+
+Both ran in a machine with 1024MB of memory. A server that other services
+connect to is a [Compose project](disks.md#compose-projects).
+
 ### Where added files go
 
 `--add` puts a file or a directory in the image, as one more layer on top of
