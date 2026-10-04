@@ -8,7 +8,8 @@ it exactly one source.
 | Source | What it takes |
 |---|---|
 | `--binary path` | a static x86_64 executable, wrapped in a `scratch` image |
-| `--image ref` | a Docker image, as a save tar or a name in your local Docker |
+| `--from ref` | a public image, by name, with the files you add to it |
+| `--image ref` | a Docker image of your own, as a save tar or a name in your local Docker |
 | `--compose dir` | a Compose project directory and the images its services name |
 
 Everything a machine runs runs in Docker Compose, inside the machine. A
@@ -22,11 +23,13 @@ runs that image as its one service. `machine` writes this image itself, so
 
 ## Docker and Compose
 
-An image needs [Docker](https://www.docker.com/). A Compose project also needs
-[Docker Compose](https://docs.docker.com/compose/). [`machine disks build`](commands.md#machine-disks-build)
-`--binary` wraps a static executable and nothing else, so a program you compile
-does not need either. The executable has to be self-contained. The image has
-no loader and no libraries, so a dynamically linked program cannot run.
+An image of your own needs [Docker](https://www.docker.com/). A Compose project
+also needs [Docker Compose](https://docs.docker.com/compose/). Two sources need
+neither. [`machine disks build`](commands.md#machine-disks-build) `--binary`
+wraps a static executable and nothing else, so a program you compile needs no
+Docker. The executable has to be self-contained. The image has no loader and no
+libraries, so a dynamically linked program cannot run. `--from` names a public
+image, and the build pulls it for you.
 
 ```bash
 machine disks build --image myapp:latest app
@@ -45,7 +48,12 @@ machine disks build --binary ./data-race race -- 3
 ## When the program is not static
 
 A program that is not a static executable needs an image that already contains
-what it runs. The same approach works for anything that needs its own runtime.
+what it runs: an interpreter, a runtime, its libraries. Public images have
+those, so name one with `--from` and put your files in it with `--add`. It
+reads like a Dockerfile, `FROM` then `ADD` then the command, and you need no
+Docker for it. The build pulls the image itself, so only your files are
+uploaded.
+
 A complex application, several services together, is a [Compose project](disks.md#compose-projects).
 
 ### Python program
@@ -56,15 +64,8 @@ Save this as `hello.py`.
 print("hello, world")
 ```
 
-```dockerfile
-FROM python:3.12
-COPY hello.py /
-CMD ["python3", "/hello.py"]
-```
-
 ```bash
-docker build --platform linux/amd64 -t hello-py:latest .
-machine disks build --image hello-py:latest hello-py
+machine disks build --from python:3.12 --add hello.py hello-py -- python hello.py
 ```
 
 ### Node.js program
@@ -75,16 +76,39 @@ Save this as `hello.js`.
 console.log("hello, world")
 ```
 
-```dockerfile
-FROM node:22
-COPY hello.js /
-CMD ["node", "/hello.js"]
+```bash
+machine disks build --from node:22 --add hello.js hello-node -- node hello.js
 ```
 
+### Where added files go
+
+`--add` puts a file or a directory in the image, as one more layer on top of
+the public one. You can repeat it.
+
+| You write | It lands at |
+|---|---|
+| `--add hello.py` | the image's working directory, as `hello.py` |
+| `--add conf` | the working directory, as the directory `conf` |
+| `--add hello.py:/app/` | `/app/hello.py` |
+| `--add hello.py:/app/main.py` | `/app/main.py` |
+
+A script that was executable still is. `--add` works with `--binary` too, for
+a program that reads a file beside it.
+
+The image is the one the name pointed at when you ran the build. The build
+records its digest and pulls exactly that, so a tag that moves later does not
+change your disk.
+
+`--from` takes public images only. For a private image, or one you build
+yourself, use `--image`:
+
 ```bash
-docker build --platform linux/amd64 -t hello-node:latest .
-machine disks build --image hello-node:latest hello-node
+docker build --platform linux/amd64 -t myapp:latest .
+machine disks build --image myapp:latest app
 ```
+
+An image that needs environment variables or more than one service, such as a
+database server with a client, is a [Compose project](disks.md#compose-projects).
 
 ## Compose projects
 

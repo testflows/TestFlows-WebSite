@@ -1926,18 +1926,26 @@ Build a disk. See [Disks](disks.md).
 
 Builds a disk from a binary, an image, or a Compose project.
 
-Exactly one source: `--binary` wraps a static executable in an image built
-around it, `--image` takes a Docker image as a save tar or a name in the local
-Docker, and `--compose` takes a project directory and the images its services
-name. A binary or an image runs as one container; a project runs every service
-in it. Use `--entrypoint` to set the executable, and pass arguments after `--`.
+Exactly one source. `--binary` wraps a static executable in an image built
+around it. `--from` names a public image, which the build pulls; no Docker is
+needed. `--image` takes a Docker image as a save tar or a name in the local
+Docker. `--compose` takes a project directory and the images its services name.
+
+A binary or an image runs as one container. Use `--entrypoint` to set the
+executable, and pass arguments after `--`. A project runs every service in it
+and takes neither.
+
+With `--from` or `--binary`, `--add` puts a file or a directory in the image, as
+one more layer. Without a destination the path lands in the image's working
+directory under its own name; path:dest names another place, and a dest ending
+in / is a directory.
 
 The name defaults to what the source is called, and the size to what the pack
 holds loaded plus a gigabyte, rounded up to a whole GB. Use `--dry-run` to see
 those numbers without building anything.
 
 ```
-usage: machine disks build [-h] (--binary path | --image ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--label name=value] [name] [-- args ...]
+usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--add path[:dest]] [--label name=value] [name] [-- args ...]
 ```
 
 | Argument | Does |
@@ -1949,10 +1957,12 @@ usage: machine disks build [-h] (--binary path | --image ref | --compose dir) [-
 |---|---|
 | `--binary path` | Static x86_64 executable to wrap |
 | `--image ref` | Docker image, a save tar or a name |
+| `--from ref` | Public image, pulled by the build |
 | `--compose dir` | Compose project directory |
 | `--size size` | Disk size, MB or with a K/M/G/T suffix (default: from the pack, rounded up to a GB) |
 | `--dry-run` | Report what the disk would hold and build nothing |
 | `--entrypoint path` | Executable the service runs |
+| `--add path[:dest]` | File or directory to put in the image, repeatable; dest defaults to the image's working directory |
 | `--label name=value` | Attach a label, repeatable; an empty value removes one the name carried |
 
 ### machine disks show
