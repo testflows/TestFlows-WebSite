@@ -28,6 +28,7 @@ const ERROR_COPY = {
   "account not active": "This account isn't active.",
   account_closing: "Account is closing. Finish or cancel closing first.",
   account_inactive: "This account isn't active.",
+  contact_unavailable: "The message was not sent. Try again shortly.",
   "missing bearer token": "Not signed in.",
   "invalid email": "Enter a valid email address.",
   "email not allowed": "That email isn't allowed.",

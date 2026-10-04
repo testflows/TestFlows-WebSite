@@ -1,4 +1,4 @@
-import { compactDatetime, eur } from "./format.js?v=73bd5f649db8";
+import { compactDatetime, eur } from "./format.js?v=dd819d081f9e";
 
 /**
  * @param {HTMLElement} panel

@@ -7,10 +7,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=73bd5f649db8";
-import { setStatus, showSpinner } from "../ui.js?v=73bd5f649db8";
-import { eur, titleCase } from "./format.js?v=73bd5f649db8";
-import { tierRank } from "./plans.js?v=73bd5f649db8";
+} from "../api.js?v=dd819d081f9e";
+import { setStatus, showSpinner } from "../ui.js?v=dd819d081f9e";
+import { eur, titleCase } from "./format.js?v=dd819d081f9e";
+import { tierRank } from "./plans.js?v=dd819d081f9e";
 
 /**
  * @param {string|undefined} url

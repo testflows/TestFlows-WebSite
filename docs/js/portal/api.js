@@ -13,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=73bd5f649db8";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=73bd5f649db8";
-import { setSession, clearSession } from "./session.js?v=73bd5f649db8";
+import { solve, currentBucket } from "./hashcash.js?v=dd819d081f9e";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=dd819d081f9e";
+import { setSession, clearSession } from "./session.js?v=dd819d081f9e";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -208,6 +208,20 @@ export async function signupStart(email, onPow) {
     return;
   }
   fail(resp, "Could not start sign-up.");
+}
+
+/**
+ * Send one message from the contact form. No account: the proof-of-work is
+ * what the request costs.
+ * @param {{ email: string, topic: string, company: string, message: string, trap: string }} fields
+ * @param {() => void} [onPow]
+ */
+export async function contactSend(fields, onPow) {
+  const resp = await requestPow("POST", "/contact", fields, { onPow });
+  if (resp.status === 204) {
+    return;
+  }
+  fail(resp, "The message was not sent. Try again shortly.");
 }
 
 /** @param {string} email @param {() => void} [onPow] */
