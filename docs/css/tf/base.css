@@ -6,6 +6,9 @@ html {
     background-color: var(--tf-bg);
     /* Keep layout width stable when overflow appears (fixed navbar won't jump). */
     scrollbar-gutter: stable;
+    /* A link to a heading, or a heading's own anchor, scrolls it to just below the fixed navigation instead of
+       under it, so the title of the section shows. */
+    scroll-padding-top: calc(var(--tf-nav-height) + 1rem);
 }
 
 html,
