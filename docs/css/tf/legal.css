@@ -132,7 +132,9 @@
 
 .legal-main a:hover,
 .legal-main a:focus {
-    color: var(--tf-text-strong);
+    color: var(--tf-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
 }
 
 .legal-main h2 {

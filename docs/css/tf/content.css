@@ -108,9 +108,13 @@ blockquote::-webkit-scrollbar {
     color: var(--tf-accent);
 }
 
+/* A link keeps its colour when it is hovered, focused or just clicked (a clicked link keeps focus), and gains an
+   underline, so it never turns into the colour of the text around it. */
 .handbook a:hover,
 .handbook a:focus {
-    color: var(--tf-text-strong);
+    color: var(--tf-accent);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
 }
 
 .handbook blockquote {
