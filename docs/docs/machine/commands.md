@@ -1123,7 +1123,7 @@ This one clause is the CLI. More than one is a plan file: machine plan <run>
 <file>, then drive with plain run.
 
 ```
-usage: machine run [-h] [--limit span] [--backstop-limit n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
                    [--auto-checkpoints n] [--mode list] [--fast span] [--step span] [--step-into span] [--vtime-rate span] [--vtime-add span] [--task-sched choices] [--task-slice choices] [--task-int choices] [--when predicate]
                    run
 ```
@@ -1136,6 +1136,7 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--strategy name] [-
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
+| `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
@@ -1224,7 +1225,7 @@ not here. The plan applies to this command's run only; a later run without it
 runs without the plan.
 
 ```
-usage: machine plan [-h] [--limit span] [--backstop-limit n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
                     [--auto-checkpoints n]
                     run file
 ```
@@ -1238,6 +1239,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--strategy name] [
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
+| `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
@@ -1472,12 +1474,16 @@ it there reports no forward entries. Naming a run walks the line that leads to
 it, hop by hop; the hops belong to that line rather than to this run, so the
 bound is the tree and not the lineage. A wrong line inside the tree is not
 refused, because replay is strict and diverges on the first entry that does not
-reproduce. An entry that diverges is replayed again from the newest checkpoint
-before it, twice at most, and not again once it diverges the same way twice. Use
-`--retry` to set how many retries; `--retry` 0 replays each entry once. The
-replay aims its interrupt short of each recorded stop by the machine's default
-skid, so an interrupt that skids less still lands in time; use `--skid` to aim
-closer, which makes a miss likely, to test what follows one.
+reproduce.
+
+An entry that diverges is replayed again from the newest checkpoint before it,
+twice at most, and not again once it diverges the same way twice. An entry the
+host interrupted is replayed again the same way and is not a divergence. Use
+`--retry` to set how many retries; `--retry` 0 replays each entry once.
+
+The replay aims its interrupt short of each recorded stop by the machine's
+default skid, so an interrupt that skids less still lands in time. Use `--skid`
+to aim closer, which makes a miss likely, to test what follows one.
 
 ```
 usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
@@ -1492,7 +1498,7 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 |---|---|
 | `--to n` | Replay to entry n, defaulting to the end of the line |
 | `--trace` | Trace each iteration one by one |
-| `--retry n` | Retries for an entry that diverges, default 2; 0 does not retry |
+| `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--skid n` | Aim the interrupt n instructions short of each recorded stop |
 
 ## machine play

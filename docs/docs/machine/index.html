@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791085784748" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791085784749" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791067133417" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791085784749" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -809,6 +809,14 @@ there, the command exits with status 3.</p>
 under <a href="#Steering-programs">Steering programs</a>.</p>
 <p><code>--iters</code> limits how many iterations a drive may spend, and the global
 <code>--timeout</code> limits how long you are willing to wait. Whichever hits first wins.</p>
+<p>Now and then the computer running Machine takes a firmware interrupt in the
+middle of an entry, which makes that entry’s instruction and branch counts
+unusable. Machine does not record such an entry. It goes back to the entry
+before, checkpoints there and records the entry again, so the recording stays
+one a replay can follow. You see nothing except a short pause. <code>--retry</code> sets
+how many more times one entry is tried, 2 by default. If they are all
+interrupted the run stops with <code>Host interrupted the run at entry N. It is not recorded.</code> and the <a href="#machine-rewind"><code>machine rewind</code></a> command that puts the run back at the
+entry before.</p>
 <h2 id="Trying-different-schedules"><a href="#Trying-different-schedules" class="headerlink" title="Trying different schedules"></a>Trying different schedules</h2><p>A program that uses threads can behave differently depending on how they
 interleave. Machine can draw how long each stretch of execution lasts, so every
 run explores a different interleaving, and <code>--seed</code> makes those draws
@@ -1017,6 +1025,13 @@ the run has <strong>diverged</strong>. Before giving up on it, Machine replays t
 again from the nearest checkpoint before it, twice by default. Use <code>--retry</code>
 to change that, or <code>--retry 0</code> to try each entry once. <code>--to</code> stops at a given
 entry instead of the end.</p>
+<p>The host can interrupt an entry too. A firmware interrupt on the computer
+running Machine makes one entry’s instruction and branch counts unusable. That
+says nothing about your run, so it is not a divergence. Replay prints
+<code>Interrupted: entry N, crossing 1: host SMI</code>, goes back to the nearest
+checkpoint before the entry and replays it again, counted against the same
+<code>--retry</code>. A recording does the same on its own, see
+<a href="#Driving-it">Driving it</a>.</p>
 <p>If a run does diverge, <a href="#machine-diff"><code>machine diff</code></a> shows how.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine diff app/try-1</span><br><span class="line">machine diff app/try-1 --entry 5000 --show regs,stack</span><br></pre></td></tr></table></figure>
 
@@ -2897,7 +2912,7 @@ is gone. <code>--iters</code> then counts dispatches the clause applied to. <cod
 on, kernel and off: a state, not an edge.</p>
 <p>This one clause is the CLI. More than one is a plan file: machine plan <run>
 <file>, then drive with plain run.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine run [-h] [--limit span] [--backstop-limit n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]</span><br><span class="line">                   [--auto-checkpoints n] [--mode list] [--fast span] [--step span] [--step-into span] [--vtime-rate span] [--vtime-add span] [--task-sched choices] [--task-slice choices] [--task-int choices] [--when predicate]</span><br><span class="line">                   run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]</span><br><span class="line">                   [--auto-checkpoints n] [--mode list] [--fast span] [--step span] [--step-into span] [--vtime-rate span] [--vtime-add span] [--task-sched choices] [--task-slice choices] [--task-int choices] [--when predicate]</span><br><span class="line">                   run</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -2925,6 +2940,10 @@ on, kernel and off: a state, not an edge.</p>
 <tr>
 <td><code>--backstop-limit n</code></td>
 <td>Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0)</td>
+</tr>
+<tr>
+<td><code>--retry n</code></td>
+<td>Retries for an entry the host interrupted, default 2; 0 does not retry</td>
 </tr>
 <tr>
 <td><code>--strategy name</code></td>
@@ -3068,7 +3087,7 @@ free. <code>--seed</code> seeds the draw strategies, and <code>--until</code>, <
 bound and steer the run as on run. The clause axes and when belong in the file,
 not here. The plan applies to this command’s run only; a later run without it
 runs without the plan.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine plan [-h] [--limit span] [--backstop-limit n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]</span><br><span class="line">                    [--auto-checkpoints n]</span><br><span class="line">                    run file</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate] [--rip addr] [--rcx addr] [--target-ic n] [--irqblk] [--rdtsc-exit] [--no-idle-skip]</span><br><span class="line">                    [--auto-checkpoints n]</span><br><span class="line">                    run file</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -3100,6 +3119,10 @@ runs without the plan.</p>
 <tr>
 <td><code>--backstop-limit n</code></td>
 <td>Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0)</td>
+</tr>
+<tr>
+<td><code>--retry n</code></td>
+<td>Retries for an entry the host interrupted, default 2; 0 does not retry</td>
 </tr>
 <tr>
 <td><code>--strategy name</code></td>
@@ -3486,12 +3509,14 @@ it there reports no forward entries. Naming a run walks the line that leads to
 it, hop by hop; the hops belong to that line rather than to this run, so the
 bound is the tree and not the lineage. A wrong line inside the tree is not
 refused, because replay is strict and diverges on the first entry that does not
-reproduce. An entry that diverges is replayed again from the newest checkpoint
-before it, twice at most, and not again once it diverges the same way twice. Use
-<code>--retry</code> to set how many retries; <code>--retry</code> 0 replays each entry once. The
-replay aims its interrupt short of each recorded stop by the machine’s default
-skid, so an interrupt that skids less still lands in time; use <code>--skid</code> to aim
-closer, which makes a miss likely, to test what follows one.</p>
+reproduce.</p>
+<p>An entry that diverges is replayed again from the newest checkpoint before it,
+twice at most, and not again once it diverges the same way twice. An entry the
+host interrupted is replayed again the same way and is not a divergence. Use
+<code>--retry</code> to set how many retries; <code>--retry</code> 0 replays each entry once.</p>
+<p>The replay aims its interrupt short of each recorded stop by the machine’s
+default skid, so an interrupt that skids less still lands in time. Use <code>--skid</code>
+to aim closer, which makes a miss likely, to test what follows one.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3527,7 +3552,7 @@ closer, which makes a miss likely, to test what follows one.</p>
 </tr>
 <tr>
 <td><code>--retry n</code></td>
-<td>Retries for an entry that diverges, default 2; 0 does not retry</td>
+<td>Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry</td>
 </tr>
 <tr>
 <td><code>--skid n</code></td>
@@ -5533,9 +5558,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791067133418"></script>
-<script src="/js/machine-hero-type.js?v=1791067133418"></script>
-<script src="/js/download-platforms.js?v=1791067133418"></script>
+<script src="/js/index-code-type.js?v=1791085784749"></script>
+<script src="/js/machine-hero-type.js?v=1791085784749"></script>
+<script src="/js/download-platforms.js?v=1791085784749"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
