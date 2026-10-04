@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791128249095" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791128249096" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791125901332" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791128249096" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -623,20 +623,31 @@ Save this as <code>queries.sql</code>.</p>
 do.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">app-1  | ada	55</span><br><span class="line">app-1  | grace	45</span><br><span class="line">app-1 exited with code 0</span><br></pre></td></tr></table></figure>
 
-<h3 id="PostgreSQL-queries"><a href="#PostgreSQL-queries" class="headerlink" title="PostgreSQL queries"></a>PostgreSQL queries</h3><p>PostgreSQL has no mode without a server, so a script starts one in the
-container, runs the queries, and exits. Save this as <code>run.sh</code>.</p>
+<h3 id="PostgreSQL-queries"><a href="#PostgreSQL-queries" class="headerlink" title="PostgreSQL queries"></a>PostgreSQL queries</h3><p>The PostgreSQL image starts a server, and it needs a password before it will.
+<code>--env</code> sets a variable in the service’s environment. The image runs every
+<code>.sql</code> file in <code>/docker-entrypoint-initdb.d</code> when the server first starts, so
+add the queries there. Save them as <code>queries.sql</code>.</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (id <span class="type">int</span>, customer text, amount <span class="type">numeric</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> orders <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;ada&#x27;</span>, <span class="number">30</span>), (<span class="number">2</span>, <span class="string">&#x27;grace&#x27;</span>, <span class="number">45</span>), (<span class="number">3</span>, <span class="string">&#x27;ada&#x27;</span>, <span class="number">25</span>);</span><br><span class="line"><span class="keyword">SELECT</span> customer, <span class="built_in">sum</span>(amount) <span class="keyword">AS</span> total <span class="keyword">FROM</span> orders <span class="keyword">GROUP</span> <span class="keyword">BY</span> customer <span class="keyword">ORDER</span> <span class="keyword">BY</span> customer;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from postgres:17 --<span class="built_in">env</span> POSTGRES_PASSWORD=secret \</span><br><span class="line">  --add queries.sql:/docker-entrypoint-initdb.d/ pg</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app-1  | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/queries.sql</span><br><span class="line">app-1  | CREATE TABLE</span><br><span class="line">app-1  | INSERT 0 3</span><br><span class="line">app-1  |  customer | total</span><br><span class="line">app-1  | ----------+-------</span><br><span class="line">app-1  |  ada      |    55</span><br><span class="line">app-1  |  grace    |    45</span><br><span class="line">app-1  | (2 rows)</span><br><span class="line">app-1  | 2026-03-01 00:00:50.435 UTC [1] LOG:  database system is ready to accept connections</span><br></pre></td></tr></table></figure>
+
+<p>The server keeps running after the queries, so this machine does not end by
+itself. The disk holds each <code>--env</code> value as written, and a value is not
+changed on the way: a <code>$</code> in it arrives as a <code>$</code>.</p>
+<p>To run the queries and exit, start the server from a script. Save this as
+<code>run.sh</code>.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="built_in">set</span> -e</span><br><span class="line"><span class="built_in">export</span> PGDATA=/tmp/pgdata</span><br><span class="line">gosu postgres initdb --auth=trust &gt; /dev/null</span><br><span class="line">gosu postgres pg_ctl -o <span class="string">&quot;-c listen_addresses=&#x27;&#x27;&quot;</span> -w start &gt; /dev/null</span><br><span class="line">gosu postgres psql -f queries.sql</span><br></pre></td></tr></table></figure>
 
 <p>The image runs as root and PostgreSQL refuses to, so each command goes through
 <code>gosu postgres</code>, which the image has. The server listens on its Unix socket
-only. Save the queries as <code>queries.sql</code>.</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> orders (id <span class="type">int</span>, customer text, amount <span class="type">numeric</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> orders <span class="keyword">VALUES</span> (<span class="number">1</span>, <span class="string">&#x27;ada&#x27;</span>, <span class="number">30</span>), (<span class="number">2</span>, <span class="string">&#x27;grace&#x27;</span>, <span class="number">45</span>), (<span class="number">3</span>, <span class="string">&#x27;ada&#x27;</span>, <span class="number">25</span>);</span><br><span class="line"><span class="keyword">SELECT</span> customer, <span class="built_in">sum</span>(amount) <span class="keyword">AS</span> total <span class="keyword">FROM</span> orders <span class="keyword">GROUP</span> <span class="keyword">BY</span> customer <span class="keyword">ORDER</span> <span class="keyword">BY</span> customer;</span><br></pre></td></tr></table></figure>
-
+only.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from postgres:17 --add run.sh --add queries.sql \</span><br><span class="line">  --entrypoint sh pg-sql -- run.sh</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">app-1  | CREATE TABLE</span><br><span class="line">app-1  | INSERT 0 3</span><br><span class="line">app-1  |  customer | total</span><br><span class="line">app-1  | ----------+-------</span><br><span class="line">app-1  |  ada      |    55</span><br><span class="line">app-1  |  grace    |    45</span><br><span class="line">app-1  | (2 rows)</span><br><span class="line">app-1 exited with code 0</span><br></pre></td></tr></table></figure>
 
-<p>Both ran in a machine with 1024MB of memory. A server that other services
+<p>All three ran in a machine with 1024MB of memory. A server that other services
 connect to is a <a href="#Compose-projects">Compose project</a>.</p>
 <h3 id="Where-added-files-go"><a href="#Where-added-files-go" class="headerlink" title="Where added files go"></a>Where added files go</h3><p><code>--add</code> puts a file or a directory in the image, as one more layer on top of
 the public one. You can repeat it.</p>
@@ -688,8 +699,8 @@ change your disk. You can name a digest yourself, as <code>python@sha256:…</co
 image, a larger one, or one you build yourself, use <code>--image</code>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">docker build --platform linux/amd64 -t myapp:latest .</span><br><span class="line">machine disks build --image myapp:latest app</span><br></pre></td></tr></table></figure>
 
-<p>An image that needs environment variables or more than one service, such as a
-database server with a client, is a <a href="#Compose-projects">Compose project</a>.</p>
+<p>An image that needs more than one service, such as a database server with a
+client, is a <a href="#Compose-projects">Compose project</a>.</p>
 <h2 id="Compose-projects"><a href="#Compose-projects" class="headerlink" title="Compose projects"></a>Compose projects</h2><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples">Machine-Examples</a> has Compose
 environments under <code>compose/</code>. Clone it, pull each image for <code>linux/amd64</code>
 into the local Docker, then build the disk from the project directory.
@@ -4233,8 +4244,9 @@ around it. <code>--from</code> names a public image, which the build pulls; no D
 needed. <code>--image</code> takes a Docker image as a save tar or a name in the local
 Docker. <code>--compose</code> takes a project directory and the images its services name.</p>
 <p>A binary or an image runs as one container. Use <code>--entrypoint</code> to set the
-executable, and pass arguments after <code>--</code>. A project runs every service in it
-and takes neither.</p>
+executable, <code>--env</code> to set a variable in its environment, and pass arguments
+after <code>--</code>. A project runs every service in it and takes none of the three. The
+disk holds each <code>--env</code> value as written.</p>
 <p>With <code>--from</code> or <code>--binary</code>, <code>--add</code> puts a file or a directory in the image, as
 one more layer. Without a destination the path lands in the image’s working
 directory under its own name; path:dest names another place, and a dest ending
@@ -4242,7 +4254,7 @@ in &#x2F; is a directory.</p>
 <p>The name defaults to what the source is called, and the size to what the pack
 holds loaded plus a gigabyte, rounded up to a whole GB. Use <code>--dry-run</code> to see
 those numbers without building anything.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--add path[:dest]] [--label name=value] [name] [-- args ...]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--add path[:dest]] [--env name=value] [--label name=value] [name] [-- args ...]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -4298,6 +4310,10 @@ those numbers without building anything.</p>
 <tr>
 <td><code>--add path[:dest]</code></td>
 <td>File or directory to put in the image, repeatable; dest defaults to the image’s working directory</td>
+</tr>
+<tr>
+<td><code>--env name=value</code></td>
+<td>Environment variable the service runs with, repeatable</td>
 </tr>
 <tr>
 <td><code>--label name=value</code></td>
@@ -5648,9 +5664,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791125901332"></script>
-<script src="/js/machine-hero-type.js?v=1791125901332"></script>
-<script src="/js/download-platforms.js?v=1791125901332"></script>
+<script src="/js/index-code-type.js?v=1791128249096"></script>
+<script src="/js/machine-hero-type.js?v=1791128249096"></script>
+<script src="/js/download-platforms.js?v=1791128249096"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

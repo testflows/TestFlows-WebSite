@@ -1932,8 +1932,9 @@ needed. `--image` takes a Docker image as a save tar or a name in the local
 Docker. `--compose` takes a project directory and the images its services name.
 
 A binary or an image runs as one container. Use `--entrypoint` to set the
-executable, and pass arguments after `--`. A project runs every service in it
-and takes neither.
+executable, `--env` to set a variable in its environment, and pass arguments
+after `--`. A project runs every service in it and takes none of the three. The
+disk holds each `--env` value as written.
 
 With `--from` or `--binary`, `--add` puts a file or a directory in the image, as
 one more layer. Without a destination the path lands in the image's working
@@ -1945,7 +1946,7 @@ holds loaded plus a gigabyte, rounded up to a whole GB. Use `--dry-run` to see
 those numbers without building anything.
 
 ```
-usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--add path[:dest]] [--label name=value] [name] [-- args ...]
+usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--add path[:dest]] [--env name=value] [--label name=value] [name] [-- args ...]
 ```
 
 | Argument | Does |
@@ -1963,6 +1964,7 @@ usage: machine disks build [-h] (--binary path | --image ref | --from ref | --co
 | `--dry-run` | Report what the disk would hold and build nothing |
 | `--entrypoint path` | Executable the service runs |
 | `--add path[:dest]` | File or directory to put in the image, repeatable; dest defaults to the image's working directory |
+| `--env name=value` | Environment variable the service runs with, repeatable |
 | `--label name=value` | Attach a label, repeatable; an empty value removes one the name carried |
 
 ### machine disks show

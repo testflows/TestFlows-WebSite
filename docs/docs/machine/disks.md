@@ -107,8 +107,40 @@ app-1 exited with code 0
 
 ### PostgreSQL queries
 
-PostgreSQL has no mode without a server, so a script starts one in the
-container, runs the queries, and exits. Save this as `run.sh`.
+The PostgreSQL image starts a server, and it needs a password before it will.
+`--env` sets a variable in the service's environment. The image runs every
+`.sql` file in `/docker-entrypoint-initdb.d` when the server first starts, so
+add the queries there. Save them as `queries.sql`.
+
+```sql
+CREATE TABLE orders (id int, customer text, amount numeric);
+INSERT INTO orders VALUES (1, 'ada', 30), (2, 'grace', 45), (3, 'ada', 25);
+SELECT customer, sum(amount) AS total FROM orders GROUP BY customer ORDER BY customer;
+```
+
+```bash
+machine disks build --from postgres:17 --env POSTGRES_PASSWORD=secret \
+  --add queries.sql:/docker-entrypoint-initdb.d/ pg
+```
+
+```
+app-1  | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/queries.sql
+app-1  | CREATE TABLE
+app-1  | INSERT 0 3
+app-1  |  customer | total
+app-1  | ----------+-------
+app-1  |  ada      |    55
+app-1  |  grace    |    45
+app-1  | (2 rows)
+app-1  | 2026-03-01 00:00:50.435 UTC [1] LOG:  database system is ready to accept connections
+```
+
+The server keeps running after the queries, so this machine does not end by
+itself. The disk holds each `--env` value as written, and a value is not
+changed on the way: a `$` in it arrives as a `$`.
+
+To run the queries and exit, start the server from a script. Save this as
+`run.sh`.
 
 ```bash
 #!/bin/sh
@@ -121,13 +153,7 @@ gosu postgres psql -f queries.sql
 
 The image runs as root and PostgreSQL refuses to, so each command goes through
 `gosu postgres`, which the image has. The server listens on its Unix socket
-only. Save the queries as `queries.sql`.
-
-```sql
-CREATE TABLE orders (id int, customer text, amount numeric);
-INSERT INTO orders VALUES (1, 'ada', 30), (2, 'grace', 45), (3, 'ada', 25);
-SELECT customer, sum(amount) AS total FROM orders GROUP BY customer ORDER BY customer;
-```
+only.
 
 ```bash
 machine disks build --from postgres:17 --add run.sh --add queries.sql \
@@ -145,7 +171,7 @@ app-1  | (2 rows)
 app-1 exited with code 0
 ```
 
-Both ran in a machine with 1024MB of memory. A server that other services
+All three ran in a machine with 1024MB of memory. A server that other services
 connect to is a [Compose project](disks.md#compose-projects).
 
 ### Where added files go
@@ -186,8 +212,8 @@ docker build --platform linux/amd64 -t myapp:latest .
 machine disks build --image myapp:latest app
 ```
 
-An image that needs environment variables or more than one service, such as a
-database server with a client, is a [Compose project](disks.md#compose-projects).
+An image that needs more than one service, such as a database server with a
+client, is a [Compose project](disks.md#compose-projects).
 
 ## Compose projects
 
