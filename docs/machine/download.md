@@ -62,6 +62,10 @@ docker pull --platform linux/amd64 myapp:latest
 
 The docs cover Compose projects and binaries: https://testflows.com/docs/machine/disks.md
 
+## Then
+
+Create an account at https://testflows.com/machine/portal/signup/, then sign in with `machine login`. Then run `machine account provision` to set up account storage. The first session cannot be created until that is done. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
+
 ## Check the download
 
 The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of `YYYYMMDD-HHMM` (`machine --version` shows it):
@@ -135,7 +139,3 @@ machine logout
 rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.local/share/machine ~/.testflows/machine
 ```
-
-## Then
-
-Create an account at https://testflows.com/machine/portal/signup/, then sign in with `machine login`. Then run `machine account provision` to set up account storage. The first session cannot be created until that is done. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md

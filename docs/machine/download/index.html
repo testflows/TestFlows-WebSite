@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791131669969" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791129504284" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791131669969" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791129504285" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791131669969" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -242,6 +242,16 @@
 <p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
 
+<div class="download-section download-next">
+<h2>Then</h2>
+<p>Sign in with <code>machine login</code>, or create an account first. Then run <code>machine account provision</code> to set up account storage. The first session cannot be created until that is done. The docs walk through your first run.</p>
+<div class="download-actions">
+<a class="section-cta" href="/machine/portal/signup/">Create account</a>
+<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
+</div>
+</div>
+
+
 <div class="download-section download-note">
 <h2>machine-env</h2>
 <p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
@@ -294,6 +304,16 @@
 <p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
 <p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
+
+<div class="download-section download-next">
+<h2>Then</h2>
+<p>Sign in with <code>machine login</code>, or create an account first. Then run <code>machine account provision</code> to set up account storage. The first session cannot be created until that is done. The docs walk through your first run.</p>
+<div class="download-actions">
+<a class="section-cta" href="/machine/portal/signup/">Create account</a>
+<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
+</div>
+</div>
+
 
 <div class="download-section download-note">
 <h2>machine-env</h2>
@@ -358,6 +378,16 @@
 <p><strong>macOS already has a <code>machine</code> command.</strong> Use <code>machine-env</code>, below, to run this one.</p>
 </div>
 
+<div class="download-section download-next">
+<h2>Then</h2>
+<p>Sign in with <code>machine login</code>, or create an account first. Then run <code>machine account provision</code> to set up account storage. The first session cannot be created until that is done. The docs walk through your first run.</p>
+<div class="download-actions">
+<a class="section-cta" href="/machine/portal/signup/">Create account</a>
+<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
+</div>
+</div>
+
+
 <div class="download-section download-note">
 <h2>macOS has its own machine command</h2>
 <p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
@@ -418,6 +448,16 @@
 
 <p>Open your Linux distribution and follow the steps for <a href="#linux-x86_64">Linux (x64)</a>, or <a href="#linux-arm64">Linux (ARM64)</a> on Windows on ARM. Not sure which? <code>uname -m</code> prints <code>x86_64</code> or <code>aarch64</code>.</p>
 </div>
+
+<div class="download-section download-next">
+<h2>Then</h2>
+<p>Sign in with <code>machine login</code>, or create an account first. Then run <code>machine account provision</code> to set up account storage. The first session cannot be created until that is done. The docs walk through your first run.</p>
+<div class="download-actions">
+<a class="section-cta" href="/machine/portal/signup/">Create account</a>
+<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
+</div>
+</div>
+
 </div>
 
 <div class="tab-pane fade" role="tabpanel" id="platform-others" aria-labelledby="tab-others">
@@ -444,15 +484,6 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash</span><br></pre></td></tr></table></figure>
 
 <p>Set <code>MACHINE_INSTALL_DIR</code> to install somewhere other than <code>~/.local/bin</code>. <code>--no-signature</code> and <code>--no-checksum</code> skip checks; a normal install needs neither.</p>
-</div>
-
-<div class="download-section download-next">
-<h2>Then</h2>
-<p>Sign in with <code>machine login</code>, or create an account first. Then run <code>machine account provision</code> to set up account storage. The first session cannot be created until that is done. The docs walk through your first run.</p>
-<div class="download-actions">
-<a class="section-cta" href="/machine/portal/signup/">Create account</a>
-<a class="section-cta section-cta-ghost" href="/docs/machine/#Your-first-run">Your first run</a>
-</div>
 </div>
 
 </div>
@@ -525,9 +556,9 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791129504285"></script>
-<script src="/js/machine-hero-type.js?v=1791129504285"></script>
-<script src="/js/download-platforms.js?v=1791129504285"></script>
+<script src="/js/index-code-type.js?v=1791131669969"></script>
+<script src="/js/machine-hero-type.js?v=1791131669969"></script>
+<script src="/js/download-platforms.js?v=1791131669969"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
