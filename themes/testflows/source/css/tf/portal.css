@@ -1407,8 +1407,9 @@
 
 .portal-banner a:hover,
 .portal-banner a:focus {
-    color: var(--tf-text-strong);
-    text-decoration: none;
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
 }
 
 .portal-credit-cards {
