@@ -22,7 +22,7 @@ fullwidth: true
             </div>
         </header>
         <div class="contact-form-col">
-            <form class="needs-validation contact-us" novalidate onsubmit="return submitContactUs(this);">
+            <form class="needs-validation contact-us" novalidate>
                 <div class="form-fields">
                     <div class="contact-step contact-step-1">
                         <div class="contact-field">
@@ -57,20 +57,18 @@ fullwidth: true
                     <div class="contact-step contact-step-2" id="contact-step-2" hidden>
                         <div class="contact-field">
                             <label for="company">Company</label>
-                            <input type="text" class="form-control" id="company" autocomplete="organization" disabled>
+                            <input type="text" class="form-control" id="company" autocomplete="organization" maxlength="100" disabled>
                             <div class="invalid-feedback">Please enter your company</div>
                         </div>
                         <div class="contact-field">
                             <label for="usecase">How can we help?</label>
-                            <textarea class="form-control" id="usecase" rows="6" disabled placeholder="A few details about your project or question…"></textarea>
+                            <textarea class="form-control" id="usecase" rows="6" maxlength="4000" disabled placeholder="A few details about your project or question…"></textarea>
                             <div class="invalid-feedback">Please tell us briefly how we can help</div>
                         </div>
                         <div class="contact-field d-none" aria-hidden="true">
-                            <label for="title">Title</label>
-                            <input type="text" class="form-control" id="title" tabindex="-1" autocomplete="off">
+                            <label for="contact-trap">Leave this field empty</label>
+                            <input type="text" class="form-control" id="contact-trap" tabindex="-1" autocomplete="off">
                         </div>
-                        <input type="hidden" id="firstname" value="">
-                        <input type="hidden" id="lastname" value="">
                         <p class="contact-privacy">By clicking Submit, you acknowledge that Katteli Inc. will process your personal information in accordance with our <a id="contact-privacy-link" href="/legal/privacy-policy/">privacy policy</a>.</p>
                         <p class="contact-error failed-submission d-none"><span role="error-message">Something went wrong while submitting.</span> Try again, or write us at <strong>contact@testflows.com</strong>.</p>
                         <button class="btn contact-submit" id="submit" type="submit" disabled>
@@ -89,4 +87,4 @@ fullwidth: true
     </div>
 </section>
 
-<script src="/js/contact-form.js"></script>
+<script type="module" src="/js/portal/contact.js"></script>

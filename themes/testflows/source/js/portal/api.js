@@ -210,6 +210,20 @@ export async function signupStart(email, onPow) {
   fail(resp, "Could not start sign-up.");
 }
 
+/**
+ * Send one message from the contact form. No account: the proof-of-work is
+ * what the request costs.
+ * @param {{ email: string, topic: string, company: string, message: string, trap: string }} fields
+ * @param {() => void} [onPow]
+ */
+export async function contactSend(fields, onPow) {
+  const resp = await requestPow("POST", "/contact", fields, { onPow });
+  if (resp.status === 204) {
+    return;
+  }
+  fail(resp, "The message was not sent. Try again shortly.");
+}
+
 /** @param {string} email @param {() => void} [onPow] */
 export async function loginStart(email, onPow) {
   const resp = await requestPow("POST", "/login/start", { email }, { onPow });
