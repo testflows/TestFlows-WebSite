@@ -356,9 +356,8 @@ Starts an existing run.
 
 A stopped run resumes at its tip. A run that stopped past its last checkpoint
 replays its recorded tail from that checkpoint to reach the tip, and says how
-many entries it replayed; `--no-recover` refuses instead, for callers that
-expect every run saved. A branch that was created but never ran begins its first
-life in a new process, leaving its parent running.
+many entries it replayed; `--no-recover` refuses instead. A branch that was
+created but never ran starts in a new process, and its parent keeps running.
 
 The machine runs with the run's own run options; `--daemon`, `--single-step`,
 `--limit` and `--backstop-limit` replace them for this start only, and
@@ -618,11 +617,9 @@ List marks. See [Marks](checkpoints-and-branches.md#marks).
 
 Lists marks.
 
-A mark is a second name a branch earns after the fact; the generated name says
-where a branch was forked from, a mark says what it turned out to be. Marks are
-unique within a tree, which is what lets one select a branch anywhere a run is
-named, written %mark. Bare, this lists every tree's marks; name a run to list
-that run's tree. Read from the database, so no active run is required.
+A mark is a second name for a branch, unique within its tree. Written %mark, it
+names the branch anywhere a run is named. Without a run, every tree's marks are
+listed; with one, the marks of that run's tree. No running machine is needed.
 
 ```
 usage: machine marks [-h] {list,add,remove} ...
@@ -650,9 +647,8 @@ Add a mark. See [Marks](checkpoints-and-branches.md#marks).
 
 Puts a mark on a branch.
 
-Marking twice is not an error. A word already spent in that tree names the
-branch holding it rather than moving, since a mark that named two branches would
-name neither.
+Marking a branch again with the same word succeeds. A word another branch in the
+tree already holds is refused and stays with that branch.
 
 ```
 usage: machine marks add [-h] run mark
@@ -900,18 +896,16 @@ Inject an interrupt into a machine. See [Interrupts and time](steering-programs.
 
 Injects an interrupt into a machine's vCPUs.
 
-Names come from the kernel's irq_vectors.h, so preempt is 0xf5 and reschedule
-is 0xfd, which are two different reschedules: ours and the kernel's own. A
-number works everywhere a name does.
+The vector is a name from the kernel's irq_vectors.h or a number. preempt is
+0xf5, the machine's reschedule; reschedule is 0xfd, the kernel's own.
 
-The vector is not interpreted. 0xf5 reaches a reschedule only because the
-kernel wires a handler there; any other vector reaches whatever the machine has
-wired, and a vector it has not wired is a spurious interrupt. Vectors below 32
-are CPU exceptions and are refused.
+The vector is delivered as given. It reaches the handler the machine's kernel
+has installed for it, and a vector with no handler is a spurious interrupt.
+Vectors below 32 are CPU exceptions and are refused.
 
-Queued, not delivered when the command returns. The machine drains its interrupt
-queue at the next dispatch boundary, which is where the injection is recorded
-and therefore where a replay repeats it. Step first to choose that boundary.
+The interrupt is queued when the command returns. It is delivered and recorded
+at the next dispatch boundary, and a replay repeats it there. Step first to
+choose that boundary.
 
 ```
 usage: machine irq [-h] [--vcpu n] [--nmi] run [vector]
@@ -1099,11 +1093,10 @@ boot-done; halted and activity=idle do not. Use `--timeout` before the command
 to cancel the in-flight run. The default is no limit; 0 checks once without
 batching.
 
-`--iters` is an upper bound, not a count. A batch also ends whenever the program
-talks to the machine, which it does on every context switch of a focused task;
-without `--until` that ends the run, and with it the drive continues from the
-next batch. It ends too where a task reaches its own code, which is what on
-waits for, and the response reports how many iterations actually ran.
+`--iters` is an upper bound, not a count. A batch also ends at every context
+switch of a focused task and where a task reaches its own code. Without
+`--until` that ends the run; with it the drive continues from the next batch.
+The response reports how many iterations ran.
 
 An iteration is ONE vCPU dispatch, and every parameter is drawn for it: the
 mode, the limit, the task marks and the interrupt all apply to the task on that
@@ -1355,12 +1348,11 @@ Detach into a new root. See [Moving around](checkpoints-and-branches.md#moving-a
 Detaches a new self-contained root from a run and starts it.
 
 Without `--at`, the root is detached at the current point. The copy includes
-everything the root still owns, which makes it substantially slower than fork
-`--rebase`; use it to leave the origin tree behind.
+everything the root still owns and shares nothing with the origin tree. It is
+slower than fork `--rebase`.
 
-The new root is named for the run it copied and the point, since a root has no
-tree to be qualified by; a second copy of one point suffixes rather than
-refusing.
+The new root is named for the run it copied and the point. A second copy of the
+same point gets a suffix.
 
 The new root keeps the run options of the run it copied; `--daemon`,
 `--single-step`, `--limit` and `--backstop-limit` replace them, and the root
@@ -1421,18 +1413,16 @@ Put a run back at a point, discarding the tail. See [Moving around](checkpoints-
 
 Puts a run back at a point and discards what came after it.
 
-The run keeps its id and its name; only its tail is gone, which is what makes
-this the way to take a replay again.
+The run keeps its id and its name. The entries, checkpoints and console output
+after the point are discarded.
 
-The point is required and is any entry from `#0` to the tip, named as the other
-verbs name one: by entry id after `#`, by checkpoint name after ^, or by machine
-time. It is landed on exactly and becomes a checkpoint. The tip changes nothing
-unless a replay diverged there.
+The point is required and is any entry from `#0` to the tip: an entry id after
+`#`, a checkpoint name after ^, or a machine time. The run lands on it exactly,
+and the point becomes a checkpoint. Rewinding to the tip changes nothing unless
+a replay diverged there.
 
-A point before the run was forked moves the run back along the line it came
-from, which replay then follows again. A run with a branch forked after the
-point is refused, since that branch's line claims entries that would no longer
-exist.
+A point before the run was forked moves the run back along the line it was
+forked from. A run with a branch forked after the point is refused.
 
 ```
 usage: machine rewind <run> to <point>
@@ -1480,16 +1470,14 @@ Replay parent entries. See [Replay](replay.md).
 
 Replays recorded entries from the parent lineage.
 
-Name a line to follow it instead of the parent's. Windows are half open, so a
-fork at an entry leaves that entry with the parent and starts the child at the
-next one; two runs forked at the same point are siblings, and a sibling's future
-is not the parent's to give. The parent's window ends at the fork, so replaying
-it there reports no forward entries.
+Without a line, the parent's entries are replayed. A fork at an entry leaves
+that entry with the parent and starts the branch at the next one, so the
+parent's entries end at the fork. Replaying past them reports no forward
+entries.
 
-Naming a run walks the line that leads to it, hop by hop; the hops belong to
-that line rather than to this run, so the bound is the tree and not the lineage.
-A wrong line inside the tree is not refused, because replay is strict and
-diverges on the first entry that does not reproduce.
+Naming a line replays the entries that lead to that run, across every fork on
+the way. The run must be in the same tree. A line that is not this run's own is
+not refused; the replay diverges at the first entry that does not reproduce.
 
 An entry that diverges is replayed again from the newest checkpoint before it,
 twice at most, and not again once it diverges the same way twice. An entry the
@@ -1498,7 +1486,7 @@ host interrupted is replayed again the same way and is not a divergence. Use
 
 The replay aims its interrupt short of each recorded stop by the machine's
 default skid, so an interrupt that skids less still lands in time. Use `--skid`
-to aim closer, which makes a miss likely, to test what follows one.
+to aim closer. A smaller skid makes a miss more likely.
 
 ```
 usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
@@ -1522,8 +1510,8 @@ Play entries from a run log. See [Replay](replay.md).
 
 Scripted playback from a run's log. No divergence checking.
 
-The source must be in this run's tree, the same bound replay takes. Divergence
-is not checked here, so a wrong source is played rather than refused.
+The source must be in this run's tree. Divergence is not checked, so a source
+that is not this run's own line is played and not refused.
 
 ```
 usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type ...]] run [source]
@@ -1547,10 +1535,9 @@ Show replay divergence details. See [Replay](replay.md).
 Compares a run log entry against another.
 
 With no second operand the entry is compared against the run it was replayed
-from, which it names itself, and the answer is a convergence check. Naming a run
-compares against that run instead, at its own entry when one is given as
-other:m; that is a comparison of two recordings, so a difference means they
-differ and says nothing about determinism.
+from, and the answer says whether the replay converged. Naming a run compares
+against that run, at its own entry when one is given as other:m. A difference
+between two recordings says that they differ, not that a replay diverged.
 
 ```
 usage: machine diff [-h] [--show sections] [--entry n] [--context n] run [other[:m]]
@@ -1623,9 +1610,9 @@ CPL 3, which is where a forced decision can land between two of its own
 instructions; kernel while that thread is on cpu in the kernel; off while it is
 not the task on cpu at all.
 
-A path or cgroup subject means the PROCESS, and tgid=N means the process for
-exit and any of its threads for exec, because a process starts once and grows
-many times. machine focus names the task that stopped the wait.
+A path or cgroup subject means the process. tgid=N means the process for exit
+and any of its threads for exec. machine focus names the task that stopped the
+wait.
 
 Named runs must be in the current session. Use `--all` to wait for every run in
 it.
