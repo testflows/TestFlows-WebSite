@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791394407184" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791394407184" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791392764239" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791394407184" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1387,6 +1387,16 @@ address instead.</p>
 how much, and <a href="#machine-storage-prune"><code>machine storage prune</code></a> frees the space that deleted runs and
 disks left behind. <a href="#machine-storage-prune"><code>machine storage prune</code></a> <code>--status</code> shows the current or last
 prune.</p>
+<p>Your plan’s storage quota counts TOTAL: what your runs and disks hold, and the
+space deleted ones have not given back yet. <a href="#machine-account-show"><code>machine account show</code></a> shows the
+same figure. Deleting a run or a disk moves its space to PRUNABLE, which still
+counts until you prune. The figures are from the last measurement, and
+<code>machine storage --refresh</code> measures again.</p>
+<p>At the quota, a session starts no machine and creates no branch:
+<code>machine create</code>, <code>machine start</code>, <code>machine fork</code>, <code>machine go</code>,
+<code>machine detach</code>, <code>machine disks build</code> and <code>machine disks push</code> are refused.
+A machine that is already running keeps recording and saving. To get under
+the quota, delete runs or disks, stop your sessions, and prune.</p>
 <h1 id="Scripting"><a href="#Scripting" class="headerlink" title="Scripting"></a>Scripting</h1><p>Everything the client does can be done from a script.</p>
 <ul>
 <li><code>-o json</code> prints machine-readable output. <code>-o raw</code> prints text without formatting values. Put the flag before the command, like <code>machine -o json runs</code>.</li>
@@ -5736,9 +5746,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791392764240"></script>
-<script src="/js/machine-hero-type.js?v=1791392764240"></script>
-<script src="/js/download-platforms.js?v=1791392764240"></script>
+<script src="/js/index-code-type.js?v=1791394407184"></script>
+<script src="/js/machine-hero-type.js?v=1791394407184"></script>
+<script src="/js/download-platforms.js?v=1791394407184"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
