@@ -68,6 +68,9 @@ print("hello, world")
 machine disks build --from python:3.12 --add hello.py hello-py -- python hello.py
 ```
 
+It runs in a machine with the default 256MB of memory, and takes about ten
+seconds from power-on to the program's exit.
+
 ### Node.js program
 
 Save this as `hello.js`.
@@ -165,6 +168,12 @@ how you write that here.
 
 A script that was executable still is. `--add` works with `--binary` too, for
 a program that reads a file beside it.
+
+`--add` takes files, directories and links. A device, a FIFO or a socket in
+the directory is refused. Every added file belongs to root in the image, so
+the set-user-id and set-group-id bits are not kept: a bit that meant "run as
+this file's owner" on your computer would mean "run as root" there. An image
+that needs one is built with Docker and named with `--image`.
 
 The image is the one the name pointed at when you ran the build. The build
 records its digest and pulls exactly that, so a tag that moves later does not
@@ -339,11 +348,55 @@ The last one builds a Compose project's images for `linux/amd64`; setting
 emulation, which is slower than a native build but works. For `--binary`,
 compile for x86_64 Linux, for example `GOOS=linux GOARCH=amd64 go build`.
 
+## What a disk holds
+
+The build writes each image into the disk's Docker store, unpacked. A machine
+that boots the disk finds every image already there and loads nothing, so the
+project starts as soon as Docker does.
+
+A disk built with `--load-at-boot` keeps the images as `docker save` tars
+instead, and Docker loads them each time the disk boots.
+
+```bash
+machine disks build --load-at-boot --image myapp:latest app
+```
+
+That boot is slower by the whole load, every time, and the disk holds each
+image twice: the tar, and what it unpacks to. Use it for one case. `docker
+save` and `docker push` read a record of the original tar that only `docker
+load` writes, so a service that saves or pushes one of the disk's own images
+from inside the machine needs a disk built this way. Starting containers does
+not.
+
+An image's layers are checked as the build unpacks them, and a layer that is
+not the one the image names is refused. Layers compressed with zstd are not
+read; save the image with gzip or uncompressed layers.
+
 ## Disk size
 
-By default Machine measures what the disk holds and adds a gigabyte. Use
-`--size` to set the size you want. Not sure how big it will be? `--dry-run`
-reports what the disk would hold without building it.
+By default Machine measures what the disk holds and adds a gigabyte, rounded
+up to a whole GB. Use `--size` to set the size you want. Not sure how big it
+will be? `--dry-run` reports what the disk would hold without building it.
+
+```bash
+machine disks build --dry-run --from python:3.12 --add hello.py hello -- python hello.py
+```
+```bash
+disk
+  name      hello
+content
+  rootfs    285MB
+  images    1295MB
+  project   1MB
+size
+  used      1581MB
+  capacity  3072MB
+```
+
+`rootfs` is the platform every disk carries. `images` is the images unpacked,
+with a layer two images share counted once. `used` is what a smaller `--size`
+is refused against, and the rest of `capacity` is what the machine can write.
+With `--load-at-boot` there is one more row, `images (tar)`.
 
 To manage your disks:
 
