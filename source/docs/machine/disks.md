@@ -407,6 +407,22 @@ machine disks rename app app-v2
 machine disks delete app-v2
 ```
 
+[`machine disks list`](commands.md#machine-disks-list) and [`machine disks show`](commands.md#machine-disks-show) give two sizes. SIZE is the disk
+as the machine sees it. DATA is what the disk takes in your account's storage,
+after deduplication and compression.
+
+```bash
+NAME   ID            SIZE   DATA   STATE  CREATED
+hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago
+```
+
+Disks share what they have in common: every disk carries the same platform,
+and two disks built from one image share its layers. Storage keeps one copy,
+and each disk's DATA counts it, so the column adds up to more than your disks
+take together. [`machine storage`](commands.md#machine-storage-show) has that figure, and it is the one your quota
+counts. A disk built before DATA was measured shows `—` until you build it
+again or run [`machine disks verify`](commands.md#machine-disks-verify) on it.
+
 A disk's ID is computed from its content, and the disk is stored under it. A
 session checks every disk it fetches against that ID before it boots one. If
 you ever doubt the copy in your account's storage, check it:
