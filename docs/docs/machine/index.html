@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791395786867" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791395786867" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791394616965" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791395786867" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -838,9 +838,13 @@ is. Add <code>--no-wait</code> if you would rather it didn’t.</p>
 <p>A machine takes twice its memory from the session, plus 128MB. The second
 half is what its checkpoints are held in while they are written. A machine
 with the default 256MB takes 640MB, and one created with <code>--mem 2048</code> takes
-4224MB, so it needs a session of at least that. <a href="#machine-runs"><code>machine runs --size</code></a>
-shows what each machine in a session holds, and a machine holds its memory
+4224MB, so it needs a session of at least that. A machine holds its memory
 until you stop it, whether or not its program has finished.</p>
+<p><a href="#machine-runs"><code>machine runs --size</code></a> adds two columns for what a run takes of the
+session’s resources. RAM is the memory its machine holds right now, which can
+be above the machine’s own MEMORY because it counts the machine’s process as
+well as the guest. DATA is what the run holds on the session’s disk. A run
+with no machine shows <code>—</code> for RAM.</p>
 <p>The MEM column of <a href="#machine-sessions-list"><code>machine sessions list</code></a> shows the memory taken over the
 session’s memory, for example <code>4.4G/8G</code>. Taken is 256MB for the session
 itself plus what each of its machines takes. A new machine starts when what
@@ -5746,9 +5750,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791394616965"></script>
-<script src="/js/machine-hero-type.js?v=1791394616965"></script>
-<script src="/js/download-platforms.js?v=1791394616965"></script>
+<script src="/js/index-code-type.js?v=1791395786868"></script>
+<script src="/js/machine-hero-type.js?v=1791395786868"></script>
+<script src="/js/download-platforms.js?v=1791395786868"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

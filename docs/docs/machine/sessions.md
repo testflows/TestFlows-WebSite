@@ -18,9 +18,14 @@ is. Add `--no-wait` if you would rather it didn't.
 A machine takes twice its memory from the session, plus 128MB. The second
 half is what its checkpoints are held in while they are written. A machine
 with the default 256MB takes 640MB, and one created with `--mem 2048` takes
-4224MB, so it needs a session of at least that. [`machine runs --size`](commands.md#machine-runs)
-shows what each machine in a session holds, and a machine holds its memory
+4224MB, so it needs a session of at least that. A machine holds its memory
 until you stop it, whether or not its program has finished.
+
+[`machine runs --size`](commands.md#machine-runs) adds two columns for what a run takes of the
+session's resources. RAM is the memory its machine holds right now, which can
+be above the machine's own MEMORY because it counts the machine's process as
+well as the guest. DATA is what the run holds on the session's disk. A run
+with no machine shows `—` for RAM.
 
 The MEM column of [`machine sessions list`](commands.md#machine-sessions-list) shows the memory taken over the
 session's memory, for example `4.4G/8G`. Taken is 256MB for the session
