@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791402382089" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791402382089" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791400616621" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791402382089" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1471,7 +1471,7 @@ takes further commands, those follow it, so each one has a heading.</p>
 <p>The listing shows the newest 25. Use <code>--limit</code> for a different page size. Naming
 a run limits the listing to its tree. Use <code>--roots</code> for one row per tree, and
 <code>-o</code> wide or <code>--no-trunc</code> for full run ids.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine runs [-h] [-s [^]state] [--running] [--roots] [--label name=value] [--flag name[=value]] [--disk name|id] [--parents mode] [--synced | --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse] [--limit n]</span><br><span class="line">                    [--offset n] [--no-trunc] [--size] [-w]</span><br><span class="line">                    [root]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">usage: machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value] [--flag name[=value]] [--disk name|id] [--parents mode] [--synced | --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse] [--limit n]</span><br><span class="line">                    [--offset n] [--no-trunc] [--size] [-w]</span><br><span class="line">                    [root]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -1573,7 +1573,7 @@ left unfinished is owed by its run, and the run’s next start finishes it. An
 operation outlives the command that started it, so one interrupted with Ctrl-C
 is still found here by its id. For work on the account’s repository, see machine
 storage ops.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine ops [-h] [--op-id id] [-s [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine ops [-h] [--op-id id] [--state [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -4568,7 +4568,7 @@ refused; use <code>--force</code> to delete it anyway and lose those runs.</p>
 pending and failed by default; use <code>--state</code> done for the rest. These act on the
 account’s repository rather than on a run, so they are listed here rather than
 by machine ops, and they answer with no session.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine storage ops [-h] [--op-id id] [-s [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -5761,9 +5761,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791400616622"></script>
-<script src="/js/machine-hero-type.js?v=1791400616622"></script>
-<script src="/js/download-platforms.js?v=1791400616622"></script>
+<script src="/js/index-code-type.js?v=1791402382089"></script>
+<script src="/js/machine-hero-type.js?v=1791402382089"></script>
+<script src="/js/download-platforms.js?v=1791402382089"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

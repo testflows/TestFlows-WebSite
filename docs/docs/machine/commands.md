@@ -30,7 +30,7 @@ a run limits the listing to its tree. Use `--roots` for one row per tree, and
 `-o` wide or `--no-trunc` for full run ids.
 
 ```
-usage: machine runs [-h] [-s [^]state] [--running] [--roots] [--label name=value] [--flag name[=value]] [--disk name|id] [--parents mode] [--synced | --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse] [--limit n]
+usage: machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value] [--flag name[=value]] [--disk name|id] [--parents mode] [--synced | --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse] [--limit n]
                     [--offset n] [--no-trunc] [--size] [-w]
                     [root]
 ```
@@ -74,7 +74,7 @@ is still found here by its id. For work on the account's repository, see machine
 storage ops.
 
 ```
-usage: machine ops [-h] [--op-id id] [-s [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]
+usage: machine ops [-h] [--op-id id] [--state [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]
 ```
 
 | Argument | Does |
@@ -2099,7 +2099,7 @@ account's repository rather than on a run, so they are listed here rather than
 by machine ops, and they answer with no session.
 
 ```
-usage: machine storage ops [-h] [--op-id id] [-s [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]
+usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]
 ```
 
 | Option | Does |
