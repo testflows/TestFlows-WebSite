@@ -150,7 +150,7 @@ image, `--add` puts your file in it, and what follows `--` is the command the
 machine runs.
 
 ```bash
-machine disks build --from python:3.12 --add hello.py hello -- python hello.py
+machine disks build --from python:3.12-slim --add hello.py hello -- python hello.py
 ```
 ```bash
 ➤ Packing hello (1 service)
@@ -163,7 +163,7 @@ machine disks build --from python:3.12 --add hello.py hello -- python hello.py
 ```
 
 Only your file is uploaded. The build pulls the image itself and writes it
-onto the disk, which takes about five minutes for an image of this size. You
+onto the disk, which takes about two minutes for an image of this size. You
 build a disk once and create as many runs from it as you like.
 
 A program you compile, an image of your own, or several services together
@@ -215,7 +215,12 @@ machine checkpoint hello-run booted
 ```
 ```bash
 ✔ Created checkpoint booted at entry 15792
+  Make it durable machine sync hello-run
 ```
+
+The checkpoint is in your session. [`machine sync`](commands.md#machine-sync) publishes the run, so the
+checkpoint outlasts the session and another session can start from it.
+Stopping the machine publishes it too.
 
 ```bash
 machine fork hello-run --at ^booted --name try-1
@@ -225,8 +230,8 @@ machine fork hello-run --at ^booted --name try-1
 ```
 
 The branch starts exactly where `booted` was taken. Notice its full name,
-`hello-run/try-1`. A branch is named after its parent, a slash, and the name you
-gave it. Look at the tree.
+`hello-run/try-1`. A branch is named after the run its tree starts from, a
+slash, and the name you gave it. Look at the tree.
 
 ```bash
 machine branches hello-run
@@ -243,10 +248,10 @@ branch until the machine shuts down, which it does when the program exits.
 machine run hello-run/try-1 --until halted
 ```
 ```bash
-iterations: 18239  run ic: 2070808642  checkpoints: 1
+iterations: 17148  run ic: 2095789032  checkpoints: 1
 
 VCPU  EXIT                ID     RUN IC      RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER
-0     IO (EXIT_SHUTDOWN)  42245  2070808642  39   2342485302  0x629569a1b45eaf14  0xffffffff8103f4fc  0    18238
+0     IO (EXIT_SHUTDOWN)  40050  2095789032  39   2367459400  0x62064a27645eaf14  0xffffffff8103f4fc  0    17147
 ```
 
 The program's own lines start with `app-1`. Find them in the branch's console.

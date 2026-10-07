@@ -109,6 +109,9 @@ returns when a condition holds.
 machine wait --for stopped app
 machine wait --for 'console~ready' app
 ```
+```bash
+✔ Reached stopped: app (whUxfLYSFJMDHzKaiBOvH) 2.1s
+```
 
 It exits with 0 when the condition is true, 2 on an error and 3 on a timeout,
 so scripts can tell them apart. Remember that it only watches. Waiting for a
@@ -122,7 +125,7 @@ machine was waiting for commands.`
 |---|---|
 | [`machine runs`](commands.md#machine-runs) | your runs, newest first (`-w` keeps the list live) |
 | [`machine describe app`](commands.md#machine-describe) | the full configuration of a run |
-| [`machine state app`](commands.md#machine-state) | its state |
+| [`machine state app`](commands.md#machine-state) | its state and where it stands; a run with no machine reads `stopped` |
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
 | [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |

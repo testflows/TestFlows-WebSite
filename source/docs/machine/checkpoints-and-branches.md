@@ -23,6 +23,13 @@ one, and it can't read as a time, like `10ms`, because a time names a point too.
 Machine takes some of its own as well, named after the entry they were taken at
 (like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.
 
+The DURABLE column says whether a checkpoint is in your account's storage or
+only in the session. A new checkpoint reads `no` until the run is published,
+with [`machine sync app`](commands.md#machine-sync) or by stopping the machine. On a branch, the listing
+includes its ancestors' checkpoints, named in the ANCESTOR column. The point a
+branch was forked at is listed once, as its ancestor's checkpoint, because
+that is the one a fork there starts from.
+
 ## Starting a branch
 
 [`machine fork`](commands.md#machine-fork) creates a new branch at a point. The branch runs in its own
@@ -37,8 +44,9 @@ machine fork app --at ^booted --name try-1  # and give it a name
 Give a branch a name with `--name`. If you don't, it is named after the
 entry it landed on. Add `--no-start` to create the branch without starting it.
 
-A branch's full name is its parent's name, a slash, and the name you gave it. So
-[`machine fork app --name try-1`](commands.md#machine-fork) makes `app/try-1`, and that full name is what
+A branch's full name is the name of the run its tree starts from, a slash, and
+the name you gave it. So [`machine fork app --name try-1`](commands.md#machine-fork) makes `app/try-1`,
+and a branch of `app/try-1` named `try-2` is `app/try-2`. That full name is what
 you use in every other command. [`machine lineage try-1`](commands.md#machine-lineage) says
 `Run not found`, and [`machine lineage app/try-1`](commands.md#machine-lineage) works.
 
