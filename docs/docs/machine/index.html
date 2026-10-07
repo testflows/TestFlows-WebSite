@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791405026366" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791405026366" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791403484225" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791405026366" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -825,6 +825,17 @@ With <code>--load-at-boot</code> there is one more row, <code>images (tar)</code
 <p>To manage your disks:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine disks list</span><br><span class="line">machine disks show app</span><br><span class="line">machine disks rename app app-v2</span><br><span class="line">machine disks delete app-v2</span><br></pre></td></tr></table></figure>
 
+<p><a href="#machine-disks-list"><code>machine disks list</code></a> and <a href="#machine-disks-show"><code>machine disks show</code></a> give two sizes. SIZE is the disk
+as the machine sees it. DATA is what the disk takes in your account’s storage,
+after deduplication and compression.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NAME   ID            SIZE   DATA   STATE  CREATED</span><br><span class="line">hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago</span><br></pre></td></tr></table></figure>
+
+<p>Disks share what they have in common: every disk carries the same platform,
+and two disks built from one image share its layers. Storage keeps one copy,
+and each disk’s DATA counts it, so the column adds up to more than your disks
+take together. <a href="#machine-storage-show"><code>machine storage</code></a> has that figure, and it is the one your quota
+counts. A disk built before DATA was measured shows <code>—</code> until you build it
+again or run <a href="#machine-disks-verify"><code>machine disks verify</code></a> on it.</p>
 <p>A disk’s ID is computed from its content, and the disk is stored under it. A
 session checks every disk it fetches against that ID before it boots one. If
 you ever doubt the copy in your account’s storage, check it:</p>
@@ -5805,9 +5816,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791403484225"></script>
-<script src="/js/machine-hero-type.js?v=1791403484225"></script>
-<script src="/js/download-platforms.js?v=1791403484225"></script>
+<script src="/js/index-code-type.js?v=1791405026367"></script>
+<script src="/js/machine-hero-type.js?v=1791405026367"></script>
+<script src="/js/download-platforms.js?v=1791405026367"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
