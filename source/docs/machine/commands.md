@@ -400,8 +400,13 @@ The first operand names the run to remove; `-a` removes every run, and `--disk`
 removes every run that boots one disk, naming it or its id. Use `-c` `-a` to
 resume interrupted delete operations.
 
+Waits until the run is gone. Use `--timeout` to bound the wait, or `--no-wait`
+to return once the delete of one run is accepted. With `--stop` or `-f` the
+machine is stopped first, and that is waited for either way. The delete is an
+operation: it goes on if the command is interrupted, and `machine ops` lists it.
+
 ```
-usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [--full-scan] [--dry-run] [run]
+usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [--full-scan] [--dry-run] [--no-wait] [run]
 ```
 
 | Argument | Does |
@@ -419,6 +424,7 @@ usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [-
 | `-c, --cleanup` | Resume interrupted delete operations |
 | `--full-scan` | Scan all branches instead of using index (with `-c`) |
 | `--dry-run` | List what would be deleted/recovered without acting |
+| `--no-wait` | Return once the delete of one run is accepted |
 
 ## machine preload
 
