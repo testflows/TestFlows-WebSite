@@ -618,8 +618,8 @@ List marks. See [Marks](checkpoints-and-branches.md#marks).
 Lists marks.
 
 A mark is a second name for a branch, unique within its tree. Written %mark, it
-names the branch anywhere a run is named. Without a run, every tree's marks are
-listed; with one, the marks of that run's tree. No running machine is needed.
+names the branch anywhere a run is named. Without a command, every tree's marks are listed. Use list with a run
+for the marks of that run's tree. No running machine is needed.
 
 ```
 usage: machine marks [-h] {list,add,remove} ...
