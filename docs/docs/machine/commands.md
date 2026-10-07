@@ -2045,6 +2045,33 @@ usage: machine disks rename [-h] name new-name
 | `name` | Current disk name |
 | `new-name` | New disk name |
 
+### machine disks verify
+
+Check a stored disk against its id. See [Disks](disks.md).
+
+Checks a stored disk against its id.
+
+Reads the disk back out of account storage and computes its id, which is what
+the disk is stored under. A disk that reads as stored is verified; one that
+does not is reported as damaged.
+
+The check is a storage operation and takes about as long as reading the disk.
+It keeps running if the command is interrupted, and machine storage ops lists
+it. Use `--timeout` to bound the wait, or `--no-wait` to return once the check has
+started. One check runs at a time for an account.
+
+```
+usage: machine disks verify [-h] [--no-wait] name
+```
+
+| Argument | Does |
+|---|---|
+| `name` | Disk name |
+
+| Option | Does |
+|---|---|
+| `--no-wait` | Return without waiting |
+
 ### machine disks cancel
 
 Cancel a transfer. See [Disks](disks.md).
@@ -2106,7 +2133,7 @@ usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type type] [-
 |---|---|
 | `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
 | `--state [^]state` | Filter by state: pending, done, failed (default: pending, failed; repeat = OR; ^ excludes) |
-| `--type type` | Filter by kind: measure, prune (repeat = OR) |
+| `--type type` | Filter by kind: measure, prune, verify (repeat = OR) |
 | `--since date\|age` | Since a date or age |
 | `--until date\|age` | Until a date or age |
 | `--limit n` | Show at most n operations (default: 25) |

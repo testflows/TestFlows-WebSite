@@ -407,6 +407,21 @@ machine disks rename app app-v2
 machine disks delete app-v2
 ```
 
+A disk's ID is computed from its content, and the disk is stored under it. A
+session checks every disk it fetches against that ID before it boots one. If
+you ever doubt the copy in your account's storage, check it:
+
+```bash
+machine disks verify app
+```
+```bash
+✔ Verified app (4d13d6d911ee)
+```
+
+[`machine disks verify`](commands.md#machine-disks-verify) reads the disk back and computes its ID again. It
+takes about as long as reading the disk, and a disk that does not read as it
+was stored is reported as damaged, in which case build it again.
+
 Deleting a disk is permanent. Machine refuses to delete one that a run still
 boots, and `--force` deletes it anyway and takes those runs with it.
 [`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
