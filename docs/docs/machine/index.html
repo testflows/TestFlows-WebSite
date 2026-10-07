@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791400616621" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791400616621" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791395786867" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791400616621" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -506,11 +506,11 @@ compiler.</p>
 <p>Build a disk named <code>hello</code> that runs it. <code>--from</code> names the public Python
 image, <code>--add</code> puts your file in it, and what follows <code>--</code> is the command the
 machine runs.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from python:3.12 --add hello.py hello -- python hello.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from python:3.12-slim --add hello.py hello -- python hello.py</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">➤ Packing hello (1 service)</span><br><span class="line">➤ Hashing hello.pack</span><br><span class="line">➤ Waiting <span class="keyword">for</span> the receiver…</span><br><span class="line">➤ Uploading 20.5kB → hello</span><br><span class="line">➤ Building the disk…</span><br><span class="line">✔ Built hello</span><br><span class="line">  Boot machine create --disk hello</span><br></pre></td></tr></table></figure>
 
 <p>Only your file is uploaded. The build pulls the image itself and writes it
-onto the disk, which takes about five minutes for an image of this size. You
+onto the disk, which takes about two minutes for an image of this size. You
 build a disk once and create as many runs from it as you like.</p>
 <p>A program you compile, an image of your own, or several services together
 build the same way from other sources. See <a href="#Disks">Disks</a>.</p>
@@ -532,21 +532,24 @@ you drive it. The <code>--until tasks</code> part means “keep going until Linu
 <p>Save the machine’s state so you can come back to it, and start a branch from
 that point.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine checkpoint hello-run booted</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Created checkpoint booted at entry 15792</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Created checkpoint booted at entry 15792</span><br><span class="line">  Make it durable machine <span class="built_in">sync</span> hello-run</span><br></pre></td></tr></table></figure>
 
+<p>The checkpoint is in your session. <a href="#machine-sync"><code>machine sync</code></a> publishes the run, so the
+checkpoint outlasts the session and another session can start from it.
+Stopping the machine publishes it too.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine fork hello-run --at ^booted --name try-1</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Forked hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH)</span><br></pre></td></tr></table></figure>
 
 <p>The branch starts exactly where <code>booted</code> was taken. Notice its full name,
-<code>hello-run/try-1</code>. A branch is named after its parent, a slash, and the name you
-gave it. Look at the tree.</p>
+<code>hello-run/try-1</code>. A branch is named after the run its tree starts from, a
+slash, and the name you gave it. Look at the tree.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine branches hello-run</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">● hello-run (whUxdR33Zad9Qxc0ASfig) [0, ∞)  ← current</span><br><span class="line">╰─ @15792 0.692741050s+1 → ● hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH) [15793, ∞)</span><br></pre></td></tr></table></figure>
 
 <p>Linux is up on the branch and your program has not started yet. Drive the
 branch until the machine shuts down, which it does when the program exits.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine run hello-run/try-1 --<span class="keyword">until</span> halted</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iterations: 18239  run ic: 2070808642  checkpoints: 1</span><br><span class="line"></span><br><span class="line">VCPU  EXIT                ID     RUN IC      RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER</span><br><span class="line">0     IO (EXIT_SHUTDOWN)  42245  2070808642  39   2342485302  0x629569a1b45eaf14  0xffffffff8103f4fc  0    18238</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">iterations: 17148  run ic: 2095789032  checkpoints: 1</span><br><span class="line"></span><br><span class="line">VCPU  EXIT                ID     RUN IC      RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER</span><br><span class="line">0     IO (EXIT_SHUTDOWN)  40050  2095789032  39   2367459400  0x62064a27645eaf14  0xffffffff8103f4fc  0    17147</span><br></pre></td></tr></table></figure>
 
 <p>The program’s own lines start with <code>app-1</code>. Find them in the branch’s console.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine console hello-run/try-1 -n : | grep app-1</span><br></pre></td></tr></table></figure>
@@ -619,7 +622,7 @@ uploaded.</p>
 <h3 id="Python-program"><a href="#Python-program" class="headerlink" title="Python program"></a>Python program</h3><p>Save this as <code>hello.py</code>.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;hello, world&quot;</span>)</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from python:3.12 --add hello.py hello-py -- python hello.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from python:3.12-slim --add hello.py hello-py -- python hello.py</span><br></pre></td></tr></table></figure>
 
 <p>It runs in a machine with the default 256MB of memory, and takes about ten
 seconds from power-on to the program’s exit.</p>
@@ -812,8 +815,8 @@ read; save the image with gzip or uncompressed layers.</p>
 <h2 id="Disk-size"><a href="#Disk-size" class="headerlink" title="Disk size"></a>Disk size</h2><p>By default Machine measures what the disk holds and adds a gigabyte, rounded
 up to a whole GB. Use <code>--size</code> to set the size you want. Not sure how big it
 will be? <code>--dry-run</code> reports what the disk would hold without building it.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --dry-run --from python:3.12 --add hello.py hello -- python hello.py</span><br></pre></td></tr></table></figure>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">disk</span><br><span class="line">  name      hello</span><br><span class="line">content</span><br><span class="line">  rootfs    285MB</span><br><span class="line">  images    1295MB</span><br><span class="line">  project   1MB</span><br><span class="line">size</span><br><span class="line">  used      1581MB</span><br><span class="line">  capacity  3072MB</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --dry-run --from python:3.12-slim --add hello.py hello -- python hello.py</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">disk</span><br><span class="line">  name      hello</span><br><span class="line">content</span><br><span class="line">  rootfs    285MB</span><br><span class="line">  images    142MB</span><br><span class="line">  project   1MB</span><br><span class="line">size</span><br><span class="line">  used      428MB</span><br><span class="line">  capacity  2048MB</span><br></pre></td></tr></table></figure>
 
 <p><code>rootfs</code> is the platform every disk carries. <code>images</code> is the images unpacked,
 with a layer two images share counted once. <code>used</code> is what a smaller <code>--size</code>
@@ -999,6 +1002,7 @@ whichever one is in progress.</p>
 <h2 id="Waiting"><a href="#Waiting" class="headerlink" title="Waiting"></a>Waiting</h2><p><a href="#machine-wait"><code>machine wait</code></a> doesn’t drive anything. It watches a run, or several, and
 returns when a condition holds.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">wait</span> --<span class="keyword">for</span> stopped app</span><br><span class="line">machine <span class="built_in">wait</span> --<span class="keyword">for</span> <span class="string">&#x27;console~ready&#x27;</span> app</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Reached stopped: app (whUxfLYSFJMDHzKaiBOvH) 2.1s</span><br></pre></td></tr></table></figure>
 
 <p>It exits with 0 when the condition is true, 2 on an error and 3 on a timeout,
 so scripts can tell them apart. Remember that it only watches. Waiting for a
@@ -1021,7 +1025,7 @@ With <code>--timeout 0</code> it checks once, and the message tells you why it f
 </tr>
 <tr>
 <td><a href="#machine-state"><code>machine state app</code></a></td>
-<td>its state</td>
+<td>its state and where it stands; a run with no machine reads <code>stopped</code></td>
 </tr>
 <tr>
 <td><a href="#machine-now"><code>machine now app</code></a></td>
@@ -1103,14 +1107,21 @@ digit. It can’t be a number, because numbers name the checkpoints taken withou
 one, and it can’t read as a time, like <code>10ms</code>, because a time names a point too.</p>
 <p>Machine takes some of its own as well, named after the entry they were taken at
 (like <code>10000</code>), so <a href="#machine-checkpoints"><code>machine checkpoints app</code></a> lists yours next to those.</p>
+<p>The DURABLE column says whether a checkpoint is in your account’s storage or
+only in the session. A new checkpoint reads <code>no</code> until the run is published,
+with <a href="#machine-sync"><code>machine sync app</code></a> or by stopping the machine. On a branch, the listing
+includes its ancestors’ checkpoints, named in the ANCESTOR column. The point a
+branch was forked at is listed once, as its ancestor’s checkpoint, because
+that is the one a fork there starts from.</p>
 <h2 id="Starting-a-branch"><a href="#Starting-a-branch" class="headerlink" title="Starting a branch"></a>Starting a branch</h2><p><a href="#machine-fork"><code>machine fork</code></a> creates a new branch at a point. The branch runs in its own
 machine, alongside its parent, and the parent keeps running.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine fork app                            <span class="comment"># at the current point</span></span><br><span class="line">machine fork app --at ^booted               <span class="comment"># at a checkpoint</span></span><br><span class="line">machine fork app --at ^booted --name try-1  <span class="comment"># and give it a name</span></span><br></pre></td></tr></table></figure>
 
 <p>Give a branch a name with <code>--name</code>. If you don’t, it is named after the
 entry it landed on. Add <code>--no-start</code> to create the branch without starting it.</p>
-<p>A branch’s full name is its parent’s name, a slash, and the name you gave it. So
-<a href="#machine-fork"><code>machine fork app --name try-1</code></a> makes <code>app/try-1</code>, and that full name is what
+<p>A branch’s full name is the name of the run its tree starts from, a slash, and
+the name you gave it. So <a href="#machine-fork"><code>machine fork app --name try-1</code></a> makes <code>app/try-1</code>,
+and a branch of <code>app/try-1</code> named <code>try-2</code> is <code>app/try-2</code>. That full name is what
 you use in every other command. <a href="#machine-lineage"><code>machine lineage try-1</code></a> says
 <code>Run not found</code>, and <a href="#machine-lineage"><code>machine lineage app/try-1</code></a> works.</p>
 <h2 id="Moving-around"><a href="#Moving-around" class="headerlink" title="Moving around"></a>Moving around</h2><p><a href="#machine-fork"><code>machine fork</code></a> gives the new branch a machine of its own and leaves you where
@@ -5750,9 +5761,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791395786868"></script>
-<script src="/js/machine-hero-type.js?v=1791395786868"></script>
-<script src="/js/download-platforms.js?v=1791395786868"></script>
+<script src="/js/index-code-type.js?v=1791400616622"></script>
+<script src="/js/machine-hero-type.js?v=1791400616622"></script>
+<script src="/js/download-platforms.js?v=1791400616622"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

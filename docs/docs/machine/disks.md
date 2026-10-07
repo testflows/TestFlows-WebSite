@@ -65,7 +65,7 @@ print("hello, world")
 ```
 
 ```bash
-machine disks build --from python:3.12 --add hello.py hello-py -- python hello.py
+machine disks build --from python:3.12-slim --add hello.py hello-py -- python hello.py
 ```
 
 It runs in a machine with the default 256MB of memory, and takes about ten
@@ -379,18 +379,18 @@ up to a whole GB. Use `--size` to set the size you want. Not sure how big it
 will be? `--dry-run` reports what the disk would hold without building it.
 
 ```bash
-machine disks build --dry-run --from python:3.12 --add hello.py hello -- python hello.py
+machine disks build --dry-run --from python:3.12-slim --add hello.py hello -- python hello.py
 ```
 ```bash
 disk
   name      hello
 content
   rootfs    285MB
-  images    1295MB
+  images    142MB
   project   1MB
 size
-  used      1581MB
-  capacity  3072MB
+  used      428MB
+  capacity  2048MB
 ```
 
 `rootfs` is the platform every disk carries. `images` is the images unpacked,
