@@ -15,7 +15,7 @@ takes further commands, those follow it, so each one has a heading.
 | `--no-colors` | Disable terminal color highlighting. |
 | `--debug` | Show the messages exchanged with the service. |
 | `--api-url` | Cloud API base URL. Overrides `TESTFLOWS_MACHINE_API_URL` and the default. |
-| `-s`, `--session` | Target session, by name, id, or unique prefix. |
+| `-s`, `--session` | Target session, by name, id, or unique prefix. Goes before the command, as every option here does. Commands that need no session ignore it. |
 | `--timeout` | Give up after S seconds, for commands that wait. The default is no limit. 0 means check once. |
 | `-q`, `--quiet` | No progress or spinners. |
 
@@ -41,8 +41,8 @@ usage: machine runs [-h] [-s [^]state] [--running] [--roots] [--label name=value
 
 | Option | Does |
 |---|---|
-| `-s, --state [^]state` | Filter by state: running, paused, recovering, read-only, stopped, killed, terminated, died, failed (repeat = OR; ^ excludes) |
-| `--running` | Show only running runs, the same as `-s` running |
+| `--state [^]state` | Filter by state: running, paused, recovering, read-only, stopped, killed, terminated, died, failed (repeat = OR; ^ excludes) |
+| `--running` | Show only running runs, the same as `--state` running |
 | `--roots` | One row per tree instead of every run, with its running N/M |
 | `--label name=value` | Filter by a label (repeatable; matches all) |
 | `--flag name[=value]` | Filter by a run flag (repeatable; matches all) |
@@ -67,7 +67,7 @@ List operations. See [Looking at it](running-a-machine.md#looking-at-it).
 Lists operations on runs and how they finished.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Shows
-pending, unfinished and failed by default; use `-s` done for the rest. A rewind
+pending, unfinished and failed by default; use `--state` done for the rest. A rewind
 left unfinished is owed by its run, and the run's next start finishes it. An
 operation outlives the command that started it, so one interrupted with Ctrl-C
 is still found here by its id. For work on the account's repository, see machine
@@ -83,8 +83,8 @@ usage: machine ops [-h] [--op-id id] [-s [^]state] [--type type] [--since date|a
 
 | Option | Does |
 |---|---|
-| `--op-id id` | Show one operation, by its id (ignores `-s` and `--type`) |
-| `-s, --state [^]state` | Filter by state: pending, unfinished, done, failed (default: pending, unfinished, failed; repeat = OR; ^ excludes) |
+| `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
+| `--state [^]state` | Filter by state: pending, unfinished, done, failed (default: pending, unfinished, failed; repeat = OR; ^ excludes) |
 | `--type type` | Filter by kind: checkpoint, branch, switch (repeat = OR) |
 | `--since date\|age` | Since a date or age |
 | `--until date\|age` | Until a date or age |
@@ -204,7 +204,7 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--disk
 | `--vtime-io-cost ns` | IO exit vtime cost in ns (default: 2000) |
 | `--vtime-rdtsc-cost ns` | RDTSC exit vtime cost in ns (default: the IO cost) |
 | `--vtime-pause-cost ns` | Vtime cost of each PAUSE in ns (default: 2000) |
-| `--auto-checkpoints n` | Checkpoint every n entries, 0 for never (default: scaled by memory, 10000 per 512MB) |
+| `--auto-checkpoints n` | Checkpoint every n entries, 0 for never (default: scaled by memory, 50000 per 512MB) |
 
 **Run log options**
 
@@ -1945,8 +1945,14 @@ The name defaults to what the source is called, and the size to what the pack
 holds loaded plus a gigabyte, rounded up to a whole GB. Use `--dry-run` to see
 those numbers without building anything.
 
+The build writes the images into the disk's Docker store, so the disk boots
+with every image present and loads nothing. Use `--load-at-boot` to keep them
+on the disk as save tars that Docker loads each time the disk boots; a guest
+that runs docker save or docker push on one of them needs that. Such a disk
+holds each image twice and is sized for both.
+
 ```
-usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--entrypoint path] [--add path[:dest]] [--env name=value] [--label name=value] [name] [-- args ...]
+usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir) [--size size] [--dry-run] [--load-at-boot] [--entrypoint path] [--add path[:dest]] [--env name=value] [--label name=value] [name] [-- args ...]
 ```
 
 | Argument | Does |
@@ -1962,6 +1968,7 @@ usage: machine disks build [-h] (--binary path | --image ref | --from ref | --co
 | `--compose dir` | Compose project directory |
 | `--size size` | Disk size, MB or with a K/M/G/T suffix (default: from the pack, rounded up to a GB) |
 | `--dry-run` | Report what the disk would hold and build nothing |
+| `--load-at-boot` | Keep the images as tars on the disk and load them each time it boots |
 | `--entrypoint path` | Executable the service runs |
 | `--add path[:dest]` | File or directory to put in the image, repeatable; dest defaults to the image's working directory |
 | `--env name=value` | Environment variable the service runs with, repeatable |
@@ -2087,7 +2094,7 @@ List storage operations.
 Lists operations on the account's storage and how they finished.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Shows
-pending and failed by default; use `-s` done for the rest. These act on the
+pending and failed by default; use `--state` done for the rest. These act on the
 account's repository rather than on a run, so they are listed here rather than
 by machine ops, and they answer with no session.
 
@@ -2097,8 +2104,8 @@ usage: machine storage ops [-h] [--op-id id] [-s [^]state] [--type type] [--sinc
 
 | Option | Does |
 |---|---|
-| `--op-id id` | Show one operation, by its id (ignores `-s` and `--type`) |
-| `-s, --state [^]state` | Filter by state: pending, done, failed (default: pending, failed; repeat = OR; ^ excludes) |
+| `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
+| `--state [^]state` | Filter by state: pending, done, failed (default: pending, failed; repeat = OR; ^ excludes) |
 | `--type type` | Filter by kind: measure, prune (repeat = OR) |
 | `--since date\|age` | Since a date or age |
 | `--until date\|age` | Until a date or age |

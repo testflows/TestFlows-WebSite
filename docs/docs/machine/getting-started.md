@@ -118,9 +118,9 @@ machine account api-keys create ci --expiry 90
 
 If you have not yet signed up, signed in and set up account storage, do that first: see [Signing up](getting-started.md#signing-up).
 
-Here is a whole trip, from nothing to a branch. The disk can come from the
-`hello-world` example if you have [Docker](disks.md#docker-and-compose), or from a small program you compile
-if you do not.
+Here is a whole trip, from nothing to a branch. The program is one line of
+Python, and you need nothing installed but the client: no Docker and no
+compiler.
 
 First, create a session and make it the one your commands use.
 
@@ -139,37 +139,37 @@ machine sessions use first
 ✔ Now using session first in this terminal.
 ```
 
-Next, build a disk named `hello`. Take one of the two paths.
+Next, save this as `hello.py`.
 
-If you have Docker, pull the hello-world example and build the disk from
-that image. The `--platform` flag asks Docker for the x86_64 image a machine
-runs.
+```python
+print("hello, world")
+```
+
+Build a disk named `hello` that runs it. `--from` names the public Python
+image, `--add` puts your file in it, and what follows `--` is the command the
+machine runs.
 
 ```bash
-docker pull --platform linux/amd64 testflows/machine-examples:latest
-machine disks build --image testflows/machine-examples:latest hello
+machine disks build --from python:3.12 --add hello.py hello -- python hello.py
 ```
-
-If you do not, compile `hello_world.c` as a static executable. [`machine disks build`](commands.md#machine-disks-build) `--binary` wraps that one file, so Docker is not needed. For a program that is not static, such as Python or Node.js, see [When the program is not static](disks.md#when-the-program-is-not-static).
-
-```c
-#include <stdio.h>
-
-int main(void) {
-    printf("hello, world\n");
-    return 0;
-}
-```
-
 ```bash
-gcc -static -o hello hello_world.c
-machine disks build --binary ./hello hello
+➤ Packing hello (1 service)
+➤ Hashing hello.pack
+➤ Waiting for the receiver…
+➤ Uploading 20.5kB → hello
+➤ Building the disk…
+✔ Built hello
+  Boot machine create --disk hello
 ```
 
-On an ARM machine that binary still has to be x86_64 Linux. See
-[building disks on an ARM machine](disks.md#building-disks-on-an-arm-machine).
+Only your file is uploaded. The build pulls the image itself and writes it
+onto the disk, which takes about five minutes for an image of this size. You
+build a disk once and create as many runs from it as you like.
 
-Either way, create a run from the disk. The machine waits for your commands. With
+A program you compile, an image of your own, or several services together
+build the same way from other sources. See [Disks](disks.md).
+
+Create a run from the disk. The machine waits for your commands. With
 `--no-daemon` it would boot and run to the end by itself.
 
 ```bash
@@ -186,10 +186,10 @@ you drive it. The `--until tasks` part means "keep going until Linux is up."
 machine run hello-run --until tasks
 ```
 ```bash
-iterations: 16093  run ic: 271990491  checkpoints: 1
+iterations: 15646  run ic: 271676660
 
 VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP                 RCX       ITER
-0     HYPERCALL  16238  271990491  190026  271990491  0x785930775efa707  0xffffffff81f9eeda  43778048  16092
+0     HYPERCALL  15791  271676660  192153  271676660  0x785930775efa707  0xffffffff81f9eeda  43778048  15645
 ```
 
 Read the last five lines the machine printed.
@@ -214,8 +214,7 @@ that point.
 machine checkpoint hello-run booted
 ```
 ```bash
-  Checkpointing: writing state 100%, 1s
-✔ Created checkpoint booted at entry 16239
+✔ Created checkpoint booted at entry 15792
 ```
 
 ```bash
@@ -234,8 +233,34 @@ machine branches hello-run
 ```
 ```bash
 ● hello-run (whUxdR33Zad9Qxc0ASfig) [0, ∞)  ← current
-╰─ @16239 0.693926690s+1 → ● hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH) [16240, ∞)
+╰─ @15792 0.692741050s+1 → ● hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH) [15793, ∞)
 ```
+
+Linux is up on the branch and your program has not started yet. Drive the
+branch until the machine shuts down, which it does when the program exits.
+
+```bash
+machine run hello-run/try-1 --until halted
+```
+```bash
+iterations: 18239  run ic: 2070808642  checkpoints: 1
+
+VCPU  EXIT                ID     RUN IC      RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER
+0     IO (EXIT_SHUTDOWN)  42245  2070808642  39   2342485302  0x629569a1b45eaf14  0xffffffff8103f4fc  0    18238
+```
+
+The program's own lines start with `app-1`. Find them in the branch's console.
+
+```bash
+machine console hello-run/try-1 -n : | grep app-1
+```
+```bash
+app-1  | hello, world
+app-1 exited with code 0
+```
+
+The parent `hello-run` is still at `booted`, with the program yet to run. You
+can fork it again and get the same start every time.
 
 When you are done, delete the runs and then the session. A run keeps its log
 and checkpoints until you delete it, and a session costs money until you do.
@@ -245,5 +270,5 @@ machine delete hello-run --recursive --stop --yes
 machine sessions delete first --yes
 ```
 
-That's the whole loop. You ran a program, saved a point in it and branched from
-there. Everything else in this page is a variation on it.
+That's the whole loop. You built a disk, saved a point in a run, branched from
+there and ran a program to its end. Everything else in this page is a variation on it.
