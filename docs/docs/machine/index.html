@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791411698699" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791411698699" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791405026366" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791411698699" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1061,7 +1061,7 @@ With <code>--timeout 0</code> it checks once, and the message tells you why it f
 </tr>
 <tr>
 <td><a href="#machine-ops"><code>machine ops</code></a></td>
-<td>operations on runs (checkpoints, branches, switches) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed</td>
+<td>operations on runs (checkpoints, branches, switches, deletes) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed</td>
 </tr>
 <tr>
 <td><a href="#machine-debug-log"><code>machine debug log app</code></a></td>
@@ -1104,6 +1104,10 @@ you name it.</p>
 <p><code>delete</code> only removes stopped runs, unless you add <code>--stop</code>. It also refuses to
 remove a run that has branches, unless you add <code>--recursive</code>. And since
 <a href="#machine-delete"><code>machine delete --all</code></a> removes every run, it asks you first.</p>
+<p><code>delete</code> waits until the run is gone, which takes a while for a run with many
+checkpoints. Add <code>--no-wait</code> and it returns as soon as the delete is accepted,
+after stopping the machine if you asked it to. The delete carries on either
+way, and <a href="#machine-ops"><code>machine ops</code></a> shows how it went.</p>
 <p>To continue a run in a different session, publish it first from the session that has it.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">sync</span> app</span><br></pre></td></tr></table></figure>
 
@@ -2181,7 +2185,11 @@ return once the request is accepted.</p>
 <p>The first operand names the run to remove; <code>-a</code> removes every run, and <code>--disk</code>
 removes every run that boots one disk, naming it or its id. Use <code>-c</code> <code>-a</code> to
 resume interrupted delete operations.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [--full-scan] [--dry-run] [run]</span><br></pre></td></tr></table></figure>
+<p>Waits until the run is gone. Use <code>--timeout</code> to bound the wait, or <code>--no-wait</code>
+to return once the delete of one run is accepted. With <code>--stop</code> or <code>-f</code> the
+machine is stopped first, and that is waited for either way. The delete is an
+operation: it goes on if the command is interrupted, and <code>machine ops</code> lists it.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [--full-scan] [--dry-run] [--no-wait] [run]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -2237,6 +2245,10 @@ resume interrupted delete operations.</p>
 <tr>
 <td><code>--dry-run</code></td>
 <td>List what would be deleted&#x2F;recovered without acting</td>
+</tr>
+<tr>
+<td><code>--no-wait</code></td>
+<td>Return once the delete of one run is accepted</td>
 </tr>
 </tbody></table>
 <h2 id="machine-preload"><a href="#machine-preload" class="headerlink" title="machine preload"></a>machine preload</h2><p>Preload into a session. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
@@ -5816,9 +5828,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791405026367"></script>
-<script src="/js/machine-hero-type.js?v=1791405026367"></script>
-<script src="/js/download-platforms.js?v=1791405026367"></script>
+<script src="/js/index-code-type.js?v=1791411698699"></script>
+<script src="/js/machine-hero-type.js?v=1791411698699"></script>
+<script src="/js/download-platforms.js?v=1791411698699"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

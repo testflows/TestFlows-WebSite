@@ -129,7 +129,7 @@ machine was waiting for commands.`
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
 | [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
-| [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed |
+| [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches, deletes) that are pending, unfinished or failed; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
 | [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one) |
 
@@ -184,6 +184,11 @@ you name it.
 `delete` only removes stopped runs, unless you add `--stop`. It also refuses to
 remove a run that has branches, unless you add `--recursive`. And since
 [`machine delete --all`](commands.md#machine-delete) removes every run, it asks you first.
+
+`delete` waits until the run is gone, which takes a while for a run with many
+checkpoints. Add `--no-wait` and it returns as soon as the delete is accepted,
+after stopping the machine if you asked it to. The delete carries on either
+way, and [`machine ops`](commands.md#machine-ops) shows how it went.
 
 To continue a run in a different session, publish it first from the session that has it.
 
