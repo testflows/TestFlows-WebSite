@@ -22,6 +22,11 @@ with the default 256MB takes 640MB, and one created with `--mem 2048` takes
 shows what each machine in a session holds, and a machine holds its memory
 until you stop it, whether or not its program has finished.
 
+The MEM column of [`machine sessions list`](commands.md#machine-sessions-list) shows the memory taken over the
+session's memory, for example `4.4G/8G`. Taken is 256MB for the session
+itself plus what each of its machines takes. A new machine starts when what
+it takes fits in the rest, and is refused when it does not.
+
 Creating a session doesn't switch you to it. Tell Machine which one to use.
 
 ```bash
