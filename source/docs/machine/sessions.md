@@ -15,11 +15,17 @@ disk space. `--class` picks the hardware class, and the default comes from your
 plan. The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
 is. Add `--no-wait` if you would rather it didn't.
 
-A machine takes twice its memory from the session, plus 128MB. The second
-half is what its checkpoints are held in while they are written. A machine
-with the default 256MB takes 640MB, and one created with `--mem 2048` takes
-4224MB, so it needs a session of at least that. A machine holds its memory
-until you stop it, whether or not its program has finished.
+A machine needs its memory plus 128MB from the session, and the session keeps
+256MB for itself. A machine with the default 256MB needs 384MB, and one created
+with `--mem 2048` needs 2176MB, so it fits a 4G session. A machine holds its
+memory until you stop it, whether or not its program has finished.
+
+A machine also keeps a copy of its latest checkpoint in memory, so a
+[`machine go`](commands.md#machine-go) or a fork from that checkpoint starts without reading it
+back from disk. The copy holds only what the program has written, and it gets
+the session memory left over when the machine starts, up to the machine's own
+memory. That room counts as taken while the machine runs. A checkpoint too
+large for it is kept on disk only, and restoring it is slower, never wrong.
 
 [`machine runs --size`](commands.md#machine-runs) adds two columns for what a run takes of the
 session's resources. RAM is the memory its machine holds right now, which can
@@ -29,8 +35,9 @@ with no machine shows `—` for RAM.
 
 The MEM column of [`machine sessions list`](commands.md#machine-sessions-list) shows the memory taken over the
 session's memory, for example `4.4G/8G`. Taken is 256MB for the session
-itself plus what each of its machines takes. A new machine starts when what
-it takes fits in the rest, and is refused when it does not.
+itself plus what each of its machines needs and the room set aside for its
+checkpoint copy. A new machine starts when what it needs fits in the rest, and
+is refused when it does not.
 
 Creating a session doesn't switch you to it. Tell Machine which one to use.
 
