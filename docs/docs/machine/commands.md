@@ -68,9 +68,9 @@ Lists operations on runs and how they finished.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Shows
 every state, newest first; use `--state` to show some. A rewind
-left unfinished is owed by its run, and the run's next start finishes it. An
+left unfinished is finished by the run's next start. An
 operation outlives the command that started it, so one interrupted with Ctrl-C
-is still found here by its id. For work on the account's repository, see machine
+is still found here by its id. For work on the account's storage, see machine
 storage ops.
 
 ```
@@ -330,8 +330,8 @@ Kill a run. See [Stopping and starting](running-a-machine.md#stopping-and-starti
 
 Kills a machine, saving its state first when it still can.
 
-The machine is asked to stop and save, as stop does, and is signalled if it does
-not go within a few seconds; a machine that did not save has its tip replayed by
+The machine is asked to stop and save, as stop does, and is ended if it does not
+stop within a few seconds; a machine that did not save has its tip replayed by
 the next start, and kill says so. Waits until it is gone, the same as wait
 `--for` stopped. Already gone is success. Use `--timeout` to bound the wait, or
 `--no-wait` to return as soon as the request is accepted.
@@ -357,7 +357,7 @@ Starts an existing run.
 A stopped run resumes at its tip. A run that stopped past its last checkpoint
 replays its recorded tail from that checkpoint to reach the tip, and says how
 many entries it replayed; `--no-recover` refuses instead. A branch that was
-created but never ran starts in a new process, and its parent keeps running.
+created but never ran starts in its own machine, and its parent keeps running.
 
 The machine runs with the run's own run options; `--daemon`, `--single-step`,
 `--limit` and `--backstop-limit` replace them for this start only, and
@@ -432,10 +432,10 @@ Preload into a session. See [Stopping and starting](running-a-machine.md#stoppin
 
 Fetches a run or a disk onto this session.
 
-Takes any run or disk in the catalog, so a run can be brought here to start
+Takes any run or disk of the account, so a run can be brought here to start
 later, or a disk put in place before a run is created against it. `-a` fetches
-the data parents and boot disks this session's runs need. Already there is fine.
-Needs a session; the local service has no durable copy to fetch from.
+the ancestors and boot disks this session's runs need. Already there is fine.
+Needs a session.
 
 ```
 usage: machine preload [-h] [-a] {run,disk} ...
@@ -452,8 +452,7 @@ Preload a run. See [Stopping and starting](running-a-machine.md#stopping-and-sta
 Preloads a run into a session.
 
 Fetches the run from durable storage onto the session so it is there before it
-is needed. Already there is fine. The disk the run boots is rematerialized with
-it.
+is needed. Already there is fine. The disk the run boots is fetched with it.
 
 ```
 usage: machine preload run [-h] [-a] [run]
@@ -494,12 +493,11 @@ Offload session copies. See [Stopping and starting](running-a-machine.md#stoppin
 
 Lists or drops this session's local copies.
 
-Bare offload lists this session's own run folders and disk files that can be
+Bare offload lists this session's copies of runs and disks that can be
 dropped to free its storage, and counts the ones in use. The run and disk
 subcommands drop one kind. `-a` drops every run and disk not in use. The durable
-copy stays. Start or preload brings a run folder back; the next start
-rematerializes a disk. Needs a session; the local service has nowhere to offload
-to.
+copy stays. Start or preload brings a run back; the next start fetches a disk
+again. Needs a session.
 
 ```
 usage: machine offload [-h] [--runs] [--disks] [-a] {list,run,disk} ...
@@ -536,8 +534,8 @@ Offload a run. See [Stopping and starting](running-a-machine.md#stopping-and-sta
 
 Offloads a run from a session.
 
-Drops the session's local folder and frees its storage; the run itself stays on
-durable storage. Stop does not do this. Start or preload brings the folder back.
+Drops the session's copy of the run and frees its storage; the run itself stays
+on durable storage. Stop does not do this. Start or preload brings it back.
 Does not drop the disk the run boots.
 
 ```
@@ -558,8 +556,8 @@ Offload a disk. See [Stopping and starting](running-a-machine.md#stopping-and-st
 
 Offloads a disk from a session.
 
-Drops the session file; the account disk stays. A live machine that boots it
-refuses. The next start rematerializes it.
+Drops the session's copy of the disk; the account disk stays. A live machine
+that boots it refuses. The next start fetches it again.
 
 ```
 usage: machine offload disk [-h] [-a] [disk]
@@ -688,8 +686,7 @@ List tasks in a machine. See [Looking at tasks](steering-programs.md#looking-at-
 
 Lists the tasks running inside a machine.
 
-One row per task, keyed by tid; tgid is the process. The table is rebuilt
-whenever the machine forks, execs or exits a task. Use `--vcpu` to list only one
+One row per task, keyed by tid; tgid is the process. Use `--vcpu` to list only one
 vCPU's, `--focused` for only the tasks focus is steering, and cgroups to list
 the same tasks grouped by cgroup.
 
@@ -706,8 +703,8 @@ thread leaves nothing to run and no decision coming, so a release then needs one
 forced with irq preempt `--vcpu` all.
 
 exits lists the tasks that have left the table and how each one ended, newest
-last. The machine records them as it reaps, so the list survives a checkpoint and
-a replay; it keeps a bounded number and says how many it dropped.
+last. The list is kept across checkpoints and replays. It holds a bounded number
+and says how many it dropped.
 
 ```
 usage: machine tasks [-h] [--vcpu n] [--focused] run {cgroups,exits,hold,yield,release,slice,pin} ...
@@ -933,12 +930,9 @@ Show or change the machine's clock. See [Interrupts and time](steering-programs.
 
 Shows a machine's clock.
 
-The rate is nanoseconds of machine time per unit of machine work, and it decides
-whether a timer is due when a dispatch ends; the instruction limit decides where
-that is. Both are needed to place a tick. Use rate to change it and add to push
-the clock forward without running the machine. There is no way back: the clock
-drives the machine's TSC, which never goes backwards, so use fork `--at` to return
-to an earlier point.
+Use rate to change how fast machine time passes, and add to push the clock
+forward without running the machine. The clock only goes forward, so use fork
+`--at` to return to an earlier point.
 
 ```
 usage: machine vtime [-h] run {rate,add} ...
@@ -979,7 +973,7 @@ List checkpoints. See [Checkpoints](checkpoints-and-branches.md#checkpoints).
 Lists the checkpoints of a branch.
 
 The listing shows the first 25 checkpoints. Use `--limit` for a different page
-size. Read from the database, so no active run is required. The durable column
+size. No running machine is needed. The durable column
 reports whether a checkpoint has been synced to durable storage. Use `-o` json
 for an object of run_id, hosted and checkpoints rather than a bare list.
 
@@ -1322,8 +1316,8 @@ Publish a run to shared storage. See [Stopping and starting](running-a-machine.m
 
 Publishes a run to shared storage.
 
-Pushes the run's folder so any session can start it. Runs in the session that
-holds the folder.
+Publishes the run so any session can start it. Runs in the session that holds
+the run.
 
 ```
 usage: machine sync [-h] run
@@ -1445,8 +1439,7 @@ Branch at a point and switch onto it. See [Moving around](checkpoints-and-branch
 
 Forks a branch at a point and switches onto it.
 
-The move a walk makes most, and the only one that forks and switches in a single
-step. The point may be a time, -10ms back, #entry, ^checkpoint, now, parent [n],
+The only command that forks and switches in a single step. The point may be a time, -10ms back, #entry, ^checkpoint, now, parent [n],
 root, or a mark written %mark; each of them names a point on this run's own
 line. A point that is not a checkpoint is reached by forking at the nearest one
 at or before it and replaying the difference.
@@ -1490,9 +1483,8 @@ twice at most, and not again once it diverges the same way twice. An entry the
 host interrupted is replayed again the same way and is not a divergence. Use
 `--retry` to set how many retries; `--retry` 0 replays each entry once.
 
-The replay aims its interrupt short of each recorded stop by the machine's
-default skid, so an interrupt that skids less still lands in time. Use `--skid`
-to aim closer. A smaller skid makes a miss more likely.
+Use `--skid` to set how early the replay stops before each recorded entry. A
+smaller skid makes a miss more likely.
 
 ```
 usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
@@ -1869,7 +1861,7 @@ Disconnect from a session. See [Sessions](sessions.md).
 
 Disconnects from a session.
 
-The session keeps running. The tunnel is shared on this machine, so every
+The session keeps running. The connection is shared on this computer, so every
 terminal loses it.
 
 ```
@@ -2020,7 +2012,7 @@ Delete disks. See [Disks](disks.md).
 Deletes disks.
 
 Deletion is permanent. The name is free at once, and the bytes count against the
-storage quota until the reclaim removes them. A disk a run still boots is
+storage quota until a prune removes them. A disk a run still boots is
 refused; use `--force` to delete it anyway and lose those runs.
 
 ```
@@ -2128,7 +2120,7 @@ Lists operations on the account's storage and how they finished.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Shows
 every state, newest first; use `--state` to show some. STATUS says why an
-operation failed, and how many objects a running check has read. These act on the account's repository rather than on a
+operation failed, and how many objects a running check has read. These act on the account's storage rather than on a
 run, so they are listed here rather than by machine ops, and they answer with no
 session.
 
@@ -2166,20 +2158,17 @@ usage: machine storage prune [-h] [-y] [--status]
 
 Check every stored object can be read. See [Account and billing](account-and-billing.md).
 
-Reads every object of the account's storage back and checks it against its
-name.
+Reads everything in the account's storage back and reports what could not be
+read.
 
-Each object is named by the SHA-256 of its contents, so an object that cannot
-be read, or reads as something else, is found without trusting anything but
-the read. Nothing is written and no lock is taken; the check runs beside
-sessions and beside a prune. An object deleted while the check runs is counted
-apart, not as unreadable.
+Nothing is written. The check can run while sessions and a prune run. An object
+deleted while the check runs is counted apart, not as unreadable.
 
 Waits for the check and shows the objects and bytes read as it goes. Use
 `--timeout` to bound the wait, or `--no-wait` to return once it is started. The
 check is an operation: it goes on if the command is interrupted, and machine
 storage ops lists it. Fails when an object could not be read, and names each
-one with the store's id for the failed request.
+one with the id of the failed request.
 
 ```
 usage: machine storage check [-h] [--status] [--no-wait]
@@ -2196,7 +2185,7 @@ Browse and copy files from a run's disk. See [Reading the disk](reading-the-disk
 
 Lists, copies, or prints files from a run's disk.
 
-Reads are snapshot-pinned. They never perturb execution.
+Reads are pinned to a checkpoint and never change how the machine executes.
 
 ```
 usage: machine artifacts [-h] {ls,cp,cat} ...
@@ -2798,7 +2787,7 @@ Sign out. See [Signing up](getting-started.md#signing-up).
 
 Signs out.
 
-Revokes the access token on the server. Use `--everywhere` to sign out of every
+Revokes the access token. Use `--everywhere` to sign out of every
 device and browser.
 
 ```

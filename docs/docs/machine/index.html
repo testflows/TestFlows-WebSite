@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791475925651" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791475925651" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791475609827" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791475925651" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -801,20 +801,18 @@ builds and pulls <code>arm64</code> images by default, and those cannot run in a
 <code>platform: linux/amd64</code> on each service does the same. Docker builds them under
 emulation, which is slower than a native build but works. For <code>--binary</code>,
 compile for x86_64 Linux, for example <code>GOOS=linux GOARCH=amd64 go build</code>.</p>
-<h2 id="What-a-disk-holds"><a href="#What-a-disk-holds" class="headerlink" title="What a disk holds"></a>What a disk holds</h2><p>The build writes each image into the disk’s Docker store, unpacked. A machine
-that boots the disk finds every image already there and loads nothing, so the
-project starts as soon as Docker does.</p>
+<h2 id="What-a-disk-holds"><a href="#What-a-disk-holds" class="headerlink" title="What a disk holds"></a>What a disk holds</h2><p>A disk boots with its images already loaded, so the project starts as soon as
+Docker does.</p>
 <p>A disk built with <code>--load-at-boot</code> keeps the images as <code>docker save</code> tars
 instead, and Docker loads them each time the disk boots.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --load-at-boot --image myapp:latest app</span><br></pre></td></tr></table></figure>
 
 <p>That boot is slower by the whole load, every time, and the disk holds each
-image twice: the tar, and what it unpacks to. Use it for one case. <code>docker save</code> and <code>docker push</code> read a record of the original tar that only <code>docker load</code> writes, so a service that saves or pushes one of the disk’s own images
-from inside the machine needs a disk built this way. Starting containers does
-not.</p>
-<p>An image’s layers are checked as the build unpacks them, and a layer that is
-not the one the image names is refused. Layers compressed with zstd are not
-read; save the image with gzip or uncompressed layers.</p>
+image twice: the tar, and what it unpacks to. Use it when a service runs
+<code>docker save</code> or <code>docker push</code> on one of the disk’s own images from inside the
+machine. Starting containers does not need it.</p>
+<p>Layers compressed with zstd are not read; save the image with gzip or
+uncompressed layers.</p>
 <h2 id="Disk-size"><a href="#Disk-size" class="headerlink" title="Disk size"></a>Disk size</h2><p>By default Machine measures what the disk holds and adds a gigabyte, rounded
 up to a whole GB. Use <code>--size</code> to set the size you want. Not sure how big it
 will be? <code>--dry-run</code> reports what the disk would hold without building it.</p>
@@ -837,11 +835,9 @@ after deduplication and compression.</p>
 and two disks built from one image share its layers. Storage keeps one copy,
 and each disk’s DATA counts it, so the column adds up to more than your disks
 take together. <a href="#machine-storage-show"><code>machine storage</code></a> has that figure, and it is the one your quota
-counts. A disk built before DATA was measured shows <code>—</code> until you build it
-again or run <a href="#machine-disks-verify"><code>machine disks verify</code></a> on it.</p>
-<p>A disk’s ID is computed from its content, and the disk is stored under it. A
-session checks every disk it fetches against that ID before it boots one. If
-you ever doubt the copy in your account’s storage, check it:</p>
+counts. A disk that shows <code>—</code> for DATA gets a figure from
+<a href="#machine-disks-verify"><code>machine disks verify</code></a>.</p>
+<p>If you ever doubt the copy of a disk in your account’s storage, check it:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine disks verify app</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Verified app (4d13d6d911ee)</span><br></pre></td></tr></table></figure>
 
@@ -954,9 +950,8 @@ says when to stop. (A run created with <code>--no-daemon</code> answers
 <code>✗ Machine not in control mode</code>, because the machine isn’t waiting for you.)</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> tasks</span><br></pre></td></tr></table></figure>
 
-<p>Each batch of work ends when the machine’s kernel talks to Machine, so a plain
-<a href="#machine-run"><code>machine run</code></a> can stop sooner than you expect. With <code>--until</code>, Machine keeps
-going, batch after batch, until what you asked for is true. If it never gets
+<p>A plain <a href="#machine-run"><code>machine run</code></a> can stop before the point you are waiting
+for. With <code>--until</code>, Machine keeps going until what you asked for is true. If it never gets
 there, the command exits with status 3.</p>
 <p>These are the conditions you can wait for. <a href="#machine-run"><code>machine run</code></a> <code>--until</code> and
 <a href="#machine-wait"><code>machine wait</code></a> <code>--for</code> take the same ones.</p>
@@ -1000,12 +995,9 @@ there, the command exits with status 3.</p>
 under <a href="#Steering-programs">Steering programs</a>.</p>
 <p><code>--iters</code> limits how many iterations a drive may spend, and the global
 <code>--timeout</code> limits how long you are willing to wait. Whichever hits first wins.</p>
-<p>Now and then the computer running Machine takes a firmware interrupt in the
-middle of an entry, which makes that entry’s instruction and branch counts
-unusable. Machine does not record such an entry. It goes back to the entry
-before, checkpoints there and records the entry again, so the recording stays
-one a replay can follow. You see nothing except a short pause. <code>--retry</code> sets
-how many more times one entry is tried, 2 by default. If they are all
+<p>Now and then the host interrupts an entry while it is being recorded. Machine
+records that entry again, and you see nothing except a short pause. <code>--retry</code>
+sets how many more times one entry is tried, 2 by default. If they are all
 interrupted the run stops with <code>Host interrupted the run at entry N. It is not recorded.</code> and the <a href="#machine-rewind"><code>machine rewind</code></a> command that puts the run back at the
 entry before.</p>
 <h2 id="Trying-different-schedules"><a href="#Trying-different-schedules" class="headerlink" title="Trying different schedules"></a>Trying different schedules</h2><p>A program that uses threads can behave differently depending on how they
@@ -1228,12 +1220,9 @@ the run has <strong>diverged</strong>. Before giving up on it, Machine replays t
 again from the nearest checkpoint before it, twice by default. Use <code>--retry</code>
 to change that, or <code>--retry 0</code> to try each entry once. <code>--to</code> stops at a given
 entry instead of the end.</p>
-<p>The host can interrupt an entry too. A firmware interrupt on the computer
-running Machine makes one entry’s instruction and branch counts unusable. That
-says nothing about your run, so it is not a divergence. Replay prints
-<code>Interrupted: entry N, crossing 1: host SMI</code>, goes back to the nearest
-checkpoint before the entry and replays it again, counted against the same
-<code>--retry</code>. A recording does the same on its own, see
+<p>The host can interrupt an entry too. That is not a divergence. Replay prints
+<code>Interrupted: entry N, crossing 1: host SMI</code> and replays the entry again,
+counted against the same <code>--retry</code>. A recording does the same on its own, see
 <a href="#Driving-it">Driving it</a>.</p>
 <p>If a run does diverge, <a href="#machine-diff"><code>machine diff</code></a> shows how.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine diff app/try-1</span><br><span class="line">machine diff app/try-1 --entry 5000 --show regs,stack</span><br></pre></td></tr></table></figure>
@@ -1433,9 +1422,9 @@ address instead.</p>
 how much, and <a href="#machine-storage-prune"><code>machine storage prune</code></a> frees the space that deleted runs and
 disks left behind. <a href="#machine-storage-prune"><code>machine storage prune</code></a> <code>--status</code> shows the current or last
 prune.</p>
-<p><a href="#machine-storage-check"><code>machine storage check</code></a> reads every stored object back and
-checks it against its name, showing its progress as it goes. It writes nothing,
-and it names any object the store could not return.</p>
+<p><a href="#machine-storage-check"><code>machine storage check</code></a> reads everything in your account’s
+storage back and reports what it could not read, showing its progress as it
+goes. It writes nothing.</p>
 <p>Your plan’s storage quota counts TOTAL: what your runs and disks hold, and the
 space deleted ones have not given back yet. <a href="#machine-account-show"><code>machine account show</code></a> shows the
 same figure. Deleting a run or a disk moves its space to PRUNABLE, which still
@@ -1603,9 +1592,9 @@ a run limits the listing to its tree. Use <code>--roots</code> for one row per t
 <p>Lists operations on runs and how they finished.</p>
 <p>The listing shows the newest 25. Use <code>--limit</code> for a different page size. Shows
 every state, newest first; use <code>--state</code> to show some. A rewind
-left unfinished is owed by its run, and the run’s next start finishes it. An
+left unfinished is finished by the run’s next start. An
 operation outlives the command that started it, so one interrupted with Ctrl-C
-is still found here by its id. For work on the account’s repository, see machine
+is still found here by its id. For work on the account’s storage, see machine
 storage ops.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]</span><br></pre></td></tr></table></figure>
 
@@ -2080,8 +2069,8 @@ return as soon as the request is accepted.</p>
 </tbody></table>
 <h2 id="machine-kill"><a href="#machine-kill" class="headerlink" title="machine kill"></a>machine kill</h2><p>Kill a run. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Kills a machine, saving its state first when it still can.</p>
-<p>The machine is asked to stop and save, as stop does, and is signalled if it does
-not go within a few seconds; a machine that did not save has its tip replayed by
+<p>The machine is asked to stop and save, as stop does, and is ended if it does not
+stop within a few seconds; a machine that did not save has its tip replayed by
 the next start, and kill says so. Waits until it is gone, the same as wait
 <code>--for</code> stopped. Already gone is success. Use <code>--timeout</code> to bound the wait, or
 <code>--no-wait</code> to return as soon as the request is accepted.</p>
@@ -2116,7 +2105,7 @@ the next start, and kill says so. Waits until it is gone, the same as wait
 <p>A stopped run resumes at its tip. A run that stopped past its last checkpoint
 replays its recorded tail from that checkpoint to reach the tip, and says how
 many entries it replayed; <code>--no-recover</code> refuses instead. A branch that was
-created but never ran starts in a new process, and its parent keeps running.</p>
+created but never ran starts in its own machine, and its parent keeps running.</p>
 <p>The machine runs with the run’s own run options; <code>--daemon</code>, <code>--single-step</code>,
 <code>--limit</code> and <code>--backstop-limit</code> replace them for this start only, and
 <code>--pin-cpu</code> names the host CPU, the least-loaded by default.</p>
@@ -2263,10 +2252,10 @@ operation: it goes on if the command is interrupted, and <code>machine ops</code
 </tbody></table>
 <h2 id="machine-preload"><a href="#machine-preload" class="headerlink" title="machine preload"></a>machine preload</h2><p>Preload into a session. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Fetches a run or a disk onto this session.</p>
-<p>Takes any run or disk in the catalog, so a run can be brought here to start
+<p>Takes any run or disk of the account, so a run can be brought here to start
 later, or a disk put in place before a run is created against it. <code>-a</code> fetches
-the data parents and boot disks this session’s runs need. Already there is fine.
-Needs a session; the local service has no durable copy to fetch from.</p>
+the ancestors and boot disks this session’s runs need. Already there is fine.
+Needs a session.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine preload [-h] [-a] &#123;run,disk&#125; ...</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2284,8 +2273,7 @@ Needs a session; the local service has no durable copy to fetch from.</p>
 <h3 id="machine-preload-run"><a href="#machine-preload-run" class="headerlink" title="machine preload run"></a>machine preload run</h3><p>Preload a run. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Preloads a run into a session.</p>
 <p>Fetches the run from durable storage onto the session so it is there before it
-is needed. Already there is fine. The disk the run boots is rematerialized with
-it.</p>
+is needed. Already there is fine. The disk the run boots is fetched with it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine preload run [-h] [-a] [run]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2344,12 +2332,11 @@ there is fine.</p>
 </tbody></table>
 <h2 id="machine-offload"><a href="#machine-offload" class="headerlink" title="machine offload"></a>machine offload</h2><p>Offload session copies. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Lists or drops this session’s local copies.</p>
-<p>Bare offload lists this session’s own run folders and disk files that can be
+<p>Bare offload lists this session’s copies of runs and disks that can be
 dropped to free its storage, and counts the ones in use. The run and disk
 subcommands drop one kind. <code>-a</code> drops every run and disk not in use. The durable
-copy stays. Start or preload brings a run folder back; the next start
-rematerializes a disk. Needs a session; the local service has nowhere to offload
-to.</p>
+copy stays. Start or preload brings a run back; the next start fetches a disk
+again. Needs a session.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine offload [-h] [--runs] [--disks] [-a] &#123;list,run,disk&#125; ...</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2397,8 +2384,8 @@ both, to show both.</p>
 </tbody></table>
 <h3 id="machine-offload-run"><a href="#machine-offload-run" class="headerlink" title="machine offload run"></a>machine offload run</h3><p>Offload a run. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Offloads a run from a session.</p>
-<p>Drops the session’s local folder and frees its storage; the run itself stays on
-durable storage. Stop does not do this. Start or preload brings the folder back.
+<p>Drops the session’s copy of the run and frees its storage; the run itself stays
+on durable storage. Stop does not do this. Start or preload brings it back.
 Does not drop the disk the run boots.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine offload run [-h] [-a] [run]</span><br></pre></td></tr></table></figure>
 
@@ -2428,8 +2415,8 @@ Does not drop the disk the run boots.</p>
 </tbody></table>
 <h3 id="machine-offload-disk"><a href="#machine-offload-disk" class="headerlink" title="machine offload disk"></a>machine offload disk</h3><p>Offload a disk. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Offloads a disk from a session.</p>
-<p>Drops the session file; the account disk stays. A live machine that boots it
-refuses. The next start rematerializes it.</p>
+<p>Drops the session’s copy of the disk; the account disk stays. A live machine
+that boots it refuses. The next start fetches it again.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine offload disk [-h] [-a] [disk]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2604,8 +2591,7 @@ tree already holds is refused and stays with that branch.</p>
 </tbody></table>
 <h2 id="machine-tasks"><a href="#machine-tasks" class="headerlink" title="machine tasks"></a>machine tasks</h2><p>List tasks in a machine. See <a href="#Looking-at-tasks">Looking at tasks</a>.</p>
 <p>Lists the tasks running inside a machine.</p>
-<p>One row per task, keyed by tid; tgid is the process. The table is rebuilt
-whenever the machine forks, execs or exits a task. Use <code>--vcpu</code> to list only one
+<p>One row per task, keyed by tid; tgid is the process. Use <code>--vcpu</code> to list only one
 vCPU’s, <code>--focused</code> for only the tasks focus is steering, and cgroups to list
 the same tasks grouped by cgroup.</p>
 <p>hold takes a thread off the runqueue, so the scheduler cannot pick it. yield
@@ -2618,8 +2604,8 @@ survives release.</p>
 thread leaves nothing to run and no decision coming, so a release then needs one
 forced with irq preempt <code>--vcpu</code> all.</p>
 <p>exits lists the tasks that have left the table and how each one ended, newest
-last. The machine records them as it reaps, so the list survives a checkpoint and
-a replay; it keeps a bounded number and says how many it dropped.</p>
+last. The list is kept across checkpoints and replays. It holds a bounded number
+and says how many it dropped.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine tasks [-h] [--vcpu n] [--focused] run &#123;cgroups,exits,hold,yield,release,slice,pin&#125; ...</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2902,12 +2888,9 @@ choose that boundary.</p>
 </tbody></table>
 <h2 id="machine-vtime"><a href="#machine-vtime" class="headerlink" title="machine vtime"></a>machine vtime</h2><p>Show or change the machine’s clock. See <a href="#Interrupts-and-time">Interrupts and time</a>.</p>
 <p>Shows a machine’s clock.</p>
-<p>The rate is nanoseconds of machine time per unit of machine work, and it decides
-whether a timer is due when a dispatch ends; the instruction limit decides where
-that is. Both are needed to place a tick. Use rate to change it and add to push
-the clock forward without running the machine. There is no way back: the clock
-drives the machine’s TSC, which never goes backwards, so use fork <code>--at</code> to return
-to an earlier point.</p>
+<p>Use rate to change how fast machine time passes, and add to push the clock
+forward without running the machine. The clock only goes forward, so use fork
+<code>--at</code> to return to an earlier point.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine vtime [-h] run &#123;rate,add&#125; ...</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -2955,7 +2938,7 @@ to an earlier point.</p>
 <h2 id="machine-checkpoints"><a href="#machine-checkpoints" class="headerlink" title="machine checkpoints"></a>machine checkpoints</h2><p>List checkpoints. See <a href="#Checkpoints">Checkpoints</a>.</p>
 <p>Lists the checkpoints of a branch.</p>
 <p>The listing shows the first 25 checkpoints. Use <code>--limit</code> for a different page
-size. Read from the database, so no active run is required. The durable column
+size. No running machine is needed. The durable column
 reports whether a checkpoint has been synced to durable storage. Use <code>-o</code> json
 for an object of run_id, hosted and checkpoints rather than a bare list.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine checkpoints [-h] [--durable] [--since date|age] [--until date|age] [--sort field] [--reverse] [--limit n] [--offset n] [-w] run</span><br></pre></td></tr></table></figure>
@@ -3485,8 +3468,8 @@ also set.</p>
 </tbody></table>
 <h2 id="machine-sync"><a href="#machine-sync" class="headerlink" title="machine sync"></a>machine sync</h2><p>Publish a run to shared storage. See <a href="#Stopping-and-starting">Stopping and starting</a>.</p>
 <p>Publishes a run to shared storage.</p>
-<p>Pushes the run’s folder so any session can start it. Runs in the session that
-holds the folder.</p>
+<p>Publishes the run so any session can start it. Runs in the session that holds
+the run.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine sync [-h] run</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -3660,8 +3643,7 @@ forked from. A run with a branch forked after the point is refused.</p>
 </tbody></table>
 <h2 id="machine-go"><a href="#machine-go" class="headerlink" title="machine go"></a>machine go</h2><p>Branch at a point and switch onto it. See <a href="#Moving-around">Moving around</a>.</p>
 <p>Forks a branch at a point and switches onto it.</p>
-<p>The move a walk makes most, and the only one that forks and switches in a single
-step. The point may be a time, -10ms back, #entry, ^checkpoint, now, parent [n],
+<p>The only command that forks and switches in a single step. The point may be a time, -10ms back, #entry, ^checkpoint, now, parent [n],
 root, or a mark written %mark; each of them names a point on this run’s own
 line. A point that is not a checkpoint is reached by forking at the nearest one
 at or before it and replaying the difference.</p>
@@ -3732,9 +3714,8 @@ not refused; the replay diverges at the first entry that does not reproduce.</p>
 twice at most, and not again once it diverges the same way twice. An entry the
 host interrupted is replayed again the same way and is not a divergence. Use
 <code>--retry</code> to set how many retries; <code>--retry</code> 0 replays each entry once.</p>
-<p>The replay aims its interrupt short of each recorded stop by the machine’s
-default skid, so an interrupt that skids less still lands in time. Use <code>--skid</code>
-to aim closer. A smaller skid makes a miss more likely.</p>
+<p>Use <code>--skid</code> to set how early the replay stops before each recorded entry. A
+smaller skid makes a miss more likely.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -4261,7 +4242,7 @@ not running yet.</p>
 </tbody></table>
 <h3 id="machine-sessions-disconnect"><a href="#machine-sessions-disconnect" class="headerlink" title="machine sessions disconnect"></a>machine sessions disconnect</h3><p>Disconnect from a session. See <a href="#Sessions">Sessions</a>.</p>
 <p>Disconnects from a session.</p>
-<p>The session keeps running. The tunnel is shared on this machine, so every
+<p>The session keeps running. The connection is shared on this computer, so every
 terminal loses it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine sessions disconnect [-h] [session]</span><br></pre></td></tr></table></figure>
 
@@ -4504,7 +4485,7 @@ holds each image twice and is sized for both.</p>
 <h3 id="machine-disks-delete"><a href="#machine-disks-delete" class="headerlink" title="machine disks delete"></a>machine disks delete</h3><p>Delete disks. See <a href="#Disks">Disks</a>.</p>
 <p>Deletes disks.</p>
 <p>Deletion is permanent. The name is free at once, and the bytes count against the
-storage quota until the reclaim removes them. A disk a run still boots is
+storage quota until a prune removes them. A disk a run still boots is
 refused; use <code>--force</code> to delete it anyway and lose those runs.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine disks delete [-h] [-y] [-f] name [name ...]</span><br></pre></td></tr></table></figure>
 
@@ -4643,7 +4624,7 @@ started. One check runs at a time for an account.</p>
 <p>Lists operations on the account’s storage and how they finished.</p>
 <p>The listing shows the newest 25. Use <code>--limit</code> for a different page size. Shows
 every state, newest first; use <code>--state</code> to show some. STATUS says why an
-operation failed, and how many objects a running check has read. These act on the account’s repository rather than on a
+operation failed, and how many objects a running check has read. These act on the account’s storage rather than on a
 run, so they are listed here rather than by machine ops, and they answer with no
 session.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]</span><br></pre></td></tr></table></figure>
@@ -4709,18 +4690,15 @@ session.</p>
 </tr>
 </tbody></table>
 <h3 id="machine-storage-check"><a href="#machine-storage-check" class="headerlink" title="machine storage check"></a>machine storage check</h3><p>Check every stored object can be read. See <a href="#Account-and-billing">Account and billing</a>.</p>
-<p>Reads every object of the account’s storage back and checks it against its
-name.</p>
-<p>Each object is named by the SHA-256 of its contents, so an object that cannot
-be read, or reads as something else, is found without trusting anything but
-the read. Nothing is written and no lock is taken; the check runs beside
-sessions and beside a prune. An object deleted while the check runs is counted
-apart, not as unreadable.</p>
+<p>Reads everything in the account’s storage back and reports what could not be
+read.</p>
+<p>Nothing is written. The check can run while sessions and a prune run. An object
+deleted while the check runs is counted apart, not as unreadable.</p>
 <p>Waits for the check and shows the objects and bytes read as it goes. Use
 <code>--timeout</code> to bound the wait, or <code>--no-wait</code> to return once it is started. The
 check is an operation: it goes on if the command is interrupted, and machine
 storage ops lists it. Fails when an object could not be read, and names each
-one with the store’s id for the failed request.</p>
+one with the id of the failed request.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine storage check [-h] [--status] [--no-wait]</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -4741,7 +4719,7 @@ one with the store’s id for the failed request.</p>
 </tbody></table>
 <h2 id="machine-artifacts"><a href="#machine-artifacts" class="headerlink" title="machine artifacts"></a>machine artifacts</h2><p>Browse and copy files from a run’s disk. See <a href="#Reading-the-disk">Reading the disk</a>.</p>
 <p>Lists, copies, or prints files from a run’s disk.</p>
-<p>Reads are snapshot-pinned. They never perturb execution.</p>
+<p>Reads are pinned to a checkpoint and never change how the machine executes.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine artifacts [-h] &#123;ls,cp,cat&#125; ...</span><br></pre></td></tr></table></figure>
 
 <h3 id="machine-artifacts-ls"><a href="#machine-artifacts-ls" class="headerlink" title="machine artifacts ls"></a>machine artifacts ls</h3><p>List files in a run’s disk. See <a href="#Reading-the-disk">Reading the disk</a>.</p>
@@ -5446,7 +5424,7 @@ close already in progress.</p>
 
 <h2 id="machine-logout"><a href="#machine-logout" class="headerlink" title="machine logout"></a>machine logout</h2><p>Sign out. See <a href="#Signing-up">Signing up</a>.</p>
 <p>Signs out.</p>
-<p>Revokes the access token on the server. Use <code>--everywhere</code> to sign out of every
+<p>Revokes the access token. Use <code>--everywhere</code> to sign out of every
 device and browser.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine logout [-h] [--everywhere]</span><br></pre></td></tr></table></figure>
 
@@ -5870,9 +5848,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791475609827"></script>
-<script src="/js/machine-hero-type.js?v=1791475609827"></script>
-<script src="/js/download-platforms.js?v=1791475609827"></script>
+<script src="/js/index-code-type.js?v=1791475925651"></script>
+<script src="/js/machine-hero-type.js?v=1791475925651"></script>
+<script src="/js/download-platforms.js?v=1791475925651"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

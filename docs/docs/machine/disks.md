@@ -350,9 +350,8 @@ compile for x86_64 Linux, for example `GOOS=linux GOARCH=amd64 go build`.
 
 ## What a disk holds
 
-The build writes each image into the disk's Docker store, unpacked. A machine
-that boots the disk finds every image already there and loads nothing, so the
-project starts as soon as Docker does.
+A disk boots with its images already loaded, so the project starts as soon as
+Docker does.
 
 A disk built with `--load-at-boot` keeps the images as `docker save` tars
 instead, and Docker loads them each time the disk boots.
@@ -362,15 +361,12 @@ machine disks build --load-at-boot --image myapp:latest app
 ```
 
 That boot is slower by the whole load, every time, and the disk holds each
-image twice: the tar, and what it unpacks to. Use it for one case. `docker
-save` and `docker push` read a record of the original tar that only `docker
-load` writes, so a service that saves or pushes one of the disk's own images
-from inside the machine needs a disk built this way. Starting containers does
-not.
+image twice: the tar, and what it unpacks to. Use it when a service runs
+`docker save` or `docker push` on one of the disk's own images from inside the
+machine. Starting containers does not need it.
 
-An image's layers are checked as the build unpacks them, and a layer that is
-not the one the image names is refused. Layers compressed with zstd are not
-read; save the image with gzip or uncompressed layers.
+Layers compressed with zstd are not read; save the image with gzip or
+uncompressed layers.
 
 ## Disk size
 
@@ -420,12 +416,10 @@ Disks share what they have in common: every disk carries the same platform,
 and two disks built from one image share its layers. Storage keeps one copy,
 and each disk's DATA counts it, so the column adds up to more than your disks
 take together. [`machine storage`](commands.md#machine-storage-show) has that figure, and it is the one your quota
-counts. A disk built before DATA was measured shows `—` until you build it
-again or run [`machine disks verify`](commands.md#machine-disks-verify) on it.
+counts. A disk that shows `—` for DATA gets a figure from
+[`machine disks verify`](commands.md#machine-disks-verify).
 
-A disk's ID is computed from its content, and the disk is stored under it. A
-session checks every disk it fetches against that ID before it boots one. If
-you ever doubt the copy in your account's storage, check it:
+If you ever doubt the copy of a disk in your account's storage, check it:
 
 ```bash
 machine disks verify app
