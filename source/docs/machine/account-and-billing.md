@@ -35,9 +35,9 @@ how much, and [`machine storage prune`](commands.md#machine-storage-prune) frees
 disks left behind. [`machine storage prune`](commands.md#machine-storage-prune) `--status` shows the current or last
 prune.
 
-[`machine storage check`](commands.md#machine-storage-check) reads every stored object back and
-checks it against its name, showing its progress as it goes. It writes nothing,
-and it names any object the store could not return.
+[`machine storage check`](commands.md#machine-storage-check) reads everything in your account's
+storage back and reports what it could not read, showing its progress as it
+goes. It writes nothing.
 
 Your plan's storage quota counts TOTAL: what your runs and disks hold, and the
 space deleted ones have not given back yet. [`machine account show`](commands.md#machine-account-show) shows the

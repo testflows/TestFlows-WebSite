@@ -15,12 +15,9 @@ again from the nearest checkpoint before it, twice by default. Use `--retry`
 to change that, or `--retry 0` to try each entry once. `--to` stops at a given
 entry instead of the end.
 
-The host can interrupt an entry too. A firmware interrupt on the computer
-running Machine makes one entry's instruction and branch counts unusable. That
-says nothing about your run, so it is not a divergence. Replay prints
-`Interrupted: entry N, crossing 1: host SMI`, goes back to the nearest
-checkpoint before the entry and replays it again, counted against the same
-`--retry`. A recording does the same on its own, see
+The host can interrupt an entry too. That is not a divergence. Replay prints
+`Interrupted: entry N, crossing 1: host SMI` and replays the entry again,
+counted against the same `--retry`. A recording does the same on its own, see
 [Driving it](running-a-machine.md#driving-it).
 
 If a run does diverge, [`machine diff`](commands.md#machine-diff) shows how.

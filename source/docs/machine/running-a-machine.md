@@ -39,9 +39,8 @@ says when to stop. (A run created with `--no-daemon` answers
 machine run app --until tasks
 ```
 
-Each batch of work ends when the machine's kernel talks to Machine, so a plain
-[`machine run`](commands.md#machine-run) can stop sooner than you expect. With `--until`, Machine keeps
-going, batch after batch, until what you asked for is true. If it never gets
+A plain [`machine run`](commands.md#machine-run) can stop before the point you are waiting
+for. With `--until`, Machine keeps going until what you asked for is true. If it never gets
 there, the command exits with status 3.
 
 These are the conditions you can wait for. [`machine run`](commands.md#machine-run) `--until` and
@@ -63,12 +62,9 @@ under [Steering programs](steering-programs.md).
 `--iters` limits how many iterations a drive may spend, and the global
 `--timeout` limits how long you are willing to wait. Whichever hits first wins.
 
-Now and then the computer running Machine takes a firmware interrupt in the
-middle of an entry, which makes that entry's instruction and branch counts
-unusable. Machine does not record such an entry. It goes back to the entry
-before, checkpoints there and records the entry again, so the recording stays
-one a replay can follow. You see nothing except a short pause. `--retry` sets
-how many more times one entry is tried, 2 by default. If they are all
+Now and then the host interrupts an entry while it is being recorded. Machine
+records that entry again, and you see nothing except a short pause. `--retry`
+sets how many more times one entry is tried, 2 by default. If they are all
 interrupted the run stops with `Host interrupted the run at entry N. It is not
 recorded.` and the [`machine rewind`](commands.md#machine-rewind) command that puts the run back at the
 entry before.
