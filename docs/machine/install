@@ -32,6 +32,15 @@
 # Everything happens inside main(), which is only called on the last line. If the
 # download is cut short, bash never reaches that line and nothing runs.
 
+# Piped into sh, which is dash on Debian and Ubuntu, the next line fails with
+# "set: Illegal option -o pipefail" and names nothing the reader can act on.
+# Written for any POSIX shell, since this is the one line another shell runs.
+if [ -z "${BASH_VERSION:-}" ]; then
+    echo "This installer needs bash." >&2
+    echo "Install with curl https://testflows.com/machine/install -fsS | bash" >&2
+    exit 1
+fi
+
 set -euo pipefail
 
 BASE_URL="${MACHINE_BASE_URL:-https://testflows-machine-client.fsn1.your-objectstorage.com}"
