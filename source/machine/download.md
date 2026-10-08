@@ -44,11 +44,20 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
 ```bash
-machine-env
+$ machine-env
+(machine) $ machine login
+(machine) $ machine --version
+(machine) $ exit
+$
+```
+
+<p>The <code>(machine)</code> at the start of the prompt says you are in it: there <code>machine</code> is this client. <code>exit</code> leaves it, back to the shell you were in. To run one command there without starting a shell:</p>
+
+```bash
 machine-env -- machine --version
 ```
 
-<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
+<p>That form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section">
@@ -122,11 +131,20 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
 ```bash
-machine-env
+$ machine-env
+(machine) $ machine login
+(machine) $ machine --version
+(machine) $ exit
+$
+```
+
+<p>The <code>(machine)</code> at the start of the prompt says you are in it: there <code>machine</code> is this client. <code>exit</code> leaves it, back to the shell you were in. To run one command there without starting a shell:</p>
+
+```bash
 machine-env -- machine --version
 ```
 
-<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
+<p>That form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section download-note">
@@ -213,11 +231,20 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
 ```bash
-machine-env
+$ machine-env
+(machine) $ machine login
+(machine) $ machine --version
+(machine) $ exit
+$
+```
+
+<p>The <code>(machine)</code> at the start of the prompt says you are in it: there <code>machine</code> is this client. <code>exit</code> leaves it, back to the shell you were in. To run one command there without starting a shell:</p>
+
+```bash
 machine-env -- machine --version
 ```
 
-<p>The second form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
+<p>That form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
 </div>
 
 <div class="download-section download-note">
@@ -316,10 +343,11 @@ wsl --install
 
 <div class="download-section">
 <h2>A specific version</h2>
-<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code>:</p>
+<p>The installer gets the latest release. <code>--list</code> shows the versions there are, newest first, and <code>--version</code> installs one of them:</p>
 
 ```bash
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash
+curl https://testflows.com/machine/install -fsS | bash -s -- --list
+curl https://testflows.com/machine/install -fsS | bash -s -- --version YYYYMMDD-HHMM
 ```
 
 <p>Set <code>MACHINE_INSTALL_DIR</code> to install somewhere other than <code>~/.local/bin</code>. <code>--no-signature</code> and <code>--no-checksum</code> skip checks; a normal install needs neither.</p>

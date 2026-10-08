@@ -39,11 +39,20 @@ starts with `(machine)`, your usual shell setup is loaded, and `exit` leaves. It
 supports zsh and bash.
 
 ```bash
-machine-env
+$ machine-env
+(machine) $ machine login
+(machine) $ machine --version
+(machine) $ exit
+$
+```
+
+The `(machine)` at the start of the prompt says you are in it: there `machine` is this client. `exit` leaves it, back to the shell you were in. To run one command there without starting a shell:
+
+```bash
 machine-env -- machine --version
 ```
 
-The second form runs one command in that environment and starts no shell, which
+That form runs one command in that environment and starts no shell, which
 suits scripts and CI. To see which `machine` you get, run `which machine`:
 `~/.local/bin/machine` is the client and `/usr/bin/machine` is the system's. If
 `machine --version` prints a processor type instead of a version, you are

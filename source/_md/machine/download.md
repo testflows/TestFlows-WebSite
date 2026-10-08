@@ -31,11 +31,20 @@ The client needs the OpenSSH client, `ssh`, which macOS and most Linux systems h
 The installer writes `machine-env` beside `machine` on every system. It starts a shell in which `machine` is this client, ahead of any other `machine` on your PATH. The prompt starts with `(machine)`, your usual shell setup is loaded, and `exit` leaves. It supports zsh and bash.
 
 ```bash
-machine-env
+$ machine-env
+(machine) $ machine login
+(machine) $ machine --version
+(machine) $ exit
+$
+```
+
+The `(machine)` at the start of the prompt says you are in it: there `machine` is this client. `exit` leaves it, back to the shell you were in. To run one command there without starting a shell:
+
+```bash
 machine-env -- machine --version
 ```
 
-The second form runs one command in that environment and starts no shell, for scripts and CI.
+That form runs one command in that environment and starts no shell, for scripts and CI.
 
 **On macOS, use it.** macOS ships `/usr/bin/machine`, which prints the processor type, such as `arm64`. Typing `machine` runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. `machine-env` avoids both. To see which `machine` you get, run `which machine`: `~/.local/bin/machine` is this client and `/usr/bin/machine` is the system's. If `machine --version` prints a processor type instead of a version, you are running the system command. If your shell cannot find `machine-env` either, run `~/.local/bin/machine-env`.
 
@@ -114,10 +123,11 @@ Every release's checksum is signed with two keys: a GPG key, https://testflows.c
 
 ## A specific version
 
-The installer gets the latest release. To install a particular one, set `MACHINE_VERSION`:
+The installer gets the latest release. `--list` shows the versions there are, newest first, and `--version` installs one of them:
 
 ```bash
-curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash
+curl https://testflows.com/machine/install -fsS | bash -s -- --list
+curl https://testflows.com/machine/install -fsS | bash -s -- --version YYYYMMDD-HHMM
 ```
 
 Set `MACHINE_INSTALL_DIR` to install somewhere other than `~/.local/bin`. `--no-signature` and `--no-checksum` skip checks; a normal install needs neither.

@@ -67,14 +67,14 @@ List operations. See [Looking at it](running-a-machine.md#looking-at-it).
 Lists operations on runs and how they finished.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Shows
-pending, unfinished and failed by default; use `--state` done for the rest. A rewind
+every state, newest first; use `--state` to show some. A rewind
 left unfinished is owed by its run, and the run's next start finishes it. An
 operation outlives the command that started it, so one interrupted with Ctrl-C
 is still found here by its id. For work on the account's repository, see machine
 storage ops.
 
 ```
-usage: machine ops [-h] [--op-id id] [--state [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]
+usage: machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|age] [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w] [run]
 ```
 
 | Argument | Does |
@@ -84,8 +84,8 @@ usage: machine ops [-h] [--op-id id] [--state [^]state] [--type type] [--since d
 | Option | Does |
 |---|---|
 | `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
-| `--state [^]state` | Filter by state: pending, unfinished, done, failed (default: pending, unfinished, failed; repeat = OR; ^ excludes) |
-| `--type type` | Filter by kind: checkpoint, branch, switch (repeat = OR) |
+| `--state [^]state` | Filter by state: running, unfinished, done, failed (default: all; repeat = OR; ^ excludes) |
+| `--type [^]type` | Filter by type: checkpoint, branch, switch, rewind, start, delete (default: all; repeat = OR; ^ excludes) |
 | `--since date\|age` | Since a date or age |
 | `--until date\|age` | Until a date or age |
 | `--limit n` | Show at most n operations (default: 25) |
@@ -400,8 +400,8 @@ The first operand names the run to remove; `-a` removes every run, and `--disk`
 removes every run that boots one disk, naming it or its id. Use `-c` `-a` to
 resume interrupted delete operations.
 
-Waits until the run is gone. Use `--timeout` to bound the wait, or `--no-wait`
-to return once the delete of one run is accepted. With `--stop` or `-f` the
+Waits until the run is gone. Use `--timeout` to bound the wait, for one run or
+for all of a tree, or `--no-wait` to return once the delete of one run is accepted. With `--stop` or `-f` the
 machine is stopped first, and that is waited for either way. The delete is an
 operation: it goes on if the command is interrupted, and `machine ops` lists it.
 
@@ -2099,7 +2099,7 @@ Manage storage. See [Account and billing](account-and-billing.md).
 Shows and manages storage.
 
 ```
-usage: machine storage [-h] [--refresh] {show,ops,prune} ...
+usage: machine storage [-h] [--refresh] {show,ops,prune,check} ...
 ```
 
 | Option | Does |
@@ -2127,19 +2127,20 @@ List storage operations.
 Lists operations on the account's storage and how they finished.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Shows
-pending and failed by default; use `--state` done for the rest. These act on the
-account's repository rather than on a run, so they are listed here rather than
-by machine ops, and they answer with no session.
+every state, newest first; use `--state` to show some. STATUS says why an
+operation failed, and how many objects a running check has read. These act on the account's repository rather than on a
+run, so they are listed here rather than by machine ops, and they answer with no
+session.
 
 ```
-usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]
+usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]
 ```
 
 | Option | Does |
 |---|---|
 | `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
-| `--state [^]state` | Filter by state: pending, done, failed (default: pending, failed; repeat = OR; ^ excludes) |
-| `--type type` | Filter by kind: measure, prune, verify (repeat = OR) |
+| `--state [^]state` | Filter by state: pending, running, done, failed (default: all; repeat = OR; ^ excludes) |
+| `--type [^]type` | Filter by type: measure, prune, verify, check (default: all; repeat = OR; ^ excludes) |
 | `--since date\|age` | Since a date or age |
 | `--until date\|age` | Until a date or age |
 | `--limit n` | Show at most n operations (default: 25) |
@@ -2160,6 +2161,34 @@ usage: machine storage prune [-h] [-y] [--status]
 |---|---|
 | `-y, --yes` | Do not ask for confirmation |
 | `--status` | Show the current or last prune and exit |
+
+### machine storage check
+
+Check every stored object can be read. See [Account and billing](account-and-billing.md).
+
+Reads every object of the account's storage back and checks it against its
+name.
+
+Each object is named by the SHA-256 of its contents, so an object that cannot
+be read, or reads as something else, is found without trusting anything but
+the read. Nothing is written and no lock is taken; the check runs beside
+sessions and beside a prune. An object deleted while the check runs is counted
+apart, not as unreadable.
+
+Waits for the check and shows the objects and bytes read as it goes. Use
+`--timeout` to bound the wait, or `--no-wait` to return once it is started. The
+check is an operation: it goes on if the command is interrupted, and machine
+storage ops lists it. Fails when an object could not be read, and names each
+one with the store's id for the failed request.
+
+```
+usage: machine storage check [-h] [--status] [--no-wait]
+```
+
+| Option | Does |
+|---|---|
+| `--status` | Show the current or last check and exit |
+| `--no-wait` | Return once the check is started |
 
 ## machine artifacts
 
