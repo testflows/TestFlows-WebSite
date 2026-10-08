@@ -1,9 +1,9 @@
+https://testflows.com/machine/download/index.html
+https://testflows.com/machine/download.md
 https://testflows.com/contact.html
 https://testflows.com/contact.md
 https://testflows.com/docs/machine/index.html
 https://testflows.com/docs/machine.md
-https://testflows.com/machine/download/index.html
-https://testflows.com/machine/download.md
 https://testflows.com/framework/index.html
 https://testflows.com/framework.md
 https://testflows.com/index.html

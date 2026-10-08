@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791422771870" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791422771870" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791411698696" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791422771870" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -256,9 +256,13 @@
 <h2>machine-env</h2>
 <p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ machine-env</span><br><span class="line">(machine) $ machine login</span><br><span class="line">(machine) $ machine --version</span><br><span class="line">(machine) $ <span class="built_in">exit</span></span><br><span class="line">$</span><br></pre></td></tr></table></figure>
 
-<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
+<p>The <code>(machine)</code> at the start of the prompt says you are in it: there <code>machine</code> is this client. <code>exit</code> leaves it, back to the shell you were in. To run one command there without starting a shell:</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>That form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section">
@@ -319,9 +323,13 @@
 <h2>machine-env</h2>
 <p>The installer also writes <code>machine-env</code> beside <code>machine</code>. It starts a shell in which <code>machine</code> is this client, ahead of any other <code>machine</code> on your PATH. If another command on your system is also named <code>machine</code>, use <code>machine-env</code>. <code>which machine</code> shows which one you get. It is the same file on every system. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ machine-env</span><br><span class="line">(machine) $ machine login</span><br><span class="line">(machine) $ machine --version</span><br><span class="line">(machine) $ <span class="built_in">exit</span></span><br><span class="line">$</span><br></pre></td></tr></table></figure>
 
-<p>The second form runs one command in that environment and starts no shell, for scripts.</p>
+<p>The <code>(machine)</code> at the start of the prompt says you are in it: there <code>machine</code> is this client. <code>exit</code> leaves it, back to the shell you were in. To run one command there without starting a shell:</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>That form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
 <div class="download-section download-note">
@@ -392,9 +400,13 @@
 <h2>macOS has its own machine command</h2>
 <p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine-env</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ machine-env</span><br><span class="line">(machine) $ machine login</span><br><span class="line">(machine) $ machine --version</span><br><span class="line">(machine) $ <span class="built_in">exit</span></span><br><span class="line">$</span><br></pre></td></tr></table></figure>
 
-<p>The second form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
+<p>The <code>(machine)</code> at the start of the prompt says you are in it: there <code>machine</code> is this client. <code>exit</code> leaves it, back to the shell you were in. To run one command there without starting a shell:</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
+
+<p>That form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
 </div>
 
 <div class="download-section download-note">
@@ -479,9 +491,9 @@
 
 <div class="download-section">
 <h2>A specific version</h2>
-<p>The installer gets the latest release. To install a particular one, set <code>MACHINE_VERSION</code>:</p>
+<p>The installer gets the latest release. <code>--list</code> shows the versions there are, newest first, and <code>--version</code> installs one of them:</p>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl https://testflows.com/machine/install -fsS | bash -s -- --list</span><br><span class="line">curl https://testflows.com/machine/install -fsS | bash -s -- --version YYYYMMDD-HHMM</span><br></pre></td></tr></table></figure>
 
 <p>Set <code>MACHINE_INSTALL_DIR</code> to install somewhere other than <code>~/.local/bin</code>. <code>--no-signature</code> and <code>--no-checksum</code> skip checks; a normal install needs neither.</p>
 </div>
@@ -556,9 +568,9 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791411698696"></script>
-<script src="/js/machine-hero-type.js?v=1791411698696"></script>
-<script src="/js/download-platforms.js?v=1791411698696"></script>
+<script src="/js/index-code-type.js?v=1791422771870"></script>
+<script src="/js/machine-hero-type.js?v=1791422771870"></script>
+<script src="/js/download-platforms.js?v=1791422771870"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

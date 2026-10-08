@@ -19,6 +19,11 @@
 #
 #   curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
 #
+# To see the versions there are, and install one of them:
+#
+#   curl https://testflows.com/machine/install -fsS | bash -s -- --list
+#   curl https://testflows.com/machine/install -fsS | bash -s -- --version 20261007-2203
+#
 # Environment:
 #   MACHINE_INSTALL_DIR   where to put machine and machine-env (default: ~/.local/bin)
 #   MACHINE_VERSION       a version to install, YYYYMMDD-HHMM (default: the latest)
@@ -196,9 +201,12 @@ usage() {
 Install the TestFlows Machine client.
 
   curl https://testflows.com/machine/install -fsS | bash
-  curl https://testflows.com/machine/install -fsS | bash -s -- --checksum
+  curl https://testflows.com/machine/install -fsS | bash -s -- --list
+  curl https://testflows.com/machine/install -fsS | bash -s -- --version 20261007-2203
 
 Options:
+  --list          list the versions there are, newest first, instead of installing
+  --version V     install version V, YYYYMMDD-HHMM, instead of the latest
   --checksum      print the published SHA-256 checksum instead of installing
   --download      download this system's file, its checksum and their signatures
                   into the current folder instead of installing, to check by hand
@@ -208,7 +216,7 @@ Options:
 
 Environment:
   MACHINE_INSTALL_DIR   where to put machine and machine-env (default: ~/.local/bin)
-  MACHINE_VERSION       a version to use, YYYYMMDD-HHMM (default: the latest)
+  MACHINE_VERSION       a version to use, as --version names one
 USAGE
 }
 
@@ -234,6 +242,36 @@ latest_version() {
     rm -f "$file"
     version_valid "$version" || die "The published latest version isn't valid."
     printf '%s' "$version"
+}
+
+# list_versions: print every published version, newest first, and how to install one.
+# latest/history holds them oldest first, one a line, and its last line is the latest.
+list_versions() {
+    local file version latest=""
+    file="$(mktemp)" || die "Could not create a temporary file."
+    if ! fetch "$BASE_URL/latest/history" "$file"; then
+        rm -f "$file"
+        die "Could not download the list of versions." "Check your connection and try again."
+    fi
+    say "${BOLD}Machine client versions${RESET} ${DIM}(newest first)${RESET}"
+    # Reversed with sed, which every system has; tac and tail -r are not on both.
+    while IFS= read -r version; do
+        version="$(printf '%s' "$version" | tr -d ' \t\r')"
+        version_valid "$version" || continue
+        if [ -z "$latest" ]; then
+            latest="$version"
+            say "  $version  ${DIM}latest${RESET}"
+        else
+            say "  $version"
+        fi
+    done <<EOF
+$(sed '1!G;h;$!d' "$file")
+EOF
+    rm -f "$file"
+    [ -n "$latest" ] || die "No versions are published."
+    say ""
+    say "Install one:"
+    say "  curl https://testflows.com/machine/install -fsS | bash -s -- --version $latest"
 }
 
 # checksum_from FILE: the SHA-256 in a published checksum file. It is a sha256sum
@@ -399,7 +437,7 @@ download_failed() {
         fi
         rm -f "$probe"
         die "Version $release isn't a released version." \
-            "Leave MACHINE_VERSION unset to install the latest."
+            "See the versions there are with --list."
     fi
     die "Could not download version $release." "Check your connection and try again."
 }
@@ -726,10 +764,42 @@ path_hint() {
     esac
 }
 
+# next_in_env DIR OTHER: what to do next when OTHER, another program called machine,
+# comes before DIR on PATH. machine-env starts a shell in which machine is this client
+# and marks its prompt, so the steps are shown as they will look in that shell.
+next_in_env() {
+    local dir="$1" other="$2" env="machine-env"
+    # Not on PATH, machine-env is found no more than machine is: name it in full.
+    case ":$PATH:" in
+        *":$dir:"*) ;;
+        *) env="$(tilde "$dir/machine-env")" ;;
+    esac
+    say ""
+    warn "Another program called machine comes first on your PATH: $(tilde "$other")"
+    say "  Typing machine runs that one. Use machine-env, a shell where machine is this client."
+    say ""
+    say "Next:"
+    say "  \$ $env"
+    say "  (machine) \$ machine login    sign in (or  machine account signup  to create an account)"
+    say "  (machine) \$ machine --help   see every command"
+    say "  (machine) \$ exit             leave it, back to the shell you were in"
+    say ""
+    say "  ${DIM}Or put $(tilde "$dir") before $(tilde "$(dirname "$other")") in your PATH.${RESET}"
+}
+
 main() {
     local mode="install" arg
-    for arg in "$@"; do
+    while [ $# -gt 0 ]; do
+        arg="$1"
+        shift
         case "$arg" in
+            --list) mode="list" ;;
+            --version)
+                [ $# -gt 0 ] || die "--version needs a version." "See them with --list."
+                MACHINE_VERSION="$1"
+                shift
+                ;;
+            --version=*) MACHINE_VERSION="${arg#--version=}" ;;
             --checksum) mode="checksum" ;;
             --download) mode="download" ;;
             --no-signature) NO_SIGNATURE=true ;;
@@ -738,6 +808,13 @@ main() {
             *) die "Unknown option: $arg" "Run it with --help to see what it accepts." ;;
         esac
     done
+
+    # A list is the same on every system, so it is answered before the platform check.
+    if [ "$mode" = "list" ]; then
+        choose_downloader
+        list_versions
+        return 0
+    fi
 
     # Before any download: on a system it doesn't run on, say so, not a network error.
     # --checksum runs anywhere, for checking a file by hand; off a supported system it
@@ -753,7 +830,8 @@ main() {
     local release
     if [ -n "${MACHINE_VERSION:-}" ]; then
         version_valid "$MACHINE_VERSION" \
-            || die "'$MACHINE_VERSION' is not a version." "A version looks like YYYYMMDD-HHMM."
+            || die "'$MACHINE_VERSION' is not a version." "A version looks like YYYYMMDD-HHMM." \
+                "See the versions there are with --list."
         release="$MACHINE_VERSION"
     else
         release="$(latest_version)"
@@ -842,22 +920,20 @@ main() {
         say "  ${DIM}https://testflows.com/docs/machine/#Building-disks-on-an-ARM-machine${RESET}"
     fi
 
-    # Make sure typing `machine` finds the one just installed.
+    # Make sure typing `machine` finds the one just installed. Another program of the
+    # same name ahead of it on PATH, Docker Machine on many Macs, would answer instead,
+    # and `machine login` would then be that program's error.
     local found
     found="$(command -v machine 2>/dev/null || true)"
-    if [ -z "$found" ]; then
-        path_hint "$dir"
-    elif ! [ "$found" -ef "$target" ]; then
+    if [ -n "$found" ] && ! [ "$found" -ef "$target" ]; then
+        next_in_env "$dir" "$found"
+    else
+        [ -n "$found" ] || path_hint "$dir"
         say ""
-        warn "Another machine comes first on your PATH: $(tilde "$found")"
-        say "  Run $(tilde "$dir/machine-env") for a shell where machine is this one,"
-        say "  or put $(tilde "$dir") earlier in your PATH."
+        say "Next:"
+        say "  machine login         sign in (or  machine account signup  to create an account)"
+        say "  machine --help        see every command"
     fi
-
-    say ""
-    say "Next:"
-    say "  machine login         sign in (or  machine account signup  to create an account)"
-    say "  machine --help        see every command"
     say ""
     say "Docs: https://testflows.com/docs/machine/"
 }
