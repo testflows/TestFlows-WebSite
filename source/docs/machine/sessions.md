@@ -15,29 +15,27 @@ disk space. `--class` picks the hardware class, and the default comes from your
 plan. The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
 is. Add `--no-wait` if you would rather it didn't.
 
-A machine needs its memory plus 128MB from the session, and the session keeps
-256MB for itself. A machine with the default 256MB needs 384MB, and one created
-with `--mem 2048` needs 2176MB, so it fits a 4G session. A machine holds its
-memory until you stop it, whether or not its program has finished.
+A machine takes its memory plus 128MB of the session's memory, and 256MB of a
+session is not available to machines. A machine with the default 256MB needs
+384MB, and one created
+with `--mem 2048` needs 2176MB, so a 4G session holds one and an 8G session
+holds three. A machine holds its memory until you stop it, whether or not its
+program has finished.
 
-A machine also keeps a copy of its latest checkpoint in memory, so a
-[`machine go`](commands.md#machine-go) or a fork from that checkpoint starts without reading it
-back from disk. The copy holds only what the program has written, and it gets
-the session memory left over when the machine starts, up to the machine's own
-memory. That room counts as taken while the machine runs. A checkpoint too
-large for it is kept on disk only, and restoring it is slower, never wrong.
+A branch you move onto with [`machine go`](commands.md#machine-go) uses the machine that is
+already running, so it needs no more memory. A branch you start with
+[`machine fork`](commands.md#machine-fork) is another machine and needs its own.
 
 [`machine runs --size`](commands.md#machine-runs) adds two columns for what a run takes of the
-session's resources. RAM is the memory its machine holds right now, which can
-be above the machine's own MEMORY because it counts the machine's process as
-well as the guest. DATA is what the run holds on the session's disk. A run
+session's resources. RAM is the session memory its machine holds right now. It
+can be above the machine's own MEMORY. DATA is what the run holds on the
+session's disk. A run
 with no machine shows `—` for RAM.
 
 The MEM column of [`machine sessions list`](commands.md#machine-sessions-list) shows the memory taken over the
-session's memory, for example `4.4G/8G`. Taken is 256MB for the session
-itself plus what each of its machines needs and the room set aside for its
-checkpoint copy. A new machine starts when what it needs fits in the rest, and
-is refused when it does not.
+session's memory, for example `4.5G/8G` with two machines of 2048MB. A new
+machine starts when what it needs fits in the rest, and is refused when it
+does not.
 
 Creating a session doesn't switch you to it. Tell Machine which one to use.
 
