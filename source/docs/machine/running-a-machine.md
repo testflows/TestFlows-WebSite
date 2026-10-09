@@ -54,6 +54,8 @@ These are the conditions you can wait for. [`machine run`](commands.md#machine-r
 | `console~REGEX` | the console output matches the pattern |
 | `entry>=N` | the log has reached entry N |
 | `entry=+N` | N more entries have been recorded |
+| `vtime>=T` | the machine's clock has reached T, a duration such as `500ms` |
+| `vtime=+T` | the machine's clock has moved T from where it was |
 | `/app:exit` | the program at `/app` has exited |
 
 The last row is one example of a task condition. There are more of them
@@ -61,6 +63,22 @@ under [Steering programs](steering-programs.md).
 
 `--iters` limits how many iterations a drive may spend, and the global
 `--timeout` limits how long you are willing to wait. Whichever hits first wins.
+
+An iteration has no fixed length. It is one dispatch of a vCPU, and it ends
+where the guest next exits to the machine: after five instructions or after a
+million. So no count is right in advance, and nobody can know how long a
+program will run. Stop on a condition, and use `--iters` or a `vtime`
+condition as a limit. Every run ends by saying how far it went:
+
+```
+iterations: 2000  run ic: 238893097  vtime: +0.383620410s
+```
+
+`vtime` is how far the machine's clock moved. A `vtime` condition is checked
+between iterations, so the run stops at the end of the iteration that reaches
+the time, a little late. A run that went too far is not lost:
+[`machine rewind`](commands.md#machine-rewind) and [`machine go`](commands.md#machine-go) take it back to an earlier
+point.
 
 Now and then the host interrupts an entry while it is being recorded. Machine
 records that entry again, and you see nothing except a short pause. `--retry`

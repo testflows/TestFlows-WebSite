@@ -70,7 +70,7 @@ it doesn't start another machine. It moves the one you are on, in place.
 machine go app ^booted --name g1
 ```
 ```bash
-✔ Forked app/g1 (whUxiqseEZ7Si8R4osT8K) at entry 16239 and switched onto it.
+✔ Branched app/g1 (whUxiqseEZ7Si8R4osT8K) at entry 16239 and switched onto it.
 ```
 
 After a `go` or a `switch`, the run you moved away from is listed as `switched`

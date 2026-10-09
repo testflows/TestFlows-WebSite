@@ -195,7 +195,7 @@ you drive it. The `--until tasks` part means "keep going until Linux is up."
 machine run hello-run --until tasks
 ```
 ```bash
-iterations: 15646  run ic: 271676660
+iterations: 15646  run ic: 271676660  vtime: +0.692741050s
 
 VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP                 RCX       ITER
 0     HYPERCALL  15791  271676660  192153  271676660  0x785930775efa707  0xffffffff81f9eeda  43778048  15645
