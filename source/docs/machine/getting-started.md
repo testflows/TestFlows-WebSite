@@ -1,4 +1,4 @@
-<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Getting started
 
@@ -81,7 +81,7 @@ machine --version
   ---- o o o ----
  |   o       o   |
  | 1 o 10010 o 0 |
- |   o       o   |  TestFlows Machine Client YYYYMMDD-HHMM
+ |   o       o   |  TestFlows™ Machine Client YYYYMMDD-HHMM
   ---  o o oxx --
  /           xx   \
 /  ^^^        xx   \

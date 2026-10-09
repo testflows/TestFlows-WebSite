@@ -1,8 +1,8 @@
 # TestFlows
 
-> TestFlows Framework is an open-source Python library for writing test programs. You write tests and define the test flow explicitly as Python code, with everything treated as a test, for functional, integration, acceptance and unit testing. It produces test reports and ties tests to requirements for coverage. TestFlows Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+> TestFlows Framework is an open-source Python library for writing test programs. You write tests and define the test flow explicitly as Python code, with everything treated as a test, for functional, integration, acceptance and unit testing. It produces test reports and ties tests to requirements for coverage. TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
-Install TestFlows Framework, the TestFlows Machine client, or both, on this computer, one step at a time. Tell your person what you did and anything you need from them.
+Install TestFlows Framework, the TestFlows™ Machine client, or both, on this computer, one step at a time. Tell your person what you did and anything you need from them.
 
 ## OBJECTIVE
 
@@ -11,7 +11,7 @@ Install what your person asks for: the open-source Framework, which is a Python 
 ## DONE WHEN
 
 - Framework: `python3 -c "import testflows.core"` succeeds, and the Hello World test in step 2 runs and exits with status `0`.
-- Machine client: `machine --version` prints `TestFlows Machine Client` and a version.
+- Machine client: `machine --version` prints `TestFlows™ Machine Client` and a version.
 - Machine account: `machine account show` prints your person's account. Until they have signed in it exits with status `2` and says `Not signed in`. That is expected: finish step 4 with them.
 
 ## TODO

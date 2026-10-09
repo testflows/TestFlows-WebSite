@@ -1,4 +1,4 @@
-<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Account and billing
 
