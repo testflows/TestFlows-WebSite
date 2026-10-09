@@ -3143,7 +3143,7 @@ usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--de
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console~regex, now, parent [n], root, or %mark |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3187,8 +3187,11 @@ The machine moves onto the branch. The run it leaves is listed as switched. A
 switched run keeps its history and has no machine.
 
 Go is the only command that branches and switches in one step. The point is a
-time, #entry, ^checkpoint, now, parent [n], root or a mark written %mark. Each
-names a point on the own line of this run.
+time, #entry, ^checkpoint, console~REGEX, now, parent [n], root or a mark
+written %mark. Each names a point on the own line of this run.
+
+console~REGEX is where the console first printed a match. It is the entry that
+printed the first byte of the match.
 
 A time such as 10ms counts from the start of the run. A minus sign, as in -10ms,
 counts back from now. A time may carry +N, as machine now prints it, to name one
@@ -3208,7 +3211,7 @@ usage: machine go [options] <run> <point>
 | Argument | Does |
 |---|---|
 | `run` | The running machine that moves |
-| `[point ...]` | Where to branch: a time such as 10ms or -10ms, #entry, ^checkpoint, now, parent [n], root, or %mark |
+| `[point ...]` | Where to branch: a time such as 10ms or -10ms, #entry, ^checkpoint, console~regex, now, parent [n], root, or %mark |
 
 | Option | Does |
 |---|---|
@@ -3310,7 +3313,7 @@ usage: machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry or a time |
+| `[point]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time or console~regex |
 
 Examples:
 
@@ -3361,7 +3364,7 @@ usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console~regex, now, parent [n], root, or %mark |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
@@ -3894,8 +3897,18 @@ The console is the output of the machine.
 Use `--entries` to select the output of given entries, -n to select lines, and
 -f to follow new output. An entry that printed nothing contributes nothing.
 
+The command prints lines and does not search them. Pipe it to grep to find text,
+or to less to page through it. Use -n : to hand them the whole console.
+
+Use `--with-entries` to see which entries printed each line, and its number.
+ENTRIES is the first and the last entry of the line.
+
+The entry subcommand gives the one entry that printed a byte. Use it for the
+exact entry of a match.
+
 ```
-usage: machine console [-h] [-n range] [--entries range] [-f] run
+usage: machine console [-h] [-n range] [--entries range] [-f] [--with-entries]
+                       run {entry,search} ...
 ```
 
 | Argument | Does |
@@ -3907,19 +3920,140 @@ usage: machine console [-h] [-n range] [--entries range] [-f] run
 | `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail -f) |
+| `--with-entries` | Show the entries that printed each line, and its number |
 
 Examples:
 
 ```
-machine console run1     console output of run1
-machine console run1 -f  follow new output
+machine console run1                                   the last lines
+machine console run1 -f                                follow new output
+machine console run1 -n : | grep -n login              find text
+machine console run1 -n : | less -RN                   page through it
+machine console run1 -n : | grep -bo login             find an offset
+machine console run1 -n : --with-entries | grep login  text and its entries
+```
+
+Output:
+
+```
+text            the lines as the machine printed them
+--with-entries  ENTRIES LINE OUTPUT
+ENTRIES         <first>:<last>, the entries that printed the line
+LINE            the line's number, as -n counts them
+json            lines entry_ranges start_line total_lines partial_last
 ```
 
 See also:
 
+- [`machine console entry`](#machine-console-entry)
 - [`machine entries`](#machine-entries)
+- [`machine go`](#machine-go)
 - [`machine debug`](#machine-debug)
-- [`machine dump`](#machine-dump)
+
+### machine console entry
+
+Show the entry that printed a byte of the console.
+See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
+
+A line is printed over a range of entries. A byte is printed by one. The command
+takes the offset of a byte and prints its entry.
+
+The offset counts bytes from 0 over the whole console. The grep option -b prints
+the offset of a match. The first number of its output is the operand.
+
+The entry is a point. Use it with go, fork, rewind and the other commands that
+take an entry.
+
+```
+usage: machine console run entry [-h] offset
+```
+
+| Argument | Does |
+|---|---|
+| `offset` | Byte offset in the console, counted from 0 |
+
+Examples:
+
+```
+machine console run1 entry 48213  the entry of byte 48213
+machine console run1 entry 0      the entry of the first byte
+```
+
+Output:
+
+```
+text  the entry, alone
+json  entry_id offset line
+```
+
+Refuses, and the way past:
+
+```
+an offset past the end  machine console run1 -n :
+```
+
+See also:
+
+- [`machine console`](#machine-console)
+- [`machine console search`](#machine-console-search)
+- [`machine go`](#machine-go)
+- [`machine rewind`](#machine-rewind)
+
+### machine console search
+
+Find a pattern in the console and the entry of each match.
+See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
+
+The pattern is a regular expression. A match is within a line. Each match is
+printed with the entry that printed its first byte.
+
+The search is done where the console is kept, so a large console is not
+downloaded. Its lineage is searched, from the first line an ancestor printed.
+
+Use -f to go on with what is printed next. Use `--max` to stop after a number of
+matches.
+
+The entry is a point. Use it with go, fork, rewind and the other commands that
+take an entry.
+
+```
+usage: machine console run search [-h] [-f] [--max n] regex
+```
+
+| Argument | Does |
+|---|---|
+| `regex` | Regular expression to find |
+
+| Option | Does |
+|---|---|
+| `-f, --follow` | Go on with new output (like tail -f) |
+| `--max n` | Stop after n matches |
+
+Examples:
+
+```
+machine console run1 search login             each match and its entry
+machine console run1 search 'error|panic' -f  go on, live
+machine console run1 search login --max 1     the first match
+machine -o json console run1 search login     matches as JSON
+```
+
+Output:
+
+```
+text   ENTRY LINE TEXT, a row for each match
+ENTRY  the entry that printed the first byte of the match
+TEXT   the line the match is on
+json   entry_id last_entry_id line offset length text
+       with -f, an object a line
+```
+
+See also:
+
+- [`machine console`](#machine-console)
+- [`machine console entry`](#machine-console-entry)
+- [`machine go`](#machine-go)
+- [`machine wait`](#machine-wait)
 
 ## machine dump
 

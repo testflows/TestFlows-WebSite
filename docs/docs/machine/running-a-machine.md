@@ -150,6 +150,50 @@ machine was waiting for commands.`
 [`machine console`](commands.md#machine-console) also takes `--entries`, if you only want what a few
 entries printed.
 
+### Finding where something was printed
+
+Often you want the opposite: you know what the machine printed, and you want the
+entry that printed it, so you can go there. A line is printed over a range of
+entries, but a byte is printed by exactly one, and Machine can tell you which.
+
+[`machine console app search`](commands.md#machine-console-search) finds a pattern and gives the entry of
+each match:
+
+```bash
+machine console app search 'Linux version'
+```
+```
+    ENTRY       LINE  TEXT
+     1276         16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...
+```
+
+The search runs where the console is kept, so a large console is not downloaded.
+`-f` keeps going with what the machine prints next, and `--max 1` stops at the
+first match. The entry is a point, so you can go straight to it:
+
+```bash
+machine go app '#1276'
+```
+
+`console~REGEX` is the same thing written as a point, where the console first
+printed a match. [`machine go`](commands.md#machine-go), [`machine fork`](commands.md#machine-fork) `--at` and
+[`machine rewind`](commands.md#machine-rewind) all take it:
+
+```bash
+machine go app 'console~Linux version'
+```
+
+If you would rather search with your own tools, pipe the console to them.
+`grep -b` prints the byte offset of a match, and
+[`machine console app entry`](commands.md#machine-console-entry) turns an offset into its entry:
+
+```bash
+machine console app -n : | grep -bo 'Linux version'    # 438:Linux version
+machine console app entry 438                          # 1276
+```
+
+`--with-entries` shows, beside every line, the range of entries that printed it.
+
 ## Interactive mode
 
 When you are working on one run for a while, you can open a prompt for it.
