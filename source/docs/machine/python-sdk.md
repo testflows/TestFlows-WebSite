@@ -112,6 +112,7 @@ And the calls you will reach for most often:
 | `run.replay()`, `run.play(...)`, `run.diff(...)` | replays and compares |
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.console(...)` | reads what it printed |
+| `run.console.search(pattern)`, `run.console.find(pattern)`, `run.console.entry(offset)` | finds text in what it printed, and the entry that printed it |
 | `run.artifacts.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
