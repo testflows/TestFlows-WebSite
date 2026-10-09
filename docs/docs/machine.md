@@ -1,8 +1,8 @@
-<!-- agents: TestFlows Machine docs index. Index: https://testflows.com/llms.txt -->
+<!-- agents: TestFlows™ Machine docs index. Index: https://testflows.com/llms.txt -->
 
-# TestFlows Machine
+# TestFlows™ Machine
 
-> TestFlows Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes. You use it from the `machine` command-line client or from the Python SDK.
+> TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes. You use it from the `machine` command-line client or from the Python SDK.
 
 Install the client with `curl https://testflows.com/machine/install -fsS | bash`. It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. Sign in with `machine login`, or set `TESTFLOWS_MACHINE_API_KEY` for scripts and agents. Before the first session, set up account storage with `machine account provision`. `machine --help` lists every command, and so does `--help` on each one. Each page below is one section of the Machine docs, in plain Markdown.
 

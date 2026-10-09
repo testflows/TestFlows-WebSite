@@ -1,4 +1,4 @@
-<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Python SDK
 
@@ -119,6 +119,26 @@ And the calls you will reach for most often:
 Every call returns a record with named fields, such as a `RunInfo` from
 `describe()` or a list of `Task` from `tasks()`. Call `as_json()` on one to get
 a plain dict.
+
+`run.run(...)` and `run.plan(...)` return a `RunResult`, which says how far the
+drive went. An iteration has no fixed length, so `iterations` alone does not
+tell you:
+
+| Field | Is |
+|---|---|
+| `iterations` | the iterations that ran |
+| `vtime_elapsed` | how far the machine's clock moved, in nanoseconds |
+| `reached` | whether `until` held; `False` when `iters` ran out first |
+| `clauses` | each clause the drive drew from, with the iterations it applied to |
+
+```python
+done = run.run(iters=300, when="/app:on", mode="step")
+for clause in done.clauses:
+    print(clause.clause, clause.matched)   # when /app:on mode step×246  246
+```
+
+`until` takes the conditions [`machine run`](commands.md#machine-run) `--until` does,
+including a machine time: `run.run(until="vtime=+10ms")`.
 
 ## Watching and following
 
