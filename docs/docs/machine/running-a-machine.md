@@ -52,6 +52,7 @@ These are the conditions you can wait for. [`machine run`](commands.md#machine-r
 | `ready` | the machine accepts commands |
 | `tasks` | Linux is up and its task table can be read, which is before it starts anything in userland |
 | `console~REGEX` | the console output matches the pattern |
+| `ttyS1~REGEX` | the output of another source matches it, here the serial port `ttyS1` |
 | `entry>=N` | the log has reached entry N |
 | `entry=+N` | N more entries have been recorded |
 | `vtime>=T` | the machine's clock has reached T, a duration such as `500ms` |
@@ -141,7 +142,7 @@ machine was waiting for commands.`
 | [`machine describe app`](commands.md#machine-describe) | the full configuration of a run |
 | [`machine state app`](commands.md#machine-state) | its state and where it stands; a run with no machine reads `stopped` |
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
-| [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines) |
+| [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines, `--source` reads another source than the console) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
 | [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches, deletes) and how each ended, newest first; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
@@ -163,8 +164,8 @@ each match:
 machine console app search 'Linux version'
 ```
 ```
-    ENTRY       LINE  TEXT
-     1276         16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...
+    ENTRY  SOURCE       LINE  TEXT
+     1276  ttyS0          16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...
 ```
 
 The search runs where the console is kept, so a large console is not downloaded.
@@ -192,7 +193,76 @@ machine console app -n : | grep -bo 'Linux version'    # 438:Linux version
 machine console app entry 438                          # 1276
 ```
 
-`--with-entries` shows, beside every line, the range of entries that printed it.
+`--with-entries` shows, beside every line, the range of entries that printed it
+and the source it came from.
+
+### Reading the output of one source
+
+The console is not the only place a machine prints. It has four serial ports,
+`ttyS0` to `ttyS3`, and the console is the first. A program in the guest that
+writes to `/dev/ttyS1` prints on `ttyS1`, apart from the boot log and from
+everything else on the console:
+
+```bash
+# inside the guest
+my-app > /dev/ttyS1 2> /dev/ttyS2
+```
+
+Everything a run prints is kept in one log, in the order it was printed, and
+each part of it has a source. [`machine console app sources`](commands.md#machine-console-sources)
+lists the sources that printed:
+
+```bash
+machine console app sources
+```
+```
+SOURCE      BYTES      LINES  ENTRIES
+ttyS0       10767        198  29:21127
+ttyS1         116         10  16916:16949
+ttyS2          99         10  16917:16948
+```
+
+`--source` reads one of them. Without it you get the console, as before:
+
+```bash
+machine console app --source ttyS1
+machine console app search ready --source ttyS1
+machine console app entry 0 --source ttyS1
+```
+
+`--source all` reads every source together, in the order printed, with the
+source in front of each line:
+
+```bash
+machine console app --source all -n -4
+```
+```
+ttyS0     starting the app
+ttyS1     listening on 8080
+ttyS2     warning: no config file
+ttyS1     ready
+```
+
+A line belongs to one source. If one source prints while another has a line
+unfinished, that line ends there, so what you read is always what one source
+printed, in order.
+
+The name of a source also takes the place of `console` in a condition and in a
+point. A run that waits for text on `ttyS1` stops at the entry that printed it,
+and what the other sources print in the meantime does not interrupt it:
+
+```bash
+machine run app --until 'ttyS1~ready'
+machine go app 'ttyS1~ready'
+```
+
+| Source | What it is |
+|---|---|
+| `console` | the console of the run, which is the default |
+| `ttyS0` to `ttyS3` | the four serial ports; `ttyS0` is the console |
+| `hvc0` | the virtio console |
+| `debugcon` | the firmware's debug port |
+| `all` | every source, in the order printed |
 
 ## Interactive mode
 

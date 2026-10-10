@@ -113,6 +113,7 @@ And the calls you will reach for most often:
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.console(...)` | reads what it printed |
 | `run.console.search(pattern)`, `run.console.find(pattern)`, `run.console.entry(offset)` | finds text in what it printed, and the entry that printed it |
+| `run.console.sources()`, `run.console(source="ttyS1")`, `run.console.lines(source="all")` | lists the sources that printed, reads one, and reads them all with the source of each line |
 | `run.artifacts.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
