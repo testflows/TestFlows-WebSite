@@ -2535,15 +2535,19 @@ Options vary the run. They draw the mode, the limit and the virtual time rate.
 They also draw a scheduling mark, slice and interrupt for a task. The same seed
 draws the same values.
 
-The `--until` predicates are those of wait. The console~ predicate signals that
+The `--until` predicates are those of wait. The console\~ predicate signals that
 boot is done. The halted and activity=idle predicates do not.
 
-A console~ predicate takes a regular expression. The run stops at the entry that
-ends the line the match is on. A match on a line with no end, such as a prompt,
-stops the run where the machine goes idle.
+A console\~ predicate takes a regular expression. The run stops at the entry
+that ends the line the match is on. A match on a line with no end, such as a
+prompt, stops the run where the machine goes idle.
 
 The match is within a line, as console search finds it. Use the point
-console~REGEX to go to the entry that printed the first byte of the match.
+console\~REGEX to go to the entry that printed the first byte of the match.
+
+The name of another source takes the place of console, as in ttyS1\~REGEX. The
+run then stops for a line that source prints. A line another source prints does
+not stop it.
 
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
@@ -2844,9 +2848,12 @@ Use wait to script against a run. It waits for a state, an entry, a console line
 or a task event. Several runs, or every run of the session, may be waited for.
 
 The predicates are running, ready, tasks, stopped, paused, halted,
-activity=`<name>`, entry>=N, entry=+N, vtime>=T, vtime=+T, console~REGEX and a
+activity=`<name>`, entry>=N, entry=+N, vtime>=T, vtime=+T, console\~REGEX and a
 task predicate. The tasks predicate holds once the operating system is up and
 its task table is readable. That is before it execs anything in userland.
+
+A console\~REGEX predicate holds once the console prints a match. The name of
+another source takes the place of console, as in ttyS1\~REGEX.
 
 A task predicate is [who:]what. The what is exec, exit, sched, desched, on,
 kernel or off. The who is /path, cgroup=path, tgid=N or tid=N. Omitting it means
@@ -2888,7 +2895,7 @@ usage: machine wait [-h] [--all] --for predicate [--interval s] [run ...]
 | Option | Does |
 |---|---|
 | `--all` | Wait for every run in the session |
-| `--for predicate` | Predicate such as running, stopped, entry=+N or console~REGEX |
+| `--for predicate` | Predicate such as running, stopped, entry=+N or console\~REGEX |
 | `--interval s` | Poll every S seconds (default: 1) |
 
 Examples:
@@ -3146,7 +3153,7 @@ usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--de
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console~regex, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3190,11 +3197,12 @@ The machine moves onto the branch. The run it leaves is listed as switched. A
 switched run keeps its history and has no machine.
 
 Go is the only command that branches and switches in one step. The point is a
-time, #entry, ^checkpoint, console~REGEX, now, parent [n], root or a mark
+time, #entry, ^checkpoint, console\~REGEX, now, parent [n], root or a mark
 written %mark. Each names a point on the own line of this run.
 
-console~REGEX is where the console first printed a match. It is the entry that
-printed the first byte of the match.
+console\~REGEX is where the console first printed a match. It is the entry that
+printed the first byte of the match. The name of another source takes the place
+of console, as in ttyS1\~REGEX.
 
 A time such as 10ms counts from the start of the run. A minus sign, as in -10ms,
 counts back from now. A time may carry +N, as machine now prints it, to name one
@@ -3214,7 +3222,7 @@ usage: machine go [options] <run> <point>
 | Argument | Does |
 |---|---|
 | `run` | The running machine that moves |
-| `[point ...]` | Where to branch: a time such as 10ms or -10ms, #entry, ^checkpoint, console~regex, now, parent [n], root, or %mark |
+| `[point ...]` | Where to branch: a time such as 10ms or -10ms, #entry, ^checkpoint, console\~regex, now, parent [n], root, or %mark |
 
 | Option | Does |
 |---|---|
@@ -3316,7 +3324,7 @@ usage: machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time or console~regex |
+| `[point]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time or console\~regex |
 
 Examples:
 
@@ -3367,7 +3375,7 @@ usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console~regex, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
@@ -3895,7 +3903,16 @@ See also:
 Show the console of a run.
 See [Looking at it](running-a-machine.md#looking-at-it).
 
-The console is the output of the machine.
+The console is the output of the machine. A machine has other sources of output
+beside it: the serial ports ttyS1 to ttyS3. A program in the guest that writes
+to /dev/ttyS1 prints on ttyS1.
+
+Use `--source` to read another source. The name console is the console of the
+run, and all is every source in the order printed. A line has one source. With
+all, a source that prints ends a line another source left unfinished.
+
+With all, each line is printed after the name of its source. The sources
+subcommand lists the sources that printed.
 
 Use `--entries` to select the output of given entries, -n to select lines, and
 -f to follow new output. An entry that printed nothing contributes nothing.
@@ -3903,15 +3920,15 @@ Use `--entries` to select the output of given entries, -n to select lines, and
 The command prints lines and does not search them. Pipe it to grep to find text,
 or to less to page through it. Use -n : to hand them the whole console.
 
-Use `--with-entries` to see which entries printed each line, and its number.
-ENTRIES is the first and the last entry of the line.
+Use `--with-entries` to see which entries and which source printed each line,
+and its number. ENTRIES is the first and the last entry of the line.
 
 The entry subcommand gives the one entry that printed a byte. Use it for the
 exact entry of a match.
 
 ```
-usage: machine console [-h] [-n range] [--entries range] [-f] [--with-entries]
-                       run {entry,search} ...
+usage: machine console [-h] [-n range] [--entries range] [-f] [--with-entries] [--source name]
+                       run {entry,sources,search} ...
 ```
 
 | Argument | Does |
@@ -3923,7 +3940,8 @@ usage: machine console [-h] [-n range] [--entries range] [-f] [--with-entries]
 | `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail -f) |
-| `--with-entries` | Show the entries that printed each line, and its number |
+| `--with-entries` | Show the entries and the source that printed each line, and its number |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
 
 Examples:
 
@@ -3934,20 +3952,26 @@ machine console run1 -n : | grep -n login              find text
 machine console run1 -n : | less -RN                   page through it
 machine console run1 -n : | grep -bo login             find an offset
 machine console run1 -n : --with-entries | grep login  text and its entries
+machine console run1 --source ttyS1                    what ttyS1 printed
+machine console run1 --source all                      every source
 ```
 
 Output:
 
 ```
 text            the lines as the machine printed them
---with-entries  ENTRIES LINE OUTPUT
+--source all    each line after its source, such as ttyS0
+--with-entries  ENTRIES SOURCE LINE OUTPUT
 ENTRIES         <first>:<last>, the entries that printed the line
+SOURCE          the source that printed the line, such as ttyS0
 LINE            the line's number, as -n counts them
-json            lines entry_ranges start_line total_lines partial_last
+json            lines entry_ranges sources start_line total_lines partial_last
+                with -f, an object a line: line text and its labels
 ```
 
 See also:
 
+- [`machine console sources`](#machine-console-sources)
 - [`machine console entry`](#machine-console-entry)
 - [`machine entries`](#machine-entries)
 - [`machine go`](#machine-go)
@@ -3964,29 +3988,37 @@ takes the offset of a byte and prints its entry.
 The offset counts bytes from 0 over the whole console. The grep option -b prints
 the offset of a match. The first number of its output is the operand.
 
+Use `--source` for a byte another source printed. The offset then counts within
+the output of that source.
+
 The entry is a point. Use it with go, fork, rewind and the other commands that
 take an entry.
 
 ```
-usage: machine console run entry [-h] offset
+usage: machine console run entry [-h] [--source name] offset
 ```
 
 | Argument | Does |
 |---|---|
 | `offset` | Byte offset in the console, counted from 0 |
 
+| Option | Does |
+|---|---|
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+
 Examples:
 
 ```
-machine console run1 entry 48213  the entry of byte 48213
-machine console run1 entry 0      the entry of the first byte
+machine console run1 entry 48213             the entry of byte 48213
+machine console run1 entry 0                 the entry of the first byte
+machine console run1 entry 0 --source ttyS1  the first byte ttyS1 printed
 ```
 
 Output:
 
 ```
 text  the entry, alone
-json  entry_id offset line
+json  entry_id source offset line
 ```
 
 Refuses, and the way past:
@@ -4002,6 +4034,46 @@ See also:
 - [`machine go`](#machine-go)
 - [`machine rewind`](#machine-rewind)
 
+### machine console sources
+
+List the sources that printed and how much each printed.
+
+A source is a serial port such as ttyS1, or the virtio console. The command
+prints a row for each source that printed, in the order each first printed.
+
+The lines of a source are counted in its own output. Use the name with
+`--source` to read that source.
+
+The list is made where the console is kept, so the console is not downloaded.
+The output of the ancestors of the run is counted.
+
+```
+usage: machine console run sources [-h]
+```
+
+Examples:
+
+```
+machine console run1 sources          each source that printed
+machine -o json console run1 sources  the same as JSON
+```
+
+Output:
+
+```
+text     SOURCE BYTES LINES ENTRIES, a row for each source
+SOURCE   the name --source takes, such as ttyS1
+LINES    the lines of the source in its own output
+ENTRIES  <first>:<last>, the entries of its first and last byte
+json     source bytes lines entry_id last_entry_id
+```
+
+See also:
+
+- [`machine console`](#machine-console)
+- [`machine console search`](#machine-console-search)
+- [`machine console entry`](#machine-console-entry)
+
 ### machine console search
 
 Find a pattern in the console and the entry of each match.
@@ -4016,11 +4088,14 @@ downloaded. Its lineage is searched, from the first line an ancestor printed.
 Use -f to go on with what is printed next. Use `--max` to stop after a number of
 matches.
 
+Use `--source` to search another source. With all, every source is searched and
+a match is still within the line of one source.
+
 The entry is a point. Use it with go, fork, rewind and the other commands that
 take an entry.
 
 ```
-usage: machine console run search [-h] [-f] [--max n] regex
+usage: machine console run search [-h] [-f] [--max n] [--source name] regex
 ```
 
 | Argument | Does |
@@ -4031,24 +4106,27 @@ usage: machine console run search [-h] [-f] [--max n] regex
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
 
 Examples:
 
 ```
-machine console run1 search login             each match and its entry
-machine console run1 search 'error|panic' -f  go on, live
-machine console run1 search login --max 1     the first match
-machine -o json console run1 search login     matches as JSON
+machine console run1 search login               each match and its entry
+machine console run1 search 'error|panic' -f    go on, live
+machine console run1 search login --max 1       the first match
+machine -o json console run1 search login       matches as JSON
+machine console run1 search ready --source all  search every source
 ```
 
 Output:
 
 ```
-text   ENTRY LINE TEXT, a row for each match
-ENTRY  the entry that printed the first byte of the match
-TEXT   the line the match is on
-json   entry_id last_entry_id line offset length text
-       with -f, an object a line
+text    ENTRY SOURCE LINE TEXT, a row for each match
+ENTRY   the entry that printed the first byte of the match
+SOURCE  the source that printed the match, such as ttyS0
+TEXT    the line the match is on
+json    entry_id last_entry_id source line offset length text
+        with -f, an object a line
 ```
 
 See also:
