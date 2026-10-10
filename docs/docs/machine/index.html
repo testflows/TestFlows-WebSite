@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791595878981" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791595878981" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791579027060" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791595878981" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -4295,9 +4295,11 @@ They also draw a scheduling mark, slice and interrupt for a task. The same seed
 draws the same values.</p>
 <p>The <code>--until</code> predicates are those of wait. The console~ predicate signals that
 boot is done. The halted and activity&#x3D;idle predicates do not.</p>
-<p>A console~ predicate takes a regular expression. The console is searched where a
-batch ends. A batch is 1000 iterations, so the run stops up to one batch past
-the text.</p>
+<p>A console~ predicate takes a regular expression. The run stops at the entry that
+ends the line the match is on. A match on a line with no end, such as a prompt,
+stops the run where the machine goes idle.</p>
+<p>The match is within a line, as console search finds it. Use the point
+console~REGEX to go to the entry that printed the first byte of the match.</p>
 <p>The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.</p>
 <p>The global timeout cancels the run in flight. Without one there is no limit. A
@@ -7270,9 +7272,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791579027061"></script>
-<script src="/js/machine-hero-type.js?v=1791579027061"></script>
-<script src="/js/download-platforms.js?v=1791579027061"></script>
+<script src="/js/index-code-type.js?v=1791595878981"></script>
+<script src="/js/machine-hero-type.js?v=1791595878981"></script>
+<script src="/js/download-platforms.js?v=1791595878981"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
