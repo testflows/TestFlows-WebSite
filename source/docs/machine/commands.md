@@ -2538,9 +2538,12 @@ draws the same values.
 The `--until` predicates are those of wait. The console~ predicate signals that
 boot is done. The halted and activity=idle predicates do not.
 
-A console~ predicate takes a regular expression. The console is searched where a
-batch ends. A batch is 1000 iterations, so the run stops up to one batch past
-the text.
+A console~ predicate takes a regular expression. The run stops at the entry that
+ends the line the match is on. A match on a line with no end, such as a prompt,
+stops the run where the machine goes idle.
+
+The match is within a line, as console search finds it. Use the point
+console~REGEX to go to the entry that printed the first byte of the match.
 
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
