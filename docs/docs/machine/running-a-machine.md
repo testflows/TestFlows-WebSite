@@ -168,6 +168,11 @@ machine console app search 'Linux version'
      1276  ttyS0          16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...
 ```
 
+A match has to cover at least one character, because it is the entry that
+printed it that you get back. A pattern that can match nothing at all, such as
+`6*`, is refused, in a search and in a `console~REGEX` condition or point alike;
+`6+` is the one to write.
+
 The search runs where the console is kept, so a large console is not downloaded.
 `-f` keeps going with what the machine prints next, and `--max 1` stops at the
 first match. The entry is a point, so you can go straight to it:

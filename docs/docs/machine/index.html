@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1791673904114" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1791673904114" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1791673123822" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1791673904114" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1105,6 +1105,10 @@ each match:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine console app search <span class="string">&#x27;Linux version&#x27;</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ENTRY  SOURCE       LINE  TEXT</span><br><span class="line"> 1276  ttyS0          16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...</span><br></pre></td></tr></table></figure>
 
+<p>A match has to cover at least one character, because it is the entry that
+printed it that you get back. A pattern that can match nothing at all, such as
+<code>6*</code>, is refused, in a search and in a <code>console~REGEX</code> condition or point alike;
+<code>6+</code> is the one to write.</p>
 <p>The search runs where the console is kept, so a large console is not downloaded.
 <code>-f</code> keeps going with what the machine prints next, and <code>--max 1</code> stops at the
 first match. The entry is a point, so you can go straight to it:</p>
@@ -4359,8 +4363,9 @@ boot is done. The halted and activity&#x3D;idle predicates do not.</p>
 <p>A console~ predicate takes a regular expression. The run stops at the entry
 that ends the line the match is on. A match on a line with no end, such as a
 prompt, stops the run where the machine goes idle.</p>
-<p>The match is within a line, as console search finds it. Use the point
-console~REGEX to go to the entry that printed the first byte of the match.</p>
+<p>The match is within a line, as console search finds it, and has at least one
+character. Use the point console~REGEX to go to the entry that printed the
+first byte of the match.</p>
 <p>The name of another source takes the place of console, as in ttyS1~REGEX. The
 run then stops for a line that source prints. A line another source prints does
 not stop it.</p>
@@ -6071,6 +6076,8 @@ The output of the ancestors of the run is counted.</p>
 See <a href="#Finding-where-something-was-printed">Finding where something was printed</a>.</p>
 <p>The pattern is a regular expression. A match is within a line. Each match is
 printed with the entry that printed its first byte.</p>
+<p>A match has at least one character, since an entry printed it. A pattern that
+matches without any text is refused. The pattern 6* is one, and 6+ is not.</p>
 <p>The search is done where the console is kept, so a large console is not
 downloaded. Its lineage is searched, from the first line an ancestor printed.</p>
 <p>Use -f to go on with what is printed next. Use <code>--max</code> to stop after a number of
@@ -6118,6 +6125,9 @@ take an entry.</p>
 
 <p>Output:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">text    ENTRY SOURCE LINE TEXT, a row for each match</span><br><span class="line">ENTRY   the entry that printed the first byte of the match</span><br><span class="line">SOURCE  the source that printed the match, such as ttyS0</span><br><span class="line">TEXT    the line the match is on</span><br><span class="line">json    entry_id last_entry_id source line offset length text</span><br><span class="line">        with -f, an object a line</span><br></pre></td></tr></table></figure>
+
+<p>Refuses, and the way past:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a pattern that matches no text, as 6*  machine console run1 search &#x27;6+&#x27;</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -7396,9 +7406,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1791673123823"></script>
-<script src="/js/machine-hero-type.js?v=1791673123823"></script>
-<script src="/js/download-platforms.js?v=1791673123823"></script>
+<script src="/js/index-code-type.js?v=1791673904115"></script>
+<script src="/js/machine-hero-type.js?v=1791673904115"></script>
+<script src="/js/download-platforms.js?v=1791673904115"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

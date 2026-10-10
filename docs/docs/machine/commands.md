@@ -2542,8 +2542,9 @@ A console\~ predicate takes a regular expression. The run stops at the entry
 that ends the line the match is on. A match on a line with no end, such as a
 prompt, stops the run where the machine goes idle.
 
-The match is within a line, as console search finds it. Use the point
-console\~REGEX to go to the entry that printed the first byte of the match.
+The match is within a line, as console search finds it, and has at least one
+character. Use the point console\~REGEX to go to the entry that printed the
+first byte of the match.
 
 The name of another source takes the place of console, as in ttyS1\~REGEX. The
 run then stops for a line that source prints. A line another source prints does
@@ -4082,6 +4083,9 @@ See [Finding where something was printed](running-a-machine.md#finding-where-som
 The pattern is a regular expression. A match is within a line. Each match is
 printed with the entry that printed its first byte.
 
+A match has at least one character, since an entry printed it. A pattern that
+matches without any text is refused. The pattern 6* is one, and 6+ is not.
+
 The search is done where the console is kept, so a large console is not
 downloaded. Its lineage is searched, from the first line an ancestor printed.
 
@@ -4127,6 +4131,12 @@ SOURCE  the source that printed the match, such as ttyS0
 TEXT    the line the match is on
 json    entry_id last_entry_id source line offset length text
         with -f, an object a line
+```
+
+Refuses, and the way past:
+
+```
+a pattern that matches no text, as 6*  machine console run1 search '6+'
 ```
 
 See also:
