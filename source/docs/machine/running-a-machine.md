@@ -286,7 +286,7 @@ my-app --events "$MACHINE_OUTPUT_DIR/events.jsonl"
 ```
 
 The file is stored with the run as it is written, each write with its entry.
-Its name as a source is its path: `/output`, the name of the service, `kept`,
+Its name as a source is its path: `/output/keep`, the name of the service,
 and the path the service wrote. A disk built from a binary or one image has
 one service, `app`.
 
@@ -296,23 +296,23 @@ machine output app sources
 ```
 SOURCE                            BYTES      LINES  ENTRIES
 ttyS0                             10767        198  29:21127
-/output/app/kept/events.jsonl      2210         31  16916:20410
+/output/keep/app/events.jsonl      2210         31  16916:20410
 ```
 
 Everything that takes a source takes the path, and the path of a directory is
 every file under it:
 
 ```bash
-machine output app --source /output/app/kept/events.jsonl
-machine output app search '"setup_complete"' --source /output/app
-machine run app --until '/output/app/kept/events.jsonl~setup_complete'
+machine output app --source /output/keep/app/events.jsonl
+machine output app search '"setup_complete"' --source /output/keep/app
+machine run app --until '/output/keep/app/events.jsonl~setup_complete'
 ```
 
 A file does not have to be text. [`machine output app bytes`](commands.md#machine-output-bytes)
 writes what a source printed exactly as it was written:
 
 ```bash
-machine output app bytes --source /output/app/kept/core.bin > core.bin
+machine output app bytes --source /output/keep/app/core.bin > core.bin
 ```
 
 ### Output too large to keep
@@ -323,40 +323,41 @@ there is not stored:
 
 ```bash
 # inside the service
-my-app --debug-log "$MACHINE_DROPPED_OUTPUT_DIR/debug.log"
+my-app --debug-log "$MACHINE_DROP_OUTPUT_DIR/debug.log"
 ```
 
-The file still has its name, and a run can still wait for a line of it. The
-wait stops the run at the entry that wrote the line and stores nothing:
+The file is a source under `/output/drop`. It still has its name, and a run
+can still wait for a line of it. The wait stops the run at the entry that
+wrote the line and stores nothing:
 
 ```bash
-machine run app --until '/output/app/dropped/debug.log~connection refused'
+machine run app --until '/output/drop/app/debug.log~connection refused'
 ```
 
 Because a run replays exactly, the file is not lost. Fork a branch that keeps
 the file, before the part you care about, and replay it:
 
 ```bash
-machine fork app --at ^before --name look --keep-output /output/app/dropped/debug.log
+machine fork app --at ^before --name look --keep-output /output/drop/app/debug.log
 machine replay look
-machine output look --source /output/app/dropped/debug.log
+machine output look --source /output/drop/app/debug.log
 ```
 
 `--keep-output` and `--drop-output` say what a run stores besides what the
 two directories say. They are options of `create`, `fork`, `detach` and `go`,
 the commands that make a run, and a run keeps them for its whole life.
-`machine describe` shows them.
+`machine describe` shows the two directories and the names the run gives.
 
 - **A name** is a file or a directory under `/output`, a port such as
-  `ttyS1`, or a pattern such as `'/output/*/dropped/*.log'`. A pattern is in
+  `ttyS1`, or a pattern such as `'/output/drop/*/*.log'`. A pattern is in
   the syntax of Python's `glob` module: `*`, `?`, `[abc]`, `[a-z]` and
   `[!abc]` stay within one directory name, and `**` matches any number of
   directories, as in `'/output/**/*.log'`. A name that begins with a dot is
   matched like any other.
 - **When a kept and a dropped name cover the same file,** a name spelled out
   decides over a pattern, and of two names spelled out the longer one
-  decides: `--keep-output /output/app/dropped --drop-output
-  /output/app/dropped/huge.log` keeps the directory except that file.
+  decides: `--keep-output /output/drop/app --drop-output
+  /output/drop/app/huge.log` keeps the directory except that file.
   Otherwise the file is stored.
 - **A branch has its parent's two lists.** An option on the fork replaces the
   list of its own kind and leaves the other as it was. The name `none`, given

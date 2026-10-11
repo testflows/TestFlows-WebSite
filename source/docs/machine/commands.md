@@ -2137,8 +2137,8 @@ Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
 to store less. The run keeps both lists for its whole life. The describe command
 shows them.
 
-A name given to either option may be a pattern, such as /output/*/dropped/*.log.
-A star matches within one directory name, a leading dot included, and never a
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
 slash. Two stars match any number of directories.
 
 A kept name and a dropped name may cover one source. A name spelled out decides
@@ -2570,8 +2570,8 @@ run then stops for a line that source prints. A line another source prints does
 not stop it.
 
 The path of an output file takes the same place, as in
-/output/app/dropped/debug.log\~REGEX. A file that is dropped stops the run the
-same way. The run stores none of the file.
+/output/drop/app/debug.log\~REGEX. A file that is dropped stops the run the same
+way. The run stores none of the file.
 
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
@@ -3986,10 +3986,10 @@ sources subcommand lists the sources that printed.
 
 An output file is a source, named by its path. A program in the guest writes its
 files under the directory that MACHINE_OUTPUT_DIR names. A file events.jsonl
-that the service app writes there is /output/app/kept/events.jsonl. The path of
+that the service app writes there is /output/keep/app/events.jsonl. The path of
 a directory is every file under it.
 
-The directory that MACHINE_DROPPED_OUTPUT_DIR names is for output too large to
+The directory that MACHINE_DROP_OUTPUT_DIR names is for output too large to
 store. A file under it has a name and no bytes. A branch forked with
 `--keep-output` stores the file when replayed.
 
@@ -4036,8 +4036,8 @@ machine output run1 -n : | grep -bo login              find an offset
 machine output run1 -n : --wide | grep login           text and its entries
 machine output run1 --source ttyS1                     what ttyS1 printed
 machine output run1 --source all                       every source
-machine output run1 --source /output/app/kept/app.log  an output file
-machine output run1 --source /output/app               every file under it
+machine output run1 --source /output/keep/app/app.log  an output file
+machine output run1 --source /output/keep              every file under it
 ```
 
 Prints:
@@ -4188,8 +4188,8 @@ usage: machine output run bytes [-h] [--source name]
 Examples:
 
 ```
-machine output run1 bytes --source /output/app/kept/a.bin  a file
-machine -o json output run1 bytes --source /output/app     each write
+machine output run1 bytes --source /output/keep/app/a.bin  a file
+machine -o json output run1 bytes --source /output/keep    each write
 ```
 
 Prints:
