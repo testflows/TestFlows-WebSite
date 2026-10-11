@@ -122,5 +122,5 @@ A mark is unique within its tree, so you can use it anywhere a run is named,
 written with a percent sign.
 
 ```bash
-machine console %crashed
+machine output %crashed
 ```

@@ -142,13 +142,13 @@ machine was waiting for commands.`
 | [`machine describe app`](commands.md#machine-describe) | the full configuration of a run |
 | [`machine state app`](commands.md#machine-state) | its state and where it stands; a run with no machine reads `stopped` |
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
-| [`machine console app`](commands.md#machine-console) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines, `--source` reads another source than the console) |
+| [`machine output app`](commands.md#machine-output) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines, `--source` reads another source than the console) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
 | [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches, deletes) and how each ended, newest first; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
 | [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one) |
 
-[`machine console`](commands.md#machine-console) also takes `--entries`, if you only want what a few
+[`machine output`](commands.md#machine-output) also takes `--entries`, if you only want what a few
 entries printed.
 
 ### Finding where something was printed
@@ -157,11 +157,11 @@ Often you want the opposite: you know what the machine printed, and you want the
 entry that printed it, so you can go there. A line is printed over a range of
 entries, but a byte is printed by exactly one, and Machine can tell you which.
 
-[`machine console app search`](commands.md#machine-console-search) finds a pattern and gives the entry of
+[`machine output app search`](commands.md#machine-output-search) finds a pattern and gives the entry of
 each match:
 
 ```bash
-machine console app search 'Linux version'
+machine output app search 'Linux version'
 ```
 ```
     ENTRY  SOURCE       LINE  TEXT
@@ -191,15 +191,19 @@ machine go app 'console~Linux version'
 
 If you would rather search with your own tools, pipe the console to them.
 `grep -b` prints the byte offset of a match, and
-[`machine console app entry`](commands.md#machine-console-entry) turns an offset into its entry:
+[`machine output app entry`](commands.md#machine-output-entry) turns an offset into its entry:
 
 ```bash
-machine console app -n : | grep -bo 'Linux version'    # 438:Linux version
-machine console app entry 438                          # 1276
+machine output app -n : | grep -bo 'Linux version'    # 438:Linux version
+machine output app entry 438                          # 1276
 ```
 
-`--with-entries` shows, beside every line, the range of entries that printed it
-and the source it came from.
+`--wide` shows, beside every line, the range of entries that printed it and the
+source it came from:
+
+```bash
+machine output app -n -5 --wide
+```
 
 ### Reading the output of one source
 
@@ -214,11 +218,11 @@ my-app > /dev/ttyS1 2> /dev/ttyS2
 ```
 
 Everything a run prints is kept in one log, in the order it was printed, and
-each part of it has a source. [`machine console app sources`](commands.md#machine-console-sources)
+each part of it has a source. [`machine output app sources`](commands.md#machine-output-sources)
 lists the sources that printed:
 
 ```bash
-machine console app sources
+machine output app sources
 ```
 ```
 SOURCE      BYTES      LINES  ENTRIES
@@ -230,16 +234,16 @@ ttyS2          99         10  16917:16948
 `--source` reads one of them. Without it you get the console, as before:
 
 ```bash
-machine console app --source ttyS1
-machine console app search ready --source ttyS1
-machine console app entry 0 --source ttyS1
+machine output app --source ttyS1
+machine output app search ready --source ttyS1
+machine output app entry 0 --source ttyS1
 ```
 
 `--source all` reads every source together, in the order printed, with the
 source in front of each line:
 
 ```bash
-machine console app --source all -n -4
+machine output app --source all -n -4
 ```
 ```
 ttyS0     starting the app
