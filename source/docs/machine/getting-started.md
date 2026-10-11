@@ -204,7 +204,7 @@ VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP    
 Read the last five lines the machine printed.
 
 ```bash
-machine console hello-run -n -5
+machine output hello-run -n -5
 ```
 ```bash
 futex hash table entries: 256 (order: 2, 16384 bytes, linear)
@@ -266,7 +266,7 @@ VCPU  EXIT                ID     RUN IC      RCB  TOTAL IC    REGS HASH         
 The program's own lines start with `app-1`. Find them in the branch's console.
 
 ```bash
-machine console hello-run/try-1 -n : | grep app-1
+machine output hello-run/try-1 -n : | grep app-1
 ```
 ```bash
 app-1  | hello, world

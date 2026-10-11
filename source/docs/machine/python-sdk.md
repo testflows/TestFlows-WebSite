@@ -26,7 +26,7 @@ with client.sessions.create(cpus=1) as session:
     client.sessions.use(session)
     with client.create(disk="hello") as run:
         run.run(until="tasks", timeout=300)
-        for line in run.console(lines=-20):
+        for line in run.output(lines=-20):
             print(line)
 ```
 
@@ -111,9 +111,9 @@ And the calls you will reach for most often:
 | `run.fork(...)`, `run.go(point)`, `run.switch(branch)`, `run.detach(...)` | branches |
 | `run.replay()`, `run.play(...)`, `run.diff(...)` | replays and compares |
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
-| `run.console(...)` | reads what it printed |
-| `run.console.search(pattern)`, `run.console.find(pattern)`, `run.console.entry(offset)` | finds text in what it printed, and the entry that printed it |
-| `run.console.sources()`, `run.console(source="ttyS1")`, `run.console.lines(source="all")` | lists the sources that printed, reads one, and reads them all with the source of each line |
+| `run.output(...)` | reads what it printed |
+| `run.output.search(pattern)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, and the entry that printed it |
+| `run.output.sources()`, `run.output(source="ttyS1")`, `run.output.lines(source="all")` | lists the sources that printed, reads one, and reads them all with the source of each line |
 | `run.artifacts.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
@@ -152,7 +152,7 @@ come, like `tail -f`.
 for runs in client.runs(states=["running"], watch=True, timeout=60):
     print([r.name for r in runs])
 
-for line in run.console(follow=True, timeout=60):
+for line in run.output(follow=True, timeout=60):
     print(line)
 ```
 

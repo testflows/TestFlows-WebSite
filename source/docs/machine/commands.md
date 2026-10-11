@@ -10,7 +10,7 @@ takes further commands, those follow it, so each one has a heading.
 
 | Option | Does |
 |---|---|
-| `-o`, `--output` | Output format: text, wide, raw, or json. The default is text. Wide adds columns to list output. |
+| `-o`, `--format` | Output format: text, raw, or json. The default is text. JSON carries every field. |
 | `--version` | Show version and license. |
 | `--no-colors` | Disable terminal color highlighting. |
 | `--debug` | Show the messages exchanged with the service. |
@@ -347,7 +347,7 @@ machine ping       reachability and latency of the API and sessions
 machine ping -c 5  five round-trips per target
 ```
 
-Output:
+Prints:
 
 ```
 text  TARGET STATE RTT JITTER SETUP CERT LEFT
@@ -1685,7 +1685,7 @@ See also:
 
 - [`machine disks`](#machine-disks)
 - [`machine dump`](#machine-dump)
-- [`machine console`](#machine-console)
+- [`machine output`](#machine-output)
 
 ### machine artifacts ls
 
@@ -1739,7 +1739,7 @@ usage: machine artifacts cp [-h] [-r] run[@ref] path [dest]
 
 | Option | Does |
 |---|---|
-| `-r, -R, --recursive` | Copy directories recursively |
+| `-r, --recursive` | Copy directories recursively |
 
 Examples:
 
@@ -2418,7 +2418,7 @@ Use -r to delete a branch with its descendants. Use `--dry-run` to list what
 would be deleted.
 
 The first operand names the run to delete. Use -a to delete every run, or
-`--disk` to delete every run created from one disk. Use -c -a to resume
+`--disk` to delete every run created from one disk. Use `--cleanup` -a to resume
 interrupted deletes.
 
 The command waits until the run is gone. Use -f to stop a running machine first.
@@ -2429,7 +2429,7 @@ A delete is an operation. It goes on if the command is interrupted. Run machine
 ops to list it.
 
 ```
-usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [--full-scan]
+usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [--cleanup] [--full-scan]
                       [--dry-run] [--no-wait]
                       [run]
 ```
@@ -2440,14 +2440,14 @@ usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [-c] [-
 
 | Option | Does |
 |---|---|
-| `-a, --all` | Delete all runs, or cleanup all interrupted deletes (with -c) |
+| `-a, --all` | Delete all runs, or cleanup all interrupted deletes (with `--cleanup`) |
 | `--disk name\|id` | Delete every run created from this disk |
 | `-r, --recursive` | Delete branch and all descendants |
 | `-y, --yes` | Skip the confirmation prompt |
 | `--stop` | Stop running machines before deleting |
 | `-f, --force` | Implies `--stop`, and deletes a run whose machine is already gone or whose process was replaced |
-| `-c, --cleanup` | Resume interrupted delete operations |
-| `--full-scan` | Scan all branches instead of using index (with -c) |
+| `--cleanup` | Resume interrupted delete operations |
+| `--full-scan` | Scan all branches instead of using index (with `--cleanup`) |
 | `--dry-run` | List what would be deleted/recovered without acting |
 | `--no-wait` | Return once the delete of one run is accepted |
 
@@ -2542,7 +2542,7 @@ A console\~ predicate takes a regular expression. The run stops at the entry
 that ends the line the match is on. A match on a line with no end, such as a
 prompt, stops the run where the machine goes idle.
 
-The match is within a line, as console search finds it, and has at least one
+The match is within a line, as output search finds it, and has at least one
 character. Use the point console\~REGEX to go to the entry that printed the
 first byte of the match.
 
@@ -2642,7 +2642,7 @@ machine run run1 --until vtime=+10ms       until its clock moves 10 ms
 machine run run1 --until tasks             until its tasks can be listed
 ```
 
-Output:
+Prints:
 
 ```
 progress       <done>/<batch> vtime=<time> entry=<id> ic=<instructions>
@@ -2776,7 +2776,7 @@ machine plan run1 plan.txt --iters 100 --seed 7  100 iterations, seed 7
 machine plan run1 -                              plan from standard input
 ```
 
-Output:
+Prints:
 
 ```
 tally         one line for each clause, numbered from 1
@@ -2809,7 +2809,7 @@ machine. Use `--entries` to select the commands issued at given run entries. Use
 -n to select commands by number.
 
 ```
-usage: machine control [-h] [--entries range] [-n range] [-c cmd] run|log [run]
+usage: machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|log [run]
 ```
 
 | Argument | Does |
@@ -2820,6 +2820,7 @@ usage: machine control [-h] [--entries range] [-n range] [-c cmd] run|log [run]
 | Option | Does |
 |---|---|
 | `--entries range` | With log: commands at one entry, or an inclusive range |
+| `--wide` | With log: show the entries, vCPU, opcode and size of each command |
 | `-n, --lines range` | With log: command N, A:B, A:, :B or :, or -N for the last N commands |
 | `-c, --command cmd` | Slash command (e.g. "/s=0@10") |
 
@@ -2989,7 +2990,7 @@ machine replay try2 --to 300       replay up to entry 300
 machine replay try2 run1 --to 420  replay the line that leads to run1
 ```
 
-Output:
+Prints:
 
 ```
 text          Replayed <n> entries to entry <id>. Converged.
@@ -3244,7 +3245,7 @@ machine go run1 parent               branch where run1 left its parent
 machine go run1 -10ms                branch 10 ms before now
 ```
 
-Output:
+Prints:
 
 ```
 result           Branched <parent>/<name> (<id>) at entry <n>
@@ -3442,7 +3443,7 @@ machine checkpoints run1            list the checkpoints of run1
 machine checkpoints run1 --durable  only those in shared storage
 ```
 
-Output:
+Prints:
 
 ```
 text      NAME ID VTIME DURABLE ANCESTOR
@@ -3610,7 +3611,7 @@ machine branches run1       only the tree of run1
 machine branches --running  running branches only
 ```
 
-Output:
+Prints:
 
 ```
 each run     <run> (<id>) [<first entry>, <end>)
@@ -3645,7 +3646,7 @@ Examples:
 machine lineage try2  the ancestors of try2
 ```
 
-Output:
+Prints:
 
 ```
 each ancestor  <run> (<id>) [<first entry>, <end>) <n> checkpoints
@@ -3686,7 +3687,7 @@ machine entries run1 -n 100:120  entries 100 to 120
 machine entries run1 -f          follow new entries
 ```
 
-Output:
+Prints:
 
 ```
 #<id>     the entry, then its fields as name=value
@@ -3715,14 +3716,14 @@ See [Looking at it](running-a-machine.md#looking-at-it).
 Options filter by state, label, flag, disk, sync state and age.
 
 The listing shows the newest 25. Use `--limit` for a different page size. Naming
-a run limits the listing to its tree. Use `--roots` for one row per tree, and -o
-wide or `--no-trunc` for full run ids.
+a run limits the listing to its tree. Use `--roots` for one row per tree, and
+`--wide` for more columns.
 
 ```
 usage: machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value]
                     [--flag name[=value]] [--disk name|id] [--parents mode] [--synced |
                     --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse]
-                    [--limit n] [--offset n] [--no-trunc] [--size] [-w]
+                    [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
                     [root]
 ```
 
@@ -3748,6 +3749,7 @@ usage: machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=
 | `--limit n` | Show at most n runs (default: 25) |
 | `--offset n` | Skip the first n runs |
 | `--no-trunc` | Show full run ids |
+| `--wide` | Show the DEPTH, DURABLE and PIN columns |
 | `--size` | Measure and show size |
 | `-w, --watch` | Watch for changes |
 
@@ -3762,7 +3764,7 @@ machine runs --roots             one row per tree
 machine -o json runs --limit 5   five runs as JSON
 ```
 
-Output:
+Prints:
 
 ```
 text      NAME STATE CPUS MEMORY DISK OPTIONS SESSION CREATED ID
@@ -3802,7 +3804,7 @@ machine describe run1  configuration and lineage of run1
 machine describe try2  a branch is named like any run
 ```
 
-Output:
+Prints:
 
 ```
 text  Name ID State Started Resources Options Lineage
@@ -3837,7 +3839,7 @@ Examples:
 machine state run1  state, activity and position of run1
 ```
 
-Output:
+Prints:
 
 ```
 running   state activity vtime entry cpus vcpu memory host cpu
@@ -3883,7 +3885,7 @@ Examples:
 machine now run1  entry, vtime and RIP of run1
 ```
 
-Output:
+Prints:
 
 ```
 text  vtime=<time> entry=<id> vcpu=<n> rip=<address>
@@ -3899,37 +3901,36 @@ See also:
 - [`machine checkpoints`](#machine-checkpoints)
 - [`machine go`](#machine-go)
 
-## machine console
+## machine output
 
-Show the console of a run.
+Show the output of a run.
 See [Looking at it](running-a-machine.md#looking-at-it).
 
-The console is the output of the machine. A machine has other sources of output
-beside it: the serial ports ttyS1 to ttyS3. A program in the guest that writes
-to /dev/ttyS1 prints on ttyS1.
+The output is everything the machine printed, in the order it was printed. Each
+line has a source. The console is one source, and it is the one shown.
 
-Use `--source` to read another source. The name console is the console of the
-run, and all is every source in the order printed. A line has one source. With
-all, a source that prints ends a line another source left unfinished.
+The serial ports ttyS1 to ttyS3 are sources too. A program in the guest that
+writes to /dev/ttyS1 prints on ttyS1. Use `--source` to read another source. The
+sources subcommand lists the sources that printed.
 
-With all, each line is printed after the name of its source. The sources
-subcommand lists the sources that printed.
+The name all is every source in the order printed, each line after the name of
+its source. A source that prints ends a line another source left unfinished.
 
 Use `--entries` to select the output of given entries, -n to select lines, and
 -f to follow new output. An entry that printed nothing contributes nothing.
 
 The command prints lines and does not search them. Pipe it to grep to find text,
-or to less to page through it. Use -n : to hand them the whole console.
+or to less to page through it. Use -n : to hand them every line.
 
-Use `--with-entries` to see which entries and which source printed each line,
-and its number. ENTRIES is the first and the last entry of the line.
+Use `--wide` to see which entries and which source printed each line, and its
+number. ENTRIES is the first and the last entry of the line.
 
 The entry subcommand gives the one entry that printed a byte. Use it for the
 exact entry of a match.
 
 ```
-usage: machine console [-h] [-n range] [--entries range] [-f] [--with-entries] [--source name]
-                       run {entry,sources,search} ...
+usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source name]
+                      run {entry,sources,search} ...
 ```
 
 | Argument | Does |
@@ -3941,53 +3942,53 @@ usage: machine console [-h] [-n range] [--entries range] [-f] [--with-entries] [
 | `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail -f) |
-| `--with-entries` | Show the entries and the source that printed each line, and its number |
+| `--wide` | Show the entries and the source that printed each line, and its number |
 | `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
 
 Examples:
 
 ```
-machine console run1                                   the last lines
-machine console run1 -f                                follow new output
-machine console run1 -n : | grep -n login              find text
-machine console run1 -n : | less -RN                   page through it
-machine console run1 -n : | grep -bo login             find an offset
-machine console run1 -n : --with-entries | grep login  text and its entries
-machine console run1 --source ttyS1                    what ttyS1 printed
-machine console run1 --source all                      every source
+machine output run1                           the last lines
+machine output run1 -f                        follow new output
+machine output run1 -n : | grep -n login      find text
+machine output run1 -n : | less -RN           page through it
+machine output run1 -n : | grep -bo login     find an offset
+machine output run1 -n : --wide | grep login  text and its entries
+machine output run1 --source ttyS1            what ttyS1 printed
+machine output run1 --source all              every source
 ```
 
-Output:
+Prints:
 
 ```
-text            the lines as the machine printed them
---source all    each line after its source, such as ttyS0
---with-entries  ENTRIES SOURCE LINE OUTPUT
-ENTRIES         <first>:<last>, the entries that printed the line
-SOURCE          the source that printed the line, such as ttyS0
-LINE            the line's number, as -n counts them
-json            lines entry_ranges sources start_line total_lines partial_last
-                with -f, an object a line: line text and its labels
+text          the lines as the machine printed them
+--source all  each line after its source, such as ttyS0
+--wide        ENTRIES SOURCE LINE OUTPUT
+ENTRIES       <first>:<last>, the entries that printed the line
+SOURCE        the source that printed the line, such as ttyS0
+LINE          the line's number, as -n counts them
+json          lines entry_ranges sources start_line total_lines partial_last
+              with -f, an object a line: line text and its labels
 ```
 
 See also:
 
-- [`machine console sources`](#machine-console-sources)
-- [`machine console entry`](#machine-console-entry)
+- [`machine output sources`](#machine-output-sources)
+- [`machine output entry`](#machine-output-entry)
 - [`machine entries`](#machine-entries)
 - [`machine go`](#machine-go)
 - [`machine debug`](#machine-debug)
 
-### machine console entry
+### machine output entry
 
-Show the entry that printed a byte of the console.
+Show the entry that printed a byte of the output.
 See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
 
 A line is printed over a range of entries. A byte is printed by one. The command
 takes the offset of a byte and prints its entry.
 
-The offset counts bytes from 0 over the whole console. The grep option -b prints
-the offset of a match. The first number of its output is the operand.
+The offset counts bytes from 0 over what the console printed. The grep option -b
+prints the offset of a match. The first number of its output is the operand.
 
 Use `--source` for a byte another source printed. The offset then counts within
 the output of that source.
@@ -3996,12 +3997,12 @@ The entry is a point. Use it with go, fork, rewind and the other commands that
 take an entry.
 
 ```
-usage: machine console run entry [-h] [--source name] offset
+usage: machine output run entry [-h] [--source name] offset
 ```
 
 | Argument | Does |
 |---|---|
-| `offset` | Byte offset in the console, counted from 0 |
+| `offset` | Byte offset in the output of the source, counted from 0 |
 
 | Option | Does |
 |---|---|
@@ -4010,12 +4011,12 @@ usage: machine console run entry [-h] [--source name] offset
 Examples:
 
 ```
-machine console run1 entry 48213             the entry of byte 48213
-machine console run1 entry 0                 the entry of the first byte
-machine console run1 entry 0 --source ttyS1  the first byte ttyS1 printed
+machine output run1 entry 48213             the entry of byte 48213
+machine output run1 entry 0                 the entry of the first byte
+machine output run1 entry 0 --source ttyS1  the first byte ttyS1 printed
 ```
 
-Output:
+Prints:
 
 ```
 text  the entry, alone
@@ -4025,17 +4026,17 @@ json  entry_id source offset line
 Refuses, and the way past:
 
 ```
-an offset past the end  machine console run1 -n :
+an offset past the end  machine output run1 -n :
 ```
 
 See also:
 
-- [`machine console`](#machine-console)
-- [`machine console search`](#machine-console-search)
+- [`machine output`](#machine-output)
+- [`machine output search`](#machine-output-search)
 - [`machine go`](#machine-go)
 - [`machine rewind`](#machine-rewind)
 
-### machine console sources
+### machine output sources
 
 List the sources that printed and how much each printed.
 
@@ -4045,21 +4046,21 @@ prints a row for each source that printed, in the order each first printed.
 The lines of a source are counted in its own output. Use the name with
 `--source` to read that source.
 
-The list is made where the console is kept, so the console is not downloaded.
-The output of the ancestors of the run is counted.
+The list is made where the output is kept, so the output is not downloaded. The
+output of the ancestors of the run is counted.
 
 ```
-usage: machine console run sources [-h]
+usage: machine output run sources [-h]
 ```
 
 Examples:
 
 ```
-machine console run1 sources          each source that printed
-machine -o json console run1 sources  the same as JSON
+machine output run1 sources          each source that printed
+machine -o json output run1 sources  the same as JSON
 ```
 
-Output:
+Prints:
 
 ```
 text     SOURCE BYTES LINES ENTRIES, a row for each source
@@ -4071,13 +4072,13 @@ json     source bytes lines entry_id last_entry_id
 
 See also:
 
-- [`machine console`](#machine-console)
-- [`machine console search`](#machine-console-search)
-- [`machine console entry`](#machine-console-entry)
+- [`machine output`](#machine-output)
+- [`machine output search`](#machine-output-search)
+- [`machine output entry`](#machine-output-entry)
 
-### machine console search
+### machine output search
 
-Find a pattern in the console and the entry of each match.
+Find a pattern in the output and the entry of each match.
 See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
 
 The pattern is a regular expression. A match is within a line. Each match is
@@ -4086,20 +4087,20 @@ printed with the entry that printed its first byte.
 A match has at least one character, since an entry printed it. A pattern that
 matches without any text is refused. The pattern 6* is one, and 6+ is not.
 
-The search is done where the console is kept, so a large console is not
+The search is done where the output is kept, so a large output is not
 downloaded. Its lineage is searched, from the first line an ancestor printed.
 
 Use -f to go on with what is printed next. Use `--max` to stop after a number of
 matches.
 
-Use `--source` to search another source. With all, every source is searched and
-a match is still within the line of one source.
+The console is searched. Use `--source` to search another source. With all,
+every source is searched and a match is still within the line of one source.
 
 The entry is a point. Use it with go, fork, rewind and the other commands that
 take an entry.
 
 ```
-usage: machine console run search [-h] [-f] [--max n] [--source name] regex
+usage: machine output run search [-h] [-f] [--max n] [--source name] regex
 ```
 
 | Argument | Does |
@@ -4115,14 +4116,14 @@ usage: machine console run search [-h] [-f] [--max n] [--source name] regex
 Examples:
 
 ```
-machine console run1 search login               each match and its entry
-machine console run1 search 'error|panic' -f    go on, live
-machine console run1 search login --max 1       the first match
-machine -o json console run1 search login       matches as JSON
-machine console run1 search ready --source all  search every source
+machine output run1 search login               each match and its entry
+machine output run1 search 'error|panic' -f    go on, live
+machine output run1 search login --max 1       the first match
+machine -o json output run1 search login       matches as JSON
+machine output run1 search ready --source all  search every source
 ```
 
-Output:
+Prints:
 
 ```
 text    ENTRY SOURCE LINE TEXT, a row for each match
@@ -4136,13 +4137,13 @@ json    entry_id last_entry_id source line offset length text
 Refuses, and the way past:
 
 ```
-a pattern that matches no text, as 6*  machine console run1 search '6+'
+a pattern that matches no text, as 6*  machine output run1 search '6+'
 ```
 
 See also:
 
-- [`machine console`](#machine-console)
-- [`machine console entry`](#machine-console-entry)
+- [`machine output`](#machine-output)
+- [`machine output entry`](#machine-output-entry)
 - [`machine go`](#machine-go)
 - [`machine wait`](#machine-wait)
 
@@ -4212,7 +4213,7 @@ machine vcpu run1           run state of vCPU 0
 machine vcpu run1 --vcpu 1  run state of vCPU 1
 ```
 
-Output:
+Prints:
 
 ```
 first line     entry ready pending iter
@@ -4297,7 +4298,7 @@ machine debug err run1         its error log
 
 See also:
 
-- [`machine console`](#machine-console)
+- [`machine output`](#machine-output)
 - [`machine entries`](#machine-entries)
 - [`machine ops`](#machine-ops)
 
@@ -4332,7 +4333,7 @@ machine debug log run1 -f      follow it
 See also:
 
 - [`machine debug err`](#machine-debug-err)
-- [`machine console`](#machine-console)
+- [`machine output`](#machine-output)
 - [`machine entries`](#machine-entries)
 
 ### machine debug err
@@ -4366,7 +4367,7 @@ machine debug err run1 -f      follow it
 See also:
 
 - [`machine debug log`](#machine-debug-log)
-- [`machine console`](#machine-console)
+- [`machine output`](#machine-output)
 - [`machine state`](#machine-state)
 
 ## machine tasks
@@ -4408,7 +4409,7 @@ machine tasks run1            the tasks in run1's machine
 machine tasks run1 --focused  only the focused tasks
 ```
 
-Output:
+Prints:
 
 ```
 TID TGID        the thread, and the process it belongs to
@@ -4483,7 +4484,7 @@ Examples:
 machine tasks run1 exits  tasks that left, newest last
 ```
 
-Output:
+Prints:
 
 ```
 text     TID TGID COMM OUTCOME
@@ -4749,7 +4750,7 @@ machine focus run1 add /test +syscalls +ints  count its calls and interrupts
 machine focus run1 clear                      focus nothing
 ```
 
-Output:
+Prints:
 
 ```
 Focus     each program or cgroup named, and what is counted for it
