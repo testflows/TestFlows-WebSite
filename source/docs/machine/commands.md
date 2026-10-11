@@ -2160,13 +2160,13 @@ once the request is accepted.
 ```
 usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]
                       [--drop-output name] [--disk disk] [--mem size] [--cpus n]
-                      [--mem-type {auto,hugepages}] [--mem-mode {auto,map,lazy}]
-                      [--fs-sync | --no-fs-sync] [--fs-dirsync | --no-fs-dirsync] [--fb type]
-                      [--rng | --no-rng] [--rng-seed n] [--daemon | --no-daemon]
-                      [--single-step | --no-single-step] [--rdtsc-exit | --no-rdtsc-exit]
-                      [--limit n] [--backstop-limit n] [--pin-cpu n] [--vtime-base n]
-                      [--vtime-rate rate] [--vtime-io-cost ns] [--vtime-rdtsc-cost ns]
-                      [--vtime-pause-cost ns] [--auto-checkpoints n]
+                      [--console {serial,virtio}] [--mem-type {auto,hugepages}]
+                      [--mem-mode {auto,map,lazy}] [--fs-sync | --no-fs-sync]
+                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
+                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
+                      [--rdtsc-exit | --no-rdtsc-exit] [--limit n] [--backstop-limit n]
+                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
+                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
                       [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                       [name]
 ```
@@ -2185,6 +2185,7 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
 | `--disk disk` | Disk to create the run from |
 | `--mem size` | Memory, MB or with a K/M/G/T suffix (default: 256) |
 | `--cpus n` | Number of CPUs (default: 1) |
+| `--console {serial,virtio}` | Device the console is: serial for ttyS0 (default) or virtio for hvc0 |
 | `--mem-type {auto,hugepages}` | Machine RAM backing: auto (default) or hugepages (local only) |
 | `--mem-mode {auto,map,lazy}` | Cold RAM restore: auto (default), map (4K pages only), or lazy (any backing) |
 | `--fs-sync, --no-fs-sync` | Mount filesystem with sync (default: off) |
@@ -4216,7 +4217,8 @@ text     SOURCE BYTES LINES ENTRIES, a row for each source
 SOURCE   the name --source takes, such as ttyS1
 LINES    the lines of the source in its own output
 ENTRIES  <first>:<last>, the entries of its first and last byte
-json     source bytes lines entry_id last_entry_id
+         - for an output file with nothing stored
+json     source bytes lines entry_id last_entry_id stored
 ```
 
 See also:
@@ -5034,6 +5036,77 @@ See also:
 - [`machine focus add`](#machine-focus-add)
 - [`machine focus remove`](#machine-focus-remove)
 - [`machine tasks`](#machine-tasks)
+
+## machine send
+
+Send input to a device of a run.
+
+The command writes bytes to a serial port, the virtio console or the keyboard of
+a run. A program in the guest reads them from the device, as it reads what a
+person types.
+
+The text is sent as written, and a newline follows it, which is Enter. Use -n to
+send no newline. Use -e to read escapes in the text, so that Ctrl-C is \x03.
+
+The text - sends standard input as it is. The command adds no newline to it and
+reads no escape in it.
+
+The keyboard takes text and types it on a US keyboard. The machine presses and
+releases a key for each character. It holds Shift or Ctrl where the character
+needs one.
+
+The command does not run the machine. It queues the bytes and returns. The
+device takes them the next time the run executes, and the run records them
+there. A replay reproduces them.
+
+Use fork to send other input than a run recorded. The branch takes its own.
+
+```
+usage: machine send [-h] [-n] [-e] [--device name] run text
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `text` | Text to send, or - to send standard input as it is |
+
+| Option | Does |
+|---|---|
+| `-n` | Send no newline after the text |
+| `-e` | Read the escapes \n, \r, \t, \b, \e, \0, \\ and \xNN in the text |
+| `--device name` | Device to send to: console, ttyS0 to ttyS3, hvc0 or keyboard (default: console) |
+
+Examples:
+
+```
+machine send run1 ls                    type ls and Enter on the console
+machine send run1 ls --device ttyS1     the same on ttyS1
+machine send -n run1 y                  send y with no newline
+machine send -n -e run1 '\x03'          send Ctrl-C
+machine send run1 -                     send standard input as it is
+machine send run1 ls --device keyboard  type it on the keyboard
+```
+
+Prints:
+
+```
+text  Queued <n> bytes for <device> of <run> (<id>)
+json  queued device run_id name
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying  machine fork run1 --name try2
+a device with no room        machine run run1
+```
+
+See also:
+
+- [`machine run`](#machine-run)
+- [`machine output`](#machine-output)
+- [`machine wait`](#machine-wait)
+- [`machine irq`](#machine-irq)
 
 ## machine irq
 

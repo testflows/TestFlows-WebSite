@@ -373,6 +373,46 @@ the commands that make a run, and a run keeps them for its whole life.
 What is stored never changes what the machine executes, so a branch that
 keeps more still reproduces the recording.
 
+## Sending input
+
+A program that reads what a person types can be typed to.
+[`machine send`](commands.md#machine-send) writes input to a device of the run:
+
+```bash
+machine send app ls                      # type ls and Enter on the console
+machine send app ls --device ttyS1       # the same on another serial port
+machine send -n app y                    # no Enter after it
+machine send -n -e app '\x03'            # Ctrl-C
+machine send app - < script.sh           # a file, exactly as it is
+```
+
+It works like `echo`: the text is sent as written and a newline follows, which
+is Enter. `-n` leaves the newline out, and `-e` reads escapes such as `\t` and
+`\x03`.
+
+`send` does not run the machine. It queues the input and returns, and the
+device takes it the next time the run executes:
+
+```bash
+machine send app 'echo hello'
+machine run app --until 'console~hello'
+```
+
+The run records the input where it arrived, so a replay reproduces it without
+being sent anything. To try other input, fork a branch and send to the branch.
+
+| Device | Is |
+|---|---|
+| `console` | the run's console, which is the default |
+| `ttyS0` to `ttyS3` | the serial ports |
+| `hvc0` | the virtio console, on a run created with `--console virtio` |
+| `keyboard` | the PS/2 keyboard |
+
+A serial port and the virtio console take bytes. The keyboard takes text and
+types it on a US keyboard, a key pressed and released for each character, with
+Shift or Ctrl held where the character needs one. Use it for a program that
+reads the screen's terminal and not a serial line.
+
 ## Interactive mode
 
 When you are working on one run for a while, you can open a prompt for it.
