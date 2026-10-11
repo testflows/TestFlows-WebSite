@@ -2981,6 +2981,10 @@ Without a line, the parent's entries are replayed. A fork at an entry leaves
 that entry with the parent. The branch starts at the next entry, so the entries
 of the parent end at the fork. Replaying past them reports no forward entries.
 
+Use `--to` to stop at a point of the line that is replayed. The point is an
+entry, a checkpoint or a time of that line. A checkpoint the parent took after
+the fork is such a point.
+
 Naming a line replays the entries that lead to that run, across every fork on
 the way. The run must be in the same tree. A line that is not the own line of
 this run is not refused. The replay diverges at the first entry that does not
@@ -3001,7 +3005,7 @@ output file its parent dropped is how the file is read. Use fork with
 executes.
 
 ```
-usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
+usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--skid n] run [line]
 ```
 
 | Argument | Does |
@@ -3011,7 +3015,7 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 
 | Option | Does |
 |---|---|
-| `--to n` | Replay to entry n, defaulting to the end of the line |
+| `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark (default: the end of the line) |
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--skid n` | Aim the interrupt n instructions short of each recorded stop |
@@ -3019,9 +3023,10 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 Examples:
 
 ```
-machine replay try2                replay the parent's entries
-machine replay try2 --to 300       replay up to entry 300
-machine replay try2 run1 --to 420  replay the line to run1
+machine replay try2                   replay the parent's entries
+machine replay try2 --to '#300'       replay up to entry 300
+machine replay try2 --to ^cp2         replay up to checkpoint cp2
+machine replay try2 run1 --to '#420'  replay the line to run1
 ```
 
 Prints:
@@ -3421,7 +3426,7 @@ usage: machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time or console\~regex |
+| `[point ...]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
 
 Examples:
 

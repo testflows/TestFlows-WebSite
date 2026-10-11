@@ -12,8 +12,12 @@ machine replay app/try-1
 Replay is strict. An entry that does not reproduce what was recorded means
 the run has **diverged**. Before giving up on it, Machine replays that entry
 again from the nearest checkpoint before it, twice by default. Use `--retry`
-to change that, or `--retry 0` to try each entry once. `--to` stops at a given
-entry instead of the end.
+to change that, or `--retry 0` to try each entry once.
+
+`--to` stops at a point instead of the end. It takes a point as every command
+does: `--to ^booted` for a checkpoint, `--to '#300'` for an entry, `--to 10ms`
+for a time. The point is one of the line being replayed, so a checkpoint the
+parent took after the fork is a valid one.
 
 The host can interrupt an entry too. That is not a divergence. Replay prints
 `Interrupted: entry N, crossing 1: host SMI` and replays the entry again,
