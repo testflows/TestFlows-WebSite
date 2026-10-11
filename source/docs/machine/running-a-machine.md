@@ -333,25 +333,38 @@ wait stops the run at the entry that wrote the line and stores nothing:
 machine run app --until '/output/app/dropped/debug.log~connection refused'
 ```
 
-Because a run replays exactly, the file is not lost. Fork a branch before the
-part you care about and replay it with the file kept:
+Because a run replays exactly, the file is not lost. Fork a branch that keeps
+the file, before the part you care about, and replay it:
 
 ```bash
-machine fork app --at ^before --name look
-machine replay look --keep-output /output/app/dropped/debug.log
+machine fork app --at ^before --name look --keep-output /output/app/dropped/debug.log
+machine replay look
 machine output look --source /output/app/dropped/debug.log
 ```
 
-`--keep-output` and `--drop-output` take a file or a directory, on `run`,
-`plan` and `replay`, and hold for that command alone. Both also take a port
-such as `ttyS1`, and a pattern such as `'/output/*/dropped/*.log'`. A pattern
-is in the syntax of Python's `glob` module: `*`, `?`, `[abc]`, `[a-z]` and
-`[!abc]` stay within one directory name, and `**` matches any number of
-directories, as in `'/output/**/*.log'`. A name that begins with a dot is
-matched like any other. Where a kept and a dropped name both cover a file, the one that covers
-more of the file's name decides, and of two that cover as much, the one that
-is no pattern. What is stored never changes what the machine executes,
-so a replay that keeps more still reproduces the recording.
+`--keep-output` and `--drop-output` say what a run stores besides what the
+two directories say. They are options of `create`, `fork`, `detach` and `go`,
+the commands that make a run, and a run keeps them for its whole life.
+`machine describe` shows them.
+
+- **A name** is a file or a directory under `/output`, a port such as
+  `ttyS1`, or a pattern such as `'/output/*/dropped/*.log'`. A pattern is in
+  the syntax of Python's `glob` module: `*`, `?`, `[abc]`, `[a-z]` and
+  `[!abc]` stay within one directory name, and `**` matches any number of
+  directories, as in `'/output/**/*.log'`. A name that begins with a dot is
+  matched like any other.
+- **When a kept and a dropped name cover the same file,** a name spelled out
+  decides over a pattern, and of two names spelled out the longer one
+  decides: `--keep-output /output/app/dropped --drop-output
+  /output/app/dropped/huge.log` keeps the directory except that file.
+  Otherwise the file is stored.
+- **A branch has its parent's two lists.** An option on the fork replaces the
+  list of its own kind and leaves the other as it was. The name `none`, given
+  alone, is an empty list: `--keep-output none` keeps nothing beyond what the
+  directories say.
+
+What is stored never changes what the machine executes, so a branch that
+keeps more still reproduces the recording.
 
 ## Interactive mode
 

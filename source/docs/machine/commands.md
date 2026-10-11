@@ -2133,18 +2133,34 @@ instead.
 The run keeps its execution options. Start and fork repeat them unless given
 others.
 
+Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
+to store less. The run keeps both lists for its whole life. The describe command
+shows them.
+
+A name given to either option may be a pattern, such as /output/*/dropped/*.log.
+A star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A kept name and a dropped name may cover one source. A name spelled out decides
+over a pattern. Of two names spelled out, the longer decides. Otherwise the
+source is stored.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 The command waits until the machine accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--disk disk]
-                      [--mem size] [--cpus n] [--mem-type {auto,hugepages}]
-                      [--mem-mode {auto,map,lazy}] [--fs-sync | --no-fs-sync]
-                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
-                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                      [--rdtsc-exit | --no-rdtsc-exit] [--limit n] [--backstop-limit n]
-                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
-                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
+usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]
+                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]
+                      [--mem-type {auto,hugepages}] [--mem-mode {auto,map,lazy}]
+                      [--fs-sync | --no-fs-sync] [--fs-dirsync | --no-fs-dirsync] [--fb type]
+                      [--rng | --no-rng] [--rng-seed n] [--daemon | --no-daemon]
+                      [--single-step | --no-single-step] [--rdtsc-exit | --no-rdtsc-exit]
+                      [--limit n] [--backstop-limit n] [--pin-cpu n] [--vtime-base n]
+                      [--vtime-rate rate] [--vtime-io-cost ns] [--vtime-rdtsc-cost ns]
+                      [--vtime-pause-cost ns] [--auto-checkpoints n]
                       [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                       [name]
 ```
@@ -2158,6 +2174,8 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--disk
 | `--like run` | Inherit options from another run, overridden by explicit ones |
 | `--label name=value` | Attach a label, repeatable; an empty value removes an inherited one |
 | `--no-wait` | Return without waiting |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--disk disk` | Disk to create the run from |
 | `--mem size` | Memory, MB or with a K/M/G/T suffix (default: 256) |
 | `--cpus n` | Number of CPUs (default: 1) |
@@ -2190,6 +2208,7 @@ machine create run1 --disk hello                      create run1 from hello
 machine create run1 --disk hello --mem 512 --cpus 2   with 512 MB, 2 CPUs
 machine create run1 --disk hello --rng --rng-seed 42  with a seeded RNG
 machine create run1 --disk hello --no-daemon          run to completion
+machine create run1 --disk hello --drop-output ttyS1  store none of ttyS1
 ```
 
 See also:
@@ -2554,14 +2573,6 @@ The path of an output file takes the same place, as in
 /output/app/dropped/debug.log\~REGEX. A file that is dropped stops the run the
 same way. The run stores none of the file.
 
-Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
-to store less. Each holds for this command alone.
-
-A name given to either option may be a pattern, such as /output/*/dropped/*.log.
-A star matches within one directory name, a leading dot included, and never a
-slash. Two stars match any number of directories. Where two names cover a
-source, the one that covers more of its name decides.
-
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
 
@@ -2604,13 +2615,12 @@ This one clause is the CLI. More than one clause is a plan file. Run machine
 plan `<run>` `<file>` for each drive that uses it.
 
 ```
-usage: machine run [-h] [--limit span] [--backstop-limit n] [--keep-output name]
-                   [--drop-output name] [--retry n] [--strategy name] [--seed n] [--vcpu span]
-                   [--iters span] [--until predicate] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
-                   [--auto-checkpoints n] [--mode list] [--fast span] [--step span]
-                   [--step-into span] [--vtime-rate span] [--vtime-add span]
-                   [--task-sched choices] [--task-slice choices] [--task-int choices]
-                   [--when predicate]
+usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
+                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
+                   [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
+                   [--fast span] [--step span] [--step-into span] [--vtime-rate span]
+                   [--vtime-add span] [--task-sched choices] [--task-slice choices]
+                   [--task-int choices] [--when predicate]
                    run
 ```
 
@@ -2622,8 +2632,6 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--keep-output name]
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
-| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
-| `--drop-output name` | Source that this command does not store: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
@@ -2648,15 +2656,13 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--keep-output name]
 Examples:
 
 ```
-machine run run1                            run one iteration
-machine run run1 --iters 100                run 100 iterations
-machine run run1 --mode step --iters 20     single-step 20 iterations
-machine run run1 --until 'console~login:'   until the console prints login:
-machine run run1 --until 'entry>=500'       until it reaches entry 500
-machine run run1 --until vtime=+10ms        until its clock moves 10 ms
-machine run run1 --until tasks              until its tasks can be listed
-machine run run1 --keep-output /output/app  store what app drops
-machine run run1 --drop-output 'ttyS[12]'   drop by a pattern
+machine run run1                           run one iteration
+machine run run1 --iters 100               run 100 iterations
+machine run run1 --mode step --iters 20    single-step 20 iterations
+machine run run1 --until 'console~login:'  until the console prints login:
+machine run run1 --until 'entry>=500'      until it reaches entry 500
+machine run run1 --until vtime=+10ms       until its clock moves 10 ms
+machine run run1 --until tasks             until its tasks can be listed
 ```
 
 Prints:
@@ -2759,10 +2765,9 @@ them for the dispatches it matches. A dispatch that no clause matches runs free.
 steer the run as on run. The clause axes and when belong in the file, not here.
 
 ```
-usage: machine plan [-h] [--limit span] [--backstop-limit n] [--keep-output name]
-                    [--drop-output name] [--retry n] [--strategy name] [--seed n] [--vcpu span]
-                    [--iters span] [--until predicate] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
-                    [--auto-checkpoints n]
+usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
+                    [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
+                    [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n]
                     run file
 ```
 
@@ -2775,8 +2780,6 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--keep-output name
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
-| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
-| `--drop-output name` | Source that this command does not store: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
@@ -2986,19 +2989,13 @@ Use `--retry` to set how many retries. `--retry` 0 replays each entry once. Use
 `--skid` to set how early the replay stops before each recorded entry. A smaller
 skid makes a miss more likely.
 
-The replay stores every source except the output files that are dropped. Use
-`--keep-output` to store an output file that is dropped. Use `--drop-output` to
-store less. What is stored does not change what the machine executes.
-
-A name given to either option may be a pattern, such as /output/*/dropped/*.log.
-A star matches within one directory name, a leading dot included, and never a
-slash. Two stars match any number of directories. Where two names cover a
-source, the one that covers more of its name decides.
+The replay stores what the branch keeps of its output. A branch that keeps an
+output file its parent dropped is how the file is read. Use fork with
+`--keep-output` to make one. What is stored does not change what the machine
+executes.
 
 ```
-usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] [--keep-output name]
-                      [--drop-output name]
-                      run [line]
+usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 ```
 
 | Argument | Does |
@@ -3012,17 +3009,13 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] [--keep-out
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--skid n` | Aim the interrupt n instructions short of each recorded stop |
-| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
-| `--drop-output name` | Source that this command does not store: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
 
 Examples:
 
 ```
-machine replay try2                        replay the parent's entries
-machine replay try2 --to 300               replay up to entry 300
-machine replay try2 run1 --to 420          replay the line to run1
-machine replay try2 --keep-output /output  store dropped output
-machine replay try2 --drop-output ttyS1    store none of ttyS1
+machine replay try2                replay the parent's entries
+machine replay try2 --to 300       replay up to entry 300
+machine replay try2 run1 --to 420  replay the line to run1
 ```
 
 Prints:
@@ -3173,14 +3166,26 @@ exists. Use `--at` to fork at another point.
 The branch keeps the execution options of the parent. Options given here replace
 them for the branch.
 
+The new run keeps and drops the output that the run it comes from does. Use
+`--keep-output` to replace the names it keeps. Use `--drop-output` to replace
+the names it drops. Each option changes its own list only.
+
+A kept name and a dropped name may cover one source. A name spelled out decides
+over a pattern. Of two names spelled out, the longer decides. Otherwise the
+source is stored.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 The command waits until the branch accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
 usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--depth n] [--lean]
                     [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                    [--limit n] [--backstop-limit n] [--pin-cpu n]
+                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
+                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
+                    [--pin-cpu n]
                     run
 ```
 
@@ -3198,6 +3203,8 @@ usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--de
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
@@ -3213,6 +3220,8 @@ machine fork run1 --name probe            name the branch probe
 machine fork run1 --at ^cp1               fork at checkpoint cp1
 machine fork run1 --at -10ms              fork 10 ms before now
 machine fork run1 --at '#120' --no-start  create the branch, do not start it
+machine fork run1 --keep-output /output   store what is dropped
+machine fork run1 --drop-output ttyS1     store none of ttyS1
 ```
 
 See also:
@@ -3252,6 +3261,17 @@ Every use creates a branch, also for a point gone to before. What runs from a
 point is a path of its own. Use switch to return to a branch that exists. Use
 rewind to put this run back at a point.
 
+The new run keeps and drops the output that the run it comes from does. Use
+`--keep-output` to replace the names it keeps. Use `--drop-output` to replace
+the names it drops. Each option changes its own list only.
+
+A kept name and a dropped name may cover one source. A name spelled out decides
+over a pattern. Of two names spelled out, the longer decides. Otherwise the
+source is stored.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 ```
 usage: machine go [options] <run> <point>
 ```
@@ -3269,6 +3289,8 @@ usage: machine go [options] <run> <point>
 | `--lean` | With `--rebase`, drop the absorbed history so those runs become deletable |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 
 Examples:
@@ -3398,9 +3420,21 @@ same point gets a suffix.
 The new root keeps the execution options of the run it copied. Options given
 here replace them for the root.
 
+The new run keeps and drops the output that the run it comes from does. Use
+`--keep-output` to replace the names it keeps. Use `--drop-output` to replace
+the names it drops. Each option changes its own list only.
+
+A kept name and a dropped name may cover one source. A name spelled out decides
+over a pattern. Of two names spelled out, the longer decides. Otherwise the
+source is stored.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 ```
 usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
-                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait]
+                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+                      [--keep-output name] [--drop-output name] [--no-wait]
                       [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
                       [--backstop-limit n] [--pin-cpu n]
                       run
@@ -3417,6 +3451,8 @@ usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
@@ -3954,8 +3990,8 @@ that the service app writes there is /output/app/kept/events.jsonl. The path of
 a directory is every file under it.
 
 The directory that MACHINE_DROPPED_OUTPUT_DIR names is for output too large to
-store. A file under it has a name and no bytes. A replay with `--keep-output`
-stores the file.
+store. A file under it has a name and no bytes. A branch forked with
+`--keep-output` stores the file when replayed.
 
 The name all is every source in the order printed, each line after the name of
 its source. A source that prints ends a line another source left unfinished.
