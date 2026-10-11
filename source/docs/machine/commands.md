@@ -2550,6 +2550,13 @@ The name of another source takes the place of console, as in ttyS1\~REGEX. The
 run then stops for a line that source prints. A line another source prints does
 not stop it.
 
+The path of an output file takes the same place, as in
+/output/app/dropped/debug.log\~REGEX. A file that is dropped stops the run the
+same way. The run stores none of the file.
+
+Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
+to store less. Each holds for this command alone.
+
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
 
@@ -2592,12 +2599,13 @@ This one clause is the CLI. More than one clause is a plan file. Run machine
 plan `<run>` `<file>` for each drive that uses it.
 
 ```
-usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
-                   [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
-                   [--fast span] [--step span] [--step-into span] [--vtime-rate span]
-                   [--vtime-add span] [--task-sched choices] [--task-slice choices]
-                   [--task-int choices] [--when predicate]
+usage: machine run [-h] [--limit span] [--backstop-limit n] [--keep-output name]
+                   [--drop-output name] [--retry n] [--strategy name] [--seed n] [--vcpu span]
+                   [--iters span] [--until predicate] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+                   [--auto-checkpoints n] [--mode list] [--fast span] [--step span]
+                   [--step-into span] [--vtime-rate span] [--vtime-add span]
+                   [--task-sched choices] [--task-slice choices] [--task-int choices]
+                   [--when predicate]
                    run
 ```
 
@@ -2609,6 +2617,8 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
+| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, or a device such as ttyS1 (repeatable) |
+| `--drop-output name` | Source that this command does not store: a path under /output, or a device such as ttyS1 (repeatable) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
@@ -2633,13 +2643,14 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 Examples:
 
 ```
-machine run run1                           run one iteration
-machine run run1 --iters 100               run 100 iterations
-machine run run1 --mode step --iters 20    single-step 20 iterations
-machine run run1 --until 'console~login:'  until the console prints login:
-machine run run1 --until 'entry>=500'      until it reaches entry 500
-machine run run1 --until vtime=+10ms       until its clock moves 10 ms
-machine run run1 --until tasks             until its tasks can be listed
+machine run run1                            run one iteration
+machine run run1 --iters 100                run 100 iterations
+machine run run1 --mode step --iters 20     single-step 20 iterations
+machine run run1 --until 'console~login:'   until the console prints login:
+machine run run1 --until 'entry>=500'       until it reaches entry 500
+machine run run1 --until vtime=+10ms        until its clock moves 10 ms
+machine run run1 --until tasks              until its tasks can be listed
+machine run run1 --keep-output /output/app  store what app drops
 ```
 
 Prints:
@@ -2742,9 +2753,10 @@ them for the dispatches it matches. A dispatch that no clause matches runs free.
 steer the run as on run. The clause axes and when belong in the file, not here.
 
 ```
-usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                    [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
-                    [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n]
+usage: machine plan [-h] [--limit span] [--backstop-limit n] [--keep-output name]
+                    [--drop-output name] [--retry n] [--strategy name] [--seed n] [--vcpu span]
+                    [--iters span] [--until predicate] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+                    [--auto-checkpoints n]
                     run file
 ```
 
@@ -2757,6 +2769,8 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
+| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, or a device such as ttyS1 (repeatable) |
+| `--drop-output name` | Source that this command does not store: a path under /output, or a device such as ttyS1 (repeatable) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
@@ -2966,8 +2980,14 @@ Use `--retry` to set how many retries. `--retry` 0 replays each entry once. Use
 `--skid` to set how early the replay stops before each recorded entry. A smaller
 skid makes a miss more likely.
 
+The replay stores every source except the output files that are dropped. Use
+`--keep-output` to store an output file that is dropped. Use `--drop-output` to
+store less. What is stored does not change what the machine executes.
+
 ```
-usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
+usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] [--keep-output name]
+                      [--drop-output name]
+                      run [line]
 ```
 
 | Argument | Does |
@@ -2981,13 +3001,17 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--skid n` | Aim the interrupt n instructions short of each recorded stop |
+| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, or a device such as ttyS1 (repeatable) |
+| `--drop-output name` | Source that this command does not store: a path under /output, or a device such as ttyS1 (repeatable) |
 
 Examples:
 
 ```
-machine replay try2                reproduce the parent's entries on try2
-machine replay try2 --to 300       replay up to entry 300
-machine replay try2 run1 --to 420  replay the line that leads to run1
+machine replay try2                        replay the parent's entries
+machine replay try2 --to 300               replay up to entry 300
+machine replay try2 run1 --to 420          replay the line to run1
+machine replay try2 --keep-output /output  store dropped output
+machine replay try2 --drop-output ttyS1    store none of ttyS1
 ```
 
 Prints:
@@ -3913,6 +3937,15 @@ The serial ports ttyS1 to ttyS3 are sources too. A program in the guest that
 writes to /dev/ttyS1 prints on ttyS1. Use `--source` to read another source. The
 sources subcommand lists the sources that printed.
 
+An output file is a source, named by its path. A program in the guest writes its
+files under the directory that MACHINE_OUTPUT_DIR names. A file events.jsonl
+that the service app writes there is /output/app/kept/events.jsonl. The path of
+a directory is every file under it.
+
+The directory that MACHINE_DROPPED_OUTPUT_DIR names is for output too large to
+store. A file under it has a name and no bytes. A replay with `--keep-output`
+stores the file.
+
 The name all is every source in the order printed, each line after the name of
 its source. A source that prints ends a line another source left unfinished.
 
@@ -3930,7 +3963,7 @@ exact entry of a match.
 
 ```
 usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source name]
-                      run {entry,sources,search} ...
+                      run {entry,sources,bytes,search} ...
 ```
 
 | Argument | Does |
@@ -3943,38 +3976,43 @@ usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source 
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail -f) |
 | `--wide` | Show the entries and the source that printed each line, and its number |
-| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
 ```
-machine output run1                           the last lines
-machine output run1 -f                        follow new output
-machine output run1 -n : | grep -n login      find text
-machine output run1 -n : | less -RN           page through it
-machine output run1 -n : | grep -bo login     find an offset
-machine output run1 -n : --wide | grep login  text and its entries
-machine output run1 --source ttyS1            what ttyS1 printed
-machine output run1 --source all              every source
+machine output run1                                    the last lines
+machine output run1 -f                                 follow new output
+machine output run1 -n : | grep -n login               find text
+machine output run1 -n : | less -RN                    page through it
+machine output run1 -n : | grep -bo login              find an offset
+machine output run1 -n : --wide | grep login           text and its entries
+machine output run1 --source ttyS1                     what ttyS1 printed
+machine output run1 --source all                       every source
+machine output run1 --source /output/app/kept/app.log  an output file
+machine output run1 --source /output/app               every file under it
 ```
 
 Prints:
 
 ```
-text          the lines as the machine printed them
---source all  each line after its source, such as ttyS0
---wide        ENTRIES SOURCE LINE OUTPUT
-ENTRIES       <first>:<last>, the entries that printed the line
-SOURCE        the source that printed the line, such as ttyS0
-LINE          the line's number, as -n counts them
-json          lines entry_ranges sources start_line total_lines partial_last
-              with -f, an object a line: line text and its labels
+text              the lines as the machine printed them
+no output stored  No output stored for <path>, for a file with a name and no bytes
+--source all      each line after its source, such as ttyS0
+--wide            ENTRIES SOURCE LINE OUTPUT
+ENTRIES           <first>:<last>, the entries that printed the line
+SOURCE            the source that printed the line, such as ttyS0
+LINE              the line's number, as -n counts them
+json              lines entry_ranges sources start_line total_lines partial_last
+                  with -f, an object a line: line text and its labels
 ```
 
 See also:
 
 - [`machine output sources`](#machine-output-sources)
+- [`machine output bytes`](#machine-output-bytes)
 - [`machine output entry`](#machine-output-entry)
+- [`machine replay`](#machine-replay)
 - [`machine entries`](#machine-entries)
 - [`machine go`](#machine-go)
 - [`machine debug`](#machine-debug)
@@ -4006,7 +4044,7 @@ usage: machine output run entry [-h] [--source name] offset
 
 | Option | Does |
 |---|---|
-| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
@@ -4040,8 +4078,9 @@ See also:
 
 List the sources that printed and how much each printed.
 
-A source is a serial port such as ttyS1, or the virtio console. The command
-prints a row for each source that printed, in the order each first printed.
+A source is a serial port such as ttyS1, the virtio console, or an output file.
+The command prints a row for each source that printed, in the order each first
+printed.
 
 The lines of a source are counted in its own output. Use the name with
 `--source` to read that source.
@@ -4074,6 +4113,50 @@ See also:
 
 - [`machine output`](#machine-output)
 - [`machine output search`](#machine-output-search)
+- [`machine output entry`](#machine-output-entry)
+
+### machine output bytes
+
+Write the bytes a source printed, exactly as printed.
+
+The command writes the bytes to standard output and changes none. Use it for an
+output file that is not text.
+
+With the json format the command prints a row for each write instead of the
+bytes. A row has the entry that wrote, the source, the offset and the length.
+The offset counts within the output of the source of the row. A row also names
+the task that wrote.
+
+The bytes are read where the output is kept. The output of the ancestors of the
+run comes first.
+
+```
+usage: machine output run bytes [-h] [--source name]
+```
+
+| Option | Does |
+|---|---|
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
+
+Examples:
+
+```
+machine output run1 bytes --source /output/app/kept/a.bin  a file
+machine -o json output run1 bytes --source /output/app     each write
+```
+
+Prints:
+
+```
+text  the bytes, unchanged
+json  entry_id source offset length tgid tid task
+      a row for each write, with the task that wrote it
+```
+
+See also:
+
+- [`machine output`](#machine-output)
+- [`machine output sources`](#machine-output-sources)
 - [`machine output entry`](#machine-output-entry)
 
 ### machine output search
@@ -4111,7 +4194,7 @@ usage: machine output run search [-h] [-f] [--max n] [--source name] regex
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
-| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 

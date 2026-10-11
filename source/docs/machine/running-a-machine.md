@@ -271,7 +271,82 @@ machine go app 'ttyS1~ready'
 | `ttyS0` to `ttyS3` | the four serial ports; `ttyS0` is the console |
 | `hvc0` | the virtio console |
 | `debugcon` | the firmware's debug port |
+| a path under `/output` | an output file, or every file under a directory |
 | `all` | every source, in the order printed |
+
+### Output files
+
+A service on a disk has no serial port to write to, and three ports are not
+many. Every service is given a directory instead, and each file it writes
+there is a source of its own. The directory is named by a variable:
+
+```bash
+# inside the service
+my-app --events "$MACHINE_OUTPUT_DIR/events.jsonl"
+```
+
+The file is stored with the run as it is written, each write with its entry.
+Its name as a source is its path: `/output`, the name of the service, `kept`,
+and the path the service wrote. A disk built from a binary or one image has
+one service, `app`.
+
+```bash
+machine output app sources
+```
+```
+SOURCE                            BYTES      LINES  ENTRIES
+ttyS0                             10767        198  29:21127
+/output/app/kept/events.jsonl      2210         31  16916:20410
+```
+
+Everything that takes a source takes the path, and the path of a directory is
+every file under it:
+
+```bash
+machine output app --source /output/app/kept/events.jsonl
+machine output app search '"setup_complete"' --source /output/app
+machine run app --until '/output/app/kept/events.jsonl~setup_complete'
+```
+
+A file does not have to be text. [`machine output app bytes`](commands.md#machine-output-bytes)
+writes what a source printed exactly as it was written:
+
+```bash
+machine output app bytes --source /output/app/kept/core.bin > core.bin
+```
+
+### Output too large to keep
+
+Debug logs can be gigabytes, and a run that stores them is slow to copy and to
+read. A service writes those under a second directory, and what is written
+there is not stored:
+
+```bash
+# inside the service
+my-app --debug-log "$MACHINE_DROPPED_OUTPUT_DIR/debug.log"
+```
+
+The file still has its name, and a run can still wait for a line of it. The
+wait stops the run at the entry that wrote the line and stores nothing:
+
+```bash
+machine run app --until '/output/app/dropped/debug.log~connection refused'
+```
+
+Because a run replays exactly, the file is not lost. Fork a branch before the
+part you care about and replay it with the file kept:
+
+```bash
+machine fork app --at ^before --name look
+machine replay look --keep-output /output/app/dropped/debug.log
+machine output look --source /output/app/dropped/debug.log
+```
+
+`--keep-output` and `--drop-output` take a file or a directory, on `run`,
+`plan` and `replay`, and hold for that command alone. Both also take a port
+such as `ttyS1`. Where a kept and a dropped path both cover a file, the
+longer path decides. What is stored never changes what the machine executes,
+so a replay that keeps more still reproduces the recording.
 
 ## Interactive mode
 
