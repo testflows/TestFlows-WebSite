@@ -2834,6 +2834,10 @@ Type /help at the prompt to list the commands. Use -c to send a slash command
 from the command line, without opening the prompt. Use -c /help to list the
 commands that way.
 
+A semicolon between two slash commands runs the second after the first, and
+stops when the first fails. A semicolon inside quotes separates commands too. A
+semicolon in the text of /send is written \x3b with -e.
+
 Use control log with a run to read the command history instead of driving the
 machine. Use `--entries` to select the commands issued at given run entries. Use
 -n to select commands by number.
@@ -2862,6 +2866,9 @@ machine control run1 -c /help                   list the slash commands
 machine control run1 -c /f@100                  run 100 iterations fast
 machine control run1 -c '/checkpoint name cp1'  create checkpoint cp1
 machine control run1 -c '/rewind to ^cp1'       put run1 back at cp1
+machine control run1 -c '/send ls -la'          type ls -la and Enter
+machine control run1 -c '/send -e a\x3bb'       send a;b and Enter
+machine control run1 -c '/f;/d'                 run, then dump
 machine control log run1                        the commands issued to run1
 ```
 
@@ -5051,6 +5058,11 @@ send no newline. Use -e to read escapes in the text, so that Ctrl-C is \x03.
 The text - sends standard input as it is. The command adds no newline to it and
 reads no escape in it.
 
+At the control prompt the command is /send. The options come first and the text
+is the rest of the line. A semicolon ends a command there, so one in the text is
+written \x3b with -e. A pair of quotes around the text keeps the spaces at its
+ends.
+
 The keyboard takes text and types it on a US keyboard. The machine presses and
 releases a key for each character. It holds Shift or Ctrl where the character
 needs one.
@@ -5085,6 +5097,7 @@ machine send -n run1 y                  send y with no newline
 machine send -n -e run1 '\x03'          send Ctrl-C
 machine send run1 -                     send standard input as it is
 machine send run1 ls --device keyboard  type it on the keyboard
+machine send run1 -- -la                a text that begins with a dash
 ```
 
 Prints:
@@ -5107,6 +5120,7 @@ See also:
 - [`machine output`](#machine-output)
 - [`machine wait`](#machine-wait)
 - [`machine irq`](#machine-irq)
+- [`machine control`](#machine-control)
 
 ## machine irq
 

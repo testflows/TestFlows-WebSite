@@ -401,6 +401,19 @@ machine run app --until 'console~hello'
 The run records the input where it arrived, so a replay reproduces it without
 being sent anything. To try other input, fork a branch and send to the branch.
 
+At the [control prompt](#interactive-mode) the same command is `/send`. The
+options come first and the text is the rest of the line, with no quotes:
+
+```
+/send ls -la
+/send --device ttyS1 echo hello
+/send -n -e \x03
+```
+
+A `;` separates commands at the prompt, so write a semicolon in the text as
+`\x3b` with `-e`. Put the text in quotes to keep spaces at its ends, as in
+`/send " y "`, and put `--` before a text that begins with a dash.
+
 | Device | Is |
 |---|---|
 | `console` | the run's console, which is the default |
