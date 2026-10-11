@@ -4186,6 +4186,10 @@ printed.
 The lines of a source are counted in its own output. Use the name with
 `--source` to read that source.
 
+An output file with nothing stored is listed after them with 0 bytes. It is a
+file the run drops, or a file that was not written. Use its name with
+`--keep-output` on a fork to store it.
+
 The list is made where the output is kept, so the output is not downloaded. The
 output of the ancestors of the run is counted.
 

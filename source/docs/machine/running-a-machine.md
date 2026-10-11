@@ -326,9 +326,10 @@ there is not stored:
 my-app --debug-log "$MACHINE_DROP_OUTPUT_DIR/debug.log"
 ```
 
-The file is a source under `/output/drop`. It still has its name, and a run
-can still wait for a line of it. The wait stops the run at the entry that
-wrote the line and stores nothing:
+The file is a source under `/output/drop`. It still has its name, and
+`machine output app sources` lists it with 0 bytes, so you can see what a run
+dropped. A run can still wait for a line of it. The wait stops the run at the
+entry that wrote the line and stores nothing:
 
 ```bash
 machine run app --until '/output/drop/app/debug.log~connection refused'
