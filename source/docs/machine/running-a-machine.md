@@ -335,13 +335,18 @@ machine run app --until '/output/drop/app/debug.log~connection refused'
 ```
 
 Because a run replays exactly, the file is not lost. Fork a branch that keeps
-the file, before the part you care about, and replay it:
+the file and starts from a point before the part you care about:
 
 ```bash
-machine fork app --at ^before --name look --keep-output /output/drop/app/debug.log
-machine replay look
+machine fork app --from ^before --name look --keep-output /output/drop/app/debug.log
 machine output look --source /output/drop/app/debug.log
 ```
+
+`--from` replays the branch from that point to where the run is now, and the
+branch stores the file on the way. Use `--at` to stop the branch at an earlier
+point. `machine go` takes `--from` too, and moves the machine onto the branch.
+`machine detach` takes it for a new root that holds the file and shares nothing
+with the run it came from.
 
 `--keep-output` and `--drop-output` say what a run stores besides what the
 two directories say. They are options of `create`, `fork`, `detach` and `go`,

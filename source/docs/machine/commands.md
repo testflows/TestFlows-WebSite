@@ -2137,13 +2137,19 @@ Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
 to store less. The run keeps both lists for its whole life. The describe command
 shows them.
 
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
 A name given to either option may be a pattern, such as /output/drop/*/*.log. A
 star matches within one directory name, a leading dot included, and never a
 slash. Two stars match any number of directories.
 
-A kept name and a dropped name may cover one source. A name spelled out decides
-over a pattern. Of two names spelled out, the longer decides. Otherwise the
-source is stored.
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
@@ -3170,9 +3176,23 @@ The new run keeps and drops the output that the run it comes from does. Use
 `--keep-output` to replace the names it keeps. Use `--drop-output` to replace
 the names it drops. Each option changes its own list only.
 
-A kept name and a dropped name may cover one source. A name spelled out decides
-over a pattern. Of two names spelled out, the longer decides. Otherwise the
-source is stored.
+Use `--from` to replay the new run from an earlier point to its point. The new
+run stores the output of that stretch by its own names. It is forked at the
+checkpoint at or before the earlier point.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
@@ -3181,11 +3201,11 @@ The command waits until the branch accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--depth n] [--lean]
-                    [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
-                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
-                    [--pin-cpu n]
+usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
+                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
+                    [--side-trace | --no-side-trace] [--keep-output name] [--drop-output name]
+                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
+                    [--limit n] [--backstop-limit n] [--pin-cpu n]
                     run
 ```
 
@@ -3195,7 +3215,8 @@ usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--de
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3222,6 +3243,7 @@ machine fork run1 --at -10ms              fork 10 ms before now
 machine fork run1 --at '#120' --no-start  create the branch, do not start it
 machine fork run1 --keep-output /output   store what is dropped
 machine fork run1 --drop-output ttyS1     store none of ttyS1
+machine fork run1 --from ^cp1             replay the branch from cp1 to now
 ```
 
 See also:
@@ -3265,9 +3287,23 @@ The new run keeps and drops the output that the run it comes from does. Use
 `--keep-output` to replace the names it keeps. Use `--drop-output` to replace
 the names it drops. Each option changes its own list only.
 
-A kept name and a dropped name may cover one source. A name spelled out decides
-over a pattern. Of two names spelled out, the longer decides. Otherwise the
-source is stored.
+Use `--from` to replay the new run from an earlier point to its point. The new
+run stores the output of that stretch by its own names. It is forked at the
+checkpoint at or before the earlier point.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
@@ -3283,6 +3319,7 @@ usage: machine go [options] <run> <point>
 
 | Option | Does |
 |---|---|
+| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3300,6 +3337,7 @@ machine go run1 ^cp1                 branch at checkpoint cp1 and switch
 machine go run1 '#120' --name probe  branch at entry 120 as probe
 machine go run1 parent               branch where run1 left its parent
 machine go run1 -10ms                branch 10 ms before now
+machine go run1 now --from ^cp1      replay the branch from cp1
 ```
 
 Prints:
@@ -3424,16 +3462,30 @@ The new run keeps and drops the output that the run it comes from does. Use
 `--keep-output` to replace the names it keeps. Use `--drop-output` to replace
 the names it drops. Each option changes its own list only.
 
-A kept name and a dropped name may cover one source. A name spelled out decides
-over a pattern. Of two names spelled out, the longer decides. Otherwise the
-source is stored.
+Use `--from` to replay the new run from an earlier point to its point. The new
+run stores the output of that stretch by its own names. It is forked at the
+checkpoint at or before the earlier point.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
 
 ```
-usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
-                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
+                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                       [--keep-output name] [--drop-output name] [--no-wait]
                       [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
                       [--backstop-limit n] [--pin-cpu n]
@@ -3446,7 +3498,8 @@ usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
@@ -3465,6 +3518,7 @@ Examples:
 ```
 machine detach run1 --at ^cp1                 copy run1 at cp1 to a new root
 machine detach run1 --at '#120' --name copy1  name the new root copy1
+machine detach run1 --from ^cp1               replay the root from cp1
 ```
 
 See also:
