@@ -344,8 +344,13 @@ machine output look --source /output/app/dropped/debug.log
 
 `--keep-output` and `--drop-output` take a file or a directory, on `run`,
 `plan` and `replay`, and hold for that command alone. Both also take a port
-such as `ttyS1`. Where a kept and a dropped path both cover a file, the
-longer path decides. What is stored never changes what the machine executes,
+such as `ttyS1`, and a pattern such as `'/output/*/dropped/*.log'`. A pattern
+is in the syntax of Python's `glob` module: `*`, `?`, `[abc]`, `[a-z]` and
+`[!abc]` stay within one directory name, and `**` matches any number of
+directories, as in `'/output/**/*.log'`. A name that begins with a dot is
+matched like any other. Where a kept and a dropped name both cover a file, the one that covers
+more of the file's name decides, and of two that cover as much, the one that
+is no pattern. What is stored never changes what the machine executes,
 so a replay that keeps more still reproduces the recording.
 
 ## Interactive mode

@@ -2557,6 +2557,11 @@ same way. The run stores none of the file.
 Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
 to store less. Each holds for this command alone.
 
+A name given to either option may be a pattern, such as /output/*/dropped/*.log.
+A star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories. Where two names cover a
+source, the one that covers more of its name decides.
+
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
 
@@ -2617,8 +2622,8 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--keep-output name]
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
-| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, or a device such as ttyS1 (repeatable) |
-| `--drop-output name` | Source that this command does not store: a path under /output, or a device such as ttyS1 (repeatable) |
+| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
+| `--drop-output name` | Source that this command does not store: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
@@ -2651,6 +2656,7 @@ machine run run1 --until 'entry>=500'       until it reaches entry 500
 machine run run1 --until vtime=+10ms        until its clock moves 10 ms
 machine run run1 --until tasks              until its tasks can be listed
 machine run run1 --keep-output /output/app  store what app drops
+machine run run1 --drop-output 'ttyS[12]'   drop by a pattern
 ```
 
 Prints:
@@ -2769,8 +2775,8 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--keep-output name
 |---|---|
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
-| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, or a device such as ttyS1 (repeatable) |
-| `--drop-output name` | Source that this command does not store: a path under /output, or a device such as ttyS1 (repeatable) |
+| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
+| `--drop-output name` | Source that this command does not store: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
@@ -2984,6 +2990,11 @@ The replay stores every source except the output files that are dropped. Use
 `--keep-output` to store an output file that is dropped. Use `--drop-output` to
 store less. What is stored does not change what the machine executes.
 
+A name given to either option may be a pattern, such as /output/*/dropped/*.log.
+A star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories. Where two names cover a
+source, the one that covers more of its name decides.
+
 ```
 usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] [--keep-output name]
                       [--drop-output name]
@@ -3001,8 +3012,8 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] [--keep-out
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--skid n` | Aim the interrupt n instructions short of each recorded stop |
-| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, or a device such as ttyS1 (repeatable) |
-| `--drop-output name` | Source that this command does not store: a path under /output, or a device such as ttyS1 (repeatable) |
+| `--keep-output name` | Source that this command stores though it is dropped: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
+| `--drop-output name` | Source that this command does not store: a path under /output, a device such as ttyS1, or a pattern (repeatable) |
 
 Examples:
 
