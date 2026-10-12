@@ -5654,6 +5654,79 @@ See also:
 - [`machine containers`](#machine-containers)
 - [`machine fork`](#machine-fork)
 
+## machine profile
+
+Sample what a machine runs and show where the time goes.
+
+The command samples the stack of every CPU on the machine's clock. The command
+prints the functions that ran. Each has the share of samples it ran in and the
+share it was on the stack of. Use `--pid` or `--container` to sample one process
+or one container.
+
+Use `--folded` to print every stack with its count, one a line. That text is
+what flame graph tools read. Use `--flame` to draw a flame graph in the
+terminal.
+
+The machine runs for the time sampled. A machine that is idle has no samples. A
+profile samples by the machine's clock, so a replay takes the same samples.
+
+A program built without frame pointers shows the function that ran and not its
+callers. The frames of the kernel end in _[k].
+
+```
+usage: machine profile [-h] [--for duration] [--hz rate] [--pid pid] [--container name]
+                       [--folded | --flame] [--top n] [--within duration]
+                       run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Machine time to sample for, such as 500ms (default: 1s) |
+| `--hz rate` | Samples a second on each CPU (default: 250, the most) |
+| `--pid pid` | Process to sample, by its pid in the machine or in the container (default: every process) |
+| `--container name` | Container to sample, by its name or its Compose service (default: the machine itself) |
+| `--folded` | Print the stacks, one a line with its count, for another tool to draw |
+| `--flame` | Draw a flame graph in the terminal |
+| `--top n` | Functions the table shows (default: 20) |
+| `--within duration` | Machine time the profile gets to end in after sampling, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine profile run1                          where a second of run1 went
+machine profile run1 --for 5s --container db  one container
+machine profile run1 --flame                  a flame graph in the terminal
+machine profile run1 --folded                 the stacks, for another tool
+```
+
+Prints:
+
+```
+text      SELF TOTAL FUNCTION
+SELF      the share of samples the function was running in
+TOTAL     the share it was on the stack of
+--folded  comm;outer;...;inner <count>
+json      samples duration_ms hz stacks process run_id name
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine tasks`](#machine-tasks)
+- [`machine syscalls`](#machine-syscalls)
+- [`machine containers`](#machine-containers)
+
 ## machine irq
 
 Inject an interrupt into the vCPUs of a machine.

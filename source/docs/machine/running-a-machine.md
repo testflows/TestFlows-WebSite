@@ -657,6 +657,43 @@ gdb ./app ./app.core
 - The first process of a container dumps no core. Run your program under an
   init, `init: true` in the Compose file, so it is not the first.
 
+## Profiling
+
+[`machine profile`](commands.md#machine-profile) samples what the machine runs
+and shows where the time went:
+
+```bash
+machine profile app                            # a second of everything
+machine profile app --for 5s --container db    # one container
+machine profile app --pid 412                  # one process
+```
+
+```text
+95 samples in 400 ms at 250 a second
+ SELF   TOTAL  FUNCTION
+69.5%   69.5%  chacha_permute_[k]
+15.8%   21.1%  _copy_to_iter_[k]
+ 7.4%   76.8%  chacha_block_generic_[k]
+ 0.0%  100.0%  do_syscall_64_[k]
+```
+
+`SELF` is the share of samples a function was running in, and `TOTAL` the share
+it was on the stack of. A name that ends in `_[k]` is a function of the kernel.
+
+- `--flame` draws a flame graph in the terminal.
+- `--folded` prints every stack with its count, one a line, as
+  `program;outer;inner 42`. That text is what flame graph tools read, so you can
+  save it and draw it with the tool you like, or hand it to an agent.
+- `-o json` gives the same stacks as data.
+
+The machine runs for the time sampled, and a machine that is idle has no
+samples. The samples are taken by the machine's clock, so a replay of the run
+takes the same ones.
+
+A program built without frame pointers shows the function that ran and not the
+functions that called it. Build with `-fno-omit-frame-pointer` to see the
+callers.
+
 ## Interactive mode
 
 When you are working on one run for a while, you can open a prompt for it.

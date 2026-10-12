@@ -119,6 +119,7 @@ And the calls you will reach for most often:
 | `run.exec(command)`, `run.exec(command, wait=False)`, `run.process(id)`, `run.processes()` | executes a command in the machine, a list for a program and a str for a shell line, and returns its `Process`: `pid`, `exit_code`, `stdout`, `stderr`, `events`, `exits` |
 | `run.exec(command, container="db", user="root")` | executes it in a container, named by its Compose service or by its own name, as a user of it |
 | `run.core(pid, dest, container=...)` | gets a core dump of a process into a file; the process dies of it |
+| `run.profile("2s", container=..., pid=...)` | samples what runs and returns a `Profile`: `samples`, `functions`, `stacks`, and `folded` text for flame graph tools |
 | `run.containers()` | lists the containers and the Compose service of each: `name`, `service`, `state`, `image` |
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
