@@ -659,8 +659,8 @@ gdb ./app ./app.core
 
 ## Profiling
 
-[`machine profile`](commands.md#machine-profile) samples what the machine runs
-and shows where the time went:
+[`machine profile`](commands.md#machine-profile) shows where a run spent its
+time, by function and by call stack:
 
 ```bash
 machine profile app                            # a second of everything
@@ -669,16 +669,17 @@ machine profile app --pid 412                  # one process
 ```
 
 ```text
-95 samples in 400 ms at 250 a second
+250 samples at 250 a second
  SELF   TOTAL  FUNCTION
-69.5%   69.5%  chacha_permute_[k]
-15.8%   21.1%  _copy_to_iter_[k]
- 7.4%   76.8%  chacha_block_generic_[k]
- 0.0%  100.0%  do_syscall_64_[k]
+61.2%   61.2%  hash_bytes
+21.6%   82.8%  index_build
+11.2%   11.2%  sys_read_[k]
+ 0.0%  100.0%  main
 ```
 
 `SELF` is the share of samples a function was running in, and `TOTAL` the share
-it was on the stack of. A name that ends in `_[k]` is a function of the kernel.
+it was on the stack of. A name that ends in `_[k]` is time in the kernel, named
+after the system call the program made.
 
 - `--flame` draws a flame graph in the terminal.
 - `--folded` prints every stack with its count, one a line, as
@@ -686,13 +687,45 @@ it was on the stack of. A name that ends in `_[k]` is a function of the kernel.
   save it and draw it with the tool you like, or hand it to an agent.
 - `-o json` gives the same stacks as data.
 
-The machine runs for the time sampled, and a machine that is idle has no
-samples. The samples are taken by the machine's clock, so a replay of the run
-takes the same ones.
+Machine takes the samples from outside the guest, at every timer interrupt of
+each CPU. Nothing is installed in your image and nothing runs in the guest for
+it, so a run is the same with a profile and without. Your programs do not need
+frame pointers: a stack is walked by the unwind information every program
+carries for exceptions.
 
-A program built without frame pointers shows the function that ran and not the
-functions that called it. Build with `-fno-omit-frame-pointer` to see the
-callers.
+### Profiling a run that already happened
+
+Because a run is recorded, you can profile a stretch of it after the fact, even
+if no profiler was on at the time:
+
+```bash
+machine profile app --from ^request --to ^reply
+machine profile app --from 12s --to 14s --flame
+```
+
+The stretch is replayed on a branch, which is deleted afterwards. Your run is
+not touched, and it does not need to be running. Profile the same stretch twice
+and you get the same samples.
+
+### Good to know
+
+- Names come from the program files on the run's disk. A profile takes a
+  checkpoint when the stretch ends and reads them there. Pass
+  `--no-checkpoint` if you want nothing added to the run: names then come from
+  its last checkpoint, and a program installed since shows as `[file]`.
+- A file the guest has written but not synced to disk yet is not in any
+  checkpoint. Run `sync` in the guest first.
+- A stripped program with no unwind information, such as Alpine's `busybox`,
+  is one frame named after its file.
+- Time in the kernel is one frame. The functions of the kernel itself are not
+  shown.
+- `--in-guest` samples with a small process inside the guest instead. Use it
+  when you need the kernel's own functions by name, or a program that is not
+  in a checkpoint yet. It is part of the run, and it cannot profile a recorded
+  stretch.
+- Samples are taken 250 times a second on each CPU.
+- C++ names are printed as the program has them. Pipe `--folded` through
+  `c++filt` to read them.
 
 ## Interactive mode
 

@@ -5658,24 +5658,36 @@ See also:
 
 Sample what a machine runs and show where the time goes.
 
-The command samples the stack of every CPU on the machine's clock. The command
-prints the functions that ran. Each has the share of samples it ran in and the
-share it was on the stack of. Use `--pid` or `--container` to sample one process
-or one container.
+The machine samples each CPU at every timer interrupt, 250 times a second.
+Nothing runs in the guest for it. The command prints the functions that ran.
+Each has the share of samples it ran in and the share it was on the stack of.
 
-Use `--folded` to print every stack with its count, one a line. That text is
-what flame graph tools read. Use `--flame` to draw a flame graph in the
-terminal.
+Use `--from` to profile a stretch the run already recorded. The stretch is
+replayed on a branch, which is deleted after. The run is not changed and need
+not be running. A stretch profiled twice gives the same samples.
 
-The machine runs for the time sampled. A machine that is idle has no samples. A
-profile samples by the machine's clock, so a replay takes the same samples.
+Use `--pid` or `--container` to show one process or one container. Use
+`--folded` to print every stack with its count, one a line. That text is what
+flame graph tools read. Use `--flame` to draw a flame graph in the terminal.
 
-A program built without frame pointers shows the function that ran and not its
-callers. The frames of the kernel end in _[k].
+The names come from the program files of the run's disk. The command takes a
+checkpoint when the stretch ends and reads them there. Use `--no-checkpoint` to
+add nothing to the run and read them at its last checkpoint. A file that is not
+there is named by its file.
+
+Time in the kernel is one frame named after the system call, which ends in _[k].
+
+Without `--from` the machine runs for the time sampled. A machine that is idle
+has no samples.
+
+Use `--in-guest` to sample with a process of the guest, which the disk's exec
+agent runs. It names the functions of the kernel. It names a program the disk
+has no checkpoint of. That process is part of the run.
 
 ```
-usage: machine profile [-h] [--for duration] [--hz rate] [--pid pid] [--container name]
-                       [--folded | --flame] [--top n] [--within duration]
+usage: machine profile [-h] [--for duration | --from point [point ...]] [--to point [point ...]]
+                       [--pid pid] [--container name] [--no-checkpoint] [--in-guest] [--folded |
+                       --flame] [--top n] [--within duration]
                        run
 ```
 
@@ -5685,21 +5697,26 @@ usage: machine profile [-h] [--for duration] [--hz rate] [--pid pid] [--containe
 
 | Option | Does |
 |---|---|
-| `--for duration` | Machine time to sample for, such as 500ms (default: 1s) |
-| `--hz rate` | Samples a second on each CPU (default: 250, the most) |
-| `--pid pid` | Process to sample, by its pid in the machine or in the container (default: every process) |
-| `--container name` | Container to sample, by its name or its Compose service (default: the machine itself) |
+| `--for duration` | Machine time to run and sample for, such as 500ms (default: 1s) |
+| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The stretch is replayed on a branch |
+| `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the end of the run's line) |
+| `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
+| `--container name` | Container to show, by its name or its Compose service (default: the machine itself) |
+| `--no-checkpoint` | Take no checkpoint when the stretch ends: name the files as the last checkpoint has them |
+| `--in-guest` | Sample with the profiler of the exec agent, a process of the guest: kernel functions by name, at the cost of changing the run |
 | `--folded` | Print the stacks, one a line with its count, for another tool to draw |
 | `--flame` | Draw a flame graph in the terminal |
 | `--top n` | Functions the table shows (default: 20) |
-| `--within duration` | Machine time the profile gets to end in after sampling, such as 10s (default: 30m) |
+| `--within duration` | Machine time a question to a container gets, such as 10s (default: 30m) |
 
 Examples:
 
 ```
 machine profile run1                          where a second of run1 went
 machine profile run1 --for 5s --container db  one container
+machine profile run1 --from ^slow --to ^done  a recorded stretch
 machine profile run1 --flame                  a flame graph in the terminal
+machine profile run1 --in-guest               kernel functions by name
 machine profile run1 --folded                 the stacks, for another tool
 ```
 
@@ -5710,19 +5727,20 @@ text      SELF TOTAL FUNCTION
 SELF      the share of samples the function was running in
 TOTAL     the share it was on the stack of
 --folded  comm;outer;...;inner <count>
-json      samples duration_ms hz stacks process run_id name
+json      samples hz stacks run_id name
 ```
 
 Refuses, and the way past:
 
 ```
-a machine that is replaying      machine fork run1 --name try2
-a container that is not running  machine containers run1
+a container the run does not have  machine containers run1
+--in-guest with --from             machine profile run1 --from ^slow
 ```
 
 See also:
 
-- [`machine exec`](#machine-exec)
+- [`machine replay`](#machine-replay)
+- [`machine fork`](#machine-fork)
 - [`machine tasks`](#machine-tasks)
 - [`machine syscalls`](#machine-syscalls)
 - [`machine containers`](#machine-containers)
