@@ -5401,6 +5401,69 @@ See also:
 - [`machine output`](#machine-output)
 - [`machine go`](#machine-go)
 
+## machine put
+
+Put a file into a machine or into a container of it.
+
+The command copies a file of this machine to a path in the running machine. Use
+`--container` to put it in a container instead. A file of any size is put. The
+directories on the way to the path are made.
+
+The file has its name only once all of it is written, so a program never reads
+part of it. A file already at the path is replaced.
+
+The machine runs while the file goes in. Other programs of the machine run with
+it. The bytes are a recorded input, so a replay puts the same file.
+
+The file is written to the disk before the command returns. A checkpoint taken
+after it has the file, and fs reads it there.
+
+```
+usage: machine put [-h] [--container name] [--mode mode] [--within duration] run file path
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `file` | File on this machine to put, or - for standard input |
+| `path` | Path the file gets in the machine or in the container |
+
+| Option | Does |
+|---|---|
+| `--container name` | Container to put the file in, by its name (default: the machine itself) |
+| `--mode mode` | Mode of the file, as octal digits (default: 644) |
+| `--within duration` | Machine time the put gets to end in, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine put run1 ./a.conf /etc/a.conf     into the machine
+machine put run1 ./t.sh /t.sh --mode 755  with a mode
+machine put run1 ./d /d --container db    into a container
+machine put run1 - /tmp/in                standard input
+```
+
+Prints:
+
+```
+text  Put <n> bytes at <path> of <run> (<id>)
+json  size path container mode process run_id name entry_id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine exec run1 run -- docker ps
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine send`](#machine-send)
+- [`machine fs`](#machine-fs)
+- [`machine checkpoint`](#machine-checkpoint)
+
 ## machine irq
 
 Inject an interrupt into the vCPUs of a machine.

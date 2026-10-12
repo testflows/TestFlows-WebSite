@@ -548,8 +548,45 @@ machine exec app start -- docker exec compose-app-1 sh -c 'gdb -p 1 < /tmp/p'
 machine exec app run   -- docker exec compose-app-1 sh -c 'echo c > /tmp/p'
 ```
 
-`machine exec` uses the serial port `ttyS3` for its requests. A program in the
-machine that reads `ttyS3` takes them.
+`machine exec` has a port of its own into the machine, so the four serial ports
+are yours. On a run created with `--console virtio` it uses the serial port
+`ttyS3` instead, and a program in the machine that reads `ttyS3` takes its
+requests.
+
+## Putting a file into the machine
+
+[`machine put`](commands.md#machine-put) copies a file of your machine into the
+running machine, or into one of its containers:
+
+```bash
+machine put app ./app.conf /etc/app.conf                    # into the machine
+machine put app ./tool.sh /usr/local/bin/tool --mode 755    # with a mode
+machine put app ./seed.sql /srv/seed.sql --container compose-db-1
+machine put app - /tmp/in < data.bin                        # standard input
+```
+
+- A file of any size is put. A megabyte takes a few seconds.
+- The directories on the way to the path are made, and a file already there is
+  replaced.
+- The file has its name only once all of it is written, so a program never
+  reads part of it.
+- The machine runs while the file goes in, and the other programs in it run
+  too.
+- The bytes are a recorded input, so a replay puts the same file and a branch
+  has it.
+- The file is on the disk when `put` returns. A checkpoint taken after it has
+  the file, and [`machine fs`](reading-the-disk.md) reads it there.
+
+A container is named as Docker names it, which
+`machine exec app run -- docker ps --format '{{.Names}}'` lists. It must be
+running. A path is resolved inside the container, as a program there would
+resolve it.
+
+[`machine send --device <path>`](commands.md#machine-send) is for a line into a
+pipe and carries about 2000 bytes. `put` is for a file.
+
+At the [control prompt](#interactive-mode) the command is `/put`, with the same
+operands and options: `/put ./app.conf /etc/app.conf`.
 
 ## Interactive mode
 

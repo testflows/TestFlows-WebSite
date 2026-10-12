@@ -117,6 +117,7 @@ And the calls you will reach for most often:
 | `run.fs.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk at a checkpoint, which `at` names |
 | `run.send(text, device=...)` | sends input to a device or to a file in the machine, as [`machine send`](commands.md#machine-send) does; returns a `Sent` with `queued`, and `process` for a file |
 | `run.exec(command)`, `run.exec(command, wait=False)`, `run.process(id)`, `run.processes()` | executes a command in the machine, a list for a program and a str for a shell line, and returns its `Process`: `pid`, `exit_code`, `stdout`, `stderr`, `events`, `exits` |
+| `run.put(source, path, container=..., mode=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 
