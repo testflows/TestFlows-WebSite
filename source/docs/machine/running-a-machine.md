@@ -115,6 +115,23 @@ entries, and 0 turns them off.
 If a drive or a checkpoint is taking too long, [`machine cancel app`](commands.md#machine-cancel) cancels
 whichever one is in progress.
 
+### Bounding a run by the machine's clock
+
+`--within` ends a run when the machine's clock has moved that far:
+
+```bash
+machine run app --within 10s                           # run for 10 s of machine time
+machine run app --until 'console~done' --within 30s    # the first of the two
+```
+
+Alone, it is the same run as `--until vtime=+10s`. With another `--until` it is
+a bound on it: if the clock gets there first, the run ends with exit status 3
+and says `Machine time ran out`. The machine checks the bound itself, so a slow
+host does not end the run sooner, which the global `--timeout` in seconds would.
+
+The clock moves as the programs in the machine work and while the machine is
+idle. A loop that does nothing but spin does not move it.
+
 ## Waiting
 
 [`machine wait`](commands.md#machine-wait) doesn't drive anything. It watches a run, or several, and
@@ -425,6 +442,98 @@ A serial port and the virtio console take bytes. The keyboard takes text and
 types it on a US keyboard, a key pressed and released for each character, with
 Shift or Ctrl held where the character needs one. Use it for a program that
 reads the screen's terminal and not a serial line.
+
+## Executing commands
+
+[`machine exec`](commands.md#machine-exec) executes a command in the machine,
+beside the programs already running there:
+
+```bash
+machine exec app run -- ls -la /             # execute it and print its output
+machine exec app run -- sh -c 'ls | wc -l'   # a shell line, on a disk with sh
+machine exec app start -- /app/load --rows 9 # send it and return its id
+```
+
+`run` runs the machine until the command exits, prints what it printed, and
+exits with its status. A command gets 30 minutes of machine time to end, and
+`--within` gives it another: `machine exec app run --within 10s -- make check`. `start` sends the command and returns an id. The
+process starts the next time the run executes, so follow it with
+[`machine run`](commands.md#machine-run).
+
+A command is a program and its arguments, written after `--`. No shell reads
+it. Use `-c` to give a line to the shell of the disk instead, with its pipes
+and redirections: `machine exec app run -c 'ls / | wc -l'`.
+
+### In one container
+
+A command runs in the machine, beside Docker, so it reaches a container of
+your Compose project through Docker. The project is named `compose`:
+
+```bash
+machine exec app run -- docker ps --format '{{.Names}}'                 # the containers
+machine exec app run -- docker compose -p compose exec -T db hostname   # by service
+machine exec app run -- docker exec compose-db-1 hostname               # by container
+machine exec app run -- docker compose -p compose exec -T db sh -c 'ls / | wc -l'
+```
+
+`docker compose exec` needs `-T`, since the command has no terminal. A shell
+line after the service is run by the image's own shell, with the image's
+tools.
+
+Each command is a process. The run records every line the process prints and
+how it ends, each at its entry, so a replay reproduces them and a branch has
+the processes of its parent:
+
+```bash
+machine exec app                       # the processes of the run
+machine exec app proc 7f3a9c21         # one process: pid, state, exit status
+machine exec app proc 7f3a9c21 events  # every line and state change, by entry
+machine exec app proc 7f3a9c21 stdout  # its standard output
+machine exec app proc 7f3a9c21 stderr  # its standard error
+machine exec app proc 7f3a9c21 exits   # how it ended, and at which entry
+```
+
+An event's entry is a point. `machine go app '#20411'` forks a branch at the
+entry that printed a line.
+
+The output of a process is also a source like any other, under
+`/output/exec/<id>`: `machine run app --until '/output/exec/7f3a9c21/stdout~done'`
+stops the run at a line the process prints.
+
+### Input for a program you started
+
+A program that reads commands from its standard input, such as a debugger, is
+driven through a named pipe. Make the pipe, keep it open, start the program
+with its input on the pipe, and send to the pipe:
+
+```bash
+machine exec app run   -c 'mkfifo /dev/gdb_pipe'
+machine exec app start -c 'sleep 1000000 > /dev/gdb_pipe'   # keeps the pipe open
+machine exec app start -c 'gdb -p 36 < /dev/gdb_pipe'
+machine send app 'b main' --device /dev/gdb_pipe
+machine send app c --device /dev/gdb_pipe
+machine run app --until vtime=+3s
+machine exec app proc 7f3a9c21 stdout                       # what gdb printed
+```
+
+A `--device` that begins with `/` is the path of a file in the machine, and
+[`machine send`](commands.md#machine-send) puts the bytes at its end. A process
+in the machine writes them, and `send` prints its id: `machine exec app proc`
+with that id says whether they were written. One send to a path carries about
+2000 bytes.
+
+`machine send` writes the machine's own files. For a program in a container,
+make the pipe in the container and write it from there:
+
+```bash
+machine exec app run   -- docker exec compose-app-1 mkfifo /tmp/p
+machine exec app start -- docker exec compose-app-1 sh -c 'sleep 1000000 > /tmp/p'
+machine exec app start -- docker exec compose-app-1 sh -c 'gdb -p 1 < /tmp/p'
+machine exec app run   -- docker exec compose-app-1 sh -c 'echo c > /tmp/p'
+```
+
+`machine exec` uses the serial port `ttyS3` for its requests. A program in the
+machine that reads `ttyS3` takes them.
 
 ## Interactive mode
 

@@ -2604,6 +2604,11 @@ With `--until`, `--iters` and the predicate are both bounds. The first to fire
 wins. `--iters` 500 `--until` on stops at 500 iterations or when a focused task
 takes a vCPU.
 
+Use `--within` to bound the run by the machine's clock. The machine checks the
+bound at every iteration, so a slow host does not end the run sooner. With
+`--until`, the first of the two to hold ends it. Without `--until`, the run goes
+on until the clock has moved that far.
+
 Without `--iters`, only the timeout bounds the drive, so `--until` tasks runs a
 whole boot. A span bounds nothing either. It draws a batch size per dispatch, so
 `--iters` 100:500 `--until` on keeps going.
@@ -2623,8 +2628,8 @@ plan `<run>` `<file>` for each drive that uses it.
 
 ```
 usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
-                   [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
+                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
+                   [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
                    [--fast span] [--step span] [--step-into span] [--vtime-rate span]
                    [--vtime-add span] [--task-sched choices] [--task-slice choices]
                    [--task-int choices] [--when predicate]
@@ -2645,6 +2650,7 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
 | `--until predicate` | Drive until this is true (same predicates as wait `--for`) |
+| `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
 | `--no-idle-skip` | Keep machine time crawling while every vCPU is idle |
@@ -2663,13 +2669,15 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 Examples:
 
 ```
-machine run run1                           run one iteration
-machine run run1 --iters 100               run 100 iterations
-machine run run1 --mode step --iters 20    single-step 20 iterations
-machine run run1 --until 'console~login:'  until the console prints login:
-machine run run1 --until 'entry>=500'      until it reaches entry 500
-machine run run1 --until vtime=+10ms       until its clock moves 10 ms
-machine run run1 --until tasks             until its tasks can be listed
+machine run run1                            run one iteration
+machine run run1 --iters 100                run 100 iterations
+machine run run1 --mode step --iters 20     single-step 20 iterations
+machine run run1 --until 'console~login:'   until the console prints login:
+machine run run1 --until 'entry>=500'       until it reaches entry 500
+machine run run1 --until vtime=+10ms        until its clock moves 10 ms
+machine run run1 --until tasks              until its tasks can be listed
+machine run run1 --within 10s               until its clock has moved 10 s
+machine run run1 --until tasks --within 9s  the first of the two
 ```
 
 Prints:
@@ -2773,8 +2781,9 @@ steer the run as on run. The clause axes and when belong in the file, not here.
 
 ```
 usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                    [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
-                    [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n]
+                    [--seed n] [--vcpu span] [--iters span] [--until predicate]
+                    [--within duration] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+                    [--auto-checkpoints n]
                     run file
 ```
 
@@ -2793,6 +2802,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
 | `--until predicate` | Drive until this is true (same predicates as wait `--for`) |
+| `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
 | `--no-idle-skip` | Keep machine time crawling while every vCPU is idle |
@@ -5067,6 +5077,13 @@ The keyboard takes text and types it on a US keyboard. The machine presses and
 releases a key for each character. It holds Shift or Ctrl where the character
 needs one.
 
+A device that begins with a slash is the path of a file in the machine. The
+bytes go at the end of the file. A pipe is such a file. A program that reads its
+input from a pipe is sent input this way.
+
+A process of the machine writes the file, and the command prints its id. The
+exec proc subcommand says whether the bytes were written.
+
 The command does not run the machine. It queues the bytes and returns. The
 device takes them the next time the run executes, and the run records them
 there. A replay reproduces them.
@@ -5086,25 +5103,27 @@ usage: machine send [-h] [-n] [-e] [--device name] run text
 |---|---|
 | `-n` | Send no newline after the text |
 | `-e` | Read the escapes \n, \r, \t, \b, \e, \0, \\ and \xNN in the text |
-| `--device name` | Device to send to: console, ttyS0 to ttyS3, hvc0 or keyboard (default: console) |
+| `--device name` | Device to send to: console, ttyS0 to ttyS3, hvc0 or keyboard, or the path of a file in the machine (default: console) |
 
 Examples:
 
 ```
-machine send run1 ls                    type ls and Enter on the console
-machine send run1 ls --device ttyS1     the same on ttyS1
-machine send -n run1 y                  send y with no newline
-machine send -n -e run1 '\x03'          send Ctrl-C
-machine send run1 -                     send standard input as it is
-machine send run1 ls --device keyboard  type it on the keyboard
-machine send run1 -- -la                a text that begins with a dash
+machine send run1 ls                        type ls and Enter on the console
+machine send run1 ls --device ttyS1         the same on ttyS1
+machine send -n run1 y                      send y with no newline
+machine send -n -e run1 '\x03'              send Ctrl-C
+machine send run1 -                         send standard input as it is
+machine send run1 ls --device keyboard      type it on the keyboard
+machine send run1 -- -la                    a text that begins with a dash
+machine send run1 c --device /dev/gdb_pipe  write a pipe
 ```
 
 Prints:
 
 ```
-text  Queued <n> bytes for <device> of <run> (<id>)
-json  queued device run_id name
+text     Queued <n> bytes for <device> of <run> (<id>)
+json     queued device run_id name process
+process  the id of the write to a path, empty for a device
 ```
 
 Refuses, and the way past:
@@ -5121,6 +5140,216 @@ See also:
 - [`machine wait`](#machine-wait)
 - [`machine irq`](#machine-irq)
 - [`machine control`](#machine-control)
+
+## machine exec
+
+Execute a command in a machine.
+
+A command is a program of the machine's disk and its arguments, written after
+two dashes. No shell reads it. Use -c to give a line to the shell of the disk,
+with its pipes and redirections.
+
+The run subcommand executes it and runs the machine until it exits. The start
+subcommand sends it and returns.
+
+Each command is a process with an id. The run records what the process prints
+and how it ends, each line at its entry. A replay reproduces them, and a branch
+has the processes of its parent.
+
+Without a subcommand the command lists the processes of the run. The proc
+subcommand shows one.
+
+The machine's disk runs the agent that executes the commands. A disk without it
+executes none.
+
+```
+usage: machine exec [-h] run {run,start,proc} ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine exec run1                   the processes of run1
+machine exec run1 run -- ls -la /   execute ls and print its output
+machine exec run1 start -- sleep 5  send it and return its id
+machine exec run1 proc 7f3a9c21     one process
+```
+
+Prints:
+
+```
+text     ID PID STATE ENTRIES COMMAND
+STATE    pending, running, exited <code>, killed <signal>
+ENTRIES  <started>:<ended>, the entries of the two events
+json     id state command pid exit_code signal started_entry
+```
+
+See also:
+
+- [`machine exec run`](#machine-exec-run)
+- [`machine exec start`](#machine-exec-start)
+- [`machine exec proc`](#machine-exec-proc)
+- [`machine send`](#machine-send)
+- [`machine output`](#machine-output)
+
+### machine exec run
+
+Execute a command and run the machine until it exits.
+
+The command prints what the command printed, its standard output and its
+standard error each on its own. The exit status is that of the command.
+
+The machine runs until the command ends. Other programs of the machine run with
+it.
+
+A command gets 30 minutes of machine time to end. Use `--within` to give it
+another. A command that has not ended by then stays, and the refusal names its
+id.
+
+```
+usage: machine exec run run [-h] [-c line] [--within duration] [command ...]
+```
+
+| Argument | Does |
+|---|---|
+| `[command ...]` | The command and its arguments, after -- |
+
+| Option | Does |
+|---|---|
+| `-c line` | A line for the shell of the machine's disk, in place of a command |
+| `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine exec run1 run -- ls -la /      execute ls and print its output
+machine exec run1 run -c 'echo $PATH'  a line for the shell
+machine -o json exec run1 run -- ls    the process and its events
+```
+
+Prints:
+
+```
+text  what the command printed, and its exit status
+json  the process, with stdout stderr events
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying           machine fork run1 --name try2
+a command that has not ended in time  machine exec run1 proc 7f3a9c21
+```
+
+See also:
+
+- [`machine exec start`](#machine-exec-start)
+- [`machine exec proc`](#machine-exec-proc)
+- [`machine run`](#machine-run)
+
+### machine exec start
+
+Send a command to execute and return.
+
+The command prints the id of the process. The machine does not run. The process
+starts the next time the run executes.
+
+Use the proc subcommand with the id to read the process.
+
+```
+usage: machine exec run start [-h] [-c line] [command ...]
+```
+
+| Argument | Does |
+|---|---|
+| `[command ...]` | The command and its arguments, after -- |
+
+| Option | Does |
+|---|---|
+| `-c line` | A line for the shell of the machine's disk, in place of a command |
+
+Examples:
+
+```
+machine exec run1 start -- sleep 5               send it and return its id
+machine exec run1 start -- /app/load --rows 9    options after --
+machine exec run1 start -c 'gdb -p 36 < /dev/p'  input on a pipe
+```
+
+Prints:
+
+```
+text  Sent <id> to <run> (<id>)
+json  id state command
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying  machine fork run1 --name try2
+```
+
+See also:
+
+- [`machine exec run`](#machine-exec-run)
+- [`machine exec proc`](#machine-exec-proc)
+- [`machine run`](#machine-run)
+
+### machine exec proc
+
+Show a process: its state, its output and its events.
+
+The summary has the command, the pid, the state and how the process ended. A
+process is pending until the machine runs and the guest takes the request.
+
+The events view lists every line the process printed and every change of its
+state, each with its entry. The stdout and stderr views print one stream. The
+exits view prints how the process ended.
+
+```
+usage: machine exec run proc [-h] id [{summary,events,stdout,stderr,exits}]
+```
+
+| Argument | Does |
+|---|---|
+| `id` | Process id |
+| `[{summary,events,stdout,stderr,exits}]` | What to show: summary, events, stdout, stderr or exits (default: summary) |
+
+Examples:
+
+```
+machine exec run1 proc 7f3a9c21         its state and how it ended
+machine exec run1 proc 7f3a9c21 events  every line and its entry
+machine exec run1 proc 7f3a9c21 stdout  its standard output
+machine exec run1 proc 7f3a9c21 stderr  its standard error
+machine exec run1 proc 7f3a9c21 exits   how it ended, and where
+```
+
+Prints:
+
+```
+summary  Process Run Command Pid State Entries Stdout Stderr
+events   ENTRY STREAM TEXT, the stream stdout, stderr or status
+exits    ENTRY and exited <code> or killed <signal>
+json     the process, or the events of the view
+```
+
+Refuses, and the way past:
+
+```
+a process the guest has not taken  machine run run1
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine exec run`](#machine-exec-run)
+- [`machine output`](#machine-output)
+- [`machine go`](#machine-go)
 
 ## machine irq
 
