@@ -5432,7 +5432,7 @@ usage: machine put [-h] [--container name] [--mode mode] [--within duration] run
 |---|---|
 | `--container name` | Container to put the file in, by its name (default: the machine itself) |
 | `--mode mode` | Mode of the file, as octal digits (default: 644) |
-| `--within duration` | Machine time the put gets to end in, such as 10s (default: 30m) |
+| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
 
 Examples:
 
