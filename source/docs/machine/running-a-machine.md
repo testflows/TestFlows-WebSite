@@ -635,6 +635,28 @@ with the same operands and options: `/put ./app.conf /etc/app.conf`.
 A machine whose disk was built before `put` used this path still takes a file,
 far slower. Rebuild the disk to get the speed.
 
+## Getting a core dump
+
+[`machine core`](commands.md#machine-core) has a process dump a core and copies
+the core to your machine, where a debugger reads it with the program:
+
+```bash
+machine core app 412 ./app.core                    # pid 412 of the machine
+machine core app 7 ./db.core --container db        # pid 7 of a container
+gdb ./app ./app.core
+```
+
+- Taking a core ends the process: it dies of a signal, `ABRT` unless you name
+  another with `--signal`.
+- To keep your run as it is, [fork](checkpoints-and-branches.md) first and take the core on
+  the branch.
+- With `--container`, the pid is the one the process has inside the container,
+  as `machine exec app run --container db -- ps` shows it.
+- A process that handles the signal dumps no core. Name another, such as
+  `--signal SEGV`.
+- The first process of a container dumps no core. Run your program under an
+  init, `init: true` in the Compose file, so it is not the first.
+
 ## Interactive mode
 
 When you are working on one run for a while, you can open a prompt for it.

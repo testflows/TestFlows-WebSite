@@ -5592,6 +5592,68 @@ See also:
 - [`machine put`](#machine-put)
 - [`machine get`](#machine-get)
 
+## machine core
+
+Get a core dump of a process of a machine.
+
+The command has a process dump a core and copies the core to a file of this
+machine. A debugger reads the core with the program of the process. Use
+`--container` for a process of a container, by the pid it has there.
+
+Taking a core ends the process. The process dies of the signal. Use fork first
+to keep the run as it is, and take the core on the branch.
+
+A process that handles the signal dumps no core. Use `--signal` to name another.
+The first process of a container dumps none.
+
+The machine runs until the core is written and copied. Other programs of the
+machine run with it.
+
+```
+usage: machine core [-h] [--container name] [--signal signal] [--within duration] run pid file
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `pid` | Pid of the process in the machine or in the container |
+| `file` | File on this machine to write the core to |
+
+| Option | Does |
+|---|---|
+| `--container name` | Container the process is in, by its name or its Compose service (default: the machine itself) |
+| `--signal signal` | Signal the process dies of, by name or number (default: ABRT) |
+| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine core run1 412 ./app.core              a core of pid 412
+machine core run1 7 ./db.core --container db  of a container
+machine core run1 412 ./c --signal SEGV       by another signal
+```
+
+Prints:
+
+```
+text  Core of <pid> of <run> (<id>): <n> bytes in <file>
+json  size pid container signal file process run_id name entry_id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine get`](#machine-get)
+- [`machine containers`](#machine-containers)
+- [`machine fork`](#machine-fork)
+
 ## machine irq
 
 Inject an interrupt into the vCPUs of a machine.
