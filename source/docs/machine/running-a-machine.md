@@ -492,6 +492,19 @@ machine exec app run --container db --user root -- id        # as another user
 machine exec app start --container app -- ./worker
 ```
 
+[`machine containers`](commands.md#machine-containers) lists the containers and
+the service of each, which are the names `--container` takes:
+
+```bash
+machine containers app
+```
+
+```text
+SERVICE  CONTAINER      STATE    IMAGE
+app      compose-app-1  running  alpine:3.20
+db       compose-db-1   running  alpine:3.20
+```
+
 The command has the container's environment and working directory. `--user`
 picks the user it runs as, by name or as `uid:gid`; without it the command runs
 as the container's own user. A service that runs several containers is refused,

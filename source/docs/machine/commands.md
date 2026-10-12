@@ -5539,6 +5539,59 @@ See also:
 - [`machine fs`](#machine-fs)
 - [`machine output`](#machine-output)
 
+## machine containers
+
+List the containers of a machine and the service of each.
+
+The command prints each container with its Compose service, its state and its
+image. Stopped containers are listed too. A container that no service started
+has no service.
+
+The exec, put and get commands take either name with `--container`. A service
+name stands for its container when the service has one.
+
+The machine runs until Docker has answered. The list is of the machine as it is
+then, and the listing is a recorded process.
+
+```
+usage: machine containers [-h] [--within duration] run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+| Option | Does |
+|---|---|
+| `--within duration` | Machine time the listing gets to end in, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine containers run1          the containers of run1
+machine -o json containers run1  every field of each
+```
+
+Prints:
+
+```
+text   SERVICE CONTAINER STATE IMAGE
+STATE  running, exited, created, paused
+json   name service project state status image id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying  machine fork run1 --name try2
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine put`](#machine-put)
+- [`machine get`](#machine-get)
+
 ## machine irq
 
 Inject an interrupt into the vCPUs of a machine.
