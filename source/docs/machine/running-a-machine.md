@@ -482,8 +482,24 @@ after the verb and write it `\x3b`, as `/send -e` does:
 
 ### In one container
 
-A command runs in the machine, beside Docker, so it reaches a container of
-your Compose project through Docker. The project is named `compose`:
+Use `--container` to run a command in a container of your Compose project. It
+takes the name of the service, or the name of the container:
+
+```bash
+machine exec app run --container db -- psql -c 'select 1'
+machine exec app run --container db -c 'ls / | wc -l'        # the container's shell
+machine exec app run --container db --user root -- id        # as another user
+machine exec app start --container app -- ./worker
+```
+
+The command has the container's environment and working directory. `--user`
+picks the user it runs as, by name or as `uid:gid`; without it the command runs
+as the container's own user. A service that runs several containers is refused,
+and the message names them, so you pick one. [`machine put`](commands.md#machine-put)
+and [`machine get`](commands.md#machine-get) take the same `--container`.
+
+A command without `--container` runs in the machine, beside Docker, and can
+call Docker itself. The project is named `compose`:
 
 ```bash
 machine exec app run -- docker ps --format '{{.Names}}'                 # the containers

@@ -5253,6 +5253,9 @@ Execute a command and run the machine until it exits.
 The command prints what the command printed, its standard output and its
 standard error each on its own. The exit status is that of the command.
 
+Use `--container` to execute it in a container. The command then has the
+environment of the container. Use `--user` to choose the user it runs as there.
+
 The machine runs until the command ends. Other programs of the machine run with
 it.
 
@@ -5261,7 +5264,8 @@ another. A command that has not ended by then stays, and the refusal names its
 id.
 
 ```
-usage: machine exec run run [-h] [-c line] [--within duration] [command ...]
+usage: machine exec run run [-h] [-c line] [--container name] [--user user] [--within duration]
+                            [command ...]
 ```
 
 | Argument | Does |
@@ -5271,14 +5275,17 @@ usage: machine exec run run [-h] [-c line] [--within duration] [command ...]
 | Option | Does |
 |---|---|
 | `-c line` | A line for the shell of the machine's disk, in place of a command |
+| `--container name` | Container to execute it in, by its name or its Compose service (default: the machine itself) |
+| `--user user` | User the command runs as in the container, such as root or 1000:1000 |
 | `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
 
 Examples:
 
 ```
-machine exec run1 run -- ls -la /      execute ls and print its output
-machine exec run1 run -c 'echo $PATH'  a line for the shell
-machine -o json exec run1 run -- ls    the process and its events
+machine exec run1 run -- ls -la /           execute ls and print its output
+machine exec run1 run -c 'echo $PATH'       a line for the shell
+machine exec run1 run --container db -- ls  in a container
+machine -o json exec run1 run -- ls         the process and its events
 ```
 
 Prints:
@@ -5293,6 +5300,7 @@ Refuses, and the way past:
 ```
 a machine that is replaying           machine fork run1 --name try2
 a command that has not ended in time  machine exec run1 proc 7f3a9c21
+a container that is not running       machine exec run1 run -- docker ps
 ```
 
 See also:
@@ -5300,6 +5308,8 @@ See also:
 - [`machine exec start`](#machine-exec-start)
 - [`machine exec proc`](#machine-exec-proc)
 - [`machine run`](#machine-run)
+- [`machine put`](#machine-put)
+- [`machine get`](#machine-get)
 
 ### machine exec start
 
@@ -5311,7 +5321,7 @@ starts the next time the run executes.
 Use the proc subcommand with the id to read the process.
 
 ```
-usage: machine exec run start [-h] [-c line] [command ...]
+usage: machine exec run start [-h] [-c line] [--container name] [--user user] [command ...]
 ```
 
 | Argument | Does |
@@ -5321,6 +5331,8 @@ usage: machine exec run start [-h] [-c line] [command ...]
 | Option | Does |
 |---|---|
 | `-c line` | A line for the shell of the machine's disk, in place of a command |
+| `--container name` | Container to execute it in, by its name or its Compose service (default: the machine itself) |
+| `--user user` | User the command runs as in the container, such as root or 1000:1000 |
 
 Examples:
 
