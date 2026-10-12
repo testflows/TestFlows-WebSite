@@ -2878,6 +2878,10 @@ machine control run1 -c '/checkpoint name cp1'  create checkpoint cp1
 machine control run1 -c '/rewind to ^cp1'       put run1 back at cp1
 machine control run1 -c '/send ls -la'          type ls -la and Enter
 machine control run1 -c '/send -e a\x3bb'       send a;b and Enter
+machine control run1 -c '/exec run ls -la /'    execute ls -la /
+machine control run1 -c '/exec run -c echo $0'  a line for the shell
+machine control run1 -c '/exec start sleep 5'   send it, get its id
+machine control run1 -c /exec                   the processes of run1
 machine control run1 -c '/f;/d'                 run, then dump
 machine control log run1                        the commands issued to run1
 ```
@@ -2887,6 +2891,8 @@ See also:
 - [`machine run`](#machine-run)
 - [`machine wait`](#machine-wait)
 - [`machine entries`](#machine-entries)
+- [`machine send`](#machine-send)
+- [`machine exec`](#machine-exec)
 
 ## machine wait
 
