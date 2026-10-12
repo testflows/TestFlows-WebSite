@@ -114,7 +114,7 @@ And the calls you will reach for most often:
 | `run.output(...)` | reads what it printed |
 | `run.output.search(pattern)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, and the entry that printed it |
 | `run.output.sources()`, `run.output(source="ttyS1")`, `run.output.lines(source="all")` | lists the sources that printed, reads one, and reads them all with the source of each line |
-| `run.artifacts.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk |
+| `run.fs.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk at a checkpoint, which `at` names |
 | `run.send(text, device=...)` | sends input to a device or to a file in the machine, as [`machine send`](commands.md#machine-send) does; returns a `Sent` with `queued`, and `process` for a file |
 | `run.exec(command)`, `run.exec(command, wait=False)`, `run.process(id)`, `run.processes()` | executes a command in the machine, a list for a program and a str for a shell line, and returns its `Process`: `pid`, `exit_code`, `stdout`, `stderr`, `events`, `exits` |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
@@ -227,7 +227,7 @@ The SDK comes with small scripts. Each one runs as
 | `plan_file.py` | drives a run with `when` and `else` clauses |
 | `watch_and_follow.py` | watches a listing and follows a console |
 | `syscall_profile.py` | counts a program's system calls and interrupts |
-| `read_artifacts.py` | reads and copies files from a checkpoint's disk |
+| `read_fs.py` | reads and copies files from a checkpoint's disk |
 | `machine_time.py` | changes the machine's clock (vtime) rate and pushes it forward |
 | `inject_interrupt.py` | injects an interrupt and replays it |
 | `stop_and_resume.py` | what `stop`, `kill`, `start` and `sync` keep |

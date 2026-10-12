@@ -1267,7 +1267,7 @@ See also:
 
 - [`machine create`](#machine-create)
 - [`machine preload`](#machine-preload)
-- [`machine artifacts`](#machine-artifacts)
+- [`machine fs`](#machine-fs)
 - [`machine storage`](#machine-storage)
 
 ### machine disks list
@@ -1658,127 +1658,169 @@ See also:
 - [`machine offload disk`](#machine-offload-disk)
 - [`machine disks list`](#machine-disks-list)
 
-## machine artifacts
+## machine fs
 
-List, copy or print files from a run's disk.
-See [Reading the disk](reading-the-disk.md).
+List, copy or print files from a run's disk at a checkpoint.
 
-The command reads the disk from a checkpoint, never from the live machine. It
-needs no guest agent and does not change how the machine executes. Name a
-checkpoint or entry with run@ref. Without it the latest checkpoint is read, and
-the command says which.
+The command reads the filesystem on the disk as a checkpoint saved it. It never
+reads the live machine. It needs no program in the machine and does not change
+how the machine executes.
+
+Every read names its checkpoint with `--at`. A point that is not a checkpoint is
+refused, and the refusal names the checkpoint before it. The point now is the
+checkpoint the run stands at, until the machine runs again.
+
+Data the machine has not synced to its disk is not visible. A file a program
+wrote a moment before the checkpoint can be missing, short or empty.
+
+To read the files as they are, execute sync in the machine with exec. Then take
+a checkpoint and read with `--at` now. Use exec alone to read the files of the
+live machine.
+
+A run created with `--fs-sync` writes every change of a file to the disk as it
+is made. A run created with `--fs-dirsync` does so for every change of a
+directory. Both are options of create and are off by default.
 
 ```
-usage: machine artifacts [-h] {ls,cp,cat} ...
+usage: machine fs [-h] {ls,cp,cat} ...
 ```
 
 Examples:
 
 ```
-machine artifacts ls run1 /etc                list a directory of run1
-machine artifacts cat run1 /etc/hostname      print a file
-machine artifacts cp run1 /etc/hostname .     copy a file out
-machine artifacts cat run1@cp1 /etc/hostname  read it at checkpoint cp1
+machine fs ls run1 /etc --at ^cp1             list a directory at cp1
+machine fs cat run1 /etc/hostname --at ^cp1   print a file
+machine fs cp run1 /etc/hostname . --at ^cp1  copy a file out
+machine fs ls run1 / --at '#300'              at the checkpoint of entry 300
+machine fs ls run1 / --at now                 at the checkpoint just taken
+```
+
+Refuses, and the way past:
+
+```
+a read with no checkpoint named   machine checkpoints run1
+a point with no checkpoint at it  machine checkpoint run1
 ```
 
 See also:
 
+- [`machine checkpoints`](#machine-checkpoints)
+- [`machine checkpoint`](#machine-checkpoint)
+- [`machine exec`](#machine-exec)
 - [`machine disks`](#machine-disks)
-- [`machine dump`](#machine-dump)
-- [`machine output`](#machine-output)
 
-### machine artifacts ls
+### machine fs ls
 
-List files in a run's disk. See [Reading the disk](reading-the-disk.md).
+List files on a run's disk at a checkpoint.
 
-Pin the listing to a checkpoint or entry with run@ref.
+The files are read from the disk as a checkpoint saved it, not from the live
+machine. Use `--at` to name the checkpoint. Data the machine has not synced to
+its disk is not visible.
 
 ```
-usage: machine artifacts ls [-h] [-l] [-a] run[@ref] [path]
+usage: machine fs ls [-h] [--at point] [-l] [-a] run [path]
 ```
 
 | Argument | Does |
 |---|---|
-| `run[@ref]` | Run name/id, optionally @entry_id or @checkpoint |
+| `run` | Run name |
 | `[path]` | Path (default: /) |
 
 | Option | Does |
 |---|---|
+| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
 | `-l` | Long format (mode, size, mtime, name) |
 | `-a, --all` | Include the current and parent directory entries |
 
 Examples:
 
 ```
-machine artifacts ls run1 /etc            list a directory of run1
-machine artifacts ls -l -a run1@cp1 /etc  long form, at cp1
+machine fs ls run1 /etc --at ^cp1        list a directory at cp1
+machine fs ls -l -a run1 /etc --at ^cp1  long form
+```
+
+Prints:
+
+```
+text  checkpoint <entry> path <path>, then a name a line
+json  checkpoint path entries
 ```
 
 See also:
 
-- [`machine artifacts cat`](#machine-artifacts-cat)
-- [`machine artifacts cp`](#machine-artifacts-cp)
-- [`machine disks show`](#machine-disks-show)
+- [`machine fs cat`](#machine-fs-cat)
+- [`machine fs cp`](#machine-fs-cp)
+- [`machine checkpoints`](#machine-checkpoints)
 
-### machine artifacts cp
+### machine fs cp
 
-Copy a file or directory from a run's disk.
-See [Reading the disk](reading-the-disk.md).
+Copy a file or directory from a run's disk at a checkpoint.
 
-Pin the copy to a checkpoint or entry with run@ref. Use -r for directories.
+The files are read from the disk as a checkpoint saved it, not from the live
+machine. Use `--at` to name the checkpoint. Data the machine has not synced to
+its disk is not visible. Use -r to copy a directory.
 
 ```
-usage: machine artifacts cp [-h] [-r] run[@ref] path [dest]
+usage: machine fs cp [-h] [--at point] [-r] run path [dest]
 ```
 
 | Argument | Does |
 |---|---|
-| `run[@ref]` | Run name/id, optionally @entry_id or @checkpoint |
+| `run` | Run name |
 | `path` | Path to copy |
 | `[dest]` | Local destination file or directory (default: .) |
 
 | Option | Does |
 |---|---|
+| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
 | `-r, --recursive` | Copy directories recursively |
 
 Examples:
 
 ```
-machine artifacts cp run1 /etc/hostname .  copy a file out
-machine artifacts cp -r run1 /etc ./etc    copy a directory out
+machine fs cp run1 /etc/hostname . --at ^cp1  copy a file out
+machine fs cp -r run1 /etc ./etc --at ^cp1    copy a directory out
 ```
 
 See also:
 
-- [`machine artifacts ls`](#machine-artifacts-ls)
-- [`machine artifacts cat`](#machine-artifacts-cat)
+- [`machine fs ls`](#machine-fs-ls)
+- [`machine fs cat`](#machine-fs-cat)
+- [`machine checkpoints`](#machine-checkpoints)
 
-### machine artifacts cat
+### machine fs cat
 
-Print a file from a run's disk. See [Reading the disk](reading-the-disk.md).
+Print a file from a run's disk at a checkpoint.
 
-Pin the read to a checkpoint or entry with run@ref.
+The files are read from the disk as a checkpoint saved it, not from the live
+machine. Use `--at` to name the checkpoint. Data the machine has not synced to
+its disk is not visible.
 
 ```
-usage: machine artifacts cat [-h] run[@ref] path
+usage: machine fs cat [-h] [--at point] run path
 ```
 
 | Argument | Does |
 |---|---|
-| `run[@ref]` | Run name/id, optionally @entry_id or @checkpoint |
+| `run` | Run name |
 | `path` | File path |
+
+| Option | Does |
+|---|---|
+| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
 
 Examples:
 
 ```
-machine artifacts cat run1 /etc/hostname      print a file
-machine artifacts cat run1@cp1 /etc/hostname  print it at cp1
+machine fs cat run1 /etc/hostname --at ^cp1    print a file
+machine fs cat run1 /etc/hostname --at '#300'  at entry 300
 ```
 
 See also:
 
-- [`machine artifacts ls`](#machine-artifacts-ls)
-- [`machine artifacts cp`](#machine-artifacts-cp)
+- [`machine fs ls`](#machine-fs-ls)
+- [`machine fs cp`](#machine-fs-cp)
+- [`machine checkpoints`](#machine-checkpoints)
 
 ## machine sync
 
@@ -2882,6 +2924,7 @@ machine control run1 -c '/exec run ls -la /'    execute ls -la /
 machine control run1 -c '/exec run -c echo $0'  a line for the shell
 machine control run1 -c '/exec start sleep 5'   send it, get its id
 machine control run1 -c /exec                   the processes of run1
+machine control run1 -c '/fs ls / at ^cp1'      the disk's files at cp1
 machine control run1 -c '/f;/d'                 run, then dump
 machine control log run1                        the commands issued to run1
 ```
@@ -2893,6 +2936,7 @@ See also:
 - [`machine entries`](#machine-entries)
 - [`machine send`](#machine-send)
 - [`machine exec`](#machine-exec)
+- [`machine fs`](#machine-fs)
 
 ## machine wait
 
