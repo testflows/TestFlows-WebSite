@@ -576,10 +576,12 @@ machine put app - /tmp/in < data.bin                        # standard input
 - The file is on the disk when `put` returns. A checkpoint taken after it has
   the file, and [`machine fs`](reading-the-disk.md) reads it there.
 
-A container is named as Docker names it, which
-`machine exec app run -- docker ps --format '{{.Names}}'` lists. It must be
-running. A path is resolved inside the container, as a program there would
-resolve it.
+`--container` takes a container's name, as
+`machine exec app run -- docker ps --format '{{.Names}}'` lists them, or the
+name of its Compose service: `--container db` is the container of the service
+`db`. A service that runs several containers is refused, and the message names
+them, so you pick one. The container must be running. A path is resolved inside
+the container, as a program there would resolve it.
 
 [`machine send --device <path>`](commands.md#machine-send) is for a line into a
 pipe and carries about 2000 bytes. `put` is for a file.

@@ -5432,7 +5432,7 @@ usage: machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no
 
 | Option | Does |
 |---|---|
-| `--container name` | Container to put the file in, by its name (default: the machine itself) |
+| `--container name` | Container to put the file in, by its name or its Compose service (default: the machine itself) |
 | `--mode mode` | Mode of the file, as octal digits (default: 644) |
 | `--owner uid:gid` | Owner of the file, as numbers (default: root) |
 | `--no-pipe` | Send the file over the serial port of the exec agent, which is far slower |
@@ -5495,7 +5495,7 @@ usage: machine get [-h] [--container name] [--within duration] run path file
 
 | Option | Does |
 |---|---|
-| `--container name` | Container to get the file from, by its name (default: the machine itself) |
+| `--container name` | Container to get the file from, by its name or its Compose service (default: the machine itself) |
 | `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
 
 Examples:
@@ -5510,7 +5510,7 @@ Prints:
 
 ```
 text  Got <n> bytes from <path> of <run> (<id>)
-json  size path container file mode owner process run_id name
+json  size path container file mode owner process run_id name entry_id
 ```
 
 Refuses, and the way past:
