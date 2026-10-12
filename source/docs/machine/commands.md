@@ -5670,10 +5670,9 @@ Use `--pid` or `--container` to show one process or one container. Use
 `--folded` to print every stack with its count, one a line. That text is what
 flame graph tools read. Use `--flame` to draw a flame graph in the terminal.
 
-The names come from the program files of the run's disk. The command takes a
-checkpoint when the stretch ends and reads them there. Use `--no-checkpoint` to
-add nothing to the run and read them at its last checkpoint. A file that is not
-there is named by its file.
+The names come from the program files of the machine's disk as it stands when
+the stretch ends. No checkpoint is taken. A file that is not on the disk is
+named by its file.
 
 Time in the kernel is one frame named after the system call, which ends in _[k].
 
@@ -5681,13 +5680,13 @@ Without `--from` the machine runs for the time sampled. A machine that is idle
 has no samples.
 
 Use `--in-guest` to sample with a process of the guest, which the disk's exec
-agent runs. It names the functions of the kernel. It names a program the disk
-has no checkpoint of. That process is part of the run.
+agent runs. It names the functions of the kernel. It names a program the guest
+has not yet written to the disk. That process is part of the run.
 
 ```
 usage: machine profile [-h] [--for duration | --from point [point ...]] [--to point [point ...]]
-                       [--pid pid] [--container name] [--no-checkpoint] [--in-guest] [--folded |
-                       --flame] [--top n] [--within duration]
+                       [--pid pid] [--container name] [--in-guest] [--folded | --flame] [--top n]
+                       [--within duration]
                        run
 ```
 
@@ -5702,7 +5701,6 @@ usage: machine profile [-h] [--for duration | --from point [point ...]] [--to po
 | `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the end of the run's line) |
 | `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
 | `--container name` | Container to show, by its name or its Compose service (default: the machine itself) |
-| `--no-checkpoint` | Take no checkpoint when the stretch ends: name the files as the last checkpoint has them |
 | `--in-guest` | Sample with the profiler of the exec agent, a process of the guest: kernel functions by name, at the cost of changing the run |
 | `--folded` | Print the stacks, one a line with its count, for another tool to draw |
 | `--flame` | Draw a flame graph in the terminal |

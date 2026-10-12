@@ -709,20 +709,17 @@ and you get the same samples.
 
 ### Good to know
 
-- Names come from the program files on the run's disk. A profile takes a
-  checkpoint when the stretch ends and reads them there. Pass
-  `--no-checkpoint` if you want nothing added to the run: names then come from
-  its last checkpoint, and a program installed since shows as `[file]`.
-- A file the guest has written but not synced to disk yet is not in any
-  checkpoint. Run `sync` in the guest first.
+- Names come from the program files on the machine's disk as it is when the
+  stretch ends. You do not need a checkpoint, and a profile does not take one.
+- A file the guest has written but not synced to disk yet shows as `[file]`.
+  Run `sync` in the guest first.
 - A stripped program with no unwind information, such as Alpine's `busybox`,
   is one frame named after its file.
 - Time in the kernel is one frame. The functions of the kernel itself are not
   shown.
 - `--in-guest` samples with a small process inside the guest instead. Use it
-  when you need the kernel's own functions by name, or a program that is not
-  in a checkpoint yet. It is part of the run, and it cannot profile a recorded
-  stretch.
+  when you need the kernel's own functions by name. It is part of the run, and
+  it cannot profile a recorded stretch.
 - Samples are taken 250 times a second on each CPU.
 - C++ names are printed as the program has them. Pipe `--folded` through
   `c++filt` to read them.
