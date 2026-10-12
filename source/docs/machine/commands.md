@@ -2846,7 +2846,7 @@ commands that way.
 
 A semicolon between two slash commands runs the second after the first, and
 stops when the first fails. A semicolon inside quotes separates commands too. A
-semicolon in the text of /send is written \x3b with -e.
+semicolon in the text of /send or in a command of /exec is written \x3b with -e.
 
 Use control log with a run to read the command history instead of driving the
 machine. Use `--entries` to select the commands issued at given run entries. Use

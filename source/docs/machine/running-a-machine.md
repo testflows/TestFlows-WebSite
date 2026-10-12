@@ -464,6 +464,22 @@ A command is a program and its arguments, written after `--`. No shell reads
 it. Use `-c` to give a line to the shell of the disk instead, with its pipes
 and redirections: `machine exec app run -c 'ls / | wc -l'`.
 
+At the [control prompt](#interactive-mode) the command is `/exec`, with the same
+verbs. It needs no quotes and no `--`: the arguments are the words after the
+verb, and a line for the shell is the rest of the line after `-c`.
+
+```
+/exec run ls -la /
+/exec run -c ls / | wc -l
+/exec start -c gdb -p 36 < /dev/gdb_pipe
+/exec proc 7f3a9c21 stdout
+/exec
+```
+
+A `;` separates commands at the prompt. To have one in the command, add `-e`
+after the verb and write it `\x3b`, as `/send -e` does:
+`/exec run -e -c echo a\x3b echo b`.
+
 ### In one container
 
 A command runs in the machine, beside Docker, so it reaches a container of
