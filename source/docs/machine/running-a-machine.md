@@ -548,12 +548,10 @@ machine exec app start -- docker exec compose-app-1 sh -c 'gdb -p 1 < /tmp/p'
 machine exec app run   -- docker exec compose-app-1 sh -c 'echo c > /tmp/p'
 ```
 
-`machine exec` has a port of its own into the machine, so the four serial ports
-are yours. On a run created with `--console virtio` it uses the serial port
-`ttyS3` instead, and a program in the machine that reads `ttyS3` takes its
-requests.
+`machine exec` uses the serial port `ttyS3` for its requests. A program in the
+machine that reads `ttyS3` takes them.
 
-## Putting a file into the machine
+## Putting a file into the machine, and getting one out
 
 [`machine put`](commands.md#machine-put) copies a file of your machine into the
 running machine, or into one of its containers:
@@ -562,10 +560,11 @@ running machine, or into one of its containers:
 machine put app ./app.conf /etc/app.conf                    # into the machine
 machine put app ./tool.sh /usr/local/bin/tool --mode 755    # with a mode
 machine put app ./seed.sql /srv/seed.sql --container compose-db-1
+machine put app ./d.bin /data/d.bin --owner 1000:1000       # with an owner
 machine put app - /tmp/in < data.bin                        # standard input
 ```
 
-- A file of any size is put. A megabyte takes a few seconds.
+- A file of any size is put, at tens of megabytes a second.
 - The directories on the way to the path are made, and a file already there is
   replaced.
 - The file has its name only once all of it is written, so a program never
@@ -585,8 +584,25 @@ resolve it.
 [`machine send --device <path>`](commands.md#machine-send) is for a line into a
 pipe and carries about 2000 bytes. `put` is for a file.
 
-At the [control prompt](#interactive-mode) the command is `/put`, with the same
-operands and options: `/put ./app.conf /etc/app.conf`.
+[`machine get`](commands.md#machine-get) copies a file the other way, from the
+machine or from a container to your machine:
+
+```bash
+machine get app /var/log/app.log ./app.log
+machine get app /srv/dump.sql ./dump.sql --container compose-db-1
+machine get app /etc/hostname -                             # standard output
+```
+
+`get` reads the file as it is now, with what programs wrote and the disk does
+not have yet. [`machine fs`](reading-the-disk.md) reads the disk at a
+checkpoint instead. The machine runs while the file comes out, so a file a
+program is writing can change on the way.
+
+At the [control prompt](#interactive-mode) the commands are `/put` and `/get`,
+with the same operands and options: `/put ./app.conf /etc/app.conf`.
+
+A machine whose disk was built before `put` used this path still takes a file,
+far slower. Rebuild the disk to get the speed.
 
 ## Interactive mode
 

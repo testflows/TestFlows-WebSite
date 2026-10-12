@@ -5419,7 +5419,9 @@ The file is written to the disk before the command returns. A checkpoint taken
 after it has the file, and fs reads it there.
 
 ```
-usage: machine put [-h] [--container name] [--mode mode] [--within duration] run file path
+usage: machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no-pipe]
+                   [--within duration]
+                   run file path
 ```
 
 | Argument | Does |
@@ -5432,22 +5434,25 @@ usage: machine put [-h] [--container name] [--mode mode] [--within duration] run
 |---|---|
 | `--container name` | Container to put the file in, by its name (default: the machine itself) |
 | `--mode mode` | Mode of the file, as octal digits (default: 644) |
+| `--owner uid:gid` | Owner of the file, as numbers (default: root) |
+| `--no-pipe` | Send the file over the serial port of the exec agent, which is far slower |
 | `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
 
 Examples:
 
 ```
-machine put run1 ./a.conf /etc/a.conf     into the machine
-machine put run1 ./t.sh /t.sh --mode 755  with a mode
-machine put run1 ./d /d --container db    into a container
-machine put run1 - /tmp/in                standard input
+machine put run1 ./a.conf /etc/a.conf      into the machine
+machine put run1 ./t.sh /t.sh --mode 755   with a mode
+machine put run1 ./d /d --container db     into a container
+machine put run1 ./d /d --owner 1000:1000  with an owner
+machine put run1 - /tmp/in                 standard input
 ```
 
 Prints:
 
 ```
 text  Put <n> bytes at <path> of <run> (<id>)
-json  size path container mode process run_id name entry_id
+json  size path container mode owner process run_id name entry_id
 ```
 
 Refuses, and the way past:
@@ -5459,10 +5464,68 @@ a container that is not running  machine exec run1 run -- docker ps
 
 See also:
 
+- [`machine get`](#machine-get)
 - [`machine exec`](#machine-exec)
 - [`machine send`](#machine-send)
 - [`machine fs`](#machine-fs)
 - [`machine checkpoint`](#machine-checkpoint)
+
+## machine get
+
+Get a file from a machine or from a container of it.
+
+The command copies a file of the running machine to a file of this machine. Use
+`--container` to get it from a container instead. A file of any size is copied.
+
+The file is read as it is now, with what programs wrote and the disk does not
+have yet. The fs command reads the disk at a checkpoint instead.
+
+The machine runs while the file comes out. Other programs of the machine run
+with it, so a file a program is writing can change on the way.
+
+```
+usage: machine get [-h] [--container name] [--within duration] run path file
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `path` | Path of the file in the machine or in the container |
+| `file` | File on this machine to write, or - for standard output |
+
+| Option | Does |
+|---|---|
+| `--container name` | Container to get the file from, by its name (default: the machine itself) |
+| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine get run1 /etc/a.conf ./a.conf   from the machine
+machine get run1 /d ./d --container db  from a container
+machine get run1 /var/log/app.log -     to standard output
+```
+
+Prints:
+
+```
+text  Got <n> bytes from <path> of <run> (<id>)
+json  size path container file mode owner process run_id name
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine exec run1 run -- docker ps
+```
+
+See also:
+
+- [`machine put`](#machine-put)
+- [`machine exec`](#machine-exec)
+- [`machine fs`](#machine-fs)
+- [`machine output`](#machine-output)
 
 ## machine irq
 
