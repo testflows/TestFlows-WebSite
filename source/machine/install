@@ -6,7 +6,10 @@
 # It downloads one file, the `machine` binary, checks it against the SHA-256
 # checksum published next to it, and puts it in ~/.local/bin. It also writes
 # machine-env there, a shell in which `machine` is this client. It never asks for
-# root. The checksum is signed with the release keys below, GPG and RSA, and the
+# root. Where another program called machine is already on PATH, as /usr/bin/machine
+# is on a Mac, `machine` goes to ~/.local/share/machine/bin instead, which is not on
+# PATH, and ~/.local/bin holds machine-env alone. Putting ~/.local/bin on PATH then
+# hides nothing. The checksum is signed with the release keys below, GPG and RSA, and the
 # signature is checked before the checksum is trusted: with gpg where there is one,
 # else with openssl, which every Mac has. The download itself is protected by HTTPS, which is the only protocol it will use unless
 # MACHINE_BASE_URL is set to an http:// address, as a local mirror for testing.
@@ -25,8 +28,12 @@
 #   curl https://testflows.com/machine/install -fsS | bash -s -- --version 20261007-2203
 #
 # Environment:
-#   MACHINE_INSTALL_DIR   where to put machine and machine-env (default: ~/.local/bin)
+#   MACHINE_INSTALL_DIR   where to put machine-env, and machine when no other program
+#                         called machine is on PATH (default: ~/.local/bin)
 #   MACHINE_VERSION       a version to install, YYYYMMDD-HHMM (default: the latest)
+#   MACHINE_NO_MODIFY_PATH  set to anything, the script does not ask to put the install
+#                         directory on PATH in your shell's startup file. It asks only at
+#                         a terminal, and writes only when the answer is yes.
 #   MACHINE_BASE_URL      where releases are downloaded from
 #
 # Everything happens inside main(), which is only called on the last line. If the
@@ -224,8 +231,10 @@ Options:
   -h, --help      show this help
 
 Environment:
-  MACHINE_INSTALL_DIR   where to put machine and machine-env (default: ~/.local/bin)
+  MACHINE_INSTALL_DIR   where to put machine-env, and machine when no other program
+                        called machine is on PATH (default: ~/.local/bin)
   MACHINE_VERSION       a version to use, as --version names one
+  MACHINE_NO_MODIFY_PATH  set to anything, do not ask to put the directory on PATH
 USAGE
 }
 
@@ -521,6 +530,48 @@ remove_old_unpacks() {
     esac
 }
 
+# other_machine OURS...: print the first program called machine on PATH that is none of
+# OURS, or nothing. `type -ap` lists every match, so an install of ours ahead of it, from a
+# PATH line an earlier version of this script printed, does not hide the system's.
+other_machine() {
+    local found ours skip
+    while IFS= read -r found; do
+        skip=false
+        for ours in "$@"; do
+            if [ -e "$ours" ] && [ "$found" -ef "$ours" ]; then
+                skip=true
+            fi
+        done
+        # A copy of this client somewhere else on PATH is no other program: taken for
+        # one, it moved an ordinary install off PATH. main() names it as a stale copy.
+        if ! $skip && [ -n "$(version_of "$found" || true)" ]; then
+            skip=true
+        fi
+        if ! $skip; then
+            printf '%s' "$found"
+            return 0
+        fi
+    done < <(type -ap machine 2>/dev/null)
+    return 0
+}
+
+# retire_machine OLD WHY: remove OLD, a machine this script put where machine no longer
+# goes: in the directory on PATH now that machine is kept off it, or the other way round.
+# WHY ends the line that says so. Only a file that runs as the client goes: a program of
+# someone else's with the name stays where it is. One that cannot be removed is said: it
+# is an older client that would otherwise be run without a word.
+retire_machine() {
+    local old="$1"
+    [ -e "$old" ] || [ -L "$old" ] || return 0
+    [ -n "$(version_of "$old" || true)" ] || return 0
+    if rm -f "$old"; then
+        ok "Removed $(tilde "$old"), $2"
+    else
+        warn "Could not remove $(tilde "$old"), an older copy of the client. Remove it:"
+        warn "    rm $(tilde "$old")"
+    fi
+}
+
 # install_tree RELEASE SHARE TARGET: unpack the verified download TMP into SHARE/RELEASE and
 # point TARGET at the executable in it. The tree is unpacked beside its final folder and
 # renamed into place, and the link replaced by a rename, so a cut-off install leaves the
@@ -561,11 +612,10 @@ remove_old_trees() {
     esac
 }
 
-# How to put DIR on PATH: the line to paste for the shell this user runs.
-# install_env DIR: write machine-env into DIR, executable, beside machine. It is written on
-# every run, so a machine installed before machine-env existed gets it on the next one, and
-# it is replaced by a rename like the client, so a cut-off write leaves the old one working.
-# machine-env finds machine through its own location, which is why the two share DIR.
+# install_env DIR: write machine-env into DIR, executable. It is written on every run, so a
+# machine installed before machine-env existed gets it on the next one, and it is replaced
+# by a rename like the client, so a cut-off write leaves the old one working. machine-env
+# finds machine beside itself, or in the data directory where machine is kept off PATH.
 install_env() {
     local dir="$1" tmp
     tmp="$(mktemp "$dir/.machine-env.XXXXXX")" || return 1
@@ -578,9 +628,10 @@ install_env() {
 # child shell with the client's directory first on PATH. The parent shell is
 # never touched: `exit` leaves, and there is nothing to deactivate.
 #
-# One file for every platform, installed beside `machine`. Linux has no
-# /usr/bin/machine, so there it only makes the client's directory the first
-# match.
+# One file for every platform. Where another program is called machine, the
+# installer keeps `machine` off PATH, in the data directory, and this is the way
+# in. Linux has no /usr/bin/machine, so there `machine` is beside this file and
+# this only makes that directory the first match.
 #
 # Runs on bash 3.2, the bash macOS ships.
 
@@ -616,16 +667,26 @@ refuse() {
     exit 1
 }
 
-# The directory this script was started from: where `machine` sits beside it.
-# Not resolved through symlinks, so a link in ~/.local/bin names that directory
-# and survives the version folder it points into being replaced.
-bin_dir() {
-    (cd "$(dirname "$0")" && pwd)
+# The directory `machine` is in: the data directory the installer keeps it in where
+# another program is called machine, else beside this script. The data directory
+# first: the installer removes the copy it no longer uses, and where it could not,
+# the one beside this script is the older client. The script's own directory is not
+# resolved through symlinks, so a link names that directory and survives the version
+# folder it points into being replaced.
+machine_dir() {
+    local here kept
+    here="$(cd "$(dirname "$0")" && pwd)"
+    kept="${XDG_DATA_HOME:-$HOME/.local/share}/machine/bin"
+    if [ -x "$kept/machine" ] || [ ! -x "$here/machine" ]; then
+        printf '%s' "$kept"
+    else
+        printf '%s' "$here"
+    fi
 }
 
 require_machine() {
     [ -x "$1/machine" ] ||
-        refuse "No machine beside machine-env: $1" \
+        refuse "No machine in $1" \
             "Reinstall the client $INSTALL_CMD"
 }
 
@@ -721,7 +782,7 @@ main() {
         ;;
     --)
         shift
-        BIN="$(bin_dir)"
+        BIN="$(machine_dir)"
         require_machine "$BIN"
         MACHINE_ENV="$BIN"
         run_command "$@"
@@ -743,7 +804,7 @@ main() {
     [ -t 0 ] && [ -t 1 ] ||
         refuse "Not a terminal." "Run one command $ONE_COMMAND"
 
-    BIN="$(bin_dir)"
+    BIN="$(machine_dir)"
     require_machine "$BIN"
     MACHINE_ENV="$BIN"
     export MACHINE_ENV
@@ -756,14 +817,11 @@ END_OF_MACHINE_ENV
     chmod 755 "$tmp" && mv -f "$tmp" "$dir/machine-env" || { rm -f "$tmp"; return 1; }
 }
 
-path_hint() {
+# path_line DIR: the line that puts DIR on PATH, for the shell this user runs.
+path_line() {
     local dir="$1" shown
     shown="$(tilde "$dir")"
     [ "$shown" != "$dir" ] && shown="\$HOME${shown#\~}"
-    say ""
-    warn "$(tilde "$dir") is not on your PATH, so your shell can't find machine yet."
-    say "  Run this, then open a new terminal:"
-    say ""
     case "$(basename "${SHELL:-}")" in
         bash) say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.bashrc" ;;
         zsh)  say "    echo 'export PATH=\"$shown:\$PATH\"' >> ~/.zshrc" ;;
@@ -773,27 +831,87 @@ path_hint() {
     esac
 }
 
-# next_in_env DIR OTHER: what to do next when OTHER, another program called machine,
-# comes before DIR on PATH. machine-env starts a shell in which machine is this client
-# and marks its prompt, so the steps are shown as they will look in that shell.
+# path_file: the startup file of the shell this user runs, or nothing for a shell whose
+# file this script does not write.
+path_file() {
+    case "$(basename "${SHELL:-}")" in
+        bash) printf '%s' "$HOME/.bashrc" ;;
+        zsh)  printf '%s' "${ZDOTDIR:-$HOME}/.zshrc" ;;
+    esac
+}
+
+# path_add DIR: put DIR on PATH in the startup file of the user's shell, when the user
+# says so. Returns 0 when the file has the line, 1 when it does not and the line is still
+# the user's to add. Asked at the terminal and never assumed: the file is the user's. The
+# script itself is on standard input under `curl | bash`, so the answer is read from the
+# terminal, and with no terminal, as in CI, nothing is asked and nothing written.
+# MACHINE_NO_MODIFY_PATH set to anything asks nothing.
+path_add() {
+    local dir="$1" file shown line answer
+    [ -z "${MACHINE_NO_MODIFY_PATH:-}" ] || return 1
+    file="$(path_file)"
+    [ -n "$file" ] || return 1
+    shown="$(tilde "$dir")"
+    [ "$shown" != "$dir" ] && shown="\$HOME${shown#\~}"
+    line="export PATH=\"$shown:\$PATH\""
+    # There from an earlier run, in a shell started before it was.
+    if [ -f "$file" ] && grep -qF "$line" "$file"; then
+        ok "$(tilde "$file") puts $(tilde "$dir") on your PATH. Open a new terminal."
+        return 0
+    fi
+    ( : < /dev/tty ) 2>/dev/null || return 1
+    printf '  Add it to your PATH in %s? [y/N] ' "$(tilde "$file")" > /dev/tty
+    IFS= read -r answer < /dev/tty || return 1
+    case "$answer" in
+        y | Y | yes | Yes | YES) ;;
+        *) return 1 ;;
+    esac
+    printf '\n# TestFlows Machine\n%s\n' "$line" >> "$file" || {
+        warn "Could not write $(tilde "$file")."
+        return 1
+    }
+    ok "Added $(tilde "$dir") to your PATH in $(tilde "$file"). Open a new terminal."
+}
+
+# path_hint DIR: DIR holds machine and is not on PATH, so the shell cannot find it.
+path_hint() {
+    say ""
+    warn "$(tilde "$1") is not on your PATH, so your shell can't find machine yet."
+    path_add "$1" && return 0
+    say "  Run this, then open a new terminal:"
+    say ""
+    path_line "$1"
+}
+
+# next_in_env DIR OTHER: what to do next when OTHER, another program called machine, is
+# on PATH. machine is kept off PATH then, so it hides nothing, and DIR holds machine-env
+# alone. machine-env starts a shell in which machine is this client and marks its prompt,
+# so the steps are shown as they will look in that shell.
 next_in_env() {
-    local dir="$1" other="$2" env="machine-env"
+    local dir="$1" other="$2" env="machine-env" on_path=true
     # Not on PATH, machine-env is found no more than machine is: name it in full.
     case ":$PATH:" in
         *":$dir:"*) ;;
-        *) env="$(tilde "$dir/machine-env")" ;;
+        *) on_path=false; env="$(tilde "$dir/machine-env")" ;;
     esac
     say ""
-    warn "Another program called machine comes first on your PATH: $(tilde "$other")"
-    say "  Typing machine runs that one. Use machine-env, a shell where machine is this client."
+    warn "Another program called machine is on your PATH: $(tilde "$other")"
+    say "  machine is kept off your PATH, so it does not hide that one."
+    say "  Use machine-env, a shell where machine is this client."
     say ""
     say "Next:"
     say "  \$ $env"
     say "  (machine) \$ machine login    sign in (or  machine account signup  to create an account)"
     say "  (machine) \$ machine --help   see every command"
     say "  (machine) \$ exit             leave it, back to the shell you were in"
+    $on_path && return 0
     say ""
-    say "  ${DIM}Or put $(tilde "$dir") before $(tilde "$(dirname "$other")") in your PATH.${RESET}"
+    warn "$(tilde "$dir") is not on your PATH, so machine-env is typed with its path."
+    say "  It holds machine-env alone, so putting it on your PATH hides nothing."
+    path_add "$dir" && return 0
+    say "  Run this, then open a new terminal:"
+    say ""
+    path_line "$dir"
 }
 
 main() {
@@ -858,21 +976,33 @@ main() {
     # The client keeps its sign-in and unpacks itself under HOME, so it needs one.
     [ -n "${HOME:-}" ] || die "HOME is not set." "The client needs a home directory to run."
     local dir="${MACHINE_INSTALL_DIR:-$HOME/.local/bin}"
-    local target="$dir/machine"
-    local url="$BASE_URL/$release/$ASSET"
     local share="${XDG_DATA_HOME:-$HOME/.local/share}/machine"
+    local url="$BASE_URL/$release/$ASSET"
 
-    local before=""
-    if [ -x "$target" ]; then
-        before="$(version_of "$target" || true)"
-    fi
+    # Where another program is called machine, as /usr/bin/machine is on a Mac, machine goes
+    # to a directory that is not on PATH, so no PATH line can hide that program. DIR then
+    # holds machine-env alone, which is the way in and is safe to put on PATH.
+    local other bin
+    other="$(other_machine "$dir/machine" "$share/bin/machine")"
+    bin="$dir"
+    [ -z "$other" ] || bin="$share/bin"
+    local target="$bin/machine"
+
+    # An install from before machine was kept off PATH has it in DIR, so DIR is read second.
+    local before="" candidate
+    for candidate in "$target" "$dir/machine"; do
+        [ -x "$candidate" ] || continue
+        before="$(version_of "$candidate" || true)"
+        [ -z "$before" ] || break
+    done
 
     say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
     mkdir -p "$dir" || die "Could not create $(tilde "$dir")."
+    mkdir -p "$bin" || die "Could not create $(tilde "$bin")."
 
     # Download next to where it ends up, so the last step is a rename. TMP, SUMFILE and
     # STAGE are global so the EXIT trap can still see them when die() exits from here.
-    local downloads="$dir"
+    local downloads="$bin"
     if [ "$KIND" = "tree" ]; then
         downloads="$share"
         mkdir -p "$share" || die "Could not create $(tilde "$share")."
@@ -905,7 +1035,16 @@ main() {
     rm -f "$SUMFILE"
     trap - EXIT
 
-    install_env "$dir" || warn "Could not write $(tilde "$dir/machine-env")."
+    local env_written=true
+    install_env "$dir" || env_written=false
+
+    # machine is in one place: the copy an earlier run put in the other one goes, or
+    # machine-env and a PATH line would find an older client there.
+    if [ "$bin" = "$dir" ]; then
+        retire_machine "$share/bin/machine" "from when another program was called machine"
+    else
+        retire_machine "$dir/machine" "which would hide $(tilde "$other")"
+    fi
 
     if [ -z "$before" ]; then
         ok "Installed machine $after to $(tilde "$target")${CHECKSUM_CHECKED:+ ${DIM}(${SIGNED_WITH:+signed and }checksum verified)${RESET}}"
@@ -913,6 +1052,13 @@ main() {
         ok "machine $after was already installed. Reinstalled it at $(tilde "$target")"
     else
         ok "Updated machine $before → $after at $(tilde "$target")"
+    fi
+    # Where machine-env is, said as machine's place is: it is the one to type where
+    # another program is called machine, and nothing else names its directory.
+    if $env_written; then
+        ok "Installed machine-env to $(tilde "$dir/machine-env")"
+    else
+        warn "Could not write $(tilde "$dir/machine-env")."
     fi
 
     if [ "$KIND" = "tree" ]; then
@@ -929,15 +1075,23 @@ main() {
         say "  ${DIM}https://testflows.com/docs/machine/#Building-disks-on-an-ARM-machine${RESET}"
     fi
 
-    # Make sure typing `machine` finds the one just installed. Another program of the
-    # same name ahead of it on PATH, Docker Machine on many Macs, would answer instead,
-    # and `machine login` would then be that program's error.
-    local found
-    found="$(command -v machine 2>/dev/null || true)"
-    if [ -n "$found" ] && ! [ "$found" -ef "$target" ]; then
-        next_in_env "$dir" "$found"
+    # With no other program called machine, typing `machine` must find the one just
+    # installed. With one, machine is off PATH and machine-env is the way in.
+    if [ -n "$other" ]; then
+        next_in_env "$dir" "$other"
     else
-        [ -n "$found" ] || path_hint "$dir"
+        local found
+        found="$(command -v machine 2>/dev/null || true)"
+        if [ -z "$found" ]; then
+            path_hint "$dir"
+        elif ! [ "$found" -ef "$target" ]; then
+            # A copy of the client that other_machine did not count as another program.
+            say ""
+            warn "An older copy of the client comes first on your PATH: $(tilde "$found")"
+            say "  Typing machine runs that one. Remove it:"
+            say ""
+            say "    rm $(tilde "$found")"
+        fi
         say ""
         say "Next:"
         say "  machine login         sign in (or  machine account signup  to create an account)"

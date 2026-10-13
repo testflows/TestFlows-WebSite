@@ -219,16 +219,16 @@ rm -rf ~/.cache/machine ~/.testflows/machine
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-<p>It verifies the download, installs the client under <code>~/.local/share/machine/</code>, and links it from <code>~/.local/bin</code>, with <code>machine-env</code> beside the link. It never asks for your password. Run the same command again to update.</p>
+<p>It verifies the download and installs the client under <code>~/.local/share/machine/</code>. It writes <code>machine-env</code> to <code>~/.local/bin</code>. It never asks for your password. Run the same command again to update.</p>
 <p>Macs with an Intel processor are not supported.</p>
-<p><strong>macOS already has a <code>machine</code> command.</strong> Use <code>machine-env</code>, below, to run this one.</p>
+<p><strong>macOS already has a <code>machine</code> command.</strong> The installer keeps this client off your PATH so it does not hide that one. Use <code>machine-env</code>, below, to run this one.</p>
 </div>
 
 <!-- include: _download-next.md -->
 
 <div class="download-section download-note">
 <h2>macOS has its own machine command</h2>
-<p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Typing <code>machine</code> runs that one unless this client comes first on your PATH, and putting it first hides the system one for every other program. <code>machine-env</code> avoids both. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
+<p>macOS ships <code>/usr/bin/machine</code>, which prints the processor type, such as <code>arm64</code>. Putting this client on your PATH would hide the system one for every other program, so the installer does not. <code>machine-env</code> is the way in. It starts a shell in which <code>machine</code> is this client and leaves the rest of your system alone. The prompt starts with <code>(machine)</code>, your usual shell setup is loaded, and <code>exit</code> leaves. It supports zsh and bash.</p>
 
 ```bash
 $ machine-env
@@ -244,7 +244,13 @@ $
 machine-env -- machine --version
 ```
 
-<p>That form runs one command in that environment and starts no shell, for scripts and CI. To see which <code>machine</code> you get, run <code>which machine</code>: <code>~/.local/bin/machine</code> is this client and <code>/usr/bin/machine</code> is the system's. If <code>machine --version</code> prints a processor type instead of a version, you are running the system command. If your shell cannot find <code>machine-env</code> either, run <code>~/.local/bin/machine-env</code>. Linux and every other system get the same file.</p>
+<p>That form runs one command in that environment and starts no shell, for scripts and CI. Outside it, <code>machine</code> is the system's command, and <code>machine --version</code> prints a processor type. Inside it, <code>which machine</code> shows <code>~/.local/share/machine/bin/machine</code>. If your shell cannot find <code>machine-env</code>, run <code>~/.local/bin/machine-env</code>, or put <code>~/.local/bin</code> on your PATH. That directory holds <code>machine-env</code> alone, so nothing is hidden:</p>
+
+```bash
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
+```
+
+<p>Then open a new terminal. The installer offers to add this line for you when it finds the directory missing from your PATH: it asks first, and writes nothing unless you say yes. Linux and every other system get the same <code>machine-env</code> file.</p>
 </div>
 
 <div class="download-section download-note">
@@ -297,11 +303,11 @@ shasum -a 256 -c machine-darwin-arm64.tar.gz.sha256
 
 <div class="download-section">
 <h2>Uninstall</h2>
-<p>Sign out, then delete the client and what it stored.</p>
+<p>Sign out, then delete the client and what it stored. An install from before the client was kept off your PATH also has <code>~/.local/bin/machine</code>, which <code>rm -f</code> removes.</p>
 
 ```bash
 machine logout
-rm ~/.local/bin/machine ~/.local/bin/machine-env
+rm -f ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.local/share/machine ~/.testflows/machine
 ```
 
