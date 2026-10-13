@@ -5725,7 +5725,7 @@ text      SELF TOTAL FUNCTION
 SELF      the share of samples the function was running in
 TOTAL     the share it was on the stack of
 --folded  comm;outer;...;inner <count>
-json      samples hz stacks run_id name
+json      samples hz stacks left run_id name
 ```
 
 Refuses, and the way past:
