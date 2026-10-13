@@ -121,6 +121,7 @@ And the calls you will reach for most often:
 | `run.core(pid, dest, container=...)` | gets a core dump of a process into a file; the process dies of it |
 | `run.profile("2s", container=..., pid=...)` | samples what runs for a time and returns a `Profile`: `samples`, `functions`, `stacks`, and `folded` text for flame graph tools |
 | `run.profile(from_="^request", to="^reply")` | profiles a stretch the run already recorded, without changing the run |
+| `run.profile("2s", in_guest=True)` | samples with a process in the run, for the functions of the kernel by name |
 | `run.containers()` | lists the containers and the Compose service of each: `name`, `service`, `state`, `image` |
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
