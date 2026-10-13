@@ -1267,7 +1267,7 @@ See also:
 
 - [`machine create`](#machine-create)
 - [`machine preload`](#machine-preload)
-- [`machine artifacts`](#machine-artifacts)
+- [`machine fs`](#machine-fs)
 - [`machine storage`](#machine-storage)
 
 ### machine disks list
@@ -1658,127 +1658,169 @@ See also:
 - [`machine offload disk`](#machine-offload-disk)
 - [`machine disks list`](#machine-disks-list)
 
-## machine artifacts
+## machine fs
 
-List, copy or print files from a run's disk.
-See [Reading the disk](reading-the-disk.md).
+List, copy or print files from a run's disk at a checkpoint.
 
-The command reads the disk from a checkpoint, never from the live machine. It
-needs no guest agent and does not change how the machine executes. Name a
-checkpoint or entry with run@ref. Without it the latest checkpoint is read, and
-the command says which.
+The command reads the filesystem on the disk as a checkpoint saved it. It never
+reads the live machine. It needs no program in the machine and does not change
+how the machine executes.
+
+Every read names its checkpoint with `--at`. A point that is not a checkpoint is
+refused, and the refusal names the checkpoint before it. The point now is the
+checkpoint the run stands at, until the machine runs again.
+
+Data the machine has not synced to its disk is not visible. A file a program
+wrote a moment before the checkpoint can be missing, short or empty.
+
+To read the files as they are, execute sync in the machine with exec. Then take
+a checkpoint and read with `--at` now. Use exec alone to read the files of the
+live machine.
+
+A run created with `--fs-sync` writes every change of a file to the disk as it
+is made. A run created with `--fs-dirsync` does so for every change of a
+directory. Both are options of create and are off by default.
 
 ```
-usage: machine artifacts [-h] {ls,cp,cat} ...
+usage: machine fs [-h] {ls,cp,cat} ...
 ```
 
 Examples:
 
 ```
-machine artifacts ls run1 /etc                list a directory of run1
-machine artifacts cat run1 /etc/hostname      print a file
-machine artifacts cp run1 /etc/hostname .     copy a file out
-machine artifacts cat run1@cp1 /etc/hostname  read it at checkpoint cp1
+machine fs ls run1 /etc --at ^cp1             list a directory at cp1
+machine fs cat run1 /etc/hostname --at ^cp1   print a file
+machine fs cp run1 /etc/hostname . --at ^cp1  copy a file out
+machine fs ls run1 / --at '#300'              at the checkpoint of entry 300
+machine fs ls run1 / --at now                 at the checkpoint just taken
+```
+
+Refuses, and the way past:
+
+```
+a read with no checkpoint named   machine checkpoints run1
+a point with no checkpoint at it  machine checkpoint run1
 ```
 
 See also:
 
+- [`machine checkpoints`](#machine-checkpoints)
+- [`machine checkpoint`](#machine-checkpoint)
+- [`machine exec`](#machine-exec)
 - [`machine disks`](#machine-disks)
-- [`machine dump`](#machine-dump)
-- [`machine output`](#machine-output)
 
-### machine artifacts ls
+### machine fs ls
 
-List files in a run's disk. See [Reading the disk](reading-the-disk.md).
+List files on a run's disk at a checkpoint.
 
-Pin the listing to a checkpoint or entry with run@ref.
+The files are read from the disk as a checkpoint saved it, not from the live
+machine. Use `--at` to name the checkpoint. Data the machine has not synced to
+its disk is not visible.
 
 ```
-usage: machine artifacts ls [-h] [-l] [-a] run[@ref] [path]
+usage: machine fs ls [-h] [--at point] [-l] [-a] run [path]
 ```
 
 | Argument | Does |
 |---|---|
-| `run[@ref]` | Run name/id, optionally @entry_id or @checkpoint |
+| `run` | Run name |
 | `[path]` | Path (default: /) |
 
 | Option | Does |
 |---|---|
+| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
 | `-l` | Long format (mode, size, mtime, name) |
 | `-a, --all` | Include the current and parent directory entries |
 
 Examples:
 
 ```
-machine artifacts ls run1 /etc            list a directory of run1
-machine artifacts ls -l -a run1@cp1 /etc  long form, at cp1
+machine fs ls run1 /etc --at ^cp1        list a directory at cp1
+machine fs ls -l -a run1 /etc --at ^cp1  long form
+```
+
+Prints:
+
+```
+text  checkpoint <entry> path <path>, then a name a line
+json  checkpoint path entries
 ```
 
 See also:
 
-- [`machine artifacts cat`](#machine-artifacts-cat)
-- [`machine artifacts cp`](#machine-artifacts-cp)
-- [`machine disks show`](#machine-disks-show)
+- [`machine fs cat`](#machine-fs-cat)
+- [`machine fs cp`](#machine-fs-cp)
+- [`machine checkpoints`](#machine-checkpoints)
 
-### machine artifacts cp
+### machine fs cp
 
-Copy a file or directory from a run's disk.
-See [Reading the disk](reading-the-disk.md).
+Copy a file or directory from a run's disk at a checkpoint.
 
-Pin the copy to a checkpoint or entry with run@ref. Use -r for directories.
+The files are read from the disk as a checkpoint saved it, not from the live
+machine. Use `--at` to name the checkpoint. Data the machine has not synced to
+its disk is not visible. Use -r to copy a directory.
 
 ```
-usage: machine artifacts cp [-h] [-r] run[@ref] path [dest]
+usage: machine fs cp [-h] [--at point] [-r] run path [dest]
 ```
 
 | Argument | Does |
 |---|---|
-| `run[@ref]` | Run name/id, optionally @entry_id or @checkpoint |
+| `run` | Run name |
 | `path` | Path to copy |
 | `[dest]` | Local destination file or directory (default: .) |
 
 | Option | Does |
 |---|---|
+| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
 | `-r, --recursive` | Copy directories recursively |
 
 Examples:
 
 ```
-machine artifacts cp run1 /etc/hostname .  copy a file out
-machine artifacts cp -r run1 /etc ./etc    copy a directory out
+machine fs cp run1 /etc/hostname . --at ^cp1  copy a file out
+machine fs cp -r run1 /etc ./etc --at ^cp1    copy a directory out
 ```
 
 See also:
 
-- [`machine artifacts ls`](#machine-artifacts-ls)
-- [`machine artifacts cat`](#machine-artifacts-cat)
+- [`machine fs ls`](#machine-fs-ls)
+- [`machine fs cat`](#machine-fs-cat)
+- [`machine checkpoints`](#machine-checkpoints)
 
-### machine artifacts cat
+### machine fs cat
 
-Print a file from a run's disk. See [Reading the disk](reading-the-disk.md).
+Print a file from a run's disk at a checkpoint.
 
-Pin the read to a checkpoint or entry with run@ref.
+The files are read from the disk as a checkpoint saved it, not from the live
+machine. Use `--at` to name the checkpoint. Data the machine has not synced to
+its disk is not visible.
 
 ```
-usage: machine artifacts cat [-h] run[@ref] path
+usage: machine fs cat [-h] [--at point] run path
 ```
 
 | Argument | Does |
 |---|---|
-| `run[@ref]` | Run name/id, optionally @entry_id or @checkpoint |
+| `run` | Run name |
 | `path` | File path |
+
+| Option | Does |
+|---|---|
+| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
 
 Examples:
 
 ```
-machine artifacts cat run1 /etc/hostname      print a file
-machine artifacts cat run1@cp1 /etc/hostname  print it at cp1
+machine fs cat run1 /etc/hostname --at ^cp1    print a file
+machine fs cat run1 /etc/hostname --at '#300'  at entry 300
 ```
 
 See also:
 
-- [`machine artifacts ls`](#machine-artifacts-ls)
-- [`machine artifacts cp`](#machine-artifacts-cp)
+- [`machine fs ls`](#machine-fs-ls)
+- [`machine fs cp`](#machine-fs-cp)
+- [`machine checkpoints`](#machine-checkpoints)
 
 ## machine sync
 
@@ -2133,12 +2175,34 @@ instead.
 The run keeps its execution options. Start and fork repeat them unless given
 others.
 
+Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
+to store less. The run keeps both lists for its whole life. The describe command
+shows them.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 The command waits until the machine accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--disk disk]
-                      [--mem size] [--cpus n] [--mem-type {auto,hugepages}]
+usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]
+                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]
+                      [--console {serial,virtio}] [--mem-type {auto,hugepages}]
                       [--mem-mode {auto,map,lazy}] [--fs-sync | --no-fs-sync]
                       [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
                       [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
@@ -2158,9 +2222,12 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--disk
 | `--like run` | Inherit options from another run, overridden by explicit ones |
 | `--label name=value` | Attach a label, repeatable; an empty value removes an inherited one |
 | `--no-wait` | Return without waiting |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--disk disk` | Disk to create the run from |
 | `--mem size` | Memory, MB or with a K/M/G/T suffix (default: 256) |
 | `--cpus n` | Number of CPUs (default: 1) |
+| `--console {serial,virtio}` | Device the console is: serial for ttyS0 (default) or virtio for hvc0 |
 | `--mem-type {auto,hugepages}` | Machine RAM backing: auto (default) or hugepages (local only) |
 | `--mem-mode {auto,map,lazy}` | Cold RAM restore: auto (default), map (4K pages only), or lazy (any backing) |
 | `--fs-sync, --no-fs-sync` | Mount filesystem with sync (default: off) |
@@ -2190,6 +2257,7 @@ machine create run1 --disk hello                      create run1 from hello
 machine create run1 --disk hello --mem 512 --cpus 2   with 512 MB, 2 CPUs
 machine create run1 --disk hello --rng --rng-seed 42  with a seeded RNG
 machine create run1 --disk hello --no-daemon          run to completion
+machine create run1 --disk hello --drop-output ttyS1  store none of ttyS1
 ```
 
 See also:
@@ -2550,6 +2618,10 @@ The name of another source takes the place of console, as in ttyS1\~REGEX. The
 run then stops for a line that source prints. A line another source prints does
 not stop it.
 
+The path of an output file takes the same place, as in
+/output/drop/app/debug.log\~REGEX. A file that is dropped stops the run the same
+way. The run stores none of the file.
+
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
 
@@ -2574,6 +2646,11 @@ With `--until`, `--iters` and the predicate are both bounds. The first to fire
 wins. `--iters` 500 `--until` on stops at 500 iterations or when a focused task
 takes a vCPU.
 
+Use `--within` to bound the run by the machine's clock. The machine checks the
+bound at every iteration, so a slow host does not end the run sooner. With
+`--until`, the first of the two to hold ends it. Without `--until`, the run goes
+on until the clock has moved that far.
+
 Without `--iters`, only the timeout bounds the drive, so `--until` tasks runs a
 whole boot. A span bounds nothing either. It draws a batch size per dispatch, so
 `--iters` 100:500 `--until` on keeps going.
@@ -2593,8 +2670,8 @@ plan `<run>` `<file>` for each drive that uses it.
 
 ```
 usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
-                   [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
+                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
+                   [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
                    [--fast span] [--step span] [--step-into span] [--vtime-rate span]
                    [--vtime-add span] [--task-sched choices] [--task-slice choices]
                    [--task-int choices] [--when predicate]
@@ -2615,6 +2692,7 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
 | `--until predicate` | Drive until this is true (same predicates as wait `--for`) |
+| `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
 | `--no-idle-skip` | Keep machine time crawling while every vCPU is idle |
@@ -2633,13 +2711,15 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 Examples:
 
 ```
-machine run run1                           run one iteration
-machine run run1 --iters 100               run 100 iterations
-machine run run1 --mode step --iters 20    single-step 20 iterations
-machine run run1 --until 'console~login:'  until the console prints login:
-machine run run1 --until 'entry>=500'      until it reaches entry 500
-machine run run1 --until vtime=+10ms       until its clock moves 10 ms
-machine run run1 --until tasks             until its tasks can be listed
+machine run run1                            run one iteration
+machine run run1 --iters 100                run 100 iterations
+machine run run1 --mode step --iters 20     single-step 20 iterations
+machine run run1 --until 'console~login:'   until the console prints login:
+machine run run1 --until 'entry>=500'       until it reaches entry 500
+machine run run1 --until vtime=+10ms        until its clock moves 10 ms
+machine run run1 --until tasks              until its tasks can be listed
+machine run run1 --within 10s               until its clock has moved 10 s
+machine run run1 --until tasks --within 9s  the first of the two
 ```
 
 Prints:
@@ -2743,8 +2823,9 @@ steer the run as on run. The clause axes and when belong in the file, not here.
 
 ```
 usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                    [--seed n] [--vcpu span] [--iters span] [--until predicate] [--irqblk]
-                    [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n]
+                    [--seed n] [--vcpu span] [--iters span] [--until predicate]
+                    [--within duration] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+                    [--auto-checkpoints n]
                     run file
 ```
 
@@ -2763,6 +2844,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
 | `--until predicate` | Drive until this is true (same predicates as wait `--for`) |
+| `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
 | `--no-idle-skip` | Keep machine time crawling while every vCPU is idle |
@@ -2804,6 +2886,10 @@ Type /help at the prompt to list the commands. Use -c to send a slash command
 from the command line, without opening the prompt. Use -c /help to list the
 commands that way.
 
+A semicolon between two slash commands runs the second after the first, and
+stops when the first fails. A semicolon inside quotes separates commands too. A
+semicolon in the text of /send or in a command of /exec is written \x3b with -e.
+
 Use control log with a run to read the command history instead of driving the
 machine. Use `--entries` to select the commands issued at given run entries. Use
 -n to select commands by number.
@@ -2832,6 +2918,14 @@ machine control run1 -c /help                   list the slash commands
 machine control run1 -c /f@100                  run 100 iterations fast
 machine control run1 -c '/checkpoint name cp1'  create checkpoint cp1
 machine control run1 -c '/rewind to ^cp1'       put run1 back at cp1
+machine control run1 -c '/send ls -la'          type ls -la and Enter
+machine control run1 -c '/send -e a\x3bb'       send a;b and Enter
+machine control run1 -c '/exec run ls -la /'    execute ls -la /
+machine control run1 -c '/exec run -c echo $0'  a line for the shell
+machine control run1 -c '/exec start sleep 5'   send it, get its id
+machine control run1 -c /exec                   the processes of run1
+machine control run1 -c '/fs ls / at ^cp1'      the disk's files at cp1
+machine control run1 -c '/f;/d'                 run, then dump
 machine control log run1                        the commands issued to run1
 ```
 
@@ -2840,6 +2934,9 @@ See also:
 - [`machine run`](#machine-run)
 - [`machine wait`](#machine-wait)
 - [`machine entries`](#machine-entries)
+- [`machine send`](#machine-send)
+- [`machine exec`](#machine-exec)
+- [`machine fs`](#machine-fs)
 
 ## machine wait
 
@@ -2952,6 +3049,10 @@ Without a line, the parent's entries are replayed. A fork at an entry leaves
 that entry with the parent. The branch starts at the next entry, so the entries
 of the parent end at the fork. Replaying past them reports no forward entries.
 
+Use `--to` to stop at a point of the line that is replayed. The point is an
+entry, a checkpoint or a time of that line. A checkpoint the parent took after
+the fork is such a point.
+
 Naming a line replays the entries that lead to that run, across every fork on
 the way. The run must be in the same tree. A line that is not the own line of
 this run is not refused. The replay diverges at the first entry that does not
@@ -2966,8 +3067,13 @@ Use `--retry` to set how many retries. `--retry` 0 replays each entry once. Use
 `--skid` to set how early the replay stops before each recorded entry. A smaller
 skid makes a miss more likely.
 
+The replay stores what the branch keeps of its output. A branch that keeps an
+output file its parent dropped is how the file is read. Use fork with
+`--keep-output` to make one. What is stored does not change what the machine
+executes.
+
 ```
-usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
+usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--skid n] run [line]
 ```
 
 | Argument | Does |
@@ -2977,7 +3083,7 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 
 | Option | Does |
 |---|---|
-| `--to n` | Replay to entry n, defaulting to the end of the line |
+| `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark (default: the end of the line) |
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--skid n` | Aim the interrupt n instructions short of each recorded stop |
@@ -2985,9 +3091,10 @@ usage: machine replay [-h] [--to n] [--trace] [--retry n] [--skid n] run [line]
 Examples:
 
 ```
-machine replay try2                reproduce the parent's entries on try2
-machine replay try2 --to 300       replay up to entry 300
-machine replay try2 run1 --to 420  replay the line that leads to run1
+machine replay try2                   replay the parent's entries
+machine replay try2 --to '#300'       replay up to entry 300
+machine replay try2 --to ^cp2         replay up to checkpoint cp2
+machine replay try2 run1 --to '#420'  replay the line to run1
 ```
 
 Prints:
@@ -3138,12 +3245,38 @@ exists. Use `--at` to fork at another point.
 The branch keeps the execution options of the parent. Options given here replace
 them for the branch.
 
+The new run keeps and drops the output that the run it comes from does. Use
+`--keep-output` to replace the names it keeps. Use `--drop-output` to replace
+the names it drops. Each option changes its own list only.
+
+Use `--from` to replay the new run from an earlier point to its point. The new
+run stores the output of that stretch by its own names. It is forked at the
+checkpoint at or before the earlier point.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 The command waits until the branch accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--depth n] [--lean]
-                    [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
+                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
+                    [--side-trace | --no-side-trace] [--keep-output name] [--drop-output name]
                     [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
                     [--limit n] [--backstop-limit n] [--pin-cpu n]
                     run
@@ -3155,7 +3288,8 @@ usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--de
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3163,6 +3297,8 @@ usage: machine fork [-h] [--at point [point ...]] [--name name] [--rebase] [--de
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
@@ -3178,6 +3314,9 @@ machine fork run1 --name probe            name the branch probe
 machine fork run1 --at ^cp1               fork at checkpoint cp1
 machine fork run1 --at -10ms              fork 10 ms before now
 machine fork run1 --at '#120' --no-start  create the branch, do not start it
+machine fork run1 --keep-output /output   store what is dropped
+machine fork run1 --drop-output ttyS1     store none of ttyS1
+machine fork run1 --from ^cp1             replay the branch from cp1 to now
 ```
 
 See also:
@@ -3217,6 +3356,31 @@ Every use creates a branch, also for a point gone to before. What runs from a
 point is a path of its own. Use switch to return to a branch that exists. Use
 rewind to put this run back at a point.
 
+The new run keeps and drops the output that the run it comes from does. Use
+`--keep-output` to replace the names it keeps. Use `--drop-output` to replace
+the names it drops. Each option changes its own list only.
+
+Use `--from` to replay the new run from an earlier point to its point. The new
+run stores the output of that stretch by its own names. It is forked at the
+checkpoint at or before the earlier point.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 ```
 usage: machine go [options] <run> <point>
 ```
@@ -3228,12 +3392,15 @@ usage: machine go [options] <run> <point>
 
 | Option | Does |
 |---|---|
+| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
 | `--lean` | With `--rebase`, drop the absorbed history so those runs become deletable |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 
 Examples:
@@ -3243,6 +3410,7 @@ machine go run1 ^cp1                 branch at checkpoint cp1 and switch
 machine go run1 '#120' --name probe  branch at entry 120 as probe
 machine go run1 parent               branch where run1 left its parent
 machine go run1 -10ms                branch 10 ms before now
+machine go run1 now --from ^cp1      replay the branch from cp1
 ```
 
 Prints:
@@ -3326,7 +3494,7 @@ usage: machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time or console\~regex |
+| `[point ...]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
 
 Examples:
 
@@ -3363,9 +3531,35 @@ same point gets a suffix.
 The new root keeps the execution options of the run it copied. Options given
 here replace them for the root.
 
+The new run keeps and drops the output that the run it comes from does. Use
+`--keep-output` to replace the names it keeps. Use `--drop-output` to replace
+the names it drops. Each option changes its own list only.
+
+Use `--from` to replay the new run from an earlier point to its point. The new
+run stores the output of that stretch by its own names. It is forked at the
+checkpoint at or before the earlier point.
+
+A run stores every source but the files under /output/drop. A file there has a
+name and no bytes. A program writes under /output/drop through
+MACHINE_DROP_OUTPUT_DIR. It writes under /output/keep through
+MACHINE_OUTPUT_DIR.
+
+A name given to either option may be a pattern, such as /output/drop/*/*.log. A
+star matches within one directory name, a leading dot included, and never a
+slash. Two stars match any number of directories.
+
+A name given to the run decides before the directory does. When a kept name and
+a dropped name cover one source, a name spelled out decides over a pattern. Of
+two names spelled out, the longer decides, and a tie is stored. Of two patterns,
+the kept one decides.
+
+The name none, given alone, is an empty list. Use it to keep or to drop nothing
+where the run would have the names of another run.
+
 ```
-usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
-                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace] [--no-wait]
+usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
+                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+                      [--keep-output name] [--drop-output name] [--no-wait]
                       [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
                       [--backstop-limit n] [--pin-cpu n]
                       run
@@ -3377,11 +3571,14 @@ usage: machine detach [-h] [--at point [point ...]] [--name name] [--no-start]
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch starts at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--at point [point ...]` | Point the new branch is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
 | `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
+| `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
@@ -3394,6 +3591,7 @@ Examples:
 ```
 machine detach run1 --at ^cp1                 copy run1 at cp1 to a new root
 machine detach run1 --at '#120' --name copy1  name the new root copy1
+machine detach run1 --from ^cp1               replay the root from cp1
 ```
 
 See also:
@@ -3913,6 +4111,15 @@ The serial ports ttyS1 to ttyS3 are sources too. A program in the guest that
 writes to /dev/ttyS1 prints on ttyS1. Use `--source` to read another source. The
 sources subcommand lists the sources that printed.
 
+An output file is a source, named by its path. A program in the guest writes its
+files under the directory that MACHINE_OUTPUT_DIR names. A file events.jsonl
+that the service app writes there is /output/keep/app/events.jsonl. The path of
+a directory is every file under it.
+
+The directory that MACHINE_DROP_OUTPUT_DIR names is for output too large to
+store. A file under it has a name and no bytes. A branch forked with
+`--keep-output` stores the file when replayed.
+
 The name all is every source in the order printed, each line after the name of
 its source. A source that prints ends a line another source left unfinished.
 
@@ -3930,7 +4137,7 @@ exact entry of a match.
 
 ```
 usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source name]
-                      run {entry,sources,search} ...
+                      run {entry,sources,bytes,search} ...
 ```
 
 | Argument | Does |
@@ -3943,38 +4150,43 @@ usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source 
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail -f) |
 | `--wide` | Show the entries and the source that printed each line, and its number |
-| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
 ```
-machine output run1                           the last lines
-machine output run1 -f                        follow new output
-machine output run1 -n : | grep -n login      find text
-machine output run1 -n : | less -RN           page through it
-machine output run1 -n : | grep -bo login     find an offset
-machine output run1 -n : --wide | grep login  text and its entries
-machine output run1 --source ttyS1            what ttyS1 printed
-machine output run1 --source all              every source
+machine output run1                                    the last lines
+machine output run1 -f                                 follow new output
+machine output run1 -n : | grep -n login               find text
+machine output run1 -n : | less -RN                    page through it
+machine output run1 -n : | grep -bo login              find an offset
+machine output run1 -n : --wide | grep login           text and its entries
+machine output run1 --source ttyS1                     what ttyS1 printed
+machine output run1 --source all                       every source
+machine output run1 --source /output/keep/app/app.log  an output file
+machine output run1 --source /output/keep              every file under it
 ```
 
 Prints:
 
 ```
-text          the lines as the machine printed them
---source all  each line after its source, such as ttyS0
---wide        ENTRIES SOURCE LINE OUTPUT
-ENTRIES       <first>:<last>, the entries that printed the line
-SOURCE        the source that printed the line, such as ttyS0
-LINE          the line's number, as -n counts them
-json          lines entry_ranges sources start_line total_lines partial_last
-              with -f, an object a line: line text and its labels
+text              the lines as the machine printed them
+no output stored  No output stored for <path>, for a file with a name and no bytes
+--source all      each line after its source, such as ttyS0
+--wide            ENTRIES SOURCE LINE OUTPUT
+ENTRIES           <first>:<last>, the entries that printed the line
+SOURCE            the source that printed the line, such as ttyS0
+LINE              the line's number, as -n counts them
+json              lines entry_ranges sources start_line total_lines partial_last
+                  with -f, an object a line: line text and its labels
 ```
 
 See also:
 
 - [`machine output sources`](#machine-output-sources)
+- [`machine output bytes`](#machine-output-bytes)
 - [`machine output entry`](#machine-output-entry)
+- [`machine replay`](#machine-replay)
 - [`machine entries`](#machine-entries)
 - [`machine go`](#machine-go)
 - [`machine debug`](#machine-debug)
@@ -4006,7 +4218,7 @@ usage: machine output run entry [-h] [--source name] offset
 
 | Option | Does |
 |---|---|
-| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
@@ -4040,11 +4252,16 @@ See also:
 
 List the sources that printed and how much each printed.
 
-A source is a serial port such as ttyS1, or the virtio console. The command
-prints a row for each source that printed, in the order each first printed.
+A source is a serial port such as ttyS1, the virtio console, or an output file.
+The command prints a row for each source that printed, in the order each first
+printed.
 
 The lines of a source are counted in its own output. Use the name with
 `--source` to read that source.
+
+An output file with nothing stored is listed after them with 0 bytes. It is a
+file the run drops, or a file that was not written. Use its name with
+`--keep-output` on a fork to store it.
 
 The list is made where the output is kept, so the output is not downloaded. The
 output of the ancestors of the run is counted.
@@ -4067,13 +4284,58 @@ text     SOURCE BYTES LINES ENTRIES, a row for each source
 SOURCE   the name --source takes, such as ttyS1
 LINES    the lines of the source in its own output
 ENTRIES  <first>:<last>, the entries of its first and last byte
-json     source bytes lines entry_id last_entry_id
+         - for an output file with nothing stored
+json     source bytes lines entry_id last_entry_id stored
 ```
 
 See also:
 
 - [`machine output`](#machine-output)
 - [`machine output search`](#machine-output-search)
+- [`machine output entry`](#machine-output-entry)
+
+### machine output bytes
+
+Write the bytes a source printed, exactly as printed.
+
+The command writes the bytes to standard output and changes none. Use it for an
+output file that is not text.
+
+With the json format the command prints a row for each write instead of the
+bytes. A row has the entry that wrote, the source, the offset and the length.
+The offset counts within the output of the source of the row. A row also names
+the task that wrote.
+
+The bytes are read where the output is kept. The output of the ancestors of the
+run comes first.
+
+```
+usage: machine output run bytes [-h] [--source name]
+```
+
+| Option | Does |
+|---|---|
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
+
+Examples:
+
+```
+machine output run1 bytes --source /output/keep/app/a.bin  a file
+machine -o json output run1 bytes --source /output/keep    each write
+```
+
+Prints:
+
+```
+text  the bytes, unchanged
+json  entry_id source offset length tgid tid task
+      a row for each write, with the task that wrote it
+```
+
+See also:
+
+- [`machine output`](#machine-output)
+- [`machine output sources`](#machine-output-sources)
 - [`machine output entry`](#machine-output-entry)
 
 ### machine output search
@@ -4111,7 +4373,7 @@ usage: machine output run search [-h] [-f] [--max n] [--source name] regex
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
-| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0 or debugcon (default: console) |
+| `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
@@ -4841,6 +5103,645 @@ See also:
 - [`machine focus add`](#machine-focus-add)
 - [`machine focus remove`](#machine-focus-remove)
 - [`machine tasks`](#machine-tasks)
+
+## machine send
+
+Send input to a device of a run.
+
+The command writes bytes to a serial port, the virtio console or the keyboard of
+a run. A program in the guest reads them from the device, as it reads what a
+person types.
+
+The text is sent as written, and a newline follows it, which is Enter. Use -n to
+send no newline. Use -e to read escapes in the text, so that Ctrl-C is \x03.
+
+The text - sends standard input as it is. The command adds no newline to it and
+reads no escape in it.
+
+At the control prompt the command is /send. The options come first and the text
+is the rest of the line. A semicolon ends a command there, so one in the text is
+written \x3b with -e. A pair of quotes around the text keeps the spaces at its
+ends.
+
+The keyboard takes text and types it on a US keyboard. The machine presses and
+releases a key for each character. It holds Shift or Ctrl where the character
+needs one.
+
+A device that begins with a slash is the path of a file in the machine. The
+bytes go at the end of the file. A pipe is such a file. A program that reads its
+input from a pipe is sent input this way.
+
+A process of the machine writes the file, and the command prints its id. The
+exec proc subcommand says whether the bytes were written.
+
+The command does not run the machine. It queues the bytes and returns. The
+device takes them the next time the run executes, and the run records them
+there. A replay reproduces them.
+
+Use fork to send other input than a run recorded. The branch takes its own.
+
+```
+usage: machine send [-h] [-n] [-e] [--device name] run text
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `text` | Text to send, or - to send standard input as it is |
+
+| Option | Does |
+|---|---|
+| `-n` | Send no newline after the text |
+| `-e` | Read the escapes \n, \r, \t, \b, \e, \0, \\ and \xNN in the text |
+| `--device name` | Device to send to: console, ttyS0 to ttyS3, hvc0 or keyboard, or the path of a file in the machine (default: console) |
+
+Examples:
+
+```
+machine send run1 ls                        type ls and Enter on the console
+machine send run1 ls --device ttyS1         the same on ttyS1
+machine send -n run1 y                      send y with no newline
+machine send -n -e run1 '\x03'              send Ctrl-C
+machine send run1 -                         send standard input as it is
+machine send run1 ls --device keyboard      type it on the keyboard
+machine send run1 -- -la                    a text that begins with a dash
+machine send run1 c --device /dev/gdb_pipe  write a pipe
+```
+
+Prints:
+
+```
+text     Queued <n> bytes for <device> of <run> (<id>)
+json     queued device run_id name process
+process  the id of the write to a path, empty for a device
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying  machine fork run1 --name try2
+a device with no room        machine run run1
+```
+
+See also:
+
+- [`machine run`](#machine-run)
+- [`machine output`](#machine-output)
+- [`machine wait`](#machine-wait)
+- [`machine irq`](#machine-irq)
+- [`machine control`](#machine-control)
+
+## machine exec
+
+Execute a command in a machine.
+
+A command is a program of the machine's disk and its arguments, written after
+two dashes. No shell reads it. Use -c to give a line to the shell of the disk,
+with its pipes and redirections.
+
+The run subcommand executes it and runs the machine until it exits. The start
+subcommand sends it and returns.
+
+Each command is a process with an id. The run records what the process prints
+and how it ends, each line at its entry. A replay reproduces them, and a branch
+has the processes of its parent.
+
+Without a subcommand the command lists the processes of the run. The proc
+subcommand shows one.
+
+The machine's disk runs the agent that executes the commands. A disk without it
+executes none.
+
+```
+usage: machine exec [-h] run {run,start,proc} ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine exec run1                   the processes of run1
+machine exec run1 run -- ls -la /   execute ls and print its output
+machine exec run1 start -- sleep 5  send it and return its id
+machine exec run1 proc 7f3a9c21     one process
+```
+
+Prints:
+
+```
+text     ID PID STATE ENTRIES COMMAND
+STATE    pending, running, exited <code>, killed <signal>
+ENTRIES  <started>:<ended>, the entries of the two events
+json     id state command pid exit_code signal started_entry
+```
+
+See also:
+
+- [`machine exec run`](#machine-exec-run)
+- [`machine exec start`](#machine-exec-start)
+- [`machine exec proc`](#machine-exec-proc)
+- [`machine send`](#machine-send)
+- [`machine output`](#machine-output)
+
+### machine exec run
+
+Execute a command and run the machine until it exits.
+
+The command prints what the command printed, its standard output and its
+standard error each on its own. The exit status is that of the command.
+
+Use `--container` to execute it in a container. The command then has the
+environment of the container. Use `--user` to choose the user it runs as there.
+
+The machine runs until the command ends. Other programs of the machine run with
+it.
+
+A command gets 30 minutes of machine time to end. Use `--within` to give it
+another. A command that has not ended by then stays, and the refusal names its
+id.
+
+```
+usage: machine exec run run [-h] [-c line] [--container name] [--user user] [--within duration]
+                            [command ...]
+```
+
+| Argument | Does |
+|---|---|
+| `[command ...]` | The command and its arguments, after -- |
+
+| Option | Does |
+|---|---|
+| `-c line` | A line for the shell of the machine's disk, in place of a command |
+| `--container name` | Container to execute it in, by its name or its Compose service (default: the machine itself) |
+| `--user user` | User the command runs as in the container, such as root or 1000:1000 |
+| `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine exec run1 run -- ls -la /           execute ls and print its output
+machine exec run1 run -c 'echo $PATH'       a line for the shell
+machine exec run1 run --container db -- ls  in a container
+machine -o json exec run1 run -- ls         the process and its events
+```
+
+Prints:
+
+```
+text  what the command printed, and its exit status
+json  the process, with stdout stderr events
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying           machine fork run1 --name try2
+a command that has not ended in time  machine exec run1 proc 7f3a9c21
+a container that is not running       machine exec run1 run -- docker ps
+```
+
+See also:
+
+- [`machine exec start`](#machine-exec-start)
+- [`machine exec proc`](#machine-exec-proc)
+- [`machine run`](#machine-run)
+- [`machine put`](#machine-put)
+- [`machine get`](#machine-get)
+
+### machine exec start
+
+Send a command to execute and return.
+
+The command prints the id of the process. The machine does not run. The process
+starts the next time the run executes.
+
+Use the proc subcommand with the id to read the process.
+
+```
+usage: machine exec run start [-h] [-c line] [--container name] [--user user] [command ...]
+```
+
+| Argument | Does |
+|---|---|
+| `[command ...]` | The command and its arguments, after -- |
+
+| Option | Does |
+|---|---|
+| `-c line` | A line for the shell of the machine's disk, in place of a command |
+| `--container name` | Container to execute it in, by its name or its Compose service (default: the machine itself) |
+| `--user user` | User the command runs as in the container, such as root or 1000:1000 |
+
+Examples:
+
+```
+machine exec run1 start -- sleep 5               send it and return its id
+machine exec run1 start -- /app/load --rows 9    options after --
+machine exec run1 start -c 'gdb -p 36 < /dev/p'  input on a pipe
+```
+
+Prints:
+
+```
+text  Sent <id> to <run> (<id>)
+json  id state command
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying  machine fork run1 --name try2
+```
+
+See also:
+
+- [`machine exec run`](#machine-exec-run)
+- [`machine exec proc`](#machine-exec-proc)
+- [`machine run`](#machine-run)
+
+### machine exec proc
+
+Show a process: its state, its output and its events.
+
+The summary has the command, the pid, the state and how the process ended. A
+process is pending until the machine runs and the guest takes the request.
+
+The events view lists every line the process printed and every change of its
+state, each with its entry. The stdout and stderr views print one stream. The
+exits view prints how the process ended.
+
+```
+usage: machine exec run proc [-h] id [{summary,events,stdout,stderr,exits}]
+```
+
+| Argument | Does |
+|---|---|
+| `id` | Process id |
+| `[{summary,events,stdout,stderr,exits}]` | What to show: summary, events, stdout, stderr or exits (default: summary) |
+
+Examples:
+
+```
+machine exec run1 proc 7f3a9c21         its state and how it ended
+machine exec run1 proc 7f3a9c21 events  every line and its entry
+machine exec run1 proc 7f3a9c21 stdout  its standard output
+machine exec run1 proc 7f3a9c21 stderr  its standard error
+machine exec run1 proc 7f3a9c21 exits   how it ended, and where
+```
+
+Prints:
+
+```
+summary  Process Run Command Pid State Entries Stdout Stderr
+events   ENTRY STREAM TEXT, the stream stdout, stderr or status
+exits    ENTRY and exited <code> or killed <signal>
+json     the process, or the events of the view
+```
+
+Refuses, and the way past:
+
+```
+a process the guest has not taken  machine run run1
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine exec run`](#machine-exec-run)
+- [`machine output`](#machine-output)
+- [`machine go`](#machine-go)
+
+## machine put
+
+Put a file into a machine or into a container of it.
+
+The command copies a file of this machine to a path in the running machine. Use
+`--container` to put it in a container instead. A file of any size is put. The
+directories on the way to the path are made.
+
+The file has its name only once all of it is written, so a program never reads
+part of it. A file already at the path is replaced.
+
+The machine runs while the file goes in. Other programs of the machine run with
+it. The bytes are a recorded input, so a replay puts the same file.
+
+The file is written to the disk before the command returns. A checkpoint taken
+after it has the file, and fs reads it there.
+
+```
+usage: machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no-pipe]
+                   [--within duration]
+                   run file path
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `file` | File on this machine to put, or - for standard input |
+| `path` | Path the file gets in the machine or in the container |
+
+| Option | Does |
+|---|---|
+| `--container name` | Container to put the file in, by its name or its Compose service (default: the machine itself) |
+| `--mode mode` | Mode of the file, as octal digits (default: 644) |
+| `--owner uid:gid` | Owner of the file, as numbers (default: root) |
+| `--no-pipe` | Send the file over the serial port of the exec agent, which is far slower |
+| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine put run1 ./a.conf /etc/a.conf      into the machine
+machine put run1 ./t.sh /t.sh --mode 755   with a mode
+machine put run1 ./d /d --container db     into a container
+machine put run1 ./d /d --owner 1000:1000  with an owner
+machine put run1 - /tmp/in                 standard input
+```
+
+Prints:
+
+```
+text  Put <n> bytes at <path> of <run> (<id>)
+json  size path container mode owner process run_id name entry_id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine exec run1 run -- docker ps
+```
+
+See also:
+
+- [`machine get`](#machine-get)
+- [`machine exec`](#machine-exec)
+- [`machine send`](#machine-send)
+- [`machine fs`](#machine-fs)
+- [`machine checkpoint`](#machine-checkpoint)
+
+## machine get
+
+Get a file from a machine or from a container of it.
+
+The command copies a file of the running machine to a file of this machine. Use
+`--container` to get it from a container instead. A file of any size is copied.
+
+The file is read as it is now, with what programs wrote and the disk does not
+have yet. The fs command reads the disk at a checkpoint instead.
+
+The machine runs while the file comes out. Other programs of the machine run
+with it, so a file a program is writing can change on the way.
+
+```
+usage: machine get [-h] [--container name] [--within duration] run path file
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `path` | Path of the file in the machine or in the container |
+| `file` | File on this machine to write, or - for standard output |
+
+| Option | Does |
+|---|---|
+| `--container name` | Container to get the file from, by its name or its Compose service (default: the machine itself) |
+| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine get run1 /etc/a.conf ./a.conf   from the machine
+machine get run1 /d ./d --container db  from a container
+machine get run1 /var/log/app.log -     to standard output
+```
+
+Prints:
+
+```
+text  Got <n> bytes from <path> of <run> (<id>)
+json  size path container file mode owner process run_id name entry_id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine exec run1 run -- docker ps
+```
+
+See also:
+
+- [`machine put`](#machine-put)
+- [`machine exec`](#machine-exec)
+- [`machine fs`](#machine-fs)
+- [`machine output`](#machine-output)
+
+## machine containers
+
+List the containers of a machine and the service of each.
+
+The command prints each container with its Compose service, its state and its
+image. Stopped containers are listed too. A container that no service started
+has no service.
+
+The exec, put and get commands take either name with `--container`. A service
+name stands for its container when the service has one.
+
+The machine runs until Docker has answered. The list is of the machine as it is
+then, and the listing is a recorded process.
+
+```
+usage: machine containers [-h] [--within duration] run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+| Option | Does |
+|---|---|
+| `--within duration` | Machine time the listing gets to end in, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine containers run1          the containers of run1
+machine -o json containers run1  every field of each
+```
+
+Prints:
+
+```
+text   SERVICE CONTAINER STATE IMAGE
+STATE  running, exited, created, paused
+json   name service project state status image id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying  machine fork run1 --name try2
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine put`](#machine-put)
+- [`machine get`](#machine-get)
+
+## machine core
+
+Get a core dump of a process of a machine.
+
+The command has a process dump a core and copies the core to a file of this
+machine. A debugger reads the core with the program of the process. Use
+`--container` for a process of a container, by the pid it has there.
+
+Taking a core ends the process. The process dies of the signal. Use fork first
+to keep the run as it is, and take the core on the branch.
+
+A process that handles the signal dumps no core. Use `--signal` to name another.
+The first process of a container dumps none.
+
+The machine runs until the core is written and copied. Other programs of the
+machine run with it.
+
+```
+usage: machine core [-h] [--container name] [--signal signal] [--within duration] run pid file
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `pid` | Pid of the process in the machine or in the container |
+| `file` | File on this machine to write the core to |
+
+| Option | Does |
+|---|---|
+| `--container name` | Container the process is in, by its name or its Compose service (default: the machine itself) |
+| `--signal signal` | Signal the process dies of, by name or number (default: ABRT) |
+| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine core run1 412 ./app.core              a core of pid 412
+machine core run1 7 ./db.core --container db  of a container
+machine core run1 412 ./c --signal SEGV       by another signal
+```
+
+Prints:
+
+```
+text  Core of <pid> of <run> (<id>): <n> bytes in <file>
+json  size pid container signal file process run_id name entry_id
+```
+
+Refuses, and the way past:
+
+```
+a machine that is replaying      machine fork run1 --name try2
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine exec`](#machine-exec)
+- [`machine get`](#machine-get)
+- [`machine containers`](#machine-containers)
+- [`machine fork`](#machine-fork)
+
+## machine profile
+
+Sample what a machine runs and show where the time goes.
+
+The machine samples each CPU at every timer interrupt, 250 times a second.
+Nothing runs in the guest for it. The command prints the functions that ran.
+Each has the share of samples it ran in and the share it was on the stack of.
+
+Use `--from` to profile a stretch the run already recorded. The stretch is
+replayed on a branch, which is deleted after. The run is not changed and need
+not be running. A stretch profiled twice gives the same samples.
+
+Use `--pid` or `--container` to show one process or one container. Use
+`--folded` to print every stack with its count, one a line. That text is what
+flame graph tools read. Use `--flame` to draw a flame graph in the terminal.
+
+The names come from the program files of the machine's disk as it stands when
+the stretch ends. No checkpoint is taken. A file that is not on the disk is
+named by its file.
+
+Time in the kernel is one frame named after the system call, which ends in _[k].
+
+Without `--from` the machine runs for the time sampled. A machine that is idle
+has no samples.
+
+Use `--in-guest` to sample with a process of the guest, which the disk's exec
+agent runs. It names the functions of the kernel. It names a program the guest
+has not yet written to the disk. That process is part of the run.
+
+```
+usage: machine profile [-h] [--for duration | --from point [point ...]] [--to point [point ...]]
+                       [--pid pid] [--container name] [--in-guest] [--folded | --flame] [--top n]
+                       [--within duration]
+                       run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Machine time to run and sample for, such as 500ms (default: 1s) |
+| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The stretch is replayed on a branch |
+| `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the end of the run's line) |
+| `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
+| `--container name` | Container to show, by its name or its Compose service (default: the machine itself) |
+| `--in-guest` | Sample with the profiler of the exec agent, a process of the guest: kernel functions by name, at the cost of changing the run |
+| `--folded` | Print the stacks, one a line with its count, for another tool to draw |
+| `--flame` | Draw a flame graph in the terminal |
+| `--top n` | Functions the table shows (default: 20) |
+| `--within duration` | Machine time a question to a container gets, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine profile run1                          where a second of run1 went
+machine profile run1 --for 5s --container db  one container
+machine profile run1 --from ^slow --to ^done  a recorded stretch
+machine profile run1 --flame                  a flame graph in the terminal
+machine profile run1 --in-guest               kernel functions by name
+machine profile run1 --folded                 the stacks, for another tool
+```
+
+Prints:
+
+```
+text      SELF TOTAL FUNCTION
+SELF      the share of samples the function was running in
+TOTAL     the share it was on the stack of
+--folded  comm;outer;...;inner <count>
+json      samples hz stacks left run_id name
+```
+
+Refuses, and the way past:
+
+```
+a container the run does not have  machine containers run1
+--in-guest with --from             machine profile run1 --from ^slow
+```
+
+See also:
+
+- [`machine replay`](#machine-replay)
+- [`machine fork`](#machine-fork)
+- [`machine tasks`](#machine-tasks)
+- [`machine syscalls`](#machine-syscalls)
+- [`machine containers`](#machine-containers)
 
 ## machine irq
 
