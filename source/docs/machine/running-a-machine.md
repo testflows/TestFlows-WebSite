@@ -668,23 +668,42 @@ machine profile app --for 5s --container db    # one container
 machine profile app --pid 412                  # one process
 ```
 
+Here is one second of [`memstress`](https://github.com/testflows/Machine-Examples),
+one of the example programs, which maps, touches and unmaps memory from four
+threads:
+
 ```text
-250 samples at 250 a second
- SELF   TOTAL  FUNCTION
-61.2%   61.2%  hash_bytes
-21.6%   82.8%  index_build
-11.2%   11.2%  sys_read_[k]
- 0.0%  100.0%  main
+463 samples at 250 a second
+ SELF  TOTAL  FUNCTION
+34.1%  34.1%  kernel_[k]
+34.1%  34.1%  sys_munmap_[k]
+19.2%  94.4%  worker
+ 5.4%   5.4%  sys_madvise_[k]
+ 5.2%   5.2%  sys_mmap_[k]
+ 1.1%   1.1%  sys_clone3_[k]
 ```
 
 `SELF` is the share of samples a function was running in, and `TOTAL` the share
-it was on the stack of. A name that ends in `_[k]` is time in the kernel, named
-after the system call the program made.
+it was on the stack of. So `worker` itself ran in 19% of the samples and was on
+the stack of 94% of them: the rest of its time went to the calls under it.
+
+A name that ends in `_[k]` is time in the kernel. `sys_munmap_[k]` is the
+`munmap` system call. `kernel_[k]` is kernel time that is no system call, here
+the page faults of touching fresh memory.
 
 - `--flame` draws a flame graph in the terminal.
-- `--folded` prints every stack with its count, one a line, as
-  `program;outer;inner 42`. That text is what flame graph tools read, so you can
-  save it and draw it with the tool you like, or hand it to an agent.
+- `--folded` prints every stack with its count, one a line. That text is what
+  flame graph tools read, so you can save it and draw it with the tool you
+  like, or hand it to an agent:
+
+  ```text
+  memstress;clone3;start_thread;worker;kernel_[k] 56
+  memstress;clone3;start_thread;worker;munmap;sys_munmap_[k] 32
+  memstress;clone3;start_thread;worker 31
+  memstress;clone3;start_thread;worker;mmap64;sys_mmap_[k] 12
+  memstress;clone3;start_thread;worker;madvise;sys_madvise_[k] 10
+  ```
+
 - `-o json` gives the same stacks as data.
 
 Machine takes the samples from outside the guest, at every timer interrupt of
