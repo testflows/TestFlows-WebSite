@@ -152,6 +152,37 @@ for clause in done.clauses:
 `until` takes the conditions [`machine run`](commands.md#machine-run) `--until` does,
 including a machine time: `run.run(until="vtime=+10ms")`.
 
+## Points in a run's history
+
+Calls that take a point, such as `fork(at=...)`, `go`, `rewind`,
+`replay(to=...)` and `profile(from_=..., to=...)`, take it as text, `"^booted"`,
+`"#300"`, `"1.194s"` or `"-10ms"`, or as one of three records:
+
+| Record | Is | Works on |
+|---|---|---|
+| `Point` | a time: `vtime`, the machine's clock in nanoseconds | every run; each finds its own entry at that time |
+| `Place` | one entry: the `run_id` that recorded it, `entry_id`, `point` and `vtime_offset` | the run that recorded it, and branches forked after it |
+| `Checkpoint` | a saved state: its `name`, and the `place` it was saved at | wherever its place works |
+
+`start(at=...)` and the `fs` readers take only a checkpoint, by its name or as
+a `Checkpoint`: they open a saved state, and a time or an entry is not one.
+
+A point moves by a duration: an int of nanoseconds, a string such as `"10ms"`,
+or a `timedelta`. Subtract one point from another for the nanoseconds between
+them. `run.now()` returns a `Place`, and `run.place(point)` finds the entry a
+point names.
+
+```python
+booted = run.checkpoint("booted")
+branch = run.fork(at=booted.place.point + "10ms")
+here = branch.now()
+run.place(here.point)    # the same time, on the parent
+```
+
+A place is one run's entry, so once the parent and the branch have both run
+past the fork, `run.place(here)` is refused: the parent's entry with that id
+is another state. Pass `here.point` to take the same time instead.
+
 ## Watching and following
 
 A listing takes `watch=True` and then gives you a new list every time
