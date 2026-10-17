@@ -112,7 +112,7 @@ And the calls you will reach for most often:
 | `run.replay()`, `run.play(...)`, `run.diff(...)` | replays and compares |
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.output(...)` | reads what it printed |
-| `run.output.search(pattern)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, and the entry that printed it |
+| `run.output.search(pattern, from_=..., to=...)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, between two points if you like; each match has the entry that printed it and a `place` to go to |
 | `run.output.sources()`, `run.output(source="ttyS1")`, `run.output.lines(source="all")` | lists the sources that printed, reads one, and reads them all with the source of each line |
 | `run.fs.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk at a checkpoint, which `at` names |
 | `run.send(text, device=...)` | sends input to a device or to a file in the machine, as [`machine send`](commands.md#machine-send) does; returns a `Sent` with `queued`, and `process` for a file |

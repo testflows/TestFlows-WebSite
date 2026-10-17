@@ -4344,7 +4344,7 @@ Find a pattern in the output and the entry of each match.
 See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
 
 The pattern is a regular expression. A match is within a line. Each match is
-printed with the entry that printed its first byte.
+printed with the entry that printed its first byte and the time of that entry.
 
 A match has at least one character, since an entry printed it. A pattern that
 matches without any text is refused. The pattern 6* is one, and 6+ is not.
@@ -4352,17 +4352,22 @@ matches without any text is refused. The pattern 6* is one, and 6+ is not.
 The search is done where the output is kept, so a large output is not
 downloaded. Its lineage is searched, from the first line an ancestor printed.
 
+Use `--from` and `--to` to search the output between two points. A match begins
+at `--from` or after it and ends at `--to` or before it.
+
 Use -f to go on with what is printed next. Use `--max` to stop after a number of
 matches.
 
 The console is searched. Use `--source` to search another source. With all,
 every source is searched and a match is still within the line of one source.
 
-The entry is a point. Use it with go, fork, rewind and the other commands that
-take an entry.
+The entry and the time are points. Use either with go, fork, rewind and the
+other commands that take a point.
 
 ```
-usage: machine output run search [-h] [-f] [--max n] [--source name] regex
+usage: machine output run search [-h] [-f] [--max n] [--from point [point ...]]
+                                 [--to point [point ...]] [--source name]
+                                 regex
 ```
 
 | Argument | Does |
@@ -4373,26 +4378,32 @@ usage: machine output run search [-h] [-f] [--max n] [--source name] regex
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
+| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root (default: the start of the output) |
+| `--to point [point ...]` | Point the search ends at, as `--from` takes one (default: the end of the output) |
 | `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
 ```
-machine output run1 search login               each match and its entry
-machine output run1 search 'error|panic' -f    go on, live
-machine output run1 search login --max 1       the first match
-machine -o json output run1 search login       matches as JSON
-machine output run1 search ready --source all  search every source
+machine output run1 search login                each match and its entry
+machine output run1 search 'error|panic' -f     go on, live
+machine output run1 search login --max 1        the first match
+machine output run1 search x --from ^a --to 1s  between two points
+machine output run1 search x --from '#42'       from an entry on
+machine -o json output run1 search login        matches as JSON
+machine output run1 search ready --source all   search every source
 ```
 
 Prints:
 
 ```
-text    ENTRY SOURCE LINE TEXT, a row for each match
+text    ENTRY TIME SOURCE LINE:COL TEXT, a row for each match
 ENTRY   the entry that printed the first byte of the match
+TIME    the time of that entry, a point such as 1.194000000s+2
 SOURCE  the source that printed the match, such as ttyS0
-TEXT    the line the match is on
-json    entry_id last_entry_id source line offset length text
+TEXT    the whole line: the match bold, the part past --to dim
+json    entry_id last_entry_id vtime vtime_offset point recorder
+        source line offset length text column column_end in_range
         with -f, an object a line
 ```
 
@@ -4400,6 +4411,8 @@ Refuses, and the way past:
 
 ```
 a pattern that matches no text, as 6*  machine output run1 search '6+'
+-f with --to                           machine output run1 search x -f
+--from after --to                      machine output run1 search x --to 1s
 ```
 
 See also:
