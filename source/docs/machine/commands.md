@@ -5894,3 +5894,256 @@ See also:
 - [`machine vtime rate`](#machine-vtime-rate)
 - [`machine vtime`](#machine-vtime)
 - [`machine fork`](#machine-fork)
+
+## machine regs
+
+Show the registers of a thread of a machine.
+
+The registers are the user registers of a thread of the guest, by its id. A
+thread on a vCPU has them in the vCPU. A thread off every vCPU has them where it
+saved them. A thread in the kernel has the ones it entered with.
+
+Without names the general registers are shown. Use `--all` to show the x87, SSE
+and AVX registers as well. Name registers to show those alone.
+
+NAME=VALUE writes a register. A value is a number or a location as mem takes
+one, such as main+4. The write is part of the run, and a replay makes it again.
+The selectors and the x87, SSE and AVX registers are not written.
+
+```
+usage: machine regs [-h] [--all] run tid [register ...]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Thread of the machine, by its id. A process is its first thread |
+| `[register ...]` | Register to show, such as rip or xmm0, or NAME=VALUE to write one (default: the general registers) |
+
+| Option | Does |
+|---|---|
+| `--all` | Show the x87, SSE and AVX registers as well |
+
+Examples:
+
+```
+machine regs run1 412                   the general registers of thread 412
+machine regs run1 412 rip rsp           two of them
+machine regs run1 412 --all             with x87, SSE and AVX
+machine regs run1 412 rax=0 rip=main+4  write two of them
+```
+
+Prints:
+
+```
+text  REGISTER VALUE NATURAL, then where they were read
+json  tid tgid start where cpu values, each value in hex
+```
+
+Refuses, and the way past:
+
+```
+a thread the machine does not have  machine tasks run1
+```
+
+See also:
+
+- [`machine mem`](#machine-mem)
+- [`machine backtrace`](#machine-backtrace)
+- [`machine tasks`](#machine-tasks)
+- [`machine dump`](#machine-dump)
+
+## machine mem
+
+Show the memory of a process of a machine.
+
+The memory is the process's own, through its page tables. The thread names its
+process. Guest kernel memory is not shown.
+
+A location is an address, a register written $rsp, or a symbol such as main. A
+symbol of one file is written PATH:NAME. A location moves by +N or -N.
+
+A format after the location shows the memory as GDB's x command does. A format
+is a count, a letter and a unit, such as 8xg, 4i or s. The letters are x, d, u,
+o, t, a, c, f, s, i and z. The units are b, h, w and g.
+
+Each line begins with its address and the symbol the address is in. A read that
+reaches an address that is not mapped ends there.
+
+LOCATION=VALUE writes there, and the write is part of the run. A quoted string
+writes its bytes. A number takes the size of the variable it is written to, or
+of a unit after it. A page the process cannot write is not written.
+
+```
+usage: machine mem [-h] run tid location [format]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Thread of the machine, by its id. A process is its first thread |
+| `location` | Address to read at: a number, $register, a symbol or PATH:symbol, moved by +N or -N. LOCATION=VALUE writes there |
+| `[format]` | Count, format letter and unit, as GDB's x takes them, such as 8xg, 4i or s (default: 8xg) |
+
+Examples:
+
+```
+machine mem run1 412 '$sp'         eight giant words at the stack
+machine mem run1 412 '$pc' 4i      the next four instructions
+machine mem run1 412 main 16xb     sixteen bytes of main
+machine mem run1 412 environ a     what environ points at
+machine mem run1 412 counter=42    write counter, at its size
+machine mem run1 412 '$sp+8=-1' w  write a word at the stack
+```
+
+Prints:
+
+```
+text  <address> <symbol+offset>: units, as GDB's x
+json  tid address format unit lines unmapped
+```
+
+Refuses, and the way past:
+
+```
+a symbol no file names              machine symbols run1 412 --regex name
+a thread the machine does not have  machine tasks run1
+```
+
+See also:
+
+- [`machine regs`](#machine-regs)
+- [`machine symbols`](#machine-symbols)
+- [`machine maps`](#machine-maps)
+- [`machine dump`](#machine-dump)
+
+## machine backtrace
+
+Show the stack of a thread of a machine.
+
+Each frame is a function the thread is in, the innermost first. The frames are
+walked by the call frame rules of the program files. Code with no rules is
+walked by its frame pointer.
+
+The names come from the program files on the machine's disk as it stands. A
+frame of a file the disk does not have is named by its file.
+
+```
+usage: machine backtrace [-h] run tid
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Thread of the machine, by its id. A process is its first thread |
+
+Examples:
+
+```
+machine backtrace run1 412  the stack of thread 412
+```
+
+Prints:
+
+```
+text  # ADDRESS FUNCTION FILE
+json  tid frames
+```
+
+Refuses, and the way past:
+
+```
+a thread the machine does not have  machine tasks run1
+```
+
+See also:
+
+- [`machine regs`](#machine-regs)
+- [`machine mem`](#machine-mem)
+- [`machine symbols`](#machine-symbols)
+- [`machine profile`](#machine-profile)
+
+## machine symbols
+
+Find the symbols of a process of a machine.
+
+A name finds the address of each symbol of that name. An address finds the
+symbol it is in. A symbol of one file is written PATH:NAME.
+
+Use `--regex` to find each function whose name matches a pattern. The symbols
+come from the program files on the machine's disk.
+
+```
+usage: machine symbols [-h] [--regex pattern] [--variables] [--file path] run tid [name|address]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Thread of the machine, by its id. A process is its first thread |
+| `[name\|address]` | Symbol to find the address of, or address to find the symbol of |
+
+| Option | Does |
+|---|---|
+| `--regex pattern` | Find each function whose name the regular expression matches |
+| `--variables` | Find variables with `--regex`, not functions |
+| `--file path` | File to look in with `--regex`, by its path or its file name (default: every file the process maps) |
+
+Examples:
+
+```
+machine symbols run1 412 main                         where main is
+machine symbols run1 412 0x401ac6                     what is at an address
+machine symbols run1 412 --regex ^wait                functions that match
+machine symbols run1 412 --regex env --variables      variables
+machine symbols run1 412 --regex ^m --file libc.so.6  of one file
+```
+
+Prints:
+
+```
+text  ADDRESS SIZE KIND NAME FILE
+json  tid symbols
+```
+
+See also:
+
+- [`machine mem`](#machine-mem)
+- [`machine maps`](#machine-maps)
+- [`machine backtrace`](#machine-backtrace)
+
+## machine maps
+
+List the files a process of a machine maps.
+
+Each row is a file the process maps executable, at its range of addresses: the
+program and its libraries. A file the machine's disk does not have has no
+symbols.
+
+```
+usage: machine maps [-h] run tid
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Thread of the machine, by its id. A process is its first thread |
+
+Examples:
+
+```
+machine maps run1 412  the files process 412 maps
+```
+
+Prints:
+
+```
+text  START END OFFSET FILE
+json  tid maps
+```
+
+See also:
+
+- [`machine symbols`](#machine-symbols)
+- [`machine mem`](#machine-mem)
+- [`machine tasks`](#machine-tasks)

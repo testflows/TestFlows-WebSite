@@ -126,6 +126,8 @@ And the calls you will reach for most often:
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
+| `run.thread(tid)` | a guest thread to debug: `registers()`, `read(address, size)`, `address("main+4")`, `symbol(address)`, `symbols(regex="^wait")`, `backtrace()`, `maps()` |
+| `thread.set(rax=0, rip="main+4")`, `thread.write(address, data)` | writes its registers and its process's memory; a replay makes the writes again |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 
 Every call returns a record with named fields, such as a `RunInfo` from
