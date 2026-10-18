@@ -20,6 +20,10 @@ permalink: machine/portal/signup/index.html
                     <label for="portal-signup-email">Your account email</label>
                     <input type="email" class="form-control" id="portal-signup-email" required autocomplete="email" placeholder="you@company.com">
                 </div>
+                <div class="portal-field portal-check">
+                    <input type="checkbox" id="portal-signup-terms" required>
+                    <label for="portal-signup-terms">I have read and accept the <a href="/machine/legal/terms-of-service/" target="_blank" rel="noopener">Terms of Service</a>, which license the Machine client.</label>
+                </div>
                 <div class="portal-actions">
                     <button type="submit" class="btn btn-primary" id="portal-signup-submit">Send link</button>
                 </div>
@@ -36,10 +40,8 @@ permalink: machine/portal/signup/index.html
             <span id="portal-signup-foot">Already have an account? <a id="portal-signup-login-link" href="/machine/portal/login/">Sign in</a></span>
         </p>
         <p class="portal-legal">
-            By creating an account you agree to the
-            <a href="/machine/legal/terms-of-service/">Terms of Service</a>
-            and
-            <a href="/machine/legal/privacy-policy/">Privacy Policy</a>.
+            The <a href="/machine/legal/privacy-policy/">Privacy Policy</a>
+            says how your data is handled.
         </p>
     </div>
 </section>

@@ -11,6 +11,8 @@ permalink: machine/download/index.html
 <header class="download-header">
 <h1>Download client</h1>
 <p>The Machine client is one small program called <code>machine</code>. Pick your system.</p>
+<p class="download-required"><strong>You need a TestFlows™ account to get the client, and you accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a>.</strong> The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
+<p>The Terms license the client to your account. In CI, where there is no terminal, install with an <a href="/docs/machine/#machine-account-api-keys">API key</a> of an account that has accepted them: <code>curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=&lt;key&gt; bash</code>.</p>
 </header>
 
 <ul class="nav nav-tabs platform-tabs" role="tablist" aria-label="Your system">

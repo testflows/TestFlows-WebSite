@@ -4,6 +4,10 @@
 
 > The Machine client is one small program called `machine`. Pick your system.
 
+**You need a TestFlows™ account to get the client, and you accept the Terms of Service: https://testflows.com/machine/legal/terms-of-service.md.** The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.
+
+The Terms license the client to your account. In CI, where there is no terminal, install with an API key of an account that has accepted them: `curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash`.
+
 TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
 ## Install
@@ -73,7 +77,7 @@ The docs cover Compose projects and binaries: https://testflows.com/docs/machine
 
 ## Then
 
-Create an account at https://testflows.com/machine/portal/signup/, then sign in with `machine login`. Then run `machine account provision` to set up account storage. The first session cannot be created until that is done. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
+The installer signs out when it is done. Sign the client in with `machine login`. Then run `machine account provision` to set up account storage. The first session cannot be created until that is done. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
 
 ## Check the download
 
@@ -142,10 +146,10 @@ rm ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.cache/machine ~/.testflows/machine
 ```
 
-On a Mac the client is under `~/.local/share/machine`, not `~/.cache/machine`:
+On a Mac the client is under `~/.local/share/machine`, not `~/.cache/machine`. An install from before the client was kept off your PATH also has `~/.local/bin/machine`, which `rm -f` removes:
 
 ```bash
 machine logout
-rm ~/.local/bin/machine ~/.local/bin/machine-env
+rm -f ~/.local/bin/machine ~/.local/bin/machine-env
 rm -rf ~/.local/share/machine ~/.testflows/machine
 ```

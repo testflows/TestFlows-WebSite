@@ -1,4 +1,4 @@
-import { signupStart, ApiError } from "./api.js";
+import { signupStart, termsCurrent, ApiError } from "./api.js";
 import { looksLikeEmail } from "./errors.js";
 import { isSignedIn } from "./session.js";
 import { setStatus, showSpinner } from "./ui.js";
@@ -16,6 +16,11 @@ async function onSubmit(event) {
   const status = $("portal-signup-status");
   const button = $("portal-signup-submit");
   const email = (emailInput && emailInput.value.trim()) || "";
+  const terms = $("portal-signup-terms");
+  if (!terms || !terms.checked) {
+    setStatus(status, "Accept the Terms of Service to create an account.", "err");
+    return;
+  }
   if (!email) {
     setStatus(status, "Enter your email.", "err");
     return;
@@ -28,7 +33,10 @@ async function onSubmit(event) {
   if (emailInput) emailInput.disabled = true;
   showSpinner(status, "Sending signup link");
   try {
-    await signupStart(email, () => showSpinner(status, "Working"));
+    // The version the page was read under is the one accepted: a newer one is
+    // refused by the service, and the page says so.
+    const version = await termsCurrent();
+    await signupStart(email, version, () => showSpinner(status, "Working"));
     setStatus(status, `Check ${email} for a link.`, "ok");
     const done = $("portal-signup-done");
     if (done) done.hidden = false;

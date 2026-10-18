@@ -4,11 +4,11 @@
 #   curl https://testflows.com/machine/install -fsS | bash
 #
 # The client is given to a TestFlows account. The script signs in, or creates an account,
-# at the terminal: an email, and a code sent to it. It prints the client's End User
-# License Agreement (EULA), in full at https://testflows.com/machine/legal/client-eula/,
-# and the account accepts it before anything is downloaded. Without a terminal it takes
-# an API key, MACHINE_API_KEY, whose account has accepted the EULA. It signs out when it
-# ends; `machine login` signs the client in.
+# at the terminal: an email, and a code sent to it. The Terms of Service license the
+# client, https://testflows.com/machine/legal/terms-of-service/. An account that has not
+# accepted their current version is shown them in full, and accepts them before anything
+# is downloaded. Without a terminal it takes an API key, TESTFLOWS_MACHINE_API_KEY, whose account
+# has accepted them. It signs out when it ends; `machine login` signs the client in.
 #
 # It downloads one file, the `machine` binary, checks it against the SHA-256
 # checksum published next to it, and puts it in ~/.local/bin. It also writes
@@ -41,7 +41,9 @@
 #   MACHINE_NO_MODIFY_PATH  set to anything, the script does not ask to put the install
 #                         directory on PATH in your shell's startup file. It asks only at
 #                         a terminal, and writes only when the answer is yes.
-#   MACHINE_API_KEY       an API key to install with, in place of signing in at a terminal
+#   TESTFLOWS_MACHINE_API_KEY
+#                         an API key to install with, in place of signing in at a
+#                         terminal; the client reads the same variable
 #   MACHINE_BASE_URL      a mirror to download releases from, with no sign-in, for testing
 #
 # Everything happens inside main(), which is only called on the last line. If the
@@ -61,7 +63,7 @@ set -euo pipefail
 # The service an account signs in to, which gives a signed-in account a link to each
 # release file. A mirror named by MACHINE_BASE_URL, a test server, is read as it is, with
 # no sign-in.
-API_URL="${MACHINE_API_URL:-https://machine-api.testflows.com}"
+API_URL="${TESTFLOWS_MACHINE_API_URL:-https://machine-api.testflows.com}"
 MIRROR="${MACHINE_BASE_URL:-}"
 MIRROR="${MIRROR%/}"
 BASE_URL="${MIRROR:-$API_URL}"
@@ -81,7 +83,10 @@ API_BODY=""
 API_STATUS=""
 SIGNED_IN=""
 ACCOUNT=""
-EULA_SHOWN=false
+# The Terms of Service, which license the client: the Markdown of their page on
+# testflows.com, which the installer shows in full before they are accepted.
+TERMS_URL="${MACHINE_TERMS_URL:-https://testflows.com/machine/legal/terms-of-service.md}"
+TERMS_PAGE="https://testflows.com/machine/legal/terms-of-service/"
 # Whether a download shows a progress bar: the client's own file does, and the small
 # files around it, its checksum and the version names, are fetched quietly.
 FETCH_PROGRESS=false
@@ -261,56 +266,63 @@ Options:
   -h, --help      show this help
 
 The client is given to a TestFlows account. The installer signs in, or creates an
-account, with an email and a code sent to it. The account accepts the End User License
-Agreement (EULA), which the installer prints, before anything is downloaded. The EULA
-in full: https://testflows.com/machine/legal/client-eula/
+account, with an email and a code sent to it. The Terms of Service license the client.
+An account accepts their current version, which the installer shows in full, before
+anything is downloaded: https://testflows.com/machine/legal/terms-of-service/
 
 Environment:
   MACHINE_INSTALL_DIR   where to put machine-env, and machine when no other program
                         called machine is on PATH (default: ~/.local/bin)
   MACHINE_VERSION       a version to use, as --version names one
-  MACHINE_API_KEY       an API key to install with, where there is no terminal to sign in at.
-                        Its account must have accepted the EULA.
+  TESTFLOWS_MACHINE_API_KEY
+                        an API key to install with, where there is no terminal to
+                        sign in at; the client reads the same variable. Its account
+                        must have accepted the Terms of Service.
   MACHINE_NO_MODIFY_PATH  set to anything, do not ask to put the directory on PATH
 USAGE
 }
 
-# show_eula: the End User License Agreement of the client, printed before anything is downloaded.
-# Downloading, installing or running the client is the agreement to it. The same agreement is on
-# its page of the legal documents. (The Terms of Service are a separate agreement, accepted with an account.)
-show_eula() {
-    printf '%s\n' "${BOLD}TestFlows™ Machine client: End User License Agreement (EULA)${RESET}"
-    cat <<'EULA'
+# show_terms FILE: the Terms of Service, their whole text, at the terminal, to read before
+# they are accepted. FILE is their page's own Markdown from testflows.com, so the text read
+# is the text published; it is shown as plain text in a pager the person scrolls through.
+show_terms() {
+    local text pager
+    text="$(mktemp)" || die "Could not create a temporary file."
+    terms_plain "$1" > "$text"
+    if command -v less >/dev/null 2>&1; then
+        # In a less prompt a full stop is special and is written \.
+        pager=(less -R -P 'The Terms of Service\. Space scrolls, q when read\.')
+    elif command -v more >/dev/null 2>&1; then
+        pager=(more)
+    else
+        pager=(cat)
+    fi
+    "${pager[@]}" "$text" < /dev/tty > /dev/tty || cat "$text" > /dev/tty
+    rm -f "$text"
+}
 
-The installer asks you to accept this agreement before it downloads the
-client. If you do not accept it, do not download the client.
-
-The full agreement: https://testflows.com/machine/legal/client-eula/
-
-In short:
-
-The client is proprietary software of Katteli Inc. It is licensed to you,
-not sold, to use with the TestFlows Machine service for your internal
-business purposes, and only a copy you get with this installer is licensed.
-You may not, and may not let anyone or any tool, including an AI system, do
-any of the following, except where the law does not allow this restriction:
-
-  - reverse engineer, decompile, disassemble or otherwise try to obtain the
-    source code, protocol, algorithms or inner workings of the client or of
-    the service;
-  - clone, copy or reimplement the client or the service, or build anything
-    that imitates or competes with them, including by having an AI system
-    study, reproduce or be trained on the client, its output or its protocol;
-  - modify the client, make derivative works of it, or remove its notices or
-    protections;
-  - copy the client, or distribute or share it with anyone, in any form: to
-    give someone the client, tell them to install it themselves with this
-    installer, and they accept this agreement each time;
-  - bypass its license, sign-in, usage-credit or security controls.
-
-Breaking this agreement ends your license to use the client.
-
-EULA
+# terms_plain FILE: the Terms' Markdown as plain text: no HTML, no emphasis marks, a link
+# as its text and its address.
+terms_plain() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -0777 -pe '
+            s/<!--.*?-->\n?//gs; s/<[^>]+>//g;
+            s/\[([^\]]+)\]\((\/[^)]*)\)/$1 (https:\/\/testflows.com$2)/g;
+            s/\[([^\]]+)\]\(([^)]*)\)/$1 ($2)/g;
+            s/\*\*([^*]+)\*\*/$1/g; s/`([^`]+)`/$1/g; s/^#+ //mg;' "$1"
+    else
+        python3 -c '
+import re, sys
+t = open(sys.argv[1], encoding="utf-8").read()
+t = re.sub(r"<!--.*?-->\n?", "", t, flags=re.S)
+t = re.sub(r"<[^>]+>", "", t)
+t = re.sub(r"\[([^\]]+)\]\((/[^)]*)\)", r"\1 (https://testflows.com\2)", t)
+t = re.sub(r"\[([^\]]+)\]\(([^)]*)\)", r"\1 (\2)", t)
+t = re.sub(r"\*\*([^*]+)\*\*", r"\1", t)
+t = re.sub(r"`([^`]+)`", r"\1", t)
+t = re.sub(r"^#+ ", "", t, flags=re.M)
+sys.stdout.write(t)' "$1"
+    fi
 }
 
 # version_valid VERSION: whether it is a release version, YYYYMMDD-HHMM.
@@ -331,7 +343,7 @@ choose_helper() {
     else
         die "Signing in needs perl or python3, and neither is installed." \
             "Install python3 and run this again." \
-            "Or install with an API key curl https://testflows.com/machine/install -fsS | MACHINE_API_KEY=<key> bash"
+            "Or install with an API key curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
     fi
 }
 
@@ -458,21 +470,21 @@ asked_yes() {
     return 1
 }
 
-# sign_in: an account, by an API key in MACHINE_API_KEY, or by a person at the terminal
+# sign_in: an account, by an API key in TESTFLOWS_MACHINE_API_KEY, or by a person at the terminal
 # signing in or signing up. Every release file is given to an account alone, so each copy
 # of the client handed out names one.
 sign_in() {
     API_HEADERS="$(mktemp)" || die "Could not create a temporary file."
     API_BODY="$(mktemp)" || die "Could not create a temporary file."
     chmod 600 "$API_HEADERS"
-    if [ -n "${MACHINE_API_KEY:-}" ]; then
-        printf 'Authorization: Bearer %s\n' "$MACHINE_API_KEY" > "$API_HEADERS"
+    if [ -n "${TESTFLOWS_MACHINE_API_KEY:-}" ]; then
+        printf 'Authorization: Bearer %s\n' "$TESTFLOWS_MACHINE_API_KEY" > "$API_HEADERS"
         SIGNED_IN="api"
         return 0
     fi
     ( : < /dev/tty ) 2>/dev/null || die "Installing the client needs a sign-in, and there is no terminal to ask at." \
-        "Install with an API key curl https://testflows.com/machine/install -fsS | MACHINE_API_KEY=<key> bash"
-    say "To install the client, sign in to your TestFlows account or create one."
+        "Install with an API key curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
+    say "To install the client, sign in to your TestFlows™ account or sign up for one."
     local email new
     while :; do
         ask "Do you have an account? [y/n] "
@@ -488,8 +500,13 @@ sign_in() {
         warn "That is not an email address."
     done
     if $new; then
+        local version
+        api_call GET /terms/current
+        [ "$API_STATUS" = "200" ] || die "Could not read the Terms of Service's version. $(api_refusal)"
+        version="$(json_get "$API_BODY" version)"
+        read_terms "$version"
         say "Creating an account for $email"
-        api_pow POST /signup/start "$(json_object email "$email")"
+        api_pow POST /signup/start "$(json_object email "$email" terms_version "$version")"
         [ "$API_STATUS" = "204" ] || die "The account was not created. $(api_refusal)"
         ask "Open the link we sent to $email to confirm it, then press Enter. "
     fi
@@ -528,25 +545,61 @@ sign_in_code() {
     die "Not signed in." "Run the installer again to send a new code."
 }
 
-# accept_eula: the account's acceptance of the current client EULA, asked for when it has
-# none. A person accepts; an API key's account must have accepted at a terminal already.
-accept_eula() {
+# terms_dated FILE: the version a text of the Terms is, YYYY-MM-DD from its "Last updated"
+# date; nothing when it has none.
+terms_dated() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -0777 -ne '
+            my %m; @m{qw(January February March April May June July August September October November December)} = (1 .. 12);
+            printf "%04d-%02d-%02d", $3, $m{$2}, $1 if /Last updated:\s*(\d{1,2}) ([A-Z][a-z]+) (\d{4})/ && $m{$2};' "$1"
+    else
+        python3 -c '
+import datetime, re, sys
+found = re.search(r"Last updated:\s*(\d{1,2} [A-Z][a-z]+ \d{4})", open(sys.argv[1], encoding="utf-8").read())
+if found:
+    try:
+        print(datetime.datetime.strptime(found.group(1), "%d %B %Y").strftime("%Y-%m-%d"), end="")
+    except ValueError:
+        pass' "$1"
+    fi
+}
+
+# read_terms VERSION: show the published Terms of Service, which must be VERSION, and ask
+# for their acceptance. Another version means the text is being changed, and accepting it
+# now would accept words not read.
+read_terms() {
+    local version="$1" text
+    text="$(mktemp)" || die "Could not create a temporary file."
+    fetch "$TERMS_URL" "$text" || { rm -f "$text"; die "Could not download the Terms of Service." "Check your connection and try again."; }
+    if [ "$(terms_dated "$text")" != "$version" ]; then
+        rm -f "$text"
+        die "The Terms of Service are being updated. Try again shortly."
+    fi
+    say "The Terms of Service of $version follow, as at $TERMS_PAGE"
+    say "They license the client. Read them, then accept them or not."
+    show_terms "$text"
+    rm -f "$text"
+    asked_yes "Accept the Terms of Service of $version? [y/N] " \
+        || die "The client is not installed. It needs the Terms of Service accepted."
+}
+
+# accept_terms: the account's acceptance of the current Terms of Service, asked for when it
+# has none. A person accepts; an API key's account must have accepted already.
+accept_terms() {
     local version accepted
-    api_call GET /client/eula
-    [ "$API_STATUS" = "200" ] || die "Could not read the client EULA. $(api_refusal)"
+    api_call GET /terms
+    [ "$API_STATUS" = "200" ] || die "Could not read the Terms of Service's version. $(api_refusal)"
     version="$(json_get "$API_BODY" version)"
     accepted="$(json_get "$API_BODY" accepted)"
     [ "$accepted" = "true" ] && return 0
     if [ "$SIGNED_IN" = "api" ]; then
-        die "This API key's account has not accepted the client EULA of $version." \
-            "Accept it by installing at a terminal curl https://testflows.com/machine/install -fsS | bash"
+        die "This API key's account has not accepted the Terms of Service of $version." \
+            "Accept them by installing at a terminal curl https://testflows.com/machine/install -fsS | bash"
     fi
-    $EULA_SHOWN || show_eula
-    asked_yes "Accept the EULA? [y/N] " \
-        || die "The client is not installed. It needs the EULA accepted."
-    api_call POST /client/eula/accept "$(json_object version "$version")"
-    [ "$API_STATUS" = "204" ] || die "The EULA was not accepted. $(api_refusal)"
-    ok "Accepted the EULA $version for $ACCOUNT"
+    read_terms "$version"
+    api_call POST /terms/accept "$(json_object version "$version")"
+    [ "$API_STATUS" = "204" ] || die "The Terms of Service were not accepted. $(api_refusal)"
+    ok "Accepted the Terms of Service of $version for $ACCOUNT"
 }
 
 # sign_out: end the installer's sign-in, so it leaves no live token behind. An API key is
@@ -591,21 +644,14 @@ release_fetch() {
     return 1
 }
 
-# signed_in_for MODE: an account that may download releases, before the first one is
-# downloaded. Installing or downloading the client shows its EULA first; --list and
-# --checksum show it only when the account has not accepted it yet. A mirror needs none.
+# signed_in_for: an account that may download releases, before the first one is
+# downloaded: signed in, and the current Terms of Service accepted. A mirror needs none.
 signed_in_for() {
-    if [ -z "$MIRROR" ]; then
-        [ "$DOWNLOADER" = "curl" ] || die "Signing in needs curl." "Install curl and run this again."
-        choose_helper
-    fi
-    if [ "$1" = "install" ] || [ "$1" = "download" ]; then
-        show_eula
-        EULA_SHOWN=true
-    fi
     [ -z "$MIRROR" ] || return 0
+    [ "$DOWNLOADER" = "curl" ] || die "Signing in needs curl." "Install curl and run this again."
+    choose_helper
     sign_in
-    accept_eula
+    accept_terms
 }
 
 # on_exit: remove what the install wrote on the way, and sign out.
@@ -1310,7 +1356,7 @@ main() {
     # A list is the same on every system, so it is answered before the platform check.
     if [ "$mode" = "list" ]; then
         choose_downloader
-        signed_in_for "$mode"
+        signed_in_for
         list_versions
         return 0
     fi
@@ -1324,9 +1370,9 @@ main() {
         check_platform
     fi
     choose_downloader
-    [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as $([ -n "$MIRROR" ] && echo MACHINE_BASE_URL || echo MACHINE_API_URL) asks."
+    [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as $([ -n "$MIRROR" ] && echo MACHINE_BASE_URL || echo TESTFLOWS_MACHINE_API_URL) asks."
 
-    signed_in_for "$mode"
+    signed_in_for
 
     local release
     if [ -n "${MACHINE_VERSION:-}" ]; then
