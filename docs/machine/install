@@ -3,6 +3,13 @@
 #
 #   curl https://testflows.com/machine/install -fsS | bash
 #
+# The client is given to a TestFlows account. The script signs in, or creates an account,
+# at the terminal: an email, and a code sent to it. The Terms of Service license the
+# client, https://testflows.com/machine/legal/terms-of-service/. An account that has not
+# accepted their current version is shown them in full, and accepts them before anything
+# is downloaded. Without a terminal it takes an API key, TESTFLOWS_MACHINE_API_KEY, whose account
+# has accepted them. It signs out when it ends; `machine login` signs the client in.
+#
 # It downloads one file, the `machine` binary, checks it against the SHA-256
 # checksum published next to it, and puts it in ~/.local/bin. It also writes
 # machine-env there, a shell in which `machine` is this client. It never asks for
@@ -34,7 +41,10 @@
 #   MACHINE_NO_MODIFY_PATH  set to anything, the script does not ask to put the install
 #                         directory on PATH in your shell's startup file. It asks only at
 #                         a terminal, and writes only when the answer is yes.
-#   MACHINE_BASE_URL      where releases are downloaded from
+#   TESTFLOWS_MACHINE_API_KEY
+#                         an API key to install with, in place of signing in at a
+#                         terminal; the client reads the same variable
+#   MACHINE_BASE_URL      a mirror to download releases from, with no sign-in, for testing
 #
 # Everything happens inside main(), which is only called on the last line. If the
 # download is cut short, bash never reaches that line and nothing runs.
@@ -50,11 +60,36 @@ fi
 
 set -euo pipefail
 
-BASE_URL="${MACHINE_BASE_URL:-https://testflows-machine-client.fsn1.your-objectstorage.com}"
-# A release from the official server must be signed; a mirror named by MACHINE_BASE_URL,
-# a test server, may not be, and is only warned about.
+# The service an account signs in to, which gives a signed-in account a link to each
+# release file. A mirror named by MACHINE_BASE_URL, a test server, is read as it is, with
+# no sign-in.
+API_URL="${TESTFLOWS_MACHINE_API_URL:-https://machine-api.testflows.com}"
+MIRROR="${MACHINE_BASE_URL:-}"
+MIRROR="${MIRROR%/}"
+BASE_URL="${MIRROR:-$API_URL}"
+# A release from the official server must be signed; a mirror may not be, and is only
+# warned about.
 OFFICIAL=true
-[ -n "${MACHINE_BASE_URL:-}" ] && OFFICIAL=false
+[ -n "$MIRROR" ] && OFFICIAL=false
+# Rounds of proof of work a sign-in answers before it gives up: the service asks for more
+# when one email is asked for often.
+POW_ROUNDS=3
+# Codes a person may type before the installer stops and they start again.
+CODE_TRIES=3
+HELPER=""
+API_POW=""
+API_HEADERS=""
+API_BODY=""
+API_STATUS=""
+SIGNED_IN=""
+ACCOUNT=""
+# The Terms of Service, which license the client: the Markdown of their page on
+# testflows.com, which the installer shows in full before they are accepted.
+TERMS_URL="${MACHINE_TERMS_URL:-https://testflows.com/machine/legal/terms-of-service.md}"
+TERMS_PAGE="https://testflows.com/machine/legal/terms-of-service/"
+# Whether a download shows a progress bar: the client's own file does, and the small
+# files around it, its checksum and the version names, are fetched quietly.
+FETCH_PROGRESS=false
 
 # The release signing keys. Every release's checksum files are signed with both: the GPG
 # key for gpg, the RSA key for openssl. Fingerprint 5F3621A5081FF68BFF2581FDB280231700CCCA66.
@@ -191,7 +226,7 @@ fetch_once() {
     FETCH_STATUS="retry"
     if [ "$DOWNLOADER" = "curl" ]; then
         local progress="-sS" code
-        [ -t 2 ] && progress="--progress-bar"
+        $FETCH_PROGRESS && [ -t 2 ] && progress="--progress-bar"
         if code="$(curl -fL --proto "$PROTOCOLS" --proto-redir "$PROTOCOLS" --tlsv1.2 \
             --connect-timeout 15 $progress -w '%{http_code}' -o "$2" "$1")"; then
             return 0
@@ -230,12 +265,64 @@ Options:
   --no-checksum   install without checking the checksum, or the signature
   -h, --help      show this help
 
+The client is given to a TestFlows account. The installer signs in, or creates an
+account, with an email and a code sent to it. The Terms of Service license the client.
+An account accepts their current version, which the installer shows in full, before
+anything is downloaded: https://testflows.com/machine/legal/terms-of-service/
+
 Environment:
   MACHINE_INSTALL_DIR   where to put machine-env, and machine when no other program
                         called machine is on PATH (default: ~/.local/bin)
   MACHINE_VERSION       a version to use, as --version names one
+  TESTFLOWS_MACHINE_API_KEY
+                        an API key to install with, where there is no terminal to
+                        sign in at; the client reads the same variable. Its account
+                        must have accepted the Terms of Service.
   MACHINE_NO_MODIFY_PATH  set to anything, do not ask to put the directory on PATH
 USAGE
+}
+
+# show_terms FILE: the Terms of Service, their whole text, at the terminal, to read before
+# they are accepted. FILE is their page's own Markdown from testflows.com, so the text read
+# is the text published; it is shown as plain text in a pager the person scrolls through.
+show_terms() {
+    local text pager
+    text="$(mktemp)" || die "Could not create a temporary file."
+    terms_plain "$1" > "$text"
+    if command -v less >/dev/null 2>&1; then
+        # In a less prompt a full stop is special and is written \.
+        pager=(less -R -P 'The Terms of Service\. Space scrolls, q when read\.')
+    elif command -v more >/dev/null 2>&1; then
+        pager=(more)
+    else
+        pager=(cat)
+    fi
+    "${pager[@]}" "$text" < /dev/tty > /dev/tty || cat "$text" > /dev/tty
+    rm -f "$text"
+}
+
+# terms_plain FILE: the Terms' Markdown as plain text: no HTML, no emphasis marks, a link
+# as its text and its address.
+terms_plain() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -0777 -pe '
+            s/<!--.*?-->\n?//gs; s/<[^>]+>//g;
+            s/\[([^\]]+)\]\((\/[^)]*)\)/$1 (https:\/\/testflows.com$2)/g;
+            s/\[([^\]]+)\]\(([^)]*)\)/$1 ($2)/g;
+            s/\*\*([^*]+)\*\*/$1/g; s/`([^`]+)`/$1/g; s/^#+ //mg;' "$1"
+    else
+        python3 -c '
+import re, sys
+t = open(sys.argv[1], encoding="utf-8").read()
+t = re.sub(r"<!--.*?-->\n?", "", t, flags=re.S)
+t = re.sub(r"<[^>]+>", "", t)
+t = re.sub(r"\[([^\]]+)\]\((/[^)]*)\)", r"\1 (https://testflows.com\2)", t)
+t = re.sub(r"\[([^\]]+)\]\(([^)]*)\)", r"\1 (\2)", t)
+t = re.sub(r"\*\*([^*]+)\*\*", r"\1", t)
+t = re.sub(r"`([^`]+)`", r"\1", t)
+t = re.sub(r"^#+ ", "", t, flags=re.M)
+sys.stdout.write(t)' "$1"
+    fi
 }
 
 # version_valid VERSION: whether it is a release version, YYYYMMDD-HHMM.
@@ -246,15 +333,342 @@ version_valid() {
     esac
 }
 
+# choose_helper: perl or python3, which work out the sign-in's proof of work and read the
+# service's answers. bash has neither SHA-256 nor JSON.
+choose_helper() {
+    if command -v perl >/dev/null 2>&1 && perl -MDigest::SHA -MJSON::PP -e 1 2>/dev/null; then
+        HELPER="perl"
+    elif command -v python3 >/dev/null 2>&1; then
+        HELPER="python3"
+    else
+        die "Signing in needs perl or python3, and neither is installed." \
+            "Install python3 and run this again." \
+            "Or install with an API key curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
+    fi
+}
+
+# json_get FILE KEY: a top-level value of a JSON object, true or false for a boolean;
+# fails when it is not there.
+json_get() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -MJSON::PP -e '
+            local $/; open(my $f, "<", $ARGV[0]) or exit 1;
+            my $d = eval { decode_json(<$f>) }; exit 1 unless ref($d) eq "HASH";
+            my $v = $d->{$ARGV[1]}; exit 1 unless defined $v;
+            print JSON::PP::is_bool($v) ? ($v ? "true" : "false") : $v;' "$1" "$2"
+    else
+        python3 -c '
+import json, sys
+try:
+    d = json.load(open(sys.argv[1]))
+except ValueError:
+    sys.exit(1)
+v = d.get(sys.argv[2]) if isinstance(d, dict) else None
+if v is None:
+    sys.exit(1)
+print(("true" if v else "false") if isinstance(v, bool) else v, end="")' "$1" "$2"
+    fi
+}
+
+# json_object KEY VALUE...: a JSON object of string values, quoted as JSON quotes them:
+# an email is typed by a person and may hold anything.
+json_object() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -MJSON::PP -e 'my %d = @ARGV; print JSON::PP->new->canonical->encode(\%d)' "$@"
+    else
+        python3 -c 'import json, sys; a = sys.argv[1:]; print(json.dumps(dict(zip(a[::2], a[1::2]))), end="")' "$@"
+    fi
+}
+
+# pow_solve SUBJECT BITS BUCKET_SECONDS: a stamp whose SHA-256 has BITS leading zero bits,
+# as the service asks of a sign-in so that a flood of them costs work.
+pow_solve() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -MDigest::SHA=sha256 -e '
+            my ($subject, $bits, $secs) = @ARGV;
+            my $bucket = int(time() / $secs);
+            my $rand = join "", map { sprintf "%02x", int(rand(256)) } 1 .. 8;
+            my $prefix = "1:$bits:$bucket:$subject:$rand:";
+            my ($whole, $rest) = (int($bits / 8), $bits % 8);
+            for (my $n = 0; ; $n++) {
+                my $h = sprintf "%x", $n;
+                my $d = sha256($prefix . $h);
+                next if substr($d, 0, $whole) ne ("\0" x $whole);
+                next if $rest && (ord(substr($d, $whole, 1)) >> (8 - $rest));
+                print "1:$bits:$bucket:$rand:$h";
+                last;
+            }' "$1" "$2" "$3"
+    else
+        python3 -c '
+import hashlib, secrets, sys, time
+subject, bits, secs = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
+bucket = int(time.time()) // secs
+rand = secrets.token_hex(8)
+prefix = hashlib.sha256(f"1:{bits}:{bucket}:{subject}:{rand}:".encode())
+limit = 1 << (256 - bits)
+n = 0
+while True:
+    h = prefix.copy()
+    h.update(format(n, "x").encode())
+    if int.from_bytes(h.digest(), "big") < limit:
+        break
+    n += 1
+print("1:%d:%d:%s:%x" % (bits, bucket, rand, n), end="")' "$1" "$2" "$3"
+    fi
+}
+
+# api_call METHOD PATH [BODY]: one request to the service, its answer in API_BODY and its
+# status in API_STATUS, 000 when there was none. The token rides in a header file, never
+# on a command line, where ps shows it to every user of the system.
+api_call() {
+    local method="$1" path="$2" body="${3:-}" args=()
+    : > "$API_BODY"
+    args=(-sS -X "$method" --proto "$PROTOCOLS" --tlsv1.2 --connect-timeout 15
+        -A "machine-install" -H "Accept: application/json" -H @"$API_HEADERS"
+        -o "$API_BODY" -w '%{http_code}')
+    [ -z "$API_POW" ] || args+=(-H "X-Tf-Pow: $API_POW")
+    [ -z "$body" ] || args+=(-H "Content-Type: application/json" --data-binary "$body")
+    API_STATUS="$(curl "${args[@]}" "$API_URL$path" 2>/dev/null)" || API_STATUS="${API_STATUS:-000}"
+}
+
+# api_pow METHOD PATH BODY: api_call, answering the service's proof-of-work challenge,
+# again when it asks for more work, at most POW_ROUNDS times.
+api_pow() {
+    local round subject bits secs
+    API_POW=""
+    api_call "$1" "$2" "$3"
+    for ((round = 0; round < POW_ROUNDS; round++)); do
+        [ "$API_STATUS" = "400" ] || break
+        [ "$(json_get "$API_BODY" error 2>/dev/null)" = "proof_of_work_required" ] || break
+        subject="$(json_get "$API_BODY" subject)" || break
+        bits="$(json_get "$API_BODY" required_difficulty)" || break
+        secs="$(json_get "$API_BODY" bucket_seconds)" || break
+        API_POW="$(pow_solve "$subject" "$bits" "$secs")"
+        api_call "$1" "$2" "$3"
+    done
+    API_POW=""
+}
+
+# api_refusal: the service's own words for a refusal, or what failed without them.
+api_refusal() {
+    json_get "$API_BODY" error 2>/dev/null \
+        || { [ "$API_STATUS" = "000" ] && printf 'The service could not be reached.'; } \
+        || printf 'The service answered %s.' "$API_STATUS"
+}
+
+# ask PROMPT: a line typed at the terminal. With curl | bash the script is standard
+# input, so the answer is read from the terminal itself.
+ask() {
+    printf '%s➤%s %s' "$BOLD" "$RESET" "$1" > /dev/tty
+    IFS= read -r ANSWER < /dev/tty || ANSWER=""
+}
+
+# asked_yes PROMPT: whether the answer is yes.
+asked_yes() {
+    ask "$1"
+    case "$ANSWER" in y | Y | yes | Yes | YES) return 0 ;; esac
+    return 1
+}
+
+# sign_in: an account, by an API key in TESTFLOWS_MACHINE_API_KEY, or by a person at the terminal
+# signing in or signing up. Every release file is given to an account alone, so each copy
+# of the client handed out names one.
+sign_in() {
+    API_HEADERS="$(mktemp)" || die "Could not create a temporary file."
+    API_BODY="$(mktemp)" || die "Could not create a temporary file."
+    chmod 600 "$API_HEADERS"
+    if [ -n "${TESTFLOWS_MACHINE_API_KEY:-}" ]; then
+        printf 'Authorization: Bearer %s\n' "$TESTFLOWS_MACHINE_API_KEY" > "$API_HEADERS"
+        SIGNED_IN="api"
+        return 0
+    fi
+    ( : < /dev/tty ) 2>/dev/null || die "Installing the client needs a sign-in, and there is no terminal to ask at." \
+        "Install with an API key curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
+    say "To install the client, sign in to your TestFlows™ account or sign up for one."
+    local email new
+    while :; do
+        ask "Do you have an account? [y/n] "
+        case "$ANSWER" in
+            y | Y | yes | Yes | YES) new=false; break ;;
+            n | N | no | No | NO) new=true; break ;;
+        esac
+    done
+    while :; do
+        ask "Email: "
+        email="$(printf '%s' "$ANSWER" | tr -d ' \t')"
+        case "$email" in ?*@?*.?*) break ;; esac
+        warn "That is not an email address."
+    done
+    if $new; then
+        local version
+        api_call GET /terms/current
+        [ "$API_STATUS" = "200" ] || die "Could not read the Terms of Service's version. $(api_refusal)"
+        version="$(json_get "$API_BODY" version)"
+        read_terms "$version"
+        say "Creating an account for $email"
+        api_pow POST /signup/start "$(json_object email "$email" terms_version "$version")"
+        [ "$API_STATUS" = "204" ] || die "The account was not created. $(api_refusal)"
+        ask "Open the link we sent to $email to confirm it, then press Enter. "
+    fi
+    sign_in_code "$email"
+    ok "Signed in as $email"
+    ACCOUNT="$email"
+}
+
+# sign_in_code EMAIL: send a sign-in code to EMAIL and take it from the terminal, at
+# most CODE_TRIES times; r sends a new code.
+sign_in_code() {
+    local email="$1" try code token
+    say "Sending a sign-in code to $email"
+    api_pow POST /login/start "$(json_object email "$email")"
+    [ "$API_STATUS" = "204" ] || die "No code was sent. $(api_refusal)"
+    for ((try = 1; try <= CODE_TRIES; try++)); do
+        ask "Code, or r to send a new one: "
+        code="$(printf '%s' "$ANSWER" | tr -d ' \t')"
+        if [ "$code" = "r" ]; then
+            api_pow POST /login/start "$(json_object email "$email")"
+            [ "$API_STATUS" = "204" ] || die "No code was sent. $(api_refusal)"
+            say "Sent a new code to $email"
+            try=$((try - 1))
+            continue
+        fi
+        [ -n "$code" ] || { try=$((try - 1)); continue; }
+        api_pow POST /login/verify "$(json_object email "$email" code "$code")"
+        if [ "$API_STATUS" = "200" ] && token="$(json_get "$API_BODY" access_token)"; then
+            printf 'Authorization: Bearer %s\n' "$token" > "$API_HEADERS"
+            SIGNED_IN="access"
+            return 0
+        fi
+        [ "$API_STATUS" = "400" ] || die "Not signed in. $(api_refusal)"
+        warn "That code is not right, or it expired."
+    done
+    die "Not signed in." "Run the installer again to send a new code."
+}
+
+# terms_dated FILE: the version a text of the Terms is, YYYY-MM-DD from its "Last updated"
+# date; nothing when it has none.
+terms_dated() {
+    if [ "$HELPER" = "perl" ]; then
+        perl -0777 -ne '
+            my %m; @m{qw(January February March April May June July August September October November December)} = (1 .. 12);
+            printf "%04d-%02d-%02d", $3, $m{$2}, $1 if /Last updated:\s*(\d{1,2}) ([A-Z][a-z]+) (\d{4})/ && $m{$2};' "$1"
+    else
+        python3 -c '
+import datetime, re, sys
+found = re.search(r"Last updated:\s*(\d{1,2} [A-Z][a-z]+ \d{4})", open(sys.argv[1], encoding="utf-8").read())
+if found:
+    try:
+        print(datetime.datetime.strptime(found.group(1), "%d %B %Y").strftime("%Y-%m-%d"), end="")
+    except ValueError:
+        pass' "$1"
+    fi
+}
+
+# read_terms VERSION: show the published Terms of Service, which must be VERSION, and ask
+# for their acceptance. Another version means the text is being changed, and accepting it
+# now would accept words not read.
+read_terms() {
+    local version="$1" text
+    text="$(mktemp)" || die "Could not create a temporary file."
+    fetch "$TERMS_URL" "$text" || { rm -f "$text"; die "Could not download the Terms of Service." "Check your connection and try again."; }
+    if [ "$(terms_dated "$text")" != "$version" ]; then
+        rm -f "$text"
+        die "The Terms of Service are being updated. Try again shortly."
+    fi
+    say "The Terms of Service of $version follow, as at $TERMS_PAGE"
+    say "They license the client. Read them, then accept them or not."
+    show_terms "$text"
+    rm -f "$text"
+    asked_yes "Accept the Terms of Service of $version? [y/N] " \
+        || die "The client is not installed. It needs the Terms of Service accepted."
+}
+
+# accept_terms: the account's acceptance of the current Terms of Service, asked for when it
+# has none. A person accepts; an API key's account must have accepted already.
+accept_terms() {
+    local version accepted
+    api_call GET /terms
+    [ "$API_STATUS" = "200" ] || die "Could not read the Terms of Service's version. $(api_refusal)"
+    version="$(json_get "$API_BODY" version)"
+    accepted="$(json_get "$API_BODY" accepted)"
+    [ "$accepted" = "true" ] && return 0
+    if [ "$SIGNED_IN" = "api" ]; then
+        die "This API key's account has not accepted the Terms of Service of $version." \
+            "Accept them by installing at a terminal curl https://testflows.com/machine/install -fsS | bash"
+    fi
+    read_terms "$version"
+    api_call POST /terms/accept "$(json_object version "$version")"
+    [ "$API_STATUS" = "204" ] || die "The Terms of Service were not accepted. $(api_refusal)"
+    ok "Accepted the Terms of Service of $version for $ACCOUNT"
+}
+
+# sign_out: end the installer's sign-in, so it leaves no live token behind. An API key is
+# the person's own and stays.
+sign_out() {
+    if [ "$SIGNED_IN" = "access" ]; then
+        api_call POST /logout
+    fi
+    SIGNED_IN=""
+    rm -f "${API_HEADERS:-}" "${API_BODY:-}"
+}
+
+# release_url PATH: where to download a release file from. A mirror's own address; else a
+# link the service signs for the account, valid for minutes. Fails with 1 for a file the
+# service has not, 2 when it could not be asked, and 3 when it refused, its words then in
+# API_BODY. Run in $(...), so it returns a code where die would end only the subshell.
+release_url() {
+    if [ -n "$MIRROR" ]; then
+        printf '%s/%s' "$MIRROR" "$1"
+        return 0
+    fi
+    api_call GET "/client/releases/$1"
+    case "$API_STATUS" in
+        200) json_get "$API_BODY" url ;;
+        404) return 1 ;;
+        401 | 403) return 3 ;;
+        *) return 2 ;;
+    esac
+}
+
+# release_fetch PATH DEST: download a release file, as fetch does; FETCH_STATUS is "final"
+# for a file there is not.
+release_fetch() {
+    local url status=0
+    url="$(release_url "$1")" || status=$?
+    case "$status" in
+        0) fetch "$url" "$2"; return ;;
+        1) FETCH_STATUS="final" ;;
+        3) die "$(api_refusal)" ;;
+        *) FETCH_STATUS="retry" ;;
+    esac
+    return 1
+}
+
+# signed_in_for: an account that may download releases, before the first one is
+# downloaded: signed in, and the current Terms of Service accepted. A mirror needs none.
+signed_in_for() {
+    [ -z "$MIRROR" ] || return 0
+    [ "$DOWNLOADER" = "curl" ] || die "Signing in needs curl." "Install curl and run this again."
+    choose_helper
+    sign_in
+    accept_terms
+}
+
+# on_exit: remove what the install wrote on the way, and sign out.
+on_exit() {
+    rm -rf "${TMP:-}" ${TMP:+"$TMP.asc" "$TMP.sig"} "${SUMFILE:-}" ${SUMFILE:+"$SUMFILE.asc" "$SUMFILE.sig"} ${STAGE:+"$STAGE"}
+    sign_out
+}
+
 # latest_version: the version latest/version names. The installer then downloads
 # that version's own files, which never change, so a release published meanwhile
 # cannot pair one release's binary with another's checksum.
 latest_version() {
     local file version
     file="$(mktemp)" || die "Could not create a temporary file."
-    if ! fetch "$BASE_URL/latest/version" "$file"; then
+    if ! release_fetch latest/version "$file"; then
         rm -f "$file"
-        die "Could not download $BASE_URL/latest/version" "Check your connection and try again."
+        die "Could not download the latest version's name." "Check your connection and try again."
     fi
     version="$(tr -d ' \t\r\n' < "$file")"
     rm -f "$file"
@@ -267,7 +681,7 @@ latest_version() {
 list_versions() {
     local file version latest=""
     file="$(mktemp)" || die "Could not create a temporary file."
-    if ! fetch "$BASE_URL/latest/history" "$file"; then
+    if ! release_fetch latest/history "$file"; then
         rm -f "$file"
         die "Could not download the list of versions." "Check your connection and try again."
     fi
@@ -312,12 +726,12 @@ SIGNED_WITH=""
 CHECKSUM_CHECKED=""
 
 # check_signature SUMFILE URL: check the signature on the checksum file downloaded from
-# URL with the release keys, before the checksum is trusted. gpg checks URL.asc; without
-# gpg, openssl checks URL.sig. A missing or bad signature on an official release stops
+# check_signature SUMFILE PATH: check the checksum SUMFILE, the release file PATH, with the
+# release keys, before it is trusted. gpg checks PATH.asc; without gpg, openssl checks PATH.sig. A missing or bad signature on an official release stops
 # the install: one that could be removed from the server would protect nothing. Sets
 # SIGNED_WITH to what checked it, or leaves it empty when nothing could.
 check_signature() {
-    local sumfile="$1" url="$2" tool sig home ring key
+    local sumfile="$1" path="$2" tool sig home ring key
     SIGNED_WITH=""
     if $NO_SIGNATURE; then
         warn "--no-signature: the release signature was not checked."
@@ -331,7 +745,7 @@ check_signature() {
         warn "Neither gpg nor openssl is installed, so the release signature was not checked."
         return 0
     fi
-    if ! fetch "$url.${sig##*.}" "$sig" 2>/dev/null; then
+    if ! release_fetch "$path.${sig##*.}" "$sig" 2>/dev/null; then
         rm -f "$sig"
         if $OFFICIAL; then
             die "This release's signature could not be downloaded, so it was not installed." \
@@ -367,13 +781,13 @@ check_signature() {
     SIGNED_WITH="$tool"
 }
 
-# verify_download URL: check the download TMP against the checksum published at
-# URL.sha256, once that checksum's signature is checked.
+# verify_download PATH: check the download TMP against the checksum published as
+# PATH.sha256, once that checksum's signature is checked.
 verify_download() {
-    local url="$1" want got
-    fetch "$url.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
+    local path="$1" want got
+    release_fetch "$path.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
         "The install is stopped rather than trusting a file it can't check."
-    check_signature "$SUMFILE" "$url.sha256"
+    check_signature "$SUMFILE" "$path.sha256"
     want="$(checksum_from "$SUMFILE")"
     got="$(sha256_of "$TMP")"
     if [ "$got" != "$want" ]; then
@@ -444,7 +858,7 @@ download_failed() {
     local release="$1" probe
     if [ "$FETCH_STATUS" = "final" ]; then
         probe="$(mktemp)" || die "Could not create a temporary file."
-        if fetch_once "$BASE_URL/$release/machine.sha256" "$probe" 2>/dev/null; then
+        if release_fetch "$release/machine.sha256" "$probe" 2>/dev/null; then
             rm -f "$probe"
             if [ -n "${MACHINE_VERSION:-}" ]; then
                 die "Version $release has no build for $PLATFORM." \
@@ -464,9 +878,8 @@ download_failed() {
 print_checksum() {
     local sum
     TMP="$(mktemp)" || die "Could not create a temporary file."
-    trap 'rm -f "$TMP" "$TMP.asc" "$TMP.sig"' EXIT
-    fetch "$BASE_URL/$1/$ASSET.sha256" "$TMP" || download_failed "$1"
-    check_signature "$TMP" "$BASE_URL/$1/$ASSET.sha256"
+    release_fetch "$1/$ASSET.sha256" "$TMP" || download_failed "$1"
+    check_signature "$TMP" "$1/$ASSET.sha256"
     sum="$(checksum_from "$TMP")"
     printf '%s  %s\n' "$sum" "$ASSET"
 }
@@ -479,7 +892,9 @@ download_files() {
     local release="$1" name
     say "${BOLD}Downloading the Machine client${RESET} ${DIM}($release, $PLATFORM)${RESET}"
     for name in "$ASSET" "$ASSET.sha256" "$ASSET.sha256.asc" "$ASSET.sha256.sig"; do
-        fetch "$BASE_URL/$release/$name" "$name" || {
+        FETCH_PROGRESS=false
+        [ "$name" = "$ASSET" ] && FETCH_PROGRESS=true
+        release_fetch "$release/$name" "$name" || {
             rm -f "$name"
             download_failed "$release"
         }
@@ -936,9 +1351,12 @@ main() {
         esac
     done
 
+    trap on_exit EXIT
+
     # A list is the same on every system, so it is answered before the platform check.
     if [ "$mode" = "list" ]; then
         choose_downloader
+        signed_in_for
         list_versions
         return 0
     fi
@@ -952,7 +1370,9 @@ main() {
         check_platform
     fi
     choose_downloader
-    [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as MACHINE_BASE_URL asks."
+    [ "$PROTOCOLS" = "=https" ] || warn "Downloading over plain HTTP from $BASE_URL, as $([ -n "$MIRROR" ] && echo MACHINE_BASE_URL || echo TESTFLOWS_MACHINE_API_URL) asks."
+
+    signed_in_for
 
     local release
     if [ -n "${MACHINE_VERSION:-}" ]; then
@@ -977,7 +1397,7 @@ main() {
     [ -n "${HOME:-}" ] || die "HOME is not set." "The client needs a home directory to run."
     local dir="${MACHINE_INSTALL_DIR:-$HOME/.local/bin}"
     local share="${XDG_DATA_HOME:-$HOME/.local/share}/machine"
-    local url="$BASE_URL/$release/$ASSET"
+    local path="$release/$ASSET"
 
     # Where another program is called machine, as /usr/bin/machine is on a Mac, machine goes
     # to a directory that is not on PATH, so no PATH line can hide that program. DIR then
@@ -1001,7 +1421,7 @@ main() {
     mkdir -p "$bin" || die "Could not create $(tilde "$bin")."
 
     # Download next to where it ends up, so the last step is a rename. TMP, SUMFILE and
-    # STAGE are global so the EXIT trap can still see them when die() exits from here.
+    # STAGE are global so on_exit can still see them when die() exits from here.
     local downloads="$bin"
     if [ "$KIND" = "tree" ]; then
         downloads="$share"
@@ -1010,15 +1430,16 @@ main() {
     TMP="$(mktemp "$downloads/.machine.XXXXXX")" || die "Could not write to $(tilde "$downloads")."
     SUMFILE="$TMP.sha256"
     STAGE=""
-    trap 'rm -rf "$TMP" "$SUMFILE" "$SUMFILE.asc" "$SUMFILE.sig" ${STAGE:+"$STAGE"}' EXIT
 
-    fetch "$url" "$TMP" || download_failed "$release"
+    FETCH_PROGRESS=true
+    release_fetch "$path" "$TMP" || download_failed "$release"
+    FETCH_PROGRESS=false
     [ -s "$TMP" ] || die "The download was empty."
 
     if $NO_CHECKSUM; then
         warn "--no-checksum: neither the checksum nor the signature was checked."
     else
-        verify_download "$url"
+        verify_download "$path"
     fi
 
     local after
@@ -1033,7 +1454,9 @@ main() {
         mv -f "$TMP" "$target"
     fi
     rm -f "$SUMFILE"
-    trap - EXIT
+    TMP=""
+    SUMFILE=""
+    STAGE=""
 
     local env_written=true
     install_env "$dir" || env_written=false

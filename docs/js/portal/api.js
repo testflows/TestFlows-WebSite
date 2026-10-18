@@ -13,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=dd819d081f9e";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=dd819d081f9e";
-import { setSession, clearSession } from "./session.js?v=dd819d081f9e";
+import { solve, currentBucket } from "./hashcash.js?v=b6a043dd1a69";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=b6a043dd1a69";
+import { setSession, clearSession } from "./session.js?v=b6a043dd1a69";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -201,9 +201,26 @@ async function requestPow(method, path, body, opts = {}) {
   return resp;
 }
 
-/** @param {string} email @param {() => void} [onPow] */
-export async function signupStart(email, onPow) {
-  const resp = await requestPow("POST", "/signup/start", { email }, { onPow });
+/** The current version of the Terms of Service, which a signup accepts. */
+export async function termsCurrent() {
+  const resp = await request("GET", "/terms/current", null);
+  if (resp.status === 200 && resp.data) {
+    return String(resp.data.version);
+  }
+  fail(resp, "Could not read the Terms of Service.");
+}
+
+/**
+ * Request a signup link, accepting the Terms of Service of `termsVersion`.
+ * @param {string} email @param {string} termsVersion @param {() => void} [onPow]
+ */
+export async function signupStart(email, termsVersion, onPow) {
+  const resp = await requestPow(
+    "POST",
+    "/signup/start",
+    { email, terms_version: termsVersion },
+    { onPow },
+  );
   if (resp.status === 204) {
     return;
   }

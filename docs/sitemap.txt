@@ -1,5 +1,10 @@
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
+https://testflows.com/machine/legal/terms-of-service/index.html
+https://testflows.com/machine/legal/terms-of-service.md
+https://testflows.com/machine/portal/signup/index.html
+https://testflows.com/legal/index.html
+https://testflows.com/legal.md
 https://testflows.com/contact.html
 https://testflows.com/contact.md
 https://testflows.com/docs/machine/index.html
@@ -10,7 +15,6 @@ https://testflows.com/index.html
 https://testflows.com/index.md
 https://testflows.com/docs/framework/index.html
 https://testflows.com/docs/framework.md
-https://testflows.com/machine/portal/signup/index.html
 https://testflows.com/machine/index.html
 https://testflows.com/machine.md
 https://testflows.com/docs/index.html
@@ -49,10 +53,6 @@ https://testflows.com/legal/privacy-policy/index.html
 https://testflows.com/legal/privacy-policy.md
 https://testflows.com/legal/terms-of-use/index.html
 https://testflows.com/legal/terms-of-use.md
-https://testflows.com/machine/legal/terms-of-service/index.html
-https://testflows.com/machine/legal/terms-of-service.md
-https://testflows.com/legal/index.html
-https://testflows.com/legal.md
 https://testflows.com/machine/portal/login/index.html
 https://testflows.com/blog/working-with-requirements-just-like-with-code/
 https://testflows.com/blog/working-with-requirements-just-like-with-code.md

@@ -2,7 +2,7 @@
 
 # Terms of Service
 
-<p class="legal-updated">Last updated: 26 July 2026</p>
+<p class="legal-updated">Last updated: 18 October 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -14,6 +14,8 @@ TestFlows™ Machine websites, APIs, clients, or related services (the
 (the “**Terms**”), the [Acceptable Use Policy](/machine/legal/acceptable-use.md), the
 [Privacy Policy](/machine/legal/privacy-policy.md), and the
 [Usage Credit Terms](/machine/legal/usage-credit.md) (together, the “**Agreement**”).
+You accept these Terms when you create an account, and again when the Machine
+client is downloaded and these Terms changed since you last accepted them.
 
 If you accept for an organization, you represent that you have authority to
 bind it. If you do not agree, do not use the Services.
@@ -33,6 +35,36 @@ We may modify, suspend, or discontinue features (including Free-tier
 allowances) with reasonable notice when practicable. Preview or beta features
 are provided as-is and may change or end without notice. We do not provide
 legal, financial, or other professional advice; workload outputs are yours.
+
+**The Machine client.** The Machine client is the programs `machine` and
+`machine-env`, the compiled core the TestFlows Machine Python SDK runs on, and
+their updates (the “**Client**”). The Python SDK `testflows.machine` is licensed
+under the Apache License 2.0 and is not the Client. We grant you a limited,
+non-exclusive, non-transferable, revocable license to install and run the Client
+on computers you control, including the build machines and containers you run,
+only to use the Services for your internal business purposes. The Client is
+licensed, not sold. Only a copy downloaded with the official installer by your
+account is licensed. You may keep copies of it on
+computers, backups, build caches and container images that you control, used by
+you and your organization alone. Except where the law does not allow this
+restriction, you may not, and may not let anyone or anything:
+
+- reverse engineer, decompile or disassemble the Client, or try to obtain its
+  source code, protocol or inner workings;
+- copy, reimplement or imitate the Client or the Services, or build a product
+  that competes with them;
+- give the Client to an AI system, or to anyone, to reproduce it, recover its
+  protocol, train a model on it, or do anything else this list forbids. An AI
+  system may operate the Client and read its output for your own work;
+- modify the Client, or remove its notices, signatures or protections;
+- distribute, publish, share or host the Client, or make it available to others
+  in any form, including in an image or a package for others to use. Anyone else
+  gets the Client by downloading it with their own account; or
+- bypass the Client's sign-in, license, usage-credit or security controls, or
+  use it with anything but the Services.
+
+Your license to the Client ends when your account ends or you breach this
+paragraph. You must then stop using the Client and delete every copy.
 
 ## 3. Accounts
 
@@ -143,8 +175,8 @@ Processing Addendum, contact `privacy@testflows.com`.
 
 ## 10. Disclaimers
 
-TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SERVICES ARE PROVIDED “AS IS” AND
-“AS AVAILABLE,” WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SERVICES, INCLUDING THE CLIENT, ARE
+PROVIDED “AS IS” AND “AS AVAILABLE,” WITHOUT WARRANTIES OF ANY KIND, WHETHER EXPRESS, IMPLIED, OR
 STATUTORY, INCLUDING MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE,
 AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SERVICES WILL BE UNINTERRUPTED,
 ERROR-FREE, OR COMPLETELY SECURE, THAT CUSTOMER CONTENT WILL REMAIN
@@ -201,7 +233,8 @@ are unpaid. Where reasonably practicable for non-abuse cases, we will give
 notice.
 
 On termination, your license ends. Sections that by nature should survive
-(including fees, IP, confidentiality, disclaimers, liability, indemnity,
+(including fees, IP, the Machine client's restrictions, confidentiality,
+disclaimers, liability, indemnity,
 export, and general terms) survive. We may delete or disable Customer Content
 per our retention practices and the Privacy Policy. Export any data you need
 before closure.

@@ -98,6 +98,16 @@ hr {
     margin: 0;
 }
 
+.download-header p + p { margin-top: 0.6rem; }
+
+/* What getting the client needs, said first and set apart: an account and the Terms. */
+.download-header .download-required {
+    border-left: 3px solid var(--tf-accent);
+    background: color-mix(in srgb, var(--tf-accent) 8%, transparent);
+    padding: 0.7rem 0.9rem;
+    border-radius: 0 6px 6px 0;
+}
+
 .download-section { padding: 1.6rem 0; border-top: 1px solid var(--tf-card-border); }
 
 .download-section h2 {
@@ -108,7 +118,8 @@ hr {
 }
 
 .download-section p { line-height: 1.55; margin: 0 0 0.85rem; max-width: 44rem; }
-.download-section a { color: var(--tf-accent); }
+.download-section a,
+.download-header a { color: var(--tf-accent); }
 
 .download-section code {
     color: var(--tf-accent);
