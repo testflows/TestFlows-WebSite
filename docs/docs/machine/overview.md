@@ -63,6 +63,12 @@ name one in several ways.
 | `parent` | the point this run branched from |
 | `root` | the start of the tree |
 | `%crashed` | the branch with the `crashed` mark |
+| `console~login` | where the console first printed a match of `login` |
+
+The same points work everywhere a point is taken: `--at` and `--from` on
+`fork`, `detach` and `go`, `rewind ... to`, and `replay --to`. A bare word is
+read as a checkpoint's name first, then as a time, then as an entry, so write
+`^name` or `#42` when you mean one of them for sure.
 
 A branch can only start from a checkpoint. [`machine go`](commands.md#machine-go) takes any of these
 points, and if the one you name isn't a checkpoint, it starts the branch at the

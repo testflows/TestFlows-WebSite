@@ -112,10 +112,22 @@ And the calls you will reach for most often:
 | `run.replay()`, `run.play(...)`, `run.diff(...)` | replays and compares |
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.output(...)` | reads what it printed |
-| `run.output.search(pattern)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, and the entry that printed it |
+| `run.output.search(pattern, from_=..., to=...)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, between two points if you like; each match has the entry that printed it and a `place` to go to |
 | `run.output.sources()`, `run.output(source="ttyS1")`, `run.output.lines(source="all")` | lists the sources that printed, reads one, and reads them all with the source of each line |
-| `run.artifacts.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk |
+| `run.fs.ls(path, at=...)`, `.cat(...)`, `.cp(...)` | reads its disk at a checkpoint, which `at` names |
+| `run.send(text, device=...)` | sends input to a device or to a file in the machine, as [`machine send`](commands.md#machine-send) does; returns a `Sent` with `queued`, and `process` for a file |
+| `run.exec(command)`, `run.exec(command, wait=False)`, `run.process(id)`, `run.processes()` | executes a command in the machine, a list for a program and a str for a shell line, and returns its `Process`: `pid`, `exit_code`, `stdout`, `stderr`, `events`, `exits` |
+| `run.exec(command, container="db", user="root")` | executes it in a container, named by its Compose service or by its own name, as a user of it |
+| `run.core(pid, dest, container=...)` | gets a core dump of a process into a file; the process dies of it |
+| `run.profile("2s", container=..., pid=...)` | samples what runs for a time and returns a `Profile`: `samples`, `functions`, `stacks`, and `folded` text for flame graph tools |
+| `run.profile(from_="^request", to="^reply")` | profiles a stretch the run already recorded, without changing the run |
+| `run.profile("2s", in_guest=True)` | samples with a process in the run, for the functions of the kernel by name |
+| `run.containers()` | lists the containers and the Compose service of each: `name`, `service`, `state`, `image` |
+| `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
+| `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
+| `run.thread(tid)` | a guest thread to debug: `registers()`, `read(address, size)`, `address("main+4")`, `symbol(address)`, `symbols(regex="^wait")`, `backtrace()`, `maps()` |
+| `thread.set(rax=0, rip="main+4")`, `thread.write(address, data)` | writes its registers and its process's memory; a replay makes the writes again |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 
 Every call returns a record with named fields, such as a `RunInfo` from
@@ -141,6 +153,37 @@ for clause in done.clauses:
 
 `until` takes the conditions [`machine run`](commands.md#machine-run) `--until` does,
 including a machine time: `run.run(until="vtime=+10ms")`.
+
+## Points in a run's history
+
+Calls that take a point, such as `fork(at=...)`, `go`, `rewind`,
+`replay(to=...)` and `profile(from_=..., to=...)`, take it as text, `"^booted"`,
+`"#300"`, `"1.194s"` or `"-10ms"`, or as one of three records:
+
+| Record | Is | Works on |
+|---|---|---|
+| `Point` | a time: `vtime`, the machine's clock in nanoseconds | every run; each finds its own entry at that time |
+| `Place` | one entry: the `run_id` that recorded it, `entry_id`, `point` and `vtime_offset` | the run that recorded it, and branches forked after it |
+| `Checkpoint` | a saved state: its `name`, and the `place` it was saved at | wherever its place works |
+
+`start(at=...)` and the `fs` readers take only a checkpoint, by its name or as
+a `Checkpoint`: they open a saved state, and a time or an entry is not one.
+
+A point moves by a duration: an int of nanoseconds, a string such as `"10ms"`,
+or a `timedelta`. Subtract one point from another for the nanoseconds between
+them. `run.now()` returns a `Place`, and `run.place(point)` finds the entry a
+point names.
+
+```python
+booted = run.checkpoint("booted")
+branch = run.fork(at=booted.place.point + "10ms")
+here = branch.now()
+run.place(here.point)    # the same time, on the parent
+```
+
+A place is one run's entry, so once the parent and the branch have both run
+past the fork, `run.place(here)` is refused: the parent's entry with that id
+is another state. Pass `here.point` to take the same time instead.
 
 ## Watching and following
 
@@ -225,7 +268,7 @@ The SDK comes with small scripts. Each one runs as
 | `plan_file.py` | drives a run with `when` and `else` clauses |
 | `watch_and_follow.py` | watches a listing and follows a console |
 | `syscall_profile.py` | counts a program's system calls and interrupts |
-| `read_artifacts.py` | reads and copies files from a checkpoint's disk |
+| `read_fs.py` | reads and copies files from a checkpoint's disk |
 | `machine_time.py` | changes the machine's clock (vtime) rate and pushes it forward |
 | `inject_interrupt.py` | injects an interrupt and replays it |
 | `stop_and_resume.py` | what `stop`, `kill`, `start` and `sync` keep |
