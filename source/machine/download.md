@@ -11,7 +11,7 @@ permalink: machine/download/index.html
 <header class="download-header">
 <h1>Download client</h1>
 <p>The Machine client is a self-contained program called <code>machine</code>.</p>
-<p class="download-required"><strong>You need an account to download the client, and must accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a> and the <a href="/machine/legal/client-eula/">Client EULA</a> that licenses it.</strong> The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
+<p class="download-required">You need an account to download the client, and must accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a> and the <a href="/machine/legal/client-eula/">Client EULA</a> that licenses it. The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
 <p>For automated installations, use your <a href="/docs/machine/#machine-account-api-keys">API key</a>:
 ```bash
 curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash
