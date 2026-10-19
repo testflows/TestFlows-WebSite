@@ -28,4 +28,4 @@
 
 ## Optional
 
-- [Legal documents](https://testflows.com/legal.md): The terms, privacy policy and content use for the website, and the terms of service, acceptable use, privacy and usage credit for Machine.
+- [Legal documents](https://testflows.com/legal.md): The terms, privacy policy and content use for the website, and the terms of service, client EULA, acceptable use, privacy and usage credit for Machine.

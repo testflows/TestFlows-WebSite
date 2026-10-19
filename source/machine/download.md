@@ -10,11 +10,15 @@ permalink: machine/download/index.html
 
 <header class="download-header">
 <h1>Download client</h1>
-<p>The Machine client is one small program called <code>machine</code>. Pick your system.</p>
-<p class="download-required"><strong>You need a TestFlows™ account to get the client, and you accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a>.</strong> The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
-<p>The Terms license the client to your account. In CI, where there is no terminal, install with an <a href="/docs/machine/#machine-account-api-keys">API key</a> of an account that has accepted them: <code>curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=&lt;key&gt; bash</code>.</p>
+<p>The Machine client is a self-contained program called <code>machine</code>.</p>
+<p class="download-required"><strong>You need an account to download the client, and must accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a> and the <a href="/machine/legal/client-eula/">Client EULA</a> that licenses it.</strong> The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
+<p>For automated installations, use your <a href="/docs/machine/#machine-account-api-keys">API key</a>:
+```bash
+curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash
+```
+</p>
 </header>
-
+<p>Pick your system.</p>
 <ul class="nav nav-tabs platform-tabs" role="tablist" aria-label="Your system">
 <li class="nav-item"><a class="nav-link active" id="tab-linux-x86_64" data-toggle="tab" href="#platform-linux-x86_64" role="tab" aria-controls="platform-linux-x86_64" aria-selected="true"><i class="fab fa-linux" aria-hidden="true"></i> Linux (x64)</a></li>
 <li class="nav-item"><a class="nav-link" id="tab-linux-arm64" data-toggle="tab" href="#platform-linux-arm64" role="tab" aria-controls="platform-linux-arm64" aria-selected="false"><i class="fab fa-linux" aria-hidden="true"></i> Linux (ARM64)</a></li>

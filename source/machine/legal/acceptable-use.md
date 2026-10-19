@@ -8,13 +8,15 @@ permalink: machine/legal/acceptable-use/index.html
 
 # Acceptable Use Policy
 
-<p class="legal-updated">Last updated: 2 August 2026</p>
+<p class="legal-updated">Last updated: 18 October 2026</p>
+<p class="legal-updated">Agreement version: 2026-10-18.2</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
 This Acceptable Use Policy (this “**Policy**”) is part of the
-[Terms of Service](/machine/legal/terms-of-service/). It applies to all use of TestFlows
-Machine and related websites, APIs, and clients (the “**Services**”).
+[Terms of Service](/machine/legal/terms-of-service/). It applies to use of the
+Services. It does not license the Client or the SDK Core, which the
+[Client EULA](/machine/legal/client-eula/) governs.
 
 You are responsible for activity on your account and for workloads you run.
 Helping someone else violate this Policy is itself a violation.
@@ -38,8 +40,8 @@ Services to:
 
 - create, host, or distribute malware, phishing pages, or botnet
   command-and-control;
-- run port scanning, penetration testing, or denial-of-service attacks against
-  systems you do not own or have permission to test;
+- run port scanning, penetration testing, or denial-of-service attacks, other
+  than against Customer Content inside your own virtual machines;
 - operate open mail relays, anonymizing proxies, or other services whose use
   gets our addresses blocklisted;
 - run cryptocurrency mining or other workloads whose purpose is to consume
@@ -49,8 +51,22 @@ Services to:
 
 ## 4. Platform integrity
 
-You may not attack or interfere with our infrastructure or other customers’
-use of the Services, bypass Free-tier or billing limits, or abuse our staff.
+Without our prior written authorization, you may not:
+
+- attack, probe, scan, penetration test, vulnerability test, exploit or
+  otherwise attempt to compromise the security, integrity or availability of
+  the Services, or of a system, network, account or data used to provide the
+  Services;
+- attempt to escape the isolation of a virtual machine, access another
+  customer’s account, session, workload or data, or obtain unauthorized access
+  to any part of the Services;
+- circumvent sign-in, licensing, Free-tier, usage-credit, billing or other
+  security or metering controls, interfere with another customer’s use of the
+  Services, or abuse our staff.
+
+This section does not prohibit testing Customer Content inside your own
+virtual machines, if the testing does not target the Services, their isolation
+or infrastructure, or another customer.
 
 ## 5. Your content
 
@@ -66,4 +82,5 @@ We may act without prior notice when risk is urgent.
 
 ## 7. Reporting
 
-Report abuse or violations of this Policy to `abuse@testflows.com`.
+Report abuse, violations of this Policy, or a vulnerability in the Services,
+the Client or the SDK Core to `abuse@testflows.com`.

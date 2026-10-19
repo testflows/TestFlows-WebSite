@@ -4,9 +4,9 @@
 
 > The Machine client is one small program called `machine`. Pick your system.
 
-**You need a TestFlows™ account to get the client, and you accept the Terms of Service: https://testflows.com/machine/legal/terms-of-service.md.** The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.
+**You need a TestFlows™ account to get the client, and you accept the Terms of Service and the Client EULA: https://testflows.com/machine/legal/client-eula.md.** The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.
 
-The Terms license the client to your account. In CI, where there is no terminal, install with an API key of an account that has accepted them: `curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash`.
+The Client EULA licenses the client to your account. In CI, where there is no terminal, install with an API key of an account that has accepted the current Agreement: `curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash`.
 
 TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 

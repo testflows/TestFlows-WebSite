@@ -8,7 +8,7 @@ permalink: legal/copyright-and-content-use/index.html
 
 # Copyright and Content Use
 
-<p class="legal-updated">Last updated: 2 August 2026</p>
+<p class="legal-updated">Last updated: 18 October 2026</p>
 
 © 2026 Katteli Inc. All rights reserved.
 
@@ -26,17 +26,16 @@ and other laws.
 
 ## 2. What you may do
 
-You may read the content for personal and internal business reference, quote
-reasonable excerpts with attribution to TestFlows and a link back to the source
-page, and link to any page on the Site.
+You may read the content, quote reasonable excerpts with attribution to
+TestFlows and a link back to the source page, and link to any page on the Site.
 
 ## 3. What you may not do
 
 Without our written permission you may not republish or mirror substantial
 portions of the content, translate it or otherwise create derivative works from
-it, sell or otherwise commercially exploit it, remove any copyright or
-attribution notice, or present it in a way that implies an endorsement or
-affiliation that does not exist.
+it, use it to develop a competing product or service, sell or otherwise
+commercially exploit it, remove any copyright or attribution notice, or present
+it in a way that implies an endorsement or affiliation that does not exist.
 
 ## 4. Trademarks
 

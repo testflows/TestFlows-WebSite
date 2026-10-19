@@ -13,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=b6a043dd1a69";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=b6a043dd1a69";
-import { setSession, clearSession } from "./session.js?v=b6a043dd1a69";
+import { solve, currentBucket } from "./hashcash.js?v=6334304a5ef5";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=6334304a5ef5";
+import { setSession, clearSession } from "./session.js?v=6334304a5ef5";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -211,7 +211,7 @@ export async function termsCurrent() {
 }
 
 /**
- * Request a signup link, accepting the Terms of Service of `termsVersion`.
+ * Request a signup link, accepting the Agreement of `termsVersion`.
  * @param {string} email @param {string} termsVersion @param {() => void} [onPow]
  */
 export async function signupStart(email, termsVersion, onPow) {

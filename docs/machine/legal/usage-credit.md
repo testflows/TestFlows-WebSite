@@ -2,7 +2,7 @@
 
 # Usage Credit Terms
 
-<p class="legal-updated">Last updated: 2 August 2026</p>
+<p class="legal-updated">Last updated: 18 October 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -32,11 +32,14 @@ Katteli may remove the Credits for that purchase and may suspend an account
 whose remaining balance is insufficient.
 
 **Duration.** Usage Credits remain valid while the account is open. If you close
-your account, unused Usage Credits are retained for 90 days — reactivate within
-that window to keep them; after 90 days they are forfeited. Included Credits end
-on the date communicated when they are granted (typically the end of the plan
-billing period) and do not roll over unless we expressly say so; closing an
-account does not extend them beyond that date.
+your account, unused Usage Credits are retained for 90 days and then forfeited.
+Reactivating within that window keeps them, and by reactivating you accept the
+current Agreement. Unused Credits are forfeited on closure if the account is
+closed because you did not accept a changed Agreement or because you breached
+the Agreement. Included Credits end on the date communicated when they are
+granted (typically the end of the plan billing period) and do not roll over
+unless we expressly say so. Closing an account does not extend them beyond
+that date.
 
 **Service allowance only.** A Credit is only a right to consume eligible
 Services. It cannot be exchanged for cash and is not currency.

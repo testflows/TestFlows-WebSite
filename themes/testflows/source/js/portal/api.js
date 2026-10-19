@@ -211,7 +211,7 @@ export async function termsCurrent() {
 }
 
 /**
- * Request a signup link, accepting the Terms of Service of `termsVersion`.
+ * Request a signup link, accepting the Agreement of `termsVersion`.
  * @param {string} email @param {string} termsVersion @param {() => void} [onPow]
  */
 export async function signupStart(email, termsVersion, onPow) {

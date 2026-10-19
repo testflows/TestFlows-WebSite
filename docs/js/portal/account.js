@@ -1,3 +1,3 @@
-import { bootAccountDashboard } from "./account/shell.js?v=b6a043dd1a69";
+import { bootAccountDashboard } from "./account/shell.js?v=6334304a5ef5";
 
 bootAccountDashboard();

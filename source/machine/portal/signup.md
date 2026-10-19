@@ -22,7 +22,7 @@ permalink: machine/portal/signup/index.html
                 </div>
                 <div class="portal-field portal-check">
                     <input type="checkbox" id="portal-signup-terms" required>
-                    <label for="portal-signup-terms">I have read and accept the <a href="/machine/legal/terms-of-service/" target="_blank" rel="noopener">Terms of Service</a>, which license the Machine client.</label>
+                    <label for="portal-signup-terms">I have read and accept the <a href="/machine/legal/terms-of-service/" target="_blank" rel="noopener">Terms of Service</a> and the <a href="/machine/legal/client-eula/" target="_blank" rel="noopener">Client EULA</a>, which licenses the Machine client and the SDK core.</label>
                 </div>
                 <div class="portal-actions">
                     <button type="submit" class="btn btn-primary" id="portal-signup-submit">Send link</button>
