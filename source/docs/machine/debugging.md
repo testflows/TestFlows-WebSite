@@ -235,18 +235,25 @@ Put GDB in the image the disk is built from. For a server in a container, put
 it in the server's image, so GDB sees the server's files:
 
 ```dockerfile
-FROM clickhouse/clickhouse-server:24.8.14.39
+FROM clickhouse/clickhouse-server:26.8.31.2
 RUN apt-get update && apt-get install -y --no-install-recommends gdb procps
 ```
 
 GDB reads the program's symbol table for function names. For arguments,
 locals and source lines it needs the program's debug information too, in a
-format it reads. ClickHouse's debug information is DWARF 5, which GDB 9.2, the
-GDB of Ubuntu 20.04, does not read. GDB 12 and later do.
+format it reads. ClickHouse's debug information is DWARF 5, which GDB 12 and
+later read. An older image's GDB may not: GDB 9.2, Ubuntu 20.04's, does not.
+
+GDB holds what it reads in memory, and the machine needs room for it beside the
+program. ClickHouse's 1.7GB of debug information grows to about 3.8GB in GDB,
+so that machine needs `--mem 12288`; with 4GB the guest's out-of-memory killer
+ends GDB.
 
 The [clickhouse-gdb example](https://github.com/testflows/Machine-Examples/tree/main/gdb/clickhouse)
-builds both kinds of image for ClickHouse: one with the symbol table alone,
-and one with the debug information.
+builds both kinds of image for ClickHouse 26.8: one with the symbol table
+alone, and one with the debug information. Its server prints the commit it was
+built from as it comes up, with a link to that source on GitHub, and the
+example shows how to put a source file where GDB finds it.
 
 ### Running a session
 
