@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792511731090" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792511731090" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792495828820" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792511731090" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1889,15 +1889,21 @@ gets 3 in the machine.</p>
 <code>next</code>, <code>finish</code>, <code>hbreak</code>, <code>watch</code> and <code>detach</code>.</p>
 <h3 id="Getting-GDB-onto-the-disk"><a href="#Getting-GDB-onto-the-disk" class="headerlink" title="Getting GDB onto the disk"></a>Getting GDB onto the disk</h3><p>Put GDB in the image the disk is built from. For a server in a container, put
 it in the server’s image, so GDB sees the server’s files:</p>
-<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> clickhouse/clickhouse-server:<span class="number">24.8</span>.<span class="number">14.39</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends gdb procps</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> clickhouse/clickhouse-server:<span class="number">26.8</span>.<span class="number">31.2</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends gdb procps</span></span><br></pre></td></tr></table></figure>
 
 <p>GDB reads the program’s symbol table for function names. For arguments,
 locals and source lines it needs the program’s debug information too, in a
-format it reads. ClickHouse’s debug information is DWARF 5, which GDB 9.2, the
-GDB of Ubuntu 20.04, does not read. GDB 12 and later do.</p>
+format it reads. ClickHouse’s debug information is DWARF 5, which GDB 12 and
+later read. An older image’s GDB may not: GDB 9.2, Ubuntu 20.04’s, does not.</p>
+<p>GDB holds what it reads in memory, and the machine needs room for it beside the
+program. ClickHouse’s 1.7GB of debug information grows to about 3.8GB in GDB,
+so that machine needs <code>--mem 12288</code>; with 4GB the guest’s out-of-memory killer
+ends GDB.</p>
 <p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples/tree/main/gdb/clickhouse">clickhouse-gdb example</a>
-builds both kinds of image for ClickHouse: one with the symbol table alone,
-and one with the debug information.</p>
+builds both kinds of image for ClickHouse 26.8: one with the symbol table
+alone, and one with the debug information. Its server prints the commit it was
+built from as it comes up, with a link to that source on GitHub, and the
+example shows how to put a source file where GDB finds it.</p>
 <h3 id="Running-a-session"><a href="#Running-a-session" class="headerlink" title="Running a session"></a>Running a session</h3><p>Run the machine to the point you want to debug, and keep a checkpoint there.
 Then run GDB with <a href="#machine-exec"><code>machine exec</code></a>. Here the
 example’s server prints <code>clickhouse-gdb: ready</code> once it answers queries:</p>
@@ -10573,9 +10579,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792495828820"></script>
-<script src="/js/machine-hero-type.js?v=1792495828820"></script>
-<script src="/js/download-platforms.js?v=1792495828820"></script>
+<script src="/js/index-code-type.js?v=1792511731091"></script>
+<script src="/js/machine-hero-type.js?v=1792511731091"></script>
+<script src="/js/download-platforms.js?v=1792511731091"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
