@@ -216,6 +216,8 @@ cpuidle: using governor ladder
 
 To see the full console log, use `-n :`. Ranges use the same colon as a Python slice. Lines are numbered from 1 and both ends count, so `-n 1:` is the first line through the last.
 
+A negative number counts from the end, and `-1` is the last line. `-n -5` and `-n -5:` are the last five lines, and `-n -10:-2` is the tenth line from the end through the second. Both ends of a range count from the same end.
+
 Save the machine's state so you can come back to it, and start a branch from
 that point.
 
