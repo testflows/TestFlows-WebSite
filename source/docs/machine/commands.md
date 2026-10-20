@@ -2637,6 +2637,22 @@ The path of an output file takes the same place, as in
 /output/drop/app/debug.log\~REGEX. A file that is dropped stops the run the same
 way. The run stores none of the file.
 
+tid=N:at=LOC runs until tid N reaches LOC in its own code. tgid=N:at=LOC runs
+until any thread of the process does. The address is resolved when the run
+starts. The stop takes one of the run's 3 breakpoints and watchpoints.
+
+LOC is one of these, in the task's process:
+
+```text
+0x401136            an address
+*0x401136           an address, as GDB writes it
+main                a function or a variable, by its name
+libc.so.6:malloc    a name in one file, by its path or file name
+init.c:106          a source line, from the line tables
+$rip                a register of the task, as it is now
+main+4, $rsp-8      any of these moved by +N or -N
+```
+
 The run log records each iteration as an entry. It also records interrupts and
 device input, so entries outnumber iterations.
 
@@ -2715,7 +2731,7 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
-| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOCATION |
+| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOC or tgid=N:at=LOC |
 | `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
@@ -2743,6 +2759,8 @@ machine run run1 --until 'console~login:'   until the console prints login:
 machine run run1 --until 'entry>=500'       until it reaches entry 500
 machine run run1 --until vtime=+10ms        until its clock moves 10 ms
 machine run run1 --until tasks              until its tasks can be listed
+machine run run1 --until tid=41:at=main     until tid 41 is at main
+machine run run1 --until tgid=7:at=a.c:9    until tgid 7 reaches a.c:9
 machine run run1 --within 10s               until its clock has moved 10 s
 machine run run1 --until tasks --within 9s  the first of the two
 ```
@@ -2796,37 +2814,61 @@ A file of - reads the plan from standard input. The plan applies to the run of
 this command only. A later machine run runs without the plan. Run machine plan
 again to go on with it.
 
-Example: when /test:on mode step,fast fast=1:100k step=1:200 when /test:kernel
-task-sched hold else mode fast
+Example:
+
+```text
+when /test:on       mode step,fast   fast=1:100k step=1:200
+when /test:kernel   task-sched hold
+else                mode fast
+```
 
 Example: place tid 56 on vCPU 2 or 3 when it wakes, 2 three times as often as 3:
-else task-pin 56=golden:2[3],3[1]
+
+```text
+else  task-pin 56=golden:2[3],3[1]
+```
 
 A clause names one when predicate, then any of these axes. An axis is a comma
 list of choices, one drawn per dispatch. [N] is an optional weight on a choice.
 The task-slice axis is the exception, a colon set that takes no weights:
 
-when `<predicate>` apply the clause only while the predicate holds. A predicate
-is [subject:]state. The state is on, kernel, off, syscall[=name] or int[=vec].
-The subject is /path, tid=N, tgid=N, cgroup=P or none for any focused task.
-vcpu=N[,N] ANDs a vCPU set onto it. mode `<mode>`[N],... the modes to draw
-among: fast, step, step-into, free or keep. A mode may carry the limit it draws
-when it wins, `<mode>`=`<span>`, as in mode step[3],fast[1] step=1:200. free
-takes no limit. vtime-rate `<rate>`[N],... the machine-time rate: a number N, a
-fraction N/D, a span of numerators such as 1:10, or keep. vtime-add
-`<duration>`[N],... time added to the clock before each dispatch: a duration
-such as 500 or 10us, a span such as 10us:2ms, or keep. task-sched
-`<mark>`[N],... a mark for the task on the drawn vCPU: keep, hold, yield, drain,
-drain-all. task-int `<int>`[N],... an interrupt for that task: none or preempt.
-This axis has no keep: none is its do-nothing choice. task-slice
-`<choice>`:`<choice>`:... that task's time slice, drawn from a colon set of
-keep, default and a duration span, in any combination, as in
-keep:default:10us:600us. task-pin [`<tid>`=]`<set>`[N],... where a task is
-placed when it next wakes, each choice a set of vCPUs: 1-3 is all three, 1,2,3
-is three choices of one, free is any vCPU and none is no vCPU, which stops it
-running. A placement policy, not confinement: a task already queued elsewhere
-keeps that vCPU until it wakes. `<tid>`= names the task. Without it, the task on
-the drawn vCPU is placed. none requires `<tid>`=.
+```text
+when <predicate>
+    apply the clause only while the predicate holds. A
+    predicate is [subject:]state. The state is on, kernel,
+    off, syscall[=name] or int[=vec]. The subject is /path,
+    tid=N, tgid=N, cgroup=P or none for any focused task.
+    vcpu=N[,N] ANDs a vCPU set onto it.
+mode <mode>[N],...
+    the modes to draw among: fast, step, step-into, free or
+    keep. A mode may carry the limit it draws when it wins,
+    <mode>=<span>, as in mode step[3],fast[1] step=1:200.
+    free takes no limit.
+vtime-rate <rate>[N],...
+    the machine-time rate: a number N, a fraction N/D, a span
+    of numerators such as 1:10, or keep.
+vtime-add <duration>[N],...
+    time added to the clock before each dispatch: a duration
+    such as 500 or 10us, a span such as 10us:2ms, or keep.
+task-sched <mark>[N],...
+    a mark for the task on the drawn vCPU: keep, hold, yield,
+    drain, drain-all.
+task-int <int>[N],...
+    an interrupt for that task: none or preempt. This axis has
+    no keep: none is its do-nothing choice.
+task-slice <choice>:<choice>:...
+    that task's time slice, drawn from a colon set of keep,
+    default and a duration span, in any combination, as in
+    keep:default:10us:600us.
+task-pin [<tid>=]<set>[N],...
+    where a task is placed when it next wakes, each choice a
+    set of vCPUs: 1-3 is all three, 1,2,3 is three choices of
+    one, free is any vCPU and none is no vCPU, which stops it
+    running. A placement policy, not confinement: a task
+    already queued elsewhere keeps that vCPU until it wakes.
+    <tid>= names the task. Without it, the task on the
+    drawn vCPU is placed. none requires <tid>=.
+```
 
 A weight makes a choice win more often. mode step[3],fast[1] draws step three
 times as often as fast. keep is the choice that draws nothing. It holds the last
@@ -2868,7 +2910,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
-| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOCATION |
+| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOC or tgid=N:at=LOC |
 | `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
@@ -6020,9 +6062,18 @@ Show the memory of a tgid.
 The memory is the tgid's own, through its page tables. The task names its tgid.
 Guest kernel memory is not shown.
 
-A location is an address, a register written $rsp, or a symbol such as main. A
-symbol of one file is written PATH:NAME. A source line is written FILE:LINE and
-names its first code. A location moves by +N or -N.
+A location names an address in the task's process. Every command that takes a
+location takes one of these:
+
+```text
+0x401136            an address
+*0x401136           an address, as GDB writes it
+main                a function or a variable, by its name
+libc.so.6:malloc    a name in one file, by its path or file name
+init.c:106          a source line, at its first code
+$rsp                a register of the task, as it is now
+main+4, $rsp-8      any of these moved by +N or -N
+```
 
 A format after the location shows the memory as GDB's x command does. A format
 is a count, a letter and a unit, such as 8xg, 4i or s. The letters are x, d, u,
@@ -6044,7 +6095,7 @@ usage: machine mem [-h] [--find pattern] [--dump file] [--restore file] [--lengt
 |---|---|
 | `run` | Run name |
 | `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
-| `[location]` | Address to read at: a number, $register, a symbol or PATH:symbol, moved by +N or -N. LOCATION=VALUE writes there |
+| `[location]` | Address to read at: a number, *ADDR, $register, NAME, PATH:NAME or FILE:LINE, moved by +N or -N. LOCATION=VALUE writes there |
 | `[format]` | Count, format letter and unit, as GDB's x takes them, such as 8xg, 4i or s (default: 8xg) |
 
 | Option | Does |
@@ -6255,6 +6306,13 @@ The types and the variables come from the program's debug information on the
 machine's disk. Use `--frame` to print in a frame of a caller, as backtrace
 numbers them.
 
+A format after the expression prints each number in it, as print/x does. The
+letters are x, d, u, o, t, c and z. Use `--type` to print the type instead, as
+whatis and ptype do.
+
+TARGET = VALUE writes VALUE at TARGET and prints TARGET after the write. The
+write is part of the run, and a replay makes it again.
+
 ```
 usage: machine print [-h] [--frame n] [--type] run tid expression [format]
 ```
@@ -6279,6 +6337,9 @@ machine print run1 412 'shape->at.x'    a member through a pointer
 machine print run1 412 'squares[2]'     an element of an array
 machine print run1 412 '*(int *)arg'    through a cast
 machine print run1 412 index --frame 1  in the caller's frame
+machine print run1 412 counter x        in hexadecimal
+machine print run1 412 shape --type     its type
+machine print run1 412 'counter = 3'    write it
 ```
 
 Prints:
@@ -6454,6 +6515,9 @@ Each step is a run of the machine, and a replay makes it again. A breakpoint the
 run reaches ends the step. A line step steps out of a function that has no line
 tables.
 
+Use `--skip` NAME with `--line` to step out of a function or a source file of
+that name. It does as GDB's skip does. Give it once for each name.
+
 Use `--back` to go back over the executions of the vCPU the task is on, as
 reverse-stepi does. Each step of a stepped stretch is one execution. The machine
 switches onto a branch there, as go does.
@@ -6478,7 +6542,7 @@ usage: machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run ti
 | `--line` | Step a source line, not an instruction |
 | `--over` | Step over a call, the function it calls and all it calls being one step |
 | `--out` | Run until the function returns to the one that called it |
-| `--back` | Go back over the run's executions, onto a branch |
+| `--back` | Go back over the executions of the task's vCPU, onto a branch |
 | `--skip name` | Step out of a function or a source file of this name in a line step (repeatable) |
 
 Examples:
@@ -6567,7 +6631,7 @@ usage: machine break [-h] run {add,delete,clear,save,hits,enable,disable,conditi
 Examples:
 
 ```
-machine break run1               the breakpoints and watchpoints of run1
+machine break run1               the breakpoints of run1
 machine break run1 add 412 main  stop the tgid of 412 at main
 machine break run1 delete 2      delete breakpoint 2
 ```
@@ -6604,8 +6668,8 @@ usage: machine break run add [-h] [--disabled] [--ignore count] [--temporary]
 
 | Argument | Does |
 |---|---|
-| `tid` | Task whose tgid the breakpoint is in |
-| `[location]` | Location, as mem takes one: NAME, FILE:LINE, *ADDR, $reg, moved by +N |
+| `tid` | Task whose tgid the stop is in |
+| `[location]` | Location, as mem takes one: an address, *ADDR, NAME, PATH:NAME, FILE:LINE or $reg, moved by +N or -N |
 
 | Option | Does |
 |---|---|
@@ -6892,7 +6956,7 @@ Examples:
 
 ```
 machine watch run1 add 412 counter  a write of counter
-machine watch run1                  the breakpoints and watchpoints of run1
+machine watch run1                  the watchpoints of run1
 ```
 
 Prints:
@@ -6931,8 +6995,8 @@ usage: machine watch run add [-h] [--disabled] [--ignore count] [--temporary]
 
 | Argument | Does |
 |---|---|
-| `tid` | Task whose tgid the breakpoint is in |
-| `location` | Location, as mem takes one: NAME, FILE:LINE, *ADDR, $reg, moved by +N |
+| `tid` | Task whose tgid the stop is in |
+| `location` | Location, as mem takes one: an address, *ADDR, NAME, PATH:NAME, FILE:LINE or $reg, moved by +N or -N |
 
 | Option | Does |
 |---|---|
@@ -7191,7 +7255,7 @@ usage: machine catch [-h] run {add,delete,save,hits,enable,disable,condition,ign
 Examples:
 
 ```
-machine catch run1                       every stop of run1
+machine catch run1                       the catchpoints of run1
 machine catch run1 add fork --in tgid=1  stop where tgid 1 forks
 ```
 
@@ -7222,6 +7286,11 @@ file's name. Without one, every event of its kind stops the run.
 
 Use `--in` to stop at the events of one task or one tgid alone. The run log
 keeps the catchpoint, and a branch has its parent's.
+
+An exit is the end of a tgid, so an exit catchpoint takes `--in` tgid=N and not
+a tid. A throw, catch or rethrow catchpoint is a breakpoint at the C++ runtime's
+function. It needs `--in` tgid=N and takes no values. It takes one of the run's
+3 breakpoints and watchpoints.
 
 ```
 usage: machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--temporary]

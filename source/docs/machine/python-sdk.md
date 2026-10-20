@@ -126,12 +126,21 @@ And the calls you will reach for most often:
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
-| `run.thread(tid)` | a guest thread to debug: `registers()`, `read(address, size)`, `address("main+4")`, `symbol(address)`, `symbols(regex="^wait")`, `backtrace()`, `maps()` |
-| `thread.set(rax=0, rip="main+4")`, `thread.write(address, data)` | writes its registers and its process's memory; a replay makes the writes again |
+| `run.task(tid)` | a guest task to debug, by its tid: `registers()`, `read(address, size)`, `address("main+4")`, `symbol(address)`, `symbols(regex="^wait")`, `backtrace()`, `libraries()` |
+| `task.set(rax=0, rip="main+4")`, `task.write(address, data)` | writes its registers and its tgid's memory; a replay makes the writes again |
+| `task.print("shape->at.x", frame=1)`, `task.print("counter = 3")`, `task.locals(args=True)` | an expression in a frame, a write with `TARGET = VALUE`, the locals or the arguments of a frame |
+| `task.step()`, `task.step(line=True, over=True)`, `task.finish()` | steps an instruction or a line, over calls, or out of the function |
+| `task.back()`, `task.back(line=True, over=True)` | goes back over the task's code onto a branch, as reverse-stepi and reverse-next |
+| `task.call("strlen", "buf")`, `task.return_(0)` | calls a function in the task, or returns from its innermost one |
+| `task.breakpoint("main")`, `task.watch("counter", on="access")` | stops its tgid at a location, or at a write or an access of its bytes; `run.run(...).hits` names the one the run ended at |
+| `run.breakpoints.catch("fork", tgid=1)`, `run.breakpoints.catch("syscall", "openat")` | stops at an event of a task: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow |
+| `run.breakpoints.list()`, `.enable(2, False)`, `.condition(2, "n > 3")`, `.ignore(2, 5)`, `.delete(2)`, `.hits()` | the run's stops, changed one at a time, and the hits the run log keeps |
+| `run.run(iters=0)`, `run.run(until="tid=412:at=main")`, `run.back()` | runs to the next hit, or until a task reaches a location; goes back onto a branch at the newest hit |
+| `run.tasks.signal(412, "SIGTERM")` | sends a task a signal; a replay sends it at the same instruction |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 
 Every call returns a record with named fields, such as a `RunInfo` from
-`describe()` or a list of `Task` from `tasks()`. Call `as_json()` on one to get
+`describe()` or a list of `TaskInfo` from `tasks()`. Call `as_json()` on one to get
 a plain dict.
 
 `run.run(...)` and `run.plan(...)` return a `RunResult`, which says how far the

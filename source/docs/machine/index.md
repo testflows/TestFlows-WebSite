@@ -22,6 +22,8 @@ permalink: docs/machine/index.html
 
 <!-- include: steering-programs.md -->
 
+<!-- include: debugging.md -->
+
 <!-- include: reading-the-disk.md -->
 
 <!-- include: account-and-billing.md -->
