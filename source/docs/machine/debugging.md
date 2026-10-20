@@ -283,10 +283,114 @@ At the control prompt the line after `-c` needs no outer quotes:
 
 Use `--user` to run GDB as the user of the process it attaches to. A
 container has no `CAP_SYS_PTRACE` by default, so root in it cannot attach to
-another user's process. For a GDB that stays attached between commands, give
-it its input on a pipe, as
-[Input for a program you started](running-a-machine.md#input-for-a-program-you-started)
-shows.
+another user's process.
+
+### A session that stays attached
+
+`-batch` runs a list of commands chosen in advance. To decide the next
+command from what GDB just printed, keep GDB attached and give it its
+commands through a named pipe in the container.
+
+This works on the server's own image with GDB added, the example's `gdb`
+image: ClickHouse 26.8 with no debug information. GDB finds functions by
+name in the program's symbol table, and attaches in about 16 seconds. With
+the debug information of the `gdb-debug` image it takes minutes instead.
+
+Make the pipe, keep it open, and start GDB with its input on it.
+`exec start` returns at once and prints the id of the process it started:
+
+```bash
+machine exec ch run   --container app --user clickhouse -- mkfifo /tmp/gdb.in
+machine exec ch start --container app --user clickhouse -c 'sleep infinity > /tmp/gdb.in'
+machine exec ch start --container app --user clickhouse -c 'gdb -q -p $(pidof clickhouse-server) < /tmp/gdb.in'
+```
+
+```text
+✔ Sent 0dd27743 to ch (whvDHu9iiWP3mTDExIjq3)
+  Read the process machine exec ch proc 0dd27743
+```
+
+The `sleep` holds the pipe open. Without it, GDB reads the end of its input
+after the first command and exits. Each command is a line written to the
+pipe:
+
+```bash
+machine exec ch run --container app --user clickhouse -c 'echo "handle SIGUSR1 nostop noprint" > /tmp/gdb.in'
+machine exec ch run --container app --user clickhouse -c 'echo "break DB::executeQuery" > /tmp/gdb.in'
+machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
+```
+
+GDB runs only while the machine runs, and commands written before it is
+ready wait in the pipe. Run the machine, and read what GDB printed from the
+process, by the id `exec start` gave:
+
+```bash
+machine run ch --within 60s
+machine exec ch proc 0dd27743 stdout
+```
+
+```text
+Attaching to process 7
+[New LWP 96]
+...
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+0x00007fd9dd9270d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+(gdb) Signal        Stop	Print	Pass to program	Description
+SIGUSR1       No	No	Yes		User defined signal 1
+(gdb) Breakpoint 1 at 0x1d386340 (3 locations)
+(gdb) Continuing.
+[Switching to Thread 0x7fd9a1dde640 (LWP 93)]
+
+Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
+(gdb)
+```
+
+GDB is stopped at the breakpoint now, and the next command is chosen from
+what it printed. `executeQuery` returns its result by value, so `rdi` holds
+where to put it, and the query follows in `rsi` and `rdx`, a pointer and a
+length:
+
+```bash
+machine exec ch run --container app --user clickhouse -c 'echo "bt 3" > /tmp/gdb.in'
+machine exec ch run --container app --user clickhouse -c 'echo "info registers rsi rdx" > /tmp/gdb.in'
+machine exec ch run --container app --user clickhouse -c 'echo "x/s \$rsi" > /tmp/gdb.in'
+machine run ch --within 2s
+machine exec ch proc 0dd27743 stdout
+```
+
+```text
+(gdb) #0  0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
+#1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+#2  0x000000001ed37d64 in DB::TCPHandler::run() ()
+(More stack frames follow...)
+(gdb) rsi            0x7fd9a6d7cae0      140572783790816
+rdx            0x28                40
+(gdb) 0x7fd9a6d7cae0:	"SELECT sum(number) FROM numbers(1000000)"
+(gdb)
+```
+
+That is the query the example's server sends itself every second, 40 bytes
+long. End the session the same way, and the server carries on:
+
+```bash
+machine exec ch run --container app --user clickhouse -c 'echo detach > /tmp/gdb.in'
+machine exec ch run --container app --user clickhouse -c 'echo quit > /tmp/gdb.in'
+machine run ch --within 3s
+machine exec ch proc 0dd27743 stdout
+```
+
+```text
+(gdb) Detaching from program: /usr/bin/clickhouse, process 7
+[Inferior 1 (process 7) detached]
+(gdb)
+```
+
+ClickHouse signals its own threads with `SIGUSR1`, and `handle SIGUSR1
+nostop noprint` keeps `continue` from stopping at each one.
+
+The session is recorded with the run. Rewind to the checkpoint taken before
+it, and the same commands give the same answers.
 
 ### Running it again
 
