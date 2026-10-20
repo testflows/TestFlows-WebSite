@@ -579,11 +579,14 @@ with that id says whether they were written. One send to a path carries about
 make the pipe in the container and write it from there:
 
 ```bash
-machine exec app run   -- docker exec compose-app-1 mkfifo /tmp/p
-machine exec app start -- docker exec compose-app-1 sh -c 'sleep 1000000 > /tmp/p'
-machine exec app start -- docker exec compose-app-1 sh -c 'gdb -p 1 < /tmp/p'
-machine exec app run   -- docker exec compose-app-1 sh -c 'echo c > /tmp/p'
+machine exec app run   --container db -- mkfifo /tmp/p
+machine exec app start --container db -c 'sleep infinity > /tmp/p'
+machine exec app start --container db -c 'gdb -p $(pidof postgres) < /tmp/p'
+machine exec app run   --container db -c 'echo c > /tmp/p'
 ```
+
+[GDB inside the machine](debugging.md#a-session-that-stays-attached) walks
+through a whole session this way, on ClickHouse.
 
 `machine exec` uses the serial port `ttyS3` for its requests. A program in the
 machine that reads `ttyS3` takes them.
