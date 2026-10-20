@@ -2216,6 +2216,7 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
                       [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
                       [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
                       [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+                      [--mem-hash | --no-mem-hash]
                       [name]
 ```
 
@@ -2255,6 +2256,7 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
 | `--auto-checkpoints n` | Checkpoint every n entries, 0 for never (default: scaled by memory, 50000 per 512MB) |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump in the run log (default: off) |
 | `--side-trace, --no-side-trace` | Record a per-entry execution trace in the run log (default: off) |
+| `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, for a replay to compare (default: off) |
 
 Examples:
 
@@ -3350,9 +3352,10 @@ once the request is accepted.
 ```
 usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                     [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
-                    [--side-trace | --no-side-trace] [--keep-output name] [--drop-output name]
-                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                    [--limit n] [--backstop-limit n] [--pin-cpu n]
+                    [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
+                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
+                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
+                    [--pin-cpu n]
                     run
 ```
 
@@ -3371,6 +3374,7 @@ usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
@@ -3473,6 +3477,7 @@ usage: machine go [options] <run> <point>
 | `--lean` | With `--rebase`, drop the absorbed history so those runs become deletable |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
@@ -3633,9 +3638,9 @@ where the run would have the names of another run.
 ```
 usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                       [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                      [--keep-output name] [--drop-output name] [--no-wait]
-                      [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
-                      [--backstop-limit n] [--pin-cpu n]
+                      [--mem-hash | --no-mem-hash] [--keep-output name] [--drop-output name]
+                      [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
+                      [--limit n] [--backstop-limit n] [--pin-cpu n]
                       run
 ```
 
@@ -3651,6 +3656,7 @@ usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [
 | `--no-start` | Create the branch without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |

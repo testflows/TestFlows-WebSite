@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792519886237" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792519886237" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792511731090" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792519886237" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1646,6 +1646,18 @@ to change that, or <code>--retry 0</code> to try each entry once.</p>
 does: <code>--to ^booted</code> for a checkpoint, <code>--to &#39;#300&#39;</code> for an entry, <code>--to 10ms</code>
 for a time. The point is one of the line being replayed, so a checkpoint the
 parent took after the fork is a valid one.</p>
+<p>Each entry holds hashes of the machine’s state: its registers, its devices,
+its timers and its disk. A replay compares them all. A run created with
+<code>--mem-hash</code> also hashes the guest’s memory at every entry, and a replay of
+it compares that as well. Hashing memory costs time at every entry, so it is
+off by default, and a divergence of memory alone shows up only later, once it
+reaches a register, a device or the disk. A branch can turn it on or off:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine create --disk app.img --mem-hash          <span class="comment"># hash memory from the start</span></span><br><span class="line">machine fork app --at ^booted --mem-hash          <span class="comment"># a branch that hashes it</span></span><br><span class="line">machine fork app --at ^booted --no-mem-hash       <span class="comment"># a branch that does not</span></span><br></pre></td></tr></table></figure>
+
+<p>A replay hashes the memory exactly where the recording did, whatever the
+replaying branch records, so a replay compares either kind of recording.
+<code>diff</code> of an entry that hashed memory against one that did not leaves memory
+out, and says <code>Memory not compared</code>.</p>
 <p>The host can interrupt an entry too. That is not a divergence. Replay prints
 <code>Interrupted: entry N, crossing 1: host SMI</code> and replays the entry again,
 counted against the same <code>--retry</code>. A recording does the same on its own, see
@@ -4402,7 +4414,7 @@ the kept one decides.</p>
 where the run would have the names of another run.</p>
 <p>The command waits until the machine accepts commands. Use <code>--no-wait</code> to return
 once the request is accepted.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]</span><br><span class="line">                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]</span><br><span class="line">                      [--console &#123;serial,virtio&#125;] [--mem-type &#123;auto,hugepages&#125;]</span><br><span class="line">                      [--mem-mode &#123;auto,map,lazy&#125;] [--fs-sync | --no-fs-sync]</span><br><span class="line">                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]</span><br><span class="line">                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--rdtsc-exit | --no-rdtsc-exit] [--limit n] [--backstop-limit n]</span><br><span class="line">                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]</span><br><span class="line">                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]</span><br><span class="line">                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [name]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]</span><br><span class="line">                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]</span><br><span class="line">                      [--console &#123;serial,virtio&#125;] [--mem-type &#123;auto,hugepages&#125;]</span><br><span class="line">                      [--mem-mode &#123;auto,map,lazy&#125;] [--fs-sync | --no-fs-sync]</span><br><span class="line">                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]</span><br><span class="line">                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--rdtsc-exit | --no-rdtsc-exit] [--limit n] [--backstop-limit n]</span><br><span class="line">                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]</span><br><span class="line">                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]</span><br><span class="line">                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [--mem-hash | --no-mem-hash]</span><br><span class="line">                      [name]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -4542,6 +4554,10 @@ once the request is accepted.</p>
 <tr>
 <td><code>--side-trace, --no-side-trace</code></td>
 <td>Record a per-entry execution trace in the run log (default: off)</td>
+</tr>
+<tr>
+<td><code>--mem-hash, --no-mem-hash</code></td>
+<td>Hash guest memory at every entry, for a replay to compare (default: off)</td>
 </tr>
 </tbody></table>
 <p>Examples:</p>
@@ -5701,7 +5717,7 @@ the kept one decides.</p>
 where the run would have the names of another run.</p>
 <p>The command waits until the branch accepts commands. Use <code>--no-wait</code> to return
 once the request is accepted.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]</span><br><span class="line">                    [--side-trace | --no-side-trace] [--keep-output name] [--drop-output name]</span><br><span class="line">                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                    [--limit n] [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                    run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]</span><br><span class="line">                    [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]</span><br><span class="line">                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]</span><br><span class="line">                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]</span><br><span class="line">                    [--pin-cpu n]</span><br><span class="line">                    run</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -5757,6 +5773,10 @@ once the request is accepted.</p>
 <tr>
 <td><code>--side-trace, --no-side-trace</code></td>
 <td>Record a per-entry kernel trace, whatever the run it comes from records</td>
+</tr>
+<tr>
+<td><code>--mem-hash, --no-mem-hash</code></td>
+<td>Hash guest memory at every entry, whatever the run it comes from records</td>
 </tr>
 <tr>
 <td><code>--keep-output name</code></td>
@@ -5892,6 +5912,10 @@ where the run would have the names of another run.</p>
 <tr>
 <td><code>--side-trace, --no-side-trace</code></td>
 <td>Record a per-entry kernel trace, whatever the run it comes from records</td>
+</tr>
+<tr>
+<td><code>--mem-hash, --no-mem-hash</code></td>
+<td>Hash guest memory at every entry, whatever the run it comes from records</td>
 </tr>
 <tr>
 <td><code>--keep-output name</code></td>
@@ -6037,7 +6061,7 @@ two names spelled out, the longer decides, and a tie is stored. Of two patterns,
 the kept one decides.</p>
 <p>The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [--keep-output name] [--drop-output name] [--no-wait]</span><br><span class="line">                      [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]</span><br><span class="line">                      [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                      run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [--mem-hash | --no-mem-hash] [--keep-output name] [--drop-output name]</span><br><span class="line">                      [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--limit n] [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                      run</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -6081,6 +6105,10 @@ where the run would have the names of another run.</p>
 <tr>
 <td><code>--side-trace, --no-side-trace</code></td>
 <td>Record a per-entry kernel trace, whatever the run it comes from records</td>
+</tr>
+<tr>
+<td><code>--mem-hash, --no-mem-hash</code></td>
+<td>Hash guest memory at every entry, whatever the run it comes from records</td>
 </tr>
 <tr>
 <td><code>--keep-output name</code></td>
@@ -10579,9 +10607,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792511731091"></script>
-<script src="/js/machine-hero-type.js?v=1792511731091"></script>
-<script src="/js/download-platforms.js?v=1792511731091"></script>
+<script src="/js/index-code-type.js?v=1792519886237"></script>
+<script src="/js/machine-hero-type.js?v=1792519886237"></script>
+<script src="/js/download-platforms.js?v=1792519886237"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
