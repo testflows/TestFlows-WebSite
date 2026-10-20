@@ -207,15 +207,21 @@ Anything that reads entries takes the same few spellings.
 |---|---|
 | `200` or `(100, 200)` | that entry, or that range, both ends included |
 | `"100:200"`, `"100:"`, `":200"` | a range, from 100 on, or up to 200 |
-| `"-20"` | the last 20 entries |
+| `"-20"` or `"-20:"` | the last 20 entries |
+| `"-20:-2"` | the 20th entry from the end through the 2nd |
 | `slice(100, 200)` | a Python slice, so 100 through 199 |
+| `slice(-20, -1)` | a Python slice from the end, so the same as `"-20:-2"` |
 
-Be careful with the last row. A pair and a string include both ends, the way
+Be careful with the slice rows. A pair and a string include both ends, the way
 Machine's own messages do. A slice is Python's, so it stops before the end.
 That makes `(100, 200)` one entry longer than `slice(100, 200)`.
 
+Both ends of a range count from the same end: `"-20:5"` and `slice(-20, 5)`
+are refused.
+
 `lines=` selects lines of output in the same grammar: `20` is line 20, `-20`
-the last 20, and `0` none, which starts a follow at the end.
+the last 20, `"-10:-2"` the tenth line from the end through the second, and
+`0` none, which starts a follow at the end.
 
 ## Cleaning up
 

@@ -25,6 +25,8 @@ Sign in. See [Signing up](getting-started.md#signing-up).
 
 A sign-in code is emailed. Use account signup if there is no account yet.
 
+Or set TESTFLOWS_MACHINE_API_KEY instead.
+
 ```
 usage: machine login [-h]
 ```
@@ -1006,6 +1008,8 @@ List and manage API keys. See [Account and billing](account-and-billing.md).
 A key controls runs, disks and sessions. It cannot change billing or the
 account.
 
+Set TESTFLOWS_MACHINE_API_KEY to use one.
+
 ```
 usage: machine account api-keys [-h] {list,create,delete,update} ...
 ```
@@ -1149,7 +1153,9 @@ See also:
 
 Create an account. See [Signing up](getting-started.md#signing-up).
 
-A link is emailed to finish signing up.
+The command shows the Terms of Service and the Client EULA in full and asks for
+their acceptance. The account is made accepting them. A link is emailed to
+finish signing up.
 
 ```
 usage: machine account signup [-h]
@@ -1660,7 +1666,7 @@ See also:
 
 ## machine fs
 
-List, copy or print files from a run's disk at a checkpoint.
+List, copy or print files of a run's disk.
 
 The command reads the filesystem on the disk as a checkpoint saved it. It never
 reads the live machine. It needs no program in the machine and does not change
@@ -2406,11 +2412,17 @@ See [Stopping and starting](running-a-machine.md#stopping-and-starting).
 
 Use -a to stop every running machine. Use `--dry-run` to list what would stop.
 
+A machine that refuses to stop stays up and is reported. A machine that does not
+stop in time stays up too. Use -a -f to kill those machines.
+
+The command lists the machines it would kill and asks first. Use -y to kill
+without asking.
+
 The command waits until the machine is gone. A machine that already exited
 counts as success. Use `--no-wait` to return once the request is accepted.
 
 ```
-usage: machine stop [-h] [-a] [--dry-run] [--no-wait] [run]
+usage: machine stop [-h] [-a] [-f] [-y] [--dry-run] [--no-wait] [run]
 ```
 
 | Argument | Does |
@@ -2420,6 +2432,8 @@ usage: machine stop [-h] [-a] [--dry-run] [--no-wait] [run]
 | Option | Does |
 |---|---|
 | `-a, --all` | Stop all running machines |
+| `-f, --force` | With -a, kill a machine that refuses to stop or does not stop in time |
+| `-y, --yes` | With -f, kill without asking first |
 | `--dry-run` | List what would be stopped without stopping it |
 | `--no-wait` | Return without waiting |
 
@@ -2430,6 +2444,7 @@ machine stop run1            stop run1, wait until it is gone
 machine stop run1 --no-wait  return once the request is accepted
 machine stop -a              stop every running machine
 machine stop -a --dry-run    list what would stop
+machine stop -afy            stop all, kill any that do not stop
 ```
 
 See also:
@@ -2668,8 +2683,16 @@ ran free too.
 This one clause is the CLI. More than one clause is a plan file. Run machine
 plan `<run>` `<file>` for each drive that uses it.
 
+A hit of a breakpoint, watchpoint or catchpoint ends the run. Use `--iters` 0 to
+run until one does, as GDB's continue does.
+
+Use `--back` to go back to the newest breakpoint, watchpoint or catchpoint hit
+before now, as reverse-continue does. The machine switches onto a branch at that
+entry, as go does. The branch keeps the run's stops as they are now. The run
+stays as it was.
+
 ```
-usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
+usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
                    [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
                    [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
                    [--fast span] [--step span] [--step-into span] [--vtime-rate span]
@@ -2684,6 +2707,7 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 
 | Option | Does |
 |---|---|
+| `--back` | Go back to the newest hit before now, onto a branch |
 | `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
@@ -2691,7 +2715,7 @@ usage: machine run [-h] [--limit span] [--backstop-limit n] [--retry n] [--strat
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
-| `--until predicate` | Drive until this is true (same predicates as wait `--for`) |
+| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOCATION |
 | `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
@@ -2713,6 +2737,7 @@ Examples:
 ```
 machine run run1                            run one iteration
 machine run run1 --iters 100                run 100 iterations
+machine run run1 --iters 0                  continue to the next hit
 machine run run1 --mode step --iters 20     single-step 20 iterations
 machine run run1 --until 'console~login:'   until the console prints login:
 machine run run1 --until 'entry>=500'       until it reaches entry 500
@@ -2774,8 +2799,8 @@ again to go on with it.
 Example: when /test:on mode step,fast fast=1:100k step=1:200 when /test:kernel
 task-sched hold else mode fast
 
-Example: place thread 56 on vCPU 2 or 3 when it wakes, 2 three times as often as
-3: else task-pin 56=golden:2[3],3[1]
+Example: place tid 56 on vCPU 2 or 3 when it wakes, 2 three times as often as 3:
+else task-pin 56=golden:2[3],3[1]
 
 A clause names one when predicate, then any of these axes. An axis is a comma
 list of choices, one drawn per dispatch. [N] is an optional weight on a choice.
@@ -2796,12 +2821,12 @@ drain-all. task-int `<int>`[N],... an interrupt for that task: none or preempt.
 This axis has no keep: none is its do-nothing choice. task-slice
 `<choice>`:`<choice>`:... that task's time slice, drawn from a colon set of
 keep, default and a duration span, in any combination, as in
-keep:default:10us:600us. task-pin [`<tid>`=]`<set>`[N],... where a thread is
+keep:default:10us:600us. task-pin [`<tid>`=]`<set>`[N],... where a task is
 placed when it next wakes, each choice a set of vCPUs: 1-3 is all three, 1,2,3
 is three choices of one, free is any vCPU and none is no vCPU, which stops it
-running. A placement policy, not confinement: a thread already queued elsewhere
-keeps that vCPU until it wakes. `<tid>`= names the thread. Without it, the task
-on the drawn vCPU is placed. none requires `<tid>`=.
+running. A placement policy, not confinement: a task already queued elsewhere
+keeps that vCPU until it wakes. `<tid>`= names the task. Without it, the task on
+the drawn vCPU is placed. none requires `<tid>`=.
 
 A weight makes a choice win more often. mode step[3],fast[1] draws step three
 times as often as fast. keep is the choice that draws nothing. It holds the last
@@ -2843,7 +2868,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
-| `--until predicate` | Drive until this is true (same predicates as wait `--for`) |
+| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOCATION |
 | `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
@@ -2864,7 +2889,7 @@ Prints:
 tally         one line for each clause, numbered from 1
 <choice>×<n>  how many times that choice of an axis was drawn
 matched <n>   how many dispatches the clause applied to
-marks held    threads a clause held that are still held at the end
+marks held    tasks a clause held that are still held at the end
               then what run prints
 ```
 
@@ -2907,7 +2932,7 @@ usage: machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|l
 |---|---|
 | `--entries range` | With log: commands at one entry, or an inclusive range |
 | `--wide` | With log: show the entries, vCPU, opcode and size of each command |
-| `-n, --lines range` | With log: command N, A:B, A:, :B or :, or -N for the last N commands |
+| `-n, --lines range` | With log: command N, A:B, A:, :B or :, -N for the last N commands, or -A:-B counted from the end |
 | `-c, --command cmd` | Slash command (e.g. "/s=0@10") |
 
 Examples:
@@ -2940,7 +2965,7 @@ See also:
 
 ## machine wait
 
-Wait until a run satisfies a `--for` predicate.
+Wait until a run satisfies a predicate.
 See [Waiting](running-a-machine.md#waiting).
 
 Use wait to script against a run. It waits for a state, an entry, a console line
@@ -2958,22 +2983,21 @@ A task predicate is [who:]what. The what is exec, exit, sched, desched, on,
 kernel or off. The who is /path, cgroup=path, tgid=N or tid=N. Omitting it means
 any focused task.
 
-A path or a cgroup must already be focused. A path or cgroup subject means the
-process. tgid=N means the process for exit and any of its threads for exec. Use
-machine tasks `<run>` `--focused` to see which thread is on a vCPU.
+A path or a cgroup must already be focused. A path or cgroup subject means its
+tgid. tgid=N means the tgid for exit and any of its tasks for exec. Use machine
+tasks `<run>` `--focused` to see which task is on a vCPU.
 
 Four of the seven are edges. exec fires where a task matching who entered the
 task table. exit fires where one left it.
 
-sched fires where a thread is given the CPU. desched fires where one gives it
-up.
+sched fires where a task is given the CPU. desched fires where one gives it up.
 
-Three are states, and they partition time. on holds while the thread is on cpu
-in its own code, at CPL 3. That is where a forced decision can land between two
-of its own instructions.
+Three are states, and they partition time. on holds while the task is on cpu in
+its own code, at CPL 3. That is where a forced decision can land between two of
+its own instructions.
 
-kernel holds while that thread is on cpu in the kernel. off holds while it is
-not the task on cpu at all.
+kernel holds while that task is on cpu in the kernel. off holds while it is not
+the task on cpu at all.
 
 Named runs must be in the current session. Use `--all` to wait for every run in
 it.
@@ -3014,8 +3038,10 @@ See also:
 
 ## machine cancel
 
-Cancel the active run or checkpoint operation.
+Cancel the run or replay in progress.
 See [Trying different schedules](running-a-machine.md#trying-different-schedules).
+
+A run stops where it is. A replay stops before its next entry.
 
 ```
 usage: machine cancel [-h] run
@@ -3028,13 +3054,19 @@ usage: machine cancel [-h] run
 Examples:
 
 ```
-machine cancel run1  cancel the active run or checkpoint
+machine cancel run1  cancel what run1 is running
+```
+
+Refuses, and the way past:
+
+```
+a run with nothing in progress  machine run run1
 ```
 
 See also:
 
 - [`machine run`](#machine-run)
-- [`machine checkpoint`](#machine-checkpoint)
+- [`machine replay`](#machine-replay)
 - [`machine wait`](#machine-wait)
 
 ## machine replay
@@ -3134,7 +3166,7 @@ usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type 
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entry N, A:B, A:, :B or :, or -N for the last N entries |
+| `-n, --entries range` | Entry N, A:B, A:, :B or :, -N for the last N entries, or -A:-B counted from the end |
 | `--include type [type ...]` | Include only these event types: run, irq, exception, random, device_in, block_done, input, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid |
 | `--exclude type [type ...]` | Exclude these event types |
 
@@ -3197,7 +3229,7 @@ See also:
 
 ## machine checkpoint
 
-Create a checkpoint of the current machine state.
+Create a checkpoint of the machine's state.
 See [Checkpoints](checkpoints-and-branches.md#checkpoints).
 
 A checkpoint is a point to return to, written ^name. It saves the machine state.
@@ -3874,7 +3906,7 @@ usage: machine entries [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entry N, A:B, A:, :B or :, or -N for the last N entries |
+| `-n, --entries range` | Entry N, A:B, A:, :B or :, -N for the last N entries, or -A:-B counted from the end |
 | `-f, --follow` | Follow new output (like tail -f) |
 
 Examples:
@@ -4146,7 +4178,7 @@ usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source 
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
+| `-n, --lines range` | Line N, A:B, A:, :B or :, -N for the last N lines, or -A:-B counted from the end |
 | `--entries range` | Output of one entry, or of an inclusive range |
 | `-f, --follow` | Follow new output (like tail -f) |
 | `--wide` | Show the entries and the source that printed each line, and its number |
@@ -4594,7 +4626,7 @@ usage: machine debug log [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
+| `-n, --lines range` | Line N, A:B, A:, :B or :, -N for the last N lines, or -A:-B counted from the end |
 | `-f, --follow` | Follow new output (like tail -f) |
 
 Examples:
@@ -4628,7 +4660,7 @@ usage: machine debug err [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Line N, A:B, A:, :B or :, or -N for the last N lines |
+| `-n, --lines range` | Line N, A:B, A:, :B or :, -N for the last N lines, or -A:-B counted from the end |
 | `-f, --follow` | Follow new output (like tail -f) |
 
 Examples:
@@ -4647,25 +4679,26 @@ See also:
 
 ## machine tasks
 
-List the tasks running inside a machine.
+List the tasks the guest runs.
 See [Looking at tasks](steering-programs.md#looking-at-tasks).
 
-A task is a thread of a program in the machine. One row per task, keyed by tid.
-The tgid is the process.
+A task is what the guest kernel schedules: a thread of a program, or the
+kernel's own. Each task has a tid. Its tgid names its thread group, the process
+it belongs to.
 
-Use `--vcpu` to list the tasks of one vCPU. Use `--focused` to list the tasks
-that focus steers.
+Each row is one task, by its tid. Use `--vcpu` to list the tasks of one vCPU.
+Use `--focused` to list the tasks that focus steers.
 
-The subcommands steer the scheduler, so a thread order can be tried. The hold,
-yield and release subcommands control whether a thread runs.
+The subcommands steer the scheduler, so an order of tasks can be tried. The
+hold, yield and release subcommands control whether a task runs.
 
-The slice subcommand sets how long a thread runs. The pin subcommand places it
-on a vCPU. The cgroups subcommand groups the list. The exits subcommand lists
-the tasks that left.
+The slice subcommand sets how long a task runs. The pin subcommand places it on
+a vCPU. The cgroups subcommand groups the list. The exits subcommand lists the
+tasks that left.
 
 ```
 usage: machine tasks [-h] [--vcpu n] [--focused]
-                     run {cgroups,exits,hold,yield,release,slice,pin} ...
+                     run {cgroups,exits,hold,yield,release,slice,pin,signal} ...
 ```
 
 | Argument | Does |
@@ -4687,18 +4720,16 @@ machine tasks run1 --focused  only the focused tasks
 Prints:
 
 ```
-TID TGID        the thread, and the process it belongs to
+TID TGID        the task, and the tgid it belongs to
 COMM EXE        the name of the task, and the path of its program
 CPU             the vCPU the task is on, blank when it is on none
 NEXT            whose code runs next on that vCPU: user or kernel
-KIND            user for a program, kernel for a kernel thread
+KIND            user for a program, kernel for the kernel's own
 FOCUS           ticked for a task that focus steers
 HOLD YIELD PIN  ticked for a mark set with hold, yield or pin
 SLICE           the time set with slice
 json            also cgroup, and exe under the same name
-generation      a count that changes when the table does
-truncated       true when the guest has more tasks than the table holds
-paths_full      true when some program paths did not fit
+generation      a count that changes when the tasks do
 ```
 
 Refuses, and the way past:
@@ -4777,11 +4808,11 @@ See also:
 
 ### machine tasks hold
 
-Take a thread off the runqueue.
+Take a task off the runqueue.
 See [Holding threads](steering-programs.md#holding-threads).
 
-The scheduler cannot pick a held thread. A hold takes effect at the next
-scheduling decision of the vCPU. Holding the last runnable thread leaves nothing
+The scheduler cannot pick a held task. A hold takes effect at the next
+scheduling decision of the vCPU. Holding the last runnable task leaves nothing
 to run and no decision coming.
 
 ```
@@ -4790,12 +4821,12 @@ usage: machine tasks run hold [-h] tid
 
 | Argument | Does |
 |---|---|
-| `tid` | Thread id |
+| `tid` | Task, by its tid |
 
 Examples:
 
 ```
-machine tasks run1 hold 56  hold thread 56
+machine tasks run1 hold 56  hold tid 56
 ```
 
 See also:
@@ -4806,10 +4837,10 @@ See also:
 
 ### machine tasks yield
 
-Put a thread behind its peers.
+Put a task behind its peers.
 See [Holding threads](steering-programs.md#holding-threads).
 
-The thread stays runnable. It does nothing when no peer is runnable.
+The task stays runnable. It does nothing when no peer is runnable.
 
 ```
 usage: machine tasks run yield [-h] tid
@@ -4817,12 +4848,12 @@ usage: machine tasks run yield [-h] tid
 
 | Argument | Does |
 |---|---|
-| `tid` | Thread id |
+| `tid` | Task, by its tid |
 
 Examples:
 
 ```
-machine tasks run1 yield 56  put thread 56 behind its peers
+machine tasks run1 yield 56  put tid 56 behind its peers
 ```
 
 See also:
@@ -4845,7 +4876,7 @@ usage: machine tasks run release [-h] tid
 
 | Argument | Does |
 |---|---|
-| `tid` | Thread id |
+| `tid` | Task, by its tid |
 
 Examples:
 
@@ -4861,7 +4892,7 @@ See also:
 
 ### machine tasks slice
 
-Set how long a thread runs between decisions.
+Set how long a task runs between decisions.
 See [Holding threads](steering-programs.md#holding-threads).
 
 A decision is a scheduling decision of the vCPU. Give a duration with a unit,
@@ -4874,13 +4905,13 @@ usage: machine tasks run slice [-h] tid duration|default
 
 | Argument | Does |
 |---|---|
-| `tid` | Thread id |
+| `tid` | Task, by its tid |
 | `duration\|default` | Duration with a unit, or default |
 
 Examples:
 
 ```
-machine tasks run1 slice 56 600us    run thread 56 for 600 us
+machine tasks run1 slice 56 600us    run tid 56 for 600 us
 machine tasks run1 slice 56 default  the kernel's own slice
 ```
 
@@ -4892,15 +4923,15 @@ See also:
 
 ### machine tasks pin
 
-Place a thread on one or more vCPUs when it next wakes.
+Place a task on one or more vCPUs when it next wakes.
 See [Holding threads](steering-programs.md#holding-threads).
 
 Each choice is a set of vCPUs. The set 1-3 is all three. The set 1,2,3 is three
 choices of one.
 
-Free means any vCPU. None means no vCPU, which stops the thread running.
+Free means any vCPU. None means no vCPU, which stops the task running.
 
-Pin is a placement policy, not confinement. A thread already queued elsewhere
+Pin is a placement policy, not confinement. A task already queued elsewhere
 keeps that vCPU until it wakes.
 
 ```
@@ -4909,13 +4940,13 @@ usage: machine tasks run pin [-h] tid set|free|none
 
 | Argument | Does |
 |---|---|
-| `tid` | Thread id |
-| `set\|free\|none` | Set of vCPUs to place the thread on, such as 1 or 0-2; free for any, none for no vCPU |
+| `tid` | Task, by its tid |
+| `set\|free\|none` | Set of vCPUs to place the task on, such as 1 or 0-2; free for any, none for no vCPU |
 
 Examples:
 
 ```
-machine tasks run1 pin 56 2     place thread 56 on vCPU 2
+machine tasks run1 pin 56 2     place tid 56 on vCPU 2
 machine tasks run1 pin 56 free  place it on any vCPU
 ```
 
@@ -4925,9 +4956,39 @@ See also:
 - [`machine tasks hold`](#machine-tasks-hold)
 - [`machine plan`](#machine-plan)
 
+### machine tasks signal
+
+Send a task a signal.
+
+The guest sends the signal at its next entry from user mode, as GDB's signal
+command delivers one. The task acts on it when it next runs. The run log keeps
+the request, so a replay sends it at the same instruction.
+
+```
+usage: machine tasks run signal [-h] tid signal
+```
+
+| Argument | Does |
+|---|---|
+| `tid` | Task, by its tid |
+| `signal` | Signal by name, such as SIGTERM or TERM, or by number |
+
+Examples:
+
+```
+machine tasks run1 signal 56 SIGTERM  send tid 56 SIGTERM
+machine tasks run1 signal 56 USR1     the name without SIG
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine tasks`](#machine-tasks)
+- [`machine run`](#machine-run)
+
 ## machine syscalls
 
-List the system calls of the machine, by number.
+List the system calls, by number.
 See [Looking at tasks](steering-programs.md#looking-at-tasks).
 
 A name filters the list to calls whose name contains that text.
@@ -4961,7 +5022,7 @@ See also:
 
 ## machine ints
 
-List the interrupt vectors of the machine.
+List the interrupt vectors.
 See [Looking at tasks](steering-programs.md#looking-at-tasks).
 
 One row per IDT vector that the machine has a handler for. The vector is in hex,
@@ -5004,8 +5065,8 @@ A focused program is tracked. A batch of run iterations ends at each of its
 context switches and where it reaches its own code.
 
 An entry is the absolute path of a program, matched exactly. Write
-cgroup=`<path>` to match the cgroup of a task. Write tgid=`<n>` to name a
-process by id. The tgid of a task is shown by tasks.
+cgroup=`<path>` to match the cgroup of a task. Write tgid=`<n>` to name a tgid.
+The tgid of a task is shown by tasks.
 
 Use add and remove to change the list. Use clear to empty it.
 
@@ -5029,9 +5090,9 @@ Prints:
 
 ```
 Focus     each program or cgroup named, and what is counted for it
-Steering  the tgid of each process a focus entry matches now
+Steering  each tgid a focus entry matches now
           nothing yet, until a program that is named starts
-Marks     how many threads are held, yield or have a slice
+Marks     how many tasks are held, yield or have a slice
 Switches  context switches of steered tasks since the start
           on I/O counts those where the task left to wait for I/O
 ```
@@ -5055,7 +5116,7 @@ usage: machine focus run add [-h] path|cgroup=path|tgid=n [+syscalls|+ints ...]
 
 | Argument | Does |
 |---|---|
-| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or process id to match |
+| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or tgid to match |
 | `[+syscalls\|+ints ...]` | Count this program's syscalls or interrupts |
 
 Examples:
@@ -5083,7 +5144,7 @@ usage: machine focus run remove [-h] path|cgroup=path|tgid=n
 
 | Argument | Does |
 |---|---|
-| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or process id to match |
+| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or tgid to match |
 
 Examples:
 
@@ -5206,7 +5267,7 @@ See also:
 
 ## machine exec
 
-Execute a command in a machine.
+Execute a command in the guest.
 
 A command is a program of the machine's disk and its arguments, written after
 two dashes. No shell reads it. Use -c to give a line to the shell of the disk,
@@ -5428,7 +5489,7 @@ See also:
 
 ## machine put
 
-Put a file into a machine or into a container of it.
+Put a file into the guest or a container.
 
 The command copies a file of this machine to a path in the running machine. Use
 `--container` to put it in a container instead. A file of any size is put. The
@@ -5497,7 +5558,7 @@ See also:
 
 ## machine get
 
-Get a file from a machine or from a container of it.
+Get a file from the guest or a container.
 
 The command copies a file of the running machine to a file of this machine. Use
 `--container` to get it from a container instead. A file of any size is copied.
@@ -5554,7 +5615,7 @@ See also:
 
 ## machine containers
 
-List the containers of a machine and the service of each.
+List the containers. Each row names its service.
 
 The command prints each container with its Compose service, its state and its
 image. Stopped containers are listed too. A container that no service started
@@ -5607,7 +5668,7 @@ See also:
 
 ## machine core
 
-Get a core dump of a process of a machine.
+Get a core dump of a process.
 
 The command has a process dump a core and copies the core to a file of this
 machine. A debugger reads the core with the program of the process. Use
@@ -5669,7 +5730,7 @@ See also:
 
 ## machine profile
 
-Sample what a machine runs and show where the time goes.
+Profile what the guest runs.
 
 The machine samples each CPU at every timer interrupt, 250 times a second.
 Nothing runs in the guest for it. The command prints the functions that ran.
@@ -5758,7 +5819,7 @@ See also:
 
 ## machine irq
 
-Inject an interrupt into the vCPUs of a machine.
+Inject an interrupt into the vCPUs.
 See [Interrupts and time](steering-programs.md#interrupts-and-time).
 
 Without a vector, the command lists the vector names. The option `--nmi` alone
@@ -5806,7 +5867,7 @@ See also:
 
 ## machine vtime
 
-Show and change the clock of a machine.
+Show and change the guest's clock.
 See [Interrupts and time](steering-programs.md#interrupts-and-time).
 
 Machine time is derived from what the machine executes, not from the host clock.
@@ -5897,11 +5958,11 @@ See also:
 
 ## machine regs
 
-Show the registers of a thread of a machine.
+Show the registers of a task.
 
-The registers are the user registers of a thread of the guest, by its id. A
-thread on a vCPU has them in the vCPU. A thread off every vCPU has them where it
-saved them. A thread in the kernel has the ones it entered with.
+The registers are the user registers of a task of the guest, by its tid. A task
+on a vCPU has them in the vCPU. A task off every vCPU has them where it saved
+them. A task in the kernel has the ones it entered with.
 
 Without names the general registers are shown. Use `--all` to show the x87, SSE
 and AVX registers as well. Name registers to show those alone.
@@ -5917,7 +5978,7 @@ usage: machine regs [-h] [--all] run tid [register ...]
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Thread of the machine, by its id. A process is its first thread |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
 | `[register ...]` | Register to show, such as rip or xmm0, or NAME=VALUE to write one (default: the general registers) |
 
 | Option | Does |
@@ -5927,7 +5988,7 @@ usage: machine regs [-h] [--all] run tid [register ...]
 Examples:
 
 ```
-machine regs run1 412                   the general registers of thread 412
+machine regs run1 412                   the general registers of tid 412
 machine regs run1 412 rip rsp           two of them
 machine regs run1 412 --all             with x87, SSE and AVX
 machine regs run1 412 rax=0 rip=main+4  write two of them
@@ -5943,7 +6004,7 @@ json  tid tgid start where cpu values, each value in hex
 Refuses, and the way past:
 
 ```
-a thread the machine does not have  machine tasks run1
+a tid the machine does not have  machine tasks run1
 ```
 
 See also:
@@ -5955,13 +6016,14 @@ See also:
 
 ## machine mem
 
-Show the memory of a process of a machine.
+Show the memory of a tgid.
 
-The memory is the process's own, through its page tables. The thread names its
-process. Guest kernel memory is not shown.
+The memory is the tgid's own, through its page tables. The task names its tgid.
+Guest kernel memory is not shown.
 
 A location is an address, a register written $rsp, or a symbol such as main. A
-symbol of one file is written PATH:NAME. A location moves by +N or -N.
+symbol of one file is written PATH:NAME. A source line is written FILE:LINE and
+names its first code. A location moves by +N or -N.
 
 A format after the location shows the memory as GDB's x command does. A format
 is a count, a letter and a unit, such as 8xg, 4i or s. The letters are x, d, u,
@@ -5972,28 +6034,41 @@ reaches an address that is not mapped ends there.
 
 LOCATION=VALUE writes there, and the write is part of the run. A quoted string
 writes its bytes. A number takes the size of the variable it is written to, or
-of a unit after it. A page the process cannot write is not written.
+of a unit after it. A page the tgid cannot write is not written.
 
 ```
-usage: machine mem [-h] run tid location [format]
+usage: machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [--mapped]
+                   run tid [location] [format]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Thread of the machine, by its id. A process is its first thread |
-| `location` | Address to read at: a number, $register, a symbol or PATH:symbol, moved by +N or -N. LOCATION=VALUE writes there |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `[location]` | Address to read at: a number, $register, a symbol or PATH:symbol, moved by +N or -N. LOCATION=VALUE writes there |
 | `[format]` | Count, format letter and unit, as GDB's x takes them, such as 8xg, 4i or s (default: 8xg) |
+
+| Option | Does |
+|---|---|
+| `--find pattern` | Find a pattern in `--length` bytes: text, or 0x and hex bytes |
+| `--dump file` | Write `--length` bytes to a file of this machine |
+| `--restore file` | Write the bytes of a file of this machine at the location |
+| `--length n` | Bytes a find or a dump reaches over |
+| `--mapped` | List the pages the tgid maps, with their access and file |
 
 Examples:
 
 ```
-machine mem run1 412 '$sp'         eight giant words at the stack
-machine mem run1 412 '$pc' 4i      the next four instructions
-machine mem run1 412 main 16xb     sixteen bytes of main
-machine mem run1 412 environ a     what environ points at
-machine mem run1 412 counter=42    write counter, at its size
-machine mem run1 412 '$sp+8=-1' w  write a word at the stack
+machine mem run1 412 '$sp'                  eight giant words at the stack
+machine mem run1 412 '$pc' 4i               the next four instructions
+machine mem run1 412 main 16xb              sixteen bytes of main
+machine mem run1 412 environ a              what environ points at
+machine mem run1 412 counter=42             write counter, at its size
+machine mem run1 412 '$sp+8=-1' w           write a word at the stack
+machine mem run1 412 --mapped               the pages the tgid maps
+machine mem run1 412 b --find x --length 9  find x
+machine mem run1 412 b --dump f --length 8  into file f
+machine mem run1 412 b --restore f          file f back
 ```
 
 Prints:
@@ -6006,54 +6081,59 @@ json  tid address format unit lines unmapped
 Refuses, and the way past:
 
 ```
-a symbol no file names              machine symbols run1 412 --regex name
-a thread the machine does not have  machine tasks run1
+a symbol no file names           machine symbols run1 412 --regex name
+a tid the machine does not have  machine tasks run1
 ```
 
 See also:
 
 - [`machine regs`](#machine-regs)
 - [`machine symbols`](#machine-symbols)
-- [`machine maps`](#machine-maps)
+- [`machine libs`](#machine-libs)
 - [`machine dump`](#machine-dump)
 
 ## machine backtrace
 
-Show the stack of a thread of a machine.
+Show the stack of a task.
 
-Each frame is a function the thread is in, the innermost first. The frames are
+Each frame is a function the task is in, the innermost first. The frames are
 walked by the call frame rules of the program files. Code with no rules is
 walked by its frame pointer.
 
 The names come from the program files on the machine's disk as it stands. A
-frame of a file the disk does not have is named by its file.
+frame of a file the disk does not have is named by its file. A frame of a
+program built with debug information names its source line.
 
 ```
-usage: machine backtrace [-h] run tid
+usage: machine backtrace [-h] [--frame n] run tid
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Thread of the machine, by its id. A process is its first thread |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+
+| Option | Does |
+|---|---|
+| `--frame n` | Describe one frame, as GDB's info frame: where it is and what called it |
 
 Examples:
 
 ```
-machine backtrace run1 412  the stack of thread 412
+machine backtrace run1 412  the stack of tid 412
 ```
 
 Prints:
 
 ```
-text  # ADDRESS FUNCTION FILE
+text  # ADDRESS FUNCTION SOURCE FILE
 json  tid frames
 ```
 
 Refuses, and the way past:
 
 ```
-a thread the machine does not have  machine tasks run1
+a tid the machine does not have  machine tasks run1
 ```
 
 See also:
@@ -6063,37 +6143,248 @@ See also:
 - [`machine symbols`](#machine-symbols)
 - [`machine profile`](#machine-profile)
 
-## machine symbols
+## machine call
 
-Find the symbols of a process of a machine.
+Call a function in a task.
 
-A name finds the address of each symbol of that name. An address finds the
-symbol it is in. A symbol of one file is written PATH:NAME.
+The task runs the function from where it stands. The arguments go in the
+registers the x86-64 ABI passes them in. An argument is an integer or a pointer.
+The value returned is printed by the function's return type.
 
-Use `--regex` to find each function whose name matches a pattern. The symbols
-come from the program files on the machine's disk.
+The task's registers are put back after the call. What the function wrote in
+memory stays written. The call is part of the run, and a replay makes it again.
+
+A breakpoint the call reaches ends it there. The registers are put back then
+too, and the call is abandoned.
 
 ```
-usage: machine symbols [-h] [--regex pattern] [--variables] [--file path] run tid [name|address]
+usage: machine call [-h] run tid function [arguments ...]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Thread of the machine, by its id. A process is its first thread |
-| `[name\|address]` | Symbol to find the address of, or address to find the symbol of |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `function` | Function to call: a name or a location |
+| `[arguments ...]` | Arguments: expressions as print takes them, integers or pointers |
+
+Examples:
+
+```
+machine call run1 412 square 3  square of 3, by its type
+machine call run1 412 fflush 0  flush every stream
+```
+
+Prints:
+
+```
+text  FUNCTION(ARGUMENTS) = VALUE
+json  tid function returned abandoned hits
+```
+
+Refuses, and the way past:
+
+```
+a tid the machine does not have  machine tasks run1
+```
+
+See also:
+
+- [`machine print`](#machine-print)
+- [`machine return`](#machine-return)
+- [`machine step`](#machine-step)
+
+## machine return
+
+Return from a task's innermost function.
+
+The task goes on at the instruction after the call, in its caller. The caller's
+stack pointer and the registers the function saved are restored, as GDB's return
+does. A value goes in rax.
+
+The registers come from the call frame rules of the program files on the
+machine's disk. A function with no rules is refused.
+
+The write is part of the run, and a replay makes it again. Memory is not
+changed.
+
+```
+usage: machine return [-h] run tid [value]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `[value]` | Value the function returns in rax: a number or a location |
+
+Examples:
+
+```
+machine return run1 412    leave the function, rax as it is
+machine return run1 412 0  leave it, returning 0
+```
+
+Prints:
+
+```
+text  Returned from FUNCTION to PLACE, in tid TID
+json  tid from address function offset source line rax
+```
+
+Refuses, and the way past:
+
+```
+a tid the machine does not have  machine tasks run1
+```
+
+See also:
+
+- [`machine backtrace`](#machine-backtrace)
+- [`machine step`](#machine-step)
+- [`machine regs`](#machine-regs)
+
+## machine print
+
+Print the value of an expression.
+
+An expression is a variable of the frame, a global or a $register. A member, an
+arrow, an index, a star and an ampersand apply to it as in C. The value is
+printed by its type.
+
+The types and the variables come from the program's debug information on the
+machine's disk. Use `--frame` to print in a frame of a caller, as backtrace
+numbers them.
+
+```
+usage: machine print [-h] [--frame n] [--type] run tid expression [format]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `expression` | A variable or $register, with .m, ->m, [i], * and & |
+| `[format]` | Each number in a format, as print/x takes one: x, d, u, o, t, c or z |
+
+| Option | Does |
+|---|---|
+| `--frame n` | Frame of the stack, as backtrace numbers it (default: 0) |
+| `--type` | Print its type instead, as GDB's whatis and ptype do |
+
+Examples:
+
+```
+machine print run1 412 counter          a global or a local
+machine print run1 412 'shape->at.x'    a member through a pointer
+machine print run1 412 'squares[2]'     an element of an array
+machine print run1 412 '*(int *)arg'    through a cast
+machine print run1 412 index --frame 1  in the caller's frame
+```
+
+Prints:
+
+```
+text  EXPRESSION = VALUE
+json  tid frame expression type value address
+```
+
+Refuses, and the way past:
+
+```
+a name the frame and the globals do not have  machine locals run1 412
+```
+
+See also:
+
+- [`machine locals`](#machine-locals)
+- [`machine backtrace`](#machine-backtrace)
+- [`machine mem`](#machine-mem)
+- [`machine symbols`](#machine-symbols)
+
+## machine locals
+
+List the local variables of a frame.
+
+Each local of the function is printed with its value, by its type. Use `--args`
+to list the function's arguments instead. Use `--frame` to list a frame of a
+caller.
+
+The variables come from the program's debug information on the machine's disk. A
+variable the debug information places where it is not read is listed with why.
+
+```
+usage: machine locals [-h] [--frame n] [--args] run tid
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+
+| Option | Does |
+|---|---|
+| `--frame n` | Frame of the stack, as backtrace numbers it (default: 0) |
+| `--args` | The function's arguments instead |
+
+Examples:
+
+```
+machine locals run1 412            the locals of the innermost frame
+machine locals run1 412 --args     the arguments instead
+machine locals run1 412 --frame 1  the caller's locals
+```
+
+Prints:
+
+```
+text  NAME = VALUE, a line each
+json  tid frame function variables
+```
+
+See also:
+
+- [`machine print`](#machine-print)
+- [`machine backtrace`](#machine-backtrace)
+
+## machine symbols
+
+Find the symbols of a tgid.
+
+A name finds the address of each symbol of that name. An address finds the
+symbol it is in. A symbol of one file is written PATH:NAME. A source line
+written FILE:LINE finds its code.
+
+Use `--regex` to find each function whose name matches a pattern. The symbols
+come from the program files on the machine's disk.
+
+```
+usage: machine symbols [-h] [--regex pattern] [--variables] [--types] [--scope] [--sources]
+                       [--file path]
+                       run tid [name|address|file:line]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `[name\|address\|file:line]` | Symbol to find the address of, address to find the symbol of, or source line to find the code of |
 
 | Option | Does |
 |---|---|
 | `--regex pattern` | Find each function whose name the regular expression matches |
 | `--variables` | Find variables with `--regex`, not functions |
-| `--file path` | File to look in with `--regex`, by its path or its file name (default: every file the process maps) |
+| `--types` | Find the types the debug information names with `--regex`, as info types |
+| `--scope` | List the variables in scope at a location, as info scope |
+| `--sources` | Find the source files the line tables name with `--regex`, as info sources |
+| `--file path` | File to look in with `--regex`, by its path or its file name (default: every file the tgid maps) |
 
 Examples:
 
 ```
 machine symbols run1 412 main                         where main is
 machine symbols run1 412 0x401ac6                     what is at an address
+machine symbols run1 412 data-race.c:56               a source line's code
 machine symbols run1 412 --regex ^wait                functions that match
 machine symbols run1 412 --regex env --variables      variables
 machine symbols run1 412 --regex ^m --file libc.so.6  of one file
@@ -6102,44 +6393,44 @@ machine symbols run1 412 --regex ^m --file libc.so.6  of one file
 Prints:
 
 ```
-text  ADDRESS SIZE KIND NAME FILE
-json  tid symbols
+text  ADDRESS SIZE KIND NAME SOURCE FILE
+json  tid symbols, or tid lines for a source line
 ```
 
 See also:
 
 - [`machine mem`](#machine-mem)
-- [`machine maps`](#machine-maps)
+- [`machine libs`](#machine-libs)
 - [`machine backtrace`](#machine-backtrace)
 
-## machine maps
+## machine libs
 
-List the files a process of a machine maps.
+List the program and the libraries a tgid maps.
 
-Each row is a file the process maps executable, at its range of addresses: the
-program and its libraries. A file the machine's disk does not have has no
+Each row is a file the tgid maps executable, at its range of addresses. The
+first row is the program. A file the machine's disk does not have has no
 symbols.
 
 ```
-usage: machine maps [-h] run tid
+usage: machine libs [-h] run tid
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Thread of the machine, by its id. A process is its first thread |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
 
 Examples:
 
 ```
-machine maps run1 412  the files process 412 maps
+machine libs run1 412  the program and libraries of 412
 ```
 
 Prints:
 
 ```
 text  START END OFFSET FILE
-json  tid maps
+json  tid libraries
 ```
 
 See also:
@@ -6147,3 +6438,1031 @@ See also:
 - [`machine symbols`](#machine-symbols)
 - [`machine mem`](#machine-mem)
 - [`machine tasks`](#machine-tasks)
+
+## machine step
+
+Step a task.
+
+A step is one instruction of the task. Use `--line` to step a source line. Use
+`--over` to step over a call, so the function and all it calls are one step. Use
+`--out` to run until the function returns.
+
+The machine runs whichever task the guest schedules. A step of one task runs the
+machine until that task is in its own code, then steps it. Other tasks run
+meanwhile.
+
+Each step is a run of the machine, and a replay makes it again. A breakpoint the
+run reaches ends the step. A line step steps out of a function that has no line
+tables.
+
+Use `--back` to go back over the executions of the vCPU the task is on, as
+reverse-stepi does. Each step of a stepped stretch is one execution. The machine
+switches onto a branch there, as go does.
+
+With `--line`, `--over` or `--out`, `--back` goes back over the task's own code.
+It does as reverse-step, reverse-next, reverse-nexti and reverse-finish do. It
+goes back over what the run recorded one instruction at a time. Past that it
+stops, and says the history ends there.
+
+```
+usage: machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run tid [count]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `[count]` | Steps to make (default: 1) |
+
+| Option | Does |
+|---|---|
+| `--line` | Step a source line, not an instruction |
+| `--over` | Step over a call, the function it calls and all it calls being one step |
+| `--out` | Run until the function returns to the one that called it |
+| `--back` | Go back over the run's executions, onto a branch |
+| `--skip name` | Step out of a function or a source file of this name in a line step (repeatable) |
+
+Examples:
+
+```
+machine step run1 412                one instruction, as stepi
+machine step run1 412 5 --over       five, a call being one, as nexti
+machine step run1 412 --line         a source line, as step
+machine step run1 412 --line --over  a line over calls, as next
+machine step run1 412 --out          until the function returns, as finish
+machine step run1 412 --back --line  back a line, as reverse-step
+machine step run1 412 --back --out   back to the call, as reverse-finish
+```
+
+Prints:
+
+```
+text         Stepped N instructions to WHERE, in tid TID
+json         tid steps address symbol source hits
+back         Stepped back N lines to WHERE, in tid TID, on BRANCH
+history end  No more history before entry N
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine run`](#machine-run)
+- [`machine backtrace`](#machine-backtrace)
+
+## machine points
+
+List the breakpoints, watchpoints and catchpoints.
+
+The three share one table and its numbers. Each row has its number and its kind.
+Use break, watch or catch to change the row of its kind.
+
+```
+usage: machine points [-h] run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine points run1  every breakpoint, watchpoint and catchpoint
+```
+
+Prints:
+
+```
+text  # KIND ADDRESS SIZE WHERE TGID HITS WHEN
+json  breakpoints
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine watch`](#machine-watch)
+- [`machine catch`](#machine-catch)
+
+## machine break
+
+List and manage breakpoints.
+
+A breakpoint stops the run when a task of its tgid reaches its location. The
+listing has the run's breakpoints, each by its number. Use points to list them
+with the watchpoints and catchpoints.
+
+The run keeps them in its run log. A branch has the ones its parent had where it
+was forked. A run holds 3 at most.
+
+A run that reaches one ends there, and says which. The breakpoints are armed
+while the run records, and not while it replays.
+
+```
+usage: machine break [-h] run {add,delete,clear,save,hits,enable,disable,condition,ignore} ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine break run1               the breakpoints and watchpoints of run1
+machine break run1 add 412 main  stop the tgid of 412 at main
+machine break run1 delete 2      delete breakpoint 2
+```
+
+Prints:
+
+```
+text  # KIND ADDRESS SIZE WHERE TGID HITS WHEN
+json  breakpoints
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine run`](#machine-run)
+- [`machine symbols`](#machine-symbols)
+
+### machine break add
+
+Add a breakpoint.
+
+The breakpoint stops the run before the instruction at its location runs. It
+stops the tgid of the task alone. Another tgid that runs the same address goes
+on.
+
+The location is resolved now, from the tgid's program files. The run log keeps
+the breakpoint, and a branch has its parent's.
+
+```
+usage: machine break run add [-h] [--disabled] [--ignore count] [--temporary]
+                             [--condition condition] [--print format] [--regex pattern]
+                             tid [location]
+```
+
+| Argument | Does |
+|---|---|
+| `tid` | Task whose tgid the breakpoint is in |
+| `[location]` | Location, as mem takes one: NAME, FILE:LINE, *ADDR, $reg, moved by +N |
+
+| Option | Does |
+|---|---|
+| `--disabled` | Add it and do not arm it |
+| `--ignore count` | Pass the first hits that count (default: 0) |
+| `--temporary` | Delete it at its first hit that counts |
+| `--condition condition` | Count a hit only where this holds, such as '$rax == 0' |
+| `--print format` | Print this at a hit and go on, such as 'n={counter} p={$rdi:x}' |
+| `--regex pattern` | Add one at each function whose name matches, in place of a location |
+
+Examples:
+
+```
+machine break run1 add 412 main           at the start of main
+machine break run1 add 412 init.c:104     at a source line
+machine break run1 add 412 '*0x401ca9'    at an address
+machine break run1 add 412 --regex '^tc'  at each function that matches
+```
+
+Prints:
+
+```
+text          Breakpoint N at WHERE, in tgid TGID
+json          number kind address size tgid program location
+json --regex  breakpoints: each added, as break lists them
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine run`](#machine-run)
+- [`machine symbols`](#machine-symbols)
+
+### machine break delete
+
+Delete breakpoints.
+
+The run log keeps the delete, so a branch forked before it keeps the breakpoint.
+
+```
+usage: machine break run delete [-h] number [number ...]
+```
+
+| Argument | Does |
+|---|---|
+| `number [number ...]` | Number of a breakpoint |
+
+Examples:
+
+```
+machine break run1 delete 2  delete breakpoint 2
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break add`](#machine-break-add)
+
+### machine break clear
+
+Delete the breakpoints at a location.
+
+Each breakpoint at the address the location names in the tgid of the task is
+deleted.
+
+```
+usage: machine break run clear [-h] tid location
+```
+
+| Argument | Does |
+|---|---|
+| `tid` | Task whose tgid the breakpoints are in |
+| `location` | Location, as mem takes one |
+
+Examples:
+
+```
+machine break run1 clear 412 main  delete the stops at main
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break delete`](#machine-break-delete)
+
+### machine break save
+
+Save the breakpoints as the commands that add them.
+
+Each line is a machine command that adds one breakpoint again. The command keeps
+its condition, ignore count and flags. A location written by a register is saved
+as its address.
+
+```
+usage: machine break run save [-h] file
+```
+
+| Argument | Does |
+|---|---|
+| `file` | File to write, or - for the standard output |
+
+Examples:
+
+```
+machine break run1 save stops.sh  write the commands to a file
+machine break run1 save -         print them
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break add`](#machine-break-add)
+
+### machine break hits
+
+List the hits of breakpoints.
+
+A hit is a breakpoint that ended a run. It has the entry it ended at, its
+machine time, the breakpoint, and a catchpoint's event. The run log keeps each
+one, so a branch lists its parent's hits before it.
+
+Use run `--back` to go back to the newest one.
+
+```
+usage: machine break run hits [-h] [-n range]
+```
+
+| Option | Does |
+|---|---|
+| `-n, --entries range` | Entries to list the hits of: N, A:B, A:, :B, -N for the last N hits, or -A:-B counted from the end (default: the last 20) |
+
+Examples:
+
+```
+machine break run1 hits       the last 20 hits
+machine break run1 hits -n :  every hit
+```
+
+Prints:
+
+```
+text  ENTRY VTIME # KIND EVENT
+json  hits
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine run`](#machine-run)
+
+### machine break enable
+
+Enable a breakpoint.
+
+The machine arms an enabled breakpoint and not a disabled one. The run log keeps
+the change.
+
+```
+usage: machine break run enable [-h] [--once | --count n] number
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the breakpoint |
+
+| Option | Does |
+|---|---|
+| `--once` | Disable it again after its next hit, as GDB's enable once |
+| `--count n` | Disable it again after N hits, as GDB's enable count |
+
+Examples:
+
+```
+machine break run1 enable 2  arm stop 2 again
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break disable`](#machine-break-disable)
+
+### machine break disable
+
+Disable a breakpoint.
+
+The machine arms an enabled breakpoint and not a disabled one. The run log keeps
+the change.
+
+```
+usage: machine break run disable [-h] number
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the breakpoint |
+
+Examples:
+
+```
+machine break run1 disable 2  keep stop 2 and do not arm it
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break enable`](#machine-break-enable)
+
+### machine break condition
+
+Set the condition of a breakpoint.
+
+A hit where the condition does not hold does not end the run. Without a
+condition the breakpoint has none.
+
+```
+usage: machine break run condition [-h] number [condition]
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the breakpoint |
+| `[condition]` | Condition, such as '$rax == 0' or 'counter > 3' (default: none) |
+
+Examples:
+
+```
+machine break run1 condition 2 '$rax == 0'  where rax is 0
+machine break run1 condition 2 'n > 3'      where n is above 3
+machine break run1 condition 2              no condition
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break ignore`](#machine-break-ignore)
+
+### machine break ignore
+
+Pass the next hits of a breakpoint.
+
+Each hit where the condition holds is counted. A counted hit is passed while the
+ignore count lasts. A count of 0 stops at the next.
+
+```
+usage: machine break run ignore [-h] number count
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the breakpoint |
+| `count` | Hits to pass |
+
+Examples:
+
+```
+machine break run1 ignore 2 5  pass the next 5 hits
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break condition`](#machine-break-condition)
+
+## machine watch
+
+List and manage watchpoints.
+
+A watchpoint stops the run after a task of its tgid writes its bytes, or reads
+them with `--on` access. The listing has the run's watchpoints, each by its
+number. Use points to list them with the breakpoints and catchpoints.
+
+The run keeps them in its run log, as it keeps its breakpoints. A run holds 3
+breakpoints and watchpoints at most.
+
+```
+usage: machine watch [-h] run {add,delete,save,hits,enable,disable,condition,ignore} ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine watch run1 add 412 counter  a write of counter
+machine watch run1                  the breakpoints and watchpoints of run1
+```
+
+Prints:
+
+```
+text  # KIND ADDRESS SIZE WHERE TGID HITS WHEN
+json  breakpoints
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine run`](#machine-run)
+- [`machine mem`](#machine-mem)
+
+### machine watch add
+
+Add a watchpoint.
+
+The watchpoint stops the run after an instruction writes its bytes. Use `--on`
+change to stop only where the bytes change, as GDB's watch does. Use `--on`
+access to stop at a read as well. It watches the tgid of the task alone.
+
+A variable is watched at its size. So is an expression, as a local, a member or
+an element, at the bytes it names when added. A local's watch stays after its
+function returns. Any other location takes `--size`, of 1, 2, 4 or 8 bytes.
+
+The run log keeps the watchpoint, and a branch has its parent's.
+
+```
+usage: machine watch run add [-h] [--disabled] [--ignore count] [--temporary]
+                             [--condition condition] [--print format] [--size bytes]
+                             [--on {write,change,read,access}]
+                             tid location
+```
+
+| Argument | Does |
+|---|---|
+| `tid` | Task whose tgid the breakpoint is in |
+| `location` | Location, as mem takes one: NAME, FILE:LINE, *ADDR, $reg, moved by +N |
+
+| Option | Does |
+|---|---|
+| `--disabled` | Add it and do not arm it |
+| `--ignore count` | Pass the first hits that count (default: 0) |
+| `--temporary` | Delete it at its first hit that counts |
+| `--condition condition` | Count a hit only where this holds, such as '$rax == 0' |
+| `--print format` | Print this at a hit and go on, such as 'n={counter} p={$rdi:x}' |
+| `--size bytes` | Bytes to watch: 1, 2, 4 or 8 (default: the variable's size) |
+| `--on {write,change,read,access}` | What stops the run: a write, a write that changes the bytes, a read, or any access (default: write) |
+
+Examples:
+
+```
+machine watch run1 add 412 counter               a write of the variable
+machine watch run1 add 412 counter --on access   any access
+machine watch run1 add 412 '*0x4c8b50' --size 4  a write of 4 bytes
+```
+
+Prints:
+
+```
+text  Watchpoint N at WHERE, in tgid TGID
+json  number kind address size tgid program location
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine run`](#machine-run)
+- [`machine mem`](#machine-mem)
+
+### machine watch delete
+
+Delete watchpoints.
+
+The run log keeps the delete, so a branch forked before it keeps the watchpoint.
+
+```
+usage: machine watch run delete [-h] number [number ...]
+```
+
+| Argument | Does |
+|---|---|
+| `number [number ...]` | Number of a watchpoint |
+
+Examples:
+
+```
+machine watch run1 delete 3  delete watchpoint 3
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch add`](#machine-watch-add)
+
+### machine watch save
+
+Save the watchpoints as the commands that add them.
+
+Each line is a machine command that adds one watchpoint again. The command keeps
+its condition, ignore count and flags. A location written by a register is saved
+as its address.
+
+```
+usage: machine watch run save [-h] file
+```
+
+| Argument | Does |
+|---|---|
+| `file` | File to write, or - for the standard output |
+
+Examples:
+
+```
+machine watch run1 save stops.sh  write the commands to a file
+machine watch run1 save -         print them
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch add`](#machine-watch-add)
+
+### machine watch hits
+
+List the hits of watchpoints.
+
+A hit is a watchpoint that ended a run. It has the entry it ended at, its
+machine time, the watchpoint, and a catchpoint's event. The run log keeps each
+one, so a branch lists its parent's hits before it.
+
+Use run `--back` to go back to the newest one.
+
+```
+usage: machine watch run hits [-h] [-n range]
+```
+
+| Option | Does |
+|---|---|
+| `-n, --entries range` | Entries to list the hits of: N, A:B, A:, :B, -N for the last N hits, or -A:-B counted from the end (default: the last 20) |
+
+Examples:
+
+```
+machine watch run1 hits       the last 20 hits
+machine watch run1 hits -n :  every hit
+```
+
+Prints:
+
+```
+text  ENTRY VTIME # KIND EVENT
+json  hits
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine run`](#machine-run)
+
+### machine watch enable
+
+Enable a watchpoint.
+
+The machine arms an enabled watchpoint and not a disabled one. The run log keeps
+the change.
+
+```
+usage: machine watch run enable [-h] [--once | --count n] number
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the watchpoint |
+
+| Option | Does |
+|---|---|
+| `--once` | Disable it again after its next hit, as GDB's enable once |
+| `--count n` | Disable it again after N hits, as GDB's enable count |
+
+Examples:
+
+```
+machine watch run1 enable 2  arm stop 2 again
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch disable`](#machine-watch-disable)
+
+### machine watch disable
+
+Disable a watchpoint.
+
+The machine arms an enabled watchpoint and not a disabled one. The run log keeps
+the change.
+
+```
+usage: machine watch run disable [-h] number
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the watchpoint |
+
+Examples:
+
+```
+machine watch run1 disable 2  keep stop 2 and do not arm it
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch enable`](#machine-watch-enable)
+
+### machine watch condition
+
+Set the condition of a watchpoint.
+
+A hit where the condition does not hold does not end the run. Without a
+condition the watchpoint has none.
+
+```
+usage: machine watch run condition [-h] number [condition]
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the watchpoint |
+| `[condition]` | Condition, such as '$rax == 0' or 'counter > 3' (default: none) |
+
+Examples:
+
+```
+machine watch run1 condition 2 '$rax == 0'  where rax is 0
+machine watch run1 condition 2 'n > 3'      where n is above 3
+machine watch run1 condition 2              no condition
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch ignore`](#machine-watch-ignore)
+
+### machine watch ignore
+
+Pass the next hits of a watchpoint.
+
+Each hit where the condition holds is counted. A counted hit is passed while the
+ignore count lasts. A count of 0 stops at the next.
+
+```
+usage: machine watch run ignore [-h] number count
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the watchpoint |
+| `count` | Hits to pass |
+
+Examples:
+
+```
+machine watch run1 ignore 2 5  pass the next 5 hits
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch condition`](#machine-watch-condition)
+
+## machine catch
+
+List and manage catchpoints.
+
+A catchpoint stops the run at an event of a task rather than at an address: an
+exec, an exit, a fork, a system call, a signal, or a file mapped. The listing
+has the run's catchpoints, each by its number. Use points to list them with the
+breakpoints and watchpoints.
+
+The run keeps them in its run log, as it keeps its breakpoints. A run holds 8
+catchpoints at most.
+
+```
+usage: machine catch [-h] run {add,delete,save,hits,enable,disable,condition,ignore} ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine catch run1                       every stop of run1
+machine catch run1 add fork --in tgid=1  stop where tgid 1 forks
+```
+
+Prints:
+
+```
+text  # KIND ADDRESS SIZE WHERE TGID HITS WHEN
+json  breakpoints
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine watch`](#machine-watch)
+- [`machine run`](#machine-run)
+
+### machine catch add
+
+Add a catchpoint.
+
+The catchpoint stops the run at an event of a task. The events are exec, exit,
+fork, vfork, syscall, signal, load and unload. The C++ events throw, catch and
+rethrow are breakpoints in one tgid.
+
+A syscall catchpoint names its system calls, and a signal catchpoint its
+signals, four at most. A load, unload or exec catchpoint names a path or a
+file's name. Without one, every event of its kind stops the run.
+
+Use `--in` to stop at the events of one task or one tgid alone. The run log
+keeps the catchpoint, and a branch has its parent's.
+
+```
+usage: machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--temporary]
+                             [--condition condition] [--print format]
+                             event [value ...]
+```
+
+| Argument | Does |
+|---|---|
+| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow |
+| `[value ...]` | System call or signal, by name or number, or the path of a load, unload or exec |
+
+| Option | Does |
+|---|---|
+| `--in tid=N\|tgid=N` | Stop at the events of this task or tgid alone (default: any task) |
+| `--disabled` | Add it and do not arm it |
+| `--ignore count` | Pass the first hits that count (default: 0) |
+| `--temporary` | Delete it at its first hit that counts |
+| `--condition condition` | Count a hit only where this holds, such as '$rax == 0' |
+| `--print format` | Print this at a hit and go on, such as 'n={counter} p={$rdi:x}' |
+
+Examples:
+
+```
+machine catch run1 add exec                        any task execs
+machine catch run1 add syscall openat write        either call
+machine catch run1 add signal SIGSEGV --in tid=57  a signal of 57
+machine catch run1 add load libssl.so.3            a library mapped
+machine catch run1 add throw --in tgid=57          a C++ throw
+```
+
+Prints:
+
+```
+text  Catchpoint N: EVENT, in tgid TGID
+json  number kind tgid tid names
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine run`](#machine-run)
+- [`machine break add`](#machine-break-add)
+
+### machine catch delete
+
+Delete catchpoints.
+
+The run log keeps the delete, so a branch forked before it keeps the catchpoint.
+
+```
+usage: machine catch run delete [-h] number [number ...]
+```
+
+| Argument | Does |
+|---|---|
+| `number [number ...]` | Number of a catchpoint |
+
+Examples:
+
+```
+machine catch run1 delete 4  delete catchpoint 4
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine break delete`](#machine-break-delete)
+
+### machine catch save
+
+Save the catchpoints as the commands that add them.
+
+Each line is a machine command that adds one catchpoint again. The command keeps
+its condition, ignore count and flags. A location written by a register is saved
+as its address.
+
+```
+usage: machine catch run save [-h] file
+```
+
+| Argument | Does |
+|---|---|
+| `file` | File to write, or - for the standard output |
+
+Examples:
+
+```
+machine catch run1 save stops.sh  write the commands to a file
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine break save`](#machine-break-save)
+
+### machine catch hits
+
+List the hits of catchpoints.
+
+A hit is a catchpoint that ended a run. It has the entry it ended at, its
+machine time, the catchpoint, and a catchpoint's event. The run log keeps each
+one, so a branch lists its parent's hits before it.
+
+Use run `--back` to go back to the newest one.
+
+```
+usage: machine catch run hits [-h] [-n range]
+```
+
+| Option | Does |
+|---|---|
+| `-n, --entries range` | Entries to list the hits of: N, A:B, A:, :B, -N for the last N hits, or -A:-B counted from the end (default: the last 20) |
+
+Examples:
+
+```
+machine catch run1 hits       the last 20 hits
+machine catch run1 hits -n :  every hit
+```
+
+Prints:
+
+```
+text  ENTRY VTIME # KIND EVENT
+json  hits
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine run`](#machine-run)
+
+### machine catch enable
+
+Enable a catchpoint.
+
+The machine arms an enabled catchpoint and not a disabled one. The run log keeps
+the change.
+
+```
+usage: machine catch run enable [-h] [--once | --count n] number
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the catchpoint |
+
+| Option | Does |
+|---|---|
+| `--once` | Disable it again after its next hit, as GDB's enable once |
+| `--count n` | Disable it again after N hits, as GDB's enable count |
+
+Examples:
+
+```
+machine catch run1 enable 4  arm catchpoint 4 again
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine break enable`](#machine-break-enable)
+
+### machine catch disable
+
+Disable a catchpoint.
+
+The machine arms an enabled catchpoint and not a disabled one. The run log keeps
+the change.
+
+```
+usage: machine catch run disable [-h] number
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the catchpoint |
+
+Examples:
+
+```
+machine catch run1 disable 4  keep catchpoint 4 and do not arm it
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine break disable`](#machine-break-disable)
+
+### machine catch condition
+
+Set the condition of a catchpoint.
+
+A hit where the condition does not hold does not end the run. Without a
+condition the catchpoint has none.
+
+```
+usage: machine catch run condition [-h] number [condition]
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the catchpoint |
+| `[condition]` | Condition, such as '$rax == 0' or 'counter > 3' (default: none) |
+
+Examples:
+
+```
+machine catch run1 condition 4 '$rax == 0'  where rax is 0
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine break condition`](#machine-break-condition)
+
+### machine catch ignore
+
+Pass the next hits of a catchpoint.
+
+Each hit where the condition holds is counted. A counted hit is passed while the
+ignore count lasts. A count of 0 stops at the next.
+
+```
+usage: machine catch run ignore [-h] number count
+```
+
+| Argument | Does |
+|---|---|
+| `number` | Number of the catchpoint |
+| `count` | Hits to pass |
+
+Examples:
+
+```
+machine catch run1 ignore 4 5  pass the next 5 hits
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine break ignore`](#machine-break-ignore)
