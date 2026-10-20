@@ -419,17 +419,21 @@ The run records the input where it arrived, so a replay reproduces it without
 being sent anything. To try other input, fork a branch and send to the branch.
 
 At the [control prompt](#interactive-mode) the same command is `/send`. The
-options come first and the text is the rest of the line, with no quotes:
+options come first and the text is the rest of the line, as you typed it,
+quotes included:
 
 ```
 /send ls -la
 /send --device ttyS1 echo hello
+/send echo "a;b"
 /send -n -e \x03
 ```
 
-A `;` separates commands at the prompt, so write a semicolon in the text as
-`\x3b` with `-e`. Put the text in quotes to keep spaces at its ends, as in
-`/send " y "`, and put `--` before a text that begins with a dash.
+The prompt reads quotes as a shell does. A `;` separates commands, except
+inside quotes, so `/send echo "a;b"` sends `echo "a;b"`. A quote that is not
+closed refuses the whole line, so write `/send "don't"`. Put the text in
+quotes to keep spaces at its ends, as in `/send " y "`, and put `--` before a
+text that begins with a dash.
 
 | Device | Is |
 |---|---|
@@ -465,20 +469,22 @@ it. Use `-c` to give a line to the shell of the disk instead, with its pipes
 and redirections: `machine exec app run -c 'ls / | wc -l'`.
 
 At the [control prompt](#interactive-mode) the command is `/exec`, with the same
-verbs. It needs no quotes and no `--`: the arguments are the words after the
-verb, and a line for the shell is the rest of the line after `-c`.
+verbs. It needs no `--`: the arguments are the words after the verb, and a line
+for the shell is the rest of the line after `-c`, its quotes kept for the shell.
 
 ```
 /exec run ls -la /
 /exec run -c ls / | wc -l
+/exec run -c 'X=1;echo $X'
+/exec run -- sh -c 'X=1;echo $X'
 /exec start -c gdb -p 36 < /dev/gdb_pipe
 /exec proc 7f3a9c21 stdout
 /exec
 ```
 
-A `;` separates commands at the prompt. To have one in the command, add `-e`
-after the verb and write it `\x3b`, as `/send -e` does:
-`/exec run -e -c echo a\x3b echo b`.
+A `;` separates commands at the prompt, except inside quotes, so a line with
+one is written in quotes, as in a terminal. A pair of quotes around the whole
+`-c` line is taken off.
 
 ### In one container
 

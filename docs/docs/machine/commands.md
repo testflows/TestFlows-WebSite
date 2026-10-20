@@ -2912,8 +2912,8 @@ from the command line, without opening the prompt. Use -c /help to list the
 commands that way.
 
 A semicolon between two slash commands runs the second after the first, and
-stops when the first fails. A semicolon inside quotes separates commands too. A
-semicolon in the text of /send or in a command of /exec is written \x3b with -e.
+stops when the first fails. The prompt reads quotes as a shell reads them. A
+semicolon inside quotes is part of the word.
 
 Use control log with a run to read the command history instead of driving the
 machine. Use `--entries` to select the commands issued at given run entries. Use
@@ -2944,7 +2944,7 @@ machine control run1 -c /f@100                  run 100 iterations fast
 machine control run1 -c '/checkpoint name cp1'  create checkpoint cp1
 machine control run1 -c '/rewind to ^cp1'       put run1 back at cp1
 machine control run1 -c '/send ls -la'          type ls -la and Enter
-machine control run1 -c '/send -e a\x3bb'       send a;b and Enter
+machine control run1 -c '/send "a;b"'           send a;b and Enter
 machine control run1 -c '/exec run ls -la /'    execute ls -la /
 machine control run1 -c '/exec run -c echo $0'  a line for the shell
 machine control run1 -c '/exec start sleep 5'   send it, get its id
@@ -5192,10 +5192,9 @@ send no newline. Use -e to read escapes in the text, so that Ctrl-C is \x03.
 The text - sends standard input as it is. The command adds no newline to it and
 reads no escape in it.
 
-At the control prompt the command is /send. The options come first and the text
-is the rest of the line. A semicolon ends a command there, so one in the text is
-written \x3b with -e. A pair of quotes around the text keeps the spaces at its
-ends.
+At the control prompt the command is /send. The text is the rest of the line
+after the options, with its quotes. A semicolon inside quotes does not end the
+command. A pair of quotes around the whole text keeps the spaces at its ends.
 
 The keyboard takes text and types it on a US keyboard. The machine presses and
 releases a key for each character. It holds Shift or Ctrl where the character

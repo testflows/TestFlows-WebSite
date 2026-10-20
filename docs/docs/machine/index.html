@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792465342820" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792465342820" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792455883539" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792465342820" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1284,12 +1284,15 @@ device takes it the next time the run executes:</p>
 <p>The run records the input where it arrived, so a replay reproduces it without
 being sent anything. To try other input, fork a branch and send to the branch.</p>
 <p>At the <a href="#interactive-mode">control prompt</a> the same command is <code>/send</code>. The
-options come first and the text is the rest of the line, with no quotes:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/send ls -la</span><br><span class="line">/send --device ttyS1 echo hello</span><br><span class="line">/send -n -e \x03</span><br></pre></td></tr></table></figure>
+options come first and the text is the rest of the line, as you typed it,
+quotes included:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/send ls -la</span><br><span class="line">/send --device ttyS1 echo hello</span><br><span class="line">/send echo &quot;a;b&quot;</span><br><span class="line">/send -n -e \x03</span><br></pre></td></tr></table></figure>
 
-<p>A <code>;</code> separates commands at the prompt, so write a semicolon in the text as
-<code>\x3b</code> with <code>-e</code>. Put the text in quotes to keep spaces at its ends, as in
-<code>/send &quot; y &quot;</code>, and put <code>--</code> before a text that begins with a dash.</p>
+<p>The prompt reads quotes as a shell does. A <code>;</code> separates commands, except
+inside quotes, so <code>/send echo &quot;a;b&quot;</code> sends <code>echo &quot;a;b&quot;</code>. A quote that is not
+closed refuses the whole line, so write <code>/send &quot;don&#39;t&quot;</code>. Put the text in
+quotes to keep spaces at its ends, as in <code>/send &quot; y &quot;</code>, and put <code>--</code> before a
+text that begins with a dash.</p>
 <table>
 <thead>
 <tr>
@@ -1331,13 +1334,13 @@ process starts the next time the run executes, so follow it with
 it. Use <code>-c</code> to give a line to the shell of the disk instead, with its pipes
 and redirections: <code>machine exec app run -c &#39;ls / | wc -l&#39;</code>.</p>
 <p>At the <a href="#interactive-mode">control prompt</a> the command is <code>/exec</code>, with the same
-verbs. It needs no quotes and no <code>--</code>: the arguments are the words after the
-verb, and a line for the shell is the rest of the line after <code>-c</code>.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/exec run ls -la /</span><br><span class="line">/exec run -c ls / | wc -l</span><br><span class="line">/exec start -c gdb -p 36 &lt; /dev/gdb_pipe</span><br><span class="line">/exec proc 7f3a9c21 stdout</span><br><span class="line">/exec</span><br></pre></td></tr></table></figure>
+verbs. It needs no <code>--</code>: the arguments are the words after the verb, and a line
+for the shell is the rest of the line after <code>-c</code>, its quotes kept for the shell.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/exec run ls -la /</span><br><span class="line">/exec run -c ls / | wc -l</span><br><span class="line">/exec run -c &#x27;X=1;echo $X&#x27;</span><br><span class="line">/exec run -- sh -c &#x27;X=1;echo $X&#x27;</span><br><span class="line">/exec start -c gdb -p 36 &lt; /dev/gdb_pipe</span><br><span class="line">/exec proc 7f3a9c21 stdout</span><br><span class="line">/exec</span><br></pre></td></tr></table></figure>
 
-<p>A <code>;</code> separates commands at the prompt. To have one in the command, add <code>-e</code>
-after the verb and write it <code>\x3b</code>, as <code>/send -e</code> does:
-<code>/exec run -e -c echo a\x3b echo b</code>.</p>
+<p>A <code>;</code> separates commands at the prompt, except inside quotes, so a line with
+one is written in quotes, as in a terminal. A pair of quotes around the whole
+<code>-c</code> line is taken off.</p>
 <h3 id="In-one-container"><a href="#In-one-container" class="headerlink" title="In one container"></a>In one container</h3><p>Use <code>--container</code> to run a command in a container of your Compose project. It
 takes the name of the service, or the name of the container:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app run --container db -- psql -c <span class="string">&#x27;select 1&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -c <span class="string">&#x27;ls / | wc -l&#x27;</span>        <span class="comment"># the container&#x27;s shell</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db --user root -- <span class="built_in">id</span>        <span class="comment"># as another user</span></span><br><span class="line">machine <span class="built_in">exec</span> app start --container app -- ./worker</span><br></pre></td></tr></table></figure>
@@ -5122,8 +5125,8 @@ syntax of their own.</p>
 from the command line, without opening the prompt. Use -c &#x2F;help to list the
 commands that way.</p>
 <p>A semicolon between two slash commands runs the second after the first, and
-stops when the first fails. A semicolon inside quotes separates commands too. A
-semicolon in the text of &#x2F;send or in a command of &#x2F;exec is written \x3b with -e.</p>
+stops when the first fails. The prompt reads quotes as a shell reads them. A
+semicolon inside quotes is part of the word.</p>
 <p>Use control log with a run to read the command history instead of driving the
 machine. Use <code>--entries</code> to select the commands issued at given run entries. Use
 -n to select commands by number.</p>
@@ -5170,7 +5173,7 @@ machine. Use <code>--entries</code> to select the commands issued at given run e
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">machine control run1                            open the prompt for run1</span><br><span class="line">machine control run1 -c /help                   list the slash commands</span><br><span class="line">machine control run1 -c /f@100                  run 100 iterations fast</span><br><span class="line">machine control run1 -c &#x27;/checkpoint name cp1&#x27;  create checkpoint cp1</span><br><span class="line">machine control run1 -c &#x27;/rewind to ^cp1&#x27;       put run1 back at cp1</span><br><span class="line">machine control run1 -c &#x27;/send ls -la&#x27;          type ls -la and Enter</span><br><span class="line">machine control run1 -c &#x27;/send -e a\x3bb&#x27;       send a;b and Enter</span><br><span class="line">machine control run1 -c &#x27;/exec run ls -la /&#x27;    execute ls -la /</span><br><span class="line">machine control run1 -c &#x27;/exec run -c echo $0&#x27;  a line for the shell</span><br><span class="line">machine control run1 -c &#x27;/exec start sleep 5&#x27;   send it, get its id</span><br><span class="line">machine control run1 -c /exec                   the processes of run1</span><br><span class="line">machine control run1 -c &#x27;/fs ls / at ^cp1&#x27;      the disk&#x27;s files at cp1</span><br><span class="line">machine control run1 -c &#x27;/f;/d&#x27;                 run, then dump</span><br><span class="line">machine control log run1                        the commands issued to run1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">machine control run1                            open the prompt for run1</span><br><span class="line">machine control run1 -c /help                   list the slash commands</span><br><span class="line">machine control run1 -c /f@100                  run 100 iterations fast</span><br><span class="line">machine control run1 -c &#x27;/checkpoint name cp1&#x27;  create checkpoint cp1</span><br><span class="line">machine control run1 -c &#x27;/rewind to ^cp1&#x27;       put run1 back at cp1</span><br><span class="line">machine control run1 -c &#x27;/send ls -la&#x27;          type ls -la and Enter</span><br><span class="line">machine control run1 -c &#x27;/send &quot;a;b&quot;&#x27;           send a;b and Enter</span><br><span class="line">machine control run1 -c &#x27;/exec run ls -la /&#x27;    execute ls -la /</span><br><span class="line">machine control run1 -c &#x27;/exec run -c echo $0&#x27;  a line for the shell</span><br><span class="line">machine control run1 -c &#x27;/exec start sleep 5&#x27;   send it, get its id</span><br><span class="line">machine control run1 -c /exec                   the processes of run1</span><br><span class="line">machine control run1 -c &#x27;/fs ls / at ^cp1&#x27;      the disk&#x27;s files at cp1</span><br><span class="line">machine control run1 -c &#x27;/f;/d&#x27;                 run, then dump</span><br><span class="line">machine control log run1                        the commands issued to run1</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -7486,10 +7489,9 @@ person types.</p>
 send no newline. Use -e to read escapes in the text, so that Ctrl-C is \x03.</p>
 <p>The text - sends standard input as it is. The command adds no newline to it and
 reads no escape in it.</p>
-<p>At the control prompt the command is &#x2F;send. The options come first and the text
-is the rest of the line. A semicolon ends a command there, so one in the text is
-written \x3b with -e. A pair of quotes around the text keeps the spaces at its
-ends.</p>
+<p>At the control prompt the command is &#x2F;send. The text is the rest of the line
+after the options, with its quotes. A semicolon inside quotes does not end the
+command. A pair of quotes around the whole text keeps the spaces at its ends.</p>
 <p>The keyboard takes text and types it on a US keyboard. The machine presses and
 releases a key for each character. It holds Shift or Ctrl where the character
 needs one.</p>
@@ -10365,9 +10367,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792455883539"></script>
-<script src="/js/machine-hero-type.js?v=1792455883539"></script>
-<script src="/js/download-platforms.js?v=1792455883539"></script>
+<script src="/js/index-code-type.js?v=1792465342820"></script>
+<script src="/js/machine-hero-type.js?v=1792465342820"></script>
+<script src="/js/download-platforms.js?v=1792465342820"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
