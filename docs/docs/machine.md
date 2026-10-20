@@ -21,6 +21,7 @@ In the Markdown files, `{% attention %}` starts a note.
 - [Checkpoints and branches](https://testflows.com/docs/machine/checkpoints-and-branches.md): Save checkpoints, branch with `fork`, `go`, `switch`, `rewind` and `detach`, see the tree, and mark branches.
 - [Replay](https://testflows.com/docs/machine/replay.md): Replay a recording, detect divergence, and compare or play back logs.
 - [Steering programs](https://testflows.com/docs/machine/steering-programs.md): Hold and release threads, focus on programs, write plan files, inject interrupts and change machine time.
+- [Debugging](https://testflows.com/docs/machine/debugging.md): The machine's debugger: registers, memory, the stack, symbols and variables, stepping, breakpoints, watchpoints and catchpoints, running to a location, going back, calls and signals, the location syntax, and the 3 hardware registers. Then GDB inside the machine, and a GDB session run again from a checkpoint.
 - [Reading the disk](https://testflows.com/docs/machine/reading-the-disk.md): Read files from a run's disk, at a checkpoint or an entry, without touching the run.
 - [Account and billing](https://testflows.com/docs/machine/account-and-billing.md): Manage the account, credits, plans, API keys and storage from the client.
 - [Scripting](https://testflows.com/docs/machine/scripting.md): JSON output, quiet mode, timeouts and exit codes for scripts and CI.
