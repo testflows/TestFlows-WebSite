@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792530532316" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792530532316" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792528364411" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792530532316" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1866,7 +1866,7 @@ a location that is not a variable. An <code>exit</code> catchpoint takes <code>-
 since an exit is the end of a process. A <code>throw</code>, <code>catch</code> or <code>rethrow</code>
 catchpoint needs <code>--in tgid=N</code>.</p>
 <p>Each stop has a number, and the same verbs change any kind:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">machine points app                   <span class="comment"># every breakpoint, watchpoint and catchpoint</span></span><br><span class="line">machine <span class="built_in">break</span> app condition 2 <span class="string">&#x27;n &gt; 3&#x27;</span>  <span class="comment"># a hit where it does not hold goes on</span></span><br><span class="line">machine <span class="built_in">break</span> app ignore 2 5         <span class="comment"># pass the next 5 hits</span></span><br><span class="line">machine <span class="built_in">break</span> app <span class="built_in">disable</span> 2          <span class="comment"># kept, not armed</span></span><br><span class="line">machine <span class="built_in">break</span> app <span class="built_in">enable</span> 2 --once    <span class="comment"># armed for one hit</span></span><br><span class="line">machine <span class="built_in">break</span> app delete 2</span><br><span class="line">machine <span class="built_in">break</span> app hits               <span class="comment"># the hits the run log keeps</span></span><br><span class="line">machine <span class="built_in">break</span> app save stops.sh      <span class="comment"># the commands that add each again</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">machine points app                   <span class="comment"># every breakpoint, watchpoint and catchpoint</span></span><br><span class="line">machine <span class="built_in">break</span> app condition 2 <span class="string">&#x27;n &gt; 3&#x27;</span>  <span class="comment"># a hit where it does not hold goes on</span></span><br><span class="line">machine <span class="built_in">break</span> app ignore 2 5         <span class="comment"># pass the next 5 hits</span></span><br><span class="line">machine <span class="built_in">break</span> app <span class="built_in">disable</span> 2          <span class="comment"># kept, not armed</span></span><br><span class="line">machine <span class="built_in">break</span> app <span class="built_in">enable</span> 2 --once    <span class="comment"># armed for one hit</span></span><br><span class="line">machine <span class="built_in">break</span> app delete 2</span><br><span class="line">machine <span class="built_in">break</span> app clear 412 main     <span class="comment"># every breakpoint at main, as GDB&#x27;s clear</span></span><br><span class="line">machine <span class="built_in">break</span> app hits               <span class="comment"># the hits the run log keeps</span></span><br><span class="line">machine <span class="built_in">break</span> app save stops.sh      <span class="comment"># the commands that add each again</span></span><br></pre></td></tr></table></figure>
 
 <p><code>machine break</code>, <code>watch</code> and <code>catch</code> each list their own kind.</p>
 <p>A run that reaches a stop ends there and says which. The run log keeps the
@@ -1890,7 +1890,10 @@ the run, and a replay makes it again.</p>
 <a href="#Interactive-mode">control prompt</a>, with the run left
 out: <code>/regs 412</code>, <code>/mem 412 &#39;$pc&#39; 4i</code>, <code>/step 412 --line</code>, <code>/break add 412 main</code>, <code>/run until &#39;tid=412:at=main&#39;</code>. The prompt also has <code>/display</code>, an
 expression printed after each run and step, and <code>/skip</code>, what a line step of
-the session steps out of. <code>/help</code> lists them all.</p>
+the session steps out of:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/display 412 counter          # printed after every /step and /run</span><br><span class="line">/skip function memcpy         # /step --line steps out of memcpy</span><br><span class="line">/step 412 --line</span><br><span class="line">/undisplay 1</span><br></pre></td></tr></table></figure>
+
+<p><code>/help</code> lists them all.</p>
 <h3 id="From-Python"><a href="#From-Python" class="headerlink" title="From Python"></a>From Python</h3><p>The <a href="#Python-SDK">Python SDK</a> has the same debugger: <code>run.task(tid)</code> gives a
 task with <code>registers()</code>, <code>read()</code>, <code>backtrace()</code>, <code>print()</code>, <code>step()</code>,
 <code>breakpoint()</code> and <code>watch()</code>, and <code>run.breakpoints</code> lists and changes the
@@ -1958,35 +1961,62 @@ the debug information of the <code>gdb-debug</code> image it takes minutes inste
 <code>exec start</code> returns at once and prints the id of the process it started:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> ch run   --container app --user clickhouse -- <span class="built_in">mkfifo</span> /tmp/gdb.in</span><br><span class="line">machine <span class="built_in">exec</span> ch start --container app --user clickhouse -c <span class="string">&#x27;sleep infinity &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> ch start --container app --user clickhouse -c <span class="string">&#x27;gdb -q -p $(pidof clickhouse-server) &lt; /tmp/gdb.in&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Sent 0dd27743 to ch (whvDHu9iiWP3mTDExIjq3)</span><br><span class="line">  Read the process machine exec ch proc 0dd27743</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Sent a28041ba to ch (whvFgTuJRf6CqOsh6Kq1b)</span><br><span class="line">  Read the process machine exec ch proc a28041ba</span><br></pre></td></tr></table></figure>
 
 <p>The <code>sleep</code> holds the pipe open. Without it, GDB reads the end of its input
-after the first command and exits. Each command is a line written to the
-pipe:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo &quot;handle SIGUSR1 nostop noprint&quot; &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo &quot;break DB::executeQuery&quot; &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo c &gt; /tmp/gdb.in&#x27;</span></span><br></pre></td></tr></table></figure>
+after the first command and exits.</p>
+<p>Every step below is the same three commands: write a line to the pipe, run
+the machine, and read what GDB printed from the process, by the id
+<code>exec start</code> gave. GDB runs only while the machine runs, and a command
+written before GDB is ready waits in the pipe:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo &quot;handle SIGUSR1 nostop noprint&quot; &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine run ch --within 60s</span><br><span class="line">machine <span class="built_in">exec</span> ch proc a28041ba stdout</span><br></pre></td></tr></table></figure>
 
-<p>GDB runs only while the machine runs, and commands written before it is
-ready wait in the pipe. Run the machine, and read what GDB printed from the
-process, by the id <code>exec start</code> gave:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine run ch --within 60s</span><br><span class="line">machine <span class="built_in">exec</span> ch proc 0dd27743 stdout</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Attaching to process 7</span><br><span class="line">[New LWP 96]</span><br><span class="line">...</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library &quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;.</span><br><span class="line">0x00007fabb8a160d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">(gdb) Signal        Stop	Print	Pass to program	Description</span><br><span class="line">SIGUSR1       No	No	Yes		User defined signal 1</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Attaching to process 7</span><br><span class="line">[New LWP 96]</span><br><span class="line">...</span><br><span class="line">[Thread debugging using libthread_db enabled]</span><br><span class="line">Using host libthread_db library &quot;/lib/x86_64-linux-gnu/libthread_db.so.1&quot;.</span><br><span class="line">0x00007fd9dd9270d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">(gdb) Signal        Stop	Print	Pass to program	Description</span><br><span class="line">SIGUSR1       No	No	Yes		User defined signal 1</span><br><span class="line">(gdb) Breakpoint 1 at 0x1d386340 (3 locations)</span><br><span class="line">(gdb) Continuing.</span><br><span class="line">[Switching to Thread 0x7fd9a1dde640 (LWP 93)]</span><br><span class="line"></span><br><span class="line">Thread 9 &quot;TCPHandler&quot; hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt;, std::__1::shared_ptr&lt;DB::Context&gt;, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<p>ClickHouse signals its own threads with <code>SIGUSR1</code>, and this keeps
+<code>continue</code> from stopping at each one. The first step waits for GDB to read
+the program’s symbols; after that <code>--within 2s</code> is enough. The steps below
+show the GDB command and what it printed. A <code>$</code> in a command is written
+<code>\$</code> inside the double quotes, as in <code>&quot;x/4i \$pc&quot;</code>.</p>
+<p><strong>A breakpoint,</strong> <code>break DB::executeQuery</code> and <code>info breakpoints</code>. GDB
+writes an <code>int3</code> into the program, as on any host, and uses no debug
+register:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Breakpoint 1 at 0x1d386340 (3 locations)</span><br><span class="line">(gdb) Num     Type           Disp Enb Address            What</span><br><span class="line">1       breakpoint     keep y   &lt;MULTIPLE&gt;</span><br><span class="line">1.1                         y   0x000000001d386340 &lt;DB::executeQuery(std::__1::basic_string_view&lt;char, ...&gt;, std::__1::shared_ptr&lt;DB::Context&gt;, DB::QueryFlags, DB::QueryProcessingStage::Enum)&gt;</span><br><span class="line">1.2                         y   0x000000001d394300 &lt;DB::executeQuery(DB::ReadBuffer&amp;, DB::WriteBuffer&amp;, ...)&gt;</span><br><span class="line">1.3                         y   0x000000001d394640 &lt;DB::executeQuery(std::__1::unique_ptr&lt;DB::ReadBuffer, ...&gt;, DB::WriteBuffer&amp;, ...)&gt;</span><br></pre></td></tr></table></figure>
 
-<p>GDB is stopped at the breakpoint now, and the next command is chosen from
-what it printed. <code>executeQuery</code> returns its result by value, so <code>rdi</code> holds
-where to put it, and the query follows in <code>rsi</code> and <code>rdx</code>, a pointer and a
-length:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo &quot;bt 3&quot; &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo &quot;info registers rsi rdx&quot; &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo &quot;x/s \$rsi&quot; &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine run ch --within 2s</span><br><span class="line">machine <span class="built_in">exec</span> ch proc 0dd27743 stdout</span><br></pre></td></tr></table></figure>
+<p><strong>Continue to it,</strong> <code>c</code>. The example’s server sends itself a query every
+second, and a thread that handles it stops:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Continuing.</span><br><span class="line">[Switching to Thread 0x7fab7d3de640 (LWP 89)]</span><br><span class="line"></span><br><span class="line">Thread 9 &quot;TCPHandler&quot; hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt;, std::__1::shared_ptr&lt;DB::Context&gt;, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) #0  0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view&lt;char, std::__1::char_traits&lt;char&gt; &gt;, std::__1::shared_ptr&lt;DB::Context&gt;, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()</span><br><span class="line">#1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()</span><br><span class="line">#2  0x000000001ed37d64 in DB::TCPHandler::run() ()</span><br><span class="line">(More stack frames follow...)</span><br><span class="line">(gdb) rsi            0x7fd9a6d7cae0      140572783790816</span><br><span class="line">rdx            0x28                40</span><br><span class="line">(gdb) 0x7fd9a6d7cae0:	&quot;SELECT sum(number) FROM numbers(1000000)&quot;</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<p><strong>Read the query,</strong> <code>info registers rsi rdx</code> and <code>x/s $rsi</code>.
+<code>executeQuery</code> returns its result by value, so <code>rdi</code> holds where to put it,
+and the query follows in <code>rsi</code> and <code>rdx</code>, a pointer and a length:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) rsi            0x7fd9a6d7cae0      140572783790816</span><br><span class="line">rdx            0x28                40</span><br><span class="line">(gdb) 0x7fd9a6d7cae0:	&quot;SELECT sum(number) FROM numbers(1000000)&quot;</span><br></pre></td></tr></table></figure>
 
-<p>That is the query the example’s server sends itself every second, 40 bytes
-long. End the session the same way, and the server carries on:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo detach &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> ch run --container app --user clickhouse -c <span class="string">&#x27;echo quit &gt; /tmp/gdb.in&#x27;</span></span><br><span class="line">machine run ch --within 3s</span><br><span class="line">machine <span class="built_in">exec</span> ch proc 0dd27743 stdout</span><br></pre></td></tr></table></figure>
+<p><strong>Instructions and single steps,</strong> <code>x/4i $pc</code>, <code>stepi</code> and <code>nexti 3</code>:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) =&gt; 0x1d386340 &lt;_ZN2DB12executeQuery...&gt;:	jmp    0x1d38634b &lt;_ZN2DB12executeQuery...+11&gt;</span><br><span class="line">   0x1d386342 &lt;_ZN2DB12executeQuery...+2&gt;:	nopw   0x200(%rax,%rax,1)</span><br><span class="line">   0x1d38634b &lt;_ZN2DB12executeQuery...+11&gt;:	push   %rbp</span><br><span class="line">   0x1d38634c &lt;_ZN2DB12executeQuery...+12&gt;:	push   %r15</span><br><span class="line">(gdb) 0x000000001d38634b in DB::executeQuery(...) ()</span><br><span class="line">(gdb) 0x000000001d386350 in DB::executeQuery(...) ()</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Detaching from program: /usr/bin/clickhouse, process 7</span><br><span class="line">[Inferior 1 (process 7) detached]</span><br><span class="line">(gdb)</span><br></pre></td></tr></table></figure>
+<p><strong>The stack, and running to the return,</strong> <code>bt 3</code> and <code>finish</code>:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) #0  0x000000001d386350 in DB::executeQuery(...) ()</span><br><span class="line">#1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()</span><br><span class="line">#2  0x000000001ed37d64 in DB::TCPHandler::run() ()</span><br><span class="line">(More stack frames follow...)</span><br><span class="line">(gdb) Run till exit from #0  0x000000001d386350 in DB::executeQuery(...) ()</span><br><span class="line">0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()</span><br></pre></td></tr></table></figure>
 
-<p>ClickHouse signals its own threads with <code>SIGUSR1</code>, and <code>handle SIGUSR1 nostop noprint</code> keeps <code>continue</code> from stopping at each one.</p>
+<p><strong>A hardware breakpoint,</strong> <code>delete 1</code>, <code>hbreak *0x1ed12ec3</code> and <code>c</code>. It
+takes one of the run’s 3 debug registers, and stops where the next query
+returns:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Hardware assisted breakpoint 2 at 0x1ed12ec3</span><br><span class="line">(gdb) Continuing.</span><br><span class="line"></span><br><span class="line">Thread 9 &quot;TCPHandler&quot; hit Breakpoint 2, 0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()</span><br></pre></td></tr></table></figure>
+
+<p><strong>A hardware watchpoint,</strong> <code>watch -l *(long *)($rsp - 8)</code> and <code>c</code>. It
+takes another debug register, and stops after the next call writes its
+return address below the stack pointer:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Hardware watchpoint 3: -location *(long *)($rsp - 8)</span><br><span class="line">(gdb) Continuing.</span><br><span class="line"></span><br><span class="line">Thread 9 &quot;TCPHandler&quot; hit Hardware watchpoint 3: -location *(long *)($rsp - 8)</span><br><span class="line"></span><br><span class="line">Old value = 517025475</span><br><span class="line">New value = 517025550</span><br><span class="line">0x000000001b389000 in DB::BlockIO::operator=(DB::BlockIO&amp;&amp;) ()</span><br></pre></td></tr></table></figure>
+
+<p><strong>A system call,</strong> <code>delete</code>, <code>catch syscall sendto</code>, <code>c</code>, then the
+socket, the length and the first bytes, <code>info registers rdi rdx</code> and
+<code>x/16xb $rsi</code>:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Catchpoint 4 (syscall &#x27;sendto&#x27; [44])</span><br><span class="line">(gdb) Continuing.</span><br><span class="line"></span><br><span class="line">Thread 9 &quot;TCPHandler&quot; hit Catchpoint 4 (call to syscall sendto), 0x00007fabb8aac98e in send () from /lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">(gdb) rdi            0x3a                58</span><br><span class="line">rdx            0x22                34</span><br><span class="line">(gdb) 0x7fab70d31e00:	0x01	0x00	0x01	0x00	0x02	0xff	0xff	0xff</span><br><span class="line">0x7fab70d31e08:	0xff	0x03	0x00	0x00	0x01	0x00	0x0b	0x73</span><br></pre></td></tr></table></figure>
+
+<p>That is the query’s result going back to the client, 34 bytes on socket 58.</p>
+<p><strong>Leave,</strong> <code>delete</code>, <code>detach</code> and <code>quit</code>. The server carries on:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) Detaching from program: /usr/bin/clickhouse, process 7</span><br><span class="line">[Inferior 1 (process 7) detached]</span><br></pre></td></tr></table></figure>
+
 <p>The session is recorded with the run. Rewind to the checkpoint taken before
 it, and the same commands give the same answers.</p>
 <h3 id="Running-it-again"><a href="#Running-it-again" class="headerlink" title="Running it again"></a>Running it again</h3><p>The checkpoint holds the machine as it was before GDB attached. Rewind to it,
@@ -10678,9 +10708,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792528364412"></script>
-<script src="/js/machine-hero-type.js?v=1792528364412"></script>
-<script src="/js/download-platforms.js?v=1792528364412"></script>
+<script src="/js/index-code-type.js?v=1792530532317"></script>
+<script src="/js/machine-hero-type.js?v=1792530532317"></script>
+<script src="/js/download-platforms.js?v=1792530532317"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

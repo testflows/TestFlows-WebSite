@@ -136,6 +136,7 @@ machine break app ignore 2 5         # pass the next 5 hits
 machine break app disable 2          # kept, not armed
 machine break app enable 2 --once    # armed for one hit
 machine break app delete 2
+machine break app clear 412 main     # every breakpoint at main, as GDB's clear
 machine break app hits               # the hits the run log keeps
 machine break app save stops.sh      # the commands that add each again
 ```
@@ -190,7 +191,16 @@ Every command here has a slash command at the
 out: `/regs 412`, `/mem 412 '$pc' 4i`, `/step 412 --line`, `/break add 412
 main`, `/run until 'tid=412:at=main'`. The prompt also has `/display`, an
 expression printed after each run and step, and `/skip`, what a line step of
-the session steps out of. `/help` lists them all.
+the session steps out of:
+
+```
+/display 412 counter          # printed after every /step and /run
+/skip function memcpy         # /step --line steps out of memcpy
+/step 412 --line
+/undisplay 1
+```
+
+`/help` lists them all.
 
 ### From Python
 
@@ -306,27 +316,22 @@ machine exec ch start --container app --user clickhouse -c 'gdb -q -p $(pidof cl
 ```
 
 ```text
-✔ Sent 0dd27743 to ch (whvDHu9iiWP3mTDExIjq3)
-  Read the process machine exec ch proc 0dd27743
+✔ Sent a28041ba to ch (whvFgTuJRf6CqOsh6Kq1b)
+  Read the process machine exec ch proc a28041ba
 ```
 
 The `sleep` holds the pipe open. Without it, GDB reads the end of its input
-after the first command and exits. Each command is a line written to the
-pipe:
+after the first command and exits.
+
+Every step below is the same three commands: write a line to the pipe, run
+the machine, and read what GDB printed from the process, by the id
+`exec start` gave. GDB runs only while the machine runs, and a command
+written before GDB is ready waits in the pipe:
 
 ```bash
 machine exec ch run --container app --user clickhouse -c 'echo "handle SIGUSR1 nostop noprint" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "break DB::executeQuery" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
-```
-
-GDB runs only while the machine runs, and commands written before it is
-ready wait in the pipe. Run the machine, and read what GDB printed from the
-process, by the id `exec start` gave:
-
-```bash
 machine run ch --within 60s
-machine exec ch proc 0dd27743 stdout
+machine exec ch proc a28041ba stdout
 ```
 
 ```text
@@ -335,59 +340,122 @@ Attaching to process 7
 ...
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
-0x00007fd9dd9270d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+0x00007fabb8a160d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
 (gdb) Signal        Stop	Print	Pass to program	Description
 SIGUSR1       No	No	Yes		User defined signal 1
-(gdb) Breakpoint 1 at 0x1d386340 (3 locations)
-(gdb) Continuing.
-[Switching to Thread 0x7fd9a1dde640 (LWP 93)]
-
-Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
 (gdb)
 ```
 
-GDB is stopped at the breakpoint now, and the next command is chosen from
-what it printed. `executeQuery` returns its result by value, so `rdi` holds
-where to put it, and the query follows in `rsi` and `rdx`, a pointer and a
-length:
+ClickHouse signals its own threads with `SIGUSR1`, and this keeps
+`continue` from stopping at each one. The first step waits for GDB to read
+the program's symbols; after that `--within 2s` is enough. The steps below
+show the GDB command and what it printed. A `$` in a command is written
+`\$` inside the double quotes, as in `"x/4i \$pc"`.
 
-```bash
-machine exec ch run --container app --user clickhouse -c 'echo "bt 3" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "info registers rsi rdx" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "x/s \$rsi" > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 0dd27743 stdout
-```
+**A breakpoint,** `break DB::executeQuery` and `info breakpoints`. GDB
+writes an `int3` into the program, as on any host, and uses no debug
+register:
 
 ```text
-(gdb) #0  0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
-#1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
-#2  0x000000001ed37d64 in DB::TCPHandler::run() ()
-(More stack frames follow...)
+(gdb) Breakpoint 1 at 0x1d386340 (3 locations)
+(gdb) Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   <MULTIPLE>
+1.1                         y   0x000000001d386340 <DB::executeQuery(std::__1::basic_string_view<char, ...>, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum)>
+1.2                         y   0x000000001d394300 <DB::executeQuery(DB::ReadBuffer&, DB::WriteBuffer&, ...)>
+1.3                         y   0x000000001d394640 <DB::executeQuery(std::__1::unique_ptr<DB::ReadBuffer, ...>, DB::WriteBuffer&, ...)>
+```
+
+**Continue to it,** `c`. The example's server sends itself a query every
+second, and a thread that handles it stops:
+
+```text
+(gdb) Continuing.
+[Switching to Thread 0x7fab7d3de640 (LWP 89)]
+
+Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
+```
+
+**Read the query,** `info registers rsi rdx` and `x/s $rsi`.
+`executeQuery` returns its result by value, so `rdi` holds where to put it,
+and the query follows in `rsi` and `rdx`, a pointer and a length:
+
+```text
 (gdb) rsi            0x7fd9a6d7cae0      140572783790816
 rdx            0x28                40
 (gdb) 0x7fd9a6d7cae0:	"SELECT sum(number) FROM numbers(1000000)"
-(gdb)
 ```
 
-That is the query the example's server sends itself every second, 40 bytes
-long. End the session the same way, and the server carries on:
+**Instructions and single steps,** `x/4i $pc`, `stepi` and `nexti 3`:
 
-```bash
-machine exec ch run --container app --user clickhouse -c 'echo detach > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo quit > /tmp/gdb.in'
-machine run ch --within 3s
-machine exec ch proc 0dd27743 stdout
+```text
+(gdb) => 0x1d386340 <_ZN2DB12executeQuery...>:	jmp    0x1d38634b <_ZN2DB12executeQuery...+11>
+   0x1d386342 <_ZN2DB12executeQuery...+2>:	nopw   0x200(%rax,%rax,1)
+   0x1d38634b <_ZN2DB12executeQuery...+11>:	push   %rbp
+   0x1d38634c <_ZN2DB12executeQuery...+12>:	push   %r15
+(gdb) 0x000000001d38634b in DB::executeQuery(...) ()
+(gdb) 0x000000001d386350 in DB::executeQuery(...) ()
 ```
+
+**The stack, and running to the return,** `bt 3` and `finish`:
+
+```text
+(gdb) #0  0x000000001d386350 in DB::executeQuery(...) ()
+#1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+#2  0x000000001ed37d64 in DB::TCPHandler::run() ()
+(More stack frames follow...)
+(gdb) Run till exit from #0  0x000000001d386350 in DB::executeQuery(...) ()
+0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+```
+
+**A hardware breakpoint,** `delete 1`, `hbreak *0x1ed12ec3` and `c`. It
+takes one of the run's 3 debug registers, and stops where the next query
+returns:
+
+```text
+(gdb) Hardware assisted breakpoint 2 at 0x1ed12ec3
+(gdb) Continuing.
+
+Thread 9 "TCPHandler" hit Breakpoint 2, 0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+```
+
+**A hardware watchpoint,** `watch -l *(long *)($rsp - 8)` and `c`. It
+takes another debug register, and stops after the next call writes its
+return address below the stack pointer:
+
+```text
+(gdb) Hardware watchpoint 3: -location *(long *)($rsp - 8)
+(gdb) Continuing.
+
+Thread 9 "TCPHandler" hit Hardware watchpoint 3: -location *(long *)($rsp - 8)
+
+Old value = 517025475
+New value = 517025550
+0x000000001b389000 in DB::BlockIO::operator=(DB::BlockIO&&) ()
+```
+
+**A system call,** `delete`, `catch syscall sendto`, `c`, then the
+socket, the length and the first bytes, `info registers rdi rdx` and
+`x/16xb $rsi`:
+
+```text
+(gdb) Catchpoint 4 (syscall 'sendto' [44])
+(gdb) Continuing.
+
+Thread 9 "TCPHandler" hit Catchpoint 4 (call to syscall sendto), 0x00007fabb8aac98e in send () from /lib/x86_64-linux-gnu/libc.so.6
+(gdb) rdi            0x3a                58
+rdx            0x22                34
+(gdb) 0x7fab70d31e00:	0x01	0x00	0x01	0x00	0x02	0xff	0xff	0xff
+0x7fab70d31e08:	0xff	0x03	0x00	0x00	0x01	0x00	0x0b	0x73
+```
+
+That is the query's result going back to the client, 34 bytes on socket 58.
+
+**Leave,** `delete`, `detach` and `quit`. The server carries on:
 
 ```text
 (gdb) Detaching from program: /usr/bin/clickhouse, process 7
 [Inferior 1 (process 7) detached]
-(gdb)
 ```
-
-ClickHouse signals its own threads with `SIGUSR1`, and `handle SIGUSR1
-nostop noprint` keeps `continue` from stopping at each one.
 
 The session is recorded with the run. Rewind to the checkpoint taken before
 it, and the same commands give the same answers.
