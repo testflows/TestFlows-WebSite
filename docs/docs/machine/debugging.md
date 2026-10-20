@@ -267,6 +267,15 @@ example shows how to put a source file where GDB finds it.
 
 ### Running a session
 
+Build the example's disk from its `gdb` image, and create a run on it.
+The [example's README](https://github.com/testflows/Machine-Examples/tree/main/gdb/clickhouse)
+builds the image:
+
+```bash
+machine disks build --image clickhouse-gdb:26.8.31.2 clickhouse-gdb
+machine create ch --disk clickhouse-gdb --mem 4096 --cpus 2
+```
+
 Run the machine to the point you want to debug, and keep a checkpoint there.
 Then run GDB with [`machine exec`](commands.md#machine-exec). Here the
 example's server prints `clickhouse-gdb: ready` once it answers queries:
@@ -275,7 +284,20 @@ example's server prints `clickhouse-gdb: ready` once it answers queries:
 machine run ch --until 'console~clickhouse-gdb: ready'
 machine checkpoint ch ready
 machine exec ch run --container app --user clickhouse \
-    -c 'gdb -batch -ex "break DB::executeQuery" -ex continue -ex "bt 3" -p $(pidof clickhouse-server)'
+    -c 'gdb -batch -ex "handle SIGUSR1 SIGUSR2 nostop noprint" -ex "break DB::executeQuery" -ex continue -ex "bt 3" -p $(pidof clickhouse-server)'
+```
+
+```text
+[New LWP 81]
+...
+Breakpoint 1 at 0x1d386340 (3 locations)
+[Switching to Thread 0x7f0c18c5e640 (LWP 92)]
+
+Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
+#0  0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
+#1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+#2  0x000000001ed37d64 in DB::TCPHandler::run() ()
+[Inferior 1 (process 8) detached]
 ```
 
 `exec run` runs the machine until GDB exits, and prints what GDB printed.
@@ -283,12 +305,16 @@ machine exec ch run --container app --user clickhouse \
 detached as GDB exits. A file of commands works the same way, with `-x FILE`.
 `-c` gives the line to the container's shell, which finds the process id.
 
+ClickHouse signals its own threads with `SIGUSR1` and `SIGUSR2`. Without the
+`handle` line, `continue` stops at the first of those signals instead of at
+the breakpoint, and `bt` shows whichever thread got it.
+
 At the control prompt the line after `-c` needs no outer quotes:
 
 ```
 /run until 'console~clickhouse-gdb: ready'
 /checkpoint ready
-/exec run --container app --user clickhouse -c gdb -batch -ex "break DB::executeQuery" -ex continue -ex "bt 3" -p $(pidof clickhouse-server)
+/exec run --container app --user clickhouse -c gdb -batch -ex "handle SIGUSR1 SIGUSR2 nostop noprint" -ex "break DB::executeQuery" -ex continue -ex "bt 3" -p $(pidof clickhouse-server)
 ```
 
 Use `--user` to run GDB as the user of the process it attaches to. A
@@ -316,8 +342,8 @@ machine exec ch start --container app --user clickhouse -c 'gdb -q -p $(pidof cl
 ```
 
 ```text
-✔ Sent a28041ba to ch (whvFgTuJRf6CqOsh6Kq1b)
-  Read the process machine exec ch proc a28041ba
+✔ Sent 842ee807 to ch (whvI0EeUUiPDfh9XhCiir)
+  Read the process machine exec ch proc 842ee807
 ```
 
 The `sleep` holds the pipe open. Without it, GDB reads the end of its input
@@ -329,25 +355,26 @@ the machine, and read what GDB printed from the process, by the id
 written before GDB is ready waits in the pipe:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "handle SIGUSR1 nostop noprint" > /tmp/gdb.in'
+machine exec ch run --container app --user clickhouse -c 'echo "handle SIGUSR1 SIGUSR2 nostop noprint" > /tmp/gdb.in'
 machine run ch --within 60s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
-Attaching to process 7
-[New LWP 96]
+Attaching to process 8
+[New LWP 81]
 ...
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
-0x00007fabb8a160d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+0x00007f0c54d8d0d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
 (gdb) Signal        Stop	Print	Pass to program	Description
 SIGUSR1       No	No	Yes		User defined signal 1
+SIGUSR2       No	No	Yes		User defined signal 2
 (gdb)
 ```
 
-ClickHouse signals its own threads with `SIGUSR1`, and this keeps
-`continue` from stopping at each one. The first step waits for GDB to read
+This keeps `continue` from stopping at ClickHouse's own signals, as in the
+batch session. The first step waits for GDB to read
 the program's symbols; after that `--within 2s` is enough. A `$` in a GDB
 command is written `\$` inside the double quotes, as `"x/4i \$pc"` below.
 Each read shows the whole session so far; the output below is what each step
@@ -360,7 +387,7 @@ uses no debug register:
 machine exec ch run --container app --user clickhouse -c 'echo "break DB::executeQuery" > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo "info breakpoints" > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
@@ -378,12 +405,13 @@ and a thread that handles it stops:
 ```bash
 machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
 (gdb) Continuing.
-[Switching to Thread 0x7fab7d3de640 (LWP 89)]
+[New Thread 0x7f0bb2dfe640 (LWP 377)]
+[Switching to Thread 0x7f0c18c5e640 (LWP 92)]
 
 Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
 ```
@@ -396,13 +424,13 @@ and a length:
 machine exec ch run --container app --user clickhouse -c 'echo "info registers rsi rdx" > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo "x/s \$rsi" > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
-(gdb) rsi            0x7fd9a6d7cae0      140572783790816
+(gdb) rsi            0x7f0c5352e8d0      139690914277584
 rdx            0x28                40
-(gdb) 0x7fd9a6d7cae0:	"SELECT sum(number) FROM numbers(1000000)"
+(gdb) 0x7f0c5352e8d0:	"SELECT sum(number) FROM numbers(1000000)"
 ```
 
 **Instructions and single steps:**
@@ -412,7 +440,7 @@ machine exec ch run --container app --user clickhouse -c 'echo "x/4i \$pc" > /tm
 machine exec ch run --container app --user clickhouse -c 'echo stepi > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo "nexti 3" > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
@@ -430,7 +458,7 @@ machine exec ch proc a28041ba stdout
 machine exec ch run --container app --user clickhouse -c 'echo "bt 3" > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo finish > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
@@ -451,7 +479,7 @@ machine exec ch run --container app --user clickhouse -c 'echo "delete 1" > /tmp
 machine exec ch run --container app --user clickhouse -c 'echo "hbreak *0x1ed12ec3" > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
 machine run ch --within 3s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
@@ -468,7 +496,7 @@ the next call writes its return address below the stack pointer:
 machine exec ch run --container app --user clickhouse -c 'echo "watch -l *(long *)(\$rsp - 8)" > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
@@ -494,7 +522,7 @@ machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo "info registers rdi rdx" > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo "x/16xb \$rsi" > /tmp/gdb.in'
 machine run ch --within 3s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
@@ -502,14 +530,14 @@ machine exec ch proc a28041ba stdout
 (gdb) Catchpoint 4 (syscall 'sendto' [44])
 (gdb) Continuing.
 
-Thread 9 "TCPHandler" hit Catchpoint 4 (call to syscall sendto), 0x00007fabb8aac98e in send () from /lib/x86_64-linux-gnu/libc.so.6
-(gdb) rdi            0x3a                58
+Thread 9 "TCPHandler" hit Catchpoint 4 (call to syscall sendto), 0x00007f0c54e2398e in send () from /lib/x86_64-linux-gnu/libc.so.6
+(gdb) rdi            0x3e                62
 rdx            0x22                34
-(gdb) 0x7fab70d31e00:	0x01	0x00	0x01	0x00	0x02	0xff	0xff	0xff
-0x7fab70d31e08:	0xff	0x03	0x00	0x00	0x01	0x00	0x0b	0x73
+(gdb) 0x7f0bb9a86cc0:	0x01	0x00	0x01	0x00	0x02	0xff	0xff	0xff
+0x7f0bb9a86cc8:	0xff	0x03	0x00	0x00	0x01	0x00	0x0b	0x73
 ```
 
-That is the query's result going back to the client, 34 bytes on socket 58.
+That is the query's result going back to the client, 34 bytes on socket 62.
 
 **Leave.** Delete the catchpoint, detach and quit. GDB exits, and the server
 carries on:
@@ -519,12 +547,14 @@ machine exec ch run --container app --user clickhouse -c 'echo delete > /tmp/gdb
 machine exec ch run --container app --user clickhouse -c 'echo detach > /tmp/gdb.in'
 machine exec ch run --container app --user clickhouse -c 'echo quit > /tmp/gdb.in'
 machine run ch --within 2s
-machine exec ch proc a28041ba stdout
+machine exec ch proc 842ee807 stdout
 ```
 
 ```text
-(gdb) Detaching from program: /usr/bin/clickhouse, process 7
-[Inferior 1 (process 7) detached]
+(gdb) Delete all breakpoints? (y or n) [answered Y; input not from terminal]
+(gdb) Detaching from program: /usr/bin/clickhouse, process 8
+[Inferior 1 (process 8) detached]
+(gdb)
 ```
 
 The session is recorded with the run. Rewind to the checkpoint taken before
