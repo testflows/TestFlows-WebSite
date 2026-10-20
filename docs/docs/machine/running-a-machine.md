@@ -22,6 +22,8 @@ knowing about:
 | `--label name=value` | attach a label to the run, as many times as you like |
 | `--rng`, `--rng-seed n` | give the machine random numbers, seeded with `n` (the default is 0) |
 | `--fs-sync` | write to the disk as the program writes, instead of later |
+| `--mem-hash` | hash the machine's memory at every entry, so a replay compares it too (off by default) |
+| `--disk-hash` | hash the machine's disk at every entry, so a replay compares it too (off by default) |
 | `--no-wait` | return as soon as the request is accepted |
 
 Change the seed and the program sees different random numbers. Keep it and it
@@ -793,6 +795,12 @@ to drive on a run created with `--no-daemon`. `fork` and `detach` take them
 too, and the new run keeps what you gave. `--pin-cpu` is the exception: no run
 remembers a CPU, so each `start` and `fork` picks the least-loaded one unless
 you name it.
+
+What a run records is fixed when you create it: `--side-dump`, `--side-trace`,
+`--mem-hash` and `--disk-hash`. A `start` keeps it. A branch is where it
+changes: `fork`, `detach` and `go` take each of them, and `--no-mem-hash` or
+`--no-disk-hash` to turn one off, and a branch given none records what its
+parent records. [Replay](replay.md) says what the two hashes add.
 
 `delete` only removes stopped runs, unless you add `--stop`. It also refuses to
 remove a run that has branches, unless you add `--recursive`. And since

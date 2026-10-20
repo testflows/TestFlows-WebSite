@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792526635712" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792524837785" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792524837786" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792526635712" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792524837786" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792526635712" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -948,6 +948,14 @@ knowing about:</p>
 <td>write to the disk as the program writes, instead of later</td>
 </tr>
 <tr>
+<td><code>--mem-hash</code></td>
+<td>hash the machine’s memory at every entry, so a replay compares it too (off by default)</td>
+</tr>
+<tr>
+<td><code>--disk-hash</code></td>
+<td>hash the machine’s disk at every entry, so a replay compares it too (off by default)</td>
+</tr>
+<tr>
 <td><code>--no-wait</code></td>
 <td>return as soon as the request is accepted</td>
 </tr>
@@ -1523,6 +1531,11 @@ to drive on a run created with <code>--no-daemon</code>. <code>fork</code> and <
 too, and the new run keeps what you gave. <code>--pin-cpu</code> is the exception: no run
 remembers a CPU, so each <code>start</code> and <code>fork</code> picks the least-loaded one unless
 you name it.</p>
+<p>What a run records is fixed when you create it: <code>--side-dump</code>, <code>--side-trace</code>,
+<code>--mem-hash</code> and <code>--disk-hash</code>. A <code>start</code> keeps it. A branch is where it
+changes: <code>fork</code>, <code>detach</code> and <code>go</code> take each of them, and <code>--no-mem-hash</code> or
+<code>--no-disk-hash</code> to turn one off, and a branch given none records what its
+parent records. <a href="#Replay">Replay</a> says what the two hashes add.</p>
 <p><code>delete</code> only removes stopped runs, unless you add <code>--stop</code>. It also refuses to
 remove a run that has branches, unless you add <code>--recursive</code>. And since
 <a href="#machine-delete"><code>machine delete --all</code></a> removes every run, it asks you first.</p>
@@ -10624,9 +10637,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792524837786"></script>
-<script src="/js/machine-hero-type.js?v=1792524837786"></script>
-<script src="/js/download-platforms.js?v=1792524837786"></script>
+<script src="/js/index-code-type.js?v=1792526635712"></script>
+<script src="/js/machine-hero-type.js?v=1792526635712"></script>
+<script src="/js/download-platforms.js?v=1792526635712"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
