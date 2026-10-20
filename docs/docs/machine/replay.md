@@ -19,23 +19,24 @@ does: `--to ^booted` for a checkpoint, `--to '#300'` for an entry, `--to 10ms`
 for a time. The point is one of the line being replayed, so a checkpoint the
 parent took after the fork is a valid one.
 
-Each entry holds hashes of the machine's state: its registers, its devices,
-its timers and its disk. A replay compares them all. A run created with
-`--mem-hash` also hashes the guest's memory at every entry, and a replay of
-it compares that as well. Hashing memory costs time at every entry, so it is
-off by default, and a divergence of memory alone shows up only later, once it
-reaches a register, a device or the disk. A branch can turn it on or off:
+Each entry holds hashes of the machine's state: its registers, its devices
+and its timers. A replay compares them all. A run created with `--mem-hash`
+also hashes the guest's memory at every entry, and one created with
+`--disk-hash` its disk, and a replay of it compares those as well. Hashing
+costs time at every entry, so both are off by default. A divergence of memory
+or the disk alone then shows up later, once it reaches a register or a
+device. A branch can turn either on or off:
 
 ```bash
-machine create --disk app.img --mem-hash          # hash memory from the start
-machine fork app --at ^booted --mem-hash          # a branch that hashes it
-machine fork app --at ^booted --no-mem-hash       # a branch that does not
+machine create --disk app.img --mem-hash --disk-hash   # hash both from the start
+machine fork app --at ^booted --mem-hash               # a branch that hashes memory
+machine fork app --at ^booted --no-disk-hash           # a branch that does not hash the disk
 ```
 
-A replay hashes the memory exactly where the recording did, whatever the
-replaying branch records, so a replay compares either kind of recording.
-`diff` of an entry that hashed memory against one that did not leaves memory
-out, and says `Memory not compared`.
+A replay hashes memory and the disk exactly where the recording did, whatever
+the replaying branch records, so a replay compares either kind of recording.
+`diff` of an entry that hashed one against an entry that did not leaves it
+out, and says `Memory not compared` or `Disk not compared`.
 
 The host can interrupt an entry too. That is not a divergence. Replay prints
 `Interrupted: entry N, crossing 1: host SMI` and replays the entry again,
