@@ -3564,7 +3564,7 @@ See [Moving around](checkpoints-and-branches.md#moving-around).
 The run keeps its id and its name. The entries, checkpoints and console output
 after the point are discarded.
 
-The point is required. It is any entry from #0 to the tip. Write an entry id
+The point is required. It is any entry from #1 to the tip. Write an entry id
 after #, a checkpoint name after ^, or a machine time. The run lands on it
 exactly.
 
@@ -3580,7 +3580,7 @@ usage: machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point ...]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `[point ...]` | Point to go back to, from #1 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
 
 Examples:
 

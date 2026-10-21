@@ -37,7 +37,8 @@ name. Nearly every action is something you do to a run.
 an entry, so for example, entry #42 is always the same point in that run.
 
 **Checkpoint.** A saved copy of the whole machine at one point in the log. Every
-run has checkpoint 0, taken at boot, and you can add your own and name them.
+run has checkpoint 1, taken at its first entry, and you can add your own and
+name them.
 
 **Branch.** A run that starts from another run at some point. It shares history
 with its parent up to that point and has its own after that. You create one
