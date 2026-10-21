@@ -809,7 +809,9 @@ machine delete app
 ```
 
 `pause` freezes a running machine and `resume` lets it carry on. `kill` ends it
-abruptly, where `stop` shuts a run down and keeps everything it recorded. `start` brings it
+abruptly, where `stop` shuts a run down and keeps everything it recorded. In
+a session, both wait until what the run recorded is saved to your storage,
+and show how far the save has got. `start` brings it
 back at the end of its log. If the run had gone past its last checkpoint
 when it stopped, Machine replays the recorded tail from that checkpoint and
 tells you how many entries it replayed. Add `--no-recover` to make it
