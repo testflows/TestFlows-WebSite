@@ -2638,7 +2638,11 @@ not stop it.
 
 The path of an output file takes the same place, as in
 /output/drop/app/debug.log\~REGEX. A file that is dropped stops the run the same
-way. The run stores none of the file.
+way. The run stores none of the file. A path that holds a \~ is quoted, as in
+'"/output/keep/app.log\~"\~ERROR'.
+
+Only text the run prints from its start ends it. A line printed before does not.
+Use machine wait `--for` to ask whether text was printed.
 
 tid=N:at=LOC runs until tid N reaches LOC in its own code. tgid=N:at=LOC runs
 until any thread of the process does. The address is resolved when the run

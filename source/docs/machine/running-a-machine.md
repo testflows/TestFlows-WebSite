@@ -64,6 +64,20 @@ These are the conditions you can wait for. [`machine run`](commands.md#machine-r
 The last row is one example of a task condition. There are more of them
 under [Steering programs](steering-programs.md).
 
+The two commands read a text condition differently. `run --until` waits for
+text printed during the run, so a line already on the console does not end
+it, and the same `--until` can stop at the next of several lines alike.
+`wait --for` asks whether the text has been printed at all, before the run
+or during it:
+
+```bash
+machine run app --until 'console~ready'    # runs until the next ready line
+machine wait --for 'console~ready' app     # true if one was printed already
+```
+
+A source name with a `~` in it is quoted inside the pattern, as in
+`'"/output/keep/app/app.log~"~ERROR'`.
+
 `--iters` limits how many iterations a drive may spend, and the global
 `--timeout` limits how long you are willing to wait. Whichever hits first wins.
 
@@ -152,6 +166,18 @@ so scripts can tell them apart. Remember that it only watches. Waiting for a
 condition on a run nobody is driving never finishes unless you set `--timeout`.
 With `--timeout 0` it checks once, and the message tells you why it failed: `The
 machine was waiting for commands.`
+
+At the [control prompt](#interactive-mode) the two are `/run until` and
+`/wait for`, and `/run` takes `within` too:
+
+```
+/run until 'console~ready' within 30s
+/wait for 'console~ready'
+```
+
+`/wait for` answers at once, because nothing drives the machine while the
+prompt waits. `timeout 5` makes it wait 5 seconds, for a run another session
+drives.
 
 ## Looking at it
 
@@ -582,8 +608,11 @@ make the pipe in the container and write it from there:
 machine exec app run   --container db -- mkfifo /tmp/p
 machine exec app start --container db -c 'sleep infinity > /tmp/p'
 machine exec app start --container db -c 'gdb -p $(pidof postgres) < /tmp/p'
-machine exec app run   --container db -c 'echo c > /tmp/p'
+machine exec app start --container db -c 'echo c > /tmp/p'
+machine run app --until '/output/exec/<id>/stdout~Continuing' --within 10s
 ```
+
+`<id>` is the id `exec start` printed for GDB.
 
 [GDB inside the machine](debugging.md#a-session-that-stays-attached) walks
 through a whole session this way, on ClickHouse.
