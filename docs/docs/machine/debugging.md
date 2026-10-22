@@ -288,16 +288,16 @@ machine exec ch run --container app --user clickhouse \
 ```
 
 ```text
-[New LWP 81]
+[New LWP 78]
 ...
 Breakpoint 1 at 0x1d386340 (3 locations)
-[Switching to Thread 0x7f0c18c5e640 (LWP 92)]
+[Switching to Thread 0x7f844cbde640 (LWP 89)]
 
 Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
 #0  0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
 #1  0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
 #2  0x000000001ed37d64 in DB::TCPHandler::run() ()
-[Inferior 1 (process 8) detached]
+[Inferior 1 (process 7) detached]
 ```
 
 `exec run` runs the machine until GDB exits, and prints what GDB printed.
@@ -342,52 +342,66 @@ machine exec ch start --container app --user clickhouse -c 'gdb -q -p $(pidof cl
 ```
 
 ```text
-✔ Sent 842ee807 to ch (whvI0EeUUiPDfh9XhCiir)
-  Read the process machine exec ch proc 842ee807
+✔ Sent 3615877d to ch (whvR8O5Y1otCgBTbNi3rc)
+  Read the process machine exec ch proc 3615877d
 ```
 
 The `sleep` holds the pipe open. Without it, GDB reads the end of its input
 after the first command and exits.
 
-Every step below is the same three commands: write a line to the pipe, run
-the machine, and read what GDB printed from the process, by the id
-`exec start` gave. GDB runs only while the machine runs, and a command
-written before GDB is ready waits in the pipe:
+Every step below is the same three commands. `exec start` queues a `printf`
+that writes the step's GDB commands to the pipe, the last of them an `echo`
+of a marker. `run --until` runs the machine until GDB prints that marker,
+which is when GDB has done every command before it. `proc` reads what GDB
+printed, by the id `exec start` gave:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "handle SIGUSR1 SIGUSR2 nostop noprint" > /tmp/gdb.in'
-machine run ch --within 60s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "handle SIGUSR1 SIGUSR2 nostop noprint" "echo step-1\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-1' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
-Attaching to process 8
-[New LWP 81]
+Attaching to process 7
+[New LWP 78]
 ...
 [Thread debugging using libthread_db enabled]
 Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
-0x00007f0c54d8d0d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
+0x00007f84884760d7 in ?? () from /lib/x86_64-linux-gnu/libc.so.6
 (gdb) Signal        Stop	Print	Pass to program	Description
 SIGUSR1       No	No	Yes		User defined signal 1
 SIGUSR2       No	No	Yes		User defined signal 2
+(gdb) step-1
 (gdb)
 ```
 
-This keeps `continue` from stopping at ClickHouse's own signals, as in the
-batch session. The first step waits for GDB to read
-the program's symbols; after that `--within 2s` is enough. A `$` in a GDB
-command is written `\$` inside the double quotes, as `"x/4i \$pc"` below.
-Each read shows the whole session so far; the output below is what each step
+The `handle` line keeps `continue` from stopping at ClickHouse's own signals,
+as in the batch session. This first step waits for GDB to read the program's
+symbols, 10 seconds here. The others take a second or two.
+
+A few things keep the steps right:
+
+- Each step has a marker of its own. `run --until` ends on text the run
+  prints from its start, so `step-1` printed before never ends a later run.
+- Use `exec start`, not `exec run`, to write to the pipe. `exec run` runs the
+  machine until the `printf` exits, and GDB may print the marker during it.
+  The `run --until` after it then waits for a marker that is already there.
+- `printf "%s\n"` writes each argument as a line and leaves `\n` in it as it
+  is, so GDB's `echo` ends the marker's line. A `$` in a GDB command is
+  written `\$` inside the double quotes, as `"x/s \$rsi"` below.
+- `--within 60s` bounds a step whose marker never comes. Without it a
+  mistyped marker runs the machine until it is cancelled.
+
+Each read shows the whole session so far. The output below is what each step
 added.
 
 **A breakpoint.** GDB writes an `int3` into the program, as on any host, and
 uses no debug register:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "break DB::executeQuery" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "info breakpoints" > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "break DB::executeQuery" "info breakpoints" "echo step-2\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-2' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
@@ -397,50 +411,54 @@ machine exec ch proc 842ee807 stdout
 1.1                         y   0x000000001d386340 <DB::executeQuery(std::__1::basic_string_view<char, ...>, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum)>
 1.2                         y   0x000000001d394300 <DB::executeQuery(DB::ReadBuffer&, DB::WriteBuffer&, ...)>
 1.3                         y   0x000000001d394640 <DB::executeQuery(std::__1::unique_ptr<DB::ReadBuffer, ...>, DB::WriteBuffer&, ...)>
+(gdb) step-2
 ```
 
 **Continue to it.** The example's server sends itself a query every second,
-and a thread that handles it stops:
+and a thread that handles it stops. GDB reads the marker after `c` stops, so
+the marker follows the hit:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" c "echo step-3\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-3' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
 (gdb) Continuing.
-[New Thread 0x7f0bb2dfe640 (LWP 377)]
-[Switching to Thread 0x7f0c18c5e640 (LWP 92)]
+[Switching to Thread 0x7f844cbde640 (LWP 89)]
 
 Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(std::__1::basic_string_view<char, std::__1::char_traits<char> >, std::__1::shared_ptr<DB::Context>, DB::QueryFlags, DB::QueryProcessingStage::Enum) ()
+(gdb) step-3
 ```
+
+Every later `continue` works the same way. Each hit prints a new
+`hit Breakpoint` line, so `--until '/output/exec/3615877d/stdout~hit Breakpoint'`
+stops at the next hit too.
 
 **Read the query.** `executeQuery` returns its result by value, so `rdi`
 holds where to put it, and the query follows in `rsi` and `rdx`, a pointer
 and a length:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "info registers rsi rdx" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "x/s \$rsi" > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "info registers rsi rdx" "x/s \$rsi" "echo step-4\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-4' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
-(gdb) rsi            0x7f0c5352e8d0      139690914277584
+(gdb) rsi            0x7f8482a32cc0      140207104142528
 rdx            0x28                40
-(gdb) 0x7f0c5352e8d0:	"SELECT sum(number) FROM numbers(1000000)"
+(gdb) 0x7f8482a32cc0:	"SELECT sum(number) FROM numbers(1000000)"
+(gdb) step-4
 ```
 
 **Instructions and single steps:**
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "x/4i \$pc" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo stepi > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "nexti 3" > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "x/4i \$pc" stepi "nexti 3" "echo step-5\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-5' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
@@ -450,15 +468,15 @@ machine exec ch proc 842ee807 stdout
    0x1d38634c <_ZN2DB12executeQuery...+12>:	push   %r15
 (gdb) 0x000000001d38634b in DB::executeQuery(...) ()
 (gdb) 0x000000001d386350 in DB::executeQuery(...) ()
+(gdb) step-5
 ```
 
 **The stack, and running to the return:**
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "bt 3" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo finish > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "bt 3" finish "echo step-6\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-6' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
@@ -468,6 +486,7 @@ machine exec ch proc 842ee807 stdout
 (More stack frames follow...)
 (gdb) Run till exit from #0  0x000000001d386350 in DB::executeQuery(...) ()
 0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+(gdb) step-6
 ```
 
 **A hardware breakpoint.** Delete the first breakpoint, and put one at the
@@ -475,28 +494,28 @@ address `finish` returned to. It takes one of the run's 3 debug registers,
 and stops where the next query returns:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "delete 1" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "hbreak *0x1ed12ec3" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
-machine run ch --within 3s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "delete 1" "hbreak *0x1ed12ec3" c "echo step-7\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-7' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
-(gdb) Hardware assisted breakpoint 2 at 0x1ed12ec3
+(gdb) (gdb) Hardware assisted breakpoint 2 at 0x1ed12ec3
 (gdb) Continuing.
 
 Thread 9 "TCPHandler" hit Breakpoint 2, 0x000000001ed12ec3 in DB::TCPHandler::runImpl() ()
+(gdb) step-7
 ```
+
+`delete` prints nothing, so its prompt stands alone at the start.
 
 **A hardware watchpoint.** It takes another debug register, and stops after
 the next call writes its return address below the stack pointer:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo "watch -l *(long *)(\$rsp - 8)" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "watch -l *(long *)(\$rsp - 8)" c "echo step-8\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-8' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
@@ -508,6 +527,7 @@ Thread 9 "TCPHandler" hit Hardware watchpoint 3: -location *(long *)($rsp - 8)
 Old value = 517025475
 New value = 517025550
 0x000000001b389000 in DB::BlockIO::operator=(DB::BlockIO&&) ()
+(gdb) step-8
 ```
 
 **A system call.** Delete every breakpoint and watchpoint, stop at the next
@@ -516,13 +536,9 @@ GDB asks before it deletes them all, and answers itself, since its input is
 not a terminal:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo delete > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "catch syscall sendto" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo c > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "info registers rdi rdx" > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo "x/16xb \$rsi" > /tmp/gdb.in'
-machine run ch --within 3s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" delete "catch syscall sendto" c "info registers rdi rdx" "x/16xb \$rsi" "echo step-9\n" > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/stdout~step-9' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
@@ -530,32 +546,33 @@ machine exec ch proc 842ee807 stdout
 (gdb) Catchpoint 4 (syscall 'sendto' [44])
 (gdb) Continuing.
 
-Thread 9 "TCPHandler" hit Catchpoint 4 (call to syscall sendto), 0x00007f0c54e2398e in send () from /lib/x86_64-linux-gnu/libc.so.6
-(gdb) rdi            0x3e                62
+Thread 9 "TCPHandler" hit Catchpoint 4 (call to syscall sendto), 0x00007f848850c98e in send () from /lib/x86_64-linux-gnu/libc.so.6
+(gdb) rdi            0x3a                58
 rdx            0x22                34
-(gdb) 0x7f0bb9a86cc0:	0x01	0x00	0x01	0x00	0x02	0xff	0xff	0xff
-0x7f0bb9a86cc8:	0xff	0x03	0x00	0x00	0x01	0x00	0x0b	0x73
+(gdb) 0x7f8400e3c280:	0x01	0x00	0x01	0x00	0x02	0xff	0xff	0xff
+0x7f8400e3c288:	0xff	0x03	0x00	0x00	0x01	0x00	0x0b	0x73
+(gdb) step-9
 ```
 
-That is the query's result going back to the client, 34 bytes on socket 62.
+That is the query's result going back to the client, 34 bytes on socket 58.
 
-**Leave.** Delete the catchpoint, detach and quit. GDB exits, and the server
-carries on:
+**Leave.** Delete the catchpoint, detach and quit. GDB prints no marker after
+`quit`, so the run waits for the process's status file to say it exited:
 
 ```bash
-machine exec ch run --container app --user clickhouse -c 'echo delete > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo detach > /tmp/gdb.in'
-machine exec ch run --container app --user clickhouse -c 'echo quit > /tmp/gdb.in'
-machine run ch --within 2s
-machine exec ch proc 842ee807 stdout
+machine exec ch start --container app --user clickhouse -c 'printf "%s\n" delete detach quit > /tmp/gdb.in'
+machine run ch --until '/output/exec/3615877d/status~^exited' --within 60s
+machine exec ch proc 3615877d stdout
 ```
 
 ```text
 (gdb) Delete all breakpoints? (y or n) [answered Y; input not from terminal]
-(gdb) Detaching from program: /usr/bin/clickhouse, process 8
-[Inferior 1 (process 8) detached]
+(gdb) Detaching from program: /usr/bin/clickhouse, process 7
+[Inferior 1 (process 7) detached]
 (gdb)
 ```
+
+GDB has exited, and the server carries on.
 
 The session is recorded with the run. Rewind to the checkpoint taken before
 it, and the same commands give the same answers.

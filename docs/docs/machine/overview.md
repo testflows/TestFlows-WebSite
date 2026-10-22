@@ -12,6 +12,12 @@ That gives you three things to work with:
 * **Replay.** Play the log back and the run repeats itself. If it failed once, it fails every time.
 * **Branch.** Stop at any point, branch from it, and try something else. The original run stays as it was.
 
+A machine has as many vCPUs as you give it, and all of them are recorded and
+replayed. Its idle time takes almost no time: a program that sleeps for ten
+minutes finishes in seconds. See
+[Multiple vCPUs](running-a-machine.md#multiple-vcpus) and
+[Time compression](running-a-machine.md#time-compression).
+
 If you have ever chased a test that fails one run in fifty, you know why this
 is handy. Record the failing run once, then replay it as often as you need.
 
@@ -37,7 +43,8 @@ name. Nearly every action is something you do to a run.
 an entry, so for example, entry #42 is always the same point in that run.
 
 **Checkpoint.** A saved copy of the whole machine at one point in the log. Every
-run has checkpoint 0, taken at boot, and you can add your own and name them.
+run has checkpoint 1, taken at its first entry, and you can add your own and
+name them.
 
 **Branch.** A run that starts from another run at some point. It shares history
 with its parent up to that point and has its own after that. You create one

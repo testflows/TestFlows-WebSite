@@ -2638,7 +2638,11 @@ not stop it.
 
 The path of an output file takes the same place, as in
 /output/drop/app/debug.log\~REGEX. A file that is dropped stops the run the same
-way. The run stores none of the file.
+way. The run stores none of the file. A path that holds a \~ is quoted, as in
+'"/output/keep/app.log\~"\~ERROR'.
+
+Only text the run prints from its start ends it. A line printed before does not.
+Use machine wait `--for` to ask whether text was printed.
 
 tid=N:at=LOC runs until tid N reaches LOC in its own code. tgid=N:at=LOC runs
 until any thread of the process does. The address is resolved when the run
@@ -3560,7 +3564,7 @@ See [Moving around](checkpoints-and-branches.md#moving-around).
 The run keeps its id and its name. The entries, checkpoints and console output
 after the point are discarded.
 
-The point is required. It is any entry from #0 to the tip. Write an entry id
+The point is required. It is any entry from #1 to the tip. Write an entry id
 after #, a checkpoint name after ^, or a machine time. The run lands on it
 exactly.
 
@@ -3576,7 +3580,7 @@ usage: machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point ...]` | Point to go back to, from #0 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `[point ...]` | Point to go back to, from #1 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
 
 Examples:
 
