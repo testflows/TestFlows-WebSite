@@ -45,6 +45,19 @@ conditions take the form `program:what`, where `what` is one of:
 | `kernel` | a thread is running in the kernel |
 | `off` | the thread is not on a CPU at all |
 
+A run can also stop where a thread reaches a location, or after it writes or
+touches bytes. These need no focus. They name a thread or a process by its id:
+
+```bash
+machine run app --until 'tid=56:at=parse'          # until thread 56 reaches parse
+machine run app --until 'tid=56:write=counter'     # until thread 56 writes counter
+machine run app --until 'tgid=12:access=buf[0]'    # until any thread of process 12 reads or writes buf[0]
+```
+
+Each takes one of the run's 3 hardware breakpoints and watchpoints, for that
+run alone. [Debugging](debugging.md#running-to-a-place) says what they take and
+what the run says when it stops.
+
 ## Holding threads
 
 ```bash
