@@ -2648,6 +2648,22 @@ tid=N:at=LOC runs until tid N reaches LOC in its own code. tgid=N:at=LOC runs
 until any thread of the process does. The address is resolved when the run
 starts. The stop takes one of the run's 3 breakpoints and watchpoints.
 
+tid=N:write=LOC runs until an instruction writes the bytes LOC names while tid N
+is on a vCPU. tid=N:access=LOC runs until one reads or writes them.
+tgid=N:write=LOC and tgid=N:access=LOC stop for any thread of the process.
+
+The run stops after the access. A write the kernel makes for the task counts. A
+variable or an expression is watched at its size of 1, 2, 4 or 8 bytes. The
+watch takes one of the run's 3 breakpoints and watchpoints.
+
+An address is watched through a cast that gives it a type, as GDB's watch takes
+one. The address is a multiple of the size. tgid=N also stops for a kernel
+thread that works in the process's memory.
+
+A run that stops at LOC says the tid that reached it and where it stands. A
+watch also says the value the access left in the bytes. The machine records both
+at the stop, so a task in the kernel still shows them.
+
 LOC is one of these, in the task's process:
 
 ```text
@@ -2738,7 +2754,7 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
-| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOC or tgid=N:at=LOC |
+| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOC, tid=N:write=LOC or tid=N:access=LOC, or the same with tgid=N |
 | `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
@@ -2768,6 +2784,8 @@ machine run run1 --until vtime=+10ms        until its clock moves 10 ms
 machine run run1 --until tasks              until its tasks can be listed
 machine run run1 --until tid=41:at=main     until tid 41 is at main
 machine run run1 --until tgid=7:at=a.c:9    until tgid 7 reaches a.c:9
+machine run run1 --until tid=41:write=sum   until tid 41 writes sum
+machine run run1 --until tgid=7:access=buf  until tgid 7 touches buf
 machine run run1 --within 10s               until its clock has moved 10 s
 machine run run1 --until tasks --within 9s  the first of the two
 ```
@@ -2917,7 +2935,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 | `--seed n` | Seed for the random and golden draw strategies (default: 0) |
 | `--vcpu span` | The vCPU, or a span to draw one per dispatch (default: all) |
 | `--iters span` | Iterations, an upper bound; 0 is unlimited (default: 1; with `--until`, unbounded) |
-| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOC or tgid=N:at=LOC |
+| `--until predicate` | Drive until this is true: a predicate of wait `--for`, or tid=N:at=LOC, tid=N:write=LOC or tid=N:access=LOC, or the same with tgid=N |
 | `--within duration` | End the run when the machine's clock has moved this far, such as 10s |
 | `--irqblk` | Block IRQs during run |
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
