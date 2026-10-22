@@ -31,6 +31,43 @@ sees the same ones every time. This one is only about the random numbers the
 machine asks for. For exploring thread schedules there is another seed, on
 [`machine run`](commands.md#machine-run), covered next.
 
+## Multiple vCPUs
+
+A machine can have more than one vCPU. Ask for them with `--cpus` and the guest
+sees every one, so its kernel spreads threads across them just as it would on
+your own computer.
+
+Here is a quick way to see it. Build a disk from Ubuntu 26.04 whose container
+just runs `sleep infinity`, so it stays up and waits for your commands. Then
+create a run with four vCPUs and ask the guest what it has:
+
+```bash
+machine disks build --from ubuntu:26.04 ubuntu-26.04 --entrypoint /bin/sleep -- infinity
+machine create app4 --disk ubuntu-26.04 --cpus 4
+machine exec app4 run --container app -- nproc
+machine exec app4 run --container app -- grep -E '^processor|^model name' /proc/cpuinfo
+```
+```
+4
+processor	: 0
+model name	: TestFlows Machine v1
+processor	: 1
+model name	: TestFlows Machine v1
+processor	: 2
+model name	: TestFlows Machine v1
+processor	: 3
+model name	: TestFlows Machine v1
+```
+
+Nothing about recording changes with more vCPUs. The machine records each of
+them, along with every interrupt one vCPU sends to another, so a run on four
+vCPUs replays exactly like a run on one. A race between two threads on
+different vCPUs plays out the same way every time you replay it.
+
+Each scheduling cycle gives every vCPU a turn. To drive just one of them, use
+`machine run --vcpu N`. And to explore how threads on several vCPUs could
+interleave, see [Trying different schedules](running-a-machine.md#trying-different-schedules).
+
 ## Driving it
 
 A run executes only while you drive it. [`machine run`](commands.md#machine-run) is the way, and `--until`
@@ -147,6 +184,75 @@ host does not end the run sooner, which the global `--timeout` in seconds would.
 
 The clock moves as the programs in the machine work and while the machine is
 idle. A loop that does nothing but spin does not move it.
+
+## Time compression
+
+Idle time takes almost no time.
+
+When every vCPU is halted and waiting for a timer, the machine doesn't sit
+through the wait. It moves its clock straight to the earliest timer the guest
+armed, and the guest wakes up at exactly the time it asked for, as if it had
+waited. No instruction runs in between, so there is nothing for the host to
+do. Time the guest spends working is never skipped.
+
+So a program that sleeps for ten minutes sleeps ten minutes of machine time,
+and only a few seconds of yours. Try it on a one-vCPU run of the Ubuntu disk
+from [Multiple vCPUs](running-a-machine.md#multiple-vcpus):
+
+```bash
+machine create app --disk ubuntu-26.04
+time machine exec app run --container app -- sh -c 'date; sleep 600; date'
+```
+```
+Sun Mar  1 00:00:05 UTC 2026
+Sun Mar  1 00:10:05 UTC 2026
+
+real	0m2.802s
+```
+
+Ten minutes went by in the guest, and 2.8 seconds went by for you.
+
+### On more than one vCPU
+
+Time compression works the same way with [several vCPUs](running-a-machine.md#multiple-vcpus).
+The machine only moves the clock once all of them are idle, so a vCPU that
+still has work finishes it first. Here is the same sleep on the four-vCPU run:
+
+```bash
+time machine exec app4 run --container app -- sh -c 'date; sleep 600; date'
+```
+```
+Sun Mar  1 00:00:07 UTC 2026
+Sun Mar  1 00:10:07 UTC 2026
+
+real	0m7.166s
+```
+
+### Replaying it
+
+Every move of the clock is recorded in the run's log, so a replay makes the same
+moves at the same points and ends up in the same state. Fork a branch from the
+start of the run and replay it, ten minutes of sleep included:
+
+```bash
+machine stop app4
+machine fork app4 --at ^1 --name check
+machine replay app4/check
+```
+
+Then [`machine diff`](commands.md#machine-diff) compares the branch with the
+original:
+
+```bash
+machine diff app4/check
+```
+```
+✔ No differences
+```
+
+How much a run compresses depends on how idle the guest really is. A database
+that keeps running background tasks while your test sleeps uses machine time
+for them, and that time is never skipped.
 
 ## Waiting
 
