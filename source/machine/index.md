@@ -1,6 +1,6 @@
 ---
 title: Machine
-description: A deterministic execution environment for your software, as a service. For testing, exploration, debugging and more. Deterministic hypervisor, multiple vCPUs, time compression.
+description: A deterministic execution environment where you run, explore, debug and test your software. Built on our deterministic hypervisor: programs, Docker images and Docker Compose environments run unchanged.
 date: 2026-08-03 00:00:00
 layout: index
 fullwidth: true
@@ -14,7 +14,7 @@ image: images/machine-hero.jpg
 
 <div class="banner-text machine-banner-text">
     <h1>Run your programs deterministically</h1>
-    <p>A deterministic execution environment for your software. Testing, exploration, debugging and more. Deterministic hypervisor for programs, Docker images and Docker Compose environments.</p>
+    <p>A deterministic execution environment where you run, explore, debug and test your software. Built on our deterministic hypervisor, it runs your programs, Docker images and Docker Compose environments unchanged.</p>
     <div class="banner-actions">
         <a class="btn banner-cta" href="/machine/portal/signup/">Create account</a>
         <a class="btn banner-cta banner-cta-ghost" href="/machine/download/">Download client</a>

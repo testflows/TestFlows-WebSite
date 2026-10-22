@@ -8,7 +8,7 @@
 
 The Client EULA licenses the client to your account. In CI, where there is no terminal, install with an API key of an account that has accepted the current Agreement: `curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash`.
 
-TestFlows™ Machine is a service that provides a deterministic execution environment for your software, used for testing, exploration, debugging and more. It is self-serve and runs in the cloud: you can sign up for free, and paid plans are available. It is built on a deterministic hypervisor, which boots a full Linux x86_64 virtual machine and runs your software in it unchanged: a single binary, a Docker image, or a whole Docker Compose environment of several services. The hypervisor controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+TestFlows™ Machine is a deterministic execution environment where you run, explore, debug and test your software. It is built on our deterministic hypervisor, which boots a full Linux x86_64 virtual machine and runs your programs, Docker images and Docker Compose environments in it unchanged. Machine is a self-serve service in the cloud: you can sign up for free, and paid plans are available. The hypervisor controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
 ## Install
 
