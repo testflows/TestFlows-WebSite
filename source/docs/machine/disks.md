@@ -2,9 +2,8 @@
 
 # Disks
 
-A disk is what a machine boots, and
-[`machine disks build`](commands.md#machine-disks-build) makes one. You give
-the build exactly one source.
+A disk is what a machine boots, and [`machine disks build`](commands.md#machine-disks-build) makes one. You give
+it exactly one source.
 
 | Source | What it takes |
 |---|---|
@@ -13,24 +12,24 @@ the build exactly one source.
 | `--image ref` | a Docker image of your own, as a save tar or a name in your local Docker |
 | `--compose dir` | a Compose project directory and the images its services name |
 
-Everything a machine runs is run by Docker Compose, inside the machine. A
-Compose project is one container for each of its services, and an image or a
-binary is a project of one service, with `--entrypoint` and the arguments after
-`--` as that service's entrypoint and command. A binary is no exception:
-`--binary` wraps the executable in a `scratch` image, one layer holding that file and
+Everything a machine runs runs in Docker Compose, inside the machine. A
+Compose project is one container for each of its services. An image or a binary
+is a project of one service, and `--entrypoint` and the arguments after `--` are
+that service's entrypoint and command. A binary is no exception: `--binary`
+wraps the executable in a `scratch` image, one layer holding that file and
 nothing else, with no base image, no loader and no libraries, and the machine
 runs that image as its one service. `machine` writes this image itself, so
 `--binary` needs no Docker on your computer.
 
 ## Docker and Compose
 
-An image of your own needs [Docker](https://www.docker.com/), and a Compose
-project also needs [Docker Compose](https://docs.docker.com/compose/). Two
-sources need neither. [`machine disks build`](commands.md#machine-disks-build)
-`--binary` wraps a static executable and nothing else, so a program you compile
-needs no Docker. The executable has to be self-contained: the image has no
-loader and no libraries, so a dynamically linked program cannot run. `--from`
-names a public image, and the build pulls that image for you.
+An image of your own needs [Docker](https://www.docker.com/). A Compose project
+also needs [Docker Compose](https://docs.docker.com/compose/). Two sources need
+neither. [`machine disks build`](commands.md#machine-disks-build) `--binary`
+wraps a static executable and nothing else, so a program you compile needs no
+Docker. The executable has to be self-contained. The image has no loader and no
+libraries, so a dynamically linked program cannot run. `--from` names a public
+image, and the build pulls it for you.
 
 ```bash
 machine disks build --image myapp:latest app
@@ -39,8 +38,8 @@ machine disks build --compose ./deploy stack
 
 The name defaults to whatever the source is called. Use `--entrypoint` to
 choose the executable the service runs. Flags go before the name, and the
-service's own arguments go after a `--`, so this command runs `data-race` with
-the argument `3`:
+service's own arguments go after a `--`. This one runs `data-race` with the
+argument `3`:
 
 ```bash
 machine disks build --binary ./data-race race -- 3
@@ -50,13 +49,12 @@ machine disks build --binary ./data-race race -- 3
 
 A program that is not a static executable needs an image that already contains
 what it runs: an interpreter, a runtime, its libraries. Public images have
-those, so name one with `--from` and put your files in it with `--add`. The
-build command reads like a Dockerfile, `FROM` then `ADD` then the command, yet
-you need no Docker for it. The build pulls the image itself, so only your files
-are uploaded.
+those, so name one with `--from` and put your files in it with `--add`. It
+reads like a Dockerfile, `FROM` then `ADD` then the command, and you need no
+Docker for it. The build pulls the image itself, so only your files are
+uploaded.
 
-A complex application made of several services together is a
-[Compose project](disks.md#compose-projects).
+A complex application, several services together, is a [Compose project](disks.md#compose-projects).
 
 ### Python program
 
@@ -112,13 +110,10 @@ app-1 exited with code 0
 
 ### PostgreSQL queries
 
-The PostgreSQL image starts a server, and the image needs a password before it
-will start one. `--env` sets a variable in the service's environment. The disk
-holds each `--env` value as written, and a value is not changed on the way: a
-`$` in it arrives as a `$`.
-
-The image runs every `.sql` file in `/docker-entrypoint-initdb.d` when the
-server first starts, so add the queries there. Save them as `queries.sql`.
+The PostgreSQL image starts a server, and it needs a password before it will.
+`--env` sets a variable in the service's environment. The image runs every
+`.sql` file in `/docker-entrypoint-initdb.d` when the server first starts, so
+add the queries there. Save them as `queries.sql`.
 
 ```sql
 CREATE TABLE orders (id int, customer text, amount numeric);
@@ -145,16 +140,17 @@ app-1  | 2026-03-01 00:00:50.435 UTC [1] LOG:  database system is ready to accep
 
 The server keeps running after the queries, so this machine does not end by
 itself. To run queries and have the machine end, use the
-[PostgreSQL project](disks.md#postgresql-project).
+[PostgreSQL project](disks.md#postgresql-project). The disk holds each `--env`
+value as written, and a value is not changed on the way: a `$` in it arrives
+as a `$`.
 
-The ClickHouse and PostgreSQL examples both ran in a machine with 1024MB of
-memory. A server that other services connect to is a
-[Compose project](disks.md#compose-projects).
+Both ran in a machine with 1024MB of memory. A server that other services
+connect to is a [Compose project](disks.md#compose-projects).
 
 ### Where added files go
 
 `--add` puts a file or a directory in the image, as one more layer on top of
-the public one, and you can repeat `--add` as often as you need.
+the public one. You can repeat it.
 
 | You write | It lands at |
 |---|---|
@@ -170,20 +166,19 @@ directory the path goes into, and any other destination is what the path
 becomes. A Dockerfile `ADD` of a directory copies its contents; the last row is
 how you write that here.
 
-A script that was executable stays executable. `--add` works with `--binary`
-too, for a program that reads a file beside it.
+A script that was executable still is. `--add` works with `--binary` too, for
+a program that reads a file beside it.
 
 `--add` takes files, directories and links. A device, a FIFO or a socket in
 the directory is refused. Every added file belongs to root in the image, so
 the set-user-id and set-group-id bits are not kept: a bit that meant "run as
 this file's owner" on your computer would mean "run as root" there. An image
-that needs one of those bits has to be built with Docker and named with
-`--image`.
+that needs one is built with Docker and named with `--image`.
 
-The `--from` image is the one the name pointed at when you ran the build. The
-build records its digest and pulls exactly that, so a tag that moves later does
-not change your disk. You can also name a digest yourself, as
-`python@sha256:…` or the `python:3.12@sha256:…` that `docker pull` prints.
+The image is the one the name pointed at when you ran the build. The build
+records its digest and pulls exactly that, so a tag that moves later does not
+change your disk. You can name a digest yourself, as `python@sha256:…` or the
+`python:3.12@sha256:…` that `docker pull` prints.
 
 The disk's size defaults to what the image needs plus a gigabyte. Use
 `--dry-run` to see the numbers, and `--size` for more room.
@@ -203,19 +198,19 @@ client, is a [Compose project](disks.md#compose-projects).
 
 [Machine-Examples](https://github.com/testflows/Machine-Examples) has Compose
 environments under `compose/`. Clone it, pull each image for `linux/amd64`
-into the local Docker, and then build the disk from the project directory.
+into the local Docker, then build the disk from the project directory.
 [`machine disks build`](commands.md#machine-disks-build) `--compose` packs
-those images together with the project. The machine runs the project with
-`--abort-on-container-exit`, so the machine ends when a service exits.
+those images and the project. The machine runs the project with
+`--abort-on-container-exit`, so it ends when a service exits.
 
 ```bash
 git clone https://github.com/testflows/Machine-Examples.git
 cd Machine-Examples
 ```
 
-You can run the same project on this computer first, from its own directory,
-which lets you fix it without waiting for a boot. The build commands below run
-from the repository root.
+The same project can be run on this computer first, from its own directory,
+which is how to fix it without waiting for a boot. The build commands below
+are from the repository root.
 
 ### Two services project
 
@@ -223,9 +218,10 @@ from the repository root.
 from it by the service name `server`. Services in a project reach each other
 by name, on the network Compose gives the project.
 
-`depends_on` only orders the start, and nothing waits for the server to accept
-connections, so the client retries. A service that takes time to become ready
-should use a healthcheck, and `depends_on` with `condition: service_healthy`.
+`depends_on` only orders the start. The client retries, because nothing waits
+for the server to accept connections. A service that takes time to become
+ready should use a healthcheck, and `depends_on` with
+`condition: service_healthy`.
 
 ```bash
 docker pull --platform linux/amd64 busybox:1.36
@@ -243,19 +239,19 @@ docker compose up --abort-on-container-exit
 
 `compose/clickhouse` is a ClickHouse server and a client that queries it.
 Both services use one image, so the disk carries that image once. The client
-waits until the server is healthy, prints its result and exits, which ends the
-project.
+waits until the server is healthy, prints its result, and exits, which ends
+the project.
 
 The server takes tens of seconds of machine time before it accepts a query,
-so the project uses a healthcheck rather than a sleep. The project's
-`config.xml` replaces the image's config. With that config the server listens
-on IPv4 only, because the machine's kernel has no IPv6, and its background
-pools are capped, because the image's defaults hang startup in a small machine.
-`CLICKHOUSE_SKIP_USER_SETUP` stops the entrypoint from restricting the
-`default` user to loopback, which would refuse the client.
+so the project uses a healthcheck rather than a sleep. `config.xml` in the
+project replaces the image's config. It listens on IPv4 only, because the
+machine's kernel has no IPv6, and it caps the background pools, because the
+image's defaults hang startup in a small machine. `CLICKHOUSE_SKIP_USER_SETUP`
+stops the entrypoint from restricting the `default` user to loopback, which
+would refuse the client.
 
 The config is mounted from `./config.xml`, a path inside the project. A bind
-mount from outside the project directory is refused, and a named volume or a
+mount from outside the project directory is refused. A named volume or a
 tmpfs is created empty when the machine boots.
 
 ```bash
@@ -295,13 +291,11 @@ client-1 exited with code 0
 ### Carrying images
 
 A service can start containers of its own, through the machine's Docker. The
-images such a service starts are not named by any service the project runs,
-and a machine reaches no registry, so an image that the project does not name
-is not on the disk.
+images it starts are named by no service this project runs, and a machine
+reaches no registry, so an image that is not named here is not on the disk.
 
-A service with `scale: 0` names an image and starts nothing. The build packs
-every image the project names, including these, and Compose starts none of
-them.
+`scale: 0` names an image and starts nothing. The build packs every image the
+project names, including these, and Compose starts none of them.
 `compose/clickhouse-regression` carries the images its suite starts this way.
 Another image, such as ZooKeeper or MinIO, is another service.
 
@@ -337,12 +331,11 @@ logging driver, if the project sets one, is `json-file`, `local`, or `none`.
 
 ## Building disks on an ARM machine
 
-A machine is an x86_64 computer, so a disk holds `linux/amd64` programs
-whatever machine you build it on. On a Mac with Apple Silicon or on arm64 Linux, Docker
+A machine is an x86_64 computer, so a disk holds `linux/amd64` programs, whatever
+machine you build it on. On a Mac with Apple Silicon or on arm64 Linux, Docker
 builds and pulls `arm64` images by default, and those cannot run in a machine.
-[`machine disks build`](commands.md#machine-disks-build) checks every image
-and refuses one that is not `linux/amd64` before uploading anything. Ask
-Docker for `linux/amd64`:
+[`machine disks build`](commands.md#machine-disks-build) checks every image and refuses one that is not
+`linux/amd64` before uploading anything. Ask Docker for `linux/amd64`:
 
 ```bash
 docker pull --platform linux/amd64 myapp:latest
@@ -360,16 +353,15 @@ compile for x86_64 Linux, for example `GOOS=linux GOARCH=amd64 go build`.
 A disk boots with its images already loaded, so the project starts as soon as
 Docker does.
 
-A disk built with `--load-at-boot` instead keeps the images as `docker save`
-tars, and Docker loads them each time the disk boots.
+A disk built with `--load-at-boot` keeps the images as `docker save` tars
+instead, and Docker loads them each time the disk boots.
 
 ```bash
 machine disks build --load-at-boot --image myapp:latest app
 ```
 
-A `--load-at-boot` disk boots slower by the whole load, every time, and holds
-each image twice: the tar, and what it unpacks to. Use `--load-at-boot` when a
-service runs
+That boot is slower by the whole load, every time, and the disk holds each
+image twice: the tar, and what it unpacks to. Use it when a service runs
 `docker save` or `docker push` on one of the disk's own images from inside the
 machine. Starting containers does not need it.
 
@@ -379,9 +371,8 @@ uncompressed layers.
 ## Disk size
 
 By default Machine measures what the disk holds and adds a gigabyte, rounded
-up to a whole GB. Use `--size` to set the size you want. If you are not sure
-how big the disk will be, `--dry-run` reports what the disk would hold without
-building it.
+up to a whole GB. Use `--size` to set the size you want. Not sure how big it
+will be? `--dry-run` reports what the disk would hold without building it.
 
 ```bash
 machine disks build --dry-run --from python:3.12-slim --add hello.py hello -- python hello.py
@@ -412,9 +403,8 @@ machine disks rename app app-v2
 machine disks delete app-v2
 ```
 
-[`machine disks list`](commands.md#machine-disks-list) and
-[`machine disks show`](commands.md#machine-disks-show) give two sizes. SIZE is
-the disk as the machine sees it. DATA is what the disk takes in your account's storage,
+[`machine disks list`](commands.md#machine-disks-list) and [`machine disks show`](commands.md#machine-disks-show) give two sizes. SIZE is the disk
+as the machine sees it. DATA is what the disk takes in your account's storage,
 after deduplication and compression.
 
 ```bash
@@ -425,12 +415,11 @@ hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago
 Disks share what they have in common: every disk carries the same platform,
 and two disks built from one image share its layers. Storage keeps one copy,
 and each disk's DATA counts it, so the column adds up to more than your disks
-take together. [`machine storage`](commands.md#machine-storage-show) has that
-total, and it is the figure your quota counts. A disk that shows `—` for DATA gets a figure from
+take together. [`machine storage`](commands.md#machine-storage-show) has that figure, and it is the one your quota
+counts. A disk that shows `—` for DATA gets a figure from
 [`machine disks verify`](commands.md#machine-disks-verify).
 
-If you ever doubt the copy of a disk in your account's storage, verify the
-disk:
+If you ever doubt the copy of a disk in your account's storage, check it:
 
 ```bash
 machine disks verify app
@@ -439,12 +428,11 @@ machine disks verify app
 ✔ Verified app (4d13d6d911ee)
 ```
 
-[`machine disks verify`](commands.md#machine-disks-verify) reads the disk back
-and computes its ID again, which takes about as long as reading the disk. A
-disk that does not read back as it was stored is reported as damaged, and the
-fix is to build it again.
+[`machine disks verify`](commands.md#machine-disks-verify) reads the disk back and computes its ID again. It
+takes about as long as reading the disk, and a disk that does not read as it
+was stored is reported as damaged, in which case build it again.
 
-Deleting a disk is permanent. Machine refuses to delete a disk that a run
-still boots, but `--force` deletes it anyway and takes those runs with it.
+Deleting a disk is permanent. Machine refuses to delete one that a run still
+boots, and `--force` deletes it anyway and takes those runs with it.
 [`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
 [`machine disks cancel`](commands.md#machine-disks-cancel) stops one.

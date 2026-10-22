@@ -1,6 +1,6 @@
 ---
 title: Machine
-description: A deterministic execution environment where you run, explore, debug and test your software. Built on our deterministic hypervisor: programs, Docker images and Docker Compose environments run unchanged.
+description: Run your programs deterministically. Record, replay, and branch your runs.
 date: 2026-08-03 00:00:00
 layout: index
 fullwidth: true
@@ -14,7 +14,7 @@ image: images/machine-hero.jpg
 
 <div class="banner-text machine-banner-text">
     <h1>Run your programs deterministically</h1>
-    <p>A deterministic execution environment where you run, explore, debug and test your software. Built on our deterministic hypervisor, it runs your programs, Docker images and Docker Compose environments unchanged.</p>
+    <p>Record, replay, and branch your runs. Create account to get started.</p>
     <div class="banner-actions">
         <a class="btn banner-cta" href="/machine/portal/signup/">Create account</a>
         <a class="btn banner-cta banner-cta-ghost" href="/machine/download/">Download client</a>
@@ -55,26 +55,6 @@ image: images/machine-hero.jpg
             <div class="machine-why-item">
                 <h3>Branch</h3>
                 <p>Fork from any point. Try alternatives without losing the original timeline.</p>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="machine-why">
-    <div class="container">
-        <h2 class="index-block-title">Deterministic hypervisor. Many vCPUs. Compressed time.</h2>
-        <div class="machine-why-list">
-            <div class="machine-why-item">
-                <h3>Deterministic hypervisor</h3>
-                <p>A full Linux virtual machine runs your binaries, Docker images and Compose environments unchanged.</p>
-            </div>
-            <div class="machine-why-item">
-                <h3>Multiple vCPUs</h3>
-                <p>Run programs on several vCPUs. Every vCPU and every interrupt between them is recorded.</p>
-            </div>
-            <div class="machine-why-item">
-                <h3>Time compression</h3>
-                <p>Idle time takes almost no time. A ten-minute sleep finishes in seconds.</p>
             </div>
         </div>
     </div>

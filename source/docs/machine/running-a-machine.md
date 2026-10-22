@@ -4,9 +4,8 @@
 
 ## Creating a run
 
-[`machine create`](commands.md#machine-create) creates a run from a disk and
-boots it. The run's name comes first and is optional; leave it out and Machine
-makes one up for you.
+[`machine create`](commands.md#machine-create) makes a run from a disk and boots it. The run's name goes
+first and is optional. Without one, Machine makes up a name.
 
 ```bash
 machine create app --disk app --cpus 2 --mem 512
@@ -27,66 +26,27 @@ knowing about:
 | `--disk-hash` | hash the machine's disk at every entry, so a replay compares it too (off by default) |
 | `--no-wait` | return as soon as the request is accepted |
 
-Change the seed and the program sees different random numbers; keep it and it
-sees the same ones every time. This seed covers only the random numbers the
-machine asks for. Exploring thread schedules uses a separate seed, on
-[`machine run`](commands.md#machine-run), covered below.
-
-## Multiple vCPUs
-
-A machine can have more than one vCPU. Ask for them with `--cpus` and the guest
-sees every one, so its kernel spreads threads across them just as it would on
-your own computer.
-
-Here is a quick way to see it. Build a disk from Ubuntu 26.04 whose container
-just runs `sleep infinity`, so it stays up and waits for your commands. Then
-create a run with four vCPUs and ask the guest what it has:
-
-```bash
-machine disks build --from ubuntu:26.04 ubuntu-26.04 --entrypoint /bin/sleep -- infinity
-machine create app4 --disk ubuntu-26.04 --cpus 4
-machine exec app4 run --container app -- nproc
-machine exec app4 run --container app -- grep -E '^processor|^model name' /proc/cpuinfo
-```
-```
-4
-processor	: 0
-model name	: TestFlows Machine v1
-processor	: 1
-model name	: TestFlows Machine v1
-processor	: 2
-model name	: TestFlows Machine v1
-processor	: 3
-model name	: TestFlows Machine v1
-```
-
-Nothing about recording changes with more vCPUs. The machine records each of
-them, along with every interrupt one vCPU sends to another, so a run on four
-vCPUs replays exactly like a run on one. A race between two threads on
-different vCPUs plays out the same way every time you replay it.
-
-Each scheduling cycle gives every vCPU a turn. To drive just one of them, use
-`machine run --vcpu N`. And to explore how threads on several vCPUs could
-interleave, see [Trying different schedules](running-a-machine.md#trying-different-schedules).
+Change the seed and the program sees different random numbers. Keep it and it
+sees the same ones every time. This one is only about the random numbers the
+machine asks for. For exploring thread schedules there is another seed, on
+[`machine run`](commands.md#machine-run), covered next.
 
 ## Driving it
 
-A run executes only while you drive it. You drive it with
-[`machine run`](commands.md#machine-run), and `--until` says when to stop. A
-run created with `--no-daemon` answers `✗ Machine not in control mode`,
-because that machine isn't waiting for you.
+A run executes only while you drive it. [`machine run`](commands.md#machine-run) is the way, and `--until`
+says when to stop. (A run created with `--no-daemon` answers
+`✗ Machine not in control mode`, because the machine isn't waiting for you.)
 
 ```bash
 machine run app --until tasks
 ```
 
 A plain [`machine run`](commands.md#machine-run) can stop before the point you are waiting
-for. With `--until`, Machine keeps going until what you asked for is true, and
-if it never gets there, the command exits with status 3.
+for. With `--until`, Machine keeps going until what you asked for is true. If it never gets
+there, the command exits with status 3.
 
-Here are the conditions you can wait for. [`machine run`](commands.md#machine-run)
-`--until` and [`machine wait`](commands.md#machine-wait) `--for` take the same
-ones.
+These are the conditions you can wait for. [`machine run`](commands.md#machine-run) `--until` and
+[`machine wait`](commands.md#machine-wait) `--for` take the same ones.
 
 | Condition | True when |
 |---|---|
@@ -101,13 +61,12 @@ ones.
 | `vtime=+T` | the machine's clock has moved T from where it was |
 | `/app:exit` | the program at `/app` has exited |
 
-The last row is one example of a task condition, and
-[Steering programs](steering-programs.md) describes more of them.
+The last row is one example of a task condition. There are more of them
+under [Steering programs](steering-programs.md).
 
-`machine run` and `machine wait` read a text condition differently.
-`run --until` waits for
-text printed during the run: a line already on the console does not end it,
-and the same `--until` can stop at the next of several matching lines.
+The two commands read a text condition differently. `run --until` waits for
+text printed during the run, so a line already on the console does not end
+it, and the same `--until` can stop at the next of several lines alike.
 `wait --for` asks whether the text has been printed at all, before the run
 or during it:
 
@@ -116,35 +75,34 @@ machine run app --until 'console~ready'    # runs until the next ready line
 machine wait --for 'console~ready' app     # true if one was printed already
 ```
 
-If a source name contains a `~`, quote it inside the pattern, as in
+A source name with a `~` in it is quoted inside the pattern, as in
 `'"/output/keep/app/app.log~"~ERROR'`.
 
 `--iters` limits how many iterations a drive may spend, and the global
-`--timeout` limits how long you are willing to wait. Whichever limit is hit
-first wins.
+`--timeout` limits how long you are willing to wait. Whichever hits first wins.
 
 An iteration has no fixed length. It is one dispatch of a vCPU, and it ends
-wherever the guest next exits to the machine, which may be after five
-instructions or after a million. No count is right in advance, since nobody can
-know how long a program will run, so stop on a condition and use `--iters` or
-a `vtime` condition as a limit. Every run ends by saying how far it went:
+where the guest next exits to the machine: after five instructions or after a
+million. So no count is right in advance, and nobody can know how long a
+program will run. Stop on a condition, and use `--iters` or a `vtime`
+condition as a limit. Every run ends by saying how far it went:
 
 ```
 iterations: 2000  run ic: 238893097  vtime: +0.383620410s
 ```
 
 `vtime` is how far the machine's clock moved. A `vtime` condition is checked
-between iterations, so the run stops a little late, at the end of the
-iteration that reaches the time. A run that went too far is not lost, though:
-[`machine rewind`](commands.md#machine-rewind) and
-[`machine go`](commands.md#machine-go) take it back to an earlier point.
+between iterations, so the run stops at the end of the iteration that reaches
+the time, a little late. A run that went too far is not lost:
+[`machine rewind`](commands.md#machine-rewind) and [`machine go`](commands.md#machine-go) take it back to an earlier
+point.
 
 Now and then the host interrupts an entry while it is being recorded. Machine
-then records that entry again, and all you see is a short pause. `--retry`
-sets how many more times an entry is tried, 2 by default. If every attempt is
-interrupted, the run stops with `Host interrupted the run at entry N. It is not
-recorded.` followed by the [`machine rewind`](commands.md#machine-rewind)
-command that puts the run back at the entry before.
+records that entry again, and you see nothing except a short pause. `--retry`
+sets how many more times one entry is tried, 2 by default. If they are all
+interrupted the run stops with `Host interrupted the run at entry N. It is not
+recorded.` and the [`machine rewind`](commands.md#machine-rewind) command that puts the run back at the
+entry before.
 
 ## Trying different schedules
 
@@ -157,17 +115,17 @@ repeatable.
 machine run app --until /usr/bin/app:exit --mode step,fast --step 1:200 --seed 1
 ```
 
-`--mode` sets how the machine runs: `fast`, `step`, `step-into` or `free`, or
-a comma list to draw from. `--step` and `--fast` give the length of a stretch
-in each mode, either a number or a range like `1:200`. `--strategy` chooses how
-the draws are made, from `random` (the default), `golden` and `sweep`, and
-`--seed` is the seed for the random and golden strategies.
+`--mode` is how the machine runs: `fast`, `step`, `step-into` or `free`, or a
+comma list to draw from. `--step` and `--fast` give the length of a stretch in
+each mode, as a number or a range like `1:200`. `--strategy` sets how the
+draws are made, `random` (the default), `golden` or `sweep`, and `--seed` is the
+seed for the random and golden ones.
 
-Combine `--seed` with branches: fork several from one checkpoint, give each its
+Combine that with branches. Fork several from one checkpoint, give each its
 own seed, and keep the ones that crash. The `explore_seeds.py` example in the
 [SDK](python-sdk.md) does exactly that.
 
-A run also takes checkpoints for you. `--auto-checkpoints N` takes one every N
+A run takes checkpoints for you too. `--auto-checkpoints N` takes one every N
 entries, and 0 turns them off.
 
 If a drive or a checkpoint is taking too long, [`machine cancel app`](commands.md#machine-cancel) cancels
@@ -182,88 +140,18 @@ machine run app --within 10s                           # run for 10 s of machine
 machine run app --until 'console~done' --within 30s    # the first of the two
 ```
 
-On its own, `--within 10s` is the same run as `--until vtime=+10s`. Next to
-another `--until` it bounds that condition: if the clock gets there first, the
-run ends with exit status 3 and says `Machine time ran out`. The machine checks
-the bound itself, so a slow host cannot end the run early the way the global
-`--timeout`, in seconds, would.
+Alone, it is the same run as `--until vtime=+10s`. With another `--until` it is
+a bound on it: if the clock gets there first, the run ends with exit status 3
+and says `Machine time ran out`. The machine checks the bound itself, so a slow
+host does not end the run sooner, which the global `--timeout` in seconds would.
 
-The clock moves while the programs in the machine work and while the machine
-is idle, but a loop that does nothing but spin does not move it.
-
-## Time compression
-
-Idle time takes almost no time.
-
-When every vCPU is halted and waiting for a timer, the machine doesn't sit
-through the wait. It moves its clock straight to the earliest timer the guest
-armed, and the guest wakes up at exactly the time it asked for, as if it had
-waited. No instruction runs in between, so there is nothing for the host to
-do. Time the guest spends working is never skipped.
-
-So a program that sleeps for ten minutes sleeps ten minutes of machine time,
-and only a few seconds of yours. Try it on a one-vCPU run of the Ubuntu disk
-from [Multiple vCPUs](running-a-machine.md#multiple-vcpus):
-
-```bash
-machine create app --disk ubuntu-26.04
-time machine exec app run --container app -- sh -c 'date; sleep 600; date'
-```
-```
-Sun Mar  1 00:00:05 UTC 2026
-Sun Mar  1 00:10:05 UTC 2026
-
-real	0m2.802s
-```
-
-Ten minutes went by in the guest, and 2.8 seconds went by for you.
-
-### On more than one vCPU
-
-Time compression works the same way with [several vCPUs](running-a-machine.md#multiple-vcpus).
-The machine only moves the clock once all of them are idle, so a vCPU that
-still has work finishes it first. Here is the same sleep on the four-vCPU run:
-
-```bash
-time machine exec app4 run --container app -- sh -c 'date; sleep 600; date'
-```
-```
-Sun Mar  1 00:00:07 UTC 2026
-Sun Mar  1 00:10:07 UTC 2026
-
-real	0m7.166s
-```
-
-### Replaying it
-
-Every move of the clock is recorded in the run's log, so a replay makes the same
-moves at the same points and ends up in the same state. Fork a branch from the
-start of the run and replay it, ten minutes of sleep included:
-
-```bash
-machine stop app4
-machine fork app4 --at ^1 --name check
-machine replay app4/check
-```
-
-Then [`machine diff`](commands.md#machine-diff) compares the branch with the
-original:
-
-```bash
-machine diff app4/check
-```
-```
-✔ No differences
-```
-
-How much a run compresses depends on how idle the guest really is. A database
-that keeps running background tasks while your test sleeps uses machine time
-for them, and that time is never skipped.
+The clock moves as the programs in the machine work and while the machine is
+idle. A loop that does nothing but spin does not move it.
 
 ## Waiting
 
-[`machine wait`](commands.md#machine-wait) doesn't drive anything. It watches
-one run or several and returns when a condition holds.
+[`machine wait`](commands.md#machine-wait) doesn't drive anything. It watches a run, or several, and
+returns when a condition holds.
 
 ```bash
 machine wait --for stopped app
@@ -273,15 +161,13 @@ machine wait --for 'console~ready' app
 ✔ Reached stopped: app (whUxfLYSFJMDHzKaiBOvH) 2.1s
 ```
 
-`machine wait` exits with 0 when the condition is true, 2 on an error and 3 on
-a timeout, so scripts can tell them apart. Because it only watches, waiting
-for a condition on a run nobody is driving never finishes unless you set
-`--timeout`.
+It exits with 0 when the condition is true, 2 on an error and 3 on a timeout,
+so scripts can tell them apart. Remember that it only watches. Waiting for a
+condition on a run nobody is driving never finishes unless you set `--timeout`.
 With `--timeout 0` it checks once, and the message tells you why it failed: `The
 machine was waiting for commands.`
 
-At the [control prompt](running-a-machine.md#interactive-mode),
-`machine run --until` and `machine wait --for` are `/run until` and
+At the [control prompt](#interactive-mode) the two are `/run until` and
 `/wait for`, and `/run` takes `within` too:
 
 ```
@@ -290,8 +176,8 @@ At the [control prompt](running-a-machine.md#interactive-mode),
 ```
 
 `/wait for` answers at once, because nothing drives the machine while the
-prompt waits. For a run that another session drives, add `timeout 5` and it
-waits 5 seconds.
+prompt waits. `timeout 5` makes it wait 5 seconds, for a run another session
+drives.
 
 ## Looking at it
 
@@ -307,8 +193,8 @@ waits 5 seconds.
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
 | [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one) |
 
-[`machine output`](commands.md#machine-output) also takes `--entries`, for when
-you only want what a few entries printed.
+[`machine output`](commands.md#machine-output) also takes `--entries`, if you only want what a few
+entries printed.
 
 ### Finding where something was printed
 
@@ -327,22 +213,21 @@ machine output app search 'Linux version'
      1276  ttyS0          16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...
 ```
 
-A match has to cover at least one character, because what you get back is the
-entry that printed it. A pattern that can match nothing at all, such as `6*`,
-is refused in a search, a `console~REGEX` condition and a point alike; write
-`6+` instead.
+A match has to cover at least one character, because it is the entry that
+printed it that you get back. A pattern that can match nothing at all, such as
+`6*`, is refused, in a search and in a `console~REGEX` condition or point alike;
+`6+` is the one to write.
 
-The search runs where the console is kept, so a large console is not
-downloaded. `-f` keeps searching what the machine prints next, and `--max 1`
-stops at the first match. Each entry is a point, so you can go straight to it:
+The search runs where the console is kept, so a large console is not downloaded.
+`-f` keeps going with what the machine prints next, and `--max 1` stops at the
+first match. The entry is a point, so you can go straight to it:
 
 ```bash
 machine go app '#1276'
 ```
 
-`console~REGEX` is the same idea written as a point: the place where the
-console first printed a match. [`machine go`](commands.md#machine-go),
-[`machine fork`](commands.md#machine-fork) `--at` and
+`console~REGEX` is the same thing written as a point, where the console first
+printed a match. [`machine go`](commands.md#machine-go), [`machine fork`](commands.md#machine-fork) `--at` and
 [`machine rewind`](commands.md#machine-rewind) all take it:
 
 ```bash
@@ -367,10 +252,10 @@ machine output app -n -5 --wide
 
 ### Reading the output of one source
 
-The console is not the only place a machine prints. A machine has four serial
-ports, `ttyS0` to `ttyS3`, and the console is the first of them. A program in
-the guest that writes to `/dev/ttyS1` prints on `ttyS1`, kept apart from the
-boot log and everything else on the console:
+The console is not the only place a machine prints. It has four serial ports,
+`ttyS0` to `ttyS3`, and the console is the first. A program in the guest that
+writes to `/dev/ttyS1` prints on `ttyS1`, apart from the boot log and from
+everything else on the console:
 
 ```bash
 # inside the guest
@@ -378,9 +263,8 @@ my-app > /dev/ttyS1 2> /dev/ttyS2
 ```
 
 Everything a run prints is kept in one log, in the order it was printed, and
-each part of it has a source.
-[`machine output app sources`](commands.md#machine-output-sources) lists the
-sources that printed something:
+each part of it has a source. [`machine output app sources`](commands.md#machine-output-sources)
+lists the sources that printed:
 
 ```bash
 machine output app sources
@@ -413,11 +297,11 @@ ttyS2     warning: no config file
 ttyS1     ready
 ```
 
-Every line belongs to one source. If one source prints while another has an
-unfinished line, that line ends there, so each line you read is what a single
-source printed, in order.
+A line belongs to one source. If one source prints while another has a line
+unfinished, that line ends there, so what you read is always what one source
+printed, in order.
 
-A source name can also take the place of `console` in a condition and in a
+The name of a source also takes the place of `console` in a condition and in a
 point. A run that waits for text on `ttyS1` stops at the entry that printed it,
 and what the other sources print in the meantime does not interrupt it:
 
@@ -437,20 +321,19 @@ machine go app 'ttyS1~ready'
 
 ### Output files
 
-A service on a disk has no serial port to write to, and three ports would not
-be many anyway. So every service is given a directory instead, and each file
-it writes there is a source of its own. A variable names the directory:
+A service on a disk has no serial port to write to, and three ports are not
+many. Every service is given a directory instead, and each file it writes
+there is a source of its own. The directory is named by a variable:
 
 ```bash
 # inside the service
 my-app --events "$MACHINE_OUTPUT_DIR/events.jsonl"
 ```
 
-An output file is stored with the run as it is written, each write with its
-entry.
-As a source, its name is its path: `/output/keep`, then the name of the
-service, then the path the service wrote. A disk built from a binary or from
-one image has a single service, `app`.
+The file is stored with the run as it is written, each write with its entry.
+Its name as a source is its path: `/output/keep`, the name of the service,
+and the path the service wrote. A disk built from a binary or one image has
+one service, `app`.
 
 ```bash
 machine output app sources
@@ -461,8 +344,8 @@ ttyS0                             10767        198  29:21127
 /output/keep/app/events.jsonl      2210         31  16916:20410
 ```
 
-Everything that takes a source takes the path, and a directory's path stands
-for every file under it:
+Everything that takes a source takes the path, and the path of a directory is
+every file under it:
 
 ```bash
 machine output app --source /output/keep/app/events.jsonl
@@ -479,27 +362,26 @@ machine output app bytes --source /output/keep/app/core.bin > core.bin
 
 ### Output too large to keep
 
-Debug logs can run to gigabytes, and a run that stores them is slow to copy
-and to read. A service writes such logs under a second directory, and what is
-written there is not stored:
+Debug logs can be gigabytes, and a run that stores them is slow to copy and to
+read. A service writes those under a second directory, and what is written
+there is not stored:
 
 ```bash
 # inside the service
 my-app --debug-log "$MACHINE_DROP_OUTPUT_DIR/debug.log"
 ```
 
-A dropped file is a source under `/output/drop`. It still has its name, and
-`machine output app sources` lists it with 0 bytes so you can see what a run
-dropped. A run can still wait for a line of it: the wait stops the run at the
+The file is a source under `/output/drop`. It still has its name, and
+`machine output app sources` lists it with 0 bytes, so you can see what a run
+dropped. A run can still wait for a line of it. The wait stops the run at the
 entry that wrote the line and stores nothing:
 
 ```bash
 machine run app --until '/output/drop/app/debug.log~connection refused'
 ```
 
-Because a run replays exactly, a dropped file is not lost. To get it, fork a
-branch that keeps the file and starts from a point before the part you care
-about:
+Because a run replays exactly, the file is not lost. Fork a branch that keeps
+the file and starts from a point before the part you care about:
 
 ```bash
 machine fork app --from ^before --name look --keep-output /output/drop/app/debug.log
@@ -508,13 +390,13 @@ machine output look --source /output/drop/app/debug.log
 
 `--from` replays the branch from that point to where the run is now, and the
 branch stores the file on the way. Use `--at` to stop the branch at an earlier
-point. `machine go` takes `--from` too and also moves the machine onto the
-branch, while `machine detach` takes it for a new root that holds the file and
-shares nothing with the run it came from.
+point. `machine go` takes `--from` too, and moves the machine onto the branch.
+`machine detach` takes it for a new root that holds the file and shares nothing
+with the run it came from.
 
-`--keep-output` and `--drop-output` tell a run what to store besides what the
+`--keep-output` and `--drop-output` say what a run stores besides what the
 two directories say. They are options of `create`, `fork`, `detach` and `go`,
-the commands that create a run, and a run keeps them for its whole life.
+the commands that make a run, and a run keeps them for its whole life.
 `machine describe` shows the two directories and the names the run gives.
 
 - **A name** is a file or a directory under `/output`, a port such as
@@ -539,8 +421,7 @@ keeps more still reproduces the recording.
 ## Sending input
 
 A program that reads what a person types can be typed to.
-[`machine send`](commands.md#machine-send) writes input to one of the run's
-devices:
+[`machine send`](commands.md#machine-send) writes input to a device of the run:
 
 ```bash
 machine send app ls                      # type ls and Enter on the console
@@ -550,8 +431,8 @@ machine send -n -e app '\x03'            # Ctrl-C
 machine send app - < script.sh           # a file, exactly as it is
 ```
 
-`machine send` works like `echo`: the text is sent as written, followed by a newline,
-which is Enter. `-n` leaves the newline out, and `-e` reads escapes such as `\t` and
+It works like `echo`: the text is sent as written and a newline follows, which
+is Enter. `-n` leaves the newline out, and `-e` reads escapes such as `\t` and
 `\x03`.
 
 `send` does not run the machine. It queues the input and returns, and the
@@ -563,11 +444,11 @@ machine run app --until 'console~hello'
 ```
 
 The run records the input where it arrived, so a replay reproduces it without
-anything being sent. To try other input, fork a branch and send to the branch.
+being sent anything. To try other input, fork a branch and send to the branch.
 
-At the [control prompt](running-a-machine.md#interactive-mode) the same command
-is `/send`. Options come first, and the text is the rest of the line exactly
-as you typed it, quotes included:
+At the [control prompt](#interactive-mode) the same command is `/send`. The
+options come first and the text is the rest of the line, as you typed it,
+quotes included:
 
 ```
 /send ls -la
@@ -576,11 +457,11 @@ as you typed it, quotes included:
 /send -n -e \x03
 ```
 
-The prompt reads quotes the way a shell does. A `;` separates commands except
+The prompt reads quotes as a shell does. A `;` separates commands, except
 inside quotes, so `/send echo "a;b"` sends `echo "a;b"`. A quote that is not
-closed makes the prompt refuse the whole line, so write `/send "don't"`. To
-keep spaces at the ends of the text, put it in quotes, as in `/send " y "`, and
-put `--` before text that begins with a dash.
+closed refuses the whole line, so write `/send "don't"`. Put the text in
+quotes to keep spaces at its ends, as in `/send " y "`, and put `--` before a
+text that begins with a dash.
 
 | Device | Is |
 |---|---|
@@ -590,14 +471,14 @@ put `--` before text that begins with a dash.
 | `keyboard` | the PS/2 keyboard |
 
 A serial port and the virtio console take bytes. The keyboard takes text and
-types it on a US keyboard, pressing and releasing a key for each character and
-holding Shift or Ctrl where the character needs one. Use it for a program that
-reads the screen's terminal rather than a serial line.
+types it on a US keyboard, a key pressed and released for each character, with
+Shift or Ctrl held where the character needs one. Use it for a program that
+reads the screen's terminal and not a serial line.
 
 ## Executing commands
 
 [`machine exec`](commands.md#machine-exec) executes a command in the machine,
-alongside the programs already running there:
+beside the programs already running there:
 
 ```bash
 machine exec app run -- ls -la /             # execute it and print its output
@@ -605,21 +486,19 @@ machine exec app run -- sh -c 'ls | wc -l'   # a shell line, on a disk with sh
 machine exec app start -- /app/load --rows 9 # send it and return its id
 ```
 
-`run` runs the machine until the command exits, prints what the command
-printed, and exits with its status. A command gets 30 minutes of machine time
-to end, and `--within` gives it another limit:
-`machine exec app run --within 10s -- make check`. `start` sends the command
-and returns an id instead. The process starts the next time the run executes,
-so follow it with [`machine run`](commands.md#machine-run).
+`run` runs the machine until the command exits, prints what it printed, and
+exits with its status. A command gets 30 minutes of machine time to end, and
+`--within` gives it another: `machine exec app run --within 10s -- make check`. `start` sends the command and returns an id. The
+process starts the next time the run executes, so follow it with
+[`machine run`](commands.md#machine-run).
 
-A command is a program and its arguments, written after `--`, and no shell
-reads it. To give a line to the disk's shell instead, with its pipes and
-redirections, use `-c`: `machine exec app run -c 'ls / | wc -l'`.
+A command is a program and its arguments, written after `--`. No shell reads
+it. Use `-c` to give a line to the shell of the disk instead, with its pipes
+and redirections: `machine exec app run -c 'ls / | wc -l'`.
 
-At the [control prompt](running-a-machine.md#interactive-mode) the command is
-`/exec`, with the same verbs. It needs no `--`: the arguments are the words
-after the verb, and a line for the shell is the rest of the line after `-c`,
-with its quotes kept for the shell.
+At the [control prompt](#interactive-mode) the command is `/exec`, with the same
+verbs. It needs no `--`: the arguments are the words after the verb, and a line
+for the shell is the rest of the line after `-c`, its quotes kept for the shell.
 
 ```
 /exec run ls -la /
@@ -631,14 +510,14 @@ with its quotes kept for the shell.
 /exec
 ```
 
-At the prompt a `;` separates commands except inside quotes, so a line that
-contains one goes in quotes, as it would in a terminal. A pair of quotes around
-the whole `-c` line is taken off.
+A `;` separates commands at the prompt, except inside quotes, so a line with
+one is written in quotes, as in a terminal. A pair of quotes around the whole
+`-c` line is taken off.
 
 ### In one container
 
 Use `--container` to run a command in a container of your Compose project. It
-takes either the name of the service or the name of the container:
+takes the name of the service, or the name of the container:
 
 ```bash
 machine exec app run --container db -- psql -c 'select 1'
@@ -648,7 +527,7 @@ machine exec app start --container app -- ./worker
 ```
 
 [`machine containers`](commands.md#machine-containers) lists the containers and
-the service each belongs to, which are the names `--container` takes:
+the service of each, which are the names `--container` takes:
 
 ```bash
 machine containers app
@@ -660,15 +539,14 @@ app      compose-app-1  running  alpine:3.20
 db       compose-db-1   running  alpine:3.20
 ```
 
-The command runs with the container's environment and working directory.
-`--user` picks the user it runs as, by name or as `uid:gid`; without it the
-command runs as the container's own user. A service that runs several
-containers is refused, and the message names them so you can pick one.
-[`machine put`](commands.md#machine-put) and
-[`machine get`](commands.md#machine-get) take the same `--container`.
+The command has the container's environment and working directory. `--user`
+picks the user it runs as, by name or as `uid:gid`; without it the command runs
+as the container's own user. A service that runs several containers is refused,
+and the message names them, so you pick one. [`machine put`](commands.md#machine-put)
+and [`machine get`](commands.md#machine-get) take the same `--container`.
 
-Without `--container`, a command runs in the machine beside Docker and can
-call Docker itself. The Compose project is named `compose`:
+A command without `--container` runs in the machine, beside Docker, and can
+call Docker itself. The project is named `compose`:
 
 ```bash
 machine exec app run -- docker ps --format '{{.Names}}'                 # the containers
@@ -682,8 +560,8 @@ line after the service is run by the image's own shell, with the image's
 tools.
 
 Each command is a process. The run records every line the process prints and
-how it ends, each at its entry, so a replay reproduces them and a branch
-inherits its parent's processes:
+how it ends, each at its entry, so a replay reproduces them and a branch has
+the processes of its parent:
 
 ```bash
 machine exec app                       # the processes of the run
@@ -694,8 +572,8 @@ machine exec app proc 7f3a9c21 stderr  # its standard error
 machine exec app proc 7f3a9c21 exits   # how it ended, and at which entry
 ```
 
-An event's entry is a point, so `machine go app '#20411'` forks a branch at
-the entry that printed a line.
+An event's entry is a point. `machine go app '#20411'` forks a branch at the
+entry that printed a line.
 
 The output of a process is also a source like any other, under
 `/output/exec/<id>`: `machine run app --until '/output/exec/7f3a9c21/stdout~done'`
@@ -704,7 +582,7 @@ stops the run at a line the process prints.
 ### Input for a program you started
 
 A program that reads commands from its standard input, such as a debugger, is
-driven through a named pipe. Create the pipe, keep it open, start the program
+driven through a named pipe. Make the pipe, keep it open, start the program
 with its input on the pipe, and send to the pipe:
 
 ```bash
@@ -718,13 +596,13 @@ machine exec app proc 7f3a9c21 stdout                       # what gdb printed
 ```
 
 A `--device` that begins with `/` is the path of a file in the machine, and
-[`machine send`](commands.md#machine-send) appends the bytes to it. A process in
-the machine writes them, and `send` prints that process's id, so
-`machine exec app proc` with the id tells you whether they were written. One
-send to a path carries about 2000 bytes.
+[`machine send`](commands.md#machine-send) puts the bytes at its end. A process
+in the machine writes them, and `send` prints its id: `machine exec app proc`
+with that id says whether they were written. One send to a path carries about
+2000 bytes.
 
-`machine send` writes the machine's own files, so for a program in a
-container, create the pipe in the container and write to it from there:
+`machine send` writes the machine's own files. For a program in a container,
+make the pipe in the container and write it from there:
 
 ```bash
 machine exec app run   --container db -- mkfifo /tmp/p
@@ -739,13 +617,13 @@ machine run app --until '/output/exec/<id>/stdout~Continuing' --within 10s
 [GDB inside the machine](debugging.md#a-session-that-stays-attached) walks
 through a whole session this way, on ClickHouse.
 
-`machine exec` uses the serial port `ttyS3` for its requests, so a program in
-the machine that reads `ttyS3` takes them.
+`machine exec` uses the serial port `ttyS3` for its requests. A program in the
+machine that reads `ttyS3` takes them.
 
 ## Putting a file into the machine, and getting one out
 
-[`machine put`](commands.md#machine-put) copies a file from your computer into
-the running machine, or into one of its containers:
+[`machine put`](commands.md#machine-put) copies a file of your machine into the
+running machine, or into one of its containers:
 
 ```bash
 machine put app ./app.conf /etc/app.conf                    # into the machine
@@ -755,15 +633,15 @@ machine put app ./d.bin /data/d.bin --owner 1000:1000       # with an owner
 machine put app - /tmp/in < data.bin                        # standard input
 ```
 
-- A file of any size goes in, at tens of megabytes a second.
-- The directories on the way to the path are created, and a file already there
-  is replaced.
-- The file appears under its name only once all of it is written, so a program
-  never reads part of it.
-- The machine keeps running while the file goes in, and so do the other
-  programs in it.
+- A file of any size is put, at tens of megabytes a second.
+- The directories on the way to the path are made, and a file already there is
+  replaced.
+- The file has its name only once all of it is written, so a program never
+  reads part of it.
+- The machine runs while the file goes in, and the other programs in it run
+  too.
 - The bytes are a recorded input, so a replay puts the same file and a branch
-  has it too.
+  has it.
 - The file is on the disk when `put` returns. A checkpoint taken after it has
   the file, and [`machine fs`](reading-the-disk.md) reads it there.
 
@@ -771,14 +649,14 @@ machine put app - /tmp/in < data.bin                        # standard input
 `machine exec app run -- docker ps --format '{{.Names}}'` lists them, or the
 name of its Compose service: `--container db` is the container of the service
 `db`. A service that runs several containers is refused, and the message names
-them so you can pick one. The container must be running, and a path is
-resolved inside it the way a program there would resolve it.
+them, so you pick one. The container must be running. A path is resolved inside
+the container, as a program there would resolve it.
 
 [`machine send --device <path>`](commands.md#machine-send) is for a line into a
-pipe and carries about 2000 bytes, while `put` is for a file.
+pipe and carries about 2000 bytes. `put` is for a file.
 
 [`machine get`](commands.md#machine-get) copies a file the other way, from the
-machine or from a container to your computer:
+machine or from a container to your machine:
 
 ```bash
 machine get app /var/log/app.log ./app.log
@@ -786,22 +664,21 @@ machine get app /srv/dump.sql ./dump.sql --container compose-db-1
 machine get app /etc/hostname -                             # standard output
 ```
 
-`get` reads the file as it is now, including what programs wrote that the disk
-does not have yet. [`machine fs`](reading-the-disk.md) reads the disk at a
-checkpoint instead. The machine keeps running while the file comes out, so a
-file a program is writing can change on the way.
+`get` reads the file as it is now, with what programs wrote and the disk does
+not have yet. [`machine fs`](reading-the-disk.md) reads the disk at a
+checkpoint instead. The machine runs while the file comes out, so a file a
+program is writing can change on the way.
 
-At the [control prompt](running-a-machine.md#interactive-mode) the commands are
-`/put` and `/get`, with the same operands and options:
-`/put ./app.conf /etc/app.conf`.
+At the [control prompt](#interactive-mode) the commands are `/put` and `/get`,
+with the same operands and options: `/put ./app.conf /etc/app.conf`.
 
 A machine whose disk was built before `put` used this path still takes a file,
-only far more slowly. Rebuild the disk to get the speed.
+far slower. Rebuild the disk to get the speed.
 
 ## Getting a core dump
 
 [`machine core`](commands.md#machine-core) has a process dump a core and copies
-the core to your computer, where a debugger reads it together with the program:
+the core to your machine, where a debugger reads it with the program:
 
 ```bash
 machine core app 412 ./app.core                    # pid 412 of the machine
@@ -815,10 +692,10 @@ gdb ./app ./app.core
   the branch.
 - With `--container`, the pid is the one the process has inside the container,
   as `machine exec app run --container db -- ps` shows it.
-- A process that handles the signal dumps no core, so name another one, such
-  as `--signal SEGV`.
-- The first process of a container dumps no core, so run your program under an
-  init, with `init: true` in the Compose file, so that it is not the first.
+- A process that handles the signal dumps no core. Name another, such as
+  `--signal SEGV`.
+- The first process of a container dumps no core. Run your program under an
+  init, `init: true` in the Compose file, so it is not the first.
 
 ## Profiling
 
@@ -846,19 +723,18 @@ threads:
  1.1%   1.1%  sys_clone3_[k]
 ```
 
-`SELF` is the share of samples in which a function was running, and `TOTAL` the
-share in which it was on the stack. So `worker` itself ran in 19% of the
-samples and was on the stack in 94% of them; the rest of its time went to the
-calls under it.
+`SELF` is the share of samples a function was running in, and `TOTAL` the share
+it was on the stack of. So `worker` itself ran in 19% of the samples and was on
+the stack of 94% of them: the rest of its time went to the calls under it.
 
-A name that ends in `_[k]` is time in the kernel: `sys_munmap_[k]` is the
-`munmap` system call, and `kernel_[k]` is kernel time outside any system call,
-here the page faults from touching fresh memory.
+A name that ends in `_[k]` is time in the kernel. `sys_munmap_[k]` is the
+`munmap` system call. `kernel_[k]` is kernel time that is no system call, here
+the page faults of touching fresh memory.
 
 - `--flame` draws a flame graph in the terminal.
-- `--folded` prints every stack with its count, one per line. Flame graph tools
-  read that text, so you can save it and draw it with whichever tool you like,
-  or hand it to an agent:
+- `--folded` prints every stack with its count, one a line. That text is what
+  flame graph tools read, so you can save it and draw it with the tool you
+  like, or hand it to an agent:
 
   ```text
   memstress;clone3;start_thread;worker;kernel_[k] 56
@@ -872,9 +748,9 @@ here the page faults from touching fresh memory.
 
 Machine takes the samples from outside the guest, at every timer interrupt of
 each CPU. Nothing is installed in your image and nothing runs in the guest for
-it, so a run is the same with or without a profile. Your programs do not need
-frame pointers either: a stack is walked using the unwind information every
-program carries for exceptions.
+it, so a run is the same with a profile and without. Your programs do not need
+frame pointers: a stack is walked by the unwind information every program
+carries for exceptions.
 
 ### Profiling a run that already happened
 
@@ -887,13 +763,13 @@ machine profile app --from 12s --to 14s --flame
 ```
 
 The stretch is replayed on a branch, which is deleted afterwards. Your run is
-left untouched and does not need to be running. Profile the same stretch twice
+not touched, and it does not need to be running. Profile the same stretch twice
 and you get the same samples.
 
 ### Good to know
 
-- Names come from the program files on the machine's disk as it stands when
-  the stretch ends. You do not need a checkpoint, and a profile does not take one.
+- Names come from the program files on the machine's disk as it is when the
+  stretch ends. You do not need a checkpoint, and a profile does not take one.
 - A file the guest has written but not synced to disk yet shows as `[file]`.
   Run `sync` in the guest first.
 - A stripped program with no unwind information, such as Alpine's `busybox`,
@@ -915,12 +791,11 @@ When you are working on one run for a while, you can open a prompt for it.
 machine control app
 ```
 
-At the prompt you give the run slash commands, such as `/checkpoint`,
-`/branches` or `/rewind`. Most of the commands on this page have one, and
-`/help` lists them all. `-c` runs a single slash command and exits, as in
-[`machine control app -c '/state'`](commands.md#machine-control), and
-[`machine control log app`](commands.md#machine-control) prints the history of
-the commands you have issued.
+You issue commands to the run as slash commands, like `/checkpoint`,
+`/branches` or `/rewind`. Most of the commands on this page have one. Type
+`/help` to see them all. `-c` runs a single slash command and exits, as in
+[`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) prints the
+history of the commands you have issued.
 
 ## Stopping and starting
 
@@ -934,14 +809,13 @@ machine delete app
 ```
 
 `pause` freezes a running machine and `resume` lets it carry on. `kill` ends it
-abruptly, while `stop` shuts a run down and keeps everything it recorded. In a
-session, both wait until what the run recorded is saved to your storage, and
-show how far the save has got.
-
-`start` brings the run back at the end of its log. If the run had gone past
-its last checkpoint when it stopped, Machine replays the recorded tail from
-that checkpoint and tells you how many entries it replayed. Add `--no-recover`
-to make it refuse instead.
+abruptly, where `stop` shuts a run down and keeps everything it recorded. In
+a session, both wait until what the run recorded is saved to your storage,
+and show how far the save has got. `start` brings it
+back at the end of its log. If the run had gone past its last checkpoint
+when it stopped, Machine replays the recorded tail from that checkpoint and
+tells you how many entries it replayed. Add `--no-recover` to make it
+refuse instead.
 
 `start` can also take a run back to an earlier point. `--at` replays from an
 earlier checkpoint, and `--read-only` opens a checkpoint without running it
@@ -949,20 +823,18 @@ at all.
 
 A run remembers the options you created it with: `--no-daemon`,
 `--single-step`, `--limit` and `--backstop-limit`. Every `start` and `fork`
-repeats them, so you only type them once. `start` takes the same flags to
-change them for that start only, so
-[`machine start app --daemon`](commands.md#machine-start) gives you a machine
+repeats them, so you type them once. `start` takes the same flags to change
+them for that start only, so [`machine start app --daemon`](commands.md#machine-start) gives you a machine
 to drive on a run created with `--no-daemon`. `fork` and `detach` take them
-too, and the new run keeps the values you give. `--pin-cpu` is the exception: no run
+too, and the new run keeps what you gave. `--pin-cpu` is the exception: no run
 remembers a CPU, so each `start` and `fork` picks the least-loaded one unless
 you name it.
 
-What a run records is fixed when you create it, by `--side-dump`,
-`--side-trace`, `--mem-hash` and `--disk-hash`, and a `start` keeps it. A
-branch is where it changes: `fork`, `detach` and `go` take each of these
-options, plus `--no-mem-hash` or `--no-disk-hash` to turn one off. A branch
-given none of them records what its parent records. [Replay](replay.md)
-explains what the two hashes add.
+What a run records is fixed when you create it: `--side-dump`, `--side-trace`,
+`--mem-hash` and `--disk-hash`. A `start` keeps it. A branch is where it
+changes: `fork`, `detach` and `go` take each of them, and `--no-mem-hash` or
+`--no-disk-hash` to turn one off, and a branch given none records what its
+parent records. [Replay](replay.md) says what the two hashes add.
 
 `delete` only removes stopped runs, unless you add `--stop`. It also refuses to
 remove a run that has branches, unless you add `--recursive`. And since

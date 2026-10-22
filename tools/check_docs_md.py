@@ -39,13 +39,11 @@ SITE = "https://testflows.com"
 # The standard descriptions. Every file agents start from says them in these words, so an
 # agent reads the same thing wherever it starts. Change one here and in each file.
 MACHINE = (
-    "TestFlows™ Machine is a deterministic execution environment where you run, explore, debug "
-    "and test your software. It is built on our deterministic hypervisor, which boots a full "
-    "Linux x86_64 virtual machine and runs your programs, Docker images and Docker Compose "
-    "environments in it unchanged. Machine is a self-serve service in the cloud: you can sign up "
-    "for free, and paid plans are available. The hypervisor controls time, interrupts, random "
-    "numbers and device input, so every run can be recorded, replayed exactly, and branched from "
-    "any point to explore other outcomes."
+    "TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a "
+    "self-serve service: you can sign up for free, and paid plans are available. "
+    "It runs software built "
+    "for Linux x86_64 and controls time, interrupts, random numbers and device input, so every "
+    "run can be recorded, replayed exactly, and branched from any point to explore other outcomes."
 )
 FRAMEWORK = (
     "TestFlows Framework is an open-source Python library for writing test programs. You write "

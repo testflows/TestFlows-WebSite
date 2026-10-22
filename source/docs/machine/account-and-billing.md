@@ -2,7 +2,7 @@
 
 # Account and billing
 
-The client does most of what the account page on the website does.
+Most of what the account page on the website does, the client does too.
 
 | Command | Does |
 |---|---|
@@ -30,26 +30,23 @@ address instead.
 How credits are granted and used is in the
 [usage credit terms](/machine/legal/usage-credit/).
 
-Runs, logs and disks take up space in your account.
-[`machine storage show`](commands.md#machine-storage-show) says how much, and
-[`machine storage prune`](commands.md#machine-storage-prune) frees the space
-that deleted runs and disks left behind. To see the current or last prune, use
-[`machine storage prune`](commands.md#machine-storage-prune) `--status`.
+Runs, logs and disks take up space in your account. [`machine storage show`](commands.md#machine-storage-show) says
+how much, and [`machine storage prune`](commands.md#machine-storage-prune) frees the space that deleted runs and
+disks left behind. [`machine storage prune`](commands.md#machine-storage-prune) `--status` shows the current or last
+prune.
 
-[`machine storage check`](commands.md#machine-storage-check) reads everything
-in your account's storage back and reports what it could not read, showing its
-progress as it goes. `machine storage check` writes nothing.
+[`machine storage check`](commands.md#machine-storage-check) reads everything in your account's
+storage back and reports what it could not read, showing its progress as it
+goes. It writes nothing.
 
-Your plan's storage quota counts TOTAL: what your runs and disks hold, plus the
-space deleted ones have not given back yet.
-[`machine account show`](commands.md#machine-account-show) shows the same
-figure. Deleting a run or a disk moves its space to PRUNABLE, which still
-counts until you prune. The figures come from the last measurement, and
+Your plan's storage quota counts TOTAL: what your runs and disks hold, and the
+space deleted ones have not given back yet. [`machine account show`](commands.md#machine-account-show) shows the
+same figure. Deleting a run or a disk moves its space to PRUNABLE, which still
+counts until you prune. The figures are from the last measurement, and
 `machine storage --refresh` measures again.
 
-At the quota, a session starts no machine and creates no branch, so these
-commands are refused: `machine create`, `machine start`, `machine fork`,
-`machine go`, `machine detach`, `machine disks build` and
-`machine disks push`. A machine that is already running keeps recording and
-saving. To get under the quota, delete runs or disks, stop your sessions, and
-prune.
+At the quota, a session starts no machine and creates no branch:
+`machine create`, `machine start`, `machine fork`, `machine go`,
+`machine detach`, `machine disks build` and `machine disks push` are refused.
+A machine that is already running keeps recording and saving. To get under
+the quota, delete runs or disks, stop your sessions, and prune.
