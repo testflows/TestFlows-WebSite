@@ -11,9 +11,10 @@ terminal, you can call it from a program.
 pip3 install testflows.machine
 ```
 
-It needs Python 3.11 or later on Linux x86_64, the same systems as the client. If
-you need another platform, [contact us](/contact.html?topic=machine). pip installs
-the Machine core that the SDK runs on, `testflows.machine.core`, along with it.
+The SDK needs Python 3.11 or later on Linux x86_64, the same systems as the
+client. If you need another platform, [contact us](/contact.html?topic=machine).
+pip installs the Machine core that the SDK runs on, `testflows.machine.core`,
+along with the SDK.
 
 ## Hello Machine
 
@@ -30,11 +31,12 @@ with client.sessions.create(cpus=1) as session:
             print(line)
 ```
 
-This creates a session, boots a run from the disk `hello` and prints the last
-twenty lines of its console. A run waits for commands, so it moves only when
-you call `run.run(...)`; pass `daemon=False` to have it run to the end by
-itself.
-Leaving a `with` block deletes what it created, whether the block ends normally
+This example creates a session, boots a run from the disk `hello` and prints
+the last twenty lines of its console. A run waits for commands, so it moves
+only when you call `run.run(...)`; pass `daemon=False` to have it run to the
+end by itself.
+
+Leaving a `with` block deletes what the block created, whether it ends normally
 or with an error. That is how you make sure a session never outlives your
 program.
 
@@ -53,15 +55,17 @@ rule.
 | a flag like `--no-wait`, `-w` or `-f` | a keyword argument like `wait=False`, `watch=True` or `follow=True` |
 
 So once you know the client, you know most of the SDK. [Commands](commands.md)
-lists them, and the client's `--help` says what each call takes.
+lists the commands, and the client's `--help` says what each call takes.
 
 ## Signing in
 
-The SDK signs in with an API key from `TESTFLOWS_MACHINE_API_KEY` if it is set.
-If it isn't, it uses the login that [`machine login`](commands.md#machine-login) stored, which it shares
-with the client.
+The SDK signs in with an API key from `TESTFLOWS_MACHINE_API_KEY` if that
+variable is set. If it isn't, the SDK uses the login that
+[`machine login`](commands.md#machine-login) stored, which it shares with the
+client.
 
-A program can sign in on its own too. The one-time code arrives by email.
+A program can also sign in on its own, with a one-time code that arrives by
+email.
 
 ```python
 machine.login.start("me@example.com")
@@ -72,16 +76,16 @@ client = machine.login.verify("me@example.com", code="123456")
 
 ## Sessions
 
-A client has a current session, like the CLI does. You can set it when you
-create the client, or later.
+A client has a current session, like the CLI does, and you can set it when you
+create the client or later.
 
 ```python
 client = machine.Client(session="ci-1")      # like -s ci-1
 client.sessions.use("ci-2")                  # for this client only
 ```
 
-`sessions.use` only changes the session for this client. It never changes it for
-the `machine` command. Without a session you can still read your account's runs:
+`sessions.use` only changes the session for this client, never for the
+`machine` command. Without a session you can still read your account's runs:
 `client.runs()`, `client.branches()` and a run's `describe()`, `lineage()`
 and `checkpoints()` all work.
 
@@ -140,12 +144,12 @@ And the calls you will reach for most often:
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 
 Every call returns a record with named fields, such as a `RunInfo` from
-`describe()` or a list of `TaskInfo` from `tasks()`. Call `as_json()` on one to get
-a plain dict.
+`describe()` or a list of `TaskInfo` from `tasks()`. Call `as_json()` on a
+record to get a plain dict.
 
 `run.run(...)` and `run.plan(...)` return a `RunResult`, which says how far the
 drive went. An iteration has no fixed length, so `iterations` alone does not
-tell you:
+tell you how far:
 
 | Field | Is |
 |---|---|
@@ -176,7 +180,8 @@ Calls that take a point, such as `fork(at=...)`, `go`, `rewind`,
 | `Checkpoint` | a saved state: its `name`, and the `place` it was saved at | wherever its place works |
 
 `start(at=...)` and the `fs` readers take only a checkpoint, by its name or as
-a `Checkpoint`: they open a saved state, and a time or an entry is not one.
+a `Checkpoint`, because they open a saved state and a time or an entry is not
+one.
 
 A point moves by a duration: an int of nanoseconds, a string such as `"10ms"`,
 or a `timedelta`. Subtract one point from another for the nanoseconds between
@@ -222,7 +227,7 @@ Anything that reads entries takes the same few spellings.
 | `slice(-20, -1)` | a Python slice from the end, so the same as `"-20:-2"` |
 
 Be careful with the slice rows. A pair and a string include both ends, the way
-Machine's own messages do. A slice is Python's, so it stops before the end.
+Machine's own messages do, while a slice is Python's and stops before the end.
 That makes `(100, 200)` one entry longer than `slice(100, 200)`.
 
 Both ends of a range count from the same end: `"-20:5"` and `slice(-20, 5)`
@@ -235,11 +240,12 @@ the last 20, `"-10:-2"` the tenth line from the end through the second, and
 ## Cleaning up
 
 A session costs from the moment you create it, and a run keeps its log and
-checkpoints until you delete it. Both can be used as context managers, as
-in the first example, and deleting a run takes its branches with it.
+checkpoints until you delete it. Sessions and runs can both be used as context
+managers, as in the first example, and deleting a run takes its branches with
+it.
 
 If you want to keep a run that found something, don't wrap it in a `with`
-block. Nothing is deleted until you call `delete()`.
+block: nothing is deleted until you call `delete()`.
 
 ## Errors
 
@@ -271,7 +277,8 @@ except machine.Diverged:
 ## Examples
 
 The SDK comes with small scripts. Each one runs as
-`python <script> --disk <name>`, creates its own session, and deletes it at the end.
+`python <script> --disk <name>`, creates its own session, and deletes that
+session at the end.
 
 | Script | Shows |
 |---|---|

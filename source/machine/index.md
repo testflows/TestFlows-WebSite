@@ -1,6 +1,6 @@
 ---
 title: Machine
-description: Run your programs deterministically. Record, replay, and branch your runs.
+description: A deterministic execution environment for your software, as a service. For testing, exploration, debugging and more. Deterministic hypervisor, multiple vCPUs, time compression.
 date: 2026-08-03 00:00:00
 layout: index
 fullwidth: true
@@ -14,7 +14,7 @@ image: images/machine-hero.jpg
 
 <div class="banner-text machine-banner-text">
     <h1>Run your programs deterministically</h1>
-    <p>Record, replay, and branch your runs. Create account to get started.</p>
+    <p>A deterministic execution environment for your software. Testing, exploration, debugging and more. Deterministic hypervisor for programs, Docker images and Docker Compose environments.</p>
     <div class="banner-actions">
         <a class="btn banner-cta" href="/machine/portal/signup/">Create account</a>
         <a class="btn banner-cta banner-cta-ghost" href="/machine/download/">Download client</a>
@@ -62,8 +62,12 @@ image: images/machine-hero.jpg
 
 <section class="machine-why">
     <div class="container">
-        <h2 class="index-block-title">Many vCPUs. Compressed time.</h2>
+        <h2 class="index-block-title">Deterministic hypervisor. Many vCPUs. Compressed time.</h2>
         <div class="machine-why-list">
+            <div class="machine-why-item">
+                <h3>Deterministic hypervisor</h3>
+                <p>A full Linux virtual machine runs your binaries, Docker images and Compose environments unchanged.</p>
+            </div>
             <div class="machine-why-item">
                 <h3>Multiple vCPUs</h3>
                 <p>Run programs on several vCPUs. Every vCPU and every interrupt between them is recorded.</p>
@@ -71,10 +75,6 @@ image: images/machine-hero.jpg
             <div class="machine-why-item">
                 <h3>Time compression</h3>
                 <p>Idle time takes almost no time. A ten-minute sleep finishes in seconds.</p>
-            </div>
-            <div class="machine-why-item">
-                <h3>Exact replay</h3>
-                <p>A compressed run replays to the same state, on one vCPU or many.</p>
             </div>
         </div>
     </div>

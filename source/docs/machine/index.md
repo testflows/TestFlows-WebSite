@@ -2,7 +2,7 @@
 layout: handbook
 p: /docs/machine
 title: Machine
-description: Documentation for Machine.
+description: Documentation for TestFlows Machine, a service that provides a deterministic execution environment for your software, used for testing, exploration, debugging and more.
 permalink: docs/machine/index.html
 ---
 
