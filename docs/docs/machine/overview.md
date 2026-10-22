@@ -2,14 +2,12 @@
 
 # What is it?
 
-**Machine** is a service that provides a deterministic execution environment
-for your software. You use it for testing, exploration, debugging and more.
-
-Machine is built on a deterministic hypervisor. The hypervisor boots a full
-Linux x86_64 virtual machine and runs your software in it unchanged: a single
-static binary, a Docker image, or a whole Docker Compose environment of several
-services. You turn any of them into a disk with
-[`machine disks build`](disks.md).
+**Machine** is a deterministic execution environment where you run, explore,
+debug and test your software. It is built on our deterministic hypervisor,
+which boots a full Linux x86_64 virtual machine and runs your programs, Docker
+images and Docker Compose environments in it unchanged. You turn any of them
+into a disk with [`machine disks build`](disks.md). Machine is a service: it
+runs in the cloud, and you can sign up for free.
 
 Nothing inside that virtual machine is left to chance. The hypervisor controls
 time, interrupts, random numbers and input from devices, and it records all of

@@ -1,7 +1,7 @@
-https://testflows.com/machine/index.html
-https://testflows.com/machine.md
 https://testflows.com/docs/machine/index.html
 https://testflows.com/docs/machine.md
+https://testflows.com/machine/index.html
+https://testflows.com/machine.md
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
 https://testflows.com/machine/legal/client-eula/index.html
