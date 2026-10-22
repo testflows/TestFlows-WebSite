@@ -2,7 +2,7 @@
 
 # TestFlows™ Machine
 
-> TestFlows™ Machine is a deterministic execution environment where you run, explore, debug and test your software. It is built on our deterministic hypervisor, which boots a full Linux x86_64 virtual machine and runs your programs, Docker images and Docker Compose environments in it unchanged. Machine is a self-serve service in the cloud: you can sign up for free, and paid plans are available. The hypervisor controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes. A machine can have several vCPUs, all recorded and replayed, and its idle time is compressed: a `sleep 600` in the guest takes seconds. You use it from the `machine` command-line client or from the Python SDK.
+> TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes. You use it from the `machine` command-line client or from the Python SDK.
 
 Install the client with `curl https://testflows.com/machine/install -fsS | bash`. It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. Sign in with `machine login`, or set `TESTFLOWS_MACHINE_API_KEY` for scripts and agents. Before the first session, set up account storage with `machine account provision`. `machine --help` lists every command, and so does `--help` on each one. Each page below is one section of the Machine docs, in plain Markdown.
 
@@ -17,7 +17,7 @@ In the Markdown files, `{% attention %}` starts a note.
 
 - [Disks](https://testflows.com/docs/machine/disks.md): Build a disk from a binary, a Docker image or a Compose project, including on ARM machines, and manage disks.
 - [Sessions](https://testflows.com/docs/machine/sessions.md): Create, size, select and delete the cloud sessions your runs live in.
-- [Running a machine](https://testflows.com/docs/machine/running-a-machine.md): Create a run, give it several vCPUs with `--cpus`, drive it with `machine run`, try different schedules, see how idle time is compressed, wait for conditions, inspect it, and stop and start it.
+- [Running a machine](https://testflows.com/docs/machine/running-a-machine.md): Create a run, drive it with `machine run`, wait for conditions, try different schedules, inspect it, and stop and start it.
 - [Checkpoints and branches](https://testflows.com/docs/machine/checkpoints-and-branches.md): Save checkpoints, branch with `fork`, `go`, `switch`, `rewind` and `detach`, see the tree, and mark branches.
 - [Replay](https://testflows.com/docs/machine/replay.md): Replay a recording, detect divergence, and compare or play back logs.
 - [Steering programs](https://testflows.com/docs/machine/steering-programs.md): Hold and release threads, focus on programs, write plan files, inject interrupts and change machine time.
