@@ -13,6 +13,7 @@ takes further commands, those follow it, so each one has a heading.
 | `-o`, `--format` | Output format: text, raw, or json. The default is text. JSON carries every field. |
 | `--version` | Show version and license. |
 | `--no-colors` | Disable terminal color highlighting. |
+| `--signatures` | Name functions by their whole signature, parameters included. Without it a C++ function is named short, as GDB names it: `DB::executeQuery`. |
 | `--debug` | Show the messages exchanged with the service. |
 | `--api-url` | Cloud API base URL. Overrides `TESTFLOWS_MACHINE_API_URL` and the default. |
 | `-s`, `--session` | Target session, by name, id, or unique prefix. Goes before the command, as every option here does. Commands that need no session ignore it. |
