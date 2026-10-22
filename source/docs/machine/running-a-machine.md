@@ -31,6 +31,39 @@ sees the same ones every time. This one is only about the random numbers the
 machine asks for. For exploring thread schedules there is another seed, on
 [`machine run`](commands.md#machine-run), covered next.
 
+## Multiple vCPUs
+
+A run has as many vCPUs as `--cpus` gives it, and the guest sees every one.
+The guest's kernel schedules its threads across all of them, as it would on
+any computer. A disk built from Ubuntu 26.04 shows them. Its container runs
+`sleep infinity`, so it stays up for commands:
+
+```bash
+machine disks build --from ubuntu:26.04 ubuntu-26.04 --entrypoint /bin/sleep -- infinity
+machine create app4 --disk ubuntu-26.04 --cpus 4
+machine exec app4 run --container app -- nproc
+machine exec app4 run --container app -- grep -E '^processor|^model name' /proc/cpuinfo
+```
+```
+4
+processor	: 0
+model name	: TestFlows Machine v1
+processor	: 1
+model name	: TestFlows Machine v1
+processor	: 2
+model name	: TestFlows Machine v1
+processor	: 3
+model name	: TestFlows Machine v1
+```
+
+The machine records every vCPU, and every interrupt one vCPU sends another. So
+a run on four vCPUs replays exactly like a run on one, and a race between
+threads on different vCPUs happens the same way every time it is replayed.
+
+Each scheduling cycle runs every vCPU in turn. `machine run --vcpu N` drives
+one vCPU alone. To explore how threads on several vCPUs can interleave, see
+[Trying different schedules](running-a-machine.md#trying-different-schedules).
+
 ## Driving it
 
 A run executes only while you drive it. [`machine run`](commands.md#machine-run) is the way, and `--until`
@@ -148,6 +181,74 @@ host does not end the run sooner, which the global `--timeout` in seconds would.
 The clock moves as the programs in the machine work and while the machine is
 idle. A loop that does nothing but spin does not move it.
 
+## Time compression
+
+Idle time takes almost no time.
+
+When every vCPU is halted and waiting for a timer, the machine moves its clock
+to the earliest timer the guest armed. The guest wakes at the time it asked
+for and handles the timer as it would on any computer. No instruction runs in
+between, so the host does not sit out the wait. Time the guest spends working
+is never skipped.
+
+A program that sleeps for ten minutes sleeps ten minutes of machine time and
+a few seconds of yours. On a run of the Ubuntu 26.04 disk from
+[Multiple vCPUs](running-a-machine.md#multiple-vcpus), with one vCPU:
+
+```bash
+machine create app --disk ubuntu-26.04
+time machine exec app run --container app -- sh -c 'date; sleep 600; date'
+```
+```
+Sun Mar  1 00:00:05 UTC 2026
+Sun Mar  1 00:10:05 UTC 2026
+
+real	0m2.802s
+```
+
+The guest's clock moved ten minutes. The command took 2.8 seconds.
+
+### On more than one vCPU
+
+Time compresses on a run with [several vCPUs](running-a-machine.md#multiple-vcpus) too. The clock
+moves only when every vCPU is idle, so a vCPU with work runs it first. On the
+four-vCPU run from above:
+
+```bash
+time machine exec app4 run --container app -- sh -c 'date; sleep 600; date'
+```
+```
+Sun Mar  1 00:00:07 UTC 2026
+Sun Mar  1 00:10:07 UTC 2026
+
+real	0m7.166s
+```
+
+### Replaying it
+
+Each move of the clock is an entry in the run's log. A replay makes the same
+moves at the same entries, so it lands on the same state:
+
+```bash
+machine stop app4
+machine fork app4 --at ^1 --name check
+machine replay app4/check
+```
+
+The branch replays the whole run, the ten minutes of sleep included, and
+[`machine diff`](commands.md#machine-diff) compares it with the original:
+
+```bash
+machine diff app4/check
+```
+```
+✔ No differences
+```
+
+A guest that keeps working while a test sleeps compresses less. A database
+that runs background tasks during the sleep spends machine time on them, and
+that time is not skipped.
+
 ## Waiting
 
 [`machine wait`](commands.md#machine-wait) doesn't drive anything. It watches a run, or several, and
@@ -167,7 +268,7 @@ condition on a run nobody is driving never finishes unless you set `--timeout`.
 With `--timeout 0` it checks once, and the message tells you why it failed: `The
 machine was waiting for commands.`
 
-At the [control prompt](#interactive-mode) the two are `/run until` and
+At the [control prompt](running-a-machine.md#interactive-mode) the two are `/run until` and
 `/wait for`, and `/run` takes `within` too:
 
 ```
@@ -446,7 +547,7 @@ machine run app --until 'console~hello'
 The run records the input where it arrived, so a replay reproduces it without
 being sent anything. To try other input, fork a branch and send to the branch.
 
-At the [control prompt](#interactive-mode) the same command is `/send`. The
+At the [control prompt](running-a-machine.md#interactive-mode) the same command is `/send`. The
 options come first and the text is the rest of the line, as you typed it,
 quotes included:
 
@@ -496,7 +597,7 @@ A command is a program and its arguments, written after `--`. No shell reads
 it. Use `-c` to give a line to the shell of the disk instead, with its pipes
 and redirections: `machine exec app run -c 'ls / | wc -l'`.
 
-At the [control prompt](#interactive-mode) the command is `/exec`, with the same
+At the [control prompt](running-a-machine.md#interactive-mode) the command is `/exec`, with the same
 verbs. It needs no `--`: the arguments are the words after the verb, and a line
 for the shell is the rest of the line after `-c`, its quotes kept for the shell.
 
@@ -669,7 +770,7 @@ not have yet. [`machine fs`](reading-the-disk.md) reads the disk at a
 checkpoint instead. The machine runs while the file comes out, so a file a
 program is writing can change on the way.
 
-At the [control prompt](#interactive-mode) the commands are `/put` and `/get`,
+At the [control prompt](running-a-machine.md#interactive-mode) the commands are `/put` and `/get`,
 with the same operands and options: `/put ./app.conf /etc/app.conf`.
 
 A machine whose disk was built before `put` used this path still takes a file,

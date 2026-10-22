@@ -12,6 +12,12 @@ That gives you three things to work with:
 * **Replay.** Play the log back and the run repeats itself. If it failed once, it fails every time.
 * **Branch.** Stop at any point, branch from it, and try something else. The original run stays as it was.
 
+A machine has as many vCPUs as you give it, and all of them are recorded and
+replayed. Its idle time takes almost no time: a program that sleeps for ten
+minutes finishes in seconds. See
+[Multiple vCPUs](running-a-machine.md#multiple-vcpus) and
+[Time compression](running-a-machine.md#time-compression).
+
 If you have ever chased a test that fails one run in fifty, you know why this
 is handy. Record the failing run once, then replay it as often as you need.
 

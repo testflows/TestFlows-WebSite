@@ -59,3 +59,23 @@ image: images/machine-hero.jpg
         </div>
     </div>
 </section>
+
+<section class="machine-why">
+    <div class="container">
+        <h2 class="index-block-title">Many vCPUs. Compressed time.</h2>
+        <div class="machine-why-list">
+            <div class="machine-why-item">
+                <h3>Multiple vCPUs</h3>
+                <p>Run programs on several vCPUs. Every vCPU and every interrupt between them is recorded.</p>
+            </div>
+            <div class="machine-why-item">
+                <h3>Time compression</h3>
+                <p>Idle time takes almost no time. A ten-minute sleep finishes in seconds.</p>
+            </div>
+            <div class="machine-why-item">
+                <h3>Exact replay</h3>
+                <p>A compressed run replays to the same state, on one vCPU or many.</p>
+            </div>
+        </div>
+    </div>
+</section>
