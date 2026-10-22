@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792667898724" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792667898724" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792641365163" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792667898724" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1946,10 +1946,17 @@ catchpoint needs <code>--in tgid=N</code>.</p>
 stops: a branch has the ones its parent had where it was forked, and a replay
 applies the adds and deletes. The stops are armed while the run records, and
 not while it replays.</p>
-<h3 id="Running-to-a-place"><a href="#Running-to-a-place" class="headerlink" title="Running to a place"></a>Running to a place</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine run app --iters 0                      <span class="comment"># until the next hit, as continue</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tid=412:at=init.c:106&#x27;</span>   <span class="comment"># until tid 412 reaches a line, as until and advance</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tgid=7:at=0x401136&#x27;</span>   <span class="comment"># until any thread of tgid 7 reaches an address</span></span><br></pre></td></tr></table></figure>
+<h3 id="Running-to-a-place"><a href="#Running-to-a-place" class="headerlink" title="Running to a place"></a>Running to a place</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine run app --iters 0                      <span class="comment"># until the next hit, as continue</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tid=412:at=init.c:106&#x27;</span>   <span class="comment"># until tid 412 reaches a line, as until and advance</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tgid=7:at=0x401136&#x27;</span>   <span class="comment"># until any thread of tgid 7 reaches an address</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tid=412:write=counter&#x27;</span>   <span class="comment"># until tid 412 writes counter, as watch</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tgid=7:access=buf[0]&#x27;</span>    <span class="comment"># until any thread of tgid 7 reads or writes buf[0], as awatch</span></span><br></pre></td></tr></table></figure>
 
-<p><code>tid=N:at=LOC</code> and <code>tgid=N:at=LOC</code> take any location. The address is resolved
-when the run starts, and the stop lasts for that run alone.</p>
+<p><code>tid=N:at=LOC</code> and <code>tgid=N:at=LOC</code> take any location. <code>write=LOC</code> and
+<code>access=LOC</code> take a variable or an expression, watched at its size of 1, 2, 4
+or 8 bytes. A write the kernel makes into the program counts, as <code>read</code> makes
+into its buffer. The address is resolved when the run starts, and the stop
+lasts for that run alone.</p>
+<p>The run says the tid it stopped in and where that task stands. A watch also
+says the value the access left in the bytes:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Written counter at main+116, watched.c:63, in tid 191</span><br><span class="line">Value = 4</span><br></pre></td></tr></table></figure>
+
 <h3 id="Going-back"><a href="#Going-back" class="headerlink" title="Going back"></a>Going back</h3><p>Going back puts you on a new branch, at an earlier point of the run, and
 leaves the run as it was:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine run app --back                 <span class="comment"># onto a branch at the newest hit, as reverse-continue</span></span><br><span class="line">machine step app 412 --back 3          <span class="comment"># three executions back, as reverse-stepi</span></span><br><span class="line">machine step app 412 --back --line     <span class="comment"># back a line, as reverse-step</span></span><br><span class="line">machine step app 412 --back --out      <span class="comment"># back to the call, as reverse-finish</span></span><br></pre></td></tr></table></figure>
@@ -1974,7 +1981,7 @@ stops.</p>
 <h2 id="The-3-hardware-breakpoints-and-watchpoints"><a href="#The-3-hardware-breakpoints-and-watchpoints" class="headerlink" title="The 3 hardware breakpoints and watchpoints"></a>The 3 hardware breakpoints and watchpoints</h2><p>A run has 3 debug registers for its stops. These take one each:</p>
 <ul>
 <li>a breakpoint or a watchpoint of <code>machine break add</code> or <code>machine watch add</code></li>
-<li>the stop of <code>run --until tid=N:at=LOC</code>, for that run</li>
+<li>the stop of <code>run --until tid=N:at=LOC</code>, <code>write=LOC</code> or <code>access=LOC</code>, for that run</li>
 <li>a <code>throw</code>, <code>catch</code> or <code>rethrow</code> catchpoint</li>
 <li>a hardware breakpoint or watchpoint of GDB inside the machine, <code>hbreak</code> or
 <code>watch</code></li>
@@ -5209,6 +5216,18 @@ Use machine wait <code>--for</code> to ask whether text was printed.</p>
 <p>tid&#x3D;N:at&#x3D;LOC runs until tid N reaches LOC in its own code. tgid&#x3D;N:at&#x3D;LOC runs
 until any thread of the process does. The address is resolved when the run
 starts. The stop takes one of the run’s 3 breakpoints and watchpoints.</p>
+<p>tid&#x3D;N:write&#x3D;LOC runs until an instruction writes the bytes LOC names while tid N
+is on a vCPU. tid&#x3D;N:access&#x3D;LOC runs until one reads or writes them.
+tgid&#x3D;N:write&#x3D;LOC and tgid&#x3D;N:access&#x3D;LOC stop for any thread of the process.</p>
+<p>The run stops after the access. A write the kernel makes for the task counts. A
+variable or an expression is watched at its size of 1, 2, 4 or 8 bytes. The
+watch takes one of the run’s 3 breakpoints and watchpoints.</p>
+<p>An address is watched through a cast that gives it a type, as GDB’s watch takes
+one. The address is a multiple of the size. tgid&#x3D;N also stops for a kernel
+thread that works in the process’s memory.</p>
+<p>A run that stops at LOC says the tid that reached it and where it stands. A
+watch also says the value the access left in the bytes. The machine records both
+at the stop, so a task in the kernel still shows them.</p>
 <p>LOC is one of these, in the task’s process:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0x401136            an address</span><br><span class="line">*0x401136           an address, as GDB writes it</span><br><span class="line">main                a function or a variable, by its name</span><br><span class="line">libc.so.6:malloc    a name in one file, by its path or file name</span><br><span class="line">init.c:106          a source line, from the line tables</span><br><span class="line">$rip                a register of the task, as it is now</span><br><span class="line">main+4, $rsp-8      any of these moved by +N or -N</span><br></pre></td></tr></table></figure>
 
@@ -5306,7 +5325,7 @@ stays as it was.</p>
 </tr>
 <tr>
 <td><code>--until predicate</code></td>
-<td>Drive until this is true: a predicate of wait <code>--for</code>, or tid&#x3D;N:at&#x3D;LOC or tgid&#x3D;N:at&#x3D;LOC</td>
+<td>Drive until this is true: a predicate of wait <code>--for</code>, or tid&#x3D;N:at&#x3D;LOC, tid&#x3D;N:write&#x3D;LOC or tid&#x3D;N:access&#x3D;LOC, or the same with tgid&#x3D;N</td>
 </tr>
 <tr>
 <td><code>--within duration</code></td>
@@ -5370,7 +5389,7 @@ stays as it was.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">machine run run1                            run one iteration</span><br><span class="line">machine run run1 --iters 100                run 100 iterations</span><br><span class="line">machine run run1 --iters 0                  continue to the next hit</span><br><span class="line">machine run run1 --mode step --iters 20     single-step 20 iterations</span><br><span class="line">machine run run1 --until &#x27;console~login:&#x27;   until the console prints login:</span><br><span class="line">machine run run1 --until &#x27;entry&gt;=500&#x27;       until it reaches entry 500</span><br><span class="line">machine run run1 --until vtime=+10ms        until its clock moves 10 ms</span><br><span class="line">machine run run1 --until tasks              until its tasks can be listed</span><br><span class="line">machine run run1 --until tid=41:at=main     until tid 41 is at main</span><br><span class="line">machine run run1 --until tgid=7:at=a.c:9    until tgid 7 reaches a.c:9</span><br><span class="line">machine run run1 --within 10s               until its clock has moved 10 s</span><br><span class="line">machine run run1 --until tasks --within 9s  the first of the two</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">machine run run1                            run one iteration</span><br><span class="line">machine run run1 --iters 100                run 100 iterations</span><br><span class="line">machine run run1 --iters 0                  continue to the next hit</span><br><span class="line">machine run run1 --mode step --iters 20     single-step 20 iterations</span><br><span class="line">machine run run1 --until &#x27;console~login:&#x27;   until the console prints login:</span><br><span class="line">machine run run1 --until &#x27;entry&gt;=500&#x27;       until it reaches entry 500</span><br><span class="line">machine run run1 --until vtime=+10ms        until its clock moves 10 ms</span><br><span class="line">machine run run1 --until tasks              until its tasks can be listed</span><br><span class="line">machine run run1 --until tid=41:at=main     until tid 41 is at main</span><br><span class="line">machine run run1 --until tgid=7:at=a.c:9    until tgid 7 reaches a.c:9</span><br><span class="line">machine run run1 --until tid=41:write=sum   until tid 41 writes sum</span><br><span class="line">machine run run1 --until tgid=7:access=buf  until tgid 7 touches buf</span><br><span class="line">machine run run1 --within 10s               until its clock has moved 10 s</span><br><span class="line">machine run run1 --until tasks --within 9s  the first of the two</span><br></pre></td></tr></table></figure>
 
 <p>Prints:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">progress       &lt;done&gt;/&lt;batch&gt; vtime=&lt;time&gt; entry=&lt;id&gt; ic=&lt;instructions&gt;</span><br><span class="line">summary        iterations: &lt;n&gt; run ic: &lt;instructions in this run&gt;</span><br><span class="line">               vtime: +&lt;how far the clock moved in this run&gt;</span><br><span class="line">last dispatch  VCPU EXIT ID RUN IC RCB TOTAL IC REGS HASH RIP RCX ITER</span><br><span class="line">EXIT           why it ended: IO, MMIO, HYPERCALL, HLT, INSTR_LIMIT</span><br><span class="line">               INSTR_LIMIT is the limit reached, or a cancel</span><br><span class="line">               IO with EXIT_SHUTDOWN is the guest powering off</span><br><span class="line">ID             the entry the dispatch wrote</span><br><span class="line">RCB            conditional branches retired, which replay matches on</span><br><span class="line">REGS HASH      a hash of the registers, which replay matches on</span><br><span class="line">ITER           which iteration of this command it was</span><br><span class="line">task:          the task event an --until predicate was met by</span><br><span class="line">guest event    a stop the guest asked for, such as a task switch</span><br><span class="line">matched &lt;n&gt;    with --when, how many dispatches it applied to</span><br><span class="line">               the rest of the iterations ran free</span><br></pre></td></tr></table></figure>
@@ -5475,7 +5494,7 @@ steer the run as on run. The clause axes and when belong in the file, not here.<
 </tr>
 <tr>
 <td><code>--until predicate</code></td>
-<td>Drive until this is true: a predicate of wait <code>--for</code>, or tid&#x3D;N:at&#x3D;LOC or tgid&#x3D;N:at&#x3D;LOC</td>
+<td>Drive until this is true: a predicate of wait <code>--for</code>, or tid&#x3D;N:at&#x3D;LOC, tid&#x3D;N:write&#x3D;LOC or tid&#x3D;N:access&#x3D;LOC, or the same with tgid&#x3D;N</td>
 </tr>
 <tr>
 <td><code>--within duration</code></td>
@@ -10832,9 +10851,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792641365163"></script>
-<script src="/js/machine-hero-type.js?v=1792641365163"></script>
-<script src="/js/download-platforms.js?v=1792641365163"></script>
+<script src="/js/index-code-type.js?v=1792667898725"></script>
+<script src="/js/machine-hero-type.js?v=1792667898725"></script>
+<script src="/js/download-platforms.js?v=1792667898725"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

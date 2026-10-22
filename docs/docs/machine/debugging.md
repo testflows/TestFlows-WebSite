@@ -154,10 +154,23 @@ not while it replays.
 machine run app --iters 0                      # until the next hit, as continue
 machine run app --until 'tid=412:at=init.c:106'   # until tid 412 reaches a line, as until and advance
 machine run app --until 'tgid=7:at=0x401136'   # until any thread of tgid 7 reaches an address
+machine run app --until 'tid=412:write=counter'   # until tid 412 writes counter, as watch
+machine run app --until 'tgid=7:access=buf[0]'    # until any thread of tgid 7 reads or writes buf[0], as awatch
 ```
 
-`tid=N:at=LOC` and `tgid=N:at=LOC` take any location. The address is resolved
-when the run starts, and the stop lasts for that run alone.
+`tid=N:at=LOC` and `tgid=N:at=LOC` take any location. `write=LOC` and
+`access=LOC` take a variable or an expression, watched at its size of 1, 2, 4
+or 8 bytes. A write the kernel makes into the program counts, as `read` makes
+into its buffer. The address is resolved when the run starts, and the stop
+lasts for that run alone.
+
+The run says the tid it stopped in and where that task stands. A watch also
+says the value the access left in the bytes:
+
+```
+✔ Written counter at main+116, watched.c:63, in tid 191
+Value = 4
+```
 
 ### Going back
 
@@ -214,7 +227,7 @@ stops.
 A run has 3 debug registers for its stops. These take one each:
 
 - a breakpoint or a watchpoint of `machine break add` or `machine watch add`
-- the stop of `run --until tid=N:at=LOC`, for that run
+- the stop of `run --until tid=N:at=LOC`, `write=LOC` or `access=LOC`, for that run
 - a `throw`, `catch` or `rethrow` catchpoint
 - a hardware breakpoint or watchpoint of GDB inside the machine, `hbreak` or
   `watch`
