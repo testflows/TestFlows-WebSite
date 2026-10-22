@@ -2,9 +2,9 @@
 
 # Machine
 
-> Run your programs deterministically. Record, replay and branch your runs.
+> A deterministic execution environment for your software, as a service. For testing, exploration, debugging and more. Deterministic hypervisor, multiple vCPUs, time compression.
 
-TestFlows™ Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+TestFlows™ Machine is a service that provides a deterministic execution environment for your software, used for testing, exploration, debugging and more. It is self-serve and runs in the cloud: you can sign up for free, and paid plans are available. It is built on a deterministic hypervisor, which boots a full Linux x86_64 virtual machine and runs your software in it unchanged: a single binary, a Docker image, or a whole Docker Compose environment of several services. The hypervisor controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
 Make every run repeatable for testing and more.
 
@@ -13,6 +13,13 @@ Make every run repeatable for testing and more.
 - **Record.** Capture a full run with every non-deterministic input pinned down.
 - **Replay.** Run it again instruction by instruction, with identical state and an identical outcome.
 - **Branch.** Fork from any point and try alternatives without losing the original timeline.
+
+## Deterministic hypervisor. Many vCPUs. Compressed time.
+
+- **Deterministic hypervisor.** A full Linux x86_64 virtual machine runs your software unchanged: a static binary, a Docker image, or a Docker Compose environment. Build its disk with `machine disks build --binary`, `--image` or `--compose`.
+- **Multiple vCPUs.** `machine create <run> --cpus 4` gives the guest four CPUs. Every vCPU and every interrupt between them is recorded, so a multi-vCPU run replays exactly.
+- **Time compression.** When every vCPU is idle, the machine moves its clock to the guest's next timer. A `sleep 600` in the guest finishes in a few seconds, and a replay makes the same moves. Work the guest does is never skipped.
+- Details: https://testflows.com/docs/machine/running-a-machine.md (sections Multiple vCPUs and Time compression).
 
 ## Rules for agents
 
@@ -35,7 +42,7 @@ Put `-o json` (parseable output), `-q` and `--timeout 300` before the command. A
 
 ## Mistakes to avoid
 
-- Create runs with `--daemon`, or they run to the end by themselves and your commands fail with `Machine not in control mode`.
+- Do not create a run with `--no-daemon` if you want to drive it. Such a run runs to the end by itself, and commands to it fail with `Machine not in control mode`. Runs wait for commands by default.
 - A branch's full name is `parent/name`. `machine fork app --name try-1` makes `app/try-1`, and that is the name every other command takes.
 - `fork` makes a branch in its own machine. `go` makes one and moves the machine you are on onto it.
 - Disks hold x86_64 programs, even on an ARM computer.
