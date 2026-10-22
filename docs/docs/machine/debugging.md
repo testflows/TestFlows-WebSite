@@ -23,6 +23,48 @@ task that is on a vCPU or off one.
 Symbols, types and source lines come from the program files on the machine's
 disk: the program's symbol table, and its debug information when it has some.
 
+### Debug information
+
+What the debugger shows depends on what the program's files on the disk hold:
+
+| On the disk | What you get |
+|---|---|
+| The symbol table alone | Function names in a backtrace, a stop at a function by its name, registers, memory, and a global at its symbol's address |
+| Debug information too | Source lines, a stop at `FILE:LINE`, line steps, arguments in a backtrace, `print` and `locals` by name, and a watch of a variable by its name |
+
+Frame 1 of the same stop, in `pg_parse_query`, of PostgreSQL as it ships and
+with its debug package:
+
+```text
+1  0x56365898a1af  ??
+1  0x556ccfc7d1af  exec_simple_query+159 (query_string=0x556cd01e6838 "SELECT count(*) FROM generate_series(1, 100000);")  postgres.c:1071
+```
+
+A program built with `-g` has its debug information in itself. A
+distribution ships it apart, in a package such as `-dbg`, `-dbgsym` or
+`debuginfo`, which puts a debug file under `/usr/lib/debug`. Install the
+package of the program's exact build in the image the disk is built from:
+the debugger takes a debug file only when its build id is the program's, and
+finds it in any layer of a container's image.
+
+A server is built optimized, as it ships. Its arguments and locals are where
+the compiler kept them at each instruction: on the stack, in registers, or in
+pieces of both, as clang keeps a C++ `std::string_view` in two registers. One
+kept nowhere is `optimized out`, as GDB says it. A C++ function is named short,
+as GDB names it, `DB::executeQuery`; `machine --signatures` names it by its
+whole signature.
+
+Without debug information, read the arguments from the registers the ABI
+passes them in, and give a global a type with a cast:
+
+```bash
+machine mem app 412 '$rsi' s                                  # the second argument, a string
+machine run app --until 'tgid=7:write=*(long *)&queries'      # a global of no type, as a long
+```
+
+The [debug examples](https://github.com/testflows/Machine-Examples/tree/main/debug)
+build ClickHouse and PostgreSQL both ways, and show a session of each.
+
 ### Locations
 
 Every command that takes a location takes one of these. A location names an
@@ -272,7 +314,7 @@ program. ClickHouse's 1.7GB of debug information grows to about 3.8GB in GDB,
 so that machine needs `--mem 12288`; with 4GB the guest's out-of-memory killer
 ends GDB.
 
-The [clickhouse-gdb example](https://github.com/testflows/Machine-Examples/tree/main/gdb/clickhouse)
+The [ClickHouse example](https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse)
 builds both kinds of image for ClickHouse 26.8: one with the symbol table
 alone, and one with the debug information. Its server prints the commit it was
 built from as it comes up, with a link to that source on GitHub, and the
@@ -280,21 +322,21 @@ example shows how to put a source file where GDB finds it.
 
 ### Running a session
 
-Build the example's disk from its `gdb` image, and create a run on it.
-The [example's README](https://github.com/testflows/Machine-Examples/tree/main/gdb/clickhouse)
+Build the example's disk from its `server` image, and create a run on it.
+The [example's README](https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse)
 builds the image:
 
 ```bash
-machine disks build --image clickhouse-gdb:26.8.31.2 clickhouse-gdb
-machine create ch --disk clickhouse-gdb --mem 4096 --cpus 2
+machine disks build --image clickhouse-server:26.8.31.2 clickhouse-server
+machine create ch --disk clickhouse-server --mem 4096 --cpus 2
 ```
 
 Run the machine to the point you want to debug, and keep a checkpoint there.
 Then run GDB with [`machine exec`](commands.md#machine-exec). Here the
-example's server prints `clickhouse-gdb: ready` once it answers queries:
+example's server prints `clickhouse: ready` once it answers queries:
 
 ```bash
-machine run ch --until 'console~clickhouse-gdb: ready'
+machine run ch --until 'console~clickhouse: ready'
 machine checkpoint ch ready
 machine exec ch run --container app --user clickhouse \
     -c 'gdb -batch -ex "handle SIGUSR1 SIGUSR2 nostop noprint" -ex "break DB::executeQuery" -ex continue -ex "bt 3" -p $(pidof clickhouse-server)'
@@ -325,7 +367,7 @@ the breakpoint, and `bt` shows whichever thread got it.
 At the control prompt the line after `-c` needs no outer quotes:
 
 ```
-/run until 'console~clickhouse-gdb: ready'
+/run until 'console~clickhouse: ready'
 /checkpoint ready
 /exec run --container app --user clickhouse -c gdb -batch -ex "handle SIGUSR1 SIGUSR2 nostop noprint" -ex "break DB::executeQuery" -ex continue -ex "bt 3" -p $(pidof clickhouse-server)
 ```
@@ -343,7 +385,7 @@ commands through a named pipe in the container.
 This works on the server's own image with GDB added, the example's `gdb`
 image: ClickHouse 26.8 with no debug information. GDB finds functions by
 name in the program's symbol table, and attaches in about 16 seconds. With
-the debug information of the `gdb-debug` image it takes minutes instead.
+the debug information of the `debug` image it takes minutes instead.
 
 Make the pipe, keep it open, and start GDB with its input on it.
 `exec start` returns at once and prints the id of the process it started:
