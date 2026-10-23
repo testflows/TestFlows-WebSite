@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792728962914" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792728962914" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792717551033" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792728962914" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -966,6 +966,10 @@ knowing about:</p>
 <td>record so that recording the run again gives the same entries (off by default, and recording is slower)</td>
 </tr>
 <tr>
+<td><code>--fence-timer-slack d</code></td>
+<td>with <code>--repeatable</code>, how late a timer may arrive in a program that computes without waiting, 20ms by default</td>
+</tr>
+<tr>
 <td><code>--no-wait</code></td>
 <td>return as soon as the request is accepted</td>
 </tr>
@@ -1120,14 +1124,28 @@ run has one vCPU or several, and a branch you fork from one of its checkpoints
 records exactly what its parent recorded after that checkpoint.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine create app --disk app.img --repeatable --cpus 2</span><br><span class="line">machine run app --<span class="keyword">until</span> tasks</span><br><span class="line">machine checkpoint app booted</span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;console~done&#x27;</span></span><br><span class="line">machine fork app --at ^booted --name again       <span class="comment"># records the same entries again</span></span><br><span class="line">machine fork app --at ^booted --no-repeatable    <span class="comment"># a branch that records as usual</span></span><br></pre></td></tr></table></figure>
 
-<p>Repeatable recording is slower, and how much slower depends on the program. A
-program that keeps the processor busy computing pays the most: one with three
-threads computing on one vCPU took 2 minutes 20 seconds to record with
-<code>--repeatable</code> and 9.5 seconds without it. A program that spends most of its
-time waiting on the disk, the network or a timer pays much less. Replaying a
-repeatable run is as fast as replaying any other.</p>
+<p>Repeatable recording is slower, and how much slower depends on the program.
+Booting PostgreSQL 17 on one vCPU took 1 minute 10 seconds to record with
+<code>--repeatable</code> and 14 seconds without it. Loading its test data with
+<code>pgbench -i</code>, which computes with hardly a pause, took 1 minute 20 seconds
+against 4 seconds. A program that spends its time waiting on the disk, the
+network or a timer pays much less. Replaying a repeatable run is as fast as
+replaying any other.</p>
+<p>Two options trade recording speed against how closely the recording follows
+the clock. <code>--fence-timer-slack</code> is how late a timer may arrive while the
+program computes without waiting on anything: 20ms by default, <code>0</code> to keep
+every timer on time, which records slowest. <code>--fence-margin</code> is how early,
+counted in branches, the machine slows down to reach each exact stop: 10000 by
+default. A smaller margin records faster, and one too small leaves stops a
+later recording may not repeat.</p>
 <p>A branch keeps whatever its parent does unless you give it <code>--repeatable</code> or
-<code>--no-repeatable</code>, and <code>start</code> keeps what the run was created with.</p>
+<code>--no-repeatable</code>, and the same holds for the two options. <code>start</code> keeps what
+the run was created with.</p>
+<p>What you send a run is part of what a recording repeats. Commands given with
+<a href="#machine-exec"><code>machine exec</code></a>, <code>put</code> and <code>get</code> in the same order
+at the same points name their processes alike in every recording, such as
+<code>40787p1</code>: the entry the run stood at, and the command’s place among those
+sent there.</p>
 <h2 id="Time-compression"><a href="#Time-compression" class="headerlink" title="Time compression"></a>Time compression</h2><p>Idle time takes almost no time.</p>
 <p>When every vCPU is halted and waiting for a timer, the machine doesn’t sit
 through the wait. It moves its clock straight to the earliest timer the guest
@@ -1441,7 +1459,7 @@ and redirections: <code>machine exec app run -c &#39;ls / | wc -l&#39;</code>.</
 <p>At the <a href="#interactive-mode">control prompt</a> the command is <code>/exec</code>, with the same
 verbs. It needs no <code>--</code>: the arguments are the words after the verb, and a line
 for the shell is the rest of the line after <code>-c</code>, its quotes kept for the shell.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/exec run ls -la /</span><br><span class="line">/exec run -c ls / | wc -l</span><br><span class="line">/exec run -c &#x27;X=1;echo $X&#x27;</span><br><span class="line">/exec run -- sh -c &#x27;X=1;echo $X&#x27;</span><br><span class="line">/exec start -c gdb -p 36 &lt; /dev/gdb_pipe</span><br><span class="line">/exec proc 7f3a9c21 stdout</span><br><span class="line">/exec</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">/exec run ls -la /</span><br><span class="line">/exec run -c ls / | wc -l</span><br><span class="line">/exec run -c &#x27;X=1;echo $X&#x27;</span><br><span class="line">/exec run -- sh -c &#x27;X=1;echo $X&#x27;</span><br><span class="line">/exec start -c gdb -p 36 &lt; /dev/gdb_pipe</span><br><span class="line">/exec proc 40787p1 stdout</span><br><span class="line">/exec</span><br></pre></td></tr></table></figure>
 
 <p>A <code>;</code> separates commands at the prompt, except inside quotes, so a line with
 one is written in quotes, as in a terminal. A pair of quotes around the whole
@@ -1471,17 +1489,17 @@ tools.</p>
 <p>Each command is a process. The run records every line the process prints and
 how it ends, each at its entry, so a replay reproduces them and a branch has
 the processes of its parent:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app                       <span class="comment"># the processes of the run</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 7f3a9c21         <span class="comment"># one process: pid, state, exit status</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 7f3a9c21 events  <span class="comment"># every line and state change, by entry</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 7f3a9c21 stdout  <span class="comment"># its standard output</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 7f3a9c21 stderr  <span class="comment"># its standard error</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 7f3a9c21 exits   <span class="comment"># how it ended, and at which entry</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app                       <span class="comment"># the processes of the run</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 40787p1         <span class="comment"># one process: pid, state, exit status</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 40787p1 events  <span class="comment"># every line and state change, by entry</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 40787p1 stdout  <span class="comment"># its standard output</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 40787p1 stderr  <span class="comment"># its standard error</span></span><br><span class="line">machine <span class="built_in">exec</span> app proc 40787p1 exits   <span class="comment"># how it ended, and at which entry</span></span><br></pre></td></tr></table></figure>
 
 <p>An event’s entry is a point. <code>machine go app &#39;#20411&#39;</code> forks a branch at the
 entry that printed a line.</p>
 <p>The output of a process is also a source like any other, under
-<code>/output/exec/&lt;id&gt;</code>: <code>machine run app --until &#39;/output/exec/7f3a9c21/stdout~done&#39;</code>
+<code>/output/exec/&lt;id&gt;</code>: <code>machine run app --until &#39;/output/exec/40787p1/stdout~done&#39;</code>
 stops the run at a line the process prints.</p>
 <h3 id="Input-for-a-program-you-started"><a href="#Input-for-a-program-you-started" class="headerlink" title="Input for a program you started"></a>Input for a program you started</h3><p>A program that reads commands from its standard input, such as a debugger, is
 driven through a named pipe. Make the pipe, keep it open, start the program
 with its input on the pipe, and send to the pipe:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app run   -c <span class="string">&#x27;mkfifo /dev/gdb_pipe&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> app start -c <span class="string">&#x27;sleep 1000000 &gt; /dev/gdb_pipe&#x27;</span>   <span class="comment"># keeps the pipe open</span></span><br><span class="line">machine <span class="built_in">exec</span> app start -c <span class="string">&#x27;gdb -p 36 &lt; /dev/gdb_pipe&#x27;</span></span><br><span class="line">machine send app <span class="string">&#x27;b main&#x27;</span> --device /dev/gdb_pipe</span><br><span class="line">machine send app c --device /dev/gdb_pipe</span><br><span class="line">machine run app --<span class="keyword">until</span> vtime=+3s</span><br><span class="line">machine <span class="built_in">exec</span> app proc 7f3a9c21 stdout                       <span class="comment"># what gdb printed</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app run   -c <span class="string">&#x27;mkfifo /dev/gdb_pipe&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> app start -c <span class="string">&#x27;sleep 1000000 &gt; /dev/gdb_pipe&#x27;</span>   <span class="comment"># keeps the pipe open</span></span><br><span class="line">machine <span class="built_in">exec</span> app start -c <span class="string">&#x27;gdb -p 36 &lt; /dev/gdb_pipe&#x27;</span></span><br><span class="line">machine send app <span class="string">&#x27;b main&#x27;</span> --device /dev/gdb_pipe</span><br><span class="line">machine send app c --device /dev/gdb_pipe</span><br><span class="line">machine run app --<span class="keyword">until</span> vtime=+3s</span><br><span class="line">machine <span class="built_in">exec</span> app proc 40787p1 stdout                       <span class="comment"># what gdb printed</span></span><br></pre></td></tr></table></figure>
 
 <p>A <code>--device</code> that begins with <code>/</code> is the path of a file in the machine, and
 <a href="#machine-send"><code>machine send</code></a> puts the bytes at its end. A process
@@ -4704,7 +4722,7 @@ the kept one decides.</p>
 where the run would have the names of another run.</p>
 <p>The command waits until the machine accepts commands. Use <code>--no-wait</code> to return
 once the request is accepted.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]</span><br><span class="line">                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]</span><br><span class="line">                      [--console &#123;serial,virtio&#125;] [--mem-type &#123;auto,hugepages&#125;]</span><br><span class="line">                      [--mem-mode &#123;auto,map,lazy&#125;] [--fs-sync | --no-fs-sync]</span><br><span class="line">                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]</span><br><span class="line">                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]</span><br><span class="line">                      [--limit n] [--backstop-limit n] [--pin-cpu n] [--vtime-base n]</span><br><span class="line">                      [--vtime-rate rate] [--vtime-io-cost ns] [--vtime-rdtsc-cost ns]</span><br><span class="line">                      [--vtime-pause-cost ns] [--auto-checkpoints n]</span><br><span class="line">                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]</span><br><span class="line">                      [name]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]</span><br><span class="line">                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]</span><br><span class="line">                      [--console &#123;serial,virtio&#125;] [--mem-type &#123;auto,hugepages&#125;]</span><br><span class="line">                      [--mem-mode &#123;auto,map,lazy&#125;] [--fs-sync | --no-fs-sync]</span><br><span class="line">                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]</span><br><span class="line">                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]</span><br><span class="line">                      [--fence-margin n] [--fence-timer-slack duration] [--limit n]</span><br><span class="line">                      [--backstop-limit n] [--pin-cpu n] [--vtime-base n] [--vtime-rate rate]</span><br><span class="line">                      [--vtime-io-cost ns] [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns]</span><br><span class="line">                      [--auto-checkpoints n] [--side-dump | --no-side-dump]</span><br><span class="line">                      [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]</span><br><span class="line">                      [--disk-hash | --no-disk-hash]</span><br><span class="line">                      [name]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -4804,6 +4822,14 @@ once the request is accepted.</p>
 <tr>
 <td><code>--repeatable, --no-repeatable</code></td>
 <td>Record so that recording again gives the same entries. Recording is slower</td>
+</tr>
+<tr>
+<td><code>--fence-margin n</code></td>
+<td>Branches before an exact stop where stepping to it starts, the cost of each stop (default: 10000 and 20ms)</td>
+</tr>
+<tr>
+<td><code>--fence-timer-slack duration</code></td>
+<td>How late a timer may be in code that takes no exit, 0 for none (default: 10000 and 20ms)</td>
 </tr>
 <tr>
 <td><code>--limit n</code></td>
@@ -6034,7 +6060,7 @@ the kept one decides.</p>
 where the run would have the names of another run.</p>
 <p>The command waits until the branch accepts commands. Use <code>--no-wait</code> to return
 once the request is accepted.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]</span><br><span class="line">                    [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]</span><br><span class="line">                    [--repeatable | --no-repeatable] [--disk-hash | --no-disk-hash]</span><br><span class="line">                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]</span><br><span class="line">                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]</span><br><span class="line">                    [--pin-cpu n]</span><br><span class="line">                    run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]</span><br><span class="line">                    [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]</span><br><span class="line">                    [--repeatable | --no-repeatable] [--fence-margin n]</span><br><span class="line">                    [--fence-timer-slack duration] [--disk-hash | --no-disk-hash]</span><br><span class="line">                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]</span><br><span class="line">                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]</span><br><span class="line">                    [--pin-cpu n]</span><br><span class="line">                    run</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -6098,6 +6124,14 @@ once the request is accepted.</p>
 <tr>
 <td><code>--repeatable, --no-repeatable</code></td>
 <td>Record so that recording again gives the same entries, whatever the run it comes from does</td>
+</tr>
+<tr>
+<td><code>--fence-margin n</code></td>
+<td>Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run’s)</td>
+</tr>
+<tr>
+<td><code>--fence-timer-slack duration</code></td>
+<td>How late a timer may be in code that takes no exit, 0 for none (default: the run’s)</td>
 </tr>
 <tr>
 <td><code>--disk-hash, --no-disk-hash</code></td>
@@ -6247,6 +6281,14 @@ where the run would have the names of another run.</p>
 <td>Record so that recording again gives the same entries, whatever the run it comes from does</td>
 </tr>
 <tr>
+<td><code>--fence-margin n</code></td>
+<td>Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run’s)</td>
+</tr>
+<tr>
+<td><code>--fence-timer-slack duration</code></td>
+<td>How late a timer may be in code that takes no exit, 0 for none (default: the run’s)</td>
+</tr>
+<tr>
 <td><code>--disk-hash, --no-disk-hash</code></td>
 <td>Hash the guest’s disk at every entry, whatever the run it comes from records</td>
 </tr>
@@ -6394,7 +6436,7 @@ two names spelled out, the longer decides, and a tie is stored. Of two patterns,
 the kept one decides.</p>
 <p>The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]</span><br><span class="line">                      [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]</span><br><span class="line">                      [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--limit n] [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                      run</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]</span><br><span class="line">                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]</span><br><span class="line">                      [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]</span><br><span class="line">                      [--fence-margin n] [--fence-timer-slack duration]</span><br><span class="line">                      [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]</span><br><span class="line">                      [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]</span><br><span class="line">                      [--limit n] [--backstop-limit n] [--pin-cpu n]</span><br><span class="line">                      run</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -6446,6 +6488,14 @@ where the run would have the names of another run.</p>
 <tr>
 <td><code>--repeatable, --no-repeatable</code></td>
 <td>Record so that recording again gives the same entries, whatever the run it comes from does</td>
+</tr>
+<tr>
+<td><code>--fence-margin n</code></td>
+<td>Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run’s)</td>
+</tr>
+<tr>
+<td><code>--fence-timer-slack duration</code></td>
+<td>How late a timer may be in code that takes no exit, 0 for none (default: the run’s)</td>
 </tr>
 <tr>
 <td><code>--disk-hash, --no-disk-hash</code></td>
@@ -8120,7 +8170,7 @@ executes none.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine exec run1                   the processes of run1</span><br><span class="line">machine exec run1 run -- ls -la /   execute ls and print its output</span><br><span class="line">machine exec run1 start -- sleep 5  send it and return its id</span><br><span class="line">machine exec run1 proc 7f3a9c21     one process</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine exec run1                   the processes of run1</span><br><span class="line">machine exec run1 run -- ls -la /   execute ls and print its output</span><br><span class="line">machine exec run1 start -- sleep 5  send it and return its id</span><br><span class="line">machine exec run1 proc 40787p1      one process</span><br></pre></td></tr></table></figure>
 
 <p>Prints:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">text     ID PID STATE ENTRIES COMMAND</span><br><span class="line">STATE    pending, running, exited &lt;code&gt;, killed &lt;signal&gt;</span><br><span class="line">ENTRIES  &lt;started&gt;:&lt;ended&gt;, the entries of the two events</span><br><span class="line">json     id state command pid exit_code signal started_entry</span><br></pre></td></tr></table></figure>
@@ -8188,7 +8238,7 @@ id.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">text  what the command printed, and its exit status</span><br><span class="line">json  the process, with stdout stderr events</span><br></pre></td></tr></table></figure>
 
 <p>Refuses, and the way past:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a machine that is replaying           machine fork run1 --name try2</span><br><span class="line">a command that has not ended in time  machine exec run1 proc 7f3a9c21</span><br><span class="line">a container that is not running       machine exec run1 run -- docker ps</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">a machine that is replaying           machine fork run1 --name try2</span><br><span class="line">a command that has not ended in time  machine exec run1 proc 40787p1</span><br><span class="line">a container that is not running       machine exec run1 run -- docker ps</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -8276,7 +8326,7 @@ exits view prints how the process ended.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine exec run1 proc 7f3a9c21         its state and how it ended</span><br><span class="line">machine exec run1 proc 7f3a9c21 events  every line and its entry</span><br><span class="line">machine exec run1 proc 7f3a9c21 stdout  its standard output</span><br><span class="line">machine exec run1 proc 7f3a9c21 stderr  its standard error</span><br><span class="line">machine exec run1 proc 7f3a9c21 exits   how it ended, and where</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine exec run1 proc 40787p1         its state and how it ended</span><br><span class="line">machine exec run1 proc 40787p1 events  every line and its entry</span><br><span class="line">machine exec run1 proc 40787p1 stdout  its standard output</span><br><span class="line">machine exec run1 proc 40787p1 stderr  its standard error</span><br><span class="line">machine exec run1 proc 40787p1 exits   how it ended, and where</span><br></pre></td></tr></table></figure>
 
 <p>Prints:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">summary  Process Run Command Pid State Entries Stdout Stderr</span><br><span class="line">events   ENTRY STREAM TEXT, the stream stdout, stderr or status</span><br><span class="line">exits    ENTRY and exited &lt;code&gt; or killed &lt;signal&gt;</span><br><span class="line">json     the process, or the events of the view</span><br></pre></td></tr></table></figure>
@@ -10948,9 +10998,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792717551034"></script>
-<script src="/js/machine-hero-type.js?v=1792717551034"></script>
-<script src="/js/download-platforms.js?v=1792717551034"></script>
+<script src="/js/index-code-type.js?v=1792728962915"></script>
+<script src="/js/machine-hero-type.js?v=1792728962915"></script>
+<script src="/js/download-platforms.js?v=1792728962915"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

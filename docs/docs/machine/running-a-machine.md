@@ -25,6 +25,7 @@ knowing about:
 | `--mem-hash` | hash the machine's memory at every entry, so a replay compares it too (off by default) |
 | `--disk-hash` | hash the machine's disk at every entry, so a replay compares it too (off by default) |
 | `--repeatable` | record so that recording the run again gives the same entries (off by default, and recording is slower) |
+| `--fence-timer-slack d` | with `--repeatable`, how late a timer may arrive in a program that computes without waiting, 20ms by default |
 | `--no-wait` | return as soon as the request is accepted |
 
 Change the seed and the program sees different random numbers. Keep it and it
@@ -213,15 +214,31 @@ machine fork app --at ^booted --name again       # records the same entries agai
 machine fork app --at ^booted --no-repeatable    # a branch that records as usual
 ```
 
-Repeatable recording is slower, and how much slower depends on the program. A
-program that keeps the processor busy computing pays the most: one with three
-threads computing on one vCPU took 2 minutes 20 seconds to record with
-`--repeatable` and 9.5 seconds without it. A program that spends most of its
-time waiting on the disk, the network or a timer pays much less. Replaying a
-repeatable run is as fast as replaying any other.
+Repeatable recording is slower, and how much slower depends on the program.
+Booting PostgreSQL 17 on one vCPU took 1 minute 10 seconds to record with
+`--repeatable` and 14 seconds without it. Loading its test data with
+`pgbench -i`, which computes with hardly a pause, took 1 minute 20 seconds
+against 4 seconds. A program that spends its time waiting on the disk, the
+network or a timer pays much less. Replaying a repeatable run is as fast as
+replaying any other.
+
+Two options trade recording speed against how closely the recording follows
+the clock. `--fence-timer-slack` is how late a timer may arrive while the
+program computes without waiting on anything: 20ms by default, `0` to keep
+every timer on time, which records slowest. `--fence-margin` is how early,
+counted in branches, the machine slows down to reach each exact stop: 10000 by
+default. A smaller margin records faster, and one too small leaves stops a
+later recording may not repeat.
 
 A branch keeps whatever its parent does unless you give it `--repeatable` or
-`--no-repeatable`, and `start` keeps what the run was created with.
+`--no-repeatable`, and the same holds for the two options. `start` keeps what
+the run was created with.
+
+What you send a run is part of what a recording repeats. Commands given with
+[`machine exec`](commands.md#machine-exec), `put` and `get` in the same order
+at the same points name their processes alike in every recording, such as
+`40787p1`: the entry the run stood at, and the command's place among those
+sent there.
 
 ## Time compression
 
@@ -650,7 +667,7 @@ for the shell is the rest of the line after `-c`, its quotes kept for the shell.
 /exec run -c 'X=1;echo $X'
 /exec run -- sh -c 'X=1;echo $X'
 /exec start -c gdb -p 36 < /dev/gdb_pipe
-/exec proc 7f3a9c21 stdout
+/exec proc 40787p1 stdout
 /exec
 ```
 
@@ -709,18 +726,18 @@ the processes of its parent:
 
 ```bash
 machine exec app                       # the processes of the run
-machine exec app proc 7f3a9c21         # one process: pid, state, exit status
-machine exec app proc 7f3a9c21 events  # every line and state change, by entry
-machine exec app proc 7f3a9c21 stdout  # its standard output
-machine exec app proc 7f3a9c21 stderr  # its standard error
-machine exec app proc 7f3a9c21 exits   # how it ended, and at which entry
+machine exec app proc 40787p1         # one process: pid, state, exit status
+machine exec app proc 40787p1 events  # every line and state change, by entry
+machine exec app proc 40787p1 stdout  # its standard output
+machine exec app proc 40787p1 stderr  # its standard error
+machine exec app proc 40787p1 exits   # how it ended, and at which entry
 ```
 
 An event's entry is a point. `machine go app '#20411'` forks a branch at the
 entry that printed a line.
 
 The output of a process is also a source like any other, under
-`/output/exec/<id>`: `machine run app --until '/output/exec/7f3a9c21/stdout~done'`
+`/output/exec/<id>`: `machine run app --until '/output/exec/40787p1/stdout~done'`
 stops the run at a line the process prints.
 
 ### Input for a program you started
@@ -736,7 +753,7 @@ machine exec app start -c 'gdb -p 36 < /dev/gdb_pipe'
 machine send app 'b main' --device /dev/gdb_pipe
 machine send app c --device /dev/gdb_pipe
 machine run app --until vtime=+3s
-machine exec app proc 7f3a9c21 stdout                       # what gdb printed
+machine exec app proc 40787p1 stdout                       # what gdb printed
 ```
 
 A `--device` that begins with `/` is the path of a file in the machine, and
