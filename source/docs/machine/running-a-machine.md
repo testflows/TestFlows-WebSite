@@ -24,6 +24,7 @@ knowing about:
 | `--fs-sync` | write to the disk as the program writes, instead of later |
 | `--mem-hash` | hash the machine's memory at every entry, so a replay compares it too (off by default) |
 | `--disk-hash` | hash the machine's disk at every entry, so a replay compares it too (off by default) |
+| `--repeatable` | record so that recording the run again gives the same entries (off by default, and recording is slower) |
 | `--no-wait` | return as soon as the request is accepted |
 
 Change the seed and the program sees different random numbers. Keep it and it
@@ -152,11 +153,18 @@ repeatable.
 machine run app --until /usr/bin/app:exit --mode step,fast --step 1:200 --seed 1
 ```
 
-`--mode` is how the machine runs: `fast`, `step`, `step-into` or `free`, or a
-comma list to draw from. `--step` and `--fast` give the length of a stretch in
-each mode, as a number or a range like `1:200`. `--strategy` sets how the
-draws are made, `random` (the default), `golden` or `sweep`, and `--seed` is the
-seed for the random and golden ones.
+`--mode` is how the machine runs: `fast`, `step`, `step-into`, `free` or
+`fence`, or a comma list to draw from. `--step` and `--fast` give the length of
+a stretch in each mode, as a number or a range like `1:200`. `--strategy` sets
+how the draws are made, `random` (the default), `golden` or `sweep`, and
+`--seed` is the seed for the random and golden ones.
+
+A `fence` stretch ends in the same place every time the same state is
+recorded, where a `fast` stretch ends close to its length but not always at the
+same instruction. That exactness makes a `fence` stretch somewhat slower than a
+`fast` one. Give its length with `--fence` or `--limit`.
+[Recording that repeats](#recording-that-repeats) shows how to make a whole run
+record the same way every time.
 
 Combine that with branches. Fork several from one checkpoint, give each its
 own seed, and keep the ones that crash. The `explore_seeds.py` example in the
@@ -184,6 +192,36 @@ host does not end the run sooner, which the global `--timeout` in seconds would.
 
 The clock moves as the programs in the machine work and while the machine is
 idle. A loop that does nothing but spin does not move it.
+
+## Recording that repeats
+
+A [replay](replay.md) always repeats a recording exactly. Recording the same
+run a second time is different: by default two recordings of one run, from the
+same disk and the same seeds, start out the same and then drift apart a little.
+
+When you need the second recording to match the first, create the run with
+`--repeatable`. Every recording of it then records the same entries, whether the
+run has one vCPU or several, and a branch you fork from one of its checkpoints
+records exactly what its parent recorded after that checkpoint.
+
+```bash
+machine create app --disk app.img --repeatable --cpus 2
+machine run app --until tasks
+machine checkpoint app booted
+machine run app --until 'console~done'
+machine fork app --at ^booted --name again       # records the same entries again
+machine fork app --at ^booted --no-repeatable    # a branch that records as usual
+```
+
+Repeatable recording is slower, and how much slower depends on the program. A
+program that keeps the processor busy computing pays the most: one with three
+threads computing on one vCPU took 2 minutes 20 seconds to record with
+`--repeatable` and 9.5 seconds without it. A program that spends most of its
+time waiting on the disk, the network or a timer pays much less. Replaying a
+repeatable run is as fast as replaying any other.
+
+A branch keeps whatever its parent does unless you give it `--repeatable` or
+`--no-repeatable`, and `start` keeps what the run was created with.
 
 ## Time compression
 
@@ -937,10 +975,10 @@ remembers a CPU, so each `start` and `fork` picks the least-loaded one unless
 you name it.
 
 What a run records is fixed when you create it: `--side-dump`, `--side-trace`,
-`--mem-hash` and `--disk-hash`. A `start` keeps it. A branch is where it
-changes: `fork`, `detach` and `go` take each of them, and `--no-mem-hash` or
-`--no-disk-hash` to turn one off, and a branch given none records what its
-parent records. [Replay](replay.md) says what the two hashes add.
+`--mem-hash`, `--disk-hash` and `--repeatable`. A `start` keeps it. A branch is
+where it changes: `fork`, `detach` and `go` take each of them, and
+`--no-mem-hash`, `--no-disk-hash` or `--no-repeatable` to turn one off, and a
+branch given none records what its parent records. [Replay](replay.md) says what the two hashes add.
 
 `delete` only removes stopped runs, unless you add `--stop`. It also refuses to
 remove a run that has branches, unless you add `--recursive`. And since

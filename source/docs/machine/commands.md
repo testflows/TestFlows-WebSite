@@ -2213,9 +2213,10 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
                       [--mem-mode {auto,map,lazy}] [--fs-sync | --no-fs-sync]
                       [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
                       [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                      [--rdtsc-exit | --no-rdtsc-exit] [--limit n] [--backstop-limit n]
-                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
-                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
+                      [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]
+                      [--limit n] [--backstop-limit n] [--pin-cpu n] [--vtime-base n]
+                      [--vtime-rate rate] [--vtime-io-cost ns] [--vtime-rdtsc-cost ns]
+                      [--vtime-pause-cost ns] [--auto-checkpoints n]
                       [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                       [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
                       [name]
@@ -2246,6 +2247,7 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: on) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` |
 | `--rdtsc-exit, --no-rdtsc-exit` | Record an entry for every RDTSC exit (applies only for non-daemon runs) |
+| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries. Recording is slower |
 | `--limit n` | Instructions per dispatch, 0 to leave it to the machine (default: 0) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
@@ -2267,6 +2269,7 @@ machine create run1 --disk hello                      create run1 from hello
 machine create run1 --disk hello --mem 512 --cpus 2   with 512 MB, 2 CPUs
 machine create run1 --disk hello --rng --rng-seed 42  with a seeded RNG
 machine create run1 --disk hello --no-daemon          run to completion
+machine create run1 --disk hello --repeatable         so recording repeats
 machine create run1 --disk hello --drop-output ttyS1  store none of ttyS1
 ```
 
@@ -2735,9 +2738,9 @@ stays as it was.
 usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
                    [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
                    [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
-                   [--fast span] [--step span] [--step-into span] [--vtime-rate span]
-                   [--vtime-add span] [--task-sched choices] [--task-slice choices]
-                   [--task-int choices] [--when predicate]
+                   [--fast span] [--step span] [--step-into span] [--fence span]
+                   [--vtime-rate span] [--vtime-add span] [--task-sched choices]
+                   [--task-slice choices] [--task-int choices] [--when predicate]
                    run
 ```
 
@@ -2748,7 +2751,7 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 | Option | Does |
 |---|---|
 | `--back` | Go back to the newest hit before now, onto a branch |
-| `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
+| `--limit span` | Default instructions per dispatch under fast, steps under step, branches under fence; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step and fence stop exactly; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
@@ -2761,10 +2764,11 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
 | `--no-idle-skip` | Keep machine time crawling while every vCPU is idle |
 | `--auto-checkpoints n` | Auto-checkpoint every N entries; 0 turns it off, default the machine's |
-| `--mode list` | Execution mode: fast, step, step-into, free, or a comma list to draw among (default: fast) |
+| `--mode list` | Execution mode: fast, step, step-into, free, fence, or a comma list to draw among (default: fast) |
 | `--fast span` | Limit fast draws when it wins (its member), overriding `--limit` |
 | `--step span` | Limit step draws when it wins (its member), overriding `--limit` |
 | `--step-into span` | Limit step-into draws when it wins (its member) |
+| `--fence span` | Branches fence draws stop at when it wins (its member), overriding `--limit` |
 | `--vtime-rate span` | Vtime rate for this run: n, n/d, or a span of either |
 | `--vtime-add span` | Nanoseconds to push the clock forward before each dispatch |
 | `--task-sched choices` | Draw a scheduler mark per dispatch for the task on that vCPU: keep, hold, yield, drain, drain-all |
@@ -2775,20 +2779,21 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 Examples:
 
 ```
-machine run run1                            run one iteration
-machine run run1 --iters 100                run 100 iterations
-machine run run1 --iters 0                  continue to the next hit
-machine run run1 --mode step --iters 20     single-step 20 iterations
-machine run run1 --until 'console~login:'   until the console prints login:
-machine run run1 --until 'entry>=500'       until it reaches entry 500
-machine run run1 --until vtime=+10ms        until its clock moves 10 ms
-machine run run1 --until tasks              until its tasks can be listed
-machine run run1 --until tid=41:at=main     until tid 41 is at main
-machine run run1 --until tgid=7:at=a.c:9    until tgid 7 reaches a.c:9
-machine run run1 --until tid=41:write=sum   until tid 41 writes sum
-machine run run1 --until tgid=7:access=buf  until tgid 7 touches buf
-machine run run1 --within 10s               until its clock has moved 10 s
-machine run run1 --until tasks --within 9s  the first of the two
+machine run run1                             run one iteration
+machine run run1 --iters 100                 run 100 iterations
+machine run run1 --iters 0                   continue to the next hit
+machine run run1 --mode step --iters 20      single-step 20 iterations
+machine run run1 --mode fence --limit 50000  stop on 50000 branches
+machine run run1 --until 'console~login:'    until the console prints login:
+machine run run1 --until 'entry>=500'        until it reaches entry 500
+machine run run1 --until vtime=+10ms         until its clock moves 10 ms
+machine run run1 --until tasks               until its tasks can be listed
+machine run run1 --until tid=41:at=main      until tid 41 is at main
+machine run run1 --until tgid=7:at=a.c:9     until tgid 7 reaches a.c:9
+machine run run1 --until tid=41:write=sum    until tid 41 writes sum
+machine run run1 --until tgid=7:access=buf   until tgid 7 touches buf
+machine run run1 --within 10s                until its clock has moved 10 s
+machine run run1 --until tasks --within 9s   the first of the two
 ```
 
 Prints:
@@ -2866,8 +2871,8 @@ when <predicate>
     tid=N, tgid=N, cgroup=P or none for any focused task.
     vcpu=N[,N] ANDs a vCPU set onto it.
 mode <mode>[N],...
-    the modes to draw among: fast, step, step-into, free or
-    keep. A mode may carry the limit it draws when it wins,
+    the modes to draw among: fast, step, step-into, free, fence
+    or keep. A mode may carry the limit it draws when it wins,
     <mode>=<span>, as in mode step[3],fast[1] step=1:200.
     free takes no limit.
 vtime-rate <rate>[N],...
@@ -2929,7 +2934,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 
 | Option | Does |
 |---|---|
-| `--limit span` | Default instructions per dispatch under fast, steps under step; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step stops exactly; 0 means no limit under fast and one step under step; default 0 |
+| `--limit span` | Default instructions per dispatch under fast, steps under step, branches under fence; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step and fence stop exactly; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
@@ -3377,9 +3382,10 @@ once the request is accepted.
 usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                     [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
                     [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
-                    [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
-                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                    [--limit n] [--backstop-limit n] [--pin-cpu n]
+                    [--repeatable | --no-repeatable] [--disk-hash | --no-disk-hash]
+                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
+                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
+                    [--pin-cpu n]
                     run
 ```
 
@@ -3399,6 +3405,7 @@ usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
+| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3420,6 +3427,7 @@ machine fork run1 --at '#120' --no-start  create the branch, do not start it
 machine fork run1 --keep-output /output   store what is dropped
 machine fork run1 --drop-output ttyS1     store none of ttyS1
 machine fork run1 --from ^cp1             replay the branch from cp1 to now
+machine fork run1 --no-repeatable         a branch without fences
 ```
 
 See also:
@@ -3503,6 +3511,7 @@ usage: machine go [options] <run> <point>
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
+| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3664,10 +3673,10 @@ where the run would have the names of another run.
 ```
 usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                       [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                      [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
-                      [--keep-output name] [--drop-output name] [--no-wait]
-                      [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
-                      [--backstop-limit n] [--pin-cpu n]
+                      [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
+                      [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
+                      [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
+                      [--limit n] [--backstop-limit n] [--pin-cpu n]
                       run
 ```
 
@@ -3684,6 +3693,7 @@ usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
+| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -4797,6 +4807,7 @@ Prints:
 
 ```
 TID TGID        the task, and the tgid it belongs to
+PID             the tgid as its container names it, blank for the machine's own
 COMM EXE        the name of the task, and the path of its program
 CPU             the vCPU the task is on, blank when it is on none
 NEXT            whose code runs next on that vCPU: user or kernel
