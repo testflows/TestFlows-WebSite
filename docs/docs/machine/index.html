@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792758888882" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792758888882" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792728962914" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792758888882" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1622,12 +1622,50 @@ it cannot profile a recorded stretch.</li>
 <li>C++ names are printed as the program has them. Pipe <code>--folded</code> through
 <code>c++filt</code> to read them.</li>
 </ul>
-<h2 id="Interactive-mode"><a href="#Interactive-mode" class="headerlink" title="Interactive mode"></a>Interactive mode</h2><p>When you are working on one run for a while, you can open a prompt for it.</p>
+<h2 id="Interactive-mode"><a href="#Interactive-mode" class="headerlink" title="Interactive mode"></a>Interactive mode</h2><p>When you are working on one run for a while, you can open a prompt for it, so
+you no longer type <code>machine</code> and the run’s name before every command.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine control app</span><br></pre></td></tr></table></figure>
 
 <p>You issue commands to the run as slash commands, like <code>/checkpoint</code>,
-<code>/branches</code> or <code>/rewind</code>. Most of the commands on this page have one. Type
-<code>/help</code> to see them all. <code>-c</code> runs a single slash command and exits, as in
+<code>/branches</code> or <code>/rewind</code>. Most of the commands on this page have one, written
+the same way without the run’s name, and options are plain words rather than
+flags: <code>--at ^booted</code> becomes <code>at ^booted</code>. Type <code>/help</code> to see them all, and
+<code>/q</code> or Ctrl+D to leave.</p>
+<p>The prompt is the easiest way to try something and come back. The session below
+starts from a new run made from the <code>ubuntu-26.04</code> disk, the one built in
+<a href="#multiple-vcpus">Multiple vCPUs</a> from Ubuntu 26.04 with a container that waits
+for your commands. <a href="#Disks">Disks</a> has more on building one.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --from ubuntu:26.04 ubuntu-26.04 --entrypoint /bin/sleep -- infinity</span><br><span class="line">machine create app --disk ubuntu-26.04</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Started app (whyvcWEKxc7c5b2UwO7r6)</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine control app</span><br></pre></td></tr></table></figure>
+
+<p>At the prompt, it boots the machine until Docker attaches to its container,
+keeps that point as a checkpoint, and removes a file:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/f until console~Attaching within 60s</span><br><span class="line">iterations: 24957  run ic: 1525715866  vtime: +3.730915228s  checkpoints: 1</span><br><span class="line"></span><br><span class="line">VCPU  EXIT  ID     RUN IC   RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER</span><br><span class="line">0     IO    27777  1905719  148  1525715866  0x26180340852cf271  0xffffffff8104880d  1    4</span><br><span class="line"></span><br><span class="line">/checkpoint name booted</span><br><span class="line">✔ Created checkpoint booted at entry 27777</span><br><span class="line">  Make it durable /sync</span><br><span class="line"></span><br><span class="line">/exec run cat /etc/hostname</span><br><span class="line">docker-test</span><br><span class="line"></span><br><span class="line">/exec run rm /etc/hostname</span><br><span class="line"></span><br><span class="line">/exec run cat /etc/hostname</span><br><span class="line">cat: can&#x27;t open &#x27;/etc/hostname&#x27;: No such file or directory</span><br><span class="line">✗ Exited 1.</span><br></pre></td></tr></table></figure>
+
+<p><code>/f</code> runs the machine until <code>Attaching</code> appears on the console, or for 60
+seconds of the machine’s own time at most. It took 3.7 seconds of the machine’s
+time here, and the table shows where each vCPU stopped. To see the
+machine as it was before the file was removed, fork a branch at <code>booted</code> and
+switch onto it:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/go to ^booted</span><br><span class="line">✔ Branched app/27777 (whyvg0aXMSf6g7H2pU5wa) at entry 27777 and switched onto it.</span><br><span class="line"></span><br><span class="line">/exec run cat /etc/hostname</span><br><span class="line">docker-test</span><br><span class="line"></span><br><span class="line">/switch app</span><br><span class="line">✔ Switched to app (whyvcWEKxc7c5b2UwO7r6)</span><br></pre></td></tr></table></figure>
+
+<p>The branch is named after the entry it was forked at, and the file is there
+again, while <code>app</code> keeps its own history without it. <code>/switch app</code> moves the
+machine back. The prompt also remembers the branches you have visited:
+<code>/go back</code> returns to where the last switch started, <code>/go up</code> and <code>/go down</code>
+walk the visits in order, and <code>/history</code> lists them. <code>/mark good</code> gives the
+branch you are on a name, and <code>/switch %good</code> returns to it.</p>
+<p>A branch made at the prompt takes the same options as one made with
+<a href="#machine-fork"><code>machine fork</code></a>, written as words. This one records
+a branch that repeats, with a smaller timer slack than the default, as
+<a href="#recording-that-repeats">Recording that repeats</a> describes:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/fork at ^booted name exact repeatable fence-timer-slack 5ms</span><br><span class="line">✔ Forked app/exact (whyvhjPaLbY3hsz3KyytQ)</span><br><span class="line">  From checkpoint 27777 of app, nothing replayed</span><br></pre></td></tr></table></figure>
+
+<p><code>/fork</code> starts the branch beside the one you are on and leaves you where you
+are. <code>/switch app/exact</code> moves onto it, and <code>/describe:app/exact</code> shows
+<code>Repeatable: true</code> and <code>Fence Timer Slack: 5ms</code>.</p>
+<p><code>-c</code> runs a single slash command and exits, as in
 <a href="#machine-control"><code>machine control app -c &#39;/state&#39;</code></a>, and <a href="#machine-control"><code>machine control log app</code></a> prints the
 history of the commands you have issued.</p>
 <h2 id="Stopping-and-starting"><a href="#Stopping-and-starting" class="headerlink" title="Stopping and starting"></a>Stopping and starting</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine pause app</span><br><span class="line">machine resume app</span><br><span class="line">machine stop app</span><br><span class="line">machine start app</span><br><span class="line">machine <span class="built_in">kill</span> app</span><br><span class="line">machine delete app</span><br></pre></td></tr></table></figure>
@@ -10998,9 +11036,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792728962915"></script>
-<script src="/js/machine-hero-type.js?v=1792728962915"></script>
-<script src="/js/download-platforms.js?v=1792728962915"></script>
+<script src="/js/index-code-type.js?v=1792758888883"></script>
+<script src="/js/machine-hero-type.js?v=1792758888883"></script>
+<script src="/js/download-platforms.js?v=1792758888883"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
