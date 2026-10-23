@@ -955,9 +955,12 @@ machine control app
 
 You issue commands to the run as slash commands, like `/checkpoint`,
 `/branches` or `/rewind`. Most of the commands on this page have one, written
-the same way without the run's name, and options are plain words rather than
-flags: `--at ^booted` becomes `at ^booted`. Type `/help` to see them all, and
-`/q` or Ctrl+D to leave.
+the same way without the run's name. Commands that run the machine, take
+checkpoints or make and switch branches take their options as plain words, so
+`--at ^booted` becomes `at ^booted`. Commands that execute something in the
+guest or read its state, such as `/exec`, `/send`, `/profile` or `/regs`, take
+the same flags as on the command line: `/exec run --container app nproc`. Type
+`/help` to see them all, and `/q` or Ctrl+D to leave.
 
 The prompt is the easiest way to try something and come back. The session below
 starts from a new run made from the `ubuntu-26.04` disk, the one built in

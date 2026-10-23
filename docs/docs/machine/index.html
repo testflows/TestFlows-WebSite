@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1792759325962" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1792759325962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792758888882" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1792759325962" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1628,9 +1628,12 @@ you no longer type <code>machine</code> and the run’s name before every comman
 
 <p>You issue commands to the run as slash commands, like <code>/checkpoint</code>,
 <code>/branches</code> or <code>/rewind</code>. Most of the commands on this page have one, written
-the same way without the run’s name, and options are plain words rather than
-flags: <code>--at ^booted</code> becomes <code>at ^booted</code>. Type <code>/help</code> to see them all, and
-<code>/q</code> or Ctrl+D to leave.</p>
+the same way without the run’s name. Commands that run the machine, take
+checkpoints or make and switch branches take their options as plain words, so
+<code>--at ^booted</code> becomes <code>at ^booted</code>. Commands that execute something in the
+guest or read its state, such as <code>/exec</code>, <code>/send</code>, <code>/profile</code> or <code>/regs</code>, take
+the same flags as on the command line: <code>/exec run --container app nproc</code>. Type
+<code>/help</code> to see them all, and <code>/q</code> or Ctrl+D to leave.</p>
 <p>The prompt is the easiest way to try something and come back. The session below
 starts from a new run made from the <code>ubuntu-26.04</code> disk, the one built in
 <a href="#multiple-vcpus">Multiple vCPUs</a> from Ubuntu 26.04 with a container that waits
@@ -11036,9 +11039,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792758888883"></script>
-<script src="/js/machine-hero-type.js?v=1792758888883"></script>
-<script src="/js/download-platforms.js?v=1792758888883"></script>
+<script src="/js/index-code-type.js?v=1792759325962"></script>
+<script src="/js/machine-hero-type.js?v=1792759325962"></script>
+<script src="/js/download-platforms.js?v=1792759325962"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
