@@ -2214,11 +2214,12 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
                       [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
                       [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
                       [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]
-                      [--limit n] [--backstop-limit n] [--pin-cpu n] [--vtime-base n]
-                      [--vtime-rate rate] [--vtime-io-cost ns] [--vtime-rdtsc-cost ns]
-                      [--vtime-pause-cost ns] [--auto-checkpoints n]
-                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                      [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
+                      [--fence-margin n] [--fence-timer-slack duration] [--limit n]
+                      [--backstop-limit n] [--pin-cpu n] [--vtime-base n] [--vtime-rate rate]
+                      [--vtime-io-cost ns] [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns]
+                      [--auto-checkpoints n] [--side-dump | --no-side-dump]
+                      [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
+                      [--disk-hash | --no-disk-hash]
                       [name]
 ```
 
@@ -2248,6 +2249,8 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` |
 | `--rdtsc-exit, --no-rdtsc-exit` | Record an entry for every RDTSC exit (applies only for non-daemon runs) |
 | `--repeatable, --no-repeatable` | Record so that recording again gives the same entries. Recording is slower |
+| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: 10000 and 20ms) |
+| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: 10000 and 20ms) |
 | `--limit n` | Instructions per dispatch, 0 to leave it to the machine (default: 0) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
@@ -3382,7 +3385,8 @@ once the request is accepted.
 usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                     [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
                     [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
-                    [--repeatable | --no-repeatable] [--disk-hash | --no-disk-hash]
+                    [--repeatable | --no-repeatable] [--fence-margin n]
+                    [--fence-timer-slack duration] [--disk-hash | --no-disk-hash]
                     [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
                     [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
                     [--pin-cpu n]
@@ -3406,6 +3410,8 @@ usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
+| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run's) |
+| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3512,6 +3518,8 @@ usage: machine go [options] <run> <point>
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
+| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run's) |
+| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3674,6 +3682,7 @@ where the run would have the names of another run.
 usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                       [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                       [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
+                      [--fence-margin n] [--fence-timer-slack duration]
                       [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
                       [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
                       [--limit n] [--backstop-limit n] [--pin-cpu n]
@@ -3694,6 +3703,8 @@ usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
+| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run's) |
+| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -5386,7 +5397,7 @@ Examples:
 machine exec run1                   the processes of run1
 machine exec run1 run -- ls -la /   execute ls and print its output
 machine exec run1 start -- sleep 5  send it and return its id
-machine exec run1 proc 7f3a9c21     one process
+machine exec run1 proc 40787p1      one process
 ```
 
 Prints:
@@ -5459,7 +5470,7 @@ Refuses, and the way past:
 
 ```
 a machine that is replaying           machine fork run1 --name try2
-a command that has not ended in time  machine exec run1 proc 7f3a9c21
+a command that has not ended in time  machine exec run1 proc 40787p1
 a container that is not running       machine exec run1 run -- docker ps
 ```
 
@@ -5544,11 +5555,11 @@ usage: machine exec run proc [-h] id [{summary,events,stdout,stderr,exits}]
 Examples:
 
 ```
-machine exec run1 proc 7f3a9c21         its state and how it ended
-machine exec run1 proc 7f3a9c21 events  every line and its entry
-machine exec run1 proc 7f3a9c21 stdout  its standard output
-machine exec run1 proc 7f3a9c21 stderr  its standard error
-machine exec run1 proc 7f3a9c21 exits   how it ended, and where
+machine exec run1 proc 40787p1         its state and how it ended
+machine exec run1 proc 40787p1 events  every line and its entry
+machine exec run1 proc 40787p1 stdout  its standard output
+machine exec run1 proc 40787p1 stderr  its standard error
+machine exec run1 proc 40787p1 exits   how it ended, and where
 ```
 
 Prints:
