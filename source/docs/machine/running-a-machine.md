@@ -946,15 +946,99 @@ and you get the same samples.
 
 ## Interactive mode
 
-When you are working on one run for a while, you can open a prompt for it.
+When you are working on one run for a while, you can open a prompt for it, so
+you no longer type `machine` and the run's name before every command.
 
 ```bash
 machine control app
 ```
 
 You issue commands to the run as slash commands, like `/checkpoint`,
-`/branches` or `/rewind`. Most of the commands on this page have one. Type
-`/help` to see them all. `-c` runs a single slash command and exits, as in
+`/branches` or `/rewind`. Most of the commands on this page have one, written
+the same way without the run's name, and options are plain words rather than
+flags: `--at ^booted` becomes `at ^booted`. Type `/help` to see them all, and
+`/q` or Ctrl+D to leave.
+
+The prompt is the easiest way to try something and come back. The session below
+starts from a new run made from the `ubuntu-26.04` disk, the one built in
+[Multiple vCPUs](#multiple-vcpus) from Ubuntu 26.04 with a container that waits
+for your commands. [Disks](disks.md) has more on building one.
+
+```bash
+machine disks build --from ubuntu:26.04 ubuntu-26.04 --entrypoint /bin/sleep -- infinity
+machine create app --disk ubuntu-26.04
+```
+```
+✔ Started app (whyvcWEKxc7c5b2UwO7r6)
+```
+```bash
+machine control app
+```
+
+At the prompt, it boots the machine until Docker attaches to its container,
+keeps that point as a checkpoint, and removes a file:
+
+```text
+/f until console~Attaching within 60s
+iterations: 24957  run ic: 1525715866  vtime: +3.730915228s  checkpoints: 1
+
+VCPU  EXIT  ID     RUN IC   RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER
+0     IO    27777  1905719  148  1525715866  0x26180340852cf271  0xffffffff8104880d  1    4
+
+/checkpoint name booted
+✔ Created checkpoint booted at entry 27777
+  Make it durable /sync
+
+/exec run cat /etc/hostname
+docker-test
+
+/exec run rm /etc/hostname
+
+/exec run cat /etc/hostname
+cat: can't open '/etc/hostname': No such file or directory
+✗ Exited 1.
+```
+
+`/f` runs the machine until `Attaching` appears on the console, or for 60
+seconds of the machine's own time at most. It took 3.7 seconds of the machine's
+time here, and the table shows where each vCPU stopped. To see the
+machine as it was before the file was removed, fork a branch at `booted` and
+switch onto it:
+
+```text
+/go to ^booted
+✔ Branched app/27777 (whyvg0aXMSf6g7H2pU5wa) at entry 27777 and switched onto it.
+
+/exec run cat /etc/hostname
+docker-test
+
+/switch app
+✔ Switched to app (whyvcWEKxc7c5b2UwO7r6)
+```
+
+The branch is named after the entry it was forked at, and the file is there
+again, while `app` keeps its own history without it. `/switch app` moves the
+machine back. The prompt also remembers the branches you have visited:
+`/go back` returns to where the last switch started, `/go up` and `/go down`
+walk the visits in order, and `/history` lists them. `/mark good` gives the
+branch you are on a name, and `/switch %good` returns to it.
+
+A branch made at the prompt takes the same options as one made with
+[`machine fork`](commands.md#machine-fork), written as words. This one records
+a branch that repeats, with a smaller timer slack than the default, as
+[Recording that repeats](#recording-that-repeats) describes:
+
+```text
+/fork at ^booted name exact repeatable fence-timer-slack 5ms
+✔ Forked app/exact (whyvhjPaLbY3hsz3KyytQ)
+  From checkpoint 27777 of app, nothing replayed
+```
+
+`/fork` starts the branch beside the one you are on and leaves you where you
+are. `/switch app/exact` moves onto it, and `/describe:app/exact` shows
+`Repeatable: true` and `Fence Timer Slack: 5ms`.
+
+`-c` runs a single slash command and exits, as in
 [`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) prints the
 history of the commands you have issued.
 
