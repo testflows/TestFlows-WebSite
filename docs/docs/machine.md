@@ -17,7 +17,7 @@ In the Markdown files, `{% attention %}` starts a note.
 
 - [Disks](https://testflows.com/docs/machine/disks.md): Build a disk from a binary, a Docker image or a Compose project, including on ARM machines, and manage disks.
 - [Sessions](https://testflows.com/docs/machine/sessions.md): Create, size, select and delete the cloud sessions your runs live in.
-- [Running a machine](https://testflows.com/docs/machine/running-a-machine.md): Create a run, drive it with `machine run`, wait for conditions, try different schedules, inspect it, and stop and start it.
+- [Running a machine](https://testflows.com/docs/machine/running-a-machine.md): Create a run, drive it with `machine run`, wait for conditions, try different schedules, record runs that repeat, inspect it, and stop and start it.
 - [Checkpoints and branches](https://testflows.com/docs/machine/checkpoints-and-branches.md): Save checkpoints, branch with `fork`, `go`, `switch`, `rewind` and `detach`, see the tree, and mark branches.
 - [Replay](https://testflows.com/docs/machine/replay.md): Replay a recording, detect divergence, and compare or play back logs.
 - [Steering programs](https://testflows.com/docs/machine/steering-programs.md): Hold and release threads, focus on programs, write plan files, inject interrupts and change machine time.
