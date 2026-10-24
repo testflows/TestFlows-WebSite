@@ -12,11 +12,6 @@ permalink: machine/download/index.html
 <h1>Download client</h1>
 <p>The Machine client is a self-contained program called <code>machine</code>.</p>
 <p class="download-required">You need an account to download the client, and must accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a> and the <a href="/machine/legal/client-eula/">Client EULA</a> that licenses it. The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
-<p>For automated installations, use your <a href="/docs/machine/#machine-account-api-keys">API key</a>:
-```bash
-curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash
-```
-</p>
 </header>
 <p>Pick your system.</p>
 <ul class="nav nav-tabs platform-tabs" role="tablist" aria-label="Your system">
@@ -42,6 +37,8 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
 <p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
+
+<!-- include: _download-automated.md -->
 
 <!-- include: _download-next.md -->
 
@@ -129,6 +126,8 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>It verifies the download and puts the client in <code>~/.local/bin</code>, with <code>machine-env</code> beside it. It never asks for root. Run the same command again to update.</p>
 <p>The client needs the OpenSSH client, <code>ssh</code>, which most Linux systems have. If yours does not, run <code>sudo apt install openssh-client</code> on Debian and Ubuntu.</p>
 </div>
+
+<!-- include: _download-automated.md -->
 
 <!-- include: _download-next.md -->
 
@@ -229,6 +228,8 @@ curl https://testflows.com/machine/install -fsS | bash
 <p>Macs with an Intel processor are not supported.</p>
 <p><strong>macOS already has a <code>machine</code> command.</strong> The installer keeps this client off your PATH so it does not hide that one. Use <code>machine-env</code>, below, to run this one.</p>
 </div>
+
+<!-- include: _download-automated.md -->
 
 <!-- include: _download-next.md -->
 
@@ -332,6 +333,8 @@ wsl --install
 
 <p>Open your Linux distribution and follow the steps for <a href="#linux-x86_64">Linux (x64)</a>, or <a href="#linux-arm64">Linux (ARM64)</a> on Windows on ARM. Not sure which? <code>uname -m</code> prints <code>x86_64</code> or <code>aarch64</code>.</p>
 </div>
+
+<!-- include: _download-automated.md -->
 
 <!-- include: _download-next.md -->
 </div>

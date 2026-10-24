@@ -429,7 +429,13 @@ def check_twins(root_llms, blog_dir):
     # The download twin keeps to the page: every code block in it is on the page.
     page, twin = Path("source/machine/download.md"), md / "machine/download.md"
     if page.exists() and twin.exists():
-        on_page = set(re.findall(r"```[^\n]*\n(.*?)```", page.read_text(), re.S))
+        # The page includes some of its text from files of the same folder (<!-- include: x.md -->), so
+        # the blocks of those files are on the page too.
+        page_text = page.read_text()
+        for name in re.findall(r"^<!--\s*include:\s*([\w./-]+\.md)\s*-->", page_text, re.M):
+            if (page.parent / name).exists():
+                page_text += "\n" + (page.parent / name).read_text()
+        on_page = set(re.findall(r"```[^\n]*\n(.*?)```", page_text, re.S))
         for block in re.findall(r"```[^\n]*\n(.*?)```", twin.read_text(), re.S):
             if block not in on_page:
                 problems.append(f"source/_md/machine/download.md: the code block starting '{block.strip().splitlines()[0][:50]}' is not on the download page")
