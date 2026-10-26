@@ -5,7 +5,7 @@ import {
   resumeBillingOrder,
 } from "../api.js";
 import { setStatus, showSpinner } from "../ui.js";
-import { compactDatetime, eur, titleCase } from "./format.js";
+import { compactDatetime, credits, titleCase } from "./format.js";
 import { runConfirm } from "./modal.js";
 import { makePager } from "./pager.js";
 import { paintEmpty } from "./table.js";
@@ -109,7 +109,7 @@ export function renderOrders(panel, ctx) {
         created ? compactDatetime(String(created)) : "—",
         row.kind ? titleCase(String(row.kind)) : "—",
         status ? titleCase(status) : "—",
-        eur(Number(row.credit_micros) || 0, 3),
+        credits(Number(row.credit_micros) || 0, 3),
       ];
       for (const text of cells) {
         const td = document.createElement("td");

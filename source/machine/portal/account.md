@@ -37,7 +37,7 @@ noindex: true
             <nav class="portal-dash-nav">
                 <a href="#overview" data-portal-nav="overview"><span class="fas fa-fw fa-house" aria-hidden="true"></span><span>Overview</span></a>
                 <a href="#sessions" data-portal-nav="sessions"><span class="fas fa-fw fa-server" aria-hidden="true"></span><span>Sessions</span></a>
-                <a href="#credits" data-portal-nav="credits"><span class="fas fa-fw fa-coins" aria-hidden="true"></span><span>Credits</span></a>
+                <a href="#credits" data-portal-nav="credits"><span class="fas fa-fw fa-ticket" aria-hidden="true"></span><span>Credits</span></a>
                 <a href="#activity" data-portal-nav="activity"><span class="fas fa-fw fa-clock-rotate-left" aria-hidden="true"></span><span>Activity</span></a>
                 <a href="#buy" data-portal-nav="buy"><span class="fas fa-fw fa-cart-shopping" aria-hidden="true"></span><span>Buy</span></a>
                 <a href="#billing" data-portal-nav="billing"><span class="fas fa-fw fa-credit-card" aria-hidden="true"></span><span>Billing</span></a>

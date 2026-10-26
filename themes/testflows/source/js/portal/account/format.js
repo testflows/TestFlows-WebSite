@@ -24,16 +24,18 @@ export function humanSize(nbytes) {
  * @returns {string}
  */
 export function eur(micros, dp = 2) {
-  const n = Number(micros) || 0;
-  const sign = n < 0 ? "-" : "";
-  const v = Math.abs(n);
-  if (v % 1_000_000 === 0) {
-    return `${sign}€${v / 1_000_000}`;
-  }
-  let s = (v / 1_000_000).toFixed(dp).replace(/0+$/, "");
-  const [intpart, frac = ""] = s.split(".");
-  const f = frac.length < 2 ? frac.padEnd(2, "0") : frac;
-  return `${sign}€${intpart}.${f}`;
+  return amount(micros, dp, "€");
+}
+
+/** Credits, and every amount in them: `⊜0.10`. Not a currency sign, since a
+ * credit has no cash value; the CLI's glyphs.ICON_CREDITS. Money, `eur`, is
+ * only what is paid: a plan's price, what credits cost, an invoice.
+ * @param {number} micros
+ * @param {number} [dp]
+ * @returns {string}
+ */
+export function credits(micros, dp = 2) {
+  return amount(micros, dp, CREDITS);
 }
 
 /**
@@ -41,11 +43,34 @@ export function eur(micros, dp = 2) {
  * @param {number} [dp]
  * @returns {string}
  */
-export function eurSigned(micros, dp = 2) {
+export function creditsSigned(micros, dp = 2) {
   const n = Number(micros) || 0;
-  if (n < 0) return `-${eur(-n, dp)}`;
-  if (n > 0) return `+${eur(n, dp)}`;
-  return eur(0, dp);
+  if (n < 0) return `-${credits(-n, dp)}`;
+  if (n > 0) return `+${credits(n, dp)}`;
+  return credits(0, dp);
+}
+
+/** The symbol of credits. */
+export const CREDITS = "⊜";
+
+/** `symbol` and the amount: whole units as `5`, otherwise up to `dp`
+ * decimals, trailing zeros trimmed but never below 2.
+ * @param {number} micros
+ * @param {number} dp
+ * @param {string} symbol
+ * @returns {string}
+ */
+function amount(micros, dp, symbol) {
+  const n = Number(micros) || 0;
+  const sign = n < 0 ? "-" : "";
+  const v = Math.abs(n);
+  if (v % 1_000_000 === 0) {
+    return `${sign}${symbol}${v / 1_000_000}`;
+  }
+  let s = (v / 1_000_000).toFixed(dp).replace(/0+$/, "");
+  const [intpart, frac = ""] = s.split(".");
+  const f = frac.length < 2 ? frac.padEnd(2, "0") : frac;
+  return `${sign}${symbol}${intpart}.${f}`;
 }
 
 /**

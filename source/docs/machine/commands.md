@@ -492,7 +492,7 @@ usage: machine account buy [-h] {usage,plan} ...
 Examples:
 
 ```
-machine account buy usage 10      buy 10 EUR of usage credits
+machine account buy usage 10      buy 10 usage credits for €10
 machine account buy plan starter  subscribe to starter
 ```
 
@@ -506,15 +506,16 @@ See also:
 
 Buy usage credits.
 
-The command opens checkout for the named pack size.
+The command opens checkout for the pack of the named number of credits. A credit
+costs one euro. A credit has no cash value.
 
 ```
-usage: machine account buy usage [-h] [-y] eur
+usage: machine account buy usage [-h] [-y] credits
 ```
 
 | Argument | Does |
 |---|---|
-| `eur` | Pack size in euros, as account products lists it |
+| `credits` | Credits to buy, a pack account products lists. A credit costs one euro |
 
 | Option | Does |
 |---|---|
@@ -523,7 +524,7 @@ usage: machine account buy usage [-h] [-y] eur
 Examples:
 
 ```
-machine account buy usage 10     buy 10 EUR of usage credits
+machine account buy usage 10     buy 10 usage credits for €10
 machine account buy usage 10 -y  without asking
 ```
 

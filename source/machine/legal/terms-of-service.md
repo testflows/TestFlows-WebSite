@@ -8,8 +8,8 @@ permalink: machine/legal/terms-of-service/index.html
 
 # Terms of Service
 
-<p class="legal-updated">Last updated: 18 October 2026</p>
-<p class="legal-updated">Agreement version: 2026-10-18.2</p>
+<p class="legal-updated">Last updated: 26 October 2026</p>
+<p class="legal-updated">Agreement version: 2026-10-26.1</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -105,7 +105,7 @@ your account email where practicable.
 
 Prepaid Usage Credits and plan Included Credits are governed by the
 [Usage Credit Terms](/machine/legal/usage-credit/). Credits are a service allowance only,
-not cash or currency.
+not cash or currency, and have no monetary value.
 
 Paid subscriptions renew automatically at the then-current price until you
 cancel. **IF YOU SUBSCRIBE, YOUR SUBSCRIPTION WILL AUTOMATICALLY RENEW UNTIL
@@ -125,7 +125,7 @@ taxes on your purchases except taxes on Katteli’s net income.
 Purchases are final except where required by law or authorized by Katteli or
 the merchant of record. Partial refunds of Usage Credit packs are not
 available. After a refund, chargeback, or reversal, we may remove associated
-Credits and suspend service if the balance is insufficient. We may suspend or
+Credits and suspend service if the remaining Credits are insufficient. We may suspend or
 limit the Services for non-payment, failed payment, or chargeback. Free
 allowances, if any, are discretionary and may change or end.
 

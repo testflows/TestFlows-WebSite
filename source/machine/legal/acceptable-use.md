@@ -9,7 +9,7 @@ permalink: machine/legal/acceptable-use/index.html
 # Acceptable Use Policy
 
 <p class="legal-updated">Last updated: 18 October 2026</p>
-<p class="legal-updated">Agreement version: 2026-10-18.2</p>
+<p class="legal-updated">Agreement version: 2026-10-26.1</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 

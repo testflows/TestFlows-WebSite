@@ -1,4 +1,4 @@
-import { compactDatetime, eur } from "./format.js";
+import { compactDatetime, credits } from "./format.js";
 
 /**
  * @param {HTMLElement} panel
@@ -8,9 +8,9 @@ export function renderCredits(panel, account) {
   const resetsAt = account.credit_resets_at
     ? String(account.credit_resets_at)
     : "";
-  const included = eur(Number(account.plan_balance_micros) || 0, 3);
-  const usage = eur(Number(account.usage_credit_balance_micros) || 0, 3);
-  const maxUsage = eur(Number(account.max_usage_credit_micros) || 0, 3);
+  const included = credits(Number(account.plan_balance_micros) || 0, 3);
+  const usage = credits(Number(account.usage_credit_balance_micros) || 0, 3);
+  const maxUsage = credits(Number(account.max_usage_credit_micros) || 0, 3);
 
   panel.replaceChildren();
   const head = document.createElement("header");
@@ -18,7 +18,7 @@ export function renderCredits(panel, account) {
   const h2 = document.createElement("h2");
   h2.textContent = "Credits";
   const p = document.createElement("p");
-  p.textContent = "Included plan balance and purchased usage credits.";
+  p.textContent = "Included and usage credits.";
   head.append(h2, p);
   panel.append(head);
 

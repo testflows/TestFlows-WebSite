@@ -4,8 +4,8 @@ import {
   compactDatetime,
   duration,
   elapsed,
-  eur,
-  eurSigned,
+  credits,
+  creditsSigned,
   titleCase,
 } from "./format.js";
 import { enhanceSelects } from "./select.js";
@@ -47,7 +47,7 @@ const ACCOUNT_LABEL = {
  */
 function rate(units, unitHourMicros) {
   if (units == null || unitHourMicros == null) return "—";
-  return `${eur(Number(units) * Number(unitHourMicros), 3)}/h`;
+  return `${credits(Number(units) * Number(unitHourMicros), 3)}/h`;
 }
 
 /**
@@ -79,7 +79,7 @@ function rowDuration(type, billedSeconds, paidFrom, paidUntil) {
  */
 function cost(type, billedMicros) {
   if (type === "coverage_refund" && billedMicros != null && billedMicros !== "") {
-    return eur(Number(billedMicros) || 0, 3);
+    return credits(Number(billedMicros) || 0, 3);
   }
   return "—";
 }
@@ -244,8 +244,8 @@ export function renderActivity(panel, ctx) {
           (type ? titleCase(type.replace(/_/g, " ")) : "—"),
         ACCOUNT_LABEL[String(row.account)] ||
           (row.account ? titleCase(String(row.account).replace(/_/g, " ")) : "—"),
-        eurSigned(Number(row.amount_micros) || 0, 3),
-        eur(Number(row.balance_after_micros) || 0, 3),
+        creditsSigned(Number(row.amount_micros) || 0, 3),
+        credits(Number(row.balance_after_micros) || 0, 3),
         rate(row.units, row.unit_hour_micros),
         rowDuration(type, row.billed_seconds, row.paid_from, row.paid_until),
         cost(type, row.billed_micros),

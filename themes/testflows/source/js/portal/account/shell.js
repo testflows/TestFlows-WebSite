@@ -43,11 +43,11 @@ const SECTION_CHROME = {
   },
   sessions: {
     title: "Sessions",
-    lead: "Active sessions and estimated cost.",
+    lead: "Active sessions and the credits they use.",
   },
   credits: {
     title: "Credits",
-    lead: "Included plan balance and purchased usage credits.",
+    lead: "Included and usage credits.",
   },
   activity: {
     title: "Activity",
@@ -390,7 +390,7 @@ function showPurchaseReturn() {
   if (purchase === "success") {
     setStatus(
       statusEl(),
-      "Payment received — your balance updates in a moment.",
+      "Payment received. Your credits arrive in a moment.",
       "ok"
     );
   } else if (purchase === "cancelled") {
