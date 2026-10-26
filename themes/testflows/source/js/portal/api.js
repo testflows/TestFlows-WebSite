@@ -22,6 +22,9 @@ const MAX_POW_ROUNDS = 5;
 /** Identifies the browser portal: selects the HttpOnly-cookie credential path and
  * carries the CSRF defense (sent on every request). */
 const CLIENT = "browser";
+/** The API contract this portal reads (cloud/api/contract.py): the API
+ * answers each request in its shape, and refuses one it no longer answers. */
+const CONTRACT = "1";
 
 /**
  * API base URL.
@@ -102,7 +105,7 @@ async function rawRequest(method, path, body, headers = {}) {
   const opts = {
     method,
     credentials: "include",
-    headers: { "X-Tf-Client": CLIENT },
+    headers: { "X-Tf-Client": CLIENT, "X-Tf-Client-Contract": CONTRACT },
   };
   for (const [key, value] of Object.entries(headers)) {
     if (value !== undefined && value !== null) {
