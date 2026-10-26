@@ -1,7 +1,7 @@
-import { ApiError, getSessions } from "../api.js?v=d79b20080061";
-import { setStatus, showSpinner } from "../ui.js?v=d79b20080061";
-import { elapsed, eur, secondsBetween, titleCase } from "./format.js?v=d79b20080061";
-import { paintEmpty } from "./table.js?v=d79b20080061";
+import { ApiError, getSessions } from "../api.js?v=de0520713518";
+import { setStatus, showSpinner } from "../ui.js?v=de0520713518";
+import { CREDITS, credits, elapsed, secondsBetween, titleCase } from "./format.js?v=de0520713518";
+import { paintEmpty } from "./table.js?v=de0520713518";
 
 /** @type {Record<string, string>} */
 const STATE_TONE = {
@@ -25,7 +25,7 @@ function costSoFar(info) {
   const secs = secondsBetween(started, info.stopped_at ? String(info.stopped_at) : "");
   if (secs == null) return { label: "—", micros: null };
   const accrued = Math.round(Number(micros) * secs / 3600);
-  return { label: eur(accrued, 3), micros: accrued };
+  return { label: credits(accrued, 3), micros: accrued };
 }
 
 /**
@@ -52,7 +52,7 @@ export function renderSessions(panel, ctx) {
   const h2 = document.createElement("h2");
   h2.textContent = "Sessions";
   const lead = document.createElement("p");
-  lead.textContent = "Active sessions and estimated cost.";
+  lead.textContent = "Active sessions and the credits they use.";
   head.append(h2, lead);
   panel.append(head);
 
@@ -85,7 +85,7 @@ export function renderSessions(panel, ctx) {
           <th>State</th>
           <th class="portal-num">CPUs</th>
           <th>Class</th>
-          <th class="portal-num">€/hour</th>
+          <th class="portal-num">${CREDITS}/hour</th>
           <th>Duration</th>
           <th class="portal-num">Cost</th>
         </tr>
@@ -123,7 +123,7 @@ export function renderSessions(panel, ctx) {
       priceTd.className = "portal-num";
       priceTd.textContent =
         row.price_hour_micros != null && row.price_hour_micros !== ""
-          ? eur(Number(row.price_hour_micros), 3)
+          ? credits(Number(row.price_hour_micros), 3)
           : "—";
       tr.append(priceTd);
 
@@ -158,7 +158,7 @@ export function renderSessions(panel, ctx) {
     labelTd.textContent = "Total";
     const totalTd = document.createElement("td");
     totalTd.className = "portal-num";
-    totalTd.textContent = hasCost ? eur(totalMicros, 3) : "—";
+    totalTd.textContent = hasCost ? credits(totalMicros, 3) : "—";
     footTr.append(labelTd, totalTd);
     foot.append(footTr);
 

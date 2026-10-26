@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793036703119" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793036703119" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793033161349" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793036703119" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2363,7 +2363,7 @@ synced or not, and is recorded in the run.</p>
 </tr>
 <tr>
 <td><a href="#machine-account-buy-usage"><code>machine account buy usage</code></a></td>
-<td>opens checkout for a pack of usage credits, sized in euros as listed by <code>products</code></td>
+<td>opens checkout for a pack of usage credits, as listed by <code>products</code></td>
 </tr>
 <tr>
 <td><a href="#machine-account-buy-plan"><code>machine account buy plan</code></a></td>
@@ -2412,8 +2412,10 @@ synced or not, and is recorded in the run.</p>
 </tbody></table>
 <p><code>payment</code>, <code>portal</code> and <code>cancel</code> open a browser. Add <code>--link</code> to print the
 address instead.</p>
-<p>How credits are granted and used is in the
-<a href="/machine/legal/usage-credit/">usage credit terms</a>.</p>
+<p>Sessions use credits, shown as <code>⊜</code>. A standard session uses ⊜0.10 an hour
+per unit. Your plan includes credits every month, and you buy usage credits
+at €1 a credit. A credit has no cash value. How credits are granted and used
+is in the <a href="/machine/legal/usage-credit/">usage credit terms</a>.</p>
 <p>Runs, logs and disks take up space in your account. <a href="#machine-storage-show"><code>machine storage show</code></a> says
 how much, and <a href="#machine-storage-prune"><code>machine storage prune</code></a> frees the space that deleted runs and
 disks left behind. <a href="#machine-storage-prune"><code>machine storage prune</code></a> <code>--status</code> shows the current or last
@@ -2943,7 +2945,7 @@ close the account.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account buy [-h] &#123;usage,plan&#125; ...</span><br></pre></td></tr></table></figure>
 
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account buy usage 10      buy 10 EUR of usage credits</span><br><span class="line">machine account buy plan starter  subscribe to starter</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account buy usage 10      buy 10 usage credits for €10</span><br><span class="line">machine account buy plan starter  subscribe to starter</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -2952,8 +2954,9 @@ close the account.</p>
 <li><a href="#machine-account-products"><code>machine account products</code></a></li>
 </ul>
 <h3 id="machine-account-buy-usage"><a href="#machine-account-buy-usage" class="headerlink" title="machine account buy usage"></a>machine account buy usage</h3><p>Buy usage credits.</p>
-<p>The command opens checkout for the named pack size.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account buy usage [-h] [-y] eur</span><br></pre></td></tr></table></figure>
+<p>The command opens checkout for the pack of the named number of credits. A credit
+costs one euro. A credit has no cash value.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account buy usage [-h] [-y] credits</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -2963,8 +2966,8 @@ close the account.</p>
 </tr>
 </thead>
 <tbody><tr>
-<td><code>eur</code></td>
-<td>Pack size in euros, as account products lists it</td>
+<td><code>credits</code></td>
+<td>Credits to buy, a pack account products lists. A credit costs one euro</td>
 </tr>
 </tbody></table>
 <table>
@@ -2980,7 +2983,7 @@ close the account.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account buy usage 10     buy 10 EUR of usage credits</span><br><span class="line">machine account buy usage 10 -y  without asking</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account buy usage 10     buy 10 usage credits for €10</span><br><span class="line">machine account buy usage 10 -y  without asking</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -11111,9 +11114,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793033161349"></script>
-<script src="/js/machine-hero-type.js?v=1793033161349"></script>
-<script src="/js/download-platforms.js?v=1793033161349"></script>
+<script src="/js/index-code-type.js?v=1793036703120"></script>
+<script src="/js/machine-hero-type.js?v=1793036703120"></script>
+<script src="/js/download-platforms.js?v=1793036703120"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

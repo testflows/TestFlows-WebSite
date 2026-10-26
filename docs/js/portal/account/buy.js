@@ -7,10 +7,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=d79b20080061";
-import { setStatus, showSpinner } from "../ui.js?v=d79b20080061";
-import { eur, titleCase } from "./format.js?v=d79b20080061";
-import { tierRank } from "./plans.js?v=d79b20080061";
+} from "../api.js?v=de0520713518";
+import { setStatus, showSpinner } from "../ui.js?v=de0520713518";
+import { credits, eur, titleCase } from "./format.js?v=de0520713518";
+import { tierRank } from "./plans.js?v=de0520713518";
 
 /**
  * @param {string|undefined} url
@@ -153,7 +153,7 @@ export function renderBuy(panel, account, ctx) {
             : "";
         const meta = document.createElement("p");
         meta.className = "portal-muted";
-        meta.textContent = `${eur(micros, 3)} included credits / period`;
+        meta.textContent = `${credits(micros, 3)} included / period`;
         if (amountMicros > 0) {
           card.append(titleRow, price, meta);
         } else {
@@ -209,12 +209,14 @@ export function renderBuy(panel, account, ctx) {
         const card = document.createElement("article");
         card.className = "portal-product";
         const title = document.createElement("h4");
-        title.textContent = eur(micros, 3);
+        title.textContent = credits(micros, 3);
         const meta = document.createElement("p");
         meta.className = "portal-muted";
+        // A credit is bought at one euro: the pack's credits are its price.
+        meta.textContent = eur(micros, 2);
         if (unitHour > 0) {
           const hours = Math.floor(micros / unitHour);
-          meta.textContent = hours > 0 ? `≈ ${hours} standard unit-hours` : "";
+          if (hours > 0) meta.textContent += ` · ≈ ${hours} standard unit-hours`;
         }
         const btn = document.createElement("button");
         btn.type = "button";

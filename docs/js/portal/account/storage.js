@@ -1,6 +1,6 @@
-import { ApiError, getAccount, provisionStorage } from "../api.js?v=d79b20080061";
-import { setStatus, showSpinner } from "../ui.js?v=d79b20080061";
-import { fillPct, humanSize, renderFillBar } from "./format.js?v=d79b20080061";
+import { ApiError, getAccount, provisionStorage } from "../api.js?v=de0520713518";
+import { setStatus, showSpinner } from "../ui.js?v=de0520713518";
+import { fillPct, humanSize, renderFillBar } from "./format.js?v=de0520713518";
 
 const POLL_MS = 2500;
 const MAX_POLLS = 40;

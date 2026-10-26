@@ -3,12 +3,12 @@ import {
   cancelBillingOrder,
   getBillingOrders,
   resumeBillingOrder,
-} from "../api.js?v=d79b20080061";
-import { setStatus, showSpinner } from "../ui.js?v=d79b20080061";
-import { compactDatetime, eur, titleCase } from "./format.js?v=d79b20080061";
-import { runConfirm } from "./modal.js?v=d79b20080061";
-import { makePager } from "./pager.js?v=d79b20080061";
-import { paintEmpty } from "./table.js?v=d79b20080061";
+} from "../api.js?v=de0520713518";
+import { setStatus, showSpinner } from "../ui.js?v=de0520713518";
+import { compactDatetime, credits, titleCase } from "./format.js?v=de0520713518";
+import { runConfirm } from "./modal.js?v=de0520713518";
+import { makePager } from "./pager.js?v=de0520713518";
+import { paintEmpty } from "./table.js?v=de0520713518";
 
 /**
  * @param {HTMLElement} panel
@@ -109,7 +109,7 @@ export function renderOrders(panel, ctx) {
         created ? compactDatetime(String(created)) : "—",
         row.kind ? titleCase(String(row.kind)) : "—",
         status ? titleCase(status) : "—",
-        eur(Number(row.credit_micros) || 0, 3),
+        credits(Number(row.credit_micros) || 0, 3),
       ];
       for (const text of cells) {
         const td = document.createElement("td");

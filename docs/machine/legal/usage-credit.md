@@ -2,7 +2,7 @@
 
 # Usage Credit Terms
 
-<p class="legal-updated">Last updated: 18 October 2026</p>
+<p class="legal-updated">Last updated: 26 October 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -12,8 +12,8 @@ have the meaning in the Terms of Service.
 
 ## 1. Credits
 
-**Usage Credits.** After a payment is confirmed, Katteli adds the purchased
-amount of usage credit to your account.
+**Usage Credits.** After a payment is confirmed, Katteli adds the number of
+Usage Credits stated for the purchased pack to your account.
 
 **Included Credits.** Katteli may add credits through a subscription plan,
 signup offer, or promotion.
@@ -22,14 +22,14 @@ Usage Credits and Included Credits are together “**Credits**.”
 
 ## 2. Conditions
 
-**Service use.** Credits pay only for eligible Services at the prices then in
-effect. Included Credits are deducted before Usage Credits.
+**Service use.** Credits are used only for eligible Services, at the rates in
+Credits then in effect. Included Credits are deducted before Usage Credits.
 
 **Final purchases.** Credit purchases are final unless a refund is required by
 law or authorized by Katteli or its merchant of record. Partial refunds of
 Usage Credit packs are not available. After a refund, reversal, or chargeback,
 Katteli may remove the Credits for that purchase and may suspend an account
-whose remaining balance is insufficient.
+whose remaining Credits are insufficient.
 
 **Duration.** Usage Credits remain valid while the account is open. If you close
 your account, unused Usage Credits are retained for 90 days and then forfeited.
@@ -44,12 +44,17 @@ that date.
 **Service allowance only.** A Credit is only a right to consume eligible
 Services. It cannot be exchanged for cash and is not currency.
 
+**No monetary value.** Credits have no monetary value. The price paid for a
+pack is the price of the allowance, not a deposit or a balance held for you.
+Credits are not electronic money or a stored-value product, earn no interest,
+and are not your property.
+
 **Account restricted.** Credits cannot be resold, assigned, moved to another
 account, or used by anyone other than the account holder.
 
 **Automatic purchase.** If we offer automatic purchases, enabling the feature
 authorizes the merchant of record to charge your selected payment method,
-including applicable taxes, whenever the chosen balance threshold is reached,
+including applicable taxes, whenever the chosen Credit threshold is reached,
 until you disable the feature.
 
 **Merchant of record.** Purchases through Stripe Checkout with Managed Payments

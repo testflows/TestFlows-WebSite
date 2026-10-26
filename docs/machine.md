@@ -17,7 +17,7 @@ Make every run repeatable for testing and more.
 ## Rules for agents
 
 - A person needs a Machine account, and you cannot sign up for them. They create one themselves at https://testflows.com/machine/portal/signup/, and signing up is free.
-- Ask before you spend money or change the account: creating sessions, buying credits, creating or deleting API keys.
+- Ask before you use credits, pay, or change the account: creating sessions uses credits, buying credits is a payment, and creating or deleting API keys changes the account.
 - Never print an API key or commit one.
 
 ## Install and sign in

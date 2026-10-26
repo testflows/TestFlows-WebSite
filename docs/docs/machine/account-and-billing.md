@@ -11,7 +11,7 @@ Most of what the account page on the website does, the client does too.
 | [`machine account credits`](commands.md#machine-account-credits) | shows your usage credits |
 | [`machine account activity`](commands.md#machine-account-activity) | lists what they were spent on |
 | [`machine account products list`](commands.md#machine-account-products-list) | lists what is for sale |
-| [`machine account buy usage`](commands.md#machine-account-buy-usage) | opens checkout for a pack of usage credits, sized in euros as listed by `products` |
+| [`machine account buy usage`](commands.md#machine-account-buy-usage) | opens checkout for a pack of usage credits, as listed by `products` |
 | [`machine account buy plan`](commands.md#machine-account-buy-plan) | subscribes to a plan, or switches tier if you already have a paid one |
 | [`machine account upgrade`](commands.md#machine-account-upgrade), [`machine account downgrade`](commands.md#machine-account-downgrade) | moves you to a higher or lower plan |
 | [`machine account cancel`](commands.md#machine-account-cancel) | cancels the subscription: the plan stays until it renews, then drops to Free, and your usage credits stay |
@@ -27,8 +27,10 @@ Most of what the account page on the website does, the client does too.
 `payment`, `portal` and `cancel` open a browser. Add `--link` to print the
 address instead.
 
-How credits are granted and used is in the
-[usage credit terms](/machine/legal/usage-credit/).
+Sessions use credits, shown as `⊜`. A standard session uses ⊜0.10 an hour
+per unit. Your plan includes credits every month, and you buy usage credits
+at €1 a credit. A credit has no cash value. How credits are granted and used
+is in the [usage credit terms](/machine/legal/usage-credit/).
 
 Runs, logs and disks take up space in your account. [`machine storage show`](commands.md#machine-storage-show) says
 how much, and [`machine storage prune`](commands.md#machine-storage-prune) frees the space that deleted runs and

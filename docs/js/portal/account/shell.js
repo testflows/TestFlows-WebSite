@@ -1,22 +1,22 @@
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=d79b20080061";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=d79b20080061";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=d79b20080061";
-import { renderOverview } from "./overview.js?v=d79b20080061";
-import { renderSessions } from "./sessions.js?v=d79b20080061";
-import { renderCredits } from "./credits.js?v=d79b20080061";
-import { renderActivity } from "./activity.js?v=d79b20080061";
-import { renderBuy } from "./buy.js?v=d79b20080061";
-import { renderBilling } from "./billing.js?v=d79b20080061";
-import { renderInvoices } from "./invoices.js?v=d79b20080061";
-import { renderOrders } from "./orders.js?v=d79b20080061";
-import { renderKeys } from "./keys.js?v=d79b20080061";
-import { renderDevices } from "./devices.js?v=d79b20080061";
-import { renderStorage } from "./storage.js?v=d79b20080061";
-import { renderSettings } from "./settings.js?v=d79b20080061";
-import { enhanceSelects } from "./select.js?v=d79b20080061";
-import { todayDate } from "./format.js?v=d79b20080061";
+import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=de0520713518";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=de0520713518";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=de0520713518";
+import { renderOverview } from "./overview.js?v=de0520713518";
+import { renderSessions } from "./sessions.js?v=de0520713518";
+import { renderCredits } from "./credits.js?v=de0520713518";
+import { renderActivity } from "./activity.js?v=de0520713518";
+import { renderBuy } from "./buy.js?v=de0520713518";
+import { renderBilling } from "./billing.js?v=de0520713518";
+import { renderInvoices } from "./invoices.js?v=de0520713518";
+import { renderOrders } from "./orders.js?v=de0520713518";
+import { renderKeys } from "./keys.js?v=de0520713518";
+import { renderDevices } from "./devices.js?v=de0520713518";
+import { renderStorage } from "./storage.js?v=de0520713518";
+import { renderSettings } from "./settings.js?v=de0520713518";
+import { enhanceSelects } from "./select.js?v=de0520713518";
+import { todayDate } from "./format.js?v=de0520713518";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -43,11 +43,11 @@ const SECTION_CHROME = {
   },
   sessions: {
     title: "Sessions",
-    lead: "Active sessions and estimated cost.",
+    lead: "Active sessions and the credits they use.",
   },
   credits: {
     title: "Credits",
-    lead: "Included plan balance and purchased usage credits.",
+    lead: "Included and usage credits.",
   },
   activity: {
     title: "Activity",
@@ -390,7 +390,7 @@ function showPurchaseReturn() {
   if (purchase === "success") {
     setStatus(
       statusEl(),
-      "Payment received — your balance updates in a moment.",
+      "Payment received. Your credits arrive in a moment.",
       "ok"
     );
   } else if (purchase === "cancelled") {
