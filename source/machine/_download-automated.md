@@ -6,9 +6,10 @@
 curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash
 ```
 
-<p>When <code>TESTFLOWS_MACHINE_API_KEY</code> is already exported, as a CI secret usually is, the installer reads it from the environment:</p>
+<p>The installer also reads the key from the environment. It must be exported: a variable set without <code>export</code> is not passed to the installer. A CI secret is exported already.</p>
 
 ```bash
+export TESTFLOWS_MACHINE_API_KEY=<key>
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
