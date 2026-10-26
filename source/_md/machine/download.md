@@ -85,6 +85,12 @@ In CI, where there is no terminal, install with an API key of an account that ha
 curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash
 ```
 
+When `TESTFLOWS_MACHINE_API_KEY` is already exported, as a CI secret usually is, the installer reads it from the environment:
+
+```bash
+curl https://testflows.com/machine/install -fsS | bash
+```
+
 ## Then
 
 The installer signs out when it is done. Sign the client in with `machine login`. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
