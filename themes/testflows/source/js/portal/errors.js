@@ -48,8 +48,6 @@ const ERROR_COPY = {
   "invalid close phase": "Invalid close step.",
   "phase must be 'start' or 'confirm'": "Invalid close step.",
   "only login tokens can be refreshed": "Sign in again.",
-  "storage not provisioned — run `machine account provision` first":
-    "Storage isn't set up yet. Provision it first.",
   "storage quota exceeded — delete an image to free space":
     "Storage full. Delete an image to free space.",
 };

@@ -87,7 +87,7 @@ curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key
 
 ## Then
 
-The installer signs out when it is done. Sign the client in with `machine login`. Then run `machine account provision` to set up account storage. The first session cannot be created until that is done. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
+The installer signs out when it is done. Sign the client in with `machine login`. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
 
 ## Check the download
 

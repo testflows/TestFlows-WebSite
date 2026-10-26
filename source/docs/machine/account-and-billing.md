@@ -7,7 +7,7 @@ Most of what the account page on the website does, the client does too.
 | Command | Does |
 |---|---|
 | [`machine account show`](commands.md#machine-account-show) | shows your account |
-| [`machine account provision`](commands.md#machine-account-provision) | sets up account storage, which the first session needs |
+| [`machine account provision`](commands.md#machine-account-provision) | sets up account storage ahead of time; the first session or disk build does it otherwise |
 | [`machine account credits`](commands.md#machine-account-credits) | shows your usage credits |
 | [`machine account activity`](commands.md#machine-account-activity) | lists what they were spent on |
 | [`machine account products list`](commands.md#machine-account-products-list) | lists what is for sale |

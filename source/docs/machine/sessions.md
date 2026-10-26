@@ -3,7 +3,6 @@
 # Sessions
 
 Runs live in a session, and you create one with [`machine sessions create`](commands.md#machine-sessions-create).
-Set up account storage first with [`machine account provision`](commands.md#machine-account-provision). The first session cannot be created until that is done.
 Pick its size when you create it.
 
 ```bash
@@ -14,6 +13,9 @@ machine sessions create ci-1 --cpus 4 --mem 8G
 disk space. `--class` picks the hardware class, and the default comes from your
 plan. The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
 is. Add `--no-wait` if you would rather it didn't.
+
+Your first session also sets up your account's storage, so it takes longer to
+create. To set the storage up before that, run [`machine account provision`](commands.md#machine-account-provision).
 
 A machine takes its memory plus 128MB of the session's memory, and 256MB of a
 session is not available to machines. A machine with the default 256MB needs

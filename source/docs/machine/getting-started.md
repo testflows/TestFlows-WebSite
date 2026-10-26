@@ -110,12 +110,6 @@ Machine emails you a one-time code and asks for it. You stay signed in until
 you sign out with [`machine logout`](commands.md#machine-logout). [`machine account show`](commands.md#machine-account-show) tells you who you
 are signed in as.
 
-Then set up account storage with [`machine account provision`](commands.md#machine-account-provision). The first session cannot be created until this is done.
-
-```bash
-machine account provision
-```
-
 For scripts and CI there is no need to sign in at all. Create an API key and
 put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
 
