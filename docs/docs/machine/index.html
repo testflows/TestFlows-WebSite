@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793044243356" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793044243356" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793042850921" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793044243356" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3399,9 +3399,11 @@ opening a browser.</p>
 <li><a href="#machine-account-show"><code>machine account show</code></a></li>
 </ul>
 <h3 id="machine-account-activity"><a href="#machine-account-activity" class="headerlink" title="machine account activity"></a>machine account activity</h3><p>Show usage credit activity. See <a href="#Account-and-billing">Account and billing</a>.</p>
-<p>The listing shows the newest 25. Use <code>--limit</code> for a different page size. Naming
-a session focuses the listing on that session.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account activity [-h] [--since date|age] [--until date|age] [--period date]</span><br><span class="line">                                [--type &#123;included,reserved,settled,expired,expired-removed,credit-purchase&#125;]</span><br><span class="line">                                [--credit-type &#123;included,usage&#125;] [--limit n] [--sort field]</span><br><span class="line">                                [--reverse]</span><br><span class="line">                                [session]</span><br></pre></td></tr></table></figure>
+<p>A session is charged an hour ahead, as Charged rows. When it stops, a Settled
+row gives back the unused part of its last hour. Naming a session adds what it
+used over all of its rows. The rows add up to it.</p>
+<p>The listing shows the newest 25. Use <code>--limit</code> for a different page size.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">usage: machine account activity [-h] [--since date|age] [--until date|age] [--period date]</span><br><span class="line">                                [--type &#123;included,charged,reserved,settled,expired,expired-removed,credit-purchase&#125;]</span><br><span class="line">                                [--credit-type &#123;included,usage&#125;] [--limit n] [--sort field]</span><br><span class="line">                                [--reverse]</span><br><span class="line">                                [session]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -3435,7 +3437,7 @@ a session focuses the listing on that session.</p>
 <td>Show credit activity in the period containing DATE</td>
 </tr>
 <tr>
-<td><code>--type &#123;included,reserved,settled,expired,expired-removed,credit-purchase&#125;</code></td>
+<td><code>--type &#123;included,charged,reserved,settled,expired,expired-removed,credit-purchase&#125;</code></td>
 <td>Filter by activity type</td>
 </tr>
 <tr>
@@ -3456,7 +3458,7 @@ a session focuses the listing on that session.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account activity             charges and credits</span><br><span class="line">machine account activity --since 7d  the last 7 days</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine account activity             charges and credits</span><br><span class="line">machine account activity idle-check  one session&#x27;s bill</span><br><span class="line">machine account activity --since 7d  the last 7 days</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -11118,9 +11120,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793042850922"></script>
-<script src="/js/machine-hero-type.js?v=1793042850922"></script>
-<script src="/js/download-platforms.js?v=1793042850922"></script>
+<script src="/js/index-code-type.js?v=1793044243356"></script>
+<script src="/js/machine-hero-type.js?v=1793044243356"></script>
+<script src="/js/download-platforms.js?v=1793044243356"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
