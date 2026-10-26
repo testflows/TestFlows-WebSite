@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793026840958" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793026840958" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1792986192515" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793026840958" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -915,16 +915,17 @@ command, as an AI agent does, loses the <code>export</code> between commands. Th
 or not anything is running in it. Delete sessions you are not using.</p>
 </blockquote>
 <h2 id="Idle-sessions-stop"><a href="#Idle-sessions-stop" class="headerlink" title="Idle sessions stop"></a>Idle sessions stop</h2><p>A session is idle while it serves no command. Your plan sets its idle time:
-10 minutes on Free, 30 on Starter and 60 on Pro.
+10 minutes on Free, 30 on Starter and on Free with usage credits, and 60 on
+Pro.
 <code>machine account show</code> shows yours. When a session reaches its idle time, it
 stops, and so do its runs. The runs are kept. Start one again in any session
 with <code>machine start &lt;run&gt;</code>.</p>
-<p>Any command resets the idle time, from any terminal, the SDK or the control
-prompt. To step away and keep the session, keep it:</p>
+<p>Every command sent to the session resets the idle time, from any terminal, the
+SDK or the control prompt. To step away and keep the session, keep it:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions keep ci-1 30m</span><br></pre></td></tr></table></figure>
 
-<p>A keep holds the session idle for up to 30 minutes on Free and an hour on
-Starter and Pro. <code>machine sessions list</code> shows when each session stops idle.
+<p>A keep holds the session idle for up to 30 minutes on Free, and an hour on
+Starter, Free with usage credits and Pro. <code>machine sessions list</code> shows when each session stops idle.
 In the control prompt, <code>/keep 30m</code> keeps the session you are driving, and the
 line under the clock shows the time left.</p>
 <h1 id="Running-a-machine"><a href="#Running-a-machine" class="headerlink" title="Running a machine"></a>Running a machine</h1><h2 id="Creating-a-run"><a href="#Creating-a-run" class="headerlink" title="Creating a run"></a>Creating a run</h2><p><a href="#machine-create"><code>machine create</code></a> makes a run from a disk and boots it. The run’s name goes
@@ -11050,9 +11051,9 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1792986192516"></script>
-<script src="/js/machine-hero-type.js?v=1792986192516"></script>
-<script src="/js/download-platforms.js?v=1792986192516"></script>
+<script src="/js/index-code-type.js?v=1793026840958"></script>
+<script src="/js/machine-hero-type.js?v=1793026840958"></script>
+<script src="/js/download-platforms.js?v=1793026840958"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
