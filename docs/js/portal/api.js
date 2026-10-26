@@ -13,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=de0520713518";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=de0520713518";
-import { setSession, clearSession } from "./session.js?v=de0520713518";
+import { solve, currentBucket } from "./hashcash.js?v=937bd93d9ee5";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=937bd93d9ee5";
+import { setSession, clearSession } from "./session.js?v=937bd93d9ee5";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -208,6 +208,33 @@ export async function termsCurrent() {
     return String(resp.data.version);
   }
   fail(resp, "Could not read the Terms of Service.");
+}
+
+/**
+ * The current Agreement version, and whether this account accepted it.
+ * @returns {Promise<{version: string, accepted: boolean}>}
+ */
+export async function getTerms() {
+  const resp = await request("GET", "/terms", null);
+  if (resp.status === 200 && resp.data) {
+    return {
+      version: String(resp.data.version),
+      accepted: Boolean(resp.data.accepted),
+    };
+  }
+  fail(resp, "Could not read the Terms of Service.");
+}
+
+/**
+ * Accept the Agreement of `version`, the one the person read.
+ * @param {string} version
+ */
+export async function acceptTerms(version) {
+  const resp = await request("POST", "/terms/accept", { version });
+  if (resp.status === 204) {
+    return;
+  }
+  fail(resp, "Could not accept the Terms of Service.");
 }
 
 /**

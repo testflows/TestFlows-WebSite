@@ -1,22 +1,30 @@
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js?v=de0520713518";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=de0520713518";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=de0520713518";
-import { renderOverview } from "./overview.js?v=de0520713518";
-import { renderSessions } from "./sessions.js?v=de0520713518";
-import { renderCredits } from "./credits.js?v=de0520713518";
-import { renderActivity } from "./activity.js?v=de0520713518";
-import { renderBuy } from "./buy.js?v=de0520713518";
-import { renderBilling } from "./billing.js?v=de0520713518";
-import { renderInvoices } from "./invoices.js?v=de0520713518";
-import { renderOrders } from "./orders.js?v=de0520713518";
-import { renderKeys } from "./keys.js?v=de0520713518";
-import { renderDevices } from "./devices.js?v=de0520713518";
-import { renderStorage } from "./storage.js?v=de0520713518";
-import { renderSettings } from "./settings.js?v=de0520713518";
-import { enhanceSelects } from "./select.js?v=de0520713518";
-import { todayDate } from "./format.js?v=de0520713518";
+import {
+  ApiError,
+  acceptTerms,
+  getAccount,
+  getTerms,
+  logout,
+  refreshSession,
+} from "../api.js?v=937bd93d9ee5";
+import { runConfirm } from "./modal.js?v=937bd93d9ee5";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=937bd93d9ee5";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=937bd93d9ee5";
+import { renderOverview } from "./overview.js?v=937bd93d9ee5";
+import { renderSessions } from "./sessions.js?v=937bd93d9ee5";
+import { renderCredits } from "./credits.js?v=937bd93d9ee5";
+import { renderActivity } from "./activity.js?v=937bd93d9ee5";
+import { renderBuy } from "./buy.js?v=937bd93d9ee5";
+import { renderBilling } from "./billing.js?v=937bd93d9ee5";
+import { renderInvoices } from "./invoices.js?v=937bd93d9ee5";
+import { renderOrders } from "./orders.js?v=937bd93d9ee5";
+import { renderKeys } from "./keys.js?v=937bd93d9ee5";
+import { renderDevices } from "./devices.js?v=937bd93d9ee5";
+import { renderStorage } from "./storage.js?v=937bd93d9ee5";
+import { renderSettings } from "./settings.js?v=937bd93d9ee5";
+import { enhanceSelects } from "./select.js?v=937bd93d9ee5";
+import { todayDate } from "./format.js?v=937bd93d9ee5";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -369,8 +377,69 @@ export async function bootAccountDashboard() {
       /* ignore — showSection's getAccount handles a gone session */
     }
   }
+  if (!(await termsAccepted())) return;
   await showSection(currentSection(), true);
   showPurchaseReturn();
+}
+
+/** The legal documents a changed Agreement asks to be read. */
+const TERMS_LINKS = [
+  { label: "Terms of Service", href: "/machine/legal/terms-of-service/" },
+  { label: "Usage Credit Terms", href: "/machine/legal/usage-credit/" },
+  { label: "Client EULA", href: "/machine/legal/client-eula/" },
+  { label: "Acceptable Use", href: "/machine/legal/acceptable-use/" },
+];
+
+/** Whether the account is under the current Agreement, asking first when it
+ * is not: Accept records it, Sign out signs out. The dashboard is for an
+ * account under the current Agreement, so nothing shows until one of the two.
+ * A version that changed while the modal was open is asked again. Terms that
+ * cannot be read do not block: the client download still refuses without them.
+ * @returns {Promise<boolean>} false once signed out
+ */
+async function termsAccepted() {
+  let terms;
+  try {
+    terms = await getTerms();
+  } catch {
+    return true;
+  }
+  while (!terms.accepted) {
+    const accept = await runConfirm({
+      title: "The Terms have changed",
+      body:
+        `The Agreement is now ${terms.version}. ` +
+        "Read the documents, then accept them to go on using your account.",
+      links: TERMS_LINKS,
+      confirmLabel: "Accept",
+      cancelLabel: "Sign out",
+    });
+    if (!accept) {
+      await signOutNow();
+      return false;
+    }
+    try {
+      await acceptTerms(terms.version);
+      return true;
+    } catch (err) {
+      if (!(err instanceof ApiError && err.status === 409)) {
+        setStatus(statusEl(), "Could not accept the Terms. Try again.", "err");
+      }
+      terms = await getTerms();
+    }
+  }
+  return true;
+}
+
+/** Sign out without the button's progress line: the modal is the page. */
+async function signOutNow() {
+  try {
+    await logout();
+  } catch {
+    /* a session the server no longer has is signed out already */
+  }
+  clearSession();
+  window.location.href = LOGIN_HREF;
 }
 
 /** Surface a Stripe return (?purchase=success|cancelled) as a status note, then
