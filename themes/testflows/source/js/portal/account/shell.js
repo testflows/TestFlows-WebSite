@@ -1,6 +1,14 @@
 /** Account dashboard shell — sidebar, hash routing, sign out, section loaders. */
 
-import { ApiError, getAccount, logout, refreshSession } from "../api.js";
+import {
+  ApiError,
+  acceptTerms,
+  getAccount,
+  getTerms,
+  logout,
+  refreshSession,
+} from "../api.js";
+import { runConfirm } from "./modal.js";
 import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js";
 import { setRefreshBusy, setStatus, showSpinner } from "../ui.js";
 import { renderOverview } from "./overview.js";
@@ -369,8 +377,69 @@ export async function bootAccountDashboard() {
       /* ignore — showSection's getAccount handles a gone session */
     }
   }
+  if (!(await termsAccepted())) return;
   await showSection(currentSection(), true);
   showPurchaseReturn();
+}
+
+/** The legal documents a changed Agreement asks to be read. */
+const TERMS_LINKS = [
+  { label: "Terms of Service", href: "/machine/legal/terms-of-service/" },
+  { label: "Usage Credit Terms", href: "/machine/legal/usage-credit/" },
+  { label: "Client EULA", href: "/machine/legal/client-eula/" },
+  { label: "Acceptable Use", href: "/machine/legal/acceptable-use/" },
+];
+
+/** Whether the account is under the current Agreement, asking first when it
+ * is not: Accept records it, Sign out signs out. The dashboard is for an
+ * account under the current Agreement, so nothing shows until one of the two.
+ * A version that changed while the modal was open is asked again. Terms that
+ * cannot be read do not block: the client download still refuses without them.
+ * @returns {Promise<boolean>} false once signed out
+ */
+async function termsAccepted() {
+  let terms;
+  try {
+    terms = await getTerms();
+  } catch {
+    return true;
+  }
+  while (!terms.accepted) {
+    const accept = await runConfirm({
+      title: "The Terms have changed",
+      body:
+        `The Agreement is now ${terms.version}. ` +
+        "Read the documents, then accept them to go on using your account.",
+      links: TERMS_LINKS,
+      confirmLabel: "Accept",
+      cancelLabel: "Sign out",
+    });
+    if (!accept) {
+      await signOutNow();
+      return false;
+    }
+    try {
+      await acceptTerms(terms.version);
+      return true;
+    } catch (err) {
+      if (!(err instanceof ApiError && err.status === 409)) {
+        setStatus(statusEl(), "Could not accept the Terms. Try again.", "err");
+      }
+      terms = await getTerms();
+    }
+  }
+  return true;
+}
+
+/** Sign out without the button's progress line: the modal is the page. */
+async function signOutNow() {
+  try {
+    await logout();
+  } catch {
+    /* a session the server no longer has is signed out already */
+  }
+  clearSession();
+  window.location.href = LOGIN_HREF;
 }
 
 /** Surface a Stripe return (?purchase=success|cancelled) as a status note, then

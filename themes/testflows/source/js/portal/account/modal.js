@@ -5,8 +5,10 @@
  *   title: string,
  *   body: string,
  *   confirmLabel?: string,
+ *   cancelLabel?: string,
  *   danger?: boolean,
  *   dismissOnly?: boolean,
+ *   links?: { label: string, href: string }[],
  * }} ConfirmOptions
  */
 
@@ -164,6 +166,27 @@ function unbindConfirmChrome(shell, onCancel, onKey, onOk) {
 }
 
 /**
+ * Links under a modal's text, one line, separated by a middle dot. Each opens
+ * in a new tab, so the modal stays where it is.
+ * @param {HTMLElement} body
+ * @param {{ label: string, href: string }[]} links
+ */
+function appendLinks(body, links) {
+  if (!links.length) return;
+  const line = document.createElement("p");
+  links.forEach((link, i) => {
+    if (i) line.append(" · ");
+    const a = document.createElement("a");
+    a.href = link.href;
+    a.textContent = link.label;
+    a.target = "_blank";
+    a.rel = "noopener";
+    line.append(a);
+  });
+  body.append(line);
+}
+
+/**
  * @param {ConfirmOptions} opts
  * @returns {Promise<boolean>}
  */
@@ -208,6 +231,7 @@ export function runConfirm(opts) {
 
     shell.title.textContent = opts.title;
     shell.body.textContent = opts.body;
+    appendLinks(shell.body, opts.links || []);
     shell.field.hidden = true;
     shell.input.hidden = true;
     shell.error.hidden = true;
@@ -216,6 +240,12 @@ export function runConfirm(opts) {
     shell.okBtn.className = opts.danger
       ? "btn btn-ghost portal-btn-danger"
       : "btn btn-primary";
+    // The page's own label, kept on the button the first time one is replaced,
+    // so a modal that names its cancel does not rename the next one's.
+    if (!shell.cancelBtn.dataset.label) {
+      shell.cancelBtn.dataset.label = shell.cancelBtn.textContent || "";
+    }
+    shell.cancelBtn.textContent = opts.cancelLabel || shell.cancelBtn.dataset.label;
     shell.cancelBtn.hidden = Boolean(opts.dismissOnly);
 
     shell.root.hidden = false;

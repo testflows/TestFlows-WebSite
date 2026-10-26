@@ -211,6 +211,33 @@ export async function termsCurrent() {
 }
 
 /**
+ * The current Agreement version, and whether this account accepted it.
+ * @returns {Promise<{version: string, accepted: boolean}>}
+ */
+export async function getTerms() {
+  const resp = await request("GET", "/terms", null);
+  if (resp.status === 200 && resp.data) {
+    return {
+      version: String(resp.data.version),
+      accepted: Boolean(resp.data.accepted),
+    };
+  }
+  fail(resp, "Could not read the Terms of Service.");
+}
+
+/**
+ * Accept the Agreement of `version`, the one the person read.
+ * @param {string} version
+ */
+export async function acceptTerms(version) {
+  const resp = await request("POST", "/terms/accept", { version });
+  if (resp.status === 204) {
+    return;
+  }
+  fail(resp, "Could not accept the Terms of Service.");
+}
+
+/**
  * Request a signup link, accepting the Agreement of `termsVersion`.
  * @param {string} email @param {string} termsVersion @param {() => void} [onPow]
  */
