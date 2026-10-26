@@ -13,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=937bd93d9ee5";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=937bd93d9ee5";
-import { setSession, clearSession } from "./session.js?v=937bd93d9ee5";
+import { solve, currentBucket } from "./hashcash.js?v=de9ac004660c";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=de9ac004660c";
+import { setSession, clearSession } from "./session.js?v=de9ac004660c";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -385,8 +385,10 @@ export async function getTransactions(params = {}) {
   const qs = q.toString();
   const path = `/account/transactions${qs ? `?${qs}` : ""}`;
   const resp = await request("GET", path, null);
-  if (resp.status === 200 && Array.isArray(resp.data)) {
-    return resp.data;
+  // `{transactions, session}`: a page of rows, and for a named session what it
+  // used over all of its rows. The page is the rows.
+  if (resp.status === 200 && resp.data && Array.isArray(resp.data.transactions)) {
+    return resp.data.transactions;
   }
   fail(resp, "Could not load activity.");
 }

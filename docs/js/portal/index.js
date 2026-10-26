@@ -1,4 +1,4 @@
-import { isSignedIn } from "./session.js?v=937bd93d9ee5";
+import { isSignedIn } from "./session.js?v=de9ac004660c";
 
 window.location.replace(
   isSignedIn() ? "/machine/portal/account/" : "/machine/portal/login/"
