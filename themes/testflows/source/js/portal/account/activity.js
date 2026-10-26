@@ -16,7 +16,6 @@ import { paintEmpty } from "./table.js";
 const ACTIVITY_FILTER = {
   included: "grant",
   charged: "purchase",
-  reserved: "purchase",
   settled: "refund",
   expired: "expired",
   "expired-removed": "forfeited",
