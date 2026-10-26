@@ -29,7 +29,12 @@ address instead.
 
 Sessions use credits, shown as `⊜`. A standard session uses ⊜0.10 an hour
 per unit. Your plan includes credits every month, and you buy usage credits
-at €1 a credit. A credit has no cash value. How credits are granted and used
+at €1 a credit. A credit has no cash value.
+
+A running session is charged an hour ahead. When it stops, the unused part
+of its last hour is settled back.
+[`machine account activity`](commands.md#machine-account-activity) `<session>`
+lists a session's charges and what they add up to. How credits are granted and used
 is in the [usage credit terms](/machine/legal/usage-credit/).
 
 Runs, logs and disks take up space in your account. [`machine storage show`](commands.md#machine-storage-show) says
