@@ -928,7 +928,7 @@ The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
 usage: machine account activity [-h] [--since date|age] [--until date|age] [--period date]
-                                [--type {included,charged,reserved,settled,expired,expired-removed,credit-purchase}]
+                                [--type {included,charged,settled,expired,expired-removed,credit-purchase}]
                                 [--credit-type {included,usage}] [--limit n] [--sort field]
                                 [--reverse]
                                 [session]
@@ -943,7 +943,7 @@ usage: machine account activity [-h] [--since date|age] [--until date|age] [--pe
 | `--since date\|age` | Since a date or age |
 | `--until date\|age` | Until a date or age |
 | `--period date` | Show credit activity in the period containing DATE |
-| `--type {included,charged,reserved,settled,expired,expired-removed,credit-purchase}` | Filter by activity type |
+| `--type {included,charged,settled,expired,expired-removed,credit-purchase}` | Filter by activity type |
 | `--credit-type {included,usage}` | Filter by credit type (included or usage) |
 | `--limit n` | Cap to most recent n (default: 25, max 500) |
 | `--sort field` | Sort by sequence or amount |
