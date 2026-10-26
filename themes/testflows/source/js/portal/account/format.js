@@ -67,6 +67,9 @@ function amount(micros, dp, symbol) {
   if (v % 1_000_000 === 0) {
     return `${sign}${symbol}${v / 1_000_000}`;
   }
+  // An amount too small for `dp` gets the digits it needs, as the CLI's does:
+  // a return of 208 micros read `+⊜0.00`, a row that seemed to move nothing.
+  while (v < 10 ** (6 - dp) && dp < 6) dp += 1;
   let s = (v / 1_000_000).toFixed(dp).replace(/0+$/, "");
   const [intpart, frac = ""] = s.split(".");
   const f = frac.length < 2 ? frac.padEnd(2, "0") : frac;
@@ -155,17 +158,17 @@ export function since(ts) {
  * @returns {string}
  */
 export function duration(secs) {
+  // The CLI's `format.duration`: up to two units, tight, `1h40m`, `19m2s`, so
+  // the portal and the terminal print one time one way.
   let s = Math.max(0, Math.trunc(secs));
-  const d = Math.trunc(s / 86400);
-  s %= 86400;
-  const h = Math.trunc(s / 3600);
-  s %= 3600;
-  const m = Math.trunc(s / 60);
-  const sec = s % 60;
-  if (d > 0) return h > 0 ? `${d}d ${h}h` : `${d}d`;
-  if (h > 0) return m > 0 ? `${h}h ${m}m` : `${h}h`;
-  if (m > 0) return `${m}m`;
-  return `${sec}s`;
+  const parts = [];
+  for (const [unit, size] of [["d", 86400], ["h", 3600], ["m", 60], ["s", 1]]) {
+    if (s >= size && parts.length < 2) {
+      parts.push(`${Math.trunc(s / size)}${unit}`);
+      s %= size;
+    }
+  }
+  return parts.length ? parts.join("") : "0s";
 }
 
 /**

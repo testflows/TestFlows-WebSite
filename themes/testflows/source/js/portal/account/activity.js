@@ -3,9 +3,9 @@ import { setStatus, showSpinner } from "../ui.js";
 import {
   compactDatetime,
   duration,
-  elapsed,
   credits,
   creditsSigned,
+  secondsBetween,
   titleCase,
 } from "./format.js";
 import { enhanceSelects } from "./select.js";
@@ -15,6 +15,7 @@ import { paintEmpty } from "./table.js";
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
   included: "grant",
+  charged: "purchase",
   reserved: "purchase",
   settled: "refund",
   expired: "expired",
@@ -24,7 +25,7 @@ const ACTIVITY_FILTER = {
 
 const ACTIVITY_LABEL = {
   grant: "Added",
-  coverage_purchase: "Reserved",
+  coverage_purchase: "Charged",
   coverage_refund: "Settled",
   expiration: "Expired",
   expiration_clawback: "Removed",
@@ -51,35 +52,20 @@ function rate(units, unitHourMicros) {
 }
 
 /**
- * DURATION — billed runtime for Settled; held interval for Reserved.
- * Mirrors client/core/transactions.py `_duration`.
- * @param {string} type
- * @param {unknown} billedSeconds
- * @param {unknown} paidFrom
- * @param {unknown} paidUntil
+ * TIME — what a row's change pays for: the hour a charge bought, or the unused
+ * part of that hour a settle gives back. Mirrors client/core/transactions.py
+ * `time_seconds`.
+ * @param {Record<string, unknown>} row
  * @returns {string}
  */
-function rowDuration(type, billedSeconds, paidFrom, paidUntil) {
-  if (type === "coverage_refund" && billedSeconds != null && billedSeconds !== "") {
-    return duration(Number(billedSeconds) || 0);
-  }
-  if (type === "coverage_purchase" && paidFrom && paidUntil) {
-    const span = elapsed(String(paidFrom), String(paidUntil));
-    return span || "—";
-  }
-  return "—";
-}
-
-/**
- * COST — settled session charge (`billed_micros` = reserved − returned).
- * Settlement rows only. Mirrors client/core/transactions.py `_cost`.
- * @param {string} type
- * @param {unknown} billedMicros
- * @returns {string}
- */
-function cost(type, billedMicros) {
-  if (type === "coverage_refund" && billedMicros != null && billedMicros !== "") {
-    return credits(Number(billedMicros) || 0, 3);
+function rowTime(row) {
+  const type = String(row.type || "");
+  if (!row.paid_from || !row.paid_until) return "—";
+  const paid = secondsBetween(String(row.paid_from), String(row.paid_until));
+  if (paid == null) return "—";
+  if (type === "coverage_purchase") return duration(paid);
+  if (type === "coverage_refund" && row.billed_seconds != null && row.billed_seconds !== "") {
+    return duration(Math.max(0, paid - (Number(row.billed_seconds) || 0)));
   }
   return "—";
 }
@@ -127,7 +113,7 @@ export function renderActivity(panel, ctx) {
       <select name="activity" class="form-control portal-select">
         <option value="">All</option>
         <option value="included">Included</option>
-        <option value="reserved">Reserved</option>
+        <option value="charged">Charged</option>
         <option value="settled">Settled</option>
         <option value="expired">Expired</option>
         <option value="expired-removed">Expired removed</option>
@@ -228,8 +214,7 @@ export function renderActivity(panel, ctx) {
         <th>Change</th>
         <th>Remaining</th>
         <th>Rate</th>
-        <th>Duration</th>
-        <th>Cost</th>
+        <th>Time</th>
         <th>Session</th>
         <th>Period</th>
       </tr>
@@ -247,8 +232,7 @@ export function renderActivity(panel, ctx) {
         creditsSigned(Number(row.amount_micros) || 0, 3),
         credits(Number(row.balance_after_micros) || 0, 3),
         rate(row.units, row.unit_hour_micros),
-        rowDuration(type, row.billed_seconds, row.paid_from, row.paid_until),
-        cost(type, row.billed_micros),
+        rowTime(row),
         String(row.session_name || row.session_id || "—"),
         period(row.paid_from, row.paid_until),
       ];
