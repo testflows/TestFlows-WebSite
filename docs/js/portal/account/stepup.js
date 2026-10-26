@@ -1,7 +1,7 @@
 /** Shared emailed-code step-up modal (PoW + code) for keys / email / close. */
 
-import { ApiError } from "../api.js?v=de9ac004660c";
-import { setStatus, showSpinner } from "../ui.js?v=de9ac004660c";
+import { ApiError } from "../api.js?v=13f2c424cbfe";
+import { setStatus, showSpinner } from "../ui.js?v=13f2c424cbfe";
 
 /**
  * @typedef {{
