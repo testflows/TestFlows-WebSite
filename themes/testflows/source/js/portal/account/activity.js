@@ -51,9 +51,9 @@ function rate(units, unitHourMicros) {
 }
 
 /**
- * TIME — what a row's change pays for: the hour a charge bought, or the unused
- * part of that hour a settle gives back. Mirrors client/core/transactions.py
- * `time_seconds`.
+ * TIME — what a row's change pays for, signed as Change is: the hour a charge
+ * bought, and less the unused part a settle gives back. Mirrors
+ * client/core/transactions.py `time_seconds`.
  * @param {Record<string, unknown>} row
  * @returns {string}
  */
@@ -64,7 +64,8 @@ function rowTime(row) {
   if (paid == null) return "—";
   if (type === "coverage_purchase") return duration(paid);
   if (type === "coverage_refund" && row.billed_seconds != null && row.billed_seconds !== "") {
-    return duration(Math.max(0, paid - (Number(row.billed_seconds) || 0)));
+    // Signed as Change is: a session's Time cells add up to the time it ran.
+    return `-${duration(Math.max(0, paid - (Number(row.billed_seconds) || 0)))}`;
   }
   return "—";
 }
