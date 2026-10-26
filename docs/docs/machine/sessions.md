@@ -3,7 +3,6 @@
 # Sessions
 
 Runs live in a session, and you create one with [`machine sessions create`](commands.md#machine-sessions-create).
-Set up account storage first with [`machine account provision`](commands.md#machine-account-provision). The first session cannot be created until that is done.
 Pick its size when you create it.
 
 ```bash
@@ -14,6 +13,9 @@ machine sessions create ci-1 --cpus 4 --mem 8G
 disk space. `--class` picks the hardware class, and the default comes from your
 plan. The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
 is. Add `--no-wait` if you would rather it didn't.
+
+Your first session also sets up your account's storage, so it takes longer to
+create. To set the storage up before that, run [`machine account provision`](commands.md#machine-account-provision).
 
 A machine takes its memory plus 128MB of the session's memory, and 256MB of a
 session is not available to machines. A machine with the default 256MB needs
@@ -73,5 +75,25 @@ machine sessions rename ci-1 ci-2
 machine sessions delete ci-2
 ```
 
-> **{% attention %}** Delete sessions you are not using. A session costs from
-> the moment you create it, whether or not anything is running in it.
+> **{% attention %}** A session costs from the moment you create it, whether
+> or not anything is running in it. Delete sessions you are not using.
+
+## Idle sessions stop
+
+A session is idle while it serves no command. Your plan sets its idle time:
+10 minutes on Free, 30 on Starter and 60 on Pro.
+`machine account show` shows yours. When a session reaches its idle time, it
+stops, and so do its runs. The runs are kept. Start one again in any session
+with `machine start <run>`.
+
+Any command resets the idle time, from any terminal, the SDK or the control
+prompt. To step away and keep the session, keep it:
+
+```bash
+machine sessions keep ci-1 30m
+```
+
+A keep holds the session idle for up to 30 minutes on Free and an hour on
+Starter and Pro. `machine sessions list` shows when each session stops idle.
+In the control prompt, `/keep 30m` keeps the session you are driving, and the
+line under the clock shows the time left.

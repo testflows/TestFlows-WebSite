@@ -102,13 +102,7 @@ You cannot do this step for your person. Do not buy credits or create or delete 
 2. They sign in, in one of two ways:
    - **On this computer:** they run `machine login` themselves and type the one-time code that is emailed to them. They stay signed in until `machine logout`.
    - **With an API key,** for a sandbox or CI where they cannot sign in: they run `machine account api-keys create <name> --expiry 30`, which needs a sign-in code, copy the secret, which is shown once, and put it in the environment variable `TESTFLOWS_MACHINE_API_KEY` for you.
-3. Set up account storage. The first session cannot be created until this is done. You can run it once they are signed in:
-
-```bash
-machine account provision
-```
-
-4. Check it:
+3. Check it:
 
 ```bash
 machine account show

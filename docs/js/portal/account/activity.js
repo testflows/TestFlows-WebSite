@@ -1,5 +1,5 @@
-import { ApiError, getTransactions } from "../api.js?v=6334304a5ef5";
-import { setStatus, showSpinner } from "../ui.js?v=6334304a5ef5";
+import { ApiError, getTransactions } from "../api.js?v=d79b20080061";
+import { setStatus, showSpinner } from "../ui.js?v=d79b20080061";
 import {
   compactDatetime,
   duration,
@@ -7,10 +7,10 @@ import {
   eur,
   eurSigned,
   titleCase,
-} from "./format.js?v=6334304a5ef5";
-import { enhanceSelects } from "./select.js?v=6334304a5ef5";
-import { makePager } from "./pager.js?v=6334304a5ef5";
-import { paintEmpty } from "./table.js?v=6334304a5ef5";
+} from "./format.js?v=d79b20080061";
+import { enhanceSelects } from "./select.js?v=d79b20080061";
+import { makePager } from "./pager.js?v=d79b20080061";
+import { paintEmpty } from "./table.js?v=d79b20080061";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
