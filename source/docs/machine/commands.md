@@ -57,7 +57,8 @@ subcommand does not select the session. The use subcommand does.
 Use -s to select a session for a single command. A session bills while it runs.
 
 ```
-usage: machine sessions [-h] [-w] {list,create,use,show,delete,rename,connect,disconnect} ...
+usage: machine sessions [-h] [-w]
+                        {list,create,use,show,classes,delete,rename,keep,connect,disconnect} ...
 ```
 
 | Option | Does |
@@ -85,21 +86,24 @@ See also:
 
 List sessions. See [Sessions](sessions.md).
 
-The current session is tagged.
+The current session is tagged. A session that stopped shows how it stopped. Use
+`--all` to list the stopped sessions of the account as well.
 
 ```
-usage: machine sessions list [-h] [-w]
+usage: machine sessions list [-h] [-w] [-a]
 ```
 
 | Option | Does |
 |---|---|
 | `-w, --watch` | Watch for changes |
+| `-a, --all` | List stopped sessions as well, the newest 50 |
 
 Examples:
 
 ```
-machine sessions list     list sessions
-machine sessions list -w  watch the list
+machine sessions list        list sessions
+machine sessions list --all  with the stopped ones, and how each stopped
+machine sessions list -w     watch the list
 ```
 
 See also:
@@ -107,6 +111,7 @@ See also:
 - [`machine sessions create`](#machine-sessions-create)
 - [`machine sessions show`](#machine-sessions-show)
 - [`machine sessions use`](#machine-sessions-use)
+- [`machine sessions keep`](#machine-sessions-keep)
 
 ### machine sessions create
 
@@ -141,11 +146,17 @@ machine sessions create work --cpus 4   with 4 CPUs
 machine sessions create work --no-wait  return once accepted
 ```
 
+Refuses, and the way past:
+
+```
+a class with no capacity now  machine sessions classes
+```
+
 See also:
 
 - [`machine sessions use`](#machine-sessions-use)
 - [`machine sessions list`](#machine-sessions-list)
-- [`machine sessions delete`](#machine-sessions-delete)
+- [`machine sessions classes`](#machine-sessions-classes)
 
 ### machine sessions use
 
@@ -203,6 +214,30 @@ See also:
 - [`machine sessions list`](#machine-sessions-list)
 - [`machine sessions use`](#machine-sessions-use)
 - [`machine ping`](#machine-ping)
+
+### machine sessions classes
+
+List the hardware classes a session can be created on.
+
+Each class names the architecture of its hosts. A run starts only in a session
+of the architecture it was recorded on. Use the class name with create
+`--class`.
+
+```
+usage: machine sessions classes [-h]
+```
+
+Examples:
+
+```
+machine sessions classes          list the classes
+machine -o json sessions classes  with every field, for a script
+```
+
+See also:
+
+- [`machine sessions create`](#machine-sessions-create)
+- [`machine sessions list`](#machine-sessions-list)
 
 ### machine sessions delete
 
@@ -269,6 +304,36 @@ See also:
 
 - [`machine sessions list`](#machine-sessions-list)
 - [`machine sessions show`](#machine-sessions-show)
+
+### machine sessions keep
+
+Keep a session running while it is idle.
+
+A session is idle while it serves no command. An idle session stops after the
+plan's idle time. Keep holds it for the duration, up to the plan's limit. A
+later keep replaces the hold.
+
+```
+usage: machine sessions keep [-h] session duration
+```
+
+| Argument | Does |
+|---|---|
+| `session` | Session name, id, or prefix |
+| `duration` | How long to keep it, such as 30m or 1h |
+
+Examples:
+
+```
+machine sessions keep work 30m  keep work running idle for 30 minutes
+machine sessions keep work 1h   keep it for an hour
+```
+
+See also:
+
+- [`machine sessions list`](#machine-sessions-list)
+- [`machine sessions show`](#machine-sessions-show)
+- [`machine account show`](#machine-account-show)
 
 ### machine sessions connect
 
@@ -1133,7 +1198,8 @@ See also:
 
 Set up cloud storage. See [Signing up](getting-started.md#signing-up).
 
-The command is safe to repeat while it is still working.
+The first session create or disk build sets up storage itself. This command sets
+it up ahead of them. The command is safe to repeat while it is still working.
 
 ```
 usage: machine account provision [-h]
@@ -2214,12 +2280,11 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
                       [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
                       [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
                       [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]
-                      [--fence-margin n] [--fence-timer-slack duration] [--limit n]
-                      [--backstop-limit n] [--pin-cpu n] [--vtime-base n] [--vtime-rate rate]
-                      [--vtime-io-cost ns] [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns]
-                      [--auto-checkpoints n] [--side-dump | --no-side-dump]
-                      [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
-                      [--disk-hash | --no-disk-hash]
+                      [--limit-margin n] [--timer-slack duration] [--limit n] [--backstop-limit n]
+                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
+                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
+                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+                      [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
                       [name]
 ```
 
@@ -2248,10 +2313,10 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: on) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` |
 | `--rdtsc-exit, --no-rdtsc-exit` | Record an entry for every RDTSC exit (applies only for non-daemon runs) |
-| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries. Recording is slower |
-| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: 10000 and 20ms) |
-| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: 10000 and 20ms) |
-| `--limit n` | Instructions per dispatch, 0 to leave it to the machine (default: 0) |
+| `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries (default: the session's) |
+| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the host's) |
+| `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: 20ms) |
+| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: 0) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 | `--vtime-base n` | The vtime base (Unix timestamp, default: 2026-03-01) |
@@ -2273,6 +2338,7 @@ machine create run1 --disk hello --mem 512 --cpus 2   with 512 MB, 2 CPUs
 machine create run1 --disk hello --rng --rng-seed 42  with a seeded RNG
 machine create run1 --disk hello --no-daemon          run to completion
 machine create run1 --disk hello --repeatable         so recording repeats
+machine create run1 --disk hello --timer-slack 0      no timer late
 machine create run1 --disk hello --drop-output ttyS1  store none of ttyS1
 ```
 
@@ -2324,7 +2390,7 @@ usage: machine start [-h] [-f] [--read-only] [--recover | --no-recover] [--at ch
 | `--parents mode` | Read data parents from the session (local) or the published tree (remote) |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
-| `--limit n` | Instructions per dispatch, 0 to leave it to the machine (default: the run's) |
+| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: the run's) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: the run's) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 | `--no-wait` | Return without waiting |
@@ -2420,10 +2486,11 @@ See also:
 Stop a running machine gracefully.
 See [Stopping and starting](running-a-machine.md#stopping-and-starting).
 
-Use -a to stop every running machine. Use `--dry-run` to list what would stop.
+Use -r to stop a branch with its descendants. Use -a to stop every running
+machine. Use `--dry-run` to list what would stop.
 
 A machine that refuses to stop stays up and is reported. A machine that does not
-stop in time stays up too. Use -a -f to kill those machines.
+stop in time stays up too. Use -f with -a or -r to kill those machines.
 
 The command lists the machines it would kill and asks first. Use -y to kill
 without asking.
@@ -2432,7 +2499,7 @@ The command waits until the machine is gone. A machine that already exited
 counts as success. Use `--no-wait` to return once the request is accepted.
 
 ```
-usage: machine stop [-h] [-a] [-f] [-y] [--dry-run] [--no-wait] [run]
+usage: machine stop [-h] [-a] [-r] [-f] [-y] [--dry-run] [--no-wait] [run]
 ```
 
 | Argument | Does |
@@ -2442,7 +2509,8 @@ usage: machine stop [-h] [-a] [-f] [-y] [--dry-run] [--no-wait] [run]
 | Option | Does |
 |---|---|
 | `-a, --all` | Stop all running machines |
-| `-f, --force` | With -a, kill a machine that refuses to stop or does not stop in time |
+| `-r, --recursive` | Stop branch and all descendants |
+| `-f, --force` | With -a or -r, kill a machine that refuses to stop or does not stop in time |
 | `-y, --yes` | With -f, kill without asking first |
 | `--dry-run` | List what would be stopped without stopping it |
 | `--no-wait` | Return without waiting |
@@ -2450,11 +2518,13 @@ usage: machine stop [-h] [-a] [-f] [-y] [--dry-run] [--no-wait] [run]
 Examples:
 
 ```
-machine stop run1            stop run1, wait until it is gone
-machine stop run1 --no-wait  return once the request is accepted
-machine stop -a              stop every running machine
-machine stop -a --dry-run    list what would stop
-machine stop -afy            stop all, kill any that do not stop
+machine stop run1               stop run1, wait until it is gone
+machine stop run1 --no-wait     return once the request is accepted
+machine stop run1 -r            stop run1 and every branch under it
+machine stop run1 -r --dry-run  list the machines of its tree
+machine stop -a                 stop every running machine
+machine stop -a --dry-run       list what would stop
+machine stop -afy               stop all, kill any that do not stop
 ```
 
 See also:
@@ -2754,7 +2824,7 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 | Option | Does |
 |---|---|
 | `--back` | Go back to the newest hit before now, onto a branch |
-| `--limit span` | Default instructions per dispatch under fast, steps under step, branches under fence; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step and fence stop exactly; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
+| `--limit span` | Default branches per dispatch under fast and fence, steps under step; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
@@ -2937,7 +3007,7 @@ usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--stra
 
 | Option | Does |
 |---|---|
-| `--limit span` | Default instructions per dispatch under fast, steps under step, branches under fence; fast takes 1000 or more and stops at or after it, late by an amount that depends on what the machine runs; step and fence stop exactly; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
+| `--limit span` | Default branches per dispatch under fast and fence, steps under step; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
 | `--strategy name` | How spans resolve when they name none: random, golden, sweep (default: random) |
@@ -3016,6 +3086,7 @@ Examples:
 ```
 machine control run1                            open the prompt for run1
 machine control run1 -c /help                   list the slash commands
+machine control run1 -c '/help output'          the help of /output
 machine control run1 -c /f@100                  run 100 iterations fast
 machine control run1 -c '/checkpoint name cp1'  create checkpoint cp1
 machine control run1 -c '/rewind to ^cp1'       put run1 back at cp1
@@ -3172,8 +3243,8 @@ entry that the host interrupted is replayed again the same way. It is not a
 divergence.
 
 Use `--retry` to set how many retries. `--retry` 0 replays each entry once. Use
-`--skid` to set how early the replay stops before each recorded entry. A smaller
-skid makes a miss more likely.
+`--limit-margin` to set how many branches short of each recorded entry the
+branch counter interrupts. A smaller margin makes a miss more likely.
 
 The replay stores what the branch keeps of its output. A branch that keeps an
 output file its parent dropped is how the file is read. Use fork with
@@ -3181,7 +3252,8 @@ output file its parent dropped is how the file is read. Use fork with
 executes.
 
 ```
-usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--skid n] run [line]
+usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--limit-margin n]
+                      run [line]
 ```
 
 | Argument | Does |
@@ -3194,15 +3266,16 @@ usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--ski
 | `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark (default: the end of the line) |
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
-| `--skid n` | Aim the interrupt n instructions short of each recorded stop |
+| `--limit-margin n` | Branches short of each recorded stop where the branch counter interrupts (default: the host's) |
 
 Examples:
 
 ```
-machine replay try2                   replay the parent's entries
-machine replay try2 --to '#300'       replay up to entry 300
-machine replay try2 --to ^cp2         replay up to checkpoint cp2
-machine replay try2 run1 --to '#420'  replay the line to run1
+machine replay try2                     replay the parent's entries
+machine replay try2 --to '#300'         replay up to entry 300
+machine replay try2 --to ^cp2           replay up to checkpoint cp2
+machine replay try2 run1 --to '#420'    replay the line to run1
+machine replay try2 --limit-margin 100  100 branches short of each stop
 ```
 
 Prints:
@@ -3385,11 +3458,10 @@ once the request is accepted.
 usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                     [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
                     [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
-                    [--repeatable | --no-repeatable] [--fence-margin n]
-                    [--fence-timer-slack duration] [--disk-hash | --no-disk-hash]
-                    [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
-                    [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
-                    [--pin-cpu n]
+                    [--repeatable | --no-repeatable] [--limit-margin n] [--timer-slack duration]
+                    [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
+                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
+                    [--limit n] [--backstop-limit n] [--pin-cpu n]
                     run
 ```
 
@@ -3409,16 +3481,16 @@ usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
-| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
-| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run's) |
-| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
+| `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
+| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the run's) |
+| `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
-| `--limit n` | Instructions per dispatch, 0 to leave it to the machine (default: the run's) |
+| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: the run's) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: the run's) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 
@@ -3433,7 +3505,7 @@ machine fork run1 --at '#120' --no-start  create the branch, do not start it
 machine fork run1 --keep-output /output   store what is dropped
 machine fork run1 --drop-output ttyS1     store none of ttyS1
 machine fork run1 --from ^cp1             replay the branch from cp1 to now
-machine fork run1 --no-repeatable         a branch without fences
+machine fork run1 --no-repeatable         a branch without exact stops
 ```
 
 See also:
@@ -3517,9 +3589,9 @@ usage: machine go [options] <run> <point>
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
-| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
-| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run's) |
-| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
+| `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
+| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the run's) |
+| `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3682,10 +3754,10 @@ where the run would have the names of another run.
 usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                       [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                       [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
-                      [--fence-margin n] [--fence-timer-slack duration]
-                      [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
-                      [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                      [--limit n] [--backstop-limit n] [--pin-cpu n]
+                      [--limit-margin n] [--timer-slack duration] [--disk-hash | --no-disk-hash]
+                      [--keep-output name] [--drop-output name] [--no-wait]
+                      [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
+                      [--backstop-limit n] [--pin-cpu n]
                       run
 ```
 
@@ -3702,16 +3774,16 @@ usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
 | `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
-| `--repeatable, --no-repeatable` | Record so that recording again gives the same entries, whatever the run it comes from does |
-| `--fence-margin n` | Branches before an exact stop where stepping to it starts, the cost of each stop (default: the run's) |
-| `--fence-timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
+| `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
+| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the run's) |
+| `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
 | `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
-| `--limit n` | Instructions per dispatch, 0 to leave it to the machine (default: the run's) |
+| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: the run's) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: the run's) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 
