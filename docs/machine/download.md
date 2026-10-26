@@ -85,9 +85,10 @@ In CI, where there is no terminal, install with an API key of an account that ha
 curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash
 ```
 
-When `TESTFLOWS_MACHINE_API_KEY` is already exported, as a CI secret usually is, the installer reads it from the environment:
+The installer also reads the key from the environment. It must be exported: a variable set without `export` is not passed to the installer. A CI secret is exported already.
 
 ```bash
+export TESTFLOWS_MACHINE_API_KEY=<key>
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
