@@ -125,20 +125,13 @@ Here is a whole trip, from nothing to a branch. The program is one line of
 Python, and you need nothing installed but the client: no Docker and no
 compiler.
 
-First, create a session and make it the one your commands use.
+First, create a session. Machine makes it the one your commands use.
 
 ```bash
 machine sessions create first --cpus 2
 ```
 ```bash
 ✔ Session first is running.
-  Use machine sessions use first
-```
-
-```bash
-machine sessions use first
-```
-```bash
 ✔ Now using session first in this terminal.
 ```
 

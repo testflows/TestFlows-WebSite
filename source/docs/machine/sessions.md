@@ -14,8 +14,13 @@ disk space. `--class` picks the hardware class, and the default comes from your
 plan. The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
 is. Add `--no-wait` if you would rather it didn't.
 
+Then Machine uses the new session in this terminal, so your next command goes
+to it. Add `--no-use` to keep using the session you are on. A session created
+with `--no-wait` is not running yet, so it is not used.
+
 Your first session also sets up your account's storage, so it takes longer to
-create. To set the storage up before that, run [`machine account provision`](commands.md#machine-account-provision).
+create, and Machine shows this as a step of its own. To set the storage up
+before that, run [`machine account provision`](commands.md#machine-account-provision).
 
 A machine takes its memory plus 128MB of the session's memory, and 256MB of a
 session is not available to machines. A machine with the default 256MB needs
@@ -39,7 +44,7 @@ session's memory, for example `4.5G/8G` with two machines of 2048MB. A new
 machine starts when what it needs fits in the rest, and is refused when it
 does not.
 
-Creating a session doesn't switch you to it. Tell Machine which one to use.
+To switch to another session, tell Machine which one to use.
 
 ```bash
 machine sessions use ci-1
