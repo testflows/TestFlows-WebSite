@@ -8,11 +8,11 @@ import {
   emailChallenge,
   emailStart,
   getAccount,
-} from "../api.js?v=13f2c424cbfe";
-import { clearSession } from "../session.js?v=13f2c424cbfe";
-import { setStatus, showSpinner } from "../ui.js?v=13f2c424cbfe";
-import { runConfirm } from "./modal.js?v=13f2c424cbfe";
-import { runStepUp } from "./stepup.js?v=13f2c424cbfe";
+} from "../api.js?v=79d480955619";
+import { clearSession } from "../session.js?v=79d480955619";
+import { setStatus, showSpinner } from "../ui.js?v=79d480955619";
+import { runConfirm } from "./modal.js?v=79d480955619";
+import { runStepUp } from "./stepup.js?v=79d480955619";
 
 /** How often the closing panel resumes teardown while waiting for `ready`. */
 const CLOSE_POLL_MS = 5000;
