@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793107920071" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793107920071" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793104206522" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793107920071" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -279,6 +279,13 @@
 <p>That form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
+<div class="download-section download-note">
+<h2>Tab completion</h2>
+<p>In <code>machine-env</code>, Tab completes commands, options and the names of your runs. To have it in every shell, add the line for your shell to its startup file. The installer prints the one for yours when it finishes.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(machine completion bash)</span>&quot;</span>     <span class="comment"># ~/.bashrc</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(machine completion zsh)</span>&quot;</span>      <span class="comment"># ~/.zshrc</span></span><br><span class="line">machine completion fish | <span class="built_in">source</span>      <span class="comment"># ~/.config/fish/config.fish</span></span><br></pre></td></tr></table></figure>
+</div>
+
 <div class="download-section">
 <h2>Check the download</h2>
 <p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
@@ -357,6 +364,13 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
 
 <p>That form runs one command in that environment and starts no shell, for scripts.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>Tab completion</h2>
+<p>In <code>machine-env</code>, Tab completes commands, options and the names of your runs. To have it in every shell, add the line for your shell to its startup file. The installer prints the one for yours when it finishes.</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(machine completion bash)</span>&quot;</span>     <span class="comment"># ~/.bashrc</span></span><br><span class="line"><span class="built_in">eval</span> <span class="string">&quot;<span class="subst">$(machine completion zsh)</span>&quot;</span>      <span class="comment"># ~/.zshrc</span></span><br><span class="line">machine completion fish | <span class="built_in">source</span>      <span class="comment"># ~/.config/fish/config.fish</span></span><br></pre></td></tr></table></figure>
 </div>
 
 <div class="download-section download-note">
@@ -451,6 +465,11 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;export PATH=&quot;$HOME/.local/bin:$PATH&quot;&#x27;</span> &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
 
 <p>Then open a new terminal. The installer offers to add this line for you when it finds the directory missing from your PATH: it asks first, and writes nothing unless you say yes. Linux and every other system get the same <code>machine-env</code> file.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>Tab completion</h2>
+<p>In <code>machine-env</code>, Tab completes commands, options and the names of your runs. There is nothing to add to a startup file: outside <code>machine-env</code>, <code>machine</code> is the system's command, and a completion line there would run that one.</p>
 </div>
 
 <div class="download-section download-note">
@@ -625,10 +644,10 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793104206522"></script>
-<script src="/js/machine-hero-type.js?v=1793104206522"></script>
-<script src="/js/download-platforms.js?v=1793104206522"></script>
-<script src="/js/anchor-case.js?v=1793104206522"></script>
+<script src="/js/index-code-type.js?v=1793107920071"></script>
+<script src="/js/machine-hero-type.js?v=1793107920071"></script>
+<script src="/js/download-platforms.js?v=1793107920071"></script>
+<script src="/js/anchor-case.js?v=1793107920071"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
