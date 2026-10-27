@@ -33,12 +33,20 @@ download yourself.
 **Behind a proxy that inspects TLS.** The client trusts only Let's Encrypt,
 which issues the certificate of the Machine API, so a certificate from any other
 CA is refused, a proxy's included. The error names
-`TESTFLOWS_MACHINE_API_CA_FILE`: set it to a PEM file of the CAs to trust
-instead, such as your proxy's.
+`TESTFLOWS_MACHINE_API_CA_FILE`, an environment variable the client reads: set
+it to a PEM file of the CAs to trust instead, such as your proxy's.
 
 ```bash
 export TESTFLOWS_MACHINE_API_CA_FILE=/etc/ssl/certs/corporate-proxy-ca.pem
 ```
+
+The file replaces the Let's Encrypt roots rather than adding to them. If the
+client must also connect without the proxy, add the
+[Let's Encrypt roots](https://letsencrypt.org/certificates/) to the same file.
+The variable applies to the connection to the API alone: sessions are reached
+over SSH with certificates TestFlows issues, and image pulls use your system's
+CAs. A file that is missing or holds no certificate is refused, and the error
+names the file. The Python SDK reads the same variable.
 
 **On a Mac, use `machine-env`.** macOS ships its own `/usr/bin/machine`, which
 prints the processor type, so typing `machine` may not run the client. Putting
