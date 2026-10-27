@@ -3299,9 +3299,8 @@ entry, a checkpoint or a time of that line. A checkpoint the parent took after
 the fork is such a point.
 
 The line of a run is its entries from the root on, across every fork. Naming a
-run replays the entries of its line. The run must be in the same tree, and need
-not be on this run's line. The replay diverges at the first entry that does not
-reproduce.
+run replays the entries of its line. The run must be in the same tree. The entry
+this run stands on must be on the line replayed.
 
 An entry that diverges is replayed again from the newest checkpoint before it,
 at most twice. It is not replayed again once it diverges the same way twice. An
@@ -3351,6 +3350,12 @@ text          Replayed <n> entries to entry <id>. Converged.
               then the last dispatch, as run prints it
 json          converged entry_id replayed diverged result misses
 nothing left  Nothing to replay: already at entry <id>
+```
+
+Refuses, and the way past:
+
+```
+a run off the line it would replay  machine replay try2 run1
 ```
 
 See also:
