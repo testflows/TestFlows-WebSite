@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793127194628" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793127194628" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793110608262" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793127194628" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -462,6 +462,20 @@ need another platform,
 <a href="/contact.html?topic=machine">contact us</a> and tell us which one. The
 <a href="/machine/download/">download page</a> has the full list, and a way to check the
 download yourself.</p>
+<p><strong>Behind a proxy that inspects TLS.</strong> The client trusts only Let’s Encrypt,
+which issues the certificate of the Machine API, so a certificate from any other
+CA is refused, a proxy’s included. The error names
+<code>TESTFLOWS_MACHINE_API_CA_FILE</code>, an environment variable the client reads: set
+it to a PEM file of the CAs to trust instead, such as your proxy’s.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> TESTFLOWS_MACHINE_API_CA_FILE=/etc/ssl/certs/corporate-proxy-ca.pem</span><br></pre></td></tr></table></figure>
+
+<p>The file replaces the Let’s Encrypt roots rather than adding to them. If the
+client must also connect without the proxy, add the
+<a target="_blank" rel="noopener external nofollow noreferrer" href="https://letsencrypt.org/certificates/">Let’s Encrypt roots</a> to the same file.
+The variable applies to the connection to the API alone: sessions are reached
+over SSH with certificates TestFlows issues, and image pulls use your system’s
+CAs. A file that is missing or holds no certificate is refused, and the error
+names the file. The Python SDK reads the same variable.</p>
 <p><strong>On a Mac, use <code>machine-env</code>.</strong> macOS ships its own <code>/usr/bin/machine</code>, which
 prints the processor type, so typing <code>machine</code> may not run the client. Putting
 the client first on your <code>PATH</code> would hide the system command for every other
@@ -6059,9 +6073,8 @@ of the parent end at the fork. Replaying past them reports no forward entries.</
 entry, a checkpoint or a time of that line. A checkpoint the parent took after
 the fork is such a point.</p>
 <p>The line of a run is its entries from the root on, across every fork. Naming a
-run replays the entries of its line. The run must be in the same tree, and need
-not be on this run’s line. The replay diverges at the first entry that does not
-reproduce.</p>
+run replays the entries of its line. The run must be in the same tree. The entry
+this run stands on must be on the line replayed.</p>
 <p>An entry that diverges is replayed again from the newest checkpoint before it,
 at most twice. It is not replayed again once it diverges the same way twice. An
 entry that the host interrupted is replayed again the same way. It is not a
@@ -6120,6 +6133,9 @@ executes.</p>
 
 <p>Prints:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">text          Replayed &lt;n&gt; entries to entry &lt;id&gt;. Converged.</span><br><span class="line">              then the last dispatch, as run prints it</span><br><span class="line">json          converged entry_id replayed diverged result misses</span><br><span class="line">nothing left  Nothing to replay: already at entry &lt;id&gt;</span><br></pre></td></tr></table></figure>
+
+<p>Refuses, and the way past:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a run off the line it would replay  machine replay try2 run1</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -11253,10 +11269,10 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793110608263"></script>
-<script src="/js/machine-hero-type.js?v=1793110608263"></script>
-<script src="/js/download-platforms.js?v=1793110608263"></script>
-<script src="/js/anchor-case.js?v=1793110608263"></script>
+<script src="/js/index-code-type.js?v=1793127194628"></script>
+<script src="/js/machine-hero-type.js?v=1793127194628"></script>
+<script src="/js/download-platforms.js?v=1793127194628"></script>
+<script src="/js/anchor-case.js?v=1793127194628"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
