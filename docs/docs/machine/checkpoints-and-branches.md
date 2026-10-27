@@ -38,6 +38,7 @@ machine, alongside its parent, and the parent keeps running.
 ```bash
 machine fork app                            # at the current point
 machine fork app --at ^booted               # at a checkpoint
+machine fork app --at console:120           # where line 120 was printed
 machine fork app --at ^booted --name try-1  # and give it a name
 ```
 

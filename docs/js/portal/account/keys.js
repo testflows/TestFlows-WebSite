@@ -5,11 +5,11 @@ import {
   tokenCreate,
   tokenRevoke,
   tokenUpdate,
-} from "../api.js?v=79d480955619";
-import { setStatus, showSpinner } from "../ui.js?v=79d480955619";
-import { compactDatetime, expiresWithDays } from "./format.js?v=79d480955619";
-import { runConfirm, runPrompt } from "./modal.js?v=79d480955619";
-import { runStepUp } from "./stepup.js?v=79d480955619";
+} from "../api.js?v=8383360e0c4a";
+import { setStatus, showSpinner } from "../ui.js?v=8383360e0c4a";
+import { compactDatetime, expiresWithDays } from "./format.js?v=8383360e0c4a";
+import { runConfirm, runPrompt } from "./modal.js?v=8383360e0c4a";
+import { runStepUp } from "./stepup.js?v=8383360e0c4a";
 
 /**
  * CLI-parity expiry: positive day count → ISO UTC, or null if invalid.

@@ -1,5 +1,5 @@
-import { ApiError, getTransactions } from "../api.js?v=79d480955619";
-import { setStatus, showSpinner } from "../ui.js?v=79d480955619";
+import { ApiError, getTransactions } from "../api.js?v=8383360e0c4a";
+import { setStatus, showSpinner } from "../ui.js?v=8383360e0c4a";
 import {
   compactDatetime,
   duration,
@@ -7,10 +7,10 @@ import {
   creditsSigned,
   secondsBetween,
   titleCase,
-} from "./format.js?v=79d480955619";
-import { enhanceSelects } from "./select.js?v=79d480955619";
-import { makePager } from "./pager.js?v=79d480955619";
-import { paintEmpty } from "./table.js?v=79d480955619";
+} from "./format.js?v=8383360e0c4a";
+import { enhanceSelects } from "./select.js?v=8383360e0c4a";
+import { makePager } from "./pager.js?v=8383360e0c4a";
+import { paintEmpty } from "./table.js?v=8383360e0c4a";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
@@ -51,9 +51,9 @@ function rate(units, unitHourMicros) {
 }
 
 /**
- * TIME — what a row's change pays for: the hour a charge bought, or the unused
- * part of that hour a settle gives back. Mirrors client/core/transactions.py
- * `time_seconds`.
+ * TIME — what a row's change pays for, signed as Change is: the hour a charge
+ * bought, and less the unused part a settle gives back. Mirrors
+ * client/core/transactions.py `time_seconds`.
  * @param {Record<string, unknown>} row
  * @returns {string}
  */
@@ -64,7 +64,10 @@ function rowTime(row) {
   if (paid == null) return "—";
   if (type === "coverage_purchase") return duration(paid);
   if (type === "coverage_refund" && row.billed_seconds != null && row.billed_seconds !== "") {
-    return duration(Math.max(0, paid - (Number(row.billed_seconds) || 0)));
+    // Signed as Change is: a session's Time cells add up to the time it ran.
+    // Nothing given back is 0s, as the CLI prints it, not -0s.
+    const back = Math.max(0, paid - (Number(row.billed_seconds) || 0));
+    return back > 0 ? `-${duration(back)}` : duration(back);
   }
   return "—";
 }
