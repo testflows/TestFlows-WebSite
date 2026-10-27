@@ -24,12 +24,13 @@ takes further commands, those follow it, so each one has a heading.
 
 Sign in. See [Signing up](getting-started.md#signing-up).
 
-A sign-in code is emailed. Use account signup if there is no account yet.
+A sign-in code is emailed. Use the account signup command if there is no account
+yet.
 
 Or set TESTFLOWS_MACHINE_API_KEY instead.
 
 ```
-usage: machine login [-h]
+machine login [-h]
 ```
 
 Examples:
@@ -51,14 +52,13 @@ List and manage sessions. See [Sessions](sessions.md).
 A session is a reserved machine in the cloud. It holds CPUs, memory and disk
 space for runs. A run is created, started and stored in a session.
 
-Create a session, then use it so later commands target it by default. The create
-subcommand does not select the session. The use subcommand does.
+The create subcommand creates a session and uses it, so later commands in this
+terminal go to it. The use subcommand switches to another session.
 
 Use -s to select a session for a single command. A session bills while it runs.
 
 ```
-usage: machine sessions [-h] [-w]
-                        {list,create,use,show,classes,delete,rename,keep,connect,disconnect} ...
+machine sessions [-h] [-w] command ...
 ```
 
 | Option | Does |
@@ -69,8 +69,7 @@ Examples:
 
 ```
 machine sessions                 list sessions
-machine sessions create work     create a session
-machine sessions use work        use it in this terminal
+machine sessions create work     create a session and use it
 machine sessions show work       details of work
 machine sessions delete work -y  stop it and delete it
 ```
@@ -90,7 +89,7 @@ The current session is tagged. A session that stopped shows how it stopped. Use
 `--all` to list the stopped sessions of the account as well.
 
 ```
-usage: machine sessions list [-h] [-w] [-a]
+machine sessions list [-h] [-w] [-a]
 ```
 
 | Option | Does |
@@ -115,15 +114,18 @@ See also:
 
 ### machine sessions create
 
-Create a session. See [Sessions](sessions.md).
+Create a session and use it. See [Sessions](sessions.md).
+
+The command uses the new session in this terminal, as sessions use does. Use
+`--no-use` to keep using the session in use before.
 
 The command waits until the session is running. Use `--no-wait` to return once
-the request is accepted.
+the request is accepted. A session created with `--no-wait` is not used.
 
 ```
-usage: machine sessions create [-h] [--cpus n] [--mem size] [--storage size] [--class type]
-                               [--no-wait]
-                               [name]
+machine sessions create [-h] [--cpus n] [--mem size] [--storage size] [--class type]
+                        [--no-wait] [--no-use]
+                        [name]
 ```
 
 | Argument | Does |
@@ -133,16 +135,18 @@ usage: machine sessions create [-h] [--cpus n] [--mem size] [--storage size] [--
 | Option | Does |
 |---|---|
 | `--cpus n` | Number of vCPUs (default: 1) |
-| `--mem size` | Memory, MB or with a K/M/G/T suffix (default: class baseline) |
-| `--storage size` | The session's storage, GB or with a K/M/G/T suffix (default: class baseline) |
-| `--class type` | Hardware class (default: plan default) |
+| `--mem size` | Memory, MB or with a K/M/G/T suffix (default: the class's memory for each vCPU, as sessions classes lists it) |
+| `--storage size` | The session's storage, GB or with a K/M/G/T suffix (default: the class's storage for the session's size, up to the plan's limit) |
+| `--class type` | Hardware class, as sessions classes lists it (default: the plan's class) |
 | `--no-wait` | Return without waiting |
+| `--no-use` | Create the session without using it |
 
 Examples:
 
 ```
-machine sessions create work            create the session work
-machine sessions create work --cpus 4   with 4 CPUs
+machine sessions create work            create the session work and use it
+machine sessions create work --cpus 4   with 4 vCPUs
+machine sessions create work --no-use   keep the session in use
 machine sessions create work --no-wait  return once accepted
 ```
 
@@ -167,7 +171,7 @@ switching. With `--no-wait` it fails if a connect is needed and the session is
 not running yet.
 
 ```
-usage: machine sessions use [-h] [--no-wait] [session]
+machine sessions use [-h] [--no-wait] [session]
 ```
 
 | Argument | Does |
@@ -196,7 +200,7 @@ See also:
 Show session details. See [Sessions](sessions.md).
 
 ```
-usage: machine sessions show [-h] [session]
+machine sessions show [-h] [session]
 ```
 
 | Argument | Does |
@@ -219,12 +223,11 @@ See also:
 
 List the hardware classes a session can be created on.
 
-Each class names the architecture of its hosts. A run starts only in a session
-of the architecture it was recorded on. Use the class name with create
-`--class`.
+Each class names its CPU architecture. A run starts only in a session of the
+architecture it was recorded on. Use the class name with create `--class`.
 
 ```
-usage: machine sessions classes [-h]
+machine sessions classes [-h]
 ```
 
 Examples:
@@ -245,15 +248,15 @@ Delete a session. See [Sessions](sessions.md).
 
 The first operand names the session. Use -a to delete every session.
 
-The command stops the machine and discards its state. A session already gone
-counts as success. The command waits until a named session is gone. Use
-`--no-wait` to return once the request is accepted.
+The command stops the machines of the session and syncs their runs to shared
+storage. The runs start again in another session. A session already gone counts
+as success.
 
-Storage prune is refused while any session is live. Use -a to delete every
-session first.
+The command waits until a named session is gone. Use `--no-wait` to return once
+the request is accepted.
 
 ```
-usage: machine sessions delete [-h] [-a] [-y] [--no-wait] [session]
+machine sessions delete [-h] [-a] [-y] [--no-wait] [session]
 ```
 
 | Argument | Does |
@@ -286,7 +289,7 @@ Rename a session. See [Sessions](sessions.md).
 Only the name changes. The session keeps running.
 
 ```
-usage: machine sessions rename [-h] session new-name
+machine sessions rename [-h] session new-name
 ```
 
 | Argument | Does |
@@ -314,7 +317,7 @@ plan's idle time. Keep holds it for the duration, up to the plan's limit. A
 later keep replaces the hold.
 
 ```
-usage: machine sessions keep [-h] session duration
+machine sessions keep [-h] session duration
 ```
 
 | Argument | Does |
@@ -339,12 +342,15 @@ See also:
 
 Connect to a session. See [Sessions](sessions.md).
 
-The everyday verb is sessions use. The command waits until the session is
-running, if it is still provisioning. With `--no-wait` it fails if the session
-is not running yet.
+The command connects this computer to the session and uses it in this terminal.
+The use subcommand does the same and also checks a connection already open. Use
+sessions use instead.
+
+The command waits until the session is running. Use `--no-wait` to return once
+the request is accepted.
 
 ```
-usage: machine sessions connect [-h] [--no-wait] [session]
+machine sessions connect [-h] [--no-wait] [session]
 ```
 
 | Argument | Does |
@@ -375,7 +381,7 @@ The session keeps running. The connection is shared on this computer, so every
 terminal loses it.
 
 ```
-usage: machine sessions disconnect [-h] [session]
+machine sessions disconnect [-h] [session]
 ```
 
 | Argument | Does |
@@ -401,7 +407,7 @@ The command pings the API and the connected sessions. It reports the state,
 round-trip time, jitter, setup time and certificate lifetime of each target.
 
 ```
-usage: machine ping [-h] [-c n]
+machine ping [-h] [-c n]
 ```
 
 | Option | Does |
@@ -435,8 +441,7 @@ devices. The subcommands buy credits or a plan, manage invoices and payment, and
 close the account.
 
 ```
-usage: machine account [-h]
-                       {devices,buy,upgrade,downgrade,payment,portal,invoices,cancel,email,products,show,credits,activity,orders,api-keys,provision,signup,close} ...
+machine account [-h] command ...
 ```
 
 Examples:
@@ -462,7 +467,7 @@ List signed-in devices. See [Account and billing](account-and-billing.md).
 Use `--revoke` to sign out one device by id.
 
 ```
-usage: machine account devices [-h] [--revoke id]
+machine account devices [-h] [--revoke id]
 ```
 
 | Option | Does |
@@ -486,7 +491,7 @@ See also:
 Buy usage credits or a plan. See [Account and billing](account-and-billing.md).
 
 ```
-usage: machine account buy [-h] {usage,plan} ...
+machine account buy [-h] command ...
 ```
 
 Examples:
@@ -510,12 +515,12 @@ The command opens checkout for the pack of the named number of credits. A credit
 costs one euro. A credit has no cash value.
 
 ```
-usage: machine account buy usage [-h] [-y] credits
+machine account buy usage [-h] [-y] credits
 ```
 
 | Argument | Does |
 |---|---|
-| `credits` | Credits to buy, a pack account products lists. A credit costs one euro |
+| `credits` | Credits to buy, one of the amounts account products list shows. A credit costs one euro |
 
 | Option | Does |
 |---|---|
@@ -541,12 +546,12 @@ Subscribe to a plan.
 On a paid plan, the command upgrades or downgrades to the named tier instead.
 
 ```
-usage: machine account buy plan [-h] [-y] tier
+machine account buy plan [-h] [-y] plan
 ```
 
 | Argument | Does |
 |---|---|
-| `tier` | Plan tier (e.g. starter, pro) |
+| `plan` | Plan to subscribe to: starter or pro |
 
 | Option | Does |
 |---|---|
@@ -573,12 +578,12 @@ An omitted tier is the next one up. Use `--link` to print the URL without
 opening a browser.
 
 ```
-usage: machine account upgrade [-h] [--link] [-y] [tier]
+machine account upgrade [-h] [--link] [-y] [plan]
 ```
 
 | Argument | Does |
 |---|---|
-| `[tier]` | Target tier (default: next up) |
+| `[plan]` | Plan to move to (default: the next plan up) |
 
 | Option | Does |
 |---|---|
@@ -606,12 +611,12 @@ An omitted tier is the next one down. Use `--link` to print the URL without
 opening a browser.
 
 ```
-usage: machine account downgrade [-h] [--link] [-y] [tier]
+machine account downgrade [-h] [--link] [-y] [plan]
 ```
 
 | Argument | Does |
 |---|---|
-| `[tier]` | Target tier (default: next down) |
+| `[plan]` | Plan to move to (default: the next plan down) |
 
 | Option | Does |
 |---|---|
@@ -638,7 +643,7 @@ Update the payment method. See [Account and billing](account-and-billing.md).
 Use `--link` to print the URL without opening a browser.
 
 ```
-usage: machine account payment [-h] [--link]
+machine account payment [-h] [--link]
 ```
 
 | Option | Does |
@@ -664,7 +669,7 @@ Open billing settings. See [Account and billing](account-and-billing.md).
 Use `--link` to print the URL without opening a browser.
 
 ```
-usage: machine account portal [-h] [--link]
+machine account portal [-h] [--link]
 ```
 
 | Option | Does |
@@ -690,16 +695,16 @@ List and manage invoices. See [Account and billing](account-and-billing.md).
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine account invoices [-h] [--since date|age] [--until date|age]
-                                [--status {draft,open,paid,uncollectible,void}] [--limit n]
-                                [--sort field] [--reverse]
-                                {list,download} ...
+machine account invoices [-h] [--since date|age] [--until date|age]
+                         [--status {draft,open,paid,uncollectible,void}] [--limit n]
+                         [--sort field] [--reverse]
+                         command ...
 ```
 
 | Option | Does |
 |---|---|
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--status {draft,open,paid,uncollectible,void}` | Filter by invoice status |
 | `--limit n` | Cap to most recent n (default: 25, max 100) |
 | `--sort field` | Sort by created or amount |
@@ -725,15 +730,15 @@ List invoices.
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine account invoices list [-h] [--since date|age] [--until date|age]
-                                     [--status {draft,open,paid,uncollectible,void}] [--limit n]
-                                     [--sort field] [--reverse]
+machine account invoices list [-h] [--since date|age] [--until date|age]
+                              [--status {draft,open,paid,uncollectible,void}] [--limit n]
+                              [--sort field] [--reverse]
 ```
 
 | Option | Does |
 |---|---|
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--status {draft,open,paid,uncollectible,void}` | Filter by invoice status |
 | `--limit n` | Cap to most recent n (default: 25, max 100) |
 | `--sort field` | Sort by created or amount |
@@ -759,7 +764,7 @@ The hosted page has the PDF and receipt. Use `--link` to print the URL without
 opening a browser.
 
 ```
-usage: machine account invoices download [-h] [--link] invoice-id
+machine account invoices download [-h] [--link] invoice-id
 ```
 
 | Argument | Does |
@@ -789,7 +794,7 @@ The plan stays until renewal, then drops to Free. Usage credits stay. Use
 `--link` to print the URL without opening a browser.
 
 ```
-usage: machine account cancel [-h] [--link]
+machine account cancel [-h] [--link]
 ```
 
 | Option | Does |
@@ -816,7 +821,7 @@ Change the account email. See [Account and billing](account-and-billing.md).
 A code goes to the current inbox. A link goes to the new one.
 
 ```
-usage: machine account email [-h] [-y] email
+machine account email [-h] [-y] email
 ```
 
 | Argument | Does |
@@ -843,7 +848,7 @@ See also:
 List products for sale. See [Account and billing](account-and-billing.md).
 
 ```
-usage: machine account products [-h] {list} ...
+machine account products [-h] command ...
 ```
 
 Examples:
@@ -862,7 +867,7 @@ See also:
 List products for sale.
 
 ```
-usage: machine account products list [-h]
+machine account products list [-h]
 ```
 
 Examples:
@@ -881,7 +886,7 @@ See also:
 Show the account. See [Account and billing](account-and-billing.md).
 
 ```
-usage: machine account show [-h]
+machine account show [-h]
 ```
 
 Examples:
@@ -901,7 +906,7 @@ See also:
 Show usage credits. See [Account and billing](account-and-billing.md).
 
 ```
-usage: machine account credits [-h]
+machine account credits [-h]
 ```
 
 Examples:
@@ -921,17 +926,17 @@ See also:
 Show usage credit activity. See [Account and billing](account-and-billing.md).
 
 A session is charged an hour ahead, as Charged rows. When it stops, a Settled
-row gives back the unused part of its last hour. Naming a session adds what it
-used over all of its rows. The rows add up to it.
+row gives back the unused part of its last hour. Naming a session ends the
+listing with what the session used over all of its rows.
 
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine account activity [-h] [--since date|age] [--until date|age] [--period date]
-                                [--type {included,charged,settled,expired,expired-removed,credit-purchase}]
-                                [--credit-type {included,usage}] [--limit n] [--sort field]
-                                [--reverse]
-                                [session]
+machine account activity [-h] [--since date|age] [--until date|age] [--period date]
+                         [--type {included,charged,settled,expired,expired-removed,credit-purchase}]
+                         [--credit-type {included,usage}] [--limit n] [--sort field]
+                         [--reverse]
+                         [session]
 ```
 
 | Argument | Does |
@@ -940,9 +945,9 @@ usage: machine account activity [-h] [--since date|age] [--until date|age] [--pe
 
 | Option | Does |
 |---|---|
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
-| `--period date` | Show credit activity in the period containing DATE |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--period date` | Show the plan period that contains this date, such as 2026-10-01 |
 | `--type {included,charged,settled,expired,expired-removed,credit-purchase}` | Filter by activity type |
 | `--credit-type {included,usage}` | Filter by credit type (included or usage) |
 | `--limit n` | Cap to most recent n (default: 25, max 500) |
@@ -970,10 +975,10 @@ List and manage orders. See [Account and billing](account-and-billing.md).
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine account orders [-h]
-                              [--status {pending,processing,completed,cancelled,expired,failed}]
-                              [--limit n]
-                              {list,resume,cancel} ...
+machine account orders [-h]
+                       [--status {pending,processing,completed,cancelled,expired,failed}]
+                       [--limit n]
+                       command ...
 ```
 
 | Option | Does |
@@ -1002,9 +1007,9 @@ List orders.
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine account orders list [-h]
-                                   [--status {pending,processing,completed,cancelled,expired,failed}]
-                                   [--limit n]
+machine account orders list [-h]
+                            [--status {pending,processing,completed,cancelled,expired,failed}]
+                            [--limit n]
 ```
 
 | Option | Does |
@@ -1028,11 +1033,11 @@ See also:
 
 Resume a pending checkout.
 
-The order defaults to the single pending order. Use `--link` to print the URL
-without opening a browser.
+The command resumes the pending order. An account has one at most. Use `--link`
+to print the URL without opening a browser.
 
 ```
-usage: machine account orders resume [-h] [--link]
+machine account orders resume [-h] [--link]
 ```
 
 | Option | Does |
@@ -1055,10 +1060,10 @@ See also:
 
 Cancel a pending order so another buy can start.
 
-The order defaults to the single pending order.
+The command cancels the pending order. An account has one at most.
 
 ```
-usage: machine account orders cancel [-h]
+machine account orders cancel [-h]
 ```
 
 Examples:
@@ -1082,7 +1087,7 @@ account.
 Set TESTFLOWS_MACHINE_API_KEY to use one.
 
 ```
-usage: machine account api-keys [-h] {list,create,delete,update} ...
+machine account api-keys [-h] command ...
 ```
 
 Examples:
@@ -1103,7 +1108,7 @@ See also:
 List API keys.
 
 ```
-usage: machine account api-keys list [-h]
+machine account api-keys list [-h]
 ```
 
 Examples:
@@ -1124,7 +1129,7 @@ Create an API key.
 The secret is shown once. A sign-in code is required.
 
 ```
-usage: machine account api-keys create [-h] [--expiry days|never] name
+machine account api-keys create [-h] [--expiry days|never] name
 ```
 
 | Argument | Does |
@@ -1154,12 +1159,12 @@ Delete an API key.
 A sign-in code is required.
 
 ```
-usage: machine account api-keys delete [-h] id
+machine account api-keys delete [-h] id
 ```
 
 | Argument | Does |
 |---|---|
-| `id` | Key id, as account api-keys lists it |
+| `id` | Key id, as account api-keys list shows it |
 
 Examples:
 
@@ -1179,12 +1184,12 @@ Set the expiry of an API key.
 A sign-in code is required.
 
 ```
-usage: machine account api-keys update [-h] id days|never
+machine account api-keys update [-h] id days|never
 ```
 
 | Argument | Does |
 |---|---|
-| `id` | Key id, as account api-keys lists it |
+| `id` | Key id, as account api-keys list shows it |
 | `days\|never` | Number of days from now (e.g. 30) or "never" |
 
 Examples:
@@ -1201,19 +1206,20 @@ See also:
 
 ### machine account provision
 
-Set up cloud storage. See [Signing up](getting-started.md#signing-up).
+Set up the account's shared storage.
+See [Signing up](getting-started.md#signing-up).
 
 The first session create or disk build sets up storage itself. This command sets
 it up ahead of them. The command is safe to repeat while it is still working.
 
 ```
-usage: machine account provision [-h]
+machine account provision [-h]
 ```
 
 Examples:
 
 ```
-machine account provision  set up cloud storage
+machine account provision  set up shared storage
 ```
 
 See also:
@@ -1230,7 +1236,7 @@ their acceptance. The account is made accepting them. A link is emailed to
 finish signing up.
 
 ```
-usage: machine account signup [-h]
+machine account signup [-h]
 ```
 
 Examples:
@@ -1249,11 +1255,14 @@ See also:
 
 Close the account. See [Account and billing](account-and-billing.md).
 
-Closing takes two steps. The first starts the close. The second confirms it
-after the machines stop. Use `--cancel` to abort a close in progress.
+The command emails a code that starts the close. It waits until the machines of
+every session stop. It then emails a second code that confirms the close.
+
+A close that is not confirmed stays in progress. Run the command again to finish
+it. Use `--cancel` to stop it.
 
 ```
-usage: machine account close [-h] [-y] [--cancel]
+machine account close [-h] [-y] [--cancel]
 ```
 
 | Option | Does |
@@ -1281,7 +1290,7 @@ The command revokes the access token. Use `--everywhere` to sign out of every
 device and browser.
 
 ```
-usage: machine logout [-h] [--everywhere]
+machine logout [-h] [--everywhere]
 ```
 
 | Option | Does |
@@ -1310,18 +1319,18 @@ static binary, a Docker image or a Compose project.
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine disks [-h] [-q] [--no-trunc] [--deleted] [--label name=value] [--since date|age]
-                     [--limit n] [--offset n] [-w]
-                     {list,build,show,transfers,delete,rename,verify,cancel} ...
+machine disks [-h] [-q] [--no-trunc] [--deleted] [--label name=value] [--since date|age]
+              [--limit n] [--offset n] [-w]
+              command ...
 ```
 
 | Option | Does |
 |---|---|
 | `-q, --quiet` | Only show ids |
 | `--no-trunc` | Full disk id |
-| `--deleted` | Show removed disks |
+| `--deleted` | Show deleted disks |
 | `--label name=value` | Filter by a label (repeatable; matches all) |
-| `--since date\|age` | Since a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--limit n` | Show at most n disks (default: 25) |
 | `--offset n` | Skip the first n disks |
 | `-w, --watch` | Watch for changes |
@@ -1355,17 +1364,17 @@ List disks. See [Disks](disks.md).
 The listing shows the newest 25. Use `--limit` for a different page size.
 
 ```
-usage: machine disks list [-h] [-q] [--no-trunc] [--deleted] [--label name=value]
-                          [--since date|age] [--limit n] [--offset n] [-w]
+machine disks list [-h] [-q] [--no-trunc] [--deleted] [--label name=value]
+                   [--since date|age] [--limit n] [--offset n] [-w]
 ```
 
 | Option | Does |
 |---|---|
 | `-q, --quiet` | Only show ids |
 | `--no-trunc` | Full disk id |
-| `--deleted` | Show removed disks |
+| `--deleted` | Show deleted disks |
 | `--label name=value` | Filter by a label (repeatable; matches all) |
-| `--since date\|age` | Since a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--limit n` | Show at most n disks (default: 25) |
 | `--offset n` | Skip the first n disks |
 | `-w, --watch` | Watch for changes |
@@ -1396,19 +1405,21 @@ is needed for `--from`.
 `--compose` takes a project directory and the images its services name.
 
 A binary or an image runs as one container. Use `--entrypoint` to set the
-executable. Use `--env` to set a variable in its environment. Pass arguments
-after --.
+executable. Pass arguments after --.
 
-A project runs every service in it and takes none of the three. The disk holds
-each `--env` value as written.
+Use `--env` to set a variable in the environment of the container. The disk
+holds each `--env` value as written.
+
+A project runs every service in it. It takes no `--entrypoint`, no `--env` and
+no arguments after --.
 
 With `--from` or `--binary`, `--add` puts a file or a directory in the image, as
 one more layer. Without a destination the path lands in the working directory of
 the image, under its own name. Write path:dest to name another place. A dest
 ending in / is a directory.
 
-The name defaults to what the source is called. The size defaults to what the
-pack holds loaded, plus a gigabyte, rounded up to a whole GB. Use `--dry-run` to
+The name defaults to what the source is called. The size defaults to the size of
+the images once loaded, plus 1 GB, rounded up to a whole GB. Use `--dry-run` to
 see those numbers without building anything.
 
 The build writes the images into the Docker store of the disk. A machine created
@@ -1420,10 +1431,10 @@ A guest that runs docker save or docker push on one of the images needs the save
 tars. Such a disk holds each image twice and is sized for both.
 
 ```
-usage: machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir)
-                           [--size size] [--dry-run] [--load-at-boot] [--entrypoint path]
-                           [--add path[:dest]] [--env name=value] [--label name=value]
-                           [name] [-- args ...]
+machine disks build [-h] (--binary path | --image ref | --from ref | --compose dir)
+                    [--size size] [--dry-run] [--load-at-boot] [--entrypoint path]
+                    [--add path[:dest]] [--env name=value] [--label name=value]
+                    [name] [-- args ...]
 ```
 
 | Argument | Does |
@@ -1437,7 +1448,7 @@ usage: machine disks build [-h] (--binary path | --image ref | --from ref | --co
 | `--image ref` | Docker image, a save tar or a name |
 | `--from ref` | Public image, pulled by the build |
 | `--compose dir` | Compose project directory |
-| `--size size` | Disk size, MB or with a K/M/G/T suffix (default: from the pack, rounded up to a GB) |
+| `--size size` | Disk size, MB or with a K/M/G/T suffix (default: the loaded images plus 1 GB, rounded up to a GB) |
 | `--dry-run` | Report what the disk would hold and build nothing |
 | `--load-at-boot` | Keep the images as tars on the disk and load them each time a machine starts from the disk |
 | `--entrypoint path` | Executable the service runs |
@@ -1465,7 +1476,7 @@ See also:
 Show disk details. See [Disks](disks.md).
 
 ```
-usage: machine disks show [-h] name
+machine disks show [-h] name
 ```
 
 | Argument | Does |
@@ -1493,13 +1504,13 @@ history. Use `--since` with `--active` for transfers in flight that started in
 that window.
 
 ```
-usage: machine disks transfers [-h] [--active] [--since date|age] [-w]
+machine disks transfers [-h] [--active] [--since date|age] [-w]
 ```
 
 | Option | Does |
 |---|---|
 | `--active` | Only in-flight transfers |
-| `--since date\|age` | Since a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `-w, --watch` | Watch for changes |
 
 Examples:
@@ -1526,7 +1537,7 @@ A disk that a run was created from is refused. Use `--force` to delete it
 anyway. Those runs stay and can no longer start.
 
 ```
-usage: machine disks delete [-h] [-y] [-f] name [name ...]
+machine disks delete [-h] [-y] [-f] name [name ...]
 ```
 
 | Argument | Does |
@@ -1536,13 +1547,13 @@ usage: machine disks delete [-h] [-y] [-f] name [name ...]
 | Option | Does |
 |---|---|
 | `-y, --yes` | Skip the confirmation prompt |
-| `-f, --force` | Delete even while runs were created from it |
+| `-f, --force` | Delete a disk that runs were created from |
 
 Examples:
 
 ```
 machine disks delete hello -y     delete hello
-machine disks delete hello -f -y  delete it and its runs
+machine disks delete hello -f -y  delete it though runs boot it
 ```
 
 See also:
@@ -1556,7 +1567,7 @@ See also:
 Rename a disk. See [Disks](disks.md).
 
 ```
-usage: machine disks rename [-h] name new-name
+machine disks rename [-h] name new-name
 ```
 
 | Argument | Does |
@@ -1579,9 +1590,9 @@ See also:
 
 Check a stored disk against its id. See [Disks](disks.md).
 
-The command reads the disk back out of account storage. It computes the id,
-which is what the disk is stored under. A disk that reads as stored is verified.
-A disk that does not is reported as damaged.
+The command reads the disk back out of shared storage. It computes the id, which
+is what the disk is stored under. A disk that reads as stored is verified. A
+disk that does not is reported as damaged.
 
 The check is a storage operation and takes about as long as reading the disk. It
 keeps running if the command is interrupted. Run machine storage ops to list it.
@@ -1591,7 +1602,7 @@ The command waits for the result. Use `--no-wait` to return once the request is
 accepted.
 
 ```
-usage: machine disks verify [-h] [--no-wait] name
+machine disks verify [-h] [--no-wait] name
 ```
 
 | Argument | Does |
@@ -1618,7 +1629,7 @@ See also:
 Cancel a transfer in progress. See [Disks](disks.md).
 
 ```
-usage: machine disks cancel [-h] name
+machine disks cancel [-h] name
 ```
 
 | Argument | Does |
@@ -1644,11 +1655,11 @@ See [Stopping and starting](running-a-machine.md#stopping-and-starting).
 The operand is any run or disk of the account. A run fetched here starts later
 without a fetch. A disk fetched here is ready before a run is created from it.
 
-Use -a to fetch the ancestors and disks that this session's runs need. A copy
-already here is skipped. A session is required.
+Use -a to fetch every run that this session's runs branched from, and their
+disks. A copy already here is skipped. A session is required.
 
 ```
-usage: machine preload [-h] [-a] {run,disk} ...
+machine preload [-h] [-a] command ...
 ```
 
 | Option | Does |
@@ -1679,16 +1690,16 @@ there before it is needed. A run already there is skipped. The disk of the run
 is fetched with it.
 
 ```
-usage: machine preload run [-h] [-a] [run]
+machine preload run [-h] [-a] [run]
 ```
 
 | Argument | Does |
 |---|---|
-| `[run]` | Run name |
+| `[run]` | Run name, required without -a |
 
 | Option | Does |
 |---|---|
-| `-a, --all` | Every data parent this session needs |
+| `-a, --all` | Every run this session's runs branched from |
 
 Examples:
 
@@ -1712,7 +1723,7 @@ The command fetches the account disk onto the session. The disk is there before
 a start. A disk already there is skipped.
 
 ```
-usage: machine preload disk [-h] [-a] [disk]
+machine preload disk [-h] [-a] [disk]
 ```
 
 | Argument | Does |
@@ -1752,15 +1763,15 @@ Data the machine has not synced to its disk is not visible. A file a program
 wrote a moment before the checkpoint can be missing, short or empty.
 
 To read the files as they are, execute sync in the machine with exec. Then take
-a checkpoint and read with `--at` now. Use exec alone to read the files of the
-live machine.
+a checkpoint and read with `--at` now. Use exec run with cat to read a file of
+the live machine.
 
 A run created with `--fs-sync` writes every change of a file to the disk as it
 is made. A run created with `--fs-dirsync` does so for every change of a
 directory. Both are options of create and are off by default.
 
 ```
-usage: machine fs [-h] {ls,cp,cat} ...
+machine fs [-h] command ...
 ```
 
 Examples:
@@ -1769,7 +1780,7 @@ Examples:
 machine fs ls run1 /etc --at ^cp1             list a directory at cp1
 machine fs cat run1 /etc/hostname --at ^cp1   print a file
 machine fs cp run1 /etc/hostname . --at ^cp1  copy a file out
-machine fs ls run1 / --at '#300'              at the checkpoint of entry 300
+machine fs ls run1 / --at '#300'              at the checkpoint at entry 300
 machine fs ls run1 / --at now                 at the checkpoint just taken
 ```
 
@@ -1796,7 +1807,7 @@ machine. Use `--at` to name the checkpoint. Data the machine has not synced to
 its disk is not visible.
 
 ```
-usage: machine fs ls [-h] [--at point] [-l] [-a] run [path]
+machine fs ls [-h] [--at point] [-l] [-a] run [path]
 ```
 
 | Argument | Does |
@@ -1806,7 +1817,7 @@ usage: machine fs ls [-h] [--at point] [-l] [-a] run [path]
 
 | Option | Does |
 |---|---|
-| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
+| `--at point` | Required. The checkpoint to read the disk at: ^name, '#entry' of a checkpoint, or now |
 | `-l` | Long format (mode, size, mtime, name) |
 | `-a, --all` | Include the current and parent directory entries |
 
@@ -1839,7 +1850,7 @@ machine. Use `--at` to name the checkpoint. Data the machine has not synced to
 its disk is not visible. Use -r to copy a directory.
 
 ```
-usage: machine fs cp [-h] [--at point] [-r] run path [dest]
+machine fs cp [-h] [--at point] [-r] run path [dest]
 ```
 
 | Argument | Does |
@@ -1850,7 +1861,7 @@ usage: machine fs cp [-h] [--at point] [-r] run path [dest]
 
 | Option | Does |
 |---|---|
-| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
+| `--at point` | Required. The checkpoint to read the disk at: ^name, '#entry' of a checkpoint, or now |
 | `-r, --recursive` | Copy directories recursively |
 
 Examples:
@@ -1875,7 +1886,7 @@ machine. Use `--at` to name the checkpoint. Data the machine has not synced to
 its disk is not visible.
 
 ```
-usage: machine fs cat [-h] [--at point] run path
+machine fs cat [-h] [--at point] run path
 ```
 
 | Argument | Does |
@@ -1885,7 +1896,7 @@ usage: machine fs cat [-h] [--at point] run path
 
 | Option | Does |
 |---|---|
-| `--at point` | Checkpoint to read the disk at, as a point such as ^cp1 |
+| `--at point` | Required. The checkpoint to read the disk at: ^name, '#entry' of a checkpoint, or now |
 
 Examples:
 
@@ -1909,7 +1920,7 @@ Any session can then start the run. The command runs in the session that holds
 the run.
 
 ```
-usage: machine sync [-h] run
+machine sync [-h] run
 ```
 
 | Argument | Does |
@@ -1943,7 +1954,7 @@ Start or preload brings a run back. The next start fetches a disk again. A
 session is required.
 
 ```
-usage: machine offload [-h] [--runs] [--disks] [-a] {list,run,disk} ...
+machine offload [-h] [--runs] [--disks] [-a] command ...
 ```
 
 | Option | Does |
@@ -1976,7 +1987,7 @@ counted below the table. Use `--runs` or `--disks` to show one kind. Omit both,
 or pass both, to show both.
 
 ```
-usage: machine offload list [-h] [--runs] [--disks]
+machine offload list [-h] [--runs] [--disks]
 ```
 
 | Option | Does |
@@ -2009,7 +2020,7 @@ Start or preload brings the run back. The command does not drop the disk of the
 run.
 
 ```
-usage: machine offload run [-h] [-a] [run]
+machine offload run [-h] [-a] [run]
 ```
 
 | Argument | Does |
@@ -2042,7 +2053,7 @@ The command drops the session's copy of the disk. The account disk stays. A disk
 in use by a live machine is refused. The next start fetches the disk again.
 
 ```
-usage: machine offload disk [-h] [-a] [disk]
+machine offload disk [-h] [-a] [disk]
 ```
 
 | Argument | Does |
@@ -2074,7 +2085,7 @@ Storage holds the runs and disks of the account. The subcommands report its use,
 list its operations, reclaim space and read every object back.
 
 ```
-usage: machine storage [-h] [--refresh] {show,ops,prune,check} ...
+machine storage [-h] [--refresh] command ...
 ```
 
 | Option | Does |
@@ -2103,7 +2114,7 @@ Show the storage the account uses.
 See [Account and billing](account-and-billing.md).
 
 ```
-usage: machine storage show [-h] [--refresh]
+machine storage show [-h] [--refresh]
 ```
 
 | Option | Does |
@@ -2133,12 +2144,12 @@ different page size. Use `--state` to show some states.
 STATUS says why an operation failed. It also says how many objects a running
 check has read.
 
-These operations act on the account's storage, not on a run. Machine ops does
-not list them. They answer with no session.
+These operations act on the account's storage, not on a run. The ops command
+does not list them. The command needs no session.
 
 ```
-usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type [^]type]
-                           [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]
+machine storage ops [-h] [--op-id id] [--state [^]state] [--type [^]type]
+                    [--since date|age] [--until date|age] [--limit n] [--offset n] [-w]
 ```
 
 | Option | Does |
@@ -2146,8 +2157,8 @@ usage: machine storage ops [-h] [--op-id id] [--state [^]state] [--type [^]type]
 | `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
 | `--state [^]state` | Filter by state: pending, running, done, failed (default: all; repeat = OR; ^ excludes) |
 | `--type [^]type` | Filter by type: measure, prune, verify, check (default: all; repeat = OR; ^ excludes) |
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--limit n` | Show at most n operations (default: 25) |
 | `--offset n` | Skip the first n operations |
 | `-w, --watch` | Watch for changes |
@@ -2173,7 +2184,7 @@ See [Account and billing](account-and-billing.md).
 The command does nothing while unused data is below 5% of storage.
 
 ```
-usage: machine storage prune [-h] [-y] [--status]
+machine storage prune [-h] [-y] [--status]
 ```
 
 | Option | Does |
@@ -2215,7 +2226,7 @@ The command fails when an object could not be read. It names each one with the
 id of the failed request.
 
 ```
-usage: machine storage check [-h] [--status] [--no-wait]
+machine storage check [-h] [--status] [--no-wait]
 ```
 
 | Option | Does |
@@ -2253,9 +2264,10 @@ instead.
 The run keeps its execution options. Start and fork repeat them unless given
 others.
 
-Use `--keep-output` to store an output file that is dropped. Use `--drop-output`
-to store less. The run keeps both lists for its whole life. The describe command
-shows them.
+A source is a device the machine prints on, such as ttyS1, or a file under
+/output. Use `--keep-output` to store a source that would be dropped. Use
+`--drop-output` to store less. The run keeps both lists for its whole life, and
+the describe command shows them.
 
 A run stores every source but the files under /output/drop. A file there has a
 name and no bytes. A program writes under /output/drop through
@@ -2266,10 +2278,10 @@ A name given to either option may be a pattern, such as /output/drop/*/*.log. A
 star matches within one directory name, a leading dot included, and never a
 slash. Two stars match any number of directories.
 
-A name given to the run decides before the directory does. When a kept name and
-a dropped name cover one source, a name spelled out decides over a pattern. Of
-two names spelled out, the longer decides, and a tie is stored. Of two patterns,
-the kept one decides.
+A name given to `--keep-output` or `--drop-output` decides before the directory
+does. When a kept name and a dropped name cover one source, a name spelled out
+decides over a pattern. Of two names spelled out, the longer decides, and a tie
+keeps the source. Of two patterns, the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
@@ -2278,19 +2290,19 @@ The command waits until the machine accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]
-                      [--drop-output name] [--disk disk] [--mem size] [--cpus n]
-                      [--console {serial,virtio}] [--mem-type {auto,hugepages}]
-                      [--mem-mode {auto,map,lazy}] [--fs-sync | --no-fs-sync]
-                      [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
-                      [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                      [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]
-                      [--limit-margin n] [--timer-slack duration] [--limit n] [--backstop-limit n]
-                      [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
-                      [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
-                      [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                      [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
-                      [name]
+machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output name]
+               [--drop-output name] [--disk disk] [--mem size] [--cpus n]
+               [--console {serial,virtio}] [--mem-type {auto,hugepages}]
+               [--mem-mode {auto,map,lazy}] [--fs-sync | --no-fs-sync]
+               [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
+               [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
+               [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]
+               [--limit-margin n] [--timer-slack duration] [--limit n] [--backstop-limit n]
+               [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
+               [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
+               [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+               [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
+               [name]
 ```
 
 | Argument | Does |
@@ -2309,29 +2321,29 @@ usage: machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep
 | `--cpus n` | Number of CPUs (default: 1) |
 | `--console {serial,virtio}` | Device the console is: serial for ttyS0 (default) or virtio for hvc0 |
 | `--mem-type {auto,hugepages}` | Machine RAM backing: auto (default) or hugepages (local only) |
-| `--mem-mode {auto,map,lazy}` | Cold RAM restore: auto (default), map (4K pages only), or lazy (any backing) |
+| `--mem-mode {auto,map,lazy}` | How memory loads when the run starts from a checkpoint: auto (default), map to load it first, lazy to load each page at first use |
 | `--fs-sync, --no-fs-sync` | Mount filesystem with sync (default: off) |
 | `--fs-dirsync, --no-fs-dirsync` | Mount filesystem with dirsync (default: off) |
 | `--fb type` | Framebuffer type: vnc, gtk, sdl, or none |
 | `--rng, --no-rng` | Enable virtio RNG |
 | `--rng-seed n` | RNG seed (default: 0) |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: on) |
-| `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` |
-| `--rdtsc-exit, --no-rdtsc-exit` | Record an entry for every RDTSC exit (applies only for non-daemon runs) |
+| `--single-step, --no-single-step` | Run in step mode, with `--no-daemon`. A run that waits for commands takes its mode from machine run `--mode` |
+| `--rdtsc-exit, --no-rdtsc-exit` | Record an entry for every RDTSC exit, with `--no-daemon` only |
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries (default: the session's) |
-| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the host's) |
+| `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the host's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: 20ms) |
-| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: 0) |
+| `--limit n` | Conditional branches per dispatch in fast mode, steps in step mode, 0 to leave it to the machine (default: 0) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 | `--vtime-base n` | The vtime base (Unix timestamp, default: 2026-03-01) |
-| `--vtime-rate rate` | The vtime rate (float or num/den, default: 10) |
+| `--vtime-rate rate` | Nanoseconds of machine time for each conditional branch the guest retires, a number or num/den (default: 10) |
 | `--vtime-io-cost ns` | IO exit vtime cost in ns (default: 2000) |
 | `--vtime-rdtsc-cost ns` | RDTSC exit vtime cost in ns (default: the IO cost) |
 | `--vtime-pause-cost ns` | Vtime cost of each PAUSE in ns (default: 2000) |
 | `--auto-checkpoints n` | Checkpoint every n entries, 0 for never (default: scaled by memory, 50000 per 512MB) |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump in the run log (default: off) |
-| `--side-trace, --no-side-trace` | Record a per-entry execution trace in the run log (default: off) |
+| `--side-trace, --no-side-trace` | Record the hypervisor's trace of each entry, for diagnosis (default: off) |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, for a replay to compare (default: off) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, for a replay to compare (default: off) |
 
@@ -2376,10 +2388,10 @@ The command waits until the machine accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine start [-h] [-f] [--read-only] [--recover | --no-recover] [--at checkpoint]
-                     [--parents mode] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                     [--limit n] [--backstop-limit n] [--pin-cpu n] [--no-wait]
-                     run
+machine start [-h] [-f] [--read-only] [--recover | --no-recover] [--at checkpoint]
+              [--parents mode] [--daemon | --no-daemon] [--single-step | --no-single-step]
+              [--limit n] [--backstop-limit n] [--pin-cpu n] [--no-wait]
+              run
 ```
 
 | Argument | Does |
@@ -2391,11 +2403,11 @@ usage: machine start [-h] [-f] [--read-only] [--recover | --no-recover] [--at ch
 | `-f, --force` | Stop a running instance first, then start |
 | `--read-only` | Start read-only at a checkpoint, unable to run or record |
 | `--recover, --no-recover` | Replay a tip that was never checkpointed from the last checkpoint (default: on) |
-| `--at checkpoint` | Checkpoint to replay to the tip from, or to open with `--read-only` |
-| `--parents mode` | Read data parents from the session (local) or the published tree (remote) |
+| `--at checkpoint` | Checkpoint to replay to the tip from, or to open with `--read-only`: ^name, or #entry of a checkpoint |
+| `--parents mode` | Where to read the runs it branched from: local for this session, remote for shared storage |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
-| `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
-| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: the run's) |
+| `--single-step, --no-single-step` | Run in step mode, with `--no-daemon`. A run that waits for commands takes its mode from machine run `--mode` (default: the run's) |
+| `--limit n` | Conditional branches per dispatch in fast mode, steps in step mode, 0 to leave it to the machine (default: the run's) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: the run's) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 | `--no-wait` | Return without waiting |
@@ -2404,7 +2416,7 @@ Examples:
 
 ```
 machine start run1              resume run1 at its tip
-machine start run1 --at 42      replay from checkpoint 42 to the tip
+machine start run1 --at ^cp1    replay from cp1 to the tip
 machine start run1 --read-only  open it at its last checkpoint
 machine start run1 -f           stop a running one first, then start
 ```
@@ -2431,7 +2443,7 @@ The command waits until the machine is paused. Use `--no-wait` to return once
 the request is accepted.
 
 ```
-usage: machine pause [-h] [--no-wait] run
+machine pause [-h] [--no-wait] run
 ```
 
 | Argument | Does |
@@ -2463,7 +2475,7 @@ The command waits until the machine accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine resume [-h] [--no-wait] run
+machine resume [-h] [--no-wait] run
 ```
 
 | Argument | Does |
@@ -2497,14 +2509,14 @@ machine. Use `--dry-run` to list what would stop.
 A machine that refuses to stop stays up and is reported. A machine that does not
 stop in time stays up too. Use -f with -a or -r to kill those machines.
 
-The command lists the machines it would kill and asks first. Use -y to kill
-without asking.
+With -f, the command lists the machines it would kill and asks first. Use -y to
+kill without asking.
 
 The command waits until the machine is gone. A machine that already exited
 counts as success. Use `--no-wait` to return once the request is accepted.
 
 ```
-usage: machine stop [-h] [-a] [-r] [-f] [-y] [--dry-run] [--no-wait] [run]
+machine stop [-h] [-a] [-r] [-f] [-y] [--dry-run] [--no-wait] [run]
 ```
 
 | Argument | Does |
@@ -2541,19 +2553,20 @@ See also:
 
 ## machine kill
 
-Kill a machine. Save its state first when it still can.
+Stop a machine, and end it if it does not stop.
 See [Stopping and starting](running-a-machine.md#stopping-and-starting).
 
 The machine is asked to stop and save, as stop does. It is ended if it does not
 stop.
 
-The next start replays the tip of a machine that did not save. Kill says so.
+The next start replays the tip of a machine that did not save. The command says
+when the machine did not save.
 
 The command waits until the machine is gone. A machine already gone counts as
 success. Use `--no-wait` to return once the request is accepted.
 
 ```
-usage: machine kill [-h] [--no-wait] run
+machine kill [-h] [--no-wait] run
 ```
 
 | Argument | Does |
@@ -2567,7 +2580,7 @@ usage: machine kill [-h] [--no-wait] run
 Examples:
 
 ```
-machine kill run1            kill run1 at once
+machine kill run1            stop run1, end it if it hangs
 machine kill run1 --no-wait  return once the request is accepted
 ```
 
@@ -2579,7 +2592,7 @@ See also:
 
 ## machine delete
 
-Delete a run that is not running and its artifacts.
+Delete a run that is not running, with its log and checkpoints.
 See [Stopping and starting](running-a-machine.md#stopping-and-starting).
 
 Use -r to delete a branch with its descendants. Use `--dry-run` to list what
@@ -2589,17 +2602,17 @@ The first operand names the run to delete. Use -a to delete every run, or
 `--disk` to delete every run created from one disk. Use `--cleanup` -a to resume
 interrupted deletes.
 
-The command waits until the run is gone. Use -f to stop a running machine first.
-The stop is waited for either way. Use `--no-wait` to return once the request is
-accepted.
+The command waits until the run is gone. Use `--stop` to stop a running machine
+first. Use -f to also delete a run whose machine is gone. Use `--no-wait` to
+return once the request is accepted.
 
 A delete is an operation. It goes on if the command is interrupted. Run machine
 ops to list it.
 
 ```
-usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [--cleanup] [--full-scan]
-                      [--dry-run] [--no-wait]
-                      [run]
+machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [--cleanup] [--full-scan]
+               [--dry-run] [--no-wait]
+               [run]
 ```
 
 | Argument | Does |
@@ -2613,9 +2626,9 @@ usage: machine delete [-h] [-a] [--disk name|id] [-r] [-y] [--stop] [-f] [--clea
 | `-r, --recursive` | Delete branch and all descendants |
 | `-y, --yes` | Skip the confirmation prompt |
 | `--stop` | Stop running machines before deleting |
-| `-f, --force` | Implies `--stop`, and deletes a run whose machine is already gone or whose process was replaced |
+| `-f, --force` | Implies `--stop`, and deletes a run whose machine is already gone |
 | `--cleanup` | Resume interrupted delete operations |
-| `--full-scan` | Scan all branches instead of using index (with `--cleanup`) |
+| `--full-scan` | With `--cleanup`, check every run, not only those recorded as interrupted |
 | `--dry-run` | List what would be deleted/recovered without acting |
 | `--no-wait` | Return once the delete of one run is accepted |
 
@@ -2647,16 +2660,16 @@ See also:
 Remove stale runs and their leftovers.
 See [Stopping and starting](running-a-machine.md#stopping-and-starting).
 
-A stale run has an entry but no machine. Use -f to hard-kill orphaned machines
-and remove their entries too.
+A stale run is listed as running but has no machine. Use -f to kill machines
+that belong to no run, and to remove those runs from the list.
 
 ```
-usage: machine cleanup [-h] [-f]
+machine cleanup [-h] [-f]
 ```
 
 | Option | Does |
 |---|---|
-| `-f, --force` | Also hard-kill orphaned machines and remove entries whose machine is already gone |
+| `-f, --force` | Also kill machines that belong to no run, and remove runs whose machine is already gone |
 
 Examples:
 
@@ -2765,12 +2778,12 @@ The global timeout cancels the run in flight. Without one there is no limit. A
 timeout of 0 checks once without batching. Exit 3 means the predicate was not
 reached.
 
-`--iters` is an upper bound, not a count. A batch ends at every context switch
-of a focused task. A batch also ends where a task reaches its own code. The
-response reports how many iterations ran.
+`--iters` is an upper bound, not a count. A batch is the iterations one request
+of the command runs. It ends at every context switch of a focused task, a task
+the focus command names. It also ends where a task reaches its own code.
 
-Without `--until`, a batch that ends early ends the run. With `--until`, the
-drive continues from the next batch.
+Without `--until`, a batch that ends early ends the run. With `--until`, the run
+goes on with the next batch. The response reports how many iterations ran.
 
 Every parameter is drawn for one iteration. The mode, the limit, the task marks
 and the interrupt apply to the task on that one vCPU.
@@ -2787,9 +2800,9 @@ bound at every iteration, so a slow host does not end the run sooner. With
 `--until`, the first of the two to hold ends it. Without `--until`, the run goes
 on until the clock has moved that far.
 
-Without `--iters`, only the timeout bounds the drive, so `--until` tasks runs a
-whole boot. A span bounds nothing either. It draws a batch size per dispatch, so
-`--iters` 100:500 `--until` on keeps going.
+Without `--iters`, only the timeout bounds the run, so `--until` tasks runs a
+whole boot. A span is lo:hi, a range one value is drawn from for each dispatch.
+A span bounds nothing either, so `--iters` 100:500 `--until` on keeps going.
 
 `--when` bounds nothing. It names what must be true for the clause to apply to a
 dispatch. A dispatch it excludes runs free, up to the crossing into the subject.
@@ -2801,8 +2814,8 @@ ran free too.
 
 `--when` takes on, kernel and off. Each is a state, not an edge.
 
-This one clause is the CLI. More than one clause is a plan file. Run machine
-plan `<run>` `<file>` for each drive that uses it.
+The options of run make one clause of a plan. Use machine plan `<run>` `<file>`
+for a run of more than one clause.
 
 A hit of a breakpoint, watchpoint or catchpoint ends the run. Use `--iters` 0 to
 run until one does, as GDB's continue does.
@@ -2813,13 +2826,13 @@ entry, as go does. The branch keeps the run's stops as they are now. The run
 stays as it was.
 
 ```
-usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                   [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
-                   [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
-                   [--fast span] [--step span] [--step-into span] [--fence span]
-                   [--vtime-rate span] [--vtime-add span] [--task-sched choices]
-                   [--task-slice choices] [--task-int choices] [--when predicate]
-                   run
+machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
+            [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
+            [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
+            [--fast span] [--step span] [--step-into span] [--fence span]
+            [--vtime-rate span] [--vtime-add span] [--task-sched choices]
+            [--task-slice choices] [--task-int choices] [--when predicate]
+            run
 ```
 
 | Argument | Does |
@@ -2846,7 +2859,7 @@ usage: machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n]
 | `--fast span` | Limit fast draws when it wins (its member), overriding `--limit` |
 | `--step span` | Limit step draws when it wins (its member), overriding `--limit` |
 | `--step-into span` | Limit step-into draws when it wins (its member) |
-| `--fence span` | Branches fence draws stop at when it wins (its member), overriding `--limit` |
+| `--fence span` | Conditional branches to stop at when fence mode is drawn, overriding `--limit` |
 | `--vtime-rate span` | Vtime rate for this run: n, n/d, or a span of either |
 | `--vtime-add span` | Nanoseconds to push the clock forward before each dispatch |
 | `--task-sched choices` | Draw a scheduler mark per dispatch for the task on that vCPU: keep, hold, yield, drain, drain-all |
@@ -2998,11 +3011,11 @@ them for the dispatches it matches. A dispatch that no clause matches runs free.
 steer the run as on run. The clause axes and when belong in the file, not here.
 
 ```
-usage: machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-                    [--seed n] [--vcpu span] [--iters span] [--until predicate]
-                    [--within duration] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
-                    [--auto-checkpoints n]
-                    run file
+machine plan [-h] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
+             [--seed n] [--vcpu span] [--iters span] [--until predicate]
+             [--within duration] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+             [--auto-checkpoints n]
+             run file
 ```
 
 | Argument | Does |
@@ -3071,7 +3084,7 @@ machine. Use `--entries` to select the commands issued at given run entries. Use
 -n to select commands by number.
 
 ```
-usage: machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|log [run]
+machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|log [run]
 ```
 
 | Argument | Does |
@@ -3083,8 +3096,8 @@ usage: machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|l
 |---|---|
 | `--entries range` | With log: commands at one entry, or an inclusive range |
 | `--wide` | With log: show the entries, vCPU, opcode and size of each command |
-| `-n, --lines range` | With log: command N, A:B, A:, :B or :, -N for the last N commands, or -A:-B counted from the end |
-| `-c, --command cmd` | Slash command (e.g. "/s=0@10") |
+| `-n, --lines range` | With log: commands: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
+| `-c, --command cmd` | Slash command to run without opening the prompt, such as "/f@100" |
 
 Examples:
 
@@ -3160,7 +3173,7 @@ The global timeout bounds the wait. Without one there is no limit. A timeout of
 Exit codes: 0 success, 2 error, 3 timeout.
 
 ```
-usage: machine wait [-h] [--all] --for predicate [--interval s] [run ...]
+machine wait [-h] [--all] --for predicate [--interval s] [run ...]
 ```
 
 | Argument | Does |
@@ -3196,7 +3209,7 @@ See [Trying different schedules](running-a-machine.md#trying-different-schedules
 A run stops where it is. A replay stops before its next entry.
 
 ```
-usage: machine cancel [-h] run
+machine cancel [-h] run
 ```
 
 | Argument | Does |
@@ -3212,7 +3225,7 @@ machine cancel run1  cancel what run1 is running
 Refuses, and the way past:
 
 ```
-a run with nothing in progress  machine run run1
+a run with nothing in progress  machine state run1
 ```
 
 See also:
@@ -3237,9 +3250,9 @@ Use `--to` to stop at a point of the line that is replayed. The point is an
 entry, a checkpoint or a time of that line. A checkpoint the parent took after
 the fork is such a point.
 
-Naming a line replays the entries that lead to that run, across every fork on
-the way. The run must be in the same tree. A line that is not the own line of
-this run is not refused. The replay diverges at the first entry that does not
+The line of a run is its entries from the root on, across every fork. Naming a
+run replays the entries of its line. The run must be in the same tree, and need
+not be on this run's line. The replay diverges at the first entry that does not
 reproduce.
 
 An entry that diverges is replayed again from the newest checkpoint before it,
@@ -3248,8 +3261,8 @@ entry that the host interrupted is replayed again the same way. It is not a
 divergence.
 
 Use `--retry` to set how many retries. `--retry` 0 replays each entry once. Use
-`--limit-margin` to set how many branches short of each recorded entry the
-branch counter interrupts. A smaller margin makes a miss more likely.
+`--limit-margin` to set how many conditional branches short of each recorded
+entry the CPU's counter interrupts. A smaller margin makes a miss more likely.
 
 The replay stores what the branch keeps of its output. A branch that keeps an
 output file its parent dropped is how the file is read. Use fork with
@@ -3257,8 +3270,8 @@ output file its parent dropped is how the file is read. Use fork with
 executes.
 
 ```
-usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--limit-margin n]
-                      run [line]
+machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--limit-margin n]
+               run [line]
 ```
 
 | Argument | Does |
@@ -3268,10 +3281,10 @@ usage: machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--lim
 
 | Option | Does |
 |---|---|
-| `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark (default: the end of the line) |
+| `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark (default: the end of the line) |
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
-| `--limit-margin n` | Branches short of each recorded stop where the branch counter interrupts (default: the host's) |
+| `--limit-margin n` | Conditional branches short of each recorded stop where the CPU's counter interrupts (default: the host's) |
 
 Examples:
 
@@ -3305,22 +3318,23 @@ Play recorded entries without checking divergence. See [Replay](replay.md).
 
 Use `--include` and `--exclude` to select the event types to play.
 
-The source must be in the tree of this run. Divergence is not checked. A source
-that is not the own line of this run is played, not refused.
+The line of a run is its entries from the root on, as replay says. The run named
+must be in the tree of this run, and need not be on its line. Divergence is not
+checked.
 
 ```
-usage: machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type ...]]
-                    run [source]
+machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type ...]]
+             run [line]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `[source]` | Source run (default: parent) |
+| `[line]` | Run whose line to play, defaulting to the parent's |
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entry N, A:B, A:, :B or :, -N for the last N entries, or -A:-B counted from the end |
+| `-n, --entries range` | Entries: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
 | `--include type [type ...]` | Include only these event types: run, irq, exception, random, device_in, block_done, input, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid |
 | `--exclude type [type ...]` | Exclude these event types |
 
@@ -3352,7 +3366,7 @@ against that run, at its own entry when given as other:m. A difference between
 two recordings says that they differ, not that a replay diverged.
 
 ```
-usage: machine diff [-h] [--show sections] [--entry n] [--context n] run [other[:m]]
+machine diff [-h] [--show sections] [--entry n] [--context n] run [other[:m]]
 ```
 
 | Argument | Does |
@@ -3392,7 +3406,7 @@ Fork, go and rewind return to it.
 The machine also checkpoints on its own, at the interval that create sets.
 
 ```
-usage: machine checkpoint [-h] run [name]
+machine checkpoint [-h] run [name]
 ```
 
 | Argument | Does |
@@ -3448,10 +3462,10 @@ A name given to either option may be a pattern, such as /output/drop/*/*.log. A
 star matches within one directory name, a leading dot included, and never a
 slash. Two stars match any number of directories.
 
-A name given to the run decides before the directory does. When a kept name and
-a dropped name cover one source, a name spelled out decides over a pattern. Of
-two names spelled out, the longer decides, and a tie is stored. Of two patterns,
-the kept one decides.
+A name given to `--keep-output` or `--drop-output` decides before the directory
+does. When a kept name and a dropped name cover one source, a name spelled out
+decides over a pattern. Of two names spelled out, the longer decides, and a tie
+keeps the source. Of two patterns, the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
@@ -3460,14 +3474,14 @@ The command waits until the branch accepts commands. Use `--no-wait` to return
 once the request is accepted.
 
 ```
-usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
-                    [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
-                    [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
-                    [--repeatable | --no-repeatable] [--limit-margin n] [--timer-slack duration]
-                    [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
-                    [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
-                    [--limit n] [--backstop-limit n] [--pin-cpu n]
-                    run
+machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
+             [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
+             [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
+             [--repeatable | --no-repeatable] [--limit-margin n] [--timer-slack duration]
+             [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
+             [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
+             [--limit n] [--backstop-limit n] [--pin-cpu n]
+             run
 ```
 
 | Argument | Does |
@@ -3476,26 +3490,26 @@ usage: machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
-| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
-| `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
+| `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
-| `--lean` | With `--rebase`, drop the absorbed history so those runs become deletable |
-| `--no-start` | Create the branch without starting it |
+| `--lean` | With `--rebase`, keep no history shared with the ancestors, so they can be deleted |
+| `--no-start` | Create the new run without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
-| `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--side-trace, --no-side-trace` | Record the hypervisor's trace of each entry, for diagnosis, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
-| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the run's) |
+| `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
-| `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
-| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: the run's) |
+| `--single-step, --no-single-step` | Run in step mode, with `--no-daemon`. A run that waits for commands takes its mode from machine run `--mode` (default: the run's) |
+| `--limit n` | Conditional branches per dispatch in fast mode, steps in step mode, 0 to leave it to the machine (default: the run's) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: the run's) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 
@@ -3531,9 +3545,8 @@ to the point.
 The machine moves onto the branch. The run it leaves is listed as switched. A
 switched run keeps its history and has no machine.
 
-Go is the only command that branches and switches in one step. The point is a
-time, #entry, ^checkpoint, console\~REGEX, now, parent [n], root or a mark
-written %mark. Each names a point on the own line of this run.
+Go is the only command that branches and switches in one step. The point operand
+lists the forms a point takes. Each names a point on the own line of this run.
 
 console\~REGEX is where the console first printed a match. It is the entry that
 printed the first byte of the match. The name of another source takes the place
@@ -3567,35 +3580,35 @@ A name given to either option may be a pattern, such as /output/drop/*/*.log. A
 star matches within one directory name, a leading dot included, and never a
 slash. Two stars match any number of directories.
 
-A name given to the run decides before the directory does. When a kept name and
-a dropped name cover one source, a name spelled out decides over a pattern. Of
-two names spelled out, the longer decides, and a tie is stored. Of two patterns,
-the kept one decides.
+A name given to `--keep-output` or `--drop-output` decides before the directory
+does. When a kept name and a dropped name cover one source, a name spelled out
+decides over a pattern. Of two names spelled out, the longer decides, and a tie
+keeps the source. Of two patterns, the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
 
 ```
-usage: machine go [options] <run> <point>
+machine go [options] <run> <point>
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | The running machine that moves |
-| `[point ...]` | Where to branch: a time such as 10ms or -10ms, #entry, ^checkpoint, console\~regex, now, parent [n], root, or %mark |
+| `[point ...]` | Where to branch: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
 
 | Option | Does |
 |---|---|
-| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
-| `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
-| `--lean` | With `--rebase`, drop the absorbed history so those runs become deletable |
+| `--lean` | With `--rebase`, keep no history shared with the ancestors, so they can be deleted |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
-| `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--side-trace, --no-side-trace` | Record the hypervisor's trace of each entry, for diagnosis, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
-| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the run's) |
+| `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3609,6 +3622,7 @@ machine go run1 ^cp1                 branch at checkpoint cp1 and switch
 machine go run1 '#120' --name probe  branch at entry 120 as probe
 machine go run1 parent               branch where run1 left its parent
 machine go run1 -10ms                branch 10 ms before now
+machine go run1 console:120          branch where line 120 was printed
 machine go run1 now --from ^cp1      replay the branch from cp1
 ```
 
@@ -3642,7 +3656,7 @@ history and has no machine.
 Go forks a branch and switches onto it. Fork forks a branch without switching.
 
 ```
-usage: machine switch [-h] [--no-wait] run [branch ...]
+machine switch [-h] [--no-wait] run [branch ...]
 ```
 
 | Argument | Does |
@@ -3687,13 +3701,13 @@ the line it was forked from. A run with a branch forked after the point is
 refused.
 
 ```
-usage: machine rewind <run> to <point>
+machine rewind <run> to <point>
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point ...]` | Point to go back to, from #1 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
+| `[point ...]` | Point to go back to, from #1 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
 
 Examples:
 
@@ -3747,23 +3761,23 @@ A name given to either option may be a pattern, such as /output/drop/*/*.log. A
 star matches within one directory name, a leading dot included, and never a
 slash. Two stars match any number of directories.
 
-A name given to the run decides before the directory does. When a kept name and
-a dropped name cover one source, a name spelled out decides over a pattern. Of
-two names spelled out, the longer decides, and a tie is stored. Of two patterns,
-the kept one decides.
+A name given to `--keep-output` or `--drop-output` decides before the directory
+does. When a kept name and a dropped name cover one source, a name spelled out
+decides over a pattern. Of two names spelled out, the longer decides, and a tie
+keeps the source. Of two patterns, the kept one decides.
 
 The name none, given alone, is an empty list. Use it to keep or to drop nothing
 where the run would have the names of another run.
 
 ```
-usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
-                      [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-                      [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
-                      [--limit-margin n] [--timer-slack duration] [--disk-hash | --no-disk-hash]
-                      [--keep-output name] [--drop-output name] [--no-wait]
-                      [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
-                      [--backstop-limit n] [--pin-cpu n]
-                      run
+machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
+               [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
+               [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
+               [--limit-margin n] [--timer-slack duration] [--disk-hash | --no-disk-hash]
+               [--keep-output name] [--drop-output name] [--no-wait]
+               [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
+               [--backstop-limit n] [--pin-cpu n]
+               run
 ```
 
 | Argument | Does |
@@ -3772,23 +3786,23 @@ usage: machine detach [-h] [--at point [point ...]] [--from point [point ...]] [
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new branch is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, now, parent [n], root, or %mark |
-| `--from point [point ...]` | Earlier point to replay the new branch from: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The branch is forked at the checkpoint at or before it |
-| `--name name` | Name for the new branch, defaulting to an address: the entry it lands on, and for detach the run it copied as well |
-| `--no-start` | Create the branch without starting it |
+| `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--name name` | Name for the new run (default: a name made from where it starts) |
+| `--no-start` | Create the new run without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
-| `--side-trace, --no-side-trace` | Record a per-entry kernel trace, whatever the run it comes from records |
+| `--side-trace, --no-side-trace` | Record the hypervisor's trace of each entry, for diagnosis, whatever the run it comes from records |
 | `--mem-hash, --no-mem-hash` | Hash guest memory at every entry, whatever the run it comes from records |
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
-| `--limit-margin n` | Branches short of a stop where the branch counter interrupts (default: the run's) |
+| `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: the run's) |
-| `--single-step, --no-single-step` | Step mode with `--no-daemon`. A run that waits takes its mode from run `--mode` (default: the run's) |
-| `--limit n` | Branches per dispatch under fast, steps under step, 0 to leave it to the machine (default: the run's) |
+| `--single-step, --no-single-step` | Run in step mode, with `--no-daemon`. A run that waits for commands takes its mode from machine run `--mode` (default: the run's) |
+| `--limit n` | Conditional branches per dispatch in fast mode, steps in step mode, 0 to leave it to the machine (default: the run's) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: the run's) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 
@@ -3820,9 +3834,9 @@ The durable column says whether a checkpoint is synced to shared storage. Use -o
 json for an object of run_id, hosted and checkpoints instead of a bare list.
 
 ```
-usage: machine checkpoints [-h] [--durable] [--since date|age] [--until date|age] [--sort field]
-                           [--reverse] [--limit n] [--offset n] [-w]
-                           run
+machine checkpoints [-h] [--durable] [--since date|age] [--until date|age] [--sort field]
+                    [--reverse] [--limit n] [--offset n] [-w]
+                    run
 ```
 
 | Argument | Does |
@@ -3832,9 +3846,9 @@ usage: machine checkpoints [-h] [--durable] [--since date|age] [--until date|age
 | Option | Does |
 |---|---|
 | `--durable` | Show only checkpoints synced to shared storage |
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
-| `--sort field` | Sort field (default: entry) |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--sort field` | Sort field: entry, date, name (default: entry) |
 | `--reverse` | Reverse sort order |
 | `--limit n` | Show at most n checkpoints (default: 25) |
 | `--offset n` | Skip the first n checkpoints |
@@ -3854,7 +3868,7 @@ text      NAME ID VTIME DURABLE ANCESTOR
 ID        the entry the checkpoint is at
 VTIME     machine time there, with +N among entries at one time
 DURABLE   ticked when it is in shared storage, no when it is not
-ANCESTOR  the run that made it, for one a branch was forked with
+ANCESTOR  the ancestor that took it, for a checkpoint this run did not take
 ```
 
 See also:
@@ -3875,7 +3889,7 @@ Without a command, marks of every tree are listed. Use list with a run for the
 marks of that run's tree. No running machine is needed.
 
 ```
-usage: machine marks [-h] {list,add,remove} ...
+machine marks [-h] command ...
 ```
 
 Examples:
@@ -3899,7 +3913,7 @@ List marks. See [Marks](checkpoints-and-branches.md#marks).
 The listing covers every tree, or the tree of one run when a run is named.
 
 ```
-usage: machine marks list [-h] [run]
+machine marks list [-h] [run]
 ```
 
 | Argument | Does |
@@ -3927,7 +3941,7 @@ Marking a branch again with the same word succeeds. A word that another branch
 in the tree already holds is refused. The mark stays with that branch.
 
 ```
-usage: machine marks add [-h] run mark
+machine marks add [-h] run mark
 ```
 
 | Argument | Does |
@@ -3954,7 +3968,7 @@ Take a mark off a branch. See [Marks](checkpoints-and-branches.md#marks).
 The command is refused when the branch does not carry the mark.
 
 ```
-usage: machine marks remove [-h] run mark
+machine marks remove [-h] run mark
 ```
 
 | Argument | Does |
@@ -3986,9 +4000,9 @@ size. Use `--depth` to keep one level of the tree, 0 for the roots. Naming any
 run in a tree, root or branch, limits the listing to that tree.
 
 ```
-usage: machine branches [-h] [--running] [--depth n] [--since date|age] [--until date|age]
-                        [--sort field] [--reverse] [--limit n] [--offset n] [-w]
-                        [run]
+machine branches [-h] [--running] [--depth n] [--since date|age] [--until date|age]
+                 [--sort field] [--reverse] [--limit n] [--offset n] [-w]
+                 [run]
 ```
 
 | Argument | Does |
@@ -3999,9 +4013,9 @@ usage: machine branches [-h] [--running] [--depth n] [--since date|age] [--until
 |---|---|
 | `--running` | Show only running branches |
 | `--depth n` | Show only branches at this depth from the root, 0 is the root |
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
-| `--sort field` | Sort field (default: created) |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--sort field` | Sort field: created, name (default: created) |
 | `--reverse` | Reverse sort order |
 | `--limit n` | Show at most n branches (default: 25) |
 | `--offset n` | Skip the first n branches |
@@ -4037,7 +4051,7 @@ Show the ancestors of a branch, from the root down.
 See [Seeing the tree](checkpoints-and-branches.md#seeing-the-tree).
 
 ```
-usage: machine lineage [-h] run
+machine lineage [-h] run
 ```
 
 | Argument | Does |
@@ -4071,7 +4085,7 @@ device input.
 Use -n to select entries, and -f to follow new output.
 
 ```
-usage: machine entries [-h] [-n range] [-f] run
+machine entries [-h] [-n range] [-f] run
 ```
 
 | Argument | Does |
@@ -4080,7 +4094,7 @@ usage: machine entries [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entry N, A:B, A:, :B or :, -N for the last N entries, or -A:-B counted from the end |
+| `-n, --entries range` | Entries: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
 | `-f, --follow` | Follow new output (like tail -f) |
 
 Examples:
@@ -4124,11 +4138,11 @@ a run limits the listing to its tree. Use `--roots` for one row per tree, and
 `--wide` for more columns.
 
 ```
-usage: machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value]
-                    [--flag name[=value]] [--disk name|id] [--parents mode] [--synced |
-                    --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse]
-                    [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
-                    [root]
+machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value]
+             [--flag name[=value]] [--disk name|id] [--parents mode] [--synced |
+             --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse]
+             [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
+             [root]
 ```
 
 | Argument | Does |
@@ -4141,14 +4155,14 @@ usage: machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=
 | `--running` | Show only running runs, the same as `--state` running |
 | `--roots` | One row per tree instead of every run, with its running N/M |
 | `--label name=value` | Filter by a label (repeatable; matches all) |
-| `--flag name[=value]` | Filter by a run flag (repeatable; matches all) |
+| `--flag name[=value]` | Filter by an option the run was created with, such as daemon or rng; name=0 for one it was not (repeatable; matches all) |
 | `--disk name\|id` | Filter by the disk a run was created from |
-| `--parents mode` | Filter by where a run reads data parents: local, remote |
+| `--parents mode` | Filter by where a run reads the runs it branched from: local for this session, remote for shared storage |
 | `--synced` | Show only runs published to shared storage |
 | `--not-synced` | Show only runs with nothing published |
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
-| `--sort field` | Sort field (default: created) |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--sort field` | Sort field: created, name, cpus, memory, rng-seed, limit (default: created) |
 | `--reverse` | Reverse sort order |
 | `--limit n` | Show at most n runs (default: 25) |
 | `--offset n` | Skip the first n runs |
@@ -4194,7 +4208,7 @@ See [Looking at it](running-a-machine.md#looking-at-it).
 The configuration covers the state, resources, options and lineage of the run.
 
 ```
-usage: machine describe [-h] run
+machine describe [-h] run
 ```
 
 | Argument | Does |
@@ -4223,14 +4237,14 @@ See also:
 
 ## machine state
 
-Show the state of a running machine.
+Show the state of a run and of its machine.
 See [Looking at it](running-a-machine.md#looking-at-it).
 
-The command shows the activity, virtual time, entry and resources of the
+The command shows the activity, machine time, entry and resources of the
 machine.
 
 ```
-usage: machine state [-h] run
+machine state [-h] run
 ```
 
 | Argument | Does |
@@ -4276,7 +4290,7 @@ tells apart the entries that share it. 0.2s is the first entry at that time and
 A time with +N is a point like any other. It names exactly one entry.
 
 ```
-usage: machine now [-h] run
+machine now [-h] run
 ```
 
 | Argument | Does |
@@ -4292,8 +4306,9 @@ machine now run1  entry, vtime and RIP of run1
 Prints:
 
 ```
-text  vtime=<time> entry=<id> vcpu=<n> rip=<address>
-json  entry_id vtime vtime_offset vcpu rip
+text  vtime=<time> entry=<id> vcpu=<n> rip=<address> <event> hash=<hash>
+      the event as entries names it, IO_OUT, and its state hash
+json  entry_id vtime vtime_offset vcpu rip event state_hash
       vtime in nanoseconds, rip as a decimal number
       vtime_offset is the N of +N
 ```
@@ -4335,15 +4350,16 @@ Use `--entries` to select the output of given entries, -n to select lines, and
 The command prints lines and does not search them. Pipe it to grep to find text,
 or to less to page through it. Use -n : to hand them every line.
 
-Use `--wide` to see which entries and which source printed each line, and its
-number. ENTRIES is the first and the last entry of the line.
+On a terminal each line shows the entries and the source that printed it, and
+its number. ENTRIES is the first and the last entry of the line. Into a pipe or
+a file the lines are printed alone. Use `--wide` or `--plain` to choose.
 
 The entry subcommand gives the one entry that printed a byte. Use it for the
 exact entry of a match.
 
 ```
-usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source name]
-                      run {entry,sources,bytes,search} ...
+machine output [-h] [-n range] [--entries range] [-f] [--wide] [--plain] [--source name]
+               run command ...
 ```
 
 | Argument | Does |
@@ -4352,16 +4368,18 @@ usage: machine output [-h] [-n range] [--entries range] [-f] [--wide] [--source 
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Line N, A:B, A:, :B or :, -N for the last N lines, or -A:-B counted from the end |
-| `--entries range` | Output of one entry, or of an inclusive range |
+| `-n, --lines range` | Lines: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
+| `--entries range` | Output of entry N, or of entries A:B, both ends included |
 | `-f, --follow` | Follow new output (like tail -f) |
-| `--wide` | Show the entries and the source that printed each line, and its number |
+| `--wide` | Show the entries and the source that printed each line, and its number (default on a terminal) |
+| `--plain` | Print the lines alone (default into a pipe or a file) |
 | `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
 Examples:
 
 ```
 machine output run1                                    the last lines
+machine output run1 --plain                            the lines alone
 machine output run1 -f                                 follow new output
 machine output run1 -n : | grep -n login               find text
 machine output run1 -n : | less -RN                    page through it
@@ -4376,10 +4394,11 @@ machine output run1 --source /output/keep              every file under it
 Prints:
 
 ```
-text              the lines as the machine printed them
+text              ENTRIES SOURCE LINE OUTPUT on a terminal
+                  the lines as the machine printed them into a pipe or a file
 no output stored  No output stored for <path>, for a file with a name and no bytes
 --source all      each line after its source, such as ttyS0
---wide            ENTRIES SOURCE LINE OUTPUT
+--plain           the lines alone, on a terminal too
 ENTRIES           <first>:<last>, the entries that printed the line
 SOURCE            the source that printed the line, such as ttyS0
 LINE              the line's number, as -n counts them
@@ -4415,7 +4434,7 @@ The entry is a point. Use it with go, fork, rewind and the other commands that
 take an entry.
 
 ```
-usage: machine output run entry [-h] [--source name] offset
+machine output run entry [-h] [--source name] offset
 ```
 
 | Argument | Does |
@@ -4473,7 +4492,7 @@ The list is made where the output is kept, so the output is not downloaded. The
 output of the ancestors of the run is counted.
 
 ```
-usage: machine output run sources [-h]
+machine output run sources [-h]
 ```
 
 Examples:
@@ -4516,7 +4535,7 @@ The bytes are read where the output is kept. The output of the ancestors of the
 run comes first.
 
 ```
-usage: machine output run bytes [-h] [--source name]
+machine output run bytes [-h] [--source name]
 ```
 
 | Option | Does |
@@ -4571,9 +4590,9 @@ The entry and the time are points. Use either with go, fork, rewind and the
 other commands that take a point.
 
 ```
-usage: machine output run search [-h] [-f] [--max n] [--from point [point ...]]
-                                 [--to point [point ...]] [--source name]
-                                 regex
+machine output run search [-h] [-f] [--max n] [--from point [point ...]]
+                          [--to point [point ...]] [--source name]
+                          regex
 ```
 
 | Argument | Does |
@@ -4584,7 +4603,7 @@ usage: machine output run search [-h] [-f] [--max n] [--from point [point ...]]
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
-| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root (default: the start of the output) |
+| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root (default: the start of the output) |
 | `--to point [point ...]` | Point the search ends at, as `--from` takes one (default: the end of the output) |
 | `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
@@ -4637,12 +4656,12 @@ The sections cover vCPU code, registers, stack and page tables, timers,
 interrupt controllers, devices, memory and hashes. Use `--show` to choose
 sections. Use `--entry` to dump the state recorded at an entry.
 
-Use -o json to emit one object per `--show` section. Omit `--show` for every
-live section. Use `--mem` for the mem object. It is alone unless `--show` is
-also set.
+Without `--show`, every section the machine has is printed. Use `--mem` to print
+memory alone, or with `--show` beside other sections. Use -o json for one object
+per section.
 
 ```
-usage: machine dump [-h] [--entry n] [--show sections] [--mem addr] [--vcpu n] run
+machine dump [-h] [--entry n] [--show sections] [--mem addr] [--vcpu n] run
 ```
 
 | Argument | Does |
@@ -4651,9 +4670,9 @@ usage: machine dump [-h] [--entry n] [--show sections] [--mem addr] [--vcpu n] r
 
 | Option | Does |
 |---|---|
-| `--entry n` | Entry from run log |
+| `--entry n` | Entry whose recorded state to dump, instead of the state now |
 | `--show sections` | One or more, comma-separated: code, regs, stack, pt, instr, trace, events, timers, debug, xsave, irq, pic, ioapic, devs, mem, disk, hash, entry, io, msrs, fullhash, all |
-| `--mem addr` | Dump raw memory cluster: N (index), pADDR (physical), vADDR (machine address) |
+| `--mem addr` | Dump guest memory at an address: pADDR physical, vADDR virtual in the page tables of the vCPU |
 | `--vcpu n` | The vCPU whose state and page tables are read (default: 0) |
 
 Examples:
@@ -4673,10 +4692,13 @@ See also:
 
 ## machine vcpu
 
-Show the current vCPU run state.
+Show what a vCPU is doing and how its last dispatch ended.
+
+A dispatch is one entry into the machine. It runs until its limit or until the
+machine exits to the host.
 
 ```
-usage: machine vcpu [-h] [--vcpu n] run
+machine vcpu [-h] [--vcpu n] run
 ```
 
 | Argument | Does |
@@ -4698,7 +4720,12 @@ Prints:
 
 ```
 first line     entry ready pending iter
+ready          the machine accepts commands
+pending        a run is in progress
 last dispatch  VCPU EXIT ID RUN IC RCB TOTAL IC REGS HASH RIP RCX ITER
+RUN IC, RCB    instructions and conditional branches of the dispatch
+TOTAL IC       instructions since the run started
+ITER           the iteration the dispatch was
 ```
 
 See also:
@@ -4722,9 +4749,9 @@ rewind.
 Operations on the account's storage are listed by machine storage ops.
 
 ```
-usage: machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|age]
-                   [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w]
-                   [run]
+machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|age]
+            [--until date|age] [--limit n] [--offset n] [--no-trunc] [-w]
+            [run]
 ```
 
 | Argument | Does |
@@ -4736,8 +4763,8 @@ usage: machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--sinc
 | `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
 | `--state [^]state` | Filter by state: running, unfinished, done, failed (default: all; repeat = OR; ^ excludes) |
 | `--type [^]type` | Filter by type: checkpoint, branch, switch, rewind, start, delete (default: all; repeat = OR; ^ excludes) |
-| `--since date\|age` | Since a date or age |
-| `--until date\|age` | Until a date or age |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--limit n` | Show at most n operations (default: 25) |
 | `--offset n` | Skip the first n operations |
 | `--no-trunc` | Show full run ids |
@@ -4746,7 +4773,7 @@ usage: machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--sinc
 Examples:
 
 ```
-machine ops       operations pending, unfinished or failed
+machine ops       the newest operations
 machine ops run1  those of run1
 ```
 
@@ -4765,7 +4792,7 @@ The log subcommand shows the debug output. The err subcommand shows errors and
 crashes.
 
 ```
-usage: machine debug [-h] {log,err} ...
+machine debug [-h] command ...
 ```
 
 Examples:
@@ -4791,7 +4818,7 @@ See [Looking at it](running-a-machine.md#looking-at-it).
 Use -n to select lines, and -f to follow new output.
 
 ```
-usage: machine debug log [-h] [-n range] [-f] run
+machine debug log [-h] [-n range] [-f] run
 ```
 
 | Argument | Does |
@@ -4800,7 +4827,7 @@ usage: machine debug log [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Line N, A:B, A:, :B or :, -N for the last N lines, or -A:-B counted from the end |
+| `-n, --lines range` | Lines: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
 | `-f, --follow` | Follow new output (like tail -f) |
 
 Examples:
@@ -4825,7 +4852,7 @@ See [Looking at it](running-a-machine.md#looking-at-it).
 Use -n to select lines, and -f to follow new output.
 
 ```
-usage: machine debug err [-h] [-n range] [-f] run
+machine debug err [-h] [-n range] [-f] run
 ```
 
 | Argument | Does |
@@ -4834,7 +4861,7 @@ usage: machine debug err [-h] [-n range] [-f] run
 
 | Option | Does |
 |---|---|
-| `-n, --lines range` | Line N, A:B, A:, :B or :, -N for the last N lines, or -A:-B counted from the end |
+| `-n, --lines range` | Lines: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
 | `-f, --follow` | Follow new output (like tail -f) |
 
 Examples:
@@ -4860,8 +4887,9 @@ A task is what the guest kernel schedules: a thread of a program, or the
 kernel's own. Each task has a tid. Its tgid names its thread group, the process
 it belongs to.
 
-Each row is one task, by its tid. Use `--vcpu` to list the tasks of one vCPU.
-Use `--focused` to list the tasks that focus steers.
+Each row is one task, by its tid, the thread id ps -L shows. Its tgid is the pid
+of its process. Use `--vcpu` to list the tasks of one vCPU. Use `--focused` to
+list the tasks that focus steers.
 
 The subcommands steer the scheduler, so an order of tasks can be tried. The
 hold, yield and release subcommands control whether a task runs.
@@ -4871,8 +4899,7 @@ a vCPU. The cgroups subcommand groups the list. The exits subcommand lists the
 tasks that left.
 
 ```
-usage: machine tasks [-h] [--vcpu n] [--focused]
-                     run {cgroups,exits,hold,yield,release,slice,pin,signal} ...
+machine tasks [-h] [--vcpu n] [--focused] run command ...
 ```
 
 | Argument | Does |
@@ -4901,7 +4928,7 @@ CPU             the vCPU the task is on, blank when it is on none
 NEXT            whose code runs next on that vCPU: user or kernel
 KIND            user for a program, kernel for the kernel's own
 FOCUS           ticked for a task that focus steers
-HOLD YIELD PIN  ticked for a mark set with hold, yield or pin
+HOLD YIELD PIN  ticked when hold, yield or pin is set on the task
 SLICE           the time set with slice
 json            also cgroup, and exe under the same name
 generation      a count that changes when the tasks do
@@ -4927,7 +4954,7 @@ See [Holding threads](steering-programs.md#holding-threads).
 Use `--vcpu` to list the tasks of one vCPU.
 
 ```
-usage: machine tasks run cgroups [-h] [--vcpu n]
+machine tasks run cgroups [-h] [--vcpu n]
 ```
 
 | Option | Does |
@@ -4956,7 +4983,7 @@ The list is kept across checkpoints and replays. It is bounded and says how many
 it dropped.
 
 ```
-usage: machine tasks run exits [-h]
+machine tasks run exits [-h]
 ```
 
 Examples:
@@ -4988,10 +5015,10 @@ See [Holding threads](steering-programs.md#holding-threads).
 
 The scheduler cannot pick a held task. A hold takes effect at the next
 scheduling decision of the vCPU. Holding the last runnable task leaves nothing
-to run and no decision coming.
+to run. Release it, then use the irq command with preempt to go on.
 
 ```
-usage: machine tasks run hold [-h] tid
+machine tasks run hold [-h] tid
 ```
 
 | Argument | Does |
@@ -5018,7 +5045,7 @@ See [Holding threads](steering-programs.md#holding-threads).
 The task stays runnable. It does nothing when no peer is runnable.
 
 ```
-usage: machine tasks run yield [-h] tid
+machine tasks run yield [-h] tid
 ```
 
 | Argument | Does |
@@ -5042,11 +5069,11 @@ See also:
 Undo a hold or a yield.
 See [Holding threads](steering-programs.md#holding-threads).
 
-A release needs a scheduling decision on the vCPU. Force one with irq preempt
-`--vcpu` all.
+A release takes effect at the next scheduling decision of the vCPU. Use the irq
+command with preempt to force one.
 
 ```
-usage: machine tasks run release [-h] tid
+machine tasks run release [-h] tid
 ```
 
 | Argument | Does |
@@ -5075,7 +5102,7 @@ such as 10us, 0.6ms or 750000ns. Use default for the kernel's own. A slice
 survives release.
 
 ```
-usage: machine tasks run slice [-h] tid duration|default
+machine tasks run slice [-h] tid duration|default
 ```
 
 | Argument | Does |
@@ -5101,8 +5128,7 @@ See also:
 Place a task on one or more vCPUs when it next wakes.
 See [Holding threads](steering-programs.md#holding-threads).
 
-Each choice is a set of vCPUs. The set 1-3 is all three. The set 1,2,3 is three
-choices of one.
+A set of vCPUs is one number, 1, or a range, 1-3, both ends included.
 
 Free means any vCPU. None means no vCPU, which stops the task running.
 
@@ -5110,7 +5136,7 @@ Pin is a placement policy, not confinement. A task already queued elsewhere
 keeps that vCPU until it wakes.
 
 ```
-usage: machine tasks run pin [-h] tid set|free|none
+machine tasks run pin [-h] tid set|free|none
 ```
 
 | Argument | Does |
@@ -5140,7 +5166,7 @@ command delivers one. The task acts on it when it next runs. The run log keeps
 the request, so a replay sends it at the same instruction.
 
 ```
-usage: machine tasks run signal [-h] tid signal
+machine tasks run signal [-h] tid signal
 ```
 
 | Argument | Does |
@@ -5173,7 +5199,7 @@ path or cgroup=path. The histogram counts calls made while the focus entry of
 the task was armed with focus add `<path>` +syscalls.
 
 ```
-usage: machine syscalls [-h] run [name|tid|tgid|path]
+machine syscalls [-h] run [name|tid|tgid|path]
 ```
 
 | Argument | Does |
@@ -5209,7 +5235,7 @@ path or cgroup=path. The histogram counts interrupts taken while the focus entry
 of the task was armed with focus add `<path>` +ints.
 
 ```
-usage: machine ints [-h] run [name|tid|tgid|path]
+machine ints [-h] run [name|tid|tgid|path]
 ```
 
 | Argument | Does |
@@ -5236,17 +5262,18 @@ See also:
 Show and change which tasks a machine steers.
 See [Focus](steering-programs.md#focus).
 
-A focused program is tracked. A batch of run iterations ends at each of its
-context switches and where it reaches its own code.
+The focus list names the programs the machine steers. A run stops at each
+context switch of a focused program, and where the program reaches its own code.
+The tasks subcommands then decide which task runs next.
 
-An entry is the absolute path of a program, matched exactly. Write
-cgroup=`<path>` to match the cgroup of a task. Write tgid=`<n>` to name a tgid.
-The tgid of a task is shown by tasks.
+A program is named by its absolute path, matched exactly. Write cgroup=`<path>`
+to match the cgroup of a task. Write tgid=`<n>` to name a tgid. The tgid of a
+task is shown by tasks.
 
 Use add and remove to change the list. Use clear to empty it.
 
 ```
-usage: machine focus [-h] run {add,remove,clear} ...
+machine focus [-h] run command ...
 ```
 
 | Argument | Does |
@@ -5286,7 +5313,7 @@ The entry is a program path, cgroup=`<path>` or tgid=`<n>`. Add +syscalls or
 +ints to count its system calls or interrupts.
 
 ```
-usage: machine focus run add [-h] path|cgroup=path|tgid=n [+syscalls|+ints ...]
+machine focus run add [-h] path|cgroup=path|tgid=n [+syscalls|+ints ...]
 ```
 
 | Argument | Does |
@@ -5314,7 +5341,7 @@ Stop steering a program. See [Focus](steering-programs.md#focus).
 Name the entry as it was added, by program path, cgroup=`<path>` or tgid=`<n>`.
 
 ```
-usage: machine focus run remove [-h] path|cgroup=path|tgid=n
+machine focus run remove [-h] path|cgroup=path|tgid=n
 ```
 
 | Argument | Does |
@@ -5338,7 +5365,7 @@ See also:
 Empty the list of steered programs. See [Focus](steering-programs.md#focus).
 
 ```
-usage: machine focus run clear [-h]
+machine focus run clear [-h]
 ```
 
 Examples:
@@ -5389,7 +5416,7 @@ there. A replay reproduces them.
 Use fork to send other input than a run recorded. The branch takes its own.
 
 ```
-usage: machine send [-h] [-n] [-e] [--device name] run text
+machine send [-h] [-n] [-e] [--device name] run text
 ```
 
 | Argument | Does |
@@ -5457,11 +5484,16 @@ has the processes of its parent.
 Without a subcommand the command lists the processes of the run. The proc
 subcommand shows one.
 
-The machine's disk runs the agent that executes the commands. A disk without it
-executes none.
+The id is the entry the command was sent at and the process number, 23090p1. In
+the machine, its output is in /.machine/output/exec/ID/stdout and stderr. Its
+events are in /.machine/output/exec/ID/status. The output source
+/output/exec/ID/stdout names the first in output and run `--until`.
+
+The machine's disk runs the agent that executes the commands,
+/sbin/machine-exec. A disk without it executes none.
 
 ```
-usage: machine exec [-h] run {run,start,proc} ...
+machine exec [-h] run command ...
 ```
 
 | Argument | Does |
@@ -5512,8 +5544,8 @@ another. A command that has not ended by then stays, and the refusal names its
 id.
 
 ```
-usage: machine exec run run [-h] [-c line] [--container name] [--user user] [--within duration]
-                            [command ...]
+machine exec run run [-h] [-c line] [--container name] [--user user] [--within duration]
+                     [command ...]
 ```
 
 | Argument | Does |
@@ -5569,7 +5601,7 @@ starts the next time the run executes.
 Use the proc subcommand with the id to read the process.
 
 ```
-usage: machine exec run start [-h] [-c line] [--container name] [--user user] [command ...]
+machine exec run start [-h] [-c line] [--container name] [--user user] [command ...]
 ```
 
 | Argument | Does |
@@ -5620,8 +5652,11 @@ The events view lists every line the process printed and every change of its
 state, each with its entry. The stdout and stderr views print one stream. The
 exits view prints how the process ended.
 
+In the machine, the streams are /.machine/output/exec/ID/stdout and
+/.machine/output/exec/ID/stderr.
+
 ```
-usage: machine exec run proc [-h] id [{summary,events,stdout,stderr,exits}]
+machine exec run proc [-h] id [{summary,events,stdout,stderr,exits}]
 ```
 
 | Argument | Does |
@@ -5665,7 +5700,7 @@ See also:
 
 Put a file into the guest or a container.
 
-The command copies a file of this machine to a path in the running machine. Use
+The command copies a file on this computer to a path in the running machine. Use
 `--container` to put it in a container instead. A file of any size is put. The
 directories on the way to the path are made.
 
@@ -5679,15 +5714,15 @@ The file is written to the disk before the command returns. A checkpoint taken
 after it has the file, and fs reads it there.
 
 ```
-usage: machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no-pipe]
-                   [--within duration]
-                   run file path
+machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no-pipe]
+            [--within duration]
+            run file path
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `file` | File on this machine to put, or - for standard input |
+| `file` | File on this computer to put, or - for standard input |
 | `path` | Path the file gets in the machine or in the container |
 
 | Option | Does |
@@ -5695,8 +5730,8 @@ usage: machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no
 | `--container name` | Container to put the file in, by its name or its Compose service (default: the machine itself) |
 | `--mode mode` | Mode of the file, as octal digits (default: 644) |
 | `--owner uid:gid` | Owner of the file, as numbers (default: root) |
-| `--no-pipe` | Send the file over the serial port of the exec agent, which is far slower |
-| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+| `--no-pipe` | Send the file over the serial port instead of the faster data channel |
+| `--within duration` | Machine time allowed each time the command runs the machine, such as 10s (default: 30m) |
 
 Examples:
 
@@ -5734,7 +5769,7 @@ See also:
 
 Get a file from the guest or a container.
 
-The command copies a file of the running machine to a file of this machine. Use
+The command copies a file of the running machine to a file on this computer. Use
 `--container` to get it from a container instead. A file of any size is copied.
 
 The file is read as it is now, with what programs wrote and the disk does not
@@ -5744,19 +5779,19 @@ The machine runs while the file comes out. Other programs of the machine run
 with it, so a file a program is writing can change on the way.
 
 ```
-usage: machine get [-h] [--container name] [--within duration] run path file
+machine get [-h] [--container name] [--within duration] run path file
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
 | `path` | Path of the file in the machine or in the container |
-| `file` | File on this machine to write, or - for standard output |
+| `file` | File on this computer to write, or - for standard output |
 
 | Option | Does |
 |---|---|
 | `--container name` | Container to get the file from, by its name or its Compose service (default: the machine itself) |
-| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+| `--within duration` | Machine time allowed each time the command runs the machine, such as 10s (default: 30m) |
 
 Examples:
 
@@ -5799,10 +5834,10 @@ The exec, put and get commands take either name with `--container`. A service
 name stands for its container when the service has one.
 
 The machine runs until Docker has answered. The list is of the machine as it is
-then, and the listing is a recorded process.
+then. The listing runs a process in the machine, and the run records it.
 
 ```
-usage: machine containers [-h] [--within duration] run
+machine containers [-h] [--within duration] run
 ```
 
 | Argument | Does |
@@ -5844,8 +5879,8 @@ See also:
 
 Get a core dump of a process.
 
-The command has a process dump a core and copies the core to a file of this
-machine. A debugger reads the core with the program of the process. Use
+The command has a process dump a core and copies the core to a file on this
+computer. A debugger reads the core with the program of the process. Use
 `--container` for a process of a container, by the pid it has there.
 
 Taking a core ends the process. The process dies of the signal. Use fork first
@@ -5858,20 +5893,20 @@ The machine runs until the core is written and copied. Other programs of the
 machine run with it.
 
 ```
-usage: machine core [-h] [--container name] [--signal signal] [--within duration] run pid file
+machine core [-h] [--container name] [--signal signal] [--within duration] run pid file
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
 | `pid` | Pid of the process in the machine or in the container |
-| `file` | File on this machine to write the core to |
+| `file` | File on this computer to write the core to |
 
 | Option | Does |
 |---|---|
 | `--container name` | Container the process is in, by its name or its Compose service (default: the machine itself) |
 | `--signal signal` | Signal the process dies of, by name or number (default: ABRT) |
-| `--within duration` | Machine time each run of the machine gets, such as 10s (default: 30m) |
+| `--within duration` | Machine time allowed each time the command runs the machine, such as 10s (default: 30m) |
 
 Examples:
 
@@ -5919,23 +5954,23 @@ Use `--pid` or `--container` to show one process or one container. Use
 flame graph tools read. Use `--flame` to draw a flame graph in the terminal.
 
 The names come from the program files of the machine's disk as it stands when
-the stretch ends. No checkpoint is taken. A file that is not on the disk is
-named by its file.
+the stretch ends. No checkpoint is taken. A function in a file that is not on
+the disk is shown by the file's name.
 
-Time in the kernel is one frame named after the system call, which ends in _[k].
+Time in the kernel is one frame for each system call, named like read_[k].
 
 Without `--from` the machine runs for the time sampled. A machine that is idle
 has no samples.
 
-Use `--in-guest` to sample with a process of the guest, which the disk's exec
-agent runs. It names the functions of the kernel. It names a program the guest
-has not yet written to the disk. That process is part of the run.
+Use `--in-guest` to sample with a program in the guest, which the exec agent of
+the disk runs. It names the functions of the kernel, and programs not yet
+written to the disk. The run records that program like any other.
 
 ```
-usage: machine profile [-h] [--for duration | --from point [point ...]] [--to point [point ...]]
-                       [--pid pid] [--container name] [--in-guest] [--folded | --flame] [--top n]
-                       [--within duration]
-                       run
+machine profile [-h] [--for duration | --from point [point ...]] [--to point [point ...]]
+                [--pid pid] [--container name] [--in-guest] [--folded | --flame] [--top n]
+                [--within duration]
+                run
 ```
 
 | Argument | Does |
@@ -5945,15 +5980,15 @@ usage: machine profile [-h] [--for duration | --from point [point ...]] [--to po
 | Option | Does |
 |---|---|
 | `--for duration` | Machine time to run and sample for, such as 500ms (default: 1s) |
-| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, parent [n] or root. The stretch is replayed on a branch |
-| `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the end of the run's line) |
+| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The stretch is replayed on a branch |
+| `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the run's last entry) |
 | `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
 | `--container name` | Container to show, by its name or its Compose service (default: the machine itself) |
 | `--in-guest` | Sample with the profiler of the exec agent, a process of the guest: kernel functions by name, at the cost of changing the run |
 | `--folded` | Print the stacks, one a line with its count, for another tool to draw |
 | `--flame` | Draw a flame graph in the terminal |
 | `--top n` | Functions the table shows (default: 20) |
-| `--within duration` | Machine time a question to a container gets, such as 10s (default: 30m) |
+| `--within duration` | Machine time allowed to find the container, such as 10s (default: 30m) |
 
 Examples:
 
@@ -5999,20 +6034,20 @@ See [Interrupts and time](steering-programs.md#interrupts-and-time).
 Without a vector, the command lists the vector names. The option `--nmi` alone
 delivers an NMI.
 
-The vector is a number or a name from irq_vectors.h of the kernel. The name
-preempt is 0xf5, the reschedule vector of the machine. The name reschedule is
-0xfd, the reschedule vector of the kernel.
+The vector is a number, or a name from irq_vectors.h of the guest kernel. The
+name preempt is 0xf5, the vector Machine preempts a task with. The name
+reschedule is 0xfd, the reschedule vector of the guest kernel.
 
 The vector is delivered as given. It reaches the handler that the kernel of the
 machine installed for it. A vector with no handler is a spurious interrupt.
 Vectors below 32 are CPU exceptions and are refused.
 
 The interrupt is queued when the command returns. It is delivered and recorded
-at the next dispatch boundary. A replay repeats it there. Step first to choose
-that boundary.
+when the machine next runs. A replay delivers it at the same instruction. Step
+first to choose that instruction.
 
 ```
-usage: machine irq [-h] [--vcpu n] [--nmi] run [vector]
+machine irq [-h] [--vcpu n] [--nmi] run [vector]
 ```
 
 | Argument | Does |
@@ -6041,17 +6076,18 @@ See also:
 
 ## machine vtime
 
-Show and change the guest's clock.
+Show and change machine time.
 See [Interrupts and time](steering-programs.md#interrupts-and-time).
 
-Machine time is derived from what the machine executes, not from the host clock.
+Machine time is the guest's clock. It is derived from what the machine executes,
+not from the host clock.
 
 Use rate to change how fast machine time passes. Use add to push the clock
 forward without running the machine. The clock only goes forward. Use rewind to
 put the run back at an earlier point.
 
 ```
-usage: machine vtime [-h] run {rate,add} ...
+machine vtime [-h] run command ...
 ```
 
 | Argument | Does |
@@ -6061,7 +6097,7 @@ usage: machine vtime [-h] run {rate,add} ...
 Examples:
 
 ```
-machine vtime run1           virtual time and rate
+machine vtime run1           machine time and its rate
 machine vtime run1 rate 5    set the rate to 5
 machine vtime run1 add 1000  advance the clock 1000 ns
 ```
@@ -6083,7 +6119,7 @@ guest retires. A run starts at 10 unless create was given `--vtime-rate`.
 Give the rate as a number or as num/den.
 
 ```
-usage: machine vtime run rate [-h] rate
+machine vtime run rate [-h] rate
 ```
 
 | Argument | Does |
@@ -6111,7 +6147,7 @@ See [Interrupts and time](steering-programs.md#interrupts-and-time).
 Give a time such as 1s or 250ms. A bare number is nanoseconds.
 
 ```
-usage: machine vtime run add [-h] time
+machine vtime run add [-h] time
 ```
 
 | Argument | Does |
@@ -6146,13 +6182,13 @@ one, such as main+4. The write is part of the run, and a replay makes it again.
 The selectors and the x87, SSE and AVX registers are not written.
 
 ```
-usage: machine regs [-h] [--all] run tid [register ...]
+machine regs [-h] [--all] run tid [register ...]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `[register ...]` | Register to show, such as rip or xmm0, or NAME=VALUE to write one (default: the general registers) |
 
 | Option | Does |
@@ -6220,29 +6256,29 @@ writes its bytes. A number takes the size of the variable it is written to, or
 of a unit after it. A page the tgid cannot write is not written.
 
 ```
-usage: machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [--mapped]
-                   run tid [location] [format]
+machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [--mapped]
+            run tid [location] [format]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `[location]` | Address to read at: a number, *ADDR, $register, NAME, PATH:NAME or FILE:LINE, moved by +N or -N. LOCATION=VALUE writes there |
 | `[format]` | Count, format letter and unit, as GDB's x takes them, such as 8xg, 4i or s (default: 8xg) |
 
 | Option | Does |
 |---|---|
 | `--find pattern` | Find a pattern in `--length` bytes: text, or 0x and hex bytes |
-| `--dump file` | Write `--length` bytes to a file of this machine |
-| `--restore file` | Write the bytes of a file of this machine at the location |
+| `--dump file` | Write `--length` bytes to a file on this computer |
+| `--restore file` | Write the bytes of a file on this computer at the location |
 | `--length n` | Bytes a find or a dump reaches over |
 | `--mapped` | List the pages the tgid maps, with their access and file |
 
 Examples:
 
 ```
-machine mem run1 412 '$sp'                  eight giant words at the stack
+machine mem run1 412 '$sp'                  eight 8-byte words at the stack
 machine mem run1 412 '$pc' 4i               the next four instructions
 machine mem run1 412 main 16xb              sixteen bytes of main
 machine mem run1 412 environ a              what environ points at
@@ -6288,13 +6324,13 @@ frame of a file the disk does not have is named by its file. A frame of a
 program built with debug information names its source line.
 
 ```
-usage: machine backtrace [-h] [--frame n] run tid
+machine backtrace [-h] [--frame n] run tid
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 
 | Option | Does |
 |---|---|
@@ -6341,13 +6377,13 @@ A breakpoint the call reaches ends it there. The registers are put back then
 too, and the call is abandoned.
 
 ```
-usage: machine call [-h] run tid function [arguments ...]
+machine call [-h] run tid function [arguments ...]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `function` | Function to call: a name or a location |
 | `[arguments ...]` | Arguments: expressions as print takes them, integers or pointers |
 
@@ -6392,13 +6428,13 @@ The write is part of the run, and a replay makes it again. Memory is not
 changed.
 
 ```
-usage: machine return [-h] run tid [value]
+machine return [-h] run tid [value]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `[value]` | Value the function returns in rax: a number or a location |
 
 Examples:
@@ -6447,15 +6483,15 @@ TARGET = VALUE writes VALUE at TARGET and prints TARGET after the write. The
 write is part of the run, and a replay makes it again.
 
 ```
-usage: machine print [-h] [--frame n] [--type] run tid expression [format]
+machine print [-h] [--frame n] [--type] run tid expression [format]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `expression` | A variable or $register, with .m, ->m, [i], * and & |
-| `[format]` | Each number in a format, as print/x takes one: x, d, u, o, t, c or z |
+| `[format]` | Format letter for each number, as print/x takes one: x, d, u, o, t, c or z |
 
 | Option | Does |
 |---|---|
@@ -6507,13 +6543,13 @@ The variables come from the program's debug information on the machine's disk. A
 variable the debug information places where it is not read is listed with why.
 
 ```
-usage: machine locals [-h] [--frame n] [--args] run tid
+machine locals [-h] [--frame n] [--args] run tid
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 
 | Option | Does |
 |---|---|
@@ -6552,15 +6588,15 @@ Use `--regex` to find each function whose name matches a pattern. The symbols
 come from the program files on the machine's disk.
 
 ```
-usage: machine symbols [-h] [--regex pattern] [--variables] [--types] [--scope] [--sources]
-                       [--file path]
-                       run tid [name|address|file:line]
+machine symbols [-h] [--regex pattern] [--variables] [--types] [--scope] [--sources]
+                [--file path]
+                run tid [name|address|file:line]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `[name\|address\|file:line]` | Symbol to find the address of, address to find the symbol of, or source line to find the code of |
 
 | Option | Does |
@@ -6605,13 +6641,13 @@ first row is the program. A file the machine's disk does not have has no
 symbols.
 
 ```
-usage: machine libs [-h] run tid
+machine libs [-h] run tid
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 
 Examples:
 
@@ -6644,16 +6680,16 @@ The machine runs whichever task the guest schedules. A step of one task runs the
 machine until that task is in its own code, then steps it. Other tasks run
 meanwhile.
 
-Each step is a run of the machine, and a replay makes it again. A breakpoint the
-run reaches ends the step. A line step steps out of a function that has no line
-tables.
+Each step runs the machine, and the run records it, so a replay makes it again.
+A breakpoint the step reaches ends it. A line step steps out of a function that
+has no line tables.
 
 Use `--skip` NAME with `--line` to step out of a function or a source file of
 that name. It does as GDB's skip does. Give it once for each name.
 
-Use `--back` to go back over the executions of the vCPU the task is on, as
-reverse-stepi does. Each step of a stepped stretch is one execution. The machine
-switches onto a branch there, as go does.
+Use `--back` to go back over dispatches of the vCPU the task is on, as
+reverse-stepi does. A dispatch is one entry into the machine, one instruction
+where the run stepped. The machine switches onto a new branch there, as go does.
 
 With `--line`, `--over` or `--out`, `--back` goes back over the task's own code.
 It does as reverse-step, reverse-next, reverse-nexti and reverse-finish do. It
@@ -6661,13 +6697,13 @@ goes back over what the run recorded one instruction at a time. Past that it
 stops, and says the history ends there.
 
 ```
-usage: machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run tid [count]
+machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run tid [count]
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
-| `tid` | Task of the machine, by its tid. A tgid is its first task's tid |
+| `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
 | `[count]` | Steps to make (default: 1) |
 
 | Option | Does |
@@ -6675,7 +6711,7 @@ usage: machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run ti
 | `--line` | Step a source line, not an instruction |
 | `--over` | Step over a call, the function it calls and all it calls being one step |
 | `--out` | Run until the function returns to the one that called it |
-| `--back` | Go back over the executions of the task's vCPU, onto a branch |
+| `--back` | Go back over dispatches of the task's vCPU, onto a branch |
 | `--skip name` | Step out of a function or a source file of this name in a line step (repeatable) |
 
 Examples:
@@ -6713,7 +6749,7 @@ The three share one table and its numbers. Each row has its number and its kind.
 Use break, watch or catch to change the row of its kind.
 
 ```
-usage: machine points [-h] run
+machine points [-h] run
 ```
 
 | Argument | Does |
@@ -6748,13 +6784,13 @@ listing has the run's breakpoints, each by its number. Use points to list them
 with the watchpoints and catchpoints.
 
 The run keeps them in its run log. A branch has the ones its parent had where it
-was forked. A run holds 3 at most.
+was forked. A run holds 3 breakpoints and watchpoints together.
 
 A run that reaches one ends there, and says which. The breakpoints are armed
 while the run records, and not while it replays.
 
 ```
-usage: machine break [-h] run {add,delete,clear,save,hits,enable,disable,condition,ignore} ...
+machine break [-h] run command ...
 ```
 
 | Argument | Does |
@@ -6794,9 +6830,9 @@ The location is resolved now, from the tgid's program files. The run log keeps
 the breakpoint, and a branch has its parent's.
 
 ```
-usage: machine break run add [-h] [--disabled] [--ignore count] [--temporary]
-                             [--condition condition] [--print format] [--regex pattern]
-                             tid [location]
+machine break run add [-h] [--disabled] [--ignore count] [--temporary]
+                      [--condition condition] [--print format] [--regex pattern]
+                      tid [location]
 ```
 
 | Argument | Does |
@@ -6807,10 +6843,10 @@ usage: machine break run add [-h] [--disabled] [--ignore count] [--temporary]
 | Option | Does |
 |---|---|
 | `--disabled` | Add it and do not arm it |
-| `--ignore count` | Pass the first hits that count (default: 0) |
-| `--temporary` | Delete it at its first hit that counts |
-| `--condition condition` | Count a hit only where this holds, such as '$rax == 0' |
-| `--print format` | Print this at a hit and go on, such as 'n={counter} p={$rdi:x}' |
+| `--ignore count` | Pass this many hits where the condition holds (default: 0) |
+| `--temporary` | Delete it at its first hit where the condition holds |
+| `--condition condition` | Count a hit only where this expression holds, as print takes one, such as '$rax == 0' |
+| `--print format` | Print this at a hit and go on. {EXPR} prints an expression as print takes one, {EXPR:x} in a print format letter: 'n={counter} p={$rdi:x}' |
 | `--regex pattern` | Add one at each function whose name matches, in place of a location |
 
 Examples:
@@ -6843,7 +6879,7 @@ Delete breakpoints.
 The run log keeps the delete, so a branch forked before it keeps the breakpoint.
 
 ```
-usage: machine break run delete [-h] number [number ...]
+machine break run delete [-h] number [number ...]
 ```
 
 | Argument | Does |
@@ -6869,7 +6905,7 @@ Each breakpoint at the address the location names in the tgid of the task is
 deleted.
 
 ```
-usage: machine break run clear [-h] tid location
+machine break run clear [-h] tid location
 ```
 
 | Argument | Does |
@@ -6897,7 +6933,7 @@ its condition, ignore count and flags. A location written by a register is saved
 as its address.
 
 ```
-usage: machine break run save [-h] file
+machine break run save [-h] file
 ```
 
 | Argument | Does |
@@ -6920,19 +6956,19 @@ See also:
 
 List the hits of breakpoints.
 
-A hit is a breakpoint that ended a run. It has the entry it ended at, its
-machine time, the breakpoint, and a catchpoint's event. The run log keeps each
-one, so a branch lists its parent's hits before it.
+A hit is a breakpoint that stopped the run. It has the entry it stopped at, its
+machine time and the number of the breakpoint. The run log keeps each one, so a
+branch lists its parent's hits before it.
 
-Use run `--back` to go back to the newest one.
+Use the run command with `--back` to switch onto a branch at the newest hit.
 
 ```
-usage: machine break run hits [-h] [-n range]
+machine break run hits [-h] [-n range]
 ```
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entries to list the hits of: N, A:B, A:, :B, -N for the last N hits, or -A:-B counted from the end (default: the last 20) |
+| `-n, --entries range` | Hits to list, by the entry each stopped at: N, A:B, A:, :B; or -N for the last N hits, -A:-B counted from the end (default: the last 20) |
 
 Examples:
 
@@ -6961,7 +6997,7 @@ The machine arms an enabled breakpoint and not a disabled one. The run log keeps
 the change.
 
 ```
-usage: machine break run enable [-h] [--once | --count n] number
+machine break run enable [-h] [--once | --count n] number
 ```
 
 | Argument | Does |
@@ -6992,7 +7028,7 @@ The machine arms an enabled breakpoint and not a disabled one. The run log keeps
 the change.
 
 ```
-usage: machine break run disable [-h] number
+machine break run disable [-h] number
 ```
 
 | Argument | Does |
@@ -7018,7 +7054,7 @@ A hit where the condition does not hold does not end the run. Without a
 condition the breakpoint has none.
 
 ```
-usage: machine break run condition [-h] number [condition]
+machine break run condition [-h] number [condition]
 ```
 
 | Argument | Does |
@@ -7047,7 +7083,7 @@ Each hit where the condition holds is counted. A counted hit is passed while the
 ignore count lasts. A count of 0 stops at the next.
 
 ```
-usage: machine break run ignore [-h] number count
+machine break run ignore [-h] number count
 ```
 
 | Argument | Does |
@@ -7075,10 +7111,10 @@ them with `--on` access. The listing has the run's watchpoints, each by its
 number. Use points to list them with the breakpoints and catchpoints.
 
 The run keeps them in its run log, as it keeps its breakpoints. A run holds 3
-breakpoints and watchpoints at most.
+breakpoints and watchpoints together.
 
 ```
-usage: machine watch [-h] run {add,delete,save,hits,enable,disable,condition,ignore} ...
+machine watch [-h] run command ...
 ```
 
 | Argument | Does |
@@ -7120,10 +7156,10 @@ function returns. Any other location takes `--size`, of 1, 2, 4 or 8 bytes.
 The run log keeps the watchpoint, and a branch has its parent's.
 
 ```
-usage: machine watch run add [-h] [--disabled] [--ignore count] [--temporary]
-                             [--condition condition] [--print format] [--size bytes]
-                             [--on {write,change,read,access}]
-                             tid location
+machine watch run add [-h] [--disabled] [--ignore count] [--temporary]
+                      [--condition condition] [--print format] [--size bytes]
+                      [--on {write,change,read,access}]
+                      tid location
 ```
 
 | Argument | Does |
@@ -7134,10 +7170,10 @@ usage: machine watch run add [-h] [--disabled] [--ignore count] [--temporary]
 | Option | Does |
 |---|---|
 | `--disabled` | Add it and do not arm it |
-| `--ignore count` | Pass the first hits that count (default: 0) |
-| `--temporary` | Delete it at its first hit that counts |
-| `--condition condition` | Count a hit only where this holds, such as '$rax == 0' |
-| `--print format` | Print this at a hit and go on, such as 'n={counter} p={$rdi:x}' |
+| `--ignore count` | Pass this many hits where the condition holds (default: 0) |
+| `--temporary` | Delete it at its first hit where the condition holds |
+| `--condition condition` | Count a hit only where this expression holds, as print takes one, such as '$rax == 0' |
+| `--print format` | Print this at a hit and go on. {EXPR} prints an expression as print takes one, {EXPR:x} in a print format letter: 'n={counter} p={$rdi:x}' |
 | `--size bytes` | Bytes to watch: 1, 2, 4 or 8 (default: the variable's size) |
 | `--on {write,change,read,access}` | What stops the run: a write, a write that changes the bytes, a read, or any access (default: write) |
 
@@ -7169,7 +7205,7 @@ Delete watchpoints.
 The run log keeps the delete, so a branch forked before it keeps the watchpoint.
 
 ```
-usage: machine watch run delete [-h] number [number ...]
+machine watch run delete [-h] number [number ...]
 ```
 
 | Argument | Does |
@@ -7196,7 +7232,7 @@ its condition, ignore count and flags. A location written by a register is saved
 as its address.
 
 ```
-usage: machine watch run save [-h] file
+machine watch run save [-h] file
 ```
 
 | Argument | Does |
@@ -7219,19 +7255,19 @@ See also:
 
 List the hits of watchpoints.
 
-A hit is a watchpoint that ended a run. It has the entry it ended at, its
-machine time, the watchpoint, and a catchpoint's event. The run log keeps each
-one, so a branch lists its parent's hits before it.
+A hit is a watchpoint that stopped the run. It has the entry it stopped at, its
+machine time and the number of the watchpoint. The run log keeps each one, so a
+branch lists its parent's hits before it.
 
-Use run `--back` to go back to the newest one.
+Use the run command with `--back` to switch onto a branch at the newest hit.
 
 ```
-usage: machine watch run hits [-h] [-n range]
+machine watch run hits [-h] [-n range]
 ```
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entries to list the hits of: N, A:B, A:, :B, -N for the last N hits, or -A:-B counted from the end (default: the last 20) |
+| `-n, --entries range` | Hits to list, by the entry each stopped at: N, A:B, A:, :B; or -N for the last N hits, -A:-B counted from the end (default: the last 20) |
 
 Examples:
 
@@ -7260,7 +7296,7 @@ The machine arms an enabled watchpoint and not a disabled one. The run log keeps
 the change.
 
 ```
-usage: machine watch run enable [-h] [--once | --count n] number
+machine watch run enable [-h] [--once | --count n] number
 ```
 
 | Argument | Does |
@@ -7291,7 +7327,7 @@ The machine arms an enabled watchpoint and not a disabled one. The run log keeps
 the change.
 
 ```
-usage: machine watch run disable [-h] number
+machine watch run disable [-h] number
 ```
 
 | Argument | Does |
@@ -7317,7 +7353,7 @@ A hit where the condition does not hold does not end the run. Without a
 condition the watchpoint has none.
 
 ```
-usage: machine watch run condition [-h] number [condition]
+machine watch run condition [-h] number [condition]
 ```
 
 | Argument | Does |
@@ -7346,7 +7382,7 @@ Each hit where the condition holds is counted. A counted hit is passed while the
 ignore count lasts. A count of 0 stops at the next.
 
 ```
-usage: machine watch run ignore [-h] number count
+machine watch run ignore [-h] number count
 ```
 
 | Argument | Does |
@@ -7378,7 +7414,7 @@ The run keeps them in its run log, as it keeps its breakpoints. A run holds 8
 catchpoints at most.
 
 ```
-usage: machine catch [-h] run {add,delete,save,hits,enable,disable,condition,ignore} ...
+machine catch [-h] run command ...
 ```
 
 | Argument | Does |
@@ -7426,9 +7462,9 @@ function. It needs `--in` tgid=N and takes no values. It takes one of the run's
 3 breakpoints and watchpoints.
 
 ```
-usage: machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--temporary]
-                             [--condition condition] [--print format]
-                             event [value ...]
+machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--temporary]
+                      [--condition condition] [--print format]
+                      event [value ...]
 ```
 
 | Argument | Does |
@@ -7440,10 +7476,10 @@ usage: machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore cou
 |---|---|
 | `--in tid=N\|tgid=N` | Stop at the events of this task or tgid alone (default: any task) |
 | `--disabled` | Add it and do not arm it |
-| `--ignore count` | Pass the first hits that count (default: 0) |
-| `--temporary` | Delete it at its first hit that counts |
-| `--condition condition` | Count a hit only where this holds, such as '$rax == 0' |
-| `--print format` | Print this at a hit and go on, such as 'n={counter} p={$rdi:x}' |
+| `--ignore count` | Pass this many hits where the condition holds (default: 0) |
+| `--temporary` | Delete it at its first hit where the condition holds |
+| `--condition condition` | Count a hit only where this expression holds, as print takes one, such as '$rax == 0' |
+| `--print format` | Print this at a hit and go on. {EXPR} prints an expression as print takes one, {EXPR:x} in a print format letter: 'n={counter} p={$rdi:x}' |
 
 Examples:
 
@@ -7475,7 +7511,7 @@ Delete catchpoints.
 The run log keeps the delete, so a branch forked before it keeps the catchpoint.
 
 ```
-usage: machine catch run delete [-h] number [number ...]
+machine catch run delete [-h] number [number ...]
 ```
 
 | Argument | Does |
@@ -7498,11 +7534,10 @@ See also:
 Save the catchpoints as the commands that add them.
 
 Each line is a machine command that adds one catchpoint again. The command keeps
-its condition, ignore count and flags. A location written by a register is saved
-as its address.
+its condition, ignore count and flags.
 
 ```
-usage: machine catch run save [-h] file
+machine catch run save [-h] file
 ```
 
 | Argument | Does |
@@ -7524,19 +7559,20 @@ See also:
 
 List the hits of catchpoints.
 
-A hit is a catchpoint that ended a run. It has the entry it ended at, its
-machine time, the catchpoint, and a catchpoint's event. The run log keeps each
-one, so a branch lists its parent's hits before it.
+A hit is a catchpoint that stopped the run. It has the entry it stopped at, its
+machine time and the number of the catchpoint. A catchpoint's hit also has its
+event. The run log keeps each one, so a branch lists its parent's hits before
+it.
 
-Use run `--back` to go back to the newest one.
+Use the run command with `--back` to switch onto a branch at the newest hit.
 
 ```
-usage: machine catch run hits [-h] [-n range]
+machine catch run hits [-h] [-n range]
 ```
 
 | Option | Does |
 |---|---|
-| `-n, --entries range` | Entries to list the hits of: N, A:B, A:, :B, -N for the last N hits, or -A:-B counted from the end (default: the last 20) |
+| `-n, --entries range` | Hits to list, by the entry each stopped at: N, A:B, A:, :B; or -N for the last N hits, -A:-B counted from the end (default: the last 20) |
 
 Examples:
 
@@ -7565,7 +7601,7 @@ The machine arms an enabled catchpoint and not a disabled one. The run log keeps
 the change.
 
 ```
-usage: machine catch run enable [-h] [--once | --count n] number
+machine catch run enable [-h] [--once | --count n] number
 ```
 
 | Argument | Does |
@@ -7596,7 +7632,7 @@ The machine arms an enabled catchpoint and not a disabled one. The run log keeps
 the change.
 
 ```
-usage: machine catch run disable [-h] number
+machine catch run disable [-h] number
 ```
 
 | Argument | Does |
@@ -7622,7 +7658,7 @@ A hit where the condition does not hold does not end the run. Without a
 condition the catchpoint has none.
 
 ```
-usage: machine catch run condition [-h] number [condition]
+machine catch run condition [-h] number [condition]
 ```
 
 | Argument | Does |
@@ -7649,7 +7685,7 @@ Each hit where the condition holds is counted. A counted hit is passed while the
 ignore count lasts. A count of 0 stops at the next.
 
 ```
-usage: machine catch run ignore [-h] number count
+machine catch run ignore [-h] number count
 ```
 
 | Argument | Does |
