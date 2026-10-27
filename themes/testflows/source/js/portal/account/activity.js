@@ -65,7 +65,9 @@ function rowTime(row) {
   if (type === "coverage_purchase") return duration(paid);
   if (type === "coverage_refund" && row.billed_seconds != null && row.billed_seconds !== "") {
     // Signed as Change is: a session's Time cells add up to the time it ran.
-    return `-${duration(Math.max(0, paid - (Number(row.billed_seconds) || 0)))}`;
+    // Nothing given back is 0s, as the CLI prints it, not -0s.
+    const back = Math.max(0, paid - (Number(row.billed_seconds) || 0));
+    return back > 0 ? `-${duration(back)}` : duration(back);
   }
   return "—";
 }
