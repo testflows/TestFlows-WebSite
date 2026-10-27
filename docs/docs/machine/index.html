@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793110608262" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793110608262" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793108011887" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793110608262" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2773,7 +2773,7 @@ architecture it was recorded on. Use the class name with create <code>--class</c
 <p>The first operand names the session. Use -a to delete every session.</p>
 <p>The command stops the machines of the session and syncs their runs to shared
 storage. The runs start again in another session. A session already gone counts
-as success.</p>
+as success. Its connection on this computer is cleared.</p>
 <p>The command waits until a named session is gone. Use <code>--no-wait</code> to return once
 the request is accepted.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions delete [-h] [-a] [-y] [--no-wait] [session]</span><br></pre></td></tr></table></figure>
@@ -2921,8 +2921,8 @@ the request is accepted.</p>
 </ul>
 <h3 id="machine-sessions-disconnect"><a href="#machine-sessions-disconnect" class="headerlink" title="machine sessions disconnect"></a>machine sessions disconnect</h3><p>Disconnect from a session. See <a href="#sessions">Sessions</a>.</p>
 <p>The session keeps running. The connection is shared on this computer, so every
-terminal loses it.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions disconnect [-h] [session]</span><br></pre></td></tr></table></figure>
+terminal loses it. Use -a to disconnect every session.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions disconnect [-h] [-a] [session]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -2936,8 +2936,20 @@ terminal loses it.</p>
 <td>Session (default: the current one)</td>
 </tr>
 </tbody></table>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-a, --all</code></td>
+<td>Disconnect every session</td>
+</tr>
+</tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions disconnect work  disconnect from work</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine sessions disconnect work  disconnect from work</span><br><span class="line">machine sessions disconnect -a    disconnect every session</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -11241,10 +11253,10 @@ went wrong.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793108011888"></script>
-<script src="/js/machine-hero-type.js?v=1793108011888"></script>
-<script src="/js/download-platforms.js?v=1793108011888"></script>
-<script src="/js/anchor-case.js?v=1793108011888"></script>
+<script src="/js/index-code-type.js?v=1793110608263"></script>
+<script src="/js/machine-hero-type.js?v=1793110608263"></script>
+<script src="/js/download-platforms.js?v=1793110608263"></script>
+<script src="/js/anchor-case.js?v=1793110608263"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -250,7 +250,7 @@ The first operand names the session. Use -a to delete every session.
 
 The command stops the machines of the session and syncs their runs to shared
 storage. The runs start again in another session. A session already gone counts
-as success.
+as success. Its connection on this computer is cleared.
 
 The command waits until a named session is gone. Use `--no-wait` to return once
 the request is accepted.
@@ -378,20 +378,25 @@ See also:
 Disconnect from a session. See [Sessions](sessions.md).
 
 The session keeps running. The connection is shared on this computer, so every
-terminal loses it.
+terminal loses it. Use -a to disconnect every session.
 
 ```
-machine sessions disconnect [-h] [session]
+machine sessions disconnect [-h] [-a] [session]
 ```
 
 | Argument | Does |
 |---|---|
 | `[session]` | Session (default: the current one) |
 
+| Option | Does |
+|---|---|
+| `-a, --all` | Disconnect every session |
+
 Examples:
 
 ```
 machine sessions disconnect work  disconnect from work
+machine sessions disconnect -a    disconnect every session
 ```
 
 See also:
