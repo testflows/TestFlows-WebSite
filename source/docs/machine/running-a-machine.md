@@ -404,12 +404,18 @@ machine output app -n : | grep -bo 'Linux version'    # 438:Linux version
 machine output app entry 438                          # 1276
 ```
 
-`--wide` shows, beside every line, the range of entries that printed it and the
-source it came from:
+On a terminal, every line shows the range of entries that printed it, the
+source it came from and its number. Into a pipe or a file the lines are printed
+alone, as the machine printed them. `--wide` and `--plain` choose either way:
 
 ```bash
-machine output app -n -5 --wide
+machine output app -n -5                      # with their entries
+machine output app -n : --plain > boot.log    # the text alone
 ```
+
+On a terminal, a control character the guest printed shows as text, such as
+`␛[?25l`, and your terminal does not act on it. Colors stay colors. A pipe or a
+file gets every byte as the guest printed it.
 
 ### Reading the output of one source
 
@@ -985,6 +991,18 @@ checkpoints or make and switch branches take their options as plain words, so
 guest or read its state, such as `/exec`, `/send`, `/profile` or `/regs`, take
 the same flags as on the command line: `/exec run --container app nproc`. Type
 `/help` to see them all, and `/q` or Ctrl+D to leave.
+
+`/h` and a command shows that command with examples, such as `/h exec`. A word
+in capitals in the help is a type: `/h RANGE` says how to write a range, and
+`/h POINT` a point.
+
+Above the prompt, a line shows where the run is: its time, its entry, the vCPU,
+the RIP, what the entry is, such as `IO_OUT`, and its state hash. Back at an
+entry, the same hash means the same state.
+
+```text
+⌖ vtime=4.648247180s  entry=32103  vcpu=0  rip=0xffffffff8104880d  IO_OUT  hash=0x91c170d2d6da8e05
+```
 
 The prompt is the easiest way to try something and come back. The session below
 starts from a new run made from the `ubuntu-26.04` disk, the one built in
