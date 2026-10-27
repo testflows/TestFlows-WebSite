@@ -705,14 +705,34 @@ for the shell is the rest of the line after `-c`, its quotes kept for the shell.
 
 A `;` separates commands at the prompt, except inside quotes, so a line with
 one is written in quotes, as in a terminal. A pair of quotes around the whole
-`-c` line is taken off.
+`-c` line is taken off. A `$` line, below, needs none of this.
 
-A line that starts with `$` is a line for the shell, whole: `$ ls / | wc -l`
-is `/exec run -c 'ls / | wc -l'`, and a `;` in it is the shell's.
+### Shell lines at the control prompt
+
+At the [control prompt](#interactive-mode), `$` puts you in the machine's
+shell. Type a line after it as you would in a terminal. The prompt runs the
+machine until the line finishes and prints what it wrote. A line that exits
+other than 0 says so after its output.
+
+Nothing in the line is the prompt's. Everything after the `$` goes to the shell
+as you typed it, so pipes, redirections, `;`, `&&`, variables and quotes all
+work without escaping:
 
 ```
+$ uname -a
+$ ls -la /srv
+$ ps aux | grep worker
+$ head -3 /etc/os-release
 $ cd /srv; make test
+$ X=1; echo $X
+$ grep -c ERROR /var/log/app.log || echo none
+$ echo 'retries=5' >> /etc/app.conf
 ```
+
+A `$` line is `/exec run -c` with that line, so the run records it like any
+other command. `/exec` lists it, a checkpoint keeps what it changed, and a fork
+or a replay repeats it. Look around between two steps of a run, change a file,
+and rewind to a checkpoint to try something else.
 
 ### In one container
 
