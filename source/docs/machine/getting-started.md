@@ -109,6 +109,9 @@ machine completion fish | source      # ~/.config/fish/config.fish
 The client answers each Tab itself, from its own commands, so a newer client
 needs no newer line.
 
+To try it in one terminal first, run the same line there instead. Tab
+completes in that shell until it exits, and no other shell changes.
+
 ## Signing up
 
 Create your account on the [sign-up page](/machine/portal/signup/), or from
