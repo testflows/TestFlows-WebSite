@@ -395,6 +395,15 @@ printed a match. [`machine go`](commands.md#machine-go), [`machine fork`](comman
 machine go app 'console~Linux version'
 ```
 
+`console:N` is a line by its number, as `machine output -n` numbers it: the
+point where the console finished printing line N. Any source takes it, such as
+`ttyS1:20`. A line counts from 1, so the point names the same place each time
+it is read:
+
+```bash
+machine go app console:120
+```
+
 If you would rather search with your own tools, pipe the console to them.
 `grep -b` prints the byte offset of a match, and
 [`machine output app entry`](commands.md#machine-output-entry) turns an offset into its entry:
