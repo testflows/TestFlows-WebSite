@@ -97,8 +97,11 @@ IMPLIED, ...
 If something does not work, [`machine ping`](commands.md#machine-ping) checks that you can reach the
 service and your sessions, and how long the round trip takes.
 
-To have Tab complete commands, options and their values, add the line for
-your shell to its startup file:
+In `machine-env`, Tab already completes commands, options and their values,
+and the names of your runs. Where `machine` is the client in every shell, as on
+most Linux systems, add the line for your shell to its startup file to have
+the same there. On a Mac, use `machine-env` instead: outside it, `machine` is
+the system's command, and the line would run that one.
 
 ```bash
 eval "$(machine completion bash)"     # ~/.bashrc

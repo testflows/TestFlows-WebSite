@@ -1050,7 +1050,8 @@ Usage: machine-env
 
 Starts a shell in which machine is TestFlows™ Machine, ahead of any other
 machine on PATH, and prefixes its prompt with $PROMPT_TAG. The shell loads the
-usual configuration first. Leave it with exit.
+usual configuration first. Tab completes machine's commands and options. Leave
+it with exit.
 
 With a command, runs it in that environment and starts no shell.
 
@@ -1109,6 +1110,9 @@ elif [ -f ~/.bash_profile ]; then
 fi
 PATH="$MACHINE_ENV:$PATH"
 export PATH
+# Tab completion, from the client now first on PATH: in a startup file, outside
+# this shell, machine is macOS's own. A client without completion prints nothing.
+eval "$(machine completion bash 2>/dev/null)"
 # At every prompt and last, because prompts that rebuild PS1 would drop it.
 __machine_env_prompt() {
     case "$PS1" in
@@ -1144,6 +1148,9 @@ ZDOTDIR="$MACHINE_ENV_ZDOTDIR"
 [[ -n $MACHINE_ENV_ZDOTDIR_UNSET ]] && unset ZDOTDIR
 unset MACHINE_ENV_ZDOTDIR MACHINE_ENV_ZDOTDIR_UNSET MACHINE_ENV_TMP
 path=("$MACHINE_ENV" $path)
+# Tab completion, from the client now first on PATH: in a startup file, outside
+# this shell, machine is macOS's own. A client without completion prints nothing.
+eval "$(machine completion zsh 2>/dev/null)"
 # At every prompt and last, because prompts that rebuild PROMPT would drop it.
 __machine_env_prompt() {
     [[ $PROMPT == "(machine) "* ]] || PROMPT="(machine) $PROMPT"
@@ -1289,6 +1296,22 @@ path_hint() {
 # on PATH. machine is kept off PATH then, so it hides nothing, and DIR holds machine-env
 # alone. machine-env starts a shell in which machine is this client and marks its prompt,
 # so the steps are shown as they will look in that shell.
+# The line that turns Tab completion on in the user's shell, for its startup file.
+# Not where machine-env is the way in: it loads completion itself, and outside it
+# machine is another program, which the line would run in every new shell.
+completion_hint() {
+    local line
+    case "$(basename "${SHELL:-}")" in
+    bash) line="echo 'eval \"\$(machine completion bash)\"' >> ~/.bashrc" ;;
+    zsh) line="echo 'eval \"\$(machine completion zsh)\"' >> ~/.zshrc" ;;
+    fish) line="echo 'machine completion fish | source' >> ~/.config/fish/config.fish" ;;
+    *) return 0 ;;
+    esac
+    say ""
+    say "Tab completion, in terminals opened after this:"
+    say "  $line"
+}
+
 next_in_env() {
     local dir="$1" other="$2" env="machine-env" on_path=true
     # Not on PATH, machine-env is found no more than machine is: name it in full.
@@ -1299,7 +1322,7 @@ next_in_env() {
     say ""
     warn "Another program called machine is on your PATH: $(tilde "$other")"
     say "  machine is kept off your PATH, so it does not hide that one."
-    say "  Use machine-env, a shell where machine is this client."
+    say "  Use machine-env, a shell where machine is this client and Tab completes it."
     say ""
     say "Next:"
     say "  \$ $env"
@@ -1506,6 +1529,7 @@ main() {
         say "Next:"
         say "  machine login         sign in (or  machine account signup  to create an account)"
         say "  machine --help        see every command"
+        completion_hint
     fi
     say ""
     say "Docs: https://testflows.com/docs/machine/"
