@@ -285,8 +285,8 @@ to get a glimpse of how {% testflows %} can make your testing flow. Be sure to t
 combinatorial [Sketch]es for a spin. You will have fun!
 
 
-[Sketch]: /docs/framework/combinatorial-tests.md#Using-Sketches
-[either()]: /docs/framework/combinatorial-tests.md#Using-either
-[Cartesian product]: /docs/framework/combinatorial-tests.md#Cartesian-Product
-[Combinatorial Tests]: /docs/framework/combinatorial-tests.md#Combinatorial-Tests
+[Sketch]: /docs/framework/combinatorial-tests.md#using-sketches
+[either()]: /docs/framework/combinatorial-tests.md#using-either
+[Cartesian product]: /docs/framework/combinatorial-tests.md#cartesian-product
+[Combinatorial Tests]: /docs/framework/combinatorial-tests.md#combinatorial-tests
 [Handbook]: /docs/framework

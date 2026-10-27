@@ -244,7 +244,7 @@ Therefore, we can define the following high-level atomic propositions for each i
 > * {%katex%} p_3 {%endkatex%}: `mode` is valid
 > * {%katex%} p_4 {%endkatex%}: `default` is valid
 
-Having a set of our four simple high-level atomic propositions in hand, we can use them to define the equivalence classes that correspond to these propositions using the [definition {%katex%} \mathcal{I} {%endkatex%}](#Simplified-is-just-a-Cartesian-product). There are {%katex%} 2^n {%endkatex%} classes where {%katex%} n {%endkatex%} is the number of propositions. In our case, we have {%katex%} 4 {%endkatex%} propositions, which gives us {%katex%} 2^4=16 {%endkatex%} classes.
+Having a set of our four simple high-level atomic propositions in hand, we can use them to define the equivalence classes that correspond to these propositions using the [definition {%katex%} \mathcal{I} {%endkatex%}](#simplified-is-just-a-cartesian-product). There are {%katex%} 2^n {%endkatex%} classes where {%katex%} n {%endkatex%} is the number of propositions. In our case, we have {%katex%} 4 {%endkatex%} propositions, which gives us {%katex%} 2^4=16 {%endkatex%} classes.
 
 {% html div class="styled-table compact" %}
 
@@ -289,7 +289,7 @@ for p1 in ['p1','¬p1']:
         (p1, p2, p3, p4)
 ```
 
-In a [TestSketch](/docs/framework/combinatorial-tests.md#Using-Sketches) which supports the [either()](/docs/framework/combinatorial-tests.md#Using-either) function, the same Cartesian product can be naturally defined as possibilities as follows:
+In a [TestSketch](/docs/framework/combinatorial-tests.md#using-sketches) which supports the [either()](/docs/framework/combinatorial-tests.md#using-either) function, the same Cartesian product can be naturally defined as possibilities as follows:
 
 ```python
 @TestSketch
@@ -305,7 +305,7 @@ def combinatorial_test(self):
 
 Having defined the first four high-level propositions and the equivalent classes derived from them, we need to give meaning to what it actually means for a given input to be valid or invalid. For this, we need to look at each input individually, as what it means to be valid or invalid for one input does not apply to another. We'll define an input to be invalid when the memory function raises an exception; otherwise, we'll consider any value that does not lead to an exception to be valid. Therefore, now we just need to think if there are any values for each input that would cause the memory function to raise an exception.
 
-After a quick examination of the [memory function](#The-memory-function) implementation, we can conclude the following:
+After a quick examination of the [memory function](#the-memory-function) implementation, we can conclude the following:
 
 1. The `addr` is valid when the value is hashable and invalid when it is not hashable. This is because the `addr` is used as a key in a dictionary, and Python dictionary keys must be hashable.
 

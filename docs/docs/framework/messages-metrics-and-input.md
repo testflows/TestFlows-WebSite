@@ -233,7 +233,7 @@ Scenario /my scenario
 # Reading Input
 
 You can read input during test program execution using [input() function].
-This function is commonly used in [Semi-Automated And Manual Tests](#Semi-Automated-And-Manual-Tests).
+This function is commonly used in [Semi-Automated And Manual Tests](#semi-automated-and-manual-tests).
 
 ```python
 input(type, multiline=False, choices=None, confirm=True, test=None

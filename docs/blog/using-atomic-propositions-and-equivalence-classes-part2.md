@@ -274,7 +274,7 @@ Our inputs are:
 > {%katex%} V_{mode} = \{"r", "w", "e", "rw", "re", "we", "rwe", "", \text{None}\} \\ {%endkatex%}  
 > {%katex%} V_{default} = \{0\} \\ {%endkatex%}  
 
-Using these inputs, we can easily implement a test to cover every equivalence class by employing [TestSketch](/docs/framework/combinatorial-tests.md#Using-Sketches) and the [either() function](/docs/framework/combinatorial-tests.md#Using-either), similar to our approach in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model). The only difference is that our equivalence classes compel us to include a few additional input values that may have been overlooked before. Other than that, the test implementation remains nearly identical.
+Using these inputs, we can easily implement a test to cover every equivalence class by employing [TestSketch](/docs/framework/combinatorial-tests.md#using-sketches) and the [either() function](/docs/framework/combinatorial-tests.md#using-either), similar to our approach in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model). The only difference is that our equivalence classes compel us to include a few additional input values that may have been overlooked before. Other than that, the test implementation remains nearly identical.
 
 The modified test is as follows:
 
@@ -301,7 +301,7 @@ def check_memory(self):
             check_result(r=r, exc=exc, behavior=behavior, model=model)
 ```
 
-Again, note that we’ve specified possible values for each variable using the [either() function](/docs/framework/combinatorial-tests.md#Using-either):
+Again, note that we’ve specified possible values for each variable using the [either() function](/docs/framework/combinatorial-tests.md#using-either):
 
 ```python
 addr = either(*[1000, 2000, None], i=f"addr-{i}")

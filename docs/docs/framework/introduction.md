@@ -169,13 +169,13 @@ For ease of navigation, you can always click any heading to go back to the table
 > will scroll up and the corresponding entry in the table of contents
 > will be highlighted in red. This handy feature will make sure you are never lost!
 
-There is also <span><a class="fas fa-chevron-up" style="color: orange" href="#Contents"></a><span>
+There is also <span><a class="fas fa-chevron-up" style="color: orange" href="#contents"></a><span>
 icon on the bottom right of the page to allow you to quickly scroll to the top.
 
 Also, feel free to click on any internal or external references, as you can
 use your browser's &#8678; back button to return to where you were.
 
->  **{% attention %}** Try clicking [Using Handbook](#Using-Handbook) link and then
+>  **{% attention %}** Try clicking [Using Handbook](#using-handbook) link and then
 > use your browser's &#8678; back button to return to the same scroll position in the handbook.
 
 If you find any errors or would like to add documentation for something that is

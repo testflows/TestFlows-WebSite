@@ -343,7 +343,7 @@ Skips(pattern,...)
 
 > **{% attention %}** [Onlys class] or [Skips class] can also act as decorators
 > to set `only` and `skip` attributes of decorated tests.
-> See [`Onlys` and `Skips` Decorators](#Onlys-and-Skips-Decorators).
+> See [`Onlys` and `Skips` Decorators](#onlys-and-skips-decorators).
 
 ```python
 with Scenario("my tests", only=[pattern,...], skip=[pattern,...])
@@ -440,7 +440,7 @@ The `type` can be one of the following:
 
 If you assign tags to your tests then [--only-tags] option can be used to select
 only the tests that match a particular tag. This option takes values
-of the form `type:tag1` where [type](#Tags-Filtering-type) is used to specify a test type
+of the form `type:tag1` where [type](#tags-filtering-type) is used to specify a test type
 of the tests that must have the specified tag.
 
 If you want to select tests that must have more than one tag use `type:tag1,tag2,...` form.
@@ -479,7 +479,7 @@ python3 test.py --only-tags test:"tag A" test:"tag A","tag B"
 If you assign tags to your tests, then you can also use [--skip-tags] option to select
 which tests should be skipped based on tests matching a particular tag.
 Similar to [--only-tags] option, it also takes values
-of the form `type:tag` where [type](#Tags-Filtering-type) is used to specify a test type
+of the form `type:tag` where [type](#tags-filtering-type) is used to specify a test type
 of the tests that must have the specified tags.
 
 If you want to skip tests that must have more than one tag use `type:tag1,tag2,...` form.
@@ -548,7 +548,7 @@ or similarly
 
 > **{% attention %}** [OnlyTags class] or [SkipTags class] can also act as decorators
 > to set `only_tags` and `skip_tags` attributes of decorated tests.
-> See [`OnlyTags` and `SkipTags` Decorators](#OnlyTags-and-SkipTags-Decorators).
+> See [`OnlyTags` and `SkipTags` Decorators](#onlytags-and-skiptags-decorators).
 
 ```python
 with Scenario("my tests", only_tags=OnlyTags(test=["tag1",("tag1","tag2"),...]), skip_tags=SkipTags(suite=["tag2",...])

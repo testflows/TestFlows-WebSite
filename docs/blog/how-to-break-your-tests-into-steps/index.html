@@ -52,40 +52,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793103067888" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793103067888" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793065869911" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793103067888" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -251,13 +251,13 @@ This article will explore a simple approach to making your tests better
 and show how you can improve your tests by breaking them into steps.
 Because there are different types of tests, we will specifically focus
 on the writing of a functional test.</p>
-<h1 id="Something-to-test"><a href="#Something-to-test" class="headerlink" title="Something to test"></a>Something to test</h1><p>To explore a manner in which we can make a test better, we need to write one. For this
+<h1 id="something-to-test"><a href="#something-to-test" class="headerlink" title="Something to test"></a>Something to test</h1><p>To explore a manner in which we can make a test better, we need to write one. For this
 we need something to test. What could it be? After much thought and for no
 obvious reason a simple <code>ls</code> utility found on all Unix-like systems comes to mind.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> foo</span><br></pre></td></tr></table></figure>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span>: cannot access <span class="string">&#x27;foo&#x27;</span>: No such file or directory</span><br></pre></td></tr></table></figure>
 
-<h1 id="What-will-we-test"><a href="#What-will-we-test" class="headerlink" title="What will we test?"></a>What will we test?</h1><p>Any good test that is worth the memory in which it is stored needs to verify one or more requirements. Having picked
+<h1 id="what-will-we-test"><a href="#what-will-we-test" class="headerlink" title="What will we test?"></a>What will we test?</h1><p>Any good test that is worth the memory in which it is stored needs to verify one or more requirements. Having picked
 the <code>ls</code> utility, we need to come up with a simple requirement
 that we can verify. Let’s pick the following requirement:</p>
 <blockquote>
@@ -265,7 +265,7 @@ that we can verify. Let’s pick the following requirement:</p>
 be printed in <code>stderr</code>, and the exit code should be <code>2</code>.</p>
 </blockquote>
 <p>With the requirement ready, we can proceed to write a test.</p>
-<h1 id="First-step"><a href="#First-step" class="headerlink" title="First step"></a>First step</h1><p>There are plenty of test frameworks that we can use to write a test but
+<h1 id="first-step"><a href="#first-step" class="headerlink" title="First step"></a>First step</h1><p>There are plenty of test frameworks that we can use to write a test but
 of course, we will use <span><img loading="lazy" decoding="async" alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> for this purpose as it
 has a convenient <strong>Connect</strong> module that provides a <strong>Shell</strong> class
 that will allow us to test <code>ls</code> utility in an intuitive way.</p>
@@ -289,7 +289,7 @@ module to provide us with a useful <strong>error()</strong> function. This funct
 information when the assertion fails. The assertion did not fail for me, and hopefully,
 it did not fail for you either. If it did, then the <strong>error()</strong> function should have provided you with
 details about what went wrong. Hey, make it fail and see what happens!</p>
-<h1 id="Taking-the-next-step"><a href="#Taking-the-next-step" class="headerlink" title="Taking the next step"></a>Taking the next step</h1><p>Are we done with the test? We could be, but we also could think about what would happen if our
+<h1 id="taking-the-next-step"><a href="#taking-the-next-step" class="headerlink" title="Taking the next step"></a>Taking the next step</h1><p>Are we done with the test? We could be, but we also could think about what would happen if our
 test was much more complex. Have we covered all the important cases? No, only one.
 What else can be tested? In truth, many more cases exist that we could and should check.
 For example, we could also check what happens if a path that we pass to the <code>ls</code> differs only
@@ -327,7 +327,7 @@ This is no small feat. For non-trivial tests, having a test procedure explicitly
 documented in the code and present in the output is a big advantage.
 It not only helps to analyze test results by looking at the output but also
 helps to understand the test code itself.</p>
-<h1 id="Taking-a-step-in-the-right-direction"><a href="#Taking-a-step-in-the-right-direction" class="headerlink" title="Taking a step in the right direction"></a>Taking a step in the right direction</h1><p>Take a look at your tests and see how the simple idea of breaking tests into steps
+<h1 id="taking-a-step-in-the-right-direction"><a href="#taking-a-step-in-the-right-direction" class="headerlink" title="Taking a step in the right direction"></a>Taking a step in the right direction</h1><p>Take a look at your tests and see how the simple idea of breaking tests into steps
 can help make your tests more readable and easier to debug.
 The cost of test maintenance far outweighs a few additional lines
 that can be added to make your tests better. Unfortunately, there are a plethora
@@ -739,9 +739,10 @@ is literally a step in the right direction.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793065869911"></script>
-<script src="/js/machine-hero-type.js?v=1793065869911"></script>
-<script src="/js/download-platforms.js?v=1793065869911"></script>
+<script src="/js/index-code-type.js?v=1793103067889"></script>
+<script src="/js/machine-hero-type.js?v=1793103067889"></script>
+<script src="/js/download-platforms.js?v=1793103067889"></script>
+<script src="/js/anchor-case.js?v=1793103067889"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793103067849" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793103067849" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793065869868" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793103067849" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -248,7 +248,7 @@
                         <a href="https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</a>
                     </h2>
                     <div class="blog-card-excerpt">
-                        <p>In <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Part 1</a>, we built an autonomous system that beat all four levels of <em>Super Mario Bros.</em> without any human guidance. We treated the exploration as a mutation-based Genetic Algorithm, and it worked: the system discovered winning paths by exploring, replaying, and mutating input sequences. It found shortcuts, navigated complex enemy patterns, and even uncovered unexpected behaviors like <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/#Finding-a-path-to-complete-Level-4">the Level 4 collision bug</a>. However, the exploration only validated one dimension of correctness: <em>Mario’s progress</em>. Our fitness function measured how far Mario advanced (x-position, level completion, and time), but the exploration couldn’t tell us whether the game actually behaved correctly. Did Mario’s velocity follow expected constraints? Were jumps causally justified? Did falling only occur when Mario lacked ground support? We had no way to know. This shows that autonomous testing by itself is not enough. To address this problem, we need a way to actually check state correctness. What we need is to plug in a behavior model!
+                        <p>In <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Part 1</a>, we built an autonomous system that beat all four levels of <em>Super Mario Bros.</em> without any human guidance. We treated the exploration as a mutation-based Genetic Algorithm, and it worked: the system discovered winning paths by exploring, replaying, and mutating input sequences. It found shortcuts, navigated complex enemy patterns, and even uncovered unexpected behaviors like <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/#finding-a-path-to-complete-level-4">the Level 4 collision bug</a>. However, the exploration only validated one dimension of correctness: <em>Mario’s progress</em>. Our fitness function measured how far Mario advanced (x-position, level completion, and time), but the exploration couldn’t tell us whether the game actually behaved correctly. Did Mario’s velocity follow expected constraints? Were jumps causally justified? Did falling only occur when Mario lacked ground support? We had no way to know. This shows that autonomous testing by itself is not enough. To address this problem, we need a way to actually check state correctness. What we need is to plug in a behavior model!
                     </div>
                     <div class="blog-card-meta">
                         <span class="blog-card-author">Vitaliy Zakaznikov</span>
@@ -417,7 +417,7 @@ To understand these terms, we will first define what a state is, what a sequence
                         <a href="https://testflows.com/blog/testing-simple-train-control-system-using-formal-description/">Testing Simple Train Control System Using Its Formal Description</a>
                     </h2>
                     <div class="blog-card-excerpt">
-                        <p>In our previous post, <a href="https://testflows.com/blog/decoding-formal-description-simple-train-control-system/">Decoding Formal Description of a Simple Train Control System</a>, we examined how to interpret a formal model defined through a <a href="https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#What-is-a-Kripke-structure">Kripke structure</a> for a simple train control system—the Ceiling Speed Monitoring Controller (CSMC). Now, we’re taking the next step by using this model to build a powerful test suite to verify an AI-generated Python implementation of the controller.</p>
+                        <p>In our previous post, <a href="https://testflows.com/blog/decoding-formal-description-simple-train-control-system/">Decoding Formal Description of a Simple Train Control System</a>, we examined how to interpret a formal model defined through a <a href="https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#what-is-a-kripke-structure">Kripke structure</a> for a simple train control system—the Ceiling Speed Monitoring Controller (CSMC). Now, we’re taking the next step by using this model to build a powerful test suite to verify an AI-generated Python implementation of the controller.</p>
 <p>With AI tools like ChatGPT increasingly involved in code generation, rigorously testing this code is essential. So, we’ll develop the test suite and see how good the AI-generated code really is—buckle up, and let’s start testing!</p>
                     </div>
                     <div class="blog-card-meta">
@@ -542,7 +542,7 @@ To understand these terms, we will first define what a state is, what a sequence
 This requires that all the combination variables and their values are identified and combined with the code
 that creates possible combinations and loops through each one of them. However, it would be nice to simplify the process and
 enable testers to write combinatorial tests in a manner that is as close as possible to a test that checks
-just one combination. This is where combinatorial <a href="/docs/framework/#Using-Sketches">Sketch</a>‘es come in. A combinatorial
+just one combination. This is where combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>‘es come in. A combinatorial
 sketch allows a tester to write combinatorial tests in an intuitive way without worrying about
 variable identification, calculation of combinations, and any explicit loops.</p>
 <div class="codeblock-image dark"><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestSketch(<span class="params">Scenario</span>)</span></span><br><span class="line"><span class="meta">@Flags(<span class="params">TE</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_add</span>(<span class="params">self</span>):</span><br><span class="line">    values = &#123;<span class="number">0</span>, <span class="number">1</span>, math.inf, math.nan, <span class="number">1</span> / <span class="number">3</span>, <span class="number">2</span>**-<span class="number">200</span>, <span class="number">2</span>**<span class="number">200</span>&#125;</span><br><span class="line">    sign = &#123;<span class="number">1</span>, -<span class="number">1</span>&#125;</span><br><span class="line">    check_add(</span><br><span class="line">        a=either(*values, i=<span class="string">&quot;a&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_a&quot;</span>),</span><br><span class="line">        b=either(*values, i=<span class="string">&quot;b&quot;</span>) * either(*sign, i=<span class="string">&quot;sign_of_b&quot;</span>)</span><br><span class="line">    )</span><br></pre></td></tr></table></figure></div>
@@ -759,9 +759,10 @@ For tests, on the other hand, readability and maintainability are a must.
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793065869869"></script>
-<script src="/js/machine-hero-type.js?v=1793065869869"></script>
-<script src="/js/download-platforms.js?v=1793065869869"></script>
+<script src="/js/index-code-type.js?v=1793103067850"></script>
+<script src="/js/machine-hero-type.js?v=1793103067850"></script>
+<script src="/js/download-platforms.js?v=1793103067850"></script>
+<script src="/js/anchor-case.js?v=1793103067850"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -2,7 +2,7 @@
 
 # Test Flags
 
-You can set the [Test Flags](#Test-Flags) of any test either by setting the [flags] parameter of the inline test
+You can set the [Test Flags](#test-flags) of any test either by setting the [flags] parameter of the inline test
 or using the [Flags] decorator if the test is defined as a decorated function.
 The flags of the test can be accessed using the `flags` attribute of the test.
 

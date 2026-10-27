@@ -52,40 +52,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793103067875" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793103067875" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793065869898" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793103067875" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -247,7 +247,7 @@
 <p>Inspired by the first <a target="_blank" rel="noopener external nofollow noreferrer" href="https://bugbash.antithesis.com/">BugBash 2025</a> software reliability conference organized by <a target="_blank" rel="noopener external nofollow noreferrer" href="https://bugbash.antithesis.com/">Antithesis</a>, this post is a lighthearted, and (hopefully) helpful take on why bugs deserve a little more love — or at least, a little less blame.</p>
 <span id="more"></span>
 
-<h1 id="The-universe-of-software-states"><a href="#The-universe-of-software-states" class="headerlink" title="The universe of software states"></a>The universe of software states</h1><p>Every software system — no matter how simple or complex — can be described as a collection (set) of possible <strong>states</strong>. A state is just a snapshot of your system at a given moment.</p>
+<h1 id="the-universe-of-software-states"><a href="#the-universe-of-software-states" class="headerlink" title="The universe of software states"></a>The universe of software states</h1><p>Every software system — no matter how simple or complex — can be described as a collection (set) of possible <strong>states</strong>. A state is just a snapshot of your system at a given moment.</p>
 <p>More precisely,</p>
 <blockquote>
 <p>A <strong>state</strong> is defined as <strong>an assignment of values to variables</strong> and this means that any state is defined by its variables and the values that those variables can have.</p>
@@ -283,7 +283,7 @@ H403z M403 1759 V0 H319 V1759 v0 v1759 v84 h84z"/></svg></span></span></span><sp
 M347 1759 V0 H263 V1759 v0 v1759 h84z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.55em;"><span></span></span></span></span></span></span></span></span></span></span></p>
 <p>Both are perfectly valid <em>from the universe’s perspective</em> — but only one matches our <em>definition</em> of what addition means. The second state is a “bug” only because <strong>we</strong> decided that <code>1 + 1</code> must equal <code>2</code>.
 And that’s the whole point. A “bug” is just an <strong>undesirable state</strong>. It’s not evil. It’s not malicious. It’s just a possibility.</p>
-<h1 id="“Bug-or-feature-”-–-Perspective-matters"><a href="#“Bug-or-feature-”-–-Perspective-matters" class="headerlink" title="“Bug or feature?” – Perspective matters"></a>“Bug or feature?” – Perspective matters</h1><p>Every tester or developer has faced the eternal question:  </p>
+<h1 id="“bug-or-feature-”-–-perspective-matters"><a href="#“bug-or-feature-”-–-perspective-matters" class="headerlink" title="“Bug or feature?” – Perspective matters"></a>“Bug or feature?” – Perspective matters</h1><p>Every tester or developer has faced the eternal question:  </p>
 <blockquote>
 <p><em>“Is this a bug… or a feature?”</em></p>
 </blockquote>
@@ -291,27 +291,27 @@ And that’s the whole point. A “bug” is just an <strong>undesirable state</
 <p>Sometimes, a “bug” gets discovered and users actually <em>like</em> it. Or your team realizes that the “unexpected” behavior solves a real-world problem — and suddenly it’s promoted to “undocumented feature” status.
 That’s because there’s nothing inherently wrong with a bug state. It’s just not aligned with someone’s expectations — which may themselves be shifting or incomplete.
 In other words, bugs are just <strong>states we didn’t plan for</strong> — and sometimes, not planning for something is the <strong>real bug</strong>.</p>
-<h1 id="Why-bugs-happen-the-problem-of-state-explosion"><a href="#Why-bugs-happen-the-problem-of-state-explosion" class="headerlink" title="Why bugs happen: the problem of state explosion"></a>Why bugs happen: the problem of state explosion</h1><p>As systems grow in complexity, the number of possible states grows <strong>exponentially</strong>. This is the well-known problem of <strong>state explosion</strong>.
+<h1 id="why-bugs-happen-the-problem-of-state-explosion"><a href="#why-bugs-happen-the-problem-of-state-explosion" class="headerlink" title="Why bugs happen: the problem of state explosion"></a>Why bugs happen: the problem of state explosion</h1><p>As systems grow in complexity, the number of possible states grows <strong>exponentially</strong>. This is the well-known problem of <strong>state explosion</strong>.
 You may only think in terms of a few inputs or edge cases, but your system doesn’t care — there always could be more values for inputs or more inputs than you expected.
 Since we can’t test every possible state, undesirable ones sneak in — and surprise! They often get labeled as bugs.</p>
 <p>But the truth is, the system is just exploring the space you built for it.
 You gave it the keys, and it took a wrong turn… because <strong>you</strong> forgot to build a roadblock.</p>
-<h1 id="What-can-we-do-—-Design-with-state-space-in-mind"><a href="#What-can-we-do-—-Design-with-state-space-in-mind" class="headerlink" title="What can we do? — Design with state space in mind"></a>What can we do? — Design with state space in mind</h1><p>We can’t eliminate bugs entirely, but we <em>can</em> improve how we deal with them — and even reduce how often they show up — by designing with possible <strong>state space</strong> in mind.</p>
-<h2 id="✅-Tip-1-Limit-the-state-space"><a href="#✅-Tip-1-Limit-the-state-space" class="headerlink" title="✅ Tip #1: Limit the state space"></a>✅ Tip #1: Limit the state space</h2><p>Be ruthless. Avoid adding options, flags, or configurations unless they’re truly needed. Every additional branch or case increases the number of possible states exponentially.</p>
-<h2 id="✅-Tip-2-Define-what-“valid”-means"><a href="#✅-Tip-2-Define-what-“valid”-means" class="headerlink" title="✅ Tip #2: Define what “valid” means"></a>✅ Tip #2: Define what “valid” means</h2><p>Don’t just rely on intuition. If you can, <strong>formally define</strong> the valid state space. Whether it’s contracts, assertions, or state models — write it down.</p>
-<h2 id="✅-Tip-3-Test-behaviors-not-just-results"><a href="#✅-Tip-3-Test-behaviors-not-just-results" class="headerlink" title="✅ Tip #3: Test behaviors, not just results"></a>✅ Tip #3: Test behaviors, not just results</h2><p>Focus on how the system behaves in response to events and inputs over time. A snapshot might pass, but the <strong>path</strong> to get to it could still be wrong.</p>
-<h2 id="✅-Tip-4-Use-model-based-or-property-based-testing"><a href="#✅-Tip-4-Use-model-based-or-property-based-testing" class="headerlink" title="✅ Tip #4: Use model-based or property-based testing"></a>✅ Tip #4: Use model-based or property-based testing</h2><p>These testing approaches are great at <strong>exploring unexpected states</strong> and helping you find issues in places your brain forgot to look.</p>
-<h2 id="✅-Tip-5-Treat-bugs-as-insights"><a href="#✅-Tip-5-Treat-bugs-as-insights" class="headerlink" title="✅ Tip #5: Treat bugs as insights"></a>✅ Tip #5: Treat bugs as insights</h2><p>Every bug is a clue about your system’s structure. Ask: “What path led here?” and “How can we prevent it — or learn from it?”</p>
-<h1 id="A-new-attitude-towards-bugs"><a href="#A-new-attitude-towards-bugs" class="headerlink" title="A new attitude towards bugs"></a>A new attitude towards bugs</h1><p>So let’s stop bashing bugs. Let’s stop treating them like invaders or villains.
+<h1 id="what-can-we-do-—-design-with-state-space-in-mind"><a href="#what-can-we-do-—-design-with-state-space-in-mind" class="headerlink" title="What can we do? — Design with state space in mind"></a>What can we do? — Design with state space in mind</h1><p>We can’t eliminate bugs entirely, but we <em>can</em> improve how we deal with them — and even reduce how often they show up — by designing with possible <strong>state space</strong> in mind.</p>
+<h2 id="✅-tip-1-limit-the-state-space"><a href="#✅-tip-1-limit-the-state-space" class="headerlink" title="✅ Tip #1: Limit the state space"></a>✅ Tip #1: Limit the state space</h2><p>Be ruthless. Avoid adding options, flags, or configurations unless they’re truly needed. Every additional branch or case increases the number of possible states exponentially.</p>
+<h2 id="✅-tip-2-define-what-“valid”-means"><a href="#✅-tip-2-define-what-“valid”-means" class="headerlink" title="✅ Tip #2: Define what “valid” means"></a>✅ Tip #2: Define what “valid” means</h2><p>Don’t just rely on intuition. If you can, <strong>formally define</strong> the valid state space. Whether it’s contracts, assertions, or state models — write it down.</p>
+<h2 id="✅-tip-3-test-behaviors-not-just-results"><a href="#✅-tip-3-test-behaviors-not-just-results" class="headerlink" title="✅ Tip #3: Test behaviors, not just results"></a>✅ Tip #3: Test behaviors, not just results</h2><p>Focus on how the system behaves in response to events and inputs over time. A snapshot might pass, but the <strong>path</strong> to get to it could still be wrong.</p>
+<h2 id="✅-tip-4-use-model-based-or-property-based-testing"><a href="#✅-tip-4-use-model-based-or-property-based-testing" class="headerlink" title="✅ Tip #4: Use model-based or property-based testing"></a>✅ Tip #4: Use model-based or property-based testing</h2><p>These testing approaches are great at <strong>exploring unexpected states</strong> and helping you find issues in places your brain forgot to look.</p>
+<h2 id="✅-tip-5-treat-bugs-as-insights"><a href="#✅-tip-5-treat-bugs-as-insights" class="headerlink" title="✅ Tip #5: Treat bugs as insights"></a>✅ Tip #5: Treat bugs as insights</h2><p>Every bug is a clue about your system’s structure. Ask: “What path led here?” and “How can we prevent it — or learn from it?”</p>
+<h1 id="a-new-attitude-towards-bugs"><a href="#a-new-attitude-towards-bugs" class="headerlink" title="A new attitude towards bugs"></a>A new attitude towards bugs</h1><p>So let’s stop bashing bugs. Let’s stop treating them like invaders or villains.
 Bugs are <strong>natural consequences</strong> of systems we build. They’re not lies — they’re inconvenient truths.
 A bug is your system telling you, “Hey, I can do this too — did you think about that?”
 Instead of blame, let’s bring <strong>curiosity</strong>. Instead of punishment, let’s pursue <strong>understanding</strong>. And instead of fear, let’s aim for <strong>better design</strong>.</p>
-<h1 id="Conclusion-Embrace-your-bugs"><a href="#Conclusion-Embrace-your-bugs" class="headerlink" title="Conclusion: Embrace your bugs"></a>Conclusion: Embrace your bugs</h1><p>Next time you find a bug, don’t reach for your hammer — reach for your model.<br>Try asking:</p>
+<h1 id="conclusion-embrace-your-bugs"><a href="#conclusion-embrace-your-bugs" class="headerlink" title="Conclusion: Embrace your bugs"></a>Conclusion: Embrace your bugs</h1><p>Next time you find a bug, don’t reach for your hammer — reach for your model.<br>Try asking:</p>
 <blockquote>
 <p>“What state did I forget to consider?”<br>“Is this really a mistake, or just a path I didn’t anticipate?”<br>“What can I learn from this bug?”</p>
 </blockquote>
 <p>And remember — bugs don’t happen <strong>to</strong> you. They happen <strong>because</strong> of you. And that means… you’re in control!</p>
-<h1 id="Bonus-Explore-behaviors-with-TestFlows"><a href="#Bonus-Explore-behaviors-with-TestFlows" class="headerlink" title="Bonus: Explore behaviors with TestFlows"></a>Bonus: Explore behaviors with TestFlows</h1><p>If you’re interested in testing using behavior models or exploring equivalence classes, check out <a href="/docs/framework">TestFlows</a> and other articles on this <a href="../">blog</a> such as <a href="../combinatorial-testing-behavior-model/">Combinatorial Testing: Writing Behavior Model</a>. <a href="/docs/framework">TestFlows</a> is a Python testing library designed to help you write better tests, define, and explore complex systems in a structured way including behavior models (extension of property-based testing) — so you can prevent bugs by understanding your system better. With <a href="/docs/framework">TestFlows</a>, you’ll write test programs instead of just tests and the sky will be the limit of what testing you can do to find the <em>undesirable states</em> — the <strong>bugs</strong>.</p>
+<h1 id="bonus-explore-behaviors-with-testflows"><a href="#bonus-explore-behaviors-with-testflows" class="headerlink" title="Bonus: Explore behaviors with TestFlows"></a>Bonus: Explore behaviors with TestFlows</h1><p>If you’re interested in testing using behavior models or exploring equivalence classes, check out <a href="/docs/framework">TestFlows</a> and other articles on this <a href="../">blog</a> such as <a href="../combinatorial-testing-behavior-model/">Combinatorial Testing: Writing Behavior Model</a>. <a href="/docs/framework">TestFlows</a> is a Python testing library designed to help you write better tests, define, and explore complex systems in a structured way including behavior models (extension of property-based testing) — so you can prevent bugs by understanding your system better. With <a href="/docs/framework">TestFlows</a>, you’ll write test programs instead of just tests and the sky will be the limit of what testing you can do to find the <em>undesirable states</em> — the <strong>bugs</strong>.</p>
 
         </div>
         <div class="col-12 divider"></div>
@@ -714,9 +714,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793065869899"></script>
-<script src="/js/machine-hero-type.js?v=1793065869899"></script>
-<script src="/js/download-platforms.js?v=1793065869899"></script>
+<script src="/js/index-code-type.js?v=1793103067875"></script>
+<script src="/js/machine-hero-type.js?v=1793103067875"></script>
+<script src="/js/download-platforms.js?v=1793103067875"></script>
+<script src="/js/anchor-case.js?v=1793103067875"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

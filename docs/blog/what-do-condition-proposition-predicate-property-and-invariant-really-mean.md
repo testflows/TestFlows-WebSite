@@ -432,7 +432,7 @@ Because an invariant must hold for every reachable state, we'll enforce that suc
 Wait a second—why do we say that a property or invariant can act as a condition? We defined a **condition** as a Boolean expression that serves as a guard for a state transition. So, where is the state transition that a property serves as a guard?
 
 A correct way to think about it is to view a property as a mechanism that sets other state variables.
-Remember that [you can always add more variables](#You-can-always-add-more-variables)! For example, consider the invariant:
+Remember that [you can always add more variables](#you-can-always-add-more-variables)! For example, consider the invariant:
 
 {%katex%}
 0 \le \text{small} \le 3 \land 0 \le \text{big} \le 5

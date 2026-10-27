@@ -10,7 +10,7 @@ as well as allowing you to easily define tests that check different combinations
 In addition, a convenient collection of tools used for combinatorial testing is provided
 including calculation of [Covering Arrays] for pairwise and n-wise testing using the [IPOG] algorithm.
 
-<figure id="Example-Pressure-Switch" class="example">Example: Pressure Switch</figure>
+<figure id="example-pressure-switch" class="example">Example: Pressure Switch</figure>
 
 Let's see the basic application of combinatorial tests to testing a simple pressure switch
 defined by the `pressure_switch` function below, where it has a fault when

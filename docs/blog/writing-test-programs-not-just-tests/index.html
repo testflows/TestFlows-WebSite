@@ -52,40 +52,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793103067874" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793103067874" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793065869897" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793103067874" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -248,7 +248,7 @@ For years, the software testing landscape has relied on this model. We diligentl
 <p>The separation of what to run (the tests) from how it runs (the flow) creates a fundamental disconnect, leading to awkward workarounds and limitations.</p>
 </blockquote>
 <p>This article explores a more powerful alternative: writing test programs instead of just tests. We’ll show how unifying tests and control flow empowers you with complete programmatic control, turning your testing from a constrained activity into a creative one.</p>
-<h1 id="The-pain-of-the-runner-centric-world"><a href="#The-pain-of-the-runner-centric-world" class="headerlink" title="The pain of the runner-centric world"></a>The pain of the runner-centric world</h1><p>The core design choice of separating the test from the runner leads to real-world pain. The moment you need dynamic control, you hit a wall.
+<h1 id="the-pain-of-the-runner-centric-world"><a href="#the-pain-of-the-runner-centric-world" class="headerlink" title="The pain of the runner-centric world"></a>The pain of the runner-centric world</h1><p>The core design choice of separating the test from the runner leads to real-world pain. The moment you need dynamic control, you hit a wall.
 Have you ever tried to:</p>
 <ul>
 <li>Conditionally run a test based on the result of another? You likely had to find, install, and learn a special dependency plugin.</li>
@@ -259,7 +259,7 @@ Have you ever tried to:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pytest</span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.dependency(<span class="params">name=<span class="string">&quot;login&quot;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_login</span>():</span><br><span class="line">    <span class="keyword">assert</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@pytest.mark.dependency(<span class="params">depends=[<span class="string">&quot;login&quot;</span>]</span>)</span></span><br><span class="line"><span class="meta">@pytest.mark.repeat(<span class="params"><span class="number">10</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_purchase</span>():</span><br><span class="line">    <span class="keyword">assert</span> <span class="number">1</span> + <span class="number">1</span> == <span class="number">2</span></span><br></pre></td></tr></table></figure>
 
 <p>This works for a static number of repetitions. But what if the repeat count is dynamic—calculated moments before the test runs? The plugin breaks. You’re stuck again, fighting your framework instead of writing tests.</p>
-<h1 id="The-alternative-embracing-test-programs"><a href="#The-alternative-embracing-test-programs" class="headerlink" title="The alternative: embracing test programs"></a>The alternative: embracing test programs</h1><p>The alternative is to eliminate the runner and, instead, write a test program. In this everything-is-code paradigm, your tests are simply functions, and the control flow is explicitly defined using the full power of your programming language.</p>
+<h1 id="the-alternative-embracing-test-programs"><a href="#the-alternative-embracing-test-programs" class="headerlink" title="The alternative: embracing test programs"></a>The alternative: embracing test programs</h1><p>The alternative is to eliminate the runner and, instead, write a test program. In this everything-is-code paradigm, your tests are simply functions, and the control flow is explicitly defined using the full power of your programming language.</p>
 <p>Let’s rewrite the previous example using <span><img loading="lazy" decoding="async" alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span>, where the framework is just a library, not a runner.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.core <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">login</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="literal">True</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">purchase</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="number">1</span> + <span class="number">1</span> == <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> Feature(<span class="string">&quot;login and purchase&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> Scenario(run=login) == OK:</span><br><span class="line">        <span class="comment"># Easily replace 10 with any dynamic value</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">10</span>):</span><br><span class="line">            Scenario(<span class="string">f&quot;purchase #<span class="subst">&#123;i&#125;</span>&quot;</span>, run=purchase)</span><br></pre></td></tr></table></figure>
 
@@ -271,7 +271,7 @@ Have you ever tried to:</p>
 and defined by you—not by some runner’s discovery process.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test_program.py </span><br><span class="line">Sep 12,2025 12:43:15   ⟥  Feature login and purchase</span><br><span class="line">Sep 12,2025 12:43:15     ⟥  Scenario login</span><br><span class="line">               270us     ⟥⟤ OK login, /login and purchase/login</span><br><span class="line">Sep 12,2025 12:43:15     ⟥  Scenario purchase <span class="comment">#0</span></span><br><span class="line">               211us     ⟥⟤ OK purchase <span class="comment">#0, /login and purchase/purchase #0</span></span><br><span class="line">...</span><br><span class="line">Sep 12,2025 12:43:15     ⟥  Scenario purchase <span class="comment">#9</span></span><br><span class="line">               180us     ⟥⟤ OK purchase <span class="comment">#9, /login and purchase/purchase #9</span></span><br><span class="line">                 6ms   ⟥⟤ OK login and purchase, /login and purchase</span><br></pre></td></tr></table></figure>
 
-<h1 id="Test-program-tree"><a href="#Test-program-tree" class="headerlink" title="Test program tree"></a>Test program tree</h1><p>Test program code naturally forms a program tree—just like any other program.
+<h1 id="test-program-tree"><a href="#test-program-tree" class="headerlink" title="Test program tree"></a>Test program tree</h1><p>Test program code naturally forms a program tree—just like any other program.
 A critic might argue, “Of course a program has a call stack—that’s obvious,” and they’re right.
 The real magic isn’t the tree itself—it’s that you have explicit control over building it.</p>
 <p>For example, consider this simple test program:</p>
@@ -295,7 +295,7 @@ The real magic isn’t the tree itself—it’s that you have explicit control o
 <p>Just like the famous saying goes: “it’s turtles all the way down”—only here, it’s tests.</p>
 </blockquote>
 <p>That consistency, where every test defines its flow in the same way, has a kind of mathematical beauty—like a recursive definition, where the whole is built from smaller parts that mirror the same structure. No runner is needed—and if you add one, you break that consistency, and there’s no way back.</p>
-<h1 id="The-power-of-explicit-control"><a href="#The-power-of-explicit-control" class="headerlink" title="The power of explicit control"></a>The power of explicit control</h1><p>When you are the captain, you have the full power of a programming language at your fingertips. Complex testing logic becomes trivial.</p>
+<h1 id="the-power-of-explicit-control"><a href="#the-power-of-explicit-control" class="headerlink" title="The power of explicit control"></a>The power of explicit control</h1><p>When you are the captain, you have the full power of a programming language at your fingertips. Complex testing logic becomes trivial.</p>
 <ul>
 <li><p>Conditional Execution: Need to run one test only if another test failed? That’s an <strong>if</strong> statement.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    <span class="keyword">if</span> Scenario(run=testA) != OK:</span><br><span class="line">        Scenario(run=testB) <span class="comment"># Conditional execution</span></span><br></pre></td></tr></table></figure>
@@ -306,12 +306,12 @@ The real magic isn’t the tree itself—it’s that you have explicit control o
 <li><p>Parallel Execution: Running tests in parallel is no longer a complex configuration file. It’s an argument in a function call.</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> Module(<span class="string">&quot;Test program&quot;</span>):</span><br><span class="line">    <span class="comment"># Run testA and testB in parallel</span></span><br><span class="line">    Scenario(run=testA, parallel=<span class="literal">True</span>)</span><br><span class="line">    Scenario(run=testB, parallel=<span class="literal">True</span>)</span><br><span class="line">    join() <span class="comment"># Wait for both to finish</span></span><br><span class="line">    Scenario(run=testC)</span><br></pre></td></tr></table></figure></li>
 </ul>
-<h1 id="Everything-is-reusable-and-composable"><a href="#Everything-is-reusable-and-composable" class="headerlink" title="Everything is reusable and composable"></a>Everything is reusable and composable</h1><p>One of the most powerful ideas behind test programs is that <strong>everything can be defined once, reused anywhere, and composed into larger flows</strong>.<br>When reusability isn’t needed, you can define everything inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  </p>
+<h1 id="everything-is-reusable-and-composable"><a href="#everything-is-reusable-and-composable" class="headerlink" title="Everything is reusable and composable"></a>Everything is reusable and composable</h1><p>One of the most powerful ideas behind test programs is that <strong>everything can be defined once, reused anywhere, and composed into larger flows</strong>.<br>When reusability isn’t needed, you can define everything inline. In practice, mixing both styles is not only possible but often beneficial for improving test code readability.  </p>
 <p>For reusability:  </p>
 <ul>
-<li>A suite can be defined with the <a href="/docs/framework/#Suite">@TestSuite</a> decorator.  </li>
-<li>A scenario can be defined with the <a href="/docs/framework/#Scenario">@TestScenario</a> decorator.  </li>
-<li>A step can be defined with the <a href="/docs/framework/#Step">@TestStep</a> decorator.</li>
+<li>A suite can be defined with the <a href="/docs/framework/#suite">@TestSuite</a> decorator.  </li>
+<li>A scenario can be defined with the <a href="/docs/framework/#scenario">@TestScenario</a> decorator.  </li>
+<li>A step can be defined with the <a href="/docs/framework/#step">@TestStep</a> decorator.</li>
 </ul>
 <p>This makes tests uniform, consistent, and naturally composable. Suites can call scenarios, scenarios can call steps, and steps themselves can wrap other steps.  </p>
 <p>For example, we can define reusable steps:</p>
@@ -335,7 +335,7 @@ Readability comes from the way reusable pieces are named and composed inline.</p
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ python3 test_program.py -o short</span><br><span class="line">Module Test program</span><br><span class="line">  Suite suiteA</span><br><span class="line">    Scenario scenarioA</span><br><span class="line">      Given I have something</span><br><span class="line">      OK</span><br><span class="line">      When I <span class="keyword">do</span> something</span><br><span class="line">      OK</span><br><span class="line">      Then I check something</span><br><span class="line">      OK</span><br><span class="line">    OK</span><br><span class="line">  OK</span><br><span class="line">OK</span><br></pre></td></tr></table></figure>
 
 <p>The short output may now start to look like a Gherkin specification. The difference is that here it’s output, not input. You don’t lose control, and you stay entirely within Python—while making both your test code and test output readable and maintainable. That balance becomes essential as your testing grows to hundreds or thousands of cases.</p>
-<h1 id="From-simple-to-advanced-with-ease"><a href="#From-simple-to-advanced-with-ease" class="headerlink" title="From simple to advanced with ease"></a>From simple to advanced with ease</h1><p>Because your tests are just code, scaling from simple to advanced techniques is simply a matter of applying different coding patterns.
+<h1 id="from-simple-to-advanced-with-ease"><a href="#from-simple-to-advanced-with-ease" class="headerlink" title="From simple to advanced with ease"></a>From simple to advanced with ease</h1><p>Because your tests are just code, scaling from simple to advanced techniques is simply a matter of applying different coding patterns.
 Dynamic test generation—often a nightmare elsewhere—becomes as simple as writing a nested <strong>for</strong> loop.</p>
 <p>Here’s an example from <a href="/blog/combinatorial-testing-the-introduction">Combinatorial Testing: The Introduction</a>:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@TestScenario</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">check_pressure_switch</span>(<span class="params">self</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;Check all pressure and volume combinations.&quot;&quot;&quot;</span></span><br><span class="line">    pressures = [<span class="number">0</span>, <span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>]</span><br><span class="line">    volumes = [<span class="number">0</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">300</span>, <span class="number">400</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> pressure <span class="keyword">in</span> pressures:</span><br><span class="line">        <span class="keyword">for</span> volume <span class="keyword">in</span> volumes:</span><br><span class="line">            <span class="keyword">with</span> Check(<span class="string">f&quot;pressure=<span class="subst">&#123;pressure&#125;</span>,volume=<span class="subst">&#123;volume&#125;</span>&quot;</span>):</span><br><span class="line">                pressure_switch(pressure=pressure, volume=volume)</span><br></pre></td></tr></table></figure>
@@ -346,7 +346,7 @@ It can also extend to working with formal system descriptions, as in <a href="/b
 <blockquote>
 <p> In the end, it’s just code.</p>
 </blockquote>
-<h1 id="Understanding-some-of-the-trade-offs"><a href="#Understanding-some-of-the-trade-offs" class="headerlink" title="Understanding some of the trade-offs"></a>Understanding some of the trade-offs</h1><p>Like any architectural choice, writing test programs comes with trade-offs. The paradigm gives you explicit control, but that power comes with responsibility.</p>
+<h1 id="understanding-some-of-the-trade-offs"><a href="#understanding-some-of-the-trade-offs" class="headerlink" title="Understanding some of the trade-offs"></a>Understanding some of the trade-offs</h1><p>Like any architectural choice, writing test programs comes with trade-offs. The paradigm gives you explicit control, but that power comes with responsibility.</p>
 <ul>
 <li><p>Conventions vs. ownership – Runners provide auto-discovery and naming rules for free. Test programs put you in charge of defining and maintaining them.</p>
 </li>
@@ -360,7 +360,7 @@ It can also extend to working with formal system descriptions, as in <a href="/b
 <p>At the same time, for teams moving into advanced testing techniques—like autonomous testing with property-based or behavior models—test programs open the freedom to explore approaches that would be difficult or impossible under a runner’s constraints.</p>
 <p>In short, you trade the convenience of implicit frameworks for the explicit power of code. For teams hitting the ceiling of what their runner can do,
 that trade can be liberating and sometimes unavoidable.</p>
-<h1 id="Get-started"><a href="#Get-started" class="headerlink" title="Get started"></a>Get started</h1><p>If this idea of freedom and control resonates with you, I encourage you to explore it further.</p>
+<h1 id="get-started"><a href="#get-started" class="headerlink" title="Get started"></a>Get started</h1><p>If this idea of freedom and control resonates with you, I encourage you to explore it further.</p>
 <span><img loading="lazy" decoding="async" alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> is an open-source project that embodies these principles. You can get started with a simple:
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install testflows</span><br></pre></td></tr></table></figure>
@@ -772,9 +772,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793065869898"></script>
-<script src="/js/machine-hero-type.js?v=1793065869898"></script>
-<script src="/js/download-platforms.js?v=1793065869898"></script>
+<script src="/js/index-code-type.js?v=1793103067874"></script>
+<script src="/js/machine-hero-type.js?v=1793103067874"></script>
+<script src="/js/download-platforms.js?v=1793103067874"></script>
+<script src="/js/anchor-case.js?v=1793103067874"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

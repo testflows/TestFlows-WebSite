@@ -390,7 +390,7 @@ with Given("I have something"):
 ## Background
 
 A [Background] step is used to define a complex preconditions or setup, usually containing multiple
-[Given](#Given)'s and can be defined using [Background] test definition class or [TestBackground]
+[Given](#given)'s and can be defined using [Background] test definition class or [TestBackground]
 decorator. It is treated as a mandatory step that can't be skipped.
 
 ```python
@@ -417,7 +417,7 @@ with Background("My complex setup"):
 
 ## When
 
-A [When](#When) step is used to define an action within a [Scenario]. It can be defined using [When] test definition class
+A [When](#when) step is used to define an action within a [Scenario]. It can be defined using [When] test definition class
 or using [TestStep] decorator with [When] passed as the [Sub-Type].
 
 ```python
@@ -435,7 +435,7 @@ with When("I do some action"):
 
 ## And
 
-An [And](#And) step is used to define a step of the same [Sub-Type] as the step right above it.
+An [And](#and) step is used to define a step of the same [Sub-Type] as the step right above it.
 It is defined using [And] test definition class.
 
 > **{% attention %}** It does not make sense to use [TestStep] decorator to define it, so always define it inline.
@@ -495,7 +495,7 @@ TypeError: `And` subtype can't be used here as it sibling is not of the same typ
 
 ## By
 
-A [By](#By) step is usually used to define a sub-step using [By] test definition class.
+A [By](#by) step is usually used to define a sub-step using [By] test definition class.
 
 ```python
 with When("I do something"):

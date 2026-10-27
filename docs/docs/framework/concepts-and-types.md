@@ -3,7 +3,7 @@
 # Concepts
 
 The framework was implemented with the following concepts and definitions in mind.
-These definitions were used as a guideline to implement the test [Tree](#Tree-is) hierarchy.
+These definitions were used as a guideline to implement the test [Tree](#tree-is) hierarchy.
 While the implementation does not strictly enforce these concepts, users are encouraged
 to apply these definitions during the design of their tests.
 
@@ -19,27 +19,27 @@ something that produces a result.
 
 ### Flow is
 
-a specific order of execution of [Tests](#Test-is)
+a specific order of execution of [Tests](#test-is)
 
 ### Tree is
 
-a rooted tree graph that results from the execution of a [Flow](#Flow-is)
+a rooted tree graph that results from the execution of a [Flow](#flow-is)
 
 ### Step is
 
-is a lowest level [Test](#Test-is)
+is a lowest level [Test](#test-is)
 
 ### Case is
 
-a [Test](#Test-is) that is made up of one or more [Steps](#Step-is)
+a [Test](#test-is) that is made up of one or more [Steps](#step-is)
 
 ### Suite is
 
-is a [Test](#Test-is) that is made up of one or more [Cases](#Case-is)
+is a [Test](#test-is) that is made up of one or more [Cases](#case-is)
 
 ### Module is
 
-a [Test](#Test-is) that is made up of one or more [Suites](#Suite-is)
+a [Test](#test-is) that is made up of one or more [Suites](#suite-is)
 
 # Types
 

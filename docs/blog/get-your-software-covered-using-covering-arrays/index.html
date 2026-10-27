@@ -52,40 +52,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793103067886" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793103067886" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793065869909" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793103067886" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -289,14 +289,14 @@ parameters <code>a</code> and <code>b</code> can take.</p>
 <p>where the first element of each tuple corresponds to the value of the parameter <code>a</code>, and the second
 element corresponds to the value of the parameter <code>b</code>.</p>
 <p>Examining the covering array above, we can see that all possible combinations, also referred to as interactions, of parameters <code>a</code> and <code>b</code> are indeed covered at least once. The same check can be done for other parameter combinations.</p>
-<h1 id="Checking-the-Covering-Array"><a href="#Checking-the-Covering-Array" class="headerlink" title="Checking the Covering Array"></a>Checking the Covering Array</h1><p>The <code>CoveringArray.check()</code> method can be used to verify that the tests
+<h1 id="checking-the-covering-array"><a href="#checking-the-covering-array" class="headerlink" title="Checking the Covering Array"></a>Checking the Covering Array</h1><p>The <code>CoveringArray.check()</code> method can be used to verify that the tests
 inside the covering array cover all possible <code>t-way</code> interactions at least once and thus
 meet the definition of a covering array.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> testflows.combinatorics <span class="keyword">import</span> CoveringArray</span><br><span class="line"></span><br><span class="line">parameters = &#123;<span class="string">&quot;a&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>], <span class="string">&quot;b&quot;</span>: [<span class="string">&quot;a&quot;</span>, <span class="string">&quot;b&quot;</span>], <span class="string">&quot;c&quot;</span>: [<span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>], <span class="string">&quot;d&quot;</span>: [<span class="string">&quot;d0&quot;</span>, <span class="string">&quot;d1&quot;</span>]&#125;</span><br><span class="line">tests = CoveringArray(parameters, strength=<span class="number">2</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(tests.check())</span><br></pre></td></tr></table></figure>
 
 <p>This is handy to confirm that the covering array that was calculated is valid.</p>
-<h1 id="Dumping-the-Covering-Array"><a href="#Dumping-the-Covering-Array" class="headerlink" title="Dumping the Covering Array"></a>Dumping the Covering Array</h1><p>The <code>CoveringArray</code> object implements a custom <code>__str__</code> method, and therefore it can be easily converted into
+<h1 id="dumping-the-covering-array"><a href="#dumping-the-covering-array" class="headerlink" title="Dumping the Covering Array"></a>Dumping the Covering Array</h1><p>The <code>CoveringArray</code> object implements a custom <code>__str__</code> method, and therefore it can be easily converted into
 a string representation similar to the format used in the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://math.nist.gov/coveringarrays/ipof/ipof-results.html">NIST covering array tables</a>.</p>
 <p>For example,</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(CoveringArray(parameters, strength=<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
@@ -304,15 +304,15 @@ a string representation similar to the format used in the <a target="_blank" rel
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">CoveringArray(&#123;<span class="string">&#x27;a&#x27;</span>: [0, 1], <span class="string">&#x27;b&#x27;</span>: [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>], <span class="string">&#x27;c&#x27;</span>: [0, 1, 2], <span class="string">&#x27;d&#x27;</span>: [<span class="string">&#x27;d0&#x27;</span>, <span class="string">&#x27;d1&#x27;</span>]&#125;,2)[</span><br><span class="line">6</span><br><span class="line">a b c d</span><br><span class="line">-------</span><br><span class="line">0 b 2 d1</span><br><span class="line">0 a 1 d0</span><br><span class="line">1 b 1 d1</span><br><span class="line">1 a 2 d0</span><br><span class="line">0 b 0 d0</span><br><span class="line">1 a 0 d1</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
 
 <p>Dumping covering arrays is useful for debugging and to get a general understanding, and the NIST-like format allows you to share it easily with your colleagues.</p>
-<h1 id="Wrapping-Up"><a href="#Wrapping-Up" class="headerlink" title="Wrapping Up"></a>Wrapping Up</h1><p>Combinatorial testing is an exciting topic, and in this article, I
+<h1 id="wrapping-up"><a href="#wrapping-up" class="headerlink" title="Wrapping Up"></a>Wrapping Up</h1><p>Combinatorial testing is an exciting topic, and in this article, I
 have introduced you to covering arrays and shown you
-how the new <a href="https://testflows.com/docs/framework/#Covering-Arrays-Pairwise-N-wise-Testing">CoveringArray class</a> allows you to
+how the new <a href="https://testflows.com/docs/framework/#covering-arrays-pairwise-n-wise-testing">CoveringArray class</a> allows you to
 calculate covering arrays for your tests. We have looked at how you can
 generate, check, and dump covering arrays. Covering arrays
 are critical for combinatorial testing, and <span><img loading="lazy" decoding="async" alt="TestFlows.com Open-Source Testing Framework" style="display: inline; vertical-align: bottom; height: 2em;" src="/img/logo.png"></span> now brings
 them to your test programs without using any third-party libraries.</p>
 <p>If you are interested in seeing how you can implement your combinatorial tests
-with the TestFlows.com open-source testing framework, check out the <a href="https://testflows.com/docs/framework/#Combinatorial-Tests">Combinatorial Tests</a>
+with the TestFlows.com open-source testing framework, check out the <a href="https://testflows.com/docs/framework/#combinatorial-tests">Combinatorial Tests</a>
 section in the <a href="https://testflows.com/docs/framework/">Handbook</a>. Until next time,
 happy combinatorial testing using covering arrays!</p>
 
@@ -717,9 +717,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793065869909"></script>
-<script src="/js/machine-hero-type.js?v=1793065869909"></script>
-<script src="/js/download-platforms.js?v=1793065869909"></script>
+<script src="/js/index-code-type.js?v=1793103067887"></script>
+<script src="/js/machine-hero-type.js?v=1793103067887"></script>
+<script src="/js/download-platforms.js?v=1793103067887"></script>
+<script src="/js/anchor-case.js?v=1793103067887"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

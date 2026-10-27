@@ -2,7 +2,7 @@
 
 [Using Timer]: timing-out.md#Using-Timer
 [Test Program Tree]: test-structure.md#Test-Program-Tree
-[Timer]: #timer
+[Timer]: #using-timer
 [Timeout]: timeouts-and-conditions.md#Timeout
 [Timeouts]: timeouts-and-conditions.md#Timeouts
 [when]: timeouts-and-conditions.md#The-when-Condition
@@ -28,7 +28,7 @@
 [`progress`]: controlling-output.md#progress-Output
 [`fails`]: controlling-output.md#fails-Output
 [`new-fails`]: controlling-output.md#new-fails-Output
-[`dots`]: #dots-Output
+[`dots`]: #dots-output
 [`brisk`]: controlling-output.md#brisk-Output
 [`manual`]: controlling-output.md#manual-Output
 [`quiet`]: controlling-output.md#quiet-Output
@@ -80,20 +80,20 @@
 [XFAIL]: test-program-options.md#XFAIL
 [XERROR]: test-program-options.md#XERROR
 [XNULL]: test-program-options.md#XNULL
-[FAIL_NOT_COUNTED]: #FAIL_NOT_COUNTED
-[ERROR_NOT_COUNTED]: #ERROR_NOT_COUNTED
-[NULL_NOT_COUNTED]: #NULL_NOT_COUNTED
-[PAUSE_BEFORE]: #PAUSE_BEFORE
+[FAIL_NOT_COUNTED]: #fail_not_counted
+[ERROR_NOT_COUNTED]: #error_not_counted
+[NULL_NOT_COUNTED]: #null_not_counted
+[PAUSE_BEFORE]: #pause_before
 [PAUSE]: test-program-options.md#PAUSE
-[PAUSE_AFTER]: #PAUSE_AFTER
-[PAUSE_ON_PASS]: #PAUSE_ON_PASS
-[PAUSE_ON_FAIL]: #PAUSE_ON_FAIL
+[PAUSE_AFTER]: #pause_after
+[PAUSE_ON_PASS]: #pause_on_pass
+[PAUSE_ON_FAIL]: #pause_on_fail
 [REPORT]: test-program-options.md#REPORT
 [DOCUMENT]: test-program-options.md#DOCUMENT
 [MANDATORY]: test-program-options.md#MANDATORY
 [MANUAL]: test-program-options.md#MANUAL
 [AUTO]: test-program-options.md#AUTO
-[LAST_RETRY]: #LAST_RETRY
+[LAST_RETRY]: #last_retry
 [flags]: test-properties.md#flags
 [Flags]: test-properties.md#Flags
 [xfails]: expected-failures.md#xfails
@@ -133,7 +133,7 @@
 [Step Type]: concepts-and-types.md#Types
 [Sub-Type]: concepts-and-types.md#Sub-Types
 [Sub-Types]: concepts-and-types.md#Sub-Types
-[Sub-Types Mapping]: #Sub-Type-Mapping
+[Sub-Types Mapping]: #sub-type-mapping
 [everything is a test]: concepts-and-types.md#Everything-is-a-Test
 [Given]: test-definition-classes.md#Given
 [When]: test-definition-classes.md#When
@@ -216,7 +216,7 @@
 [IPOG: A General Strategy for T-Way Software Testing]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
 [Covering Arrays]: combinatorial-tests.md#Covering-Arrays-Pairwise-N-wise-Testing
 [Covering Array]: combinatorial-tests.md#Covering-Arrays-Pairwise-N-wise-Testing
-[Example: Pressure Switch]: #Example-Pressure-Switch
+[Example: Pressure Switch]: #example-pressure-switch
 [Cartesian Product]: combinatorial-tests.md#Cartesian-Product
 [nested for-loops]: combinatorial-tests.md#Simple-Approach-Nested-For-loops
 [Using Sketches]: combinatorial-tests.md#Using-Sketches
@@ -224,7 +224,7 @@
 [Covering Array Combinations]: combinatorial-tests.md#Covering-Array-Combinations
 [Filtering Combinations]: combinatorial-tests.md#Filtering-Combinations
 [Using either()]: combinatorial-tests.md#Using-either
-[Limiting Number of Combinations]: #Limiting-Number-of-Combinations
+[Limiting Number of Combinations]: #limiting-the-number-of-combinations
 
 [And class]: https://github.com/testflows/TestFlows-Core/blob/622383c06a15e9165436923b7821d3d7048f7ce7/testflows/_core/test.py#L3391
 [Args class]: https://github.com/testflows/TestFlows-Core/blob/622383c06a15e9165436923b7821d3d7048f7ce7/testflows/_core/objects.py#L1156

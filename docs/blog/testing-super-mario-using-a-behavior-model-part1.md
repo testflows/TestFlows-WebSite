@@ -252,7 +252,7 @@ When we start the game, we also want to be able to wait for the game
 to be ready to play which means that we want to pass the `MAIN_MENU` states and
 enter the first `LEVEL` state. It also makes sense to always cleanly
 stop the game using `pygame.quit()` call, so we'll define this action as
-a [Given with yield](/docs/framework/contexts-and-setups.md#Given-With-yield) step that supports combining setup and clean up in one step.  
+a [Given with yield](/docs/framework/contexts-and-setups.md#given-with-yield) step that supports combining setup and clean up in one step.  
 
 Most of the code to implement this action will be similar to the game's [main()](https://github.com/testflows/Examples/blob/v1.0/SuperMario/source/main.py#L8) function. We'll just add `yield`ing the game's object, clean up using `pygame.quit()` call and call to `wait_ready(game)` to enter playable state with the default Mario player selected. The stubs for the `start()` and `wait_ready()` actions will be the following: 
 

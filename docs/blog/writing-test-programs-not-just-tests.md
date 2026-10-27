@@ -175,9 +175,9 @@ When reusability isn’t needed, you can define everything inline. In practice, 
 
 For reusability:  
 
-* A suite can be defined with the [@TestSuite](/docs/framework/test-definition-classes.md#Suite) decorator.  
-* A scenario can be defined with the [@TestScenario](/docs/framework/test-definition-classes.md#Scenario) decorator.  
-* A step can be defined with the [@TestStep](/docs/framework/test-definition-classes.md#Step) decorator.  
+* A suite can be defined with the [@TestSuite](/docs/framework/test-definition-classes.md#suite) decorator.  
+* A scenario can be defined with the [@TestScenario](/docs/framework/test-definition-classes.md#scenario) decorator.  
+* A step can be defined with the [@TestStep](/docs/framework/test-definition-classes.md#step) decorator.  
 
 This makes tests uniform, consistent, and naturally composable. Suites can call scenarios, scenarios can call steps, and steps themselves can wrap other steps.  
 
