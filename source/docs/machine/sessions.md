@@ -100,8 +100,9 @@ machine sessions keep ci-1 30m
 ```
 
 A keep holds the session idle for up to 30 minutes on Free, and an hour on
-Starter, Free with usage credits and Pro. `machine sessions list` shows when each session stops idle.
-A session that stopped idle is listed as `stopped idle`, with the idle time it
-reached under IDLE STOP.
+Starter, Free with usage credits and Pro. `machine sessions list` shows under
+IDLE how long each session has gone without a command, and
+`machine sessions show` when it stops. A session that stopped idle is listed
+as `stopped idle`, with the idle time it reached under IDLE.
 In the control prompt, `/keep 30m` keeps the session you are driving, and the
 line under the clock shows the time left.
