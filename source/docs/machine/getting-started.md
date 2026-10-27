@@ -30,6 +30,16 @@ need another platform,
 [download page](/machine/download/) has the full list, and a way to check the
 download yourself.
 
+**Behind a proxy that inspects TLS.** The client trusts only Let's Encrypt,
+which issues the certificate of the Machine API, so a certificate from any other
+CA is refused, a proxy's included. The error names
+`TESTFLOWS_MACHINE_API_CA_FILE`: set it to a PEM file of the CAs to trust
+instead, such as your proxy's.
+
+```bash
+export TESTFLOWS_MACHINE_API_CA_FILE=/etc/ssl/certs/corporate-proxy-ca.pem
+```
+
 **On a Mac, use `machine-env`.** macOS ships its own `/usr/bin/machine`, which
 prints the processor type, so typing `machine` may not run the client. Putting
 the client first on your `PATH` would hide the system command for every other
