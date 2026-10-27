@@ -63,6 +63,17 @@ machine-env -- machine --version
 <p>That form runs one command in that environment and starts no shell, for scripts.</p>
 </div>
 
+<div class="download-section download-note">
+<h2>Tab completion</h2>
+<p>In <code>machine-env</code>, Tab completes commands, options and the names of your runs. To have it in every shell, add the line for your shell to its startup file. The installer prints the one for yours when it finishes.</p>
+
+```bash
+eval "$(machine completion bash)"     # ~/.bashrc
+eval "$(machine completion zsh)"      # ~/.zshrc
+machine completion fish | source      # ~/.config/fish/config.fish
+```
+</div>
+
 <div class="download-section">
 <h2>Check the download</h2>
 <p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
@@ -150,6 +161,17 @@ machine-env -- machine --version
 ```
 
 <p>That form runs one command in that environment and starts no shell, for scripts.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>Tab completion</h2>
+<p>In <code>machine-env</code>, Tab completes commands, options and the names of your runs. To have it in every shell, add the line for your shell to its startup file. The installer prints the one for yours when it finishes.</p>
+
+```bash
+eval "$(machine completion bash)"     # ~/.bashrc
+eval "$(machine completion zsh)"      # ~/.zshrc
+machine completion fish | source      # ~/.config/fish/config.fish
+```
 </div>
 
 <div class="download-section download-note">
@@ -258,6 +280,11 @@ echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.zshrc
 ```
 
 <p>Then open a new terminal. The installer offers to add this line for you when it finds the directory missing from your PATH: it asks first, and writes nothing unless you say yes. Linux and every other system get the same <code>machine-env</code> file.</p>
+</div>
+
+<div class="download-section download-note">
+<h2>Tab completion</h2>
+<p>In <code>machine-env</code>, Tab completes commands, options and the names of your runs. There is nothing to add to a startup file: outside <code>machine-env</code>, <code>machine</code> is the system's command, and a completion line there would run that one.</p>
 </div>
 
 <div class="download-section download-note">
