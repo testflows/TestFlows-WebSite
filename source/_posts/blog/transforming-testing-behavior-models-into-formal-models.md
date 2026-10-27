@@ -462,7 +462,7 @@ Where:
 
 With the transition relation {% katex %}R{% endkatex %} expressed as a predicate derived from the testing behavior model, we can now complete the rest of the Kripke structure {% katex %}(S, S_0, R, L, AP){% endkatex %}.
 
-The most challenging aspect is deriving the set of atomic propositions. Fortunately, since we have worked with this formal model before, the full procedure is detailed in the article [Decoding Formal Description of a Simple Train Control System](/blog/decoding-formal-description-simple-train-control-system/#The-atomic-propositions).
+The most challenging aspect is deriving the set of atomic propositions. Fortunately, since we have worked with this formal model before, the full procedure is detailed in the article [Decoding Formal Description of a Simple Train Control System](/blog/decoding-formal-description-simple-train-control-system/#the-atomic-propositions).
 
 From that procedure, the set of atomic propositions for this model is:
 
@@ -475,7 +475,7 @@ The set of states {% katex %}S{% endkatex %} is theoretically infinite since eac
 
 Similarly, the set of initial states {% katex %}S_0{% endkatex %} is also infinite because the system could restart in the middle of the train's movement, leading to a dependency on {% katex %}V_{\text{est}}{% endkatex %}.
 
-Finally, the labeling function ({% katex %}L{% endkatex %}) maps each state to the set of atomic propositions that are true for that state. While the set of states {% katex %}S{% endkatex %} is infinite, the labeling function can be defined piecewise using equivalence classes derived from the set of atomic propositions. For more details on deriving equivalence classes, refer to [Building test input sequences](/blog/testing-simple-train-control-system-using-formal-description/#Building-test-input-sequences), where this process is explained in depth.
+Finally, the labeling function ({% katex %}L{% endkatex %}) maps each state to the set of atomic propositions that are true for that state. While the set of states {% katex %}S{% endkatex %} is infinite, the labeling function can be defined piecewise using equivalence classes derived from the set of atomic propositions. For more details on deriving equivalence classes, refer to [Building test input sequences](/blog/testing-simple-train-control-system-using-formal-description/#building-test-input-sequences), where this process is explained in depth.
 
 ### Conclusion
 

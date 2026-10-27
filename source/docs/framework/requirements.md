@@ -71,7 +71,7 @@ The [ls](#ls) utility SHALL list the contents of a directory.
 
 The above document serves as the source of all the requirements and can be
 used to generate corresponding [Requirement class] objects that can be linked with tests
-using `tfs requirements generate` command. See [Generating Requirements Objects](#Generating-Requirements-Objects).
+using `tfs requirements generate` command. See [Generating Requirement Objects](#generating-requirement-objects).
 
 Each requirement is defined as a heading that starts with `RQ.` prefix and contains
 attributes such as `version`, `priority`, `group`, `type` and `uid` defined
@@ -227,9 +227,9 @@ source files and used to link with tests.
 
 ## Linking Requirements
 
-Once you have written your requirements in a [Markdown] document as described in [Requirements As Code](#Requirements-As-Code)
+Once you have written your requirements in a [Markdown] document as described in [Requirement Documents](#requirement-documents)
 and have generated [Requirement class] objects from the requirements source file using `tfs requirements generate`
-command as described in [Generating Requirements Objects](#Generating-Requirements-Objects)
+command as described in [Generating Requirement Objects](#generating-requirement-objects)
 you can link the requirements to any of the tests by either setting
 [requirements](test-properties.md#requirements) attribute of the inline test or using [Requirements](test-properties.md#Requirements)
 decorator for decorated tests.

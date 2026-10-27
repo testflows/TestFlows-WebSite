@@ -8,7 +8,7 @@ image: images/testing-simple-train-control-system-using-formal-description.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-In our previous post, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/), we examined how to interpret a formal model defined through a [Kripke structure](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#What-is-a-Kripke-structure) for a simple train control system—the Ceiling Speed Monitoring Controller (CSMC). Now, we’re taking the next step by using this model to build a powerful test suite to verify an AI-generated Python implementation of the controller.
+In our previous post, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/), we examined how to interpret a formal model defined through a [Kripke structure](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#what-is-a-kripke-structure) for a simple train control system—the Ceiling Speed Monitoring Controller (CSMC). Now, we’re taking the next step by using this model to build a powerful test suite to verify an AI-generated Python implementation of the controller.
 
 With AI tools like ChatGPT increasingly involved in code generation, rigorously testing this code is essential. So, we'll develop the test suite and see how good the AI-generated code really is—buckle up, and let's start testing!
 
@@ -18,7 +18,7 @@ With AI tools like ChatGPT increasingly involved in code generation, rigorously 
 
 Before we can start testing, we need a concrete implementation of the system. Taking a modern approach, we’ll use an AI tool, [ChatGPT](https://chatgpt.com/?model=gpt-4o), to provide us with a reference implementation in Python.
 
-We’ll give the ChatGPT 4o model access to the original article, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#The-transition-relation), to provide context. In addition, we will restate the transition relation, {%katex%} R {%endkatex%}, which defines the system's behavior as follows:
+We’ll give the ChatGPT 4o model access to the original article, [Decoding Formal Description of a Simple Train Control System](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#the-transition-relation), to provide context. In addition, we will restate the transition relation, {%katex%} R {%endkatex%}, which defines the system's behavior as follows:
 
 > {%katex%}
 R((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MRSP}}, \ell', W', EB')) \equiv \\
@@ -32,7 +32,7 @@ R((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MR
 \quad \varphi_7: (\ell = \text{IS} \land V_{\text{est}} = 0 \land \ell' = \text{NS} \land W' = 0 \land EB' = 0)
 {%endkatex%}
 
-Refer to the [Transition relation {%katex%} R {%endkatex%}](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#The-transition-relation) section in the previous blog if the transition relation is unclear.
+Refer to the [Transition relation {%katex%} R {%endkatex%}](https://testflows.com/blog/decoding-formal-description-simple-train-control-system/#the-transition-relation) section in the previous blog if the transition relation is unclear.
 
 Next, we provided ChatGPT with the following prompt to generate a Python implementation:
 
@@ -457,7 +457,7 @@ def check_result(self, behavior, model):
 
 # Writing the test to check all equivalence classes
 
-With the inputs selected to cover each equivalence class, we can now write the actual test. Since the system is stateful, we need to account for transitions between states as the system progresses. Given that the system has only three internal states, we can apply the [Pigeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle), just as we did in the [Determining the minimum number of calls](https://testflows.com/blog/combinatorial-testing-behavior-model/#Determining-the-minimum-number-of-calls) section when testing the memory function in the previous article.
+With the inputs selected to cover each equivalence class, we can now write the actual test. Since the system is stateful, we need to account for transitions between states as the system progresses. Given that the system has only three internal states, we can apply the [Pigeonhole principle](https://en.wikipedia.org/wiki/Pigeonhole_principle), just as we did in the [Determining the minimum number of calls](https://testflows.com/blog/combinatorial-testing-behavior-model/#determining-the-minimum-number-of-calls) section when testing the memory function in the previous article.
 
 The test itself will consist of two parts: the `TestOutline`, which defines the overall structure of the test, and individual checks for specific combinations of {%katex%} V_{\text{MRSP}} {%endkatex%}, threshold values, and sequences of estimated speed readings.
 

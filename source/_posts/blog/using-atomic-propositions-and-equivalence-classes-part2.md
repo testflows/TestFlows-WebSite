@@ -16,9 +16,9 @@ Ready to dive deeper? Let’s continue our journey into advanced testing strateg
 
 # Taking into account system's internal states
 
-The original definition of [input equivalence class partitions {%katex%} \mathcal{I} {%endkatex%}](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes) (IECP) does not explicitly consider system state. This may seem counterintuitive, as one might expect a system in different states to respond differently to inputs within the same equivalence class. In other words, the behavior of some class {%katex%}EC_1{%endkatex%} when the system is in state {%katex%}s_1{%endkatex%} may not be the same as when {%katex%}EC_1{%endkatex%} is applied in {%katex%}s_2{%endkatex%}.
+The original definition of [input equivalence class partitions {%katex%} \mathcal{I} {%endkatex%}](/blog/using-atomic-propositions-and-equivalence-classes-part1/#equivalence-classes) (IECP) does not explicitly consider system state. This may seem counterintuitive, as one might expect a system in different states to respond differently to inputs within the same equivalence class. In other words, the behavior of some class {%katex%}EC_1{%endkatex%} when the system is in state {%katex%}s_1{%endkatex%} may not be the same as when {%katex%}EC_1{%endkatex%} is applied in {%katex%}s_2{%endkatex%}.
 
-For example, let’s consider **Class 47** from the [table of equivalence classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Table-of-equivalence-classes) for the memory function, represented as a logical conjunction of the propositions:
+For example, let’s consider **Class 47** from the [table of equivalence classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#table-of-equivalence-classes) for the memory function, represented as a logical conjunction of the propositions:
 
 > {%katex%}
 p_1 \land p_{1a} \land p_2 \land p_{2a} \land p_3 \land p_{3a} \land \lnot p_{3b} \land \lnot p_{3c} \land p_4
@@ -59,7 +59,7 @@ In this modified definition:
 
 This modified IECP definition creates equivalence classes that group state-input pairs {%katex%} (s, c) {%endkatex%} based on their combined behavior, ensuring that inputs leading to different outcomes in different states are handled correctly.
 
-However, modifying the original [equivalence class {%katex%} \mathcal{I} {%endkatex%}](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes) definition may not be necessary, as equivalence classes should ideally focus on partitioning the input space independently of the system's internal states. This independence allows us to create equivalence classes that describe all possible input conditions without being specific to any internal state. Here are the main reasons why:
+However, modifying the original [equivalence class {%katex%} \mathcal{I} {%endkatex%}](/blog/using-atomic-propositions-and-equivalence-classes-part1/#equivalence-classes) definition may not be necessary, as equivalence classes should ideally focus on partitioning the input space independently of the system's internal states. This independence allows us to create equivalence classes that describe all possible input conditions without being specific to any internal state. Here are the main reasons why:
 
 1. **State Independence**: Traditional IECP is designed to provide a global partition of inputs that applies universally, regardless of the internal state. This approach simplifies testing by focusing solely on the inputs and ensuring coverage of all possible input conditions without needing to consider internal behavior.
 
@@ -92,7 +92,7 @@ Then:
 \text{Total\,States} = (V+1)^A = 257^{100}
 {%endkatex%}
 
-This result is astronomically large, making the total number of states practically infinite for testing purposes. We cannot reasonably test such a vast number of states, so an abstraction is necessary to focus on the core behavior. This is achieved by defining **abstract states** — broad states that summarize the essential conditions of the system, as we did in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model/#Determining-the-minimum-number-of-calls).
+This result is astronomically large, making the total number of states practically infinite for testing purposes. We cannot reasonably test such a vast number of states, so an abstraction is necessary to focus on the core behavior. This is achieved by defining **abstract states** — broad states that summarize the essential conditions of the system, as we did in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model/#determining-the-minimum-number-of-calls).
 
 Our simplified model of the memory function, based on the following assumptions, reduces the complexity:
 
@@ -116,7 +116,7 @@ Thus, we abstract the memory function to have only {%katex%} 3 {%endkatex%} inte
 
 Before we can use the equivalence classes defined in the [Table: Equivalent Classes](/blog/using-atomic-propositions-and-equivalence-classes-part1/#table-equivalent-classes), we need to define each atomic proposition concretely by assigning actual input values.
 
-This involves reviewing combinations of [refined propositions](/blog/using-atomic-propositions-and-equivalence-classes-part1/#Equivalence-classes-from-refined-propositions) and specifying them with precise input values.
+This involves reviewing combinations of [refined propositions](/blog/using-atomic-propositions-and-equivalence-classes-part1/#equivalence-classes-from-refined-propositions) and specifying them with precise input values.
 
 ## Concrete values for `addr` (address) input
 
@@ -278,7 +278,7 @@ Our inputs are:
 > {%katex%} V_{mode} = \{"r", "w", "e", "rw", "re", "we", "rwe", "", \text{None}\} \\ {%endkatex%}  
 > {%katex%} V_{default} = \{0\} \\ {%endkatex%}  
 
-Using these inputs, we can easily implement a test to cover every equivalence class by employing [TestSketch](https://testflows.com/docs/framework/#Using-Sketches) and the [either() function](https://testflows.com/docs/framework/#Using-either), similar to our approach in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model). The only difference is that our equivalence classes compel us to include a few additional input values that may have been overlooked before. Other than that, the test implementation remains nearly identical.
+Using these inputs, we can easily implement a test to cover every equivalence class by employing [TestSketch](https://testflows.com/docs/framework/#using-sketches) and the [either() function](https://testflows.com/docs/framework/#using-either), similar to our approach in [Combinatorial Testing: Writing Behavior Model](/blog/combinatorial-testing-behavior-model). The only difference is that our equivalence classes compel us to include a few additional input values that may have been overlooked before. Other than that, the test implementation remains nearly identical.
 
 The modified test is as follows:
 
@@ -305,7 +305,7 @@ def check_memory(self):
             check_result(r=r, exc=exc, behavior=behavior, model=model)
 ```
 
-Again, note that we’ve specified possible values for each variable using the [either() function](https://testflows.com/docs/framework/#Using-either):
+Again, note that we’ve specified possible values for each variable using the [either() function](https://testflows.com/docs/framework/#using-either):
 
 ```python
 addr = either(*[1000, 2000, None], i=f"addr-{i}")

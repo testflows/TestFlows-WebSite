@@ -542,7 +542,7 @@ The tradeoff is incompleteness—we're not modeling every detail of the physics 
 
 ## Moving right with a model
 
-Now let's see the real power of behavior models in action by converting our first classical test. Remember the cluttered assertions and position tracking from [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/#Checking-basic-movements-using-classical-auto-tests)? Let's see how our behavior model transforms the experience.
+Now let's see the real power of behavior models in action by converting our first classical test. Remember the cluttered assertions and position tracking from [Part 1](/blog/testing-super-mario-using-a-behavior-model-part1/#checking-basic-movements-using-classical-auto-tests)? Let's see how our behavior model transforms the experience.
 
 ### Before: Classical test with manual assertions
 

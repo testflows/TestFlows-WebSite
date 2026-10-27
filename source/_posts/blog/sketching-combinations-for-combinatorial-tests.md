@@ -31,7 +31,7 @@ def test_add(self):
 {% endhtml %}
 <!-- more -->
 
-Due to the problem with the [combinatorial explosion](/blog/combinatorial-testing-the-introduction/#Exhaustive-testing-and-the-combinatorial-explosion-problem), a practical application of
+Due to the problem with the [combinatorial explosion](/blog/combinatorial-testing-the-introduction/#exhaustive-testing-and-the-combinatorial-explosion-problem), a practical application of
 combinatorial testing requires narrowing down the number of combinations that each test can explore.
 Combinatorial testing is often even put aside altogether, as testers think that the number of combinations
 is either very large or close to infinite and therefore nothing can be done, and they
@@ -289,10 +289,10 @@ to get a glimpse of how {% testflows %} can make your testing flow. Be sure to t
 combinatorial [Sketch]es for a spin. You will have fun!
 
 
-[Sketch]: /docs/framework/#Using-Sketches
-[either()]: /docs/framework/#Using-either
-[Cartesian product]: /docs/framework/#Cartesian-Product
-[Combinatorial Tests]: /docs/framework/#Combinatorial-Tests
+[Sketch]: /docs/framework/#using-sketches
+[either()]: /docs/framework/#using-either
+[Cartesian product]: /docs/framework/#cartesian-product
+[Combinatorial Tests]: /docs/framework/#combinatorial-tests
 [Handbook]: /docs/framework
 
 

@@ -64,7 +64,7 @@ function partsByHeading(product) {
       if (/^[ \t>]*(```|~~~)/.test(line)) fence = !fence;
       const m = !fence && line.match(/^#{1,6}\s+(.+?)\s*$/);
       if (m) {
-        const id = slugize(m[1].trim());
+        const id = slugize(m[1].trim(), { transform: 1 });
         if (id && !found[id]) found[id] = name.slice(0, -'.md'.length);
       }
     }

@@ -93,7 +93,7 @@ A Kripke structure is defined by {%katex%}K=(S,S_0,R,L,AP){%endkatex%}, which is
 
 In summary, a Kripke structure captures the dynamics of a system by defining its states, how it can transition between states, and which conditions hold true in each state. This allows for systematic analysis of the system’s behavior and helps in verifying that it meets the system's requirements or avoids unwanted conditions.
 
-Let's start unraveling what each element in the Kripke structure is as it applies to the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller).
+Let's start unraveling what each element in the Kripke structure is as it applies to the [Ceiling Speed Monitoring Controller](#ceiling-speed-monitoring-controller).
 
 # The states
 
@@ -101,7 +101,7 @@ First, **States** ({%katex%} S {%endkatex%}) is the set of all possible states. 
 
 In some cases, people think that the states of the system are only the circles seen in the state diagram. This is not the case. Those circles are just a part of the overall state description. In this case, the circles in the state diagram are represented as {%katex%}\ell {%endkatex%}, where {%katex%}\ell {%endkatex%} is an internal variable that can have values {%katex%}\text{NS}, \text{WS}, \text{IS}{%endkatex%}, corresponding to each status.
 
-So, after including **input**, **internal (model)**, and **output** variables in the state for the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller), its state is represented as a tuple:
+So, after including **input**, **internal (model)**, and **output** variables in the state for the [Ceiling Speed Monitoring Controller](#ceiling-speed-monitoring-controller), its state is represented as a tuple:
 
 > {%katex%}s = (V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB){%endkatex%}
 
@@ -150,7 +150,7 @@ When they say that "the transition relation {%katex%} R {%endkatex%} is specifie
 
 ## How does it look like?
 
-For the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller), {%katex%} R {%endkatex%} is defined as:
+For the [Ceiling Speed Monitoring Controller](#ceiling-speed-monitoring-controller), {%katex%} R {%endkatex%} is defined as:
 
 > {%katex%}
 R((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MRSP}}, \ell', W', EB')) \equiv \bigvee_{i=0}^7 \varphi_i((V_{\text{est}}, V_{\text{MRSP}}, \ell, W, EB), (V'_{\text{est}}, V'_{\text{MRSP}}, \ell', W', EB'))
@@ -290,7 +290,7 @@ As expected, this formula describes the **labeling function** {%katex%}L{%endkat
 
 After breaking down the formula, we see that it states for each state {%katex%}s{%endkatex%} in the system, the labeling function {%katex%}L(s){%endkatex%} returns the set of all atomic propositions {%katex%}p{%endkatex%} that are true in {%katex%}s{%endkatex%}. This allows us to understand which properties or conditions hold in each state of the Kripke structure describing the system.
 
-Because the labeling function depends on the atomic propositions, let's move on and try to define what the actual atomic propositions are for the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller).
+Because the labeling function depends on the atomic propositions, let's move on and try to define what the actual atomic propositions are for the [Ceiling Speed Monitoring Controller](#ceiling-speed-monitoring-controller).
 
 # The atomic propositions
 
@@ -314,7 +314,7 @@ This is the main point of the [*Exhaustive Model-Based Equivalence Class Testing
 
 > "We prove that a finite collection of input traces whose elements have been selected from a specific set of input equivalence classes suffices to prove a conformance relation between the specification model and the system under test."
 
-For the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller), the paper states that the complete set of atomic propositions is:
+For the [Ceiling Speed Monitoring Controller](#ceiling-speed-monitoring-controller), the paper states that the complete set of atomic propositions is:
 
 > {%katex%}
 AP = \{ V_{\text{est}} = 0, V_{\text{est}} > V_{\text{MRSP}}, V_{\text{MRSP}} > 110, V_{\text{est}} > V_{\text{MRSP}} + 7.5, V_{\text{est}} > V_{\text{MRSP}} + 15, \\
@@ -474,7 +474,7 @@ With the set of atomic propositions in hand, we can easily create equivalence cl
 
 # Conclusion
 
-We've successfully decoded the formal description of a simple train control system, the [Ceiling Speed Monitoring Controller](#Ceiling-speed-monitoring-controller), as described in [*Exhaustive Model-Based Equivalence Class Testing* by W. Huang and J. Peleska, 2013](https://link.springer.com/chapter/10.1007/978-3-642-41707-8_4). In the paper, the system was formally described using a Kripke structure. We’ve explored what a Kripke structure is, examined each component used to define it, and saw how it applies to the controller. We closely analyzed how a transition relation can be specified as a predicate—a mathematical formula—and how, from it, we can extract a set of atomic propositions that allow for the construction of equivalence classes to implement test cases.
+We've successfully decoded the formal description of a simple train control system, the [Ceiling Speed Monitoring Controller](#ceiling-speed-monitoring-controller), as described in [*Exhaustive Model-Based Equivalence Class Testing* by W. Huang and J. Peleska, 2013](https://link.springer.com/chapter/10.1007/978-3-642-41707-8_4). In the paper, the system was formally described using a Kripke structure. We’ve explored what a Kripke structure is, examined each component used to define it, and saw how it applies to the controller. We closely analyzed how a transition relation can be specified as a predicate—a mathematical formula—and how, from it, we can extract a set of atomic propositions that allow for the construction of equivalence classes to implement test cases.
 
 When a complete list of atomic propositions is known for a given implementation, the set of test cases constructed from equivalence classes can result in an exhaustive test suite. This level of rigor is hard to achieve without a clear understanding and application of formal mathematics. While tackling formal definitions can be challenging at first, I hope this article, where I aimed to explain the math in as much detail as possible, will inspire more test engineers to embrace it. Formal concepts provide a strong foundation for thinking about systems we test in an abstract and structured way—a critical skill when testing real-world software systems.
 

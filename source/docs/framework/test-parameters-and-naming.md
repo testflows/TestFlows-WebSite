@@ -32,7 +32,7 @@ parameters for a test:
 * skip_tags
 * random
 * limit
-* [args](#Args-Parameter)
+* [args](#args)
 
 > **{% attention %}** Most parameter names match the names of the attributes of the test which they set.
 > For example, [name] parameter sets the `name` attribute of the test.

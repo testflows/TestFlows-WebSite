@@ -4,7 +4,7 @@
         <div class="handbook-layout row">
             <div id="Top-of-the-handbook"></div>
             <nav id="sidebar" class="col-lg-4 sidebar handbook-toc">
-                <div id="Contents" class="handbook-toc-header">
+                <div id="contents" class="handbook-toc-header">
                     <h2>Contents</h2>
                 </div>
                 <div class="handbook-toc-body">
@@ -13,7 +13,7 @@
                             <% if (page.title == chapter.title) { %>
                                 <%- toc(page.content) %>
                             <% } else { %>
-                                <div><a class="toc-link" href="/<%- chapter.path %>#Contents"><%- chapter.title %></a></div>
+                                <div><a class="toc-link" href="/<%- chapter.path %>#contents"><%- chapter.title %></a></div>
                             <% } %>
                         <% } %>
                     <% }); %>
@@ -57,7 +57,7 @@
                 }
                 heading.setAttribute("role", "button");
                 heading.setAttribute("tabindex", "0");
-                setOpen(!small.matches || window.location.hash === "#Contents");
+                setOpen(!small.matches || window.location.hash.toLowerCase() === "#contents");
                 small.addEventListener("change", function () { setOpen(!small.matches); });
                 heading.addEventListener("click", function () {
                     if (small.matches) { setOpen(!sidebar.classList.contains("is-open")); }
@@ -69,7 +69,7 @@
                     }
                 });
                 window.addEventListener("hashchange", function () {
-                    if (window.location.hash === "#Contents" && small.matches) { setOpen(true); }
+                    if (window.location.hash.toLowerCase() === "#contents" && small.matches) { setOpen(true); }
                 });
                 /* Picking an entry gets the list out of the way so the section is visible. */
                 sidebar.querySelectorAll(".toc-link").forEach(function (link) {
@@ -84,10 +84,10 @@
                 <div class="handbook-divider"></div>
                 <div class="handbook-nav">
                     <% if (page.prev) { %>
-                        <a class="handbook-nav-link handbook-nav-prev" href="/docs/framework<%- url_for(page.prev) %>.html#Contents"><span class="fas fa-arrow-left" aria-hidden="true"></span> Back</a>
+                        <a class="handbook-nav-link handbook-nav-prev" href="/docs/framework<%- url_for(page.prev) %>.html#contents"><span class="fas fa-arrow-left" aria-hidden="true"></span> Back</a>
                     <% } %>
                     <% if (page.next) { %>
-                        <a class="handbook-nav-link handbook-nav-next" href="/docs/framework<%- url_for(page.next) %>.html#Contents">Next <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                        <a class="handbook-nav-link handbook-nav-next" href="/docs/framework<%- url_for(page.next) %>.html#contents">Next <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
                     <% } %>
                 </div>
             </div>

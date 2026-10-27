@@ -1482,7 +1482,7 @@ main() {
         say ""
         warn "This is an ARM system, and a machine runs x86_64. Build disks from"
         warn "linux/amd64 images: docker build or docker pull with --platform linux/amd64."
-        say "  ${DIM}https://testflows.com/docs/machine/#Building-disks-on-an-ARM-machine${RESET}"
+        say "  ${DIM}https://testflows.com/docs/machine/#building-disks-on-an-arm-machine${RESET}"
     fi
 
     # With no other program called machine, typing `machine` must find the one just

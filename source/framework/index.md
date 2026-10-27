@@ -197,7 +197,7 @@ def my_scenario(self):
 </div>
 </div>
 <div class="index-steps-cta">
-<a class="section-cta" href="/docs/framework/#Using-Test-Steps">How to use test steps</a>
+<a class="section-cta" href="/docs/framework/#using-test-steps">How to use test steps</a>
 <a class="section-cta section-cta-ghost" href="/blog/how-to-break-your-tests-into-steps/"><span class="fas fa-file-lines" aria-hidden="true"></span> Making your tests better</a>
 </div>
 </div>

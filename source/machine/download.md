@@ -161,7 +161,7 @@ docker build --platform linux/amd64 -t myapp:latest .
 docker pull --platform linux/amd64 myapp:latest
 ```
 
-<p>The <a href="/docs/machine/#Building-disks-on-an-ARM-machine">docs</a> cover Compose projects and binaries.</p>
+<p>The <a href="/docs/machine/#building-disks-on-an-arm-machine">docs</a> cover Compose projects and binaries.</p>
 </div>
 
 <div class="download-section">
@@ -269,7 +269,7 @@ docker build --platform linux/amd64 -t myapp:latest .
 docker pull --platform linux/amd64 myapp:latest
 ```
 
-<p>The <a href="/docs/machine/#Building-disks-on-an-ARM-machine">docs</a> cover Compose projects and binaries.</p>
+<p>The <a href="/docs/machine/#building-disks-on-an-arm-machine">docs</a> cover Compose projects and binaries.</p>
 </div>
 
 <div class="download-section">

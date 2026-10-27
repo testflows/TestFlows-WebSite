@@ -12,7 +12,7 @@ The main use case for using `context` is to avoid passing along common arguments
 to sub-tests, because `contexts` enable them to pass **automatically**.
 
 Also, test clean up functions can be added to the current test using `context`.
-See [Cleanup Functions](#Cleanup-Functions).
+See [Cleanup Functions](#cleanup-functions).
 
 Here is an example of using `context` to store and pass state.
 
@@ -133,7 +133,7 @@ def my_scenario(self):
 ```
 
 > **{% attention %}** It is recommended to use a decorated [Given] step that contains `yield` statement
-> in most cases. See [Given With `yield`](#Given-With-yield).
+> in most cases. See [Given With `yield`](#given-with-yield).
 
 > **{% attention %}** [Given] and [Finally] steps have [MANDATORY] flag set by default,
 > and therefore these steps can't be skipped.

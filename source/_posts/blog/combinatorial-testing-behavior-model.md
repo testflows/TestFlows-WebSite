@@ -388,8 +388,8 @@ Total time 4s 217ms
 
 This output demonstrates that increasing the number of sequential memory calls results in an exponential increase in the number of combinations covered, ensuring even more comprehensive test coverage. In this case, the test program executed {%katex%}3136{%endkatex%} different combinations giving us greater confidence in the correctness of the memory function for longer sequences of calls.
 
-[TestSketch]: https://testflows.com/docs/framework/#Sketch
-[either()]: https://testflows.com/docs/framework/#Using-either
+[TestSketch]: https://testflows.com/docs/framework/#sketch
+[either()]: https://testflows.com/docs/framework/#using-either
 
 # Determining the minimum number of calls
 

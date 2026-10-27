@@ -31,8 +31,10 @@ const path = require('path');
 const INCLUDE = /^<!--\s*include:\s*([\w./-]+\.md)\s*-->[ \t]*$/gm;
 
 // The id Hexo gives a heading on the page, and the anchor GitHub gives it in a Markdown file.
+// Ids are lower case, `marked.modifyAnchors: 1` in _config.yml, so a link written by hand
+// as GitHub writes it, #interactive-mode, is the id.
 const { slugize } = require('hexo-util');
-const hexoId = (text) => slugize(text.trim());
+const hexoId = (text) => slugize(text.trim(), { transform: 1 });
 const slug = (text) => text.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
 
 function headings(text) {
@@ -64,15 +66,23 @@ hexo.extend.filter.register('before_post_render', function (data) {
     files.set(m[1], text.replace(/\n+$/, '\n'));
   }
 
-  const toAnchor = (match, name, fragment) => {
+  // The heading of file `name` that `fragment` names, or its first heading with none.
+  const findHeading = (name, fragment) => {
     const target = files.get(name);
-    if (target === undefined) return match;
+    if (target === undefined) return undefined;
     const found = headings(target);
-    // A fragment is a heading's id on the page, or its lower-case GitHub anchor.
+    // A fragment is a heading's id on the page in any case, written before the ids
+    // were lower case, or its lower-case GitHub anchor.
     const want = fragment ? fragment.slice(1) : '';
-    const heading = fragment
-      ? found.find((h) => hexoId(h.text) === want) || found.find((h) => slug(h.text) === want.toLowerCase())
+    return fragment
+      ? found.find((h) => hexoId(h.text) === want.toLowerCase())
+        || found.find((h) => slug(h.text) === want.toLowerCase())
       : found[0];
+  };
+
+  const toAnchor = (match, name, fragment) => {
+    if (!files.has(name)) return match;
+    const heading = findHeading(name, fragment);
     if (!heading) {
       hexo.log.warn(`${data.source}: link to ${name}${fragment || ''} matches no heading`);
       return match;
@@ -80,22 +90,51 @@ hexo.extend.filter.register('before_post_render', function (data) {
     return `](#${hexoId(heading.text)})`;
   };
 
+  // A link within the file, (#fragment): the files are one page, so the heading is the
+  // file's own first, else any included file's.
+  const findPageHeading = (name, fragment) => {
+    for (const file of [name, ...files.keys()]) {
+      const heading = findHeading(file, fragment);
+      if (heading) return heading;
+    }
+    return undefined;
+  };
+  const toPageAnchor = (match, name, fragment) => {
+    const heading = findPageHeading(name, fragment);
+    if (heading) return `](#${hexoId(heading.text)})`;
+    hexo.log.warn(`${data.source}: link to ${fragment} in ${name} matches no heading`);
+    return match;
+  };
+
   const toDefinition = (match, start, name, fragment) => {
     const link = toAnchor(`](${name}${fragment || ''})`, name, fragment);
     return link.startsWith('](') ? `${start}${link.slice(2, -1)}` : match;
   };
-  // Rewrite links to sibling files in the prose only, not in fenced code.
-  const rewrite = (text) => {
+  // Rewrite links to sibling files in the prose only, not in fenced code. A link
+  // within the file, (#fragment), resolves against the file's own headings: left
+  // as written, #interactive-mode reached the page and matched no id, since Hexo
+  // keeps the heading's capitals.
+  const rewrite = (name, text) => {
     let fence = false;
     return text.split('\n').map((line) => {
       if (/^[ \t>]*(```|~~~)/.test(line)) { fence = !fence; return line; }
       if (fence) return line;
       return line
+        // Within the file first: what the second rule writes is (#id) of
+        // another file, which this one must not look up again.
+        .replace(/\]\((#[^)\s]+)\)/g, (match, fragment) => toPageAnchor(match, name, fragment))
         .replace(/\]\(([\w-]+\.md)(#[^)\s]*)?\)/g, toAnchor)
+        // A definition, [x]: #fragment, is resolved where a heading has it and left as
+        // written where none does, without a warning: the renderer's smart punctuation
+        // makes ids such as #–only-option that no heading's source text gives.
+        .replace(/^(\[[^\]\n]+\]:[ \t]+)(#\S+)[ \t]*$/, (match, start, fragment) => {
+          const heading = findPageHeading(name, fragment);
+          return heading ? `${start}#${hexoId(heading.text)}` : match;
+        })
         .replace(/^(\[[^\]\n]+\]:[ \t]+)([\w-]+\.md)(#\S*)?[ \t]*$/, toDefinition);
     }).join('\n');
   };
-  data.content = data.content.replace(INCLUDE, (match, name) => rewrite(files.get(name)));
+  data.content = data.content.replace(INCLUDE, (match, name) => rewrite(name, files.get(name)));
   return data;
 }, 1);  // priority 1: before Hexo's own filters, which turn fenced code into highlighted blocks
 
