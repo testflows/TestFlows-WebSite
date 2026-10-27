@@ -1309,6 +1309,49 @@ See also:
 - [`machine login`](#machine-login)
 - [`machine account`](#machine-account)
 
+## machine completion
+
+Print the shell completion script.
+See [The client](getting-started.md#the-client).
+
+The script completes commands, options and their values as the client reads
+them. The client answers each Tab itself, so a newer client needs no newer
+script.
+
+Add the line for the shell to its startup file:
+
+```text
+bash  eval "$(machine completion bash)"   in ~/.bashrc
+zsh   eval "$(machine completion zsh)"    in ~/.zshrc
+fish  machine completion fish | source    in ~/.config/fish/config.fish
+```
+
+Run the same line in a shell to complete in that shell alone. The completion
+lasts until the shell exits.
+
+machine-env loads the script itself. On macOS, machine outside machine-env is
+the system's command. There the line belongs in no startup file.
+
+```
+machine completion [-h] {bash,zsh,fish}
+```
+
+| Argument | Does |
+|---|---|
+| `{bash,zsh,fish}` | Shell to print the script for: bash, zsh or fish |
+
+Examples:
+
+```
+machine completion bash  the script for bash
+machine completion zsh   the script for zsh
+machine completion fish  the script for fish
+```
+
+See also:
+
+- [`machine login`](#machine-login)
+
 ## machine disks
 
 List and manage disks. See [Disks](disks.md).
