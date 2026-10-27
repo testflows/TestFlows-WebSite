@@ -657,6 +657,23 @@ A command is a program and its arguments, written after `--`. No shell reads
 it. Use `-c` to give a line to the shell of the disk instead, with its pipes
 and redirections: `machine exec app run -c 'ls / | wc -l'`.
 
+`machine exec app` with no verb lists every command executed in the run, with
+the entries it started and ended at:
+
+```text
+ID       PID  STATE     ENTRIES      COMMAND
+23035p1  138  exited 0  23084:23090  ls
+23090p1  139  exited 0  23220:23226  echo foo > /tmp/foo.txt
+```
+
+A process's id is the entry it was sent at and its number. In the machine,
+its standard output and standard error are the files
+`/.machine/output/exec/23090p1/stdout` and `/.machine/output/exec/23090p1/stderr`,
+and its events are in `/.machine/output/exec/23090p1/status`.
+`machine exec app proc 23090p1 stdout` prints one stream, and the output source
+`/output/exec/23090p1/stdout` names it in
+[`machine output`](commands.md#machine-output) and `--until`.
+
 At the [control prompt](#interactive-mode) the command is `/exec`, with the same
 verbs. It needs no `--`: the arguments are the words after the verb, and a line
 for the shell is the rest of the line after `-c`, its quotes kept for the shell.
@@ -674,6 +691,13 @@ for the shell is the rest of the line after `-c`, its quotes kept for the shell.
 A `;` separates commands at the prompt, except inside quotes, so a line with
 one is written in quotes, as in a terminal. A pair of quotes around the whole
 `-c` line is taken off.
+
+A line that starts with `$` is a line for the shell, whole: `$ ls / | wc -l`
+is `/exec run -c 'ls / | wc -l'`, and a `;` in it is the shell's.
+
+```
+$ cd /srv; make test
+```
 
 ### In one container
 
