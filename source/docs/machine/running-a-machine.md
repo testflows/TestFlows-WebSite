@@ -734,21 +734,6 @@ other command. `/exec` lists it, a checkpoint keeps what it changed, and a fork
 or a replay repeats it. Look around between two steps of a run, change a file,
 and rewind to a checkpoint to try something else.
 
-#### In a container's shell
-
-Put a container before the `$` to run the line in its shell. A container is
-named by its Compose service or by its container name, as `--container` takes
-it. Put a user and `@` before the container to run the line as that user:
-
-```
-db$ psql -c 'select 1'
-root@db$ id
-clickhouse@app$ clickhouse-client -q 'SELECT version()'
-```
-
-`db$ LINE` is `/exec run --container db -c` with that line, and `root@db$ LINE`
-adds `--user root`.
-
 #### Lines that go on
 
 A line goes on in the next one while a quote is open, after a trailing
@@ -779,6 +764,19 @@ machine exec app run --container db -c 'ls / | wc -l'        # the container's s
 machine exec app run --container db --user root -- id        # as another user
 machine exec app start --container app -- ./worker
 ```
+
+At the [control prompt](#interactive-mode), put the container before the `$`
+of a [shell line](#shell-lines-at-the-control-prompt), and a user and `@`
+before it to run as that user:
+
+```
+db$ psql -c 'select 1'
+root@db$ id
+clickhouse@app$ clickhouse-client -q 'SELECT version()'
+```
+
+`db$ LINE` is `/exec run --container db -c` with that line, and `root@db$ LINE`
+adds `--user root`.
 
 [`machine containers`](commands.md#machine-containers) lists the containers and
 the service of each, which are the names `--container` takes:
