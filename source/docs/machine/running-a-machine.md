@@ -664,13 +664,19 @@ machine exec app start -- /app/load --rows 9 # send it and return its id
 
 `run` runs the machine until the command exits, prints what it printed, and
 exits with its status. A command gets 30 minutes of machine time to end, and
-`--within` gives it another: `machine exec app run --within 10s -- make check`. `start` sends the command and returns an id. The
-process starts the next time the run executes, so follow it with
-[`machine run`](commands.md#machine-run).
+`--within` gives it another: `machine exec app run --within 10s -- make check`.
+`start` sends the command and returns an id. The process starts the next time
+the run executes, so follow it with [`machine run`](commands.md#machine-run).
 
 A command is a program and its arguments, written after `--`. No shell reads
 it. Use `-c` to give a line to the shell of the disk instead, with its pipes
 and redirections: `machine exec app run -c 'ls / | wc -l'`.
+
+### Processes
+
+Each command is a process. The run records every line the process prints and
+how it ends, each at its entry, so a replay reproduces them and a branch has
+the processes of its parent.
 
 `machine exec app` with no verb lists every command executed in the run, with
 the entries it started and ended at:
@@ -681,77 +687,27 @@ ID       PID  STATE     ENTRIES      COMMAND
 23090p1  139  exited 0  23220:23226  echo foo > /tmp/foo.txt
 ```
 
-A process's id is the entry it was sent at and its number. In the machine,
-its standard output and standard error are the files
-`/.machine/output/exec/23090p1/stdout` and `/.machine/output/exec/23090p1/stderr`,
-and its events are in `/.machine/output/exec/23090p1/status`.
-`machine exec app proc 23090p1 stdout` prints one stream, and the output source
-`/output/exec/23090p1/stdout` names it in
-[`machine output`](commands.md#machine-output) and `--until`.
+A process's id is the entry it was sent at and its number. `proc` shows one
+process:
 
-At the [control prompt](#interactive-mode) the command is `/exec`, with the same
-verbs. It needs no `--`: the arguments are the words after the verb, and a line
-for the shell is the rest of the line after `-c`, its quotes kept for the shell.
-
-```
-/exec run ls -la /
-/exec run -c ls / | wc -l
-/exec run -c 'X=1;echo $X'
-/exec run -- sh -c 'X=1;echo $X'
-/exec start -c gdb -p 36 < /dev/gdb_pipe
-/exec proc 40787p1 stdout
-/exec
+```bash
+machine exec app proc 23090p1          # pid, state, exit status
+machine exec app proc 23090p1 events   # every line and state change, by entry
+machine exec app proc 23090p1 stdout   # its standard output
+machine exec app proc 23090p1 stderr   # its standard error
+machine exec app proc 23090p1 exits    # how it ended, and at which entry
 ```
 
-A `;` separates commands at the prompt, except inside quotes, so a line with
-one is written in quotes, as in a terminal. A pair of quotes around the whole
-`-c` line is taken off. A `$` line, below, needs none of this.
+An event's entry is a point. `machine go app '#23224'` forks a branch at the
+entry that printed a line.
 
-### Shell lines at the control prompt
-
-At the [control prompt](#interactive-mode), `$` puts you in the machine's
-shell. Type a line after it as you would in a terminal. The prompt runs the
-machine until the line finishes and prints what it wrote. A line that exits
-other than 0 says so after its output.
-
-Nothing in the line is the prompt's. Everything after the `$` goes to the shell
-as you typed it, so pipes, redirections, `;`, `&&`, variables and quotes all
-work without escaping:
-
-```
-$ uname -a
-$ ls -la /srv
-$ ps aux | grep worker
-$ head -3 /etc/os-release
-$ cd /srv; make test
-$ X=1; echo $X
-$ grep -c ERROR /var/log/app.log || echo none
-$ echo 'retries=5' >> /etc/app.conf
-```
-
-A `$` line is `/exec run -c` with that line, so the run records it like any
-other command. `/exec` lists it, a checkpoint keeps what it changed, and a fork
-or a replay repeats it. Look around between two steps of a run, change a file,
-and rewind to a checkpoint to try something else.
-
-#### Lines that go on
-
-A line goes on in the next one while a quote is open, after a trailing
-backslash, and through a here-document, as in a shell. The prompt shows `>` for
-each line after the first, and runs the whole command once it is complete. A
-pasted query of several lines is one command:
-
-```
-app$ clickhouse-client -q 'SELECT 1,
->   2 AS two'
-$ cat <<EOF > /etc/app.conf
-> retries=5
-> EOF
-```
-
-The lines of a command are edited together: Backspace at the start of a line
-goes on into the line above, and the arrows move between the lines. Ctrl+C
-drops the command.
+The output of a process is a source like any other, under `/output/exec/<id>`.
+[`machine output`](commands.md#machine-output) reads it, and
+`machine run app --until '/output/exec/23090p1/stdout~done'` stops the run at a
+line the process prints. In the machine, its standard output and standard error
+are the files `/.machine/output/exec/23090p1/stdout` and
+`/.machine/output/exec/23090p1/stderr`, and its events are in
+`/.machine/output/exec/23090p1/status`.
 
 ### Inside a container
 
@@ -764,19 +720,6 @@ machine exec app run --container db -c 'ls / | wc -l'        # the container's s
 machine exec app run --container db --user root -- id        # as another user
 machine exec app start --container app -- ./worker
 ```
-
-At the [control prompt](#interactive-mode), put the container before the `$`
-of a [shell line](#shell-lines-at-the-control-prompt), and a user and `@`
-before it to run as that user:
-
-```
-db$ psql -c 'select 1'
-root@db$ id
-clickhouse@app$ clickhouse-client -q 'SELECT version()'
-```
-
-`db$ LINE` is `/exec run --container db -c` with that line, and `root@db$ LINE`
-adds `--user root`.
 
 [`machine containers`](commands.md#machine-containers) lists the containers and
 the service of each, which are the names `--container` takes:
@@ -811,25 +754,97 @@ machine exec app run -- docker compose -p compose exec -T db sh -c 'ls / | wc -l
 line after the service is run by the image's own shell, with the image's
 tools.
 
-Each command is a process. The run records every line the process prints and
-how it ends, each at its entry, so a replay reproduces them and a branch has
-the processes of its parent:
+### `/exec` at the control prompt
 
-```bash
-machine exec app                       # the processes of the run
-machine exec app proc 40787p1         # one process: pid, state, exit status
-machine exec app proc 40787p1 events  # every line and state change, by entry
-machine exec app proc 40787p1 stdout  # its standard output
-machine exec app proc 40787p1 stderr  # its standard error
-machine exec app proc 40787p1 exits   # how it ended, and at which entry
+At the [control prompt](#interactive-mode) the command is `/exec`, with the
+same verbs and flags. It needs no `--`: the arguments are the words after the
+verb, and a line for the shell is the rest of the line after `-c`, its quotes
+kept for the shell.
+
+```
+/exec run ls -la /
+/exec run -c ls / | wc -l
+/exec run -c 'X=1;echo $X'
+/exec run --container db -- psql -c 'select 1'
+/exec start -c gdb -p 36 < /dev/gdb_pipe
+/exec proc 23090p1 stdout
+/exec
 ```
 
-An event's entry is a point. `machine go app '#20411'` forks a branch at the
-entry that printed a line.
+A `;` separates commands at the prompt, except inside quotes, so a line with
+one is written in quotes, as in a terminal. A pair of quotes around the whole
+`-c` line is taken off. A `$` line, below, needs none of this.
 
-The output of a process is also a source like any other, under
-`/output/exec/<id>`: `machine run app --until '/output/exec/40787p1/stdout~done'`
-stops the run at a line the process prints.
+#### The machine's shell: `$`
+
+`$` puts you in the machine's shell. Type a line after it as you would in a
+terminal. The prompt runs the machine until the line finishes and prints what
+it wrote. A line that exits other than 0 says so after its output.
+
+Nothing in the line is the prompt's. Everything after the `$` goes to the shell
+as you typed it, so pipes, redirections, `;`, `&&`, variables and quotes all
+work without escaping:
+
+```
+$ uname -a
+$ ls -la /srv
+$ ps aux | grep worker
+$ cd /srv; make test
+$ X=1; echo $X
+$ grep -c ERROR /var/log/app.log || echo none
+$ echo 'retries=5' >> /etc/app.conf
+```
+
+A `$` line is `/exec run -c` with that line, so the run records it like any
+other command. `/exec` lists it, a checkpoint keeps what it changed, and a fork
+or a replay repeats it. Look around between two steps of a run, change a file,
+and rewind to a checkpoint to try something else.
+
+#### A container's shell: `db$`
+
+Put a container before the `$` to run the line in that container's shell.
+Name the container by its Compose service or by its container name, as
+`--container` takes it. Put a user and `@` before the container to run the
+line as that user, by name or by uid. Without a user the line runs as the
+container's own user.
+
+```
+db$ psql -c 'select 1'                          # in the db service
+compose-db-1$ hostname                          # by container name
+root@db$ id                                     # as root
+70@db$ ls -l /var/lib/postgresql/data           # as uid 70
+app$ ps aux | grep clickhouse                   # pipes are the shell's
+app$ cd /var/log/clickhouse-server; tail -5 clickhouse-server.log
+clickhouse@app$ clickhouse-client -q 'SELECT version()'
+```
+
+`db$ LINE` is `/exec run --container db -c` with that line, and
+`root@db$ LINE` adds `--user root`. Everything after the `$` goes to the
+container's shell as you typed it, and the run records it as it records a `$`
+line.
+
+#### Commands over several lines
+
+A line goes on in the next one while a quote is open, after a trailing
+backslash, and through a here-document, as in a shell. The prompt shows `>` for
+each line after the first, and runs the whole command once it is complete. A
+pasted query of several lines is one command:
+
+```
+clickhouse@app$ clickhouse-client -q '
+>   SELECT name, value
+>   FROM system.build_options
+>   LIMIT 3'
+$ cat <<EOF > /etc/app.conf
+> retries=5
+> EOF
+$ tar czf /tmp/logs.tgz \
+>   /var/log/app
+```
+
+The lines of a command are edited together: Backspace at the start of a line
+goes on into the line above, and the arrows move between the lines. Ctrl+C
+drops the command.
 
 ### Input for a program you started
 
