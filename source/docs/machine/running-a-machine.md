@@ -734,7 +734,41 @@ other command. `/exec` lists it, a checkpoint keeps what it changed, and a fork
 or a replay repeats it. Look around between two steps of a run, change a file,
 and rewind to a checkpoint to try something else.
 
-### In one container
+#### In a container's shell
+
+Put a container before the `$` to run the line in its shell. A container is
+named by its Compose service or by its container name, as `--container` takes
+it. Put a user and `@` before the container to run the line as that user:
+
+```
+db$ psql -c 'select 1'
+root@db$ id
+clickhouse@app$ clickhouse-client -q 'SELECT version()'
+```
+
+`db$ LINE` is `/exec run --container db -c` with that line, and `root@db$ LINE`
+adds `--user root`.
+
+#### Lines that go on
+
+A line goes on in the next one while a quote is open, after a trailing
+backslash, and through a here-document, as in a shell. The prompt shows `>` for
+each line after the first, and runs the whole command once it is complete. A
+pasted query of several lines is one command:
+
+```
+app$ clickhouse-client -q 'SELECT 1,
+>   2 AS two'
+$ cat <<EOF > /etc/app.conf
+> retries=5
+> EOF
+```
+
+The lines of a command are edited together: Backspace at the start of a line
+goes on into the line above, and the arrows move between the lines. Ctrl+C
+drops the command.
+
+### Inside a container
 
 Use `--container` to run a command in a container of your Compose project. It
 takes the name of the service, or the name of the container:
