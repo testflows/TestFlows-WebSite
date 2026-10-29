@@ -155,12 +155,12 @@ machine fault app
 ```
 
 The last command lists the faults, with how many calls each one matched and
-failed. For a program that connects once, it shows that one call failed. The
+fired on. For a program that connects once, it shows that one call failed. The
 seed is drawn, so yours differs:
 
 ```
-#   SYSCALL        ERRORS                   IN               FAILS                 PROB       SEED  MATCHED  FAILED
-1   connect        ECONNREFUSED             /usr/bin/app     every call               1 1820473361        1       1
+#   SYSCALL        ERRORS                   DELAY        IN               FIRES                 PROB       SEED  MATCHED   FIRED
+1   connect        ECONNREFUSED             -            /usr/bin/app     every call               1 1820473361        1       1
 ```
 
 The guest kernel decides at each call, and the run records every fault you
@@ -283,6 +283,34 @@ draw as another run did:
 machine fault app add openat valid --pick 2 --seed 7 --in /usr/bin/app
 ```
 
+### Slow calls
+
+A fault can hold a call instead of failing it. `--delay` takes a time, or a
+span to draw one from for each call, up to a second:
+
+```bash
+machine fault app add read --delay 0:20ms --in /usr/bin/app            # each read waits 0 to 20ms, then runs
+machine fault app add connect ECONNREFUSED --delay 500ms --in /usr/bin/app   # waits, then fails
+machine fault app add write --delay 5ms --prob 0.1 --in /usr/bin/app   # one write in ten waits 5ms
+```
+
+The wait is on the machine's own clock, and each call draws its time from the
+fault's seed, so a replay holds the same calls for the same time. `--prob`,
+`--after`, `--times` and `--in` work as they do for errors.
+
+### Stopping at a fault
+
+To look at the program at the moment a fault fires, add a catchpoint for it:
+
+```bash
+machine catch app add fault openat
+machine run app
+```
+
+The run stops at the call, before its wait and its error, and says which:
+`Stopped at catchpoint 1: fault openat EACCES, in tid 229`. See
+[Debugging](debugging.md) for catchpoints.
+
 ### Changing faults
 
 ```bash
@@ -315,7 +343,7 @@ change them partway, stop, change them, and run on.
 - **Calls the vDSO answers never reach the kernel.** `clock_gettime`,
   `gettimeofday`, `time` and `getcpu` usually return without a system call, so
   a fault on them matches nothing and MATCHED stays 0.
-- **16 faults, and 38 errors in one.** Delete one to add another; pick some of
+- **16 faults, and 34 errors in one.** Delete one to add another; pick some of
   `all`.
 - **A fault matches the system call, whose call it is and the count of calls.**
   It does not look at the arguments, so "openat of /etc/passwd" is not a fault.

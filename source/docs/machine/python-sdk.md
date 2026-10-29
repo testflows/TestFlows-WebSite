@@ -126,7 +126,7 @@ And the calls you will reach for most often:
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
-| `run.fault.add("read", "valid", in_="/usr/bin/app", pick=1, prob=0.1)`, `run.fault()`, `run.fault.delete(2)`, `run.fault.clear()` | makes system calls fail with chosen errors, lists the faults with their counts, and deletes them; `in_` takes the words `--in` takes, and a list of system calls or errors works too |
+| `run.fault.add("read", "valid", in_="/usr/bin/app", pick=1, prob=0.1)`, `run.fault.add("read", delay="0:20ms", in_="/usr/bin/app")`, `run.fault()`, `run.fault.delete(2)`, `run.fault.clear()` | makes system calls fail with chosen errors, or wait first, lists the faults with their counts, and deletes them; `in_` takes the words `--in` takes, `delay` the span `--delay` takes, and a list of system calls or errors works too |
 | `run.tasks.exist("/usr/bin/app")` | returns the tasks running that program, comm, tid or tgid now, or raises `NotFound`; it changes nothing |
 | `run.task(tid)` | a guest task to debug, by its tid: `registers()`, `read(address, size)`, `address("main+4")`, `symbol(address)`, `symbols(regex="^wait")`, `backtrace()`, `libraries()` |
 | `task.set(rax=0, rip="main+4")`, `task.write(address, data)` | writes its registers and its tgid's memory; a replay makes the writes again |

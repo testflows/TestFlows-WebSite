@@ -6304,11 +6304,16 @@ See also:
 
 ## machine fault
 
-Make system calls of the guest fail with an error.
+Make system calls of the guest fail with an error, or wait.
 
 A fault names a system call and a set of errors. The task's calls of it return
 one of the errors without running. The guest kernel decides at each call, so a
 replay fails the same calls with the same errors.
+
+Use `--delay` to hold each call the fault fires on for a time, drawn from a
+span. A fault with a delay and no errors runs the call after the hold. A fault
+with both holds the call, then fails it. The hold is on the guest's own clock,
+so a replay holds the same calls for the same time.
 
 Use `--in` to say whose calls fail. It is required. A program is the absolute
 path of the file it runs, the EXE that tasks shows. It takes the tasks running
@@ -6319,11 +6324,11 @@ tasks of that comm. A script runs as its interpreter, so its comm names it.
 tid=n takes one task, tgid=n the tasks of one tgid, and all every task in the
 machine.
 
-A fault lets a number of matching calls through first. It then fails each call
-by a chance, up to a number of calls or without end.
+A fault lets a number of matching calls through first. It then fires on each
+call by a chance, up to a number of calls or without end.
 
-Each fault counts the calls it matches on its own. A call fails with the error
-of the first fault that fails it.
+Each fault counts the calls it matches on its own. The first fault that fires on
+a call acts on it.
 
 A program's fault can be added before the program starts. Its calls match from
 its exec on, and the commands that start it match none.
@@ -6389,24 +6394,25 @@ The fault draws from its seed which calls fail and with which error. A replay
 draws the same. Use `--seed` to draw as another run did.
 
 ```
-machine fault run add [-h] [--prob p] [--pick n] [--seed n] --in who [--after n]
-                      [--times n]
-                      syscall[,syscall...] errors
+machine fault run add [-h] [--delay span] [--prob p] [--pick n] [--seed n] --in who
+                      [--after n] [--times n]
+                      syscall[,syscall...] [errors]
 ```
 
 | Argument | Does |
 |---|---|
 | `syscall[,syscall...]` | System calls, by name or number |
-| `errors` | Errors: ENOENT, a number, valid or all, comma-separated; -ERRNO takes one out |
+| `[errors]` | Errors: ENOENT, a number, valid or all, comma-separated; -ERRNO takes one out. Without them, `--delay` is required and the call runs |
 
 | Option | Does |
 |---|---|
-| `--prob p` | Chance a matching call fails, 0 to 1, such as 0.1 (default: 1) |
+| `--delay span` | Hold each call the fault fires on for a time drawn from a span such as 0:20ms, at most 1s |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
 | `--pick n` | Pick n of the errors at random when the fault is added (default: all of them) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
 | `--in who` | Whose calls fail: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
 | `--after n` | Let n matching calls through first (default: 0) |
-| `--times n` | Fail at most n calls, then let the rest through (default: no end) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 
 Examples:
 
@@ -6426,6 +6432,8 @@ machine fault run1 add write EIO --in tgid=412              one tgid
 machine fault run1 add accept4 EMFILE --in tid=41           one task
 machine fault run1 add openat valid --seed 7 --in /app      as seed 7
 machine fault run1 add getrandom EAGAIN --in all            any task
+machine fault run1 add read --delay 0:20ms --in /app        slow reads
+machine fault run1 add connect EIO --delay 5ms --in /app    wait, fail
 ```
 
 See also:
@@ -6433,6 +6441,7 @@ See also:
 - [`machine fault`](#machine-fault)
 - [`machine tasks`](#machine-tasks)
 - [`machine syscalls`](#machine-syscalls)
+- [`machine catch add`](#machine-catch-add)
 
 ### machine fault delete
 
@@ -7911,11 +7920,15 @@ See also:
 Add a catchpoint.
 
 The catchpoint stops the run at an event of a task. The events are exec, exit,
-fork, vfork, syscall, signal, load and unload. The C++ events throw, catch and
-rethrow are breakpoints in one tgid.
+fork, vfork, syscall, signal, load, unload and fault. The C++ events throw,
+catch and rethrow are breakpoints in one tgid.
 
-A syscall catchpoint names its system calls, and a signal catchpoint its
-signals, four at most. A load, unload or exec catchpoint names a path or a
+A fault catchpoint stops where a syscall fault fires on a call, before its delay
+and its error. The hit names the call and the error, or delayed for a fault with
+no error.
+
+A syscall or fault catchpoint names its system calls, and a signal catchpoint
+its signals, four at most. A load, unload or exec catchpoint names a path or a
 file's name. Without one, every event of its kind stops the run.
 
 Use `--in` to stop at the events of one task or one tgid alone. The run log
@@ -7944,8 +7957,8 @@ machine catch run add [-h] [--in tid=N|tgid=N|comm=NAME] [--disabled] [--ignore 
 
 | Argument | Does |
 |---|---|
-| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow |
-| `[value ...]` | System call or signal, by name or number, or the path of a load, unload or exec |
+| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, fault, throw, catch, rethrow |
+| `[value ...]` | System call of a syscall or fault catchpoint, signal, by name or number, or the path of a load, unload or exec |
 
 | Option | Does |
 |---|---|
@@ -7965,6 +7978,7 @@ machine catch run1 add signal SIGSEGV --in tid=57  a signal of 57
 machine catch run1 add load libssl.so.3            a library mapped
 machine catch run1 add throw --in tgid=57          a C++ throw
 machine catch run1 add exit --in comm=cat          a cat ends
+machine catch run1 add fault openat                a fault fires
 ```
 
 Prints:
