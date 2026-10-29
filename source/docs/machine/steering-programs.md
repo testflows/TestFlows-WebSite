@@ -143,15 +143,36 @@ earlier time, branch there with [`machine go app 1.5s`](commands.md#machine-go).
 
 ## Fault injection
 
-Make a program's system calls fail. A fault names a system call and the errors
-it may return, and the program's calls of it return one of them without running.
-You find out what your program does when `openat` says `EACCES`, `write` says
-`ENOSPC` or `connect` says `ECONNREFUSED`, at the call you choose or by chance.
+`machine inject` makes things fail inside the machine. A fault goes into a
+subsystem: a program's system calls, or one of the kernel's own places where
+things can fail, such as the disk or memory allocation. You find out what your
+program does when `openat` says `EACCES`, `write` says `ENOSPC`, the disk
+returns an I/O error or the kernel runs out of memory, at the call you choose or
+by chance.
+
+| Subsystem | What fails |
+|---|---|
+| `syscall` | a system call returns an error you choose, or waits first |
+| `disk` | a disk read or write returns an I/O error |
+| `disk-timeout` | a disk request never completes, and its task waits forever |
+| `slab`, `pages` | a kernel memory allocation fails, usually as `ENOMEM` |
+| `usercopy` | the kernel fails to copy to or from the program's memory: `EFAULT` |
+| `futex-access` | a futex call fails to reach the program's memory: `EFAULT` |
+
+Every subsystem takes the same options: `--in` for whose calls, `--prob` for the
+chance, `--after` to let calls through first, `--times` to stop after a number,
+and `--seed`. The guest kernel decides each call itself, without stopping the
+machine, and a replay fails exactly the same calls.
+
+### System calls
+
+A syscall fault names a system call and the errors it may return, and the
+program's calls of it return one of them without running.
 
 ```bash
-machine fault app add connect ECONNREFUSED --in /usr/bin/app
+machine inject app add syscall connect ECONNREFUSED --in /usr/bin/app
 machine exec app run -- /usr/bin/app
-machine fault app
+machine inject app
 ```
 
 The last command lists the faults, with how many calls each one matched and
@@ -188,7 +209,7 @@ the faults and their counts, and a branch has its parent's.
   the script opens:
 
   ```bash
-  machine fault app add open EACCES --in comm=s.sh --after 1
+  machine inject app add syscall open EACCES --in comm=s.sh --after 1
   machine exec app run -- /tmp/s.sh
   ```
 
@@ -205,17 +226,17 @@ exist` takes the same words, lists the tasks that match, and fails when none
 does. It only reads, so it changes nothing:
 
 ```bash
-machine tasks app exist /usr/bin/app && machine fault app add openat ENOENT --in /usr/bin/app
+machine tasks app exist /usr/bin/app && machine inject app add syscall openat ENOENT --in /usr/bin/app
 ```
 
 A rule's `--after` and `--times` count calls across every task it matches: for
 a program, the 100th write is the 100th of all its processes together.
 
 ```bash
-machine fault app add write ENOSPC --in /usr/bin/app --after 99 --times 1   # the 100th write
-machine fault app add read EINTR --in /usr/bin/app --prob 0.1               # a read in ten
-machine fault app add read EIO --in /usr/bin/app --prob 0.5 --times 2       # by chance, twice at most
-machine fault app add read EIO --in /usr/bin/app --prob 0                   # count the calls, fail none
+machine inject app add syscall write ENOSPC --in /usr/bin/app --after 99 --times 1   # the 100th write
+machine inject app add syscall read EINTR --in /usr/bin/app --prob 0.1               # a read in ten
+machine inject app add syscall read EIO --in /usr/bin/app --prob 0.5 --times 2       # by chance, twice at most
+machine inject app add syscall read EIO --in /usr/bin/app --prob 0                   # count the calls, fail none
 ```
 
 `--after` lets that many matching calls through first. `--prob` is the chance a
@@ -229,9 +250,9 @@ fault a stretch, such as the next 10 seconds of machine time, add the fault, run
 for that long, and delete it:
 
 ```bash
-machine fault app add read EIO --in /usr/bin/app --prob 0.1
+machine inject app add syscall read EIO --in /usr/bin/app --prob 0.1
 machine run app --within 10s
-machine fault app delete 1
+machine inject app delete 1
 ```
 
 To fail one particular call, run until the program makes it, then add the fault
@@ -239,14 +260,14 @@ for one call. The stop is at the start of the call, so that same call fails:
 
 ```bash
 machine run app --until tgid=412:syscall=write
-machine fault app add write EIO --in tgid=412 --times 1
+machine inject app add syscall write EIO --in tgid=412 --times 1
 machine run app
 ```
 
 Name several system calls at once and each gets a fault of its own:
 
 ```bash
-machine fault app add open,openat,creat EACCES --in /usr/bin/app
+machine inject app add syscall open,openat,creat EACCES --in /usr/bin/app
 ```
 
 ### Which errors
@@ -257,9 +278,9 @@ examples here fail `openat` of `/usr/bin/app`, so add them once it runs, after
 `machine tasks app exist /usr/bin/app`:
 
 ```bash
-machine fault app add openat ENOENT,EACCES,EMFILE --in /usr/bin/app   # one of three, each call
-machine fault app add openat valid --in /usr/bin/app                  # one the manual documents
-machine fault app add openat valid,-EINTR --in /usr/bin/app           # those, but not EINTR
+machine inject app add syscall openat ENOENT,EACCES,EMFILE --in /usr/bin/app   # one of three, each call
+machine inject app add syscall openat valid --in /usr/bin/app                  # one the manual documents
+machine inject app add syscall openat valid,-EINTR --in /usr/bin/app           # those, but not EINTR
 ```
 
 `valid` is the errors the system call's manual page lists. `all` is every error
@@ -271,8 +292,8 @@ Linux names, which is more than a fault holds, so pick some of it.
 fault keeps those. This is swarm testing: each run fails with its own few errors.
 
 ```bash
-machine fault app add openat,read,write valid --pick 1 --in /usr/bin/app   # one error each
-machine fault app add openat all --pick 3 --in /usr/bin/app                # three of any
+machine inject app add syscall openat,read,write valid --pick 1 --in /usr/bin/app   # one error each
+machine inject app add syscall openat all --pick 3 --in /usr/bin/app                # three of any
 ```
 
 Every fault has a seed, and the list shows it. The seed decides the picks,
@@ -280,7 +301,7 @@ which calls fail by chance and which error each one returns. Give `--seed` to
 draw as another run did:
 
 ```bash
-machine fault app add openat valid --pick 2 --seed 7 --in /usr/bin/app
+machine inject app add syscall openat valid --pick 2 --seed 7 --in /usr/bin/app
 ```
 
 ### Slow calls
@@ -289,14 +310,47 @@ A fault can hold a call instead of failing it. `--delay` takes a time, or a
 span to draw one from for each call, up to a second:
 
 ```bash
-machine fault app add read --delay 0:20ms --in /usr/bin/app            # each read waits 0 to 20ms, then runs
-machine fault app add connect ECONNREFUSED --delay 500ms --in /usr/bin/app   # waits, then fails
-machine fault app add write --delay 5ms --prob 0.1 --in /usr/bin/app   # one write in ten waits 5ms
+machine inject app add syscall read --delay 0:20ms --in /usr/bin/app            # each read waits 0 to 20ms, then runs
+machine inject app add syscall connect ECONNREFUSED --delay 500ms --in /usr/bin/app   # waits, then fails
+machine inject app add syscall write --delay 5ms --prob 0.1 --in /usr/bin/app   # one write in ten waits 5ms
 ```
 
 The wait is on the machine's own clock, and each call draws its time from the
 fault's seed, so a replay holds the same calls for the same time. `--prob`,
 `--after`, `--times` and `--in` work as they do for errors.
+
+### The disk and the kernel's memory
+
+The other subsystems fail work inside the kernel, after a system call has
+started, where a syscall fault never reaches. They take no errors: each fails
+the way the kernel would.
+
+```bash
+machine inject app add disk --times 1 --in /usr/bin/app        # one disk request fails with EIO
+machine inject app add disk --prob 0.01 --in all               # a disk request in a hundred
+machine inject app add slab --after 50 --times 1 --in /usr/bin/app   # its 51st allocation fails
+machine inject app add usercopy --after 100 --times 1 --in /usr/bin/app
+machine inject app add disk-timeout --times 1 --in /usr/bin/app # its next disk request never completes
+```
+
+A few things decide whether you see the failure:
+
+- **Who sends a disk request.** Your program sends its reads, its `O_DIRECT`
+  writes and the writes `fsync` forces, so `--in /usr/bin/app` fails those.
+  Ordinary writes wait in memory and the kernel's flusher writes them later, so
+  only `--in all` reaches them.
+- **A program's first moments.** When a program starts, the kernel copies its
+  arguments in and allocates for it. A `usercopy` or allocation fault that fires
+  then kills the program before your code runs. Use `--after`, or add the fault
+  once the program is up.
+- **The kernel copes with some failures.** A failed page allocation is often
+  retried, and the program never sees it. `MATCHED` and `FIRED` in the list
+  still show that the fault fired.
+- **`disk-timeout` hangs.** The request is lost, and the task waiting for it
+  stays stuck until the machine stops. That is the point: you find out what
+  else in the program notices. Name your program in `--in`: with `--in all`
+  the lost request may be the kernel's own, and whatever waits on that disk
+  hangs with it.
 
 ### Stopping at a fault
 
@@ -304,26 +358,27 @@ To look at the program at the moment a fault fires, add a catchpoint for it:
 
 ```bash
 machine catch app add fault openat
+machine catch app add fault disk
 machine run app
 ```
 
-The run stops at the call, before its wait and its error, and says which:
-`Stopped at catchpoint 1: fault openat EACCES, in tid 229`. See
-[Debugging](debugging.md) for catchpoints.
+The run stops where the fault fires, before a system call's wait and error, and
+says which: `Stopped at catchpoint 1: fault openat EACCES, in tid 229`, or
+`fault disk, in tid 77`. See [Debugging](debugging.md) for catchpoints.
 
 ### Changing faults
 
 ```bash
-machine fault app delete 2       # by its number in the list
-machine fault app clear
+machine inject app delete 2       # by its number in the list
+machine inject app clear
 ```
 
-At the [control prompt](running-a-machine.md#interactive-mode) it is `/fault`,
+At the [control prompt](running-a-machine.md#interactive-mode) it is `/inject`,
 with the same words, and `/tasks exist` checks first:
 
 ```
 /tasks exist /usr/bin/app
-/fault add openat ENOENT --in /usr/bin/app
+/inject add syscall openat ENOENT --in /usr/bin/app
 ```
 
 Faults and [plans](#plans) work together. Add the faults, then run the plan:

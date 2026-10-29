@@ -5162,7 +5162,7 @@ See also:
 Assert that the machine runs a program, a comm, a tid or a tgid.
 
 The command lists the tasks that match and is refused when none does. It takes
-the words fault add takes for `--in`, except all.
+the words inject add takes for `--in`, except all.
 
 A program is the absolute path of the file it runs, the EXE that tasks shows. A
 symlink's path matches no task.
@@ -5189,7 +5189,7 @@ machine tasks run1 exist tgid=412      tgid 412
 See also:
 
 - [`machine tasks`](#machine-tasks)
-- [`machine fault add`](#machine-fault-add)
+- [`machine inject add`](#machine-inject-add)
 - [`machine focus add`](#machine-focus-add)
 
 ### machine tasks hold
@@ -5454,9 +5454,9 @@ A program is named by its absolute path, matched exactly. Write cgroup=`<path>`
 to match the cgroup of a task. Write tgid=`<n>` to name a tgid. The tgid of a
 task is shown by tasks.
 
-Write comm=`<name>` to focus each process with a task of that comm, as fault add
-and tasks exist read it. A comm names a busybox applet or a script, which a path
-cannot. A task renamed after exec is seen at the next fork, exec or exit.
+Write comm=`<name>` to focus each process with a task of that comm, as inject
+add and tasks exist read it. A comm names a busybox applet or a script, which a
+path cannot. A task renamed after exec is seen at the next fork, exec or exit.
 
 Use add and remove to change the list. Use clear to empty it.
 
@@ -6302,22 +6302,22 @@ See also:
 - [`machine run`](#machine-run)
 - [`machine hash`](#machine-hash)
 
-## machine fault
+## machine inject
 
-Make system calls of the guest fail with an error, or wait.
+Inject faults into the guest's system calls and kernel.
 
-A fault names a system call and a set of errors. The task's calls of it return
-one of the errors without running. The guest kernel decides at each call, so a
-replay fails the same calls with the same errors.
+A fault makes a system call fail with an error, or wait. A fault at a kernel
+site fails a disk request or drops its completion. It also fails an allocation
+of the kernel, or a copy to or from a program's memory. The guest kernel decides
+at each call, without a stop of the machine.
 
-Use `--delay` to hold each call the fault fires on for a time, drawn from a
-span. A fault with a delay and no errors runs the call after the hold. A fault
-with both holds the call, then fails it. The hold is on the guest's own clock,
-so a replay holds the same calls for the same time.
+A replay acts on the same calls the same way. The faults are part of the
+machine. A checkpoint keeps them, and a fork has its parent's. The run records
+each change, and a replay makes it at the same point.
 
-Use `--in` to say whose calls fail. It is required. A program is the absolute
-path of the file it runs, the EXE that tasks shows. It takes the tasks running
-that file, and the processes they fork without exec.
+Use `--in` to say whose calls a fault acts on. It is required. A program is the
+absolute path of the file it runs, the EXE that tasks shows. It takes the tasks
+running that file, and the processes they fork without exec.
 
 A comm is the name the kernel gives a task at exec, and comm=name takes the
 tasks of that comm. A script runs as its interpreter, so its comm names it.
@@ -6325,29 +6325,18 @@ tid=n takes one task, tgid=n the tasks of one tgid, and all every task in the
 machine.
 
 A fault lets a number of matching calls through first. It then fires on each
-call by a chance, up to a number of calls or without end.
-
-Each fault counts the calls it matches on its own. The first fault that fires on
-a call acts on it.
+call by a chance, up to a number of calls or without end. Each fault counts the
+calls it matches on its own. The first fault that fires on a call acts on it.
 
 A program's fault can be added before the program starts. Its calls match from
-its exec on, and the commands that start it match none.
+its exec on, and the commands that start it match none. A fault on a tgid
+applies to whatever that tgid runs, exec's setup of it first. Use tasks exist to
+check that what `--in` names is running.
 
-A dynamic program's loader opens and reads its libraries after the exec too. A
-fault on openat or read added first fails the loader. Add such a fault once the
-program is up.
-
-A fault on a tgid applies to whatever that tgid runs, exec's setup of it first.
-Use tasks exist to check that what `--in` names is running.
-
-The faults are part of the machine. A checkpoint keeps them, and a fork has its
-parent's. The run records each change, and a replay makes it at the same point.
-
-An error is any Linux error, by name or number. Without a verb the command lists
-the faults.
+Without a verb the command lists the faults.
 
 ```
-machine fault [-h] run command ...
+machine inject [-h] run command ...
 ```
 
 | Argument | Does |
@@ -6357,46 +6346,83 @@ machine fault [-h] run command ...
 Examples:
 
 ```
-machine fault run1                                      the faults, counted
-machine fault run1 add connect ECONNREFUSED --in /app   every connect
-machine fault run1 add openat valid --pick 1 --in /app  one documented
-machine fault run1 add read EINTR --prob 0.1 --in /app  a read in ten
-machine fault run1 delete 2                             the second fault
-machine fault run1 clear                                every fault
+machine inject run1                                    the faults, counted
+machine inject run1 add syscall connect EIO --in /app  every connect
+machine inject run1 add disk --prob 0.01 --in all      a request in 100
+machine inject run1 add slab --times 1 --in tgid=412   one allocation
+machine inject run1 delete 2                           the second fault
+machine inject run1 clear                              every fault
 ```
 
 See also:
 
-- [`machine fault add`](#machine-fault-add)
-- [`machine tasks`](#machine-tasks)
+- [`machine inject add`](#machine-inject-add)
+- [`machine tasks exist`](#machine-tasks-exist)
 - [`machine syscalls`](#machine-syscalls)
-- [`machine catch`](#machine-catch)
+- [`machine catch add`](#machine-catch-add)
 
-### machine fault add
+### machine inject add
 
-Fail calls of system calls with errors.
+Inject a fault into a subsystem of the guest.
 
-The calls return an error without running. Each system call gets its own fault.
-A failing call returns one error of the set, drawn at random.
+The subsystem is syscall, or one of the kernel's own fault sites: disk,
+disk-timeout, slab, pages, usercopy and futex-access. Every subsystem takes the
+same options, with the same meaning.
+
+A fault fires on every matching call by default. Use `--prob` to fire on a call
+by chance. A `--prob` of 0 fires on none and counts the matches.
+
+The fault draws from its seed which calls it fires on. A replay draws the same.
+Use `--seed` to draw as another run did.
+
+```
+machine inject run add [-h] subsystem ...
+```
+
+Examples:
+
+```
+machine inject run1 add syscall openat ENOENT --in /app      fail
+machine inject run1 add syscall read --delay 2ms --in /app   wait
+machine inject run1 add disk --times 3 --in /app             three requests
+machine inject run1 add pages --after 99 --times 1 --in all  the 100th
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+- [`machine inject add disk`](#machine-inject-add-disk)
+- [`machine catch add`](#machine-catch-add)
+
+### machine inject add syscall
+
+Fail calls of system calls with errors, or hold them.
+
+A failed call returns an error without running. Each system call gets its own
+fault. A failing call returns one error of the set, drawn at random.
 
 The set holds names or numbers. Use valid for the errors the system call's man
 page documents, and all for every error Linux names. A -ERRNO in the set takes
 that error out.
 
+Use `--delay` to hold each call the fault fires on for a time, drawn from a
+span. A fault with a delay and no errors runs the call after the hold. A fault
+with both holds the call, then fails it. The hold is on the guest's own clock,
+so a replay holds the same calls for the same time.
+
 Use `--pick` to take a number of the set at random when the fault is added. Each
 system call picks its own. A run then fails with its own few errors, as swarm
 testing does.
 
-A fault fails every matching call by default. Use `--prob` to fail a call by
-chance instead. A `--prob` of 0 fails no call and counts the matches.
-
-The fault draws from its seed which calls fail and with which error. A replay
-draws the same. Use `--seed` to draw as another run did.
+A dynamic program's loader opens and reads its libraries after the exec. A fault
+on openat or read added before the program starts fails the loader. Add such a
+fault once the program is up.
 
 ```
-machine fault run add [-h] [--delay span] [--prob p] [--pick n] [--seed n] --in who
-                      [--after n] [--times n]
-                      syscall[,syscall...] [errors]
+machine inject run add syscall [-h] [--delay span] [--pick n] --in who [--prob p]
+                               [--after n] [--times n] [--seed n]
+                               syscall[,syscall...] [errors]
 ```
 
 | Argument | Does |
@@ -6407,50 +6433,256 @@ machine fault run add [-h] [--delay span] [--prob p] [--pick n] [--seed n] --in 
 | Option | Does |
 |---|---|
 | `--delay span` | Hold each call the fault fires on for a time drawn from a span such as 0:20ms, at most 1s |
-| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
 | `--pick n` | Pick n of the errors at random when the fault is added (default: all of them) |
-| `--seed n` | Seed the draws of the fault (default: a random seed) |
-| `--in who` | Whose calls fail: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
 
 Examples:
 
 ```
-machine fault run1 add connect ECONNREFUSED --in /app       every connect
-machine fault run1 add openat ENOENT,EACCES --in /app       one of two
-machine fault run1 add openat valid --in /app               documented
-machine fault run1 add openat valid,-EINTR --in /app        but not EINTR
-machine fault run1 add read,write valid --pick 1 --in /app  one each
-machine fault run1 add openat all --pick 3 --in /app        three of all
-machine fault run1 add read EINTR --prob 0.1 --in /app      one in ten
-machine fault run1 add read EIO --prob 0 --in /app          count only
-machine fault run1 add read EIO --after 9 --in /app         past the 9th
-machine fault run1 add read EIO --times 2 --in /app         two at most
-machine fault run1 add open,openat EIO --in comm=cat        a cat applet
-machine fault run1 add write EIO --in tgid=412              one tgid
-machine fault run1 add accept4 EMFILE --in tid=41           one task
-machine fault run1 add openat valid --seed 7 --in /app      as seed 7
-machine fault run1 add getrandom EAGAIN --in all            any task
-machine fault run1 add read --delay 0:20ms --in /app        slow reads
-machine fault run1 add connect EIO --delay 5ms --in /app    wait, fail
+machine inject run1 add syscall connect EIO --in /a          every connect
+machine inject run1 add syscall open valid --in /a           documented
+machine inject run1 add syscall read all --pick 1 --in /a    one of all
+machine inject run1 add syscall read EIO --prob 0.1 --in /a  one in ten
+machine inject run1 add syscall read EIO --after 9 --in /a   past the 9th
+machine inject run1 add syscall open EIO --in comm=cat       a cat applet
+machine inject run1 add syscall write EIO --in tgid=412      one tgid
+machine inject run1 add syscall read --delay 20ms --in /a    slow reads
 ```
 
 See also:
 
-- [`machine fault`](#machine-fault)
+- [`machine inject`](#machine-inject)
 - [`machine tasks`](#machine-tasks)
 - [`machine syscalls`](#machine-syscalls)
 - [`machine catch add`](#machine-catch-add)
 
-### machine fault delete
+### machine inject add disk
+
+Fail block requests of the guest's disks with EIO.
+
+A read or write request fails with EIO in the task that submits it. A program
+submits its reads, its O_DIRECT writes and the writes its fsync forces. The
+kernel's flusher threads submit buffered writes later, so `--in` all or a
+kworker comm matches those. A request the kernel splits counts once for each
+part.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add disk --in all              every block request
+machine inject run1 add disk --prob 0.1 --in /app  a request in ten
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-timeout`](#machine-inject-add-disk-timeout)
+
+### machine inject add disk-timeout
+
+Drop the completions of block requests.
+
+The request is decided in the task that submits it, and its completion is
+dropped when the disk answers. The guest's disk driver has no timeout handler,
+so the request never completes and the task waiting on it hangs. The tasks that
+submit a request are as for disk.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add disk-timeout [-h] --in who [--prob p] [--after n] [--times n]
+                                    [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add disk-timeout --times 1 --in comm=dd  dd hangs
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk`](#machine-inject-add-disk)
+
+### machine inject add slab
+
+Fail slab allocations of the guest kernel.
+
+The allocation returns NULL, and the call that made it fails with ENOMEM or as
+the kernel handles it. An allocation the kernel promised, with __GFP_NOFAIL,
+never fails.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add slab [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add slab --prob 0.001 --in comm=cat  rarely
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add pages`](#machine-inject-add-pages)
+
+### machine inject add pages
+
+Fail page allocations of the guest kernel.
+
+The allocation returns no pages, and the call that made it fails with ENOMEM or
+as the kernel handles it. An allocation the kernel promised, with __GFP_NOFAIL,
+never fails.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add pages [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add pages --after 99 --times 1 --in all  the 100th
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add slab`](#machine-inject-add-slab)
+
+### machine inject add usercopy
+
+Fail copies between the kernel and a program's memory.
+
+The copy fails, and the system call that made it returns EFAULT or a short
+count. A system call that copies a buffer to or from the program copies through
+it. A call that reads or writes one value with get_user or put_user does not.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add usercopy [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add usercopy --times 1 --in tid=41  one copy
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+
+### machine inject add futex-access
+
+Fail a futex's access to a program's memory.
+
+A futex operation's access to the program's memory fails. The futex call returns
+EFAULT, or EDEADLK where a priority-inheritance futex checks its owner.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add futex-access [-h] --in who [--prob p] [--after n] [--times n]
+                                    [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add futex-access --in tgid=412  every futex call
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+
+### machine inject delete
 
 Delete a fault.
 
 The fault's calls run again from here.
 
 ```
-machine fault run delete [-h] n
+machine inject run delete [-h] n
 ```
 
 | Argument | Does |
@@ -6460,32 +6692,32 @@ machine fault run delete [-h] n
 Examples:
 
 ```
-machine fault run1 delete 2  the second fault
+machine inject run1 delete 2  the second fault
 ```
 
 See also:
 
-- [`machine fault`](#machine-fault)
-- [`machine fault clear`](#machine-fault-clear)
+- [`machine inject`](#machine-inject)
+- [`machine inject clear`](#machine-inject-clear)
 
-### machine fault clear
+### machine inject clear
 
 Delete every fault.
 
 ```
-machine fault run clear [-h]
+machine inject run clear [-h]
 ```
 
 Examples:
 
 ```
-machine fault run1 clear  every fault
+machine inject run1 clear  every fault
 ```
 
 See also:
 
-- [`machine fault`](#machine-fault)
-- [`machine fault delete`](#machine-fault-delete)
+- [`machine inject`](#machine-inject)
+- [`machine inject delete`](#machine-inject-delete)
 
 ## machine vtime
 
@@ -7923,12 +8155,14 @@ The catchpoint stops the run at an event of a task. The events are exec, exit,
 fork, vfork, syscall, signal, load, unload and fault. The C++ events throw,
 catch and rethrow are breakpoints in one tgid.
 
-A fault catchpoint stops where a syscall fault fires on a call, before its delay
-and its error. The hit names the call and the error, or delayed for a fault with
-no error.
+A fault catchpoint stops where an injected fault fires. A syscall fault stops
+before its delay and its error. The hit names the call and the error, or delayed
+for a fault with no error. A site fault stops at the site, and the hit names the
+site.
 
-A syscall or fault catchpoint names its system calls, and a signal catchpoint
-its signals, four at most. A load, unload or exec catchpoint names a path or a
+A syscall catchpoint names its system calls, and a signal catchpoint its
+signals, four at most. A fault catchpoint names system calls or the sites of
+inject add, such as disk. A load, unload or exec catchpoint names a path or a
 file's name. Without one, every event of its kind stops the run.
 
 Use `--in` to stop at the events of one task or one tgid alone. The run log
