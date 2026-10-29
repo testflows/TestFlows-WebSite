@@ -133,23 +133,18 @@ You find out what your program does when `openat` says `EACCES`, `write` says
 `ENOSPC` or `connect` says `ECONNREFUSED`, at the call you choose or by chance.
 
 ```bash
-machine focus app add /usr/bin/app
-machine exec app start -- /usr/bin/app
-machine run app --until /usr/bin/app:exec        # task: exec 412 (tgid 412)
-machine fault app add openat ENOENT --tgid 412
-machine run app --until tgid=412:exit
+machine fault app add connect ECONNREFUSED --in /usr/bin/app
+machine exec app run -- /usr/bin/app
 machine fault app
 ```
 
-Add the fault once the program has started, by its tgid, which is its pid.
-Before then, that process is still being set up to run it, and the fault
-would fail those calls instead.
-
-The last command lists the faults, with how many calls each one matched and failed:
+The last command lists the faults, with how many calls each one matched and
+failed. For a program that connects once, it shows that one call failed. The
+seed is drawn, so yours differs:
 
 ```
-#   SYSCALL        ERRORS                   TASK       FAILS                 PROB       SEED  MATCHED  FAILED
-1   write          EIO,ENOSPC               tgid=69    every call after 2     0.3          5      101      35
+#   SYSCALL        ERRORS                   IN               FAILS                 PROB       SEED  MATCHED  FAILED
+1   connect        ECONNREFUSED             /usr/bin/app     every call               1 1820473361        1       1
 ```
 
 The guest kernel decides at each call, and the run records every fault you
@@ -158,15 +153,53 @@ the faults and their counts, and a branch has its parent's.
 
 ### Which calls fail
 
-Name the program with `--tgid` or one thread with `--tid`. To fail the calls of
-every task in the machine, the system's own included, say `--all-tasks`. One
-of the three is required.
+`--in` says whose calls fail, and you always give it:
+
+* **A program, by its absolute path:** `--in /usr/bin/app`. The fault applies to
+  every task running that program, and to the processes it forks without
+  starting another program, such as a server's workers. It starts with the
+  program, so you can add it before the program runs. Use the path
+  [`machine tasks app`](commands.md#machine-tasks) shows as EXE: a symlink
+  counts as the file it points to, so busybox's `/bin/cat` is `/bin/busybox`.
+  A program that loads shared libraries opens and reads them after it starts,
+  so add a fault on `openat`, `read` or `stat` once it is up, or it fails the
+  loading instead.
+* **A task's name:** `--in comm=cat`. The kernel names a task after the file
+  the command named, up to 15 bytes. That picks out one tool of a
+  multi-call binary such as busybox, and a script, whose program is its
+  interpreter but whose name is its own. The interpreter's first open is of
+  the script itself, so `--after 1` lets it read the script and fails what
+  the script opens:
+
+  ```bash
+  machine fault app add open EACCES --in comm=s.sh --after 1
+  machine exec app run -- /tmp/s.sh
+  ```
+
+  That is busybox's shell, which calls `open`. A glibc shell calls `openat`
+  and opens its shared libraries first: count them in `--after`, or add the
+  fault once the script runs.
+* **One process:** `--in tgid=412`, its pid. Add it once the program is running.
+  Before then, that process is still being set up to run it.
+* **One thread:** `--in tid=41`.
+* **Every task in the machine,** the system's own included: `--in all`.
+
+To make sure something runs before you act on it, ask first. `machine tasks app
+exist` takes the same words, lists the tasks that match, and fails when none
+does. It only reads, so it changes nothing:
 
 ```bash
-machine fault app add write ENOSPC --tgid 412 --after 99 --times 1   # the 100th write
-machine fault app add read EINTR --tgid 412 --prob 0.1               # a read in ten
-machine fault app add read EIO --tgid 412 --prob 0.5 --times 2       # by chance, twice at most
-machine fault app add read EIO --tgid 412 --prob 0                   # count the calls, fail none
+machine tasks app exist /usr/bin/app && machine fault app add openat ENOENT --in /usr/bin/app
+```
+
+A rule's `--after` and `--times` count calls across every task it matches: for
+a program, the 100th write is the 100th of all its processes together.
+
+```bash
+machine fault app add write ENOSPC --in /usr/bin/app --after 99 --times 1   # the 100th write
+machine fault app add read EINTR --in /usr/bin/app --prob 0.1               # a read in ten
+machine fault app add read EIO --in /usr/bin/app --prob 0.5 --times 2       # by chance, twice at most
+machine fault app add read EIO --in /usr/bin/app --prob 0                   # count the calls, fail none
 ```
 
 `--after` lets that many matching calls through first. `--prob` is the chance a
@@ -180,7 +213,7 @@ fault a stretch, such as the next 10 seconds of machine time, add the fault, run
 for that long, and delete it:
 
 ```bash
-machine fault app add read EIO --tgid 412 --prob 0.1
+machine fault app add read EIO --in /usr/bin/app --prob 0.1
 machine run app --within 10s
 machine fault app delete 1
 ```
@@ -190,25 +223,27 @@ for one call. The stop is at the start of the call, so that same call fails:
 
 ```bash
 machine run app --until tgid=412:syscall=write
-machine fault app add write EIO --tgid 412 --times 1
+machine fault app add write EIO --in tgid=412 --times 1
 machine run app
 ```
 
 Name several system calls at once and each gets a fault of its own:
 
 ```bash
-machine fault app add openat,openat2,creat EACCES --tgid 412
+machine fault app add open,openat,creat EACCES --in /usr/bin/app
 ```
 
 ### Which errors
 
 Any Linux error goes, by name or by number, whether or not the system call's
-manual lists it. Give a set and each failing call returns one of them:
+manual lists it. Give a set and each failing call returns one of them. The
+examples here fail `openat` of `/usr/bin/app`, so add them once it runs, after
+`machine tasks app exist /usr/bin/app`:
 
 ```bash
-machine fault app add openat ENOENT,EACCES,EMFILE --tgid 412   # one of three, each call
-machine fault app add openat valid --tgid 412                  # one the manual documents
-machine fault app add openat valid,-EINTR --tgid 412           # those, but not EINTR
+machine fault app add openat ENOENT,EACCES,EMFILE --in /usr/bin/app   # one of three, each call
+machine fault app add openat valid --in /usr/bin/app                  # one the manual documents
+machine fault app add openat valid,-EINTR --in /usr/bin/app           # those, but not EINTR
 ```
 
 `valid` is the errors the system call's manual page lists. `all` is every error
@@ -220,8 +255,8 @@ Linux names, which is more than a fault holds, so pick some of it.
 fault keeps those. This is swarm testing: each run fails with its own few errors.
 
 ```bash
-machine fault app add openat,read,write valid --pick 1 --tgid 412   # one error each
-machine fault app add openat all --pick 3 --tgid 412                # three of any
+machine fault app add openat,read,write valid --pick 1 --in /usr/bin/app   # one error each
+machine fault app add openat all --pick 3 --in /usr/bin/app                # three of any
 ```
 
 Every fault has a seed, and the list shows it. The seed decides the picks,
@@ -229,7 +264,7 @@ which calls fail by chance and which error each one returns. Give `--seed` to
 draw as another run did:
 
 ```bash
-machine fault app add openat valid --pick 2 --seed 7 --tgid 412
+machine fault app add openat valid --pick 2 --seed 7 --in /usr/bin/app
 ```
 
 ### Changing faults
@@ -240,7 +275,12 @@ machine fault app clear
 ```
 
 At the [control prompt](running-a-machine.md#interactive-mode) it is `/fault`,
-with the same words: `/fault add openat ENOENT --tgid 412`.
+with the same words, and `/tasks exist` checks first:
+
+```
+/tasks exist /usr/bin/app
+/fault add openat ENOENT --in /usr/bin/app
+```
 
 Faults and [plans](#plans) work together. Add the faults, then run the plan:
 the faults apply to every stretch of execution, whatever the plan chooses. To
@@ -248,14 +288,19 @@ change them partway, stop, change them, and run on.
 
 ### Good to know
 
-- **A C function is not always the system call of its name.** glibc's `open()`
-  calls `openat`, and its `stat()` calls `newfstatat`. Adding a fault on `open`
-  says so. [`machine syscalls app`](commands.md#machine-syscalls) lists the
-  names the kernel uses.
+- **A C function is not always the system call of its name, and C libraries
+  differ.** glibc's `open()` calls `openat`, musl's calls `open`, and glibc's
+  `stat()` calls `newfstatat`. Name both, `open,openat`, to cover either.
+  [`machine syscalls app`](commands.md#machine-syscalls) lists the names the
+  kernel uses.
 - **Give `--seed` in a script that records again.** Without it each run draws
   its own seed. A replay needs none: the run keeps the fault as it was added.
 - **64-bit system calls only.** A 32-bit call, made with `int 0x80`, never fails.
-- **16 faults, and 40 errors in one.** Delete one to add another; pick some of
+- **Calls the vDSO answers never reach the kernel.** `clock_gettime`,
+  `gettimeofday`, `time` and `getcpu` usually return without a system call, so
+  a fault on them matches nothing and MATCHED stays 0.
+- **16 faults, and 38 errors in one.** Delete one to add another; pick some of
   `all`.
-- **A fault matches the system call, the task and the count of calls.** It does
-  not look at the arguments, so "openat of /etc/passwd" is not a fault.
+- **A fault matches the system call, whose call it is and the count of calls.**
+  It does not look at the arguments, so "openat of /etc/passwd" is not a fault.
+  Stop at the call and fail that one instead.
