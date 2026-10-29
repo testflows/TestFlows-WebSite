@@ -3013,7 +3013,8 @@ when <predicate>
     apply the clause only while the predicate holds. A
     predicate is [subject:]state. The state is on, kernel,
     off, syscall[=name] or int[=vec]. The subject is /path,
-    tid=N, tgid=N, cgroup=P or none for any focused task.
+    tid=N, tgid=N, cgroup=P, comm=NAME or none for any
+    focused task.
     vcpu=N[,N] ANDs a vCPU set onto it.
 mode <mode>[N],...
     the modes to draw among: fast, step, step-into, free, fence
@@ -3212,10 +3213,10 @@ A console\~REGEX predicate holds once the console prints a match. The name of
 another source takes the place of console, as in ttyS1\~REGEX.
 
 A task predicate is [who:]what. The what is exec, exit, sched, desched, on,
-kernel or off. The who is /path, cgroup=path, tgid=N or tid=N. Omitting it means
-any focused task.
+kernel or off. The who is /path, cgroup=path, comm=name, tgid=N or tid=N.
+Omitting it means any focused task.
 
-A path or a cgroup must already be focused. A path or cgroup subject means its
+A path, a cgroup or a comm must already be focused. Such a subject means its
 tgid. tgid=N means the tgid for exit and any of its tasks for exec. Use machine
 tasks `<run>` `--focused` to see which task is on a vCPU.
 
@@ -5378,8 +5379,8 @@ See [Looking at tasks](steering-programs.md#looking-at-tasks).
 A name filters the list to calls whose name contains that text.
 
 A task shows its syscall histogram instead. Name a task by tid, tgid, absolute
-path or cgroup=path. The histogram counts calls made while the focus entry of
-the task was armed with focus add `<path>` +syscalls.
+path, cgroup=path or comm=name. The histogram counts calls made while the focus
+entry of the task was armed with focus add `<path>` +syscalls.
 
 ```
 machine syscalls [-h] run [name|tid|tgid|path]
@@ -5414,8 +5415,8 @@ as the table is indexed. A name filters to handlers whose name contains that
 text.
 
 A task shows its interrupt histogram instead. Name a task by tid, tgid, absolute
-path or cgroup=path. The histogram counts interrupts taken while the focus entry
-of the task was armed with focus add `<path>` +ints.
+path, cgroup=path or comm=name. The histogram counts interrupts taken while the
+focus entry of the task was armed with focus add `<path>` +ints.
 
 ```
 machine ints [-h] run [name|tid|tgid|path]
@@ -5452,6 +5453,10 @@ The tasks subcommands then decide which task runs next.
 A program is named by its absolute path, matched exactly. Write cgroup=`<path>`
 to match the cgroup of a task. Write tgid=`<n>` to name a tgid. The tgid of a
 task is shown by tasks.
+
+Write comm=`<name>` to focus each process with a task of that comm, as fault add
+and tasks exist read it. A comm names a busybox applet or a script, which a path
+cannot. A task renamed after exec is seen at the next fork, exec or exit.
 
 Use add and remove to change the list. Use clear to empty it.
 
@@ -5492,16 +5497,16 @@ See also:
 
 Steer another program. See [Focus](steering-programs.md#focus).
 
-The entry is a program path, cgroup=`<path>` or tgid=`<n>`. Add +syscalls or
-+ints to count its system calls or interrupts.
+The entry is a program path, cgroup=`<path>`, comm=`<name>` or tgid=`<n>`. Add
++syscalls or +ints to count its system calls or interrupts.
 
 ```
-machine focus run add [-h] path|cgroup=path|tgid=n [+syscalls|+ints ...]
+machine focus run add [-h] path|cgroup=path|comm=name|tgid=n [+syscalls|+ints ...]
 ```
 
 | Argument | Does |
 |---|---|
-| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or tgid to match |
+| `path\|cgroup=path\|comm=name\|tgid=n` | Program path, cgroup, comm, or tgid to match |
 | `[+syscalls\|+ints ...]` | Count this program's syscalls or interrupts |
 
 Examples:
@@ -5509,6 +5514,7 @@ Examples:
 ```
 machine focus run1 add /test                  focus the program /test
 machine focus run1 add /test +syscalls +ints  count its calls and interrupts
+machine focus run1 add comm=cat               processes whose comm is cat
 ```
 
 See also:
@@ -5516,20 +5522,22 @@ See also:
 - [`machine focus remove`](#machine-focus-remove)
 - [`machine focus clear`](#machine-focus-clear)
 - [`machine tasks`](#machine-tasks)
+- [`machine tasks exist`](#machine-tasks-exist)
 
 ### machine focus remove
 
 Stop steering a program. See [Focus](steering-programs.md#focus).
 
-Name the entry as it was added, by program path, cgroup=`<path>` or tgid=`<n>`.
+Name the entry as it was added, by program path, cgroup=`<path>`, comm=`<name>`
+or tgid=`<n>`.
 
 ```
-machine focus run remove [-h] path|cgroup=path|tgid=n
+machine focus run remove [-h] path|cgroup=path|comm=name|tgid=n
 ```
 
 | Argument | Does |
 |---|---|
-| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or tgid to match |
+| `path\|cgroup=path\|comm=name\|tgid=n` | Program path, cgroup, comm, or tgid to match |
 
 Examples:
 

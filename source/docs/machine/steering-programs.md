@@ -29,8 +29,18 @@ machine focus app add /app
 machine run app --until /app:exit
 ```
 
-You can also focus on a cgroup (`cgroup=/path`) or a single process
-(`tgid=12`). `focus remove` and `focus clear` take them off again.
+Focus also takes a cgroup (`cgroup=/path`), a single process (`tgid=12`), or
+the processes with a task of a given name (`comm=cat`). A name picks out one
+tool of a multi-call binary such as busybox, or a script, which a path cannot.
+It means the same tasks [`machine tasks app exist`](#which-calls-fail) checks. `focus remove` and `focus clear` take them off again.
+
+```bash
+machine focus app add comm=cat
+machine run app --until comm=cat:exit
+```
+
+Whatever you focus by, the conditions below and a plan's `when` name it the
+same way: `/app:exit`, `cgroup=/path:on`, `comm=cat:kernel`.
 
 Once a program is focused you can wait for things that happen to it. The task
 conditions take the form `program:what`, where `what` is one of:
