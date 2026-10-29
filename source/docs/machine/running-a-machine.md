@@ -27,6 +27,7 @@ knowing about:
 | `--timer-slack d` | how late a timer may be in code that takes no exit, 20ms by default; `0` keeps every timer on time |
 | `--limit-margin n` | how many conditional branches short of an exact stop the CPU's counter interrupts; the default is the host's |
 | `--repeatable` | record so that recording the run again gives the same entries; the default is the session's, which [`machine describe`](commands.md#machine-describe) shows, and recording is slower |
+| `--vtime-base n` | the date the machine's clock starts at, as a Unix timestamp; the default is 2026-03-01, see [Machine time](steering-programs.md#machine-time) |
 | `--no-wait` | return as soon as the request is accepted |
 
 ## Random numbers
@@ -70,6 +71,10 @@ At the [control prompt](#interactive-mode) the same commands are `/rng` and
 The seed on [`machine run`](commands.md#machine-run) `--seed` is a different
 one. It draws how long each stretch of execution lasts.
 [Schedules](#schedules) covers it.
+
+From Python, `client.create("app", disk="app", rng_seed=42)` seeds a new run,
+`run.rng()` reads the seed, `run.rng.seed(7)` seeds the device again, and
+`run.fork(at="^booted", rng_seed=7)` makes a branch with its own.
 
 ## Multiple vCPUs
 
@@ -222,6 +227,32 @@ same instruction. That exactness makes a `fence` stretch somewhat slower than a
 [Recording that repeats](#recording-that-repeats) shows how to make a whole run
 record the same way every time.
 
+### What a task does
+
+Drawing the length of a stretch varies where threads are interrupted. To vary
+what the guest's scheduler does with them, draw a mark for the task on the vCPU
+at each dispatch:
+
+```bash
+machine run app --task-sched keep:hold:yield --task-slice 10us:600us --seed 3 --iters 500
+machine focus app add /usr/bin/app
+machine run app --task-int none:preempt --when /usr/bin/app:on --seed 4 --iters 500
+```
+
+`--task-sched` draws among `keep`, `hold`, `yield`, `drain` and `drain-all`:
+`hold` takes the task off the run queue, `yield` puts it behind its peers, and
+`keep` changes nothing. `--task-slice` draws how long the task runs before the
+scheduler decides again, from a span such as `10us:600us`, and `default` puts
+the kernel's own back. `--task-int` draws whether to preempt it. Each takes a
+colon list to draw from, and `--seed` makes the draws repeatable.
+
+`--when` applies the draws only while a predicate holds, such as
+`/usr/bin/app:on` for the program running its own code. A predicate on a
+program needs the program focused first, as the second example does with
+[`machine focus`](commands.md#machine-focus), and the run refuses it otherwise. To draw different
+things at different moments, write a [plan](steering-programs.md#plans), where
+each clause has its own `when`.
+
 Combine that with branches. Fork several from one checkpoint, give each its
 own seed, and keep the ones that crash. The `explore_seeds.py` example in the
 [SDK](python-sdk.md) does exactly that.
@@ -362,6 +393,16 @@ How much a run compresses depends on how idle the guest really is. A database
 that keeps running background tasks while your test sleeps uses machine time
 for them, and that time is never skipped.
 
+### Turning time compression off
+
+`--no-idle-skip` keeps the clock moving at its own rate while every vCPU is
+idle, instead of jumping to the next timer. Use it to see what a program does
+while it waits in real time, at the cost of the speed:
+
+```bash
+machine run app --no-idle-skip --within 10s
+```
+
 ## Waiting
 
 [`machine wait`](commands.md#machine-wait) doesn't drive anything. It watches a run, or several, and
@@ -393,6 +434,10 @@ At the [control prompt](#interactive-mode) the two are `/run until` and
 prompt waits. `timeout 5` makes it wait 5 seconds, for a run another session
 drives.
 
+From Python, `run.run(until="console~ready", within="30s")` drives until a
+condition, and `run.wait(for_="stopped", timeout=60)` waits for one without
+driving. [Bounding a drive](python-sdk.md#bounding-a-drive) shows both.
+
 ## Inspecting a run
 
 | Command | Shows |
@@ -412,6 +457,20 @@ drives.
 
 [`machine output`](commands.md#machine-output) also takes `--entries`, if you only want what a few
 entries printed.
+
+The run's log is a list of entries, one for each time the machine stopped,
+with why it stopped and where. [`machine entries`](commands.md#machine-entries)
+reads it, and `-f` follows new entries as the run records them:
+
+```bash
+machine entries app -n -20      # the last 20 entries
+machine entries app -n 100:120  # entries 100 to 120
+machine entries app -f
+```
+
+With many runs, `machine runs --roots` shows one row for each tree, with how
+many of its runs are running, and `--not-synced` shows the runs nothing has
+been published from yet.
 
 ### Finding a line
 
@@ -481,6 +540,18 @@ machine output app -n : --plain > boot.log    # the text alone
 On a terminal, a control character the guest printed shows as text, such as
 `␛[?25l`, and your terminal does not act on it. Colors stay colors. A pipe or a
 file gets every byte as the guest printed it.
+
+From Python, `run.output.find` returns the first match, with the entry that
+printed it and a `place` that `go` takes, and `run.output.search` yields the
+matches one at a time:
+
+```python
+hit = run.output.find("Linux version", from_="^booted")
+branch = run.go(hit.place)
+
+for match in run.output.search("ERROR", from_="^booted", to="^done"):
+    print(match.entry_id, match.text)
+```
 
 ### Sources
 
@@ -951,6 +1022,17 @@ through a whole session this way, on ClickHouse.
 `machine exec` uses the serial port `ttyS3` for its requests. A program in the
 machine that reads `ttyS3` takes them.
 
+From Python, `run.exec(["cat", "/etc/hostname"])` runs a program and returns a
+`Process` with `exit_code`, `stdout` and `stderr`. A string is a shell line,
+`container="db"` and `user="root"` pick where it runs, and `wait=False`
+returns at once with the process's id:
+
+```python
+proc = run.exec("ls /data", container="app")
+print(proc.exit_code, proc.stdout)
+```
+
+
 ## Copying files
 
 [`machine put`](commands.md#machine-put) copies a file of your machine into the
@@ -1006,6 +1088,11 @@ with the same operands and options: `/put ./app.conf /etc/app.conf`.
 A machine whose disk was built before `put` used this path still takes a file,
 far slower. Rebuild the disk to get the speed.
 
+From Python, `run.put("./app.conf", "/etc/app.conf")` puts a file in, and
+`source` can be bytes. `run.get("/var/log/app.log", "./app.log")` gets one out,
+and without a destination the `Got` it returns carries the bytes in `data`.
+Both take `container=`.
+
 ## Core dumps
 
 [`machine core`](commands.md#machine-core) has a process dump a core and copies
@@ -1027,6 +1114,9 @@ gdb ./app ./app.core
   `--signal SEGV`.
 - The first process of a container dumps no core. Run your program under an
   init, `init: true` in the Compose file, so it is not the first.
+
+From Python, `run.core(412, "./app.core")` gets the core of process 412, and
+`container="db"` names the process by its pid in that container.
 
 ## Profiling
 
@@ -1113,6 +1203,10 @@ and you get the same samples.
 - Samples are taken 250 times a second on each CPU.
 - C++ names are printed as the program has them. Pipe `--folded` through
   `c++filt` to read them.
+
+From Python, `run.profile("5s", container="db")` returns a `Profile` with
+`samples`, `functions`, `stacks` and the `folded` text, and
+`run.profile(from_="^slow", to="^done")` profiles a stretch already recorded.
 
 ## Interactive mode
 
@@ -1227,6 +1321,87 @@ are. `/switch app/exact` moves onto it, and `/describe:app/exact` shows
 [`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) prints the
 history of the commands you have issued.
 
+### Keys
+
+The prompt edits a line the way your shell does.
+
+| Key | Does |
+|---|---|
+| Tab | completes a command, and after `/h` a command or a type |
+| Up, Down | walk the commands typed at this prompt, the last 500; they are not saved when it closes |
+| Ctrl+C | cancels the run, checkpoint or hash in progress, and keeps the prompt |
+| Ctrl+D, `/q` | leaves the prompt; the run carries on as it was |
+| `;` | runs the next command after this one, and stops at the first that fails: `/s;/d` |
+| `;+` | runs the next command whatever this one did: `/replay;+/diff` |
+
+Quotes work as in a shell, so a `;` inside quotes is part of the word:
+`/send "a;b"` types `a;b`. A line with a quote left open continues on the next
+one, at a `>` prompt.
+
+### Running at the prompt
+
+`/run` drives the machine as [`machine run`](commands.md#machine-run) does, and
+every option of `machine run` is a word: `--until` is `until`, `--within` is
+`within`, `--irq-delay` is `irq-delay`. Two shorter forms pick the mode: `/f`
+runs fast and `/s` steps. A suffix picks the vCPU and the number of dispatches:
+`=N` drives vCPU N alone, and `@N` runs N dispatches.
+
+```text
+/f until console~ready within 30s
+/s@20
+/f=1@10
+/run@50 mode fast,step seed 3
+/run@200 task-sched keep:hold:yield task-slice 10us:600us seed 7
+```
+
+The first runs fast until `ready` appears on the console, or for 30 seconds of
+the machine's time. `/s@20` steps 20 dispatches, and `/f=1@10` runs vCPU 1 fast
+for 10 dispatches. The last two draw something per dispatch from a seed: the
+mode, then what the focused tasks do and how long each runs, as
+[Schedules](#schedules) describes. `/h run` lists every word.
+
+### Reading another run
+
+A command that reads a run takes `:RUN` to read another one without switching
+to it: `/describe:app/exact`, `/checkpoints:app/try-1`, `/entries:app -20`,
+`/lineage:parent`, `/d:app/try-1 regs`. Where you stand stays the same.
+
+### Words that differ from the command line
+
+Most slash commands are `machine` commands with the run's name left out and the
+options of commands that act written as words. These differ:
+
+| At the prompt | On the command line |
+|---|---|
+| `/go to ^42` | `machine go app ^42` |
+| `/go up`, `/go down`, `/go back`, `/history` | none: the prompt's own record of the branches you visited |
+| `/delete try-1 recursive force` | `machine delete app/try-1 -r -f`; the prompt refuses the branch you are on |
+| `/mark good`, `/mark -good`, `/marks` | `machine marks add`, `remove`, `list` |
+| `/vcpu=1` | `machine vcpu app --vcpu 1` |
+| `/d regs` | `machine dump app --show regs` |
+| `/checkpoint booted` | `machine checkpoint app booted`; `/checkpoint name booted` also works |
+| `/auto-checkpoints 10000` | `machine run app --auto-checkpoints 10000`, at the prompt a setting that stays |
+| `/now` | none: the run's time, entry, vCPU and RIP in one line |
+
+`create`, `start`, `stop`, `pause`, `resume`, `kill`, `runs`, `sessions` and
+`disks` have no slash command. Use them from the command line beside the prompt.
+
+### Scripts and history
+
+`-c` sends one line and exits, so a script can use the prompt's syntax. A line
+can chain commands:
+
+```bash
+machine control app -c '/checkpoint name before'
+machine control app -c '/f until console~done within 60s;/d regs'
+machine control log app
+machine control log app --wide
+```
+
+[`machine control log`](commands.md#machine-control) lists every command that
+changed the run, from the prompt or the command line, with the entry where it
+was issued. Commands that only read are not listed. `--wide` adds columns.
+
 ## Stopping and starting
 
 ```bash
@@ -1251,6 +1426,20 @@ refuse instead.
 earlier checkpoint, and `--read-only` opens a checkpoint without running it
 at all.
 
+```bash
+machine start app --at ^booted              # replay from booted to the end of the log
+machine start app --read-only --at ^booted  # the machine at booted, to read
+machine start app --no-recover              # refuse rather than replay the tail
+```
+
+`--at` brings the run up at the checkpoint and replays every entry after it,
+so the run ends at its tip as it would have without the option, and you see
+that the recording still replays. A read-only run accepts commands that read,
+such as [`machine dump`](commands.md#machine-dump), [`machine hash`](commands.md#machine-hash)
+and [`machine output`](commands.md#machine-output), and refuses `run` and
+anything that would record. Stop it, and start it again without `--read-only`
+to go on.
+
 A run remembers the options you created it with: `--no-daemon`,
 `--single-step`, `--limit` and `--backstop-limit`. Every `start` and `fork`
 repeats them, so you type them once. `start` takes the same flags to change
@@ -1274,6 +1463,15 @@ remove a run that has branches, unless you add `--recursive`. And since
 checkpoints. Add `--no-wait` and it returns as soon as the delete is accepted,
 after stopping the machine if you asked it to. The delete carries on either
 way, and [`machine ops`](commands.md#machine-ops) shows how it went.
+
+A delete that was interrupted, by a lost connection or a stopped service,
+finishes when you run the same `delete` again. `--cleanup -a` finishes every
+interrupted delete at once, and `--dry-run` lists them first:
+
+```bash
+machine delete --cleanup -a --dry-run
+machine delete --cleanup -a
+```
 
 To continue a run in a different session, publish it first from the session that has it.
 

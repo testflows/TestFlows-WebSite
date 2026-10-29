@@ -88,11 +88,28 @@ last thread that could run, there is no next decision coming, so force one
 with [`machine irq app preempt --vcpu all`](commands.md#machine-irq).
 
 There is also `pin`, which places a thread on the vCPUs you choose the next
-time it wakes. Run [`machine tasks pin`](commands.md#machine-tasks-pin) `--help` to see how to name them.
+time it wakes:
+
+```bash
+machine tasks app pin 56 2      # on vCPU 2
+machine tasks app pin 56 0-1    # on vCPU 0 or 1
+machine tasks app pin 56 none   # on no vCPU, so it does not run
+machine tasks app pin 56 free   # on any vCPU again
+```
+
+A set is one vCPU or a range, both ends included. A pin decides where the
+thread goes when it wakes, so a thread already queued on another vCPU stays
+there until then. `none` keeps a thread from running at all, until you pin it
+somewhere again.
 
 Two more things you can ask of `tasks`. [`machine tasks app exits`](commands.md#machine-tasks-exits) lists the
 tasks that have left and how each one ended, and [`machine tasks app cgroups`](commands.md#machine-tasks-cgroups)
 groups them by cgroup. `--focused` shows only the tasks you are steering.
+
+From Python, the same verbs are `run.tasks.hold(56)`, `run.tasks.release(56)`,
+`run.tasks.yield_(56)`, `run.tasks.slice(56, "10us")` and
+`run.tasks.pin(56, "2")`. `run.tasks.exits()` and `run.tasks.cgroups()` read
+the other two lists.
 
 ## Plans
 
@@ -119,6 +136,46 @@ machine plan app plan.txt
 machine run app
 ```
 
+A clause draws any of these, once per dispatch:
+
+| Axis | Draws |
+|---|---|
+| `mode` | how the machine runs: `fast`, `step`, `step-into`, `free`, `fence` or `keep`, with the length of a stretch as `fast=1:100k` |
+| `task-sched` | what the task on the vCPU does: `keep`, `hold`, `yield`, `drain`, `drain-all` |
+| `task-int` | whether to preempt that task: `none` or `preempt` |
+| `task-slice` | how long that task runs between decisions: `keep:default:10us:600us` |
+| `task-pin` | where a task goes when it next wakes: a vCPU set, `free` or `none` |
+| `vtime-rate` | how fast the machine's clock passes, as in [Clock rate](#clock-rate) |
+| `vtime-add` | time added to the clock before the dispatch, such as `10us:2ms` |
+| `timer-slack` | how late a timer may be, such as `0:20ms` |
+| `irq-delay` | how long each interrupt is held, as in [Holding interrupts](#holding-interrupts) |
+
+Every axis but `task-slice` is a comma list of choices, and `[N]` makes a
+choice N times as likely: `mode step[3],fast[1]` draws step three times as
+often as fast. `keep` draws nothing and leaves the axis as it was, so a clause
+can leave an axis alone part of the time. A range such as `1:200` draws one
+value from it, and the plan's `--seed` makes every draw repeatable.
+
+A `when` names what a task is doing: `/path:on` for a program running its own
+code, `/path:kernel` in the kernel, `/path:syscall=openat` in one system call. The
+subject can also be `tid=N`, `tgid=N`, `comm=NAME` or `cgroup=PATH`, and
+`vcpu=1` narrows it to one vCPU. Braces may group a clause, `#` starts a
+comment, and a file named `-` is read from standard input.
+
+```
+# Find the race: interrupt the writer, and move it between vCPUs.
+when /usr/bin/app:on            mode step[3],fast[1] step=1:200 fast=1:50k
+when tid=56:on                  task-int none[4],preempt[1]
+else                            mode fast  task-pin 56=golden:2[3],3[1]
+```
+
+The plan applies to the run of that `machine plan` command alone. A later
+`machine run` runs without it.
+
+From Python, `run.plan("plan.txt", seed=3)` runs a plan from a file, and the
+`RunResult` it returns lists each clause with the iterations it applied to. The
+`plan_file.py` example shows one.
+
 ## Interrupts
 
 Inject an interrupt by name or number.
@@ -129,6 +186,14 @@ machine irq app preempt --vcpu 1
 
 The interrupt is queued, then delivered at the next boundary and recorded
 there, so a replay delivers it at the same place.
+
+`--nmi` delivers a non-maskable interrupt instead, which reaches a vCPU even
+while the guest has interrupts turned off, so you can test how a program or
+the kernel handles one:
+
+```bash
+machine irq app --nmi --vcpu 0
+```
 
 ### Holding interrupts
 
@@ -174,6 +239,42 @@ machine vtime app add 5s
 
 There is no way back. The machine's clock only goes forward, so to return to an
 earlier time, branch there with [`machine go app 1.5s`](commands.md#machine-go).
+
+### Starting date
+
+Every machine's clock starts at 2026-03-01 00:00 UTC, whatever the date is on
+your computer, so a program that reads the date reads the same one in every
+run. To test code that depends on the date, such as a certificate that
+expires or a job that runs at the end of a month, give the start as a Unix
+timestamp when you create the run:
+
+```bash
+machine create app --disk app --vtime-base 1893456000   # 2030-01-01 00:00 UTC
+machine create app --disk app --vtime-base "$(date -d 2030-01-01T00:00:00Z +%s)"
+```
+
+The run keeps its starting date, and every branch of it has the same one.
+
+### Clock rate
+
+The machine's clock moves with the work the guest does: 10 nanoseconds for
+each conditional branch a vCPU retires, unless the run was created with
+`--vtime-rate`. A higher rate makes the same work take longer in the guest's
+eyes, which brings timeouts closer, and a lower one makes it faster. The rate
+is a number or a fraction:
+
+```bash
+machine vtime app rate 20      # the same work takes twice as long
+machine vtime app rate 1/2     # 0.5 ns a branch
+```
+
+The change is recorded, so a replay changes the rate at the same point. Idle
+time is a separate matter: [Time compression](running-a-machine.md#time-compression)
+skips it whatever the rate.
+
+From Python, `client.create("app", disk="app", vtime_base=1893456000)` sets
+the starting date, `run.vtime.rate("20")` the rate, and `run.vtime.add("5s")`
+pushes the clock forward.
 
 ## Fault injection
 
@@ -542,6 +643,10 @@ Faults and [plans](#plans) work together. Add the faults, then run the plan:
 the faults apply to every stretch of execution, whatever the plan chooses. To
 change them partway, stop, change them, and run on.
 
+From Python, `run.inject.add(...)` takes the same subsystem, errors and
+options, with `in_=` for `--in`, and `run.inject()` lists the faults with
+their counts. [The SDK's Faults](python-sdk.md#faults) has an example.
+
 ### What a fault misses
 
 - **A C function is not always the system call of its name, and C libraries
@@ -569,6 +674,7 @@ container while the others keep running:
 
 ```bash
 machine containers app stop db                   # SIGTERM, then SIGKILL after 10s
+machine containers app stop db --grace 2s        # SIGKILL after 2s of machine time
 machine containers app kill db                   # SIGKILL, no cleanup
 machine containers app crash db                  # a power cut: its volumes lose what was not synced
 machine containers app pause db --for 5s         # frozen for 5s, then thawed
@@ -653,3 +759,7 @@ machine exec app/cut run --container db -- psql -U postgres -c 'select count(*) 
 
 The run is deterministic, so the branch crashes at exactly that sync every
 time. Run on to the next sync and fork again to cut at another point.
+
+From Python, `run.containers.crash("db", restart="0")` and the other verbs
+take the same options as keywords. [The SDK's Container faults](python-sdk.md#container-faults)
+has an example.

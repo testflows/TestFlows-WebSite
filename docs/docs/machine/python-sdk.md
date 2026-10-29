@@ -85,6 +85,42 @@ the `machine` command. Without a session you can still read your account's runs:
 `client.runs()`, `client.branches()` and a run's `describe()`, `lineage()`
 and `checkpoints()` all work.
 
+`client.sessions` does what [`machine sessions`](commands.md#machine-sessions)
+does. A session is a context manager, so leaving the `with` block deletes it:
+
+```python
+with client.sessions.create("ci-1", cpus=4, mem=8192) as session:
+    print(session.name, session.state)
+```
+
+| Call | Does |
+|---|---|
+| `client.sessions.create(name, cpus=..., mem=..., storage=..., class_=...)` | creates a session and waits until it runs; `mem` is in MB and `storage` in GB |
+| `client.sessions()`, `client.sessions.show(name)` | lists them, or reads one |
+| `client.sessions.keep(name, minutes)` | keeps a session running idle for that long |
+| `client.sessions.rename(name, new_name)`, `client.sessions.delete(name)` | renames or deletes one |
+
+## Disks
+
+`client.disks` builds and manages disks, as [`machine disks`](commands.md#machine-disks)
+does. A build takes the same sources: `binary`, `from_`, `image` or `compose`.
+
+```python
+disk = client.disks.build("hello-py", from_="python:3.12-slim",
+                          add=["hello.py"], command=["python", "hello.py"])
+run = client.create("hello", disk=disk.name)
+```
+
+`image` and `compose` read your local Docker, as `--image` and `--compose` do.
+[Disks](disks.md) says what each source needs.
+
+| Call | Does |
+|---|---|
+| `client.disks()`, `client.disks.show(name)` | lists your disks, or reads one: `name`, `size_bytes`, `state`, `labels` |
+| `client.disks.rename(name, new_name)` | renames one |
+| `client.disks.delete(name)` | deletes one |
+| `client.preload.disk(name)`, `client.offload.disk(name)` | copies a disk into the session ahead of time, or drops the session's copy; `preload_and_offload.py` shows both |
+
 ## Runs
 
 Here is a typical run, from creating it to branching and replaying.
@@ -144,6 +180,14 @@ And the calls you will reach for most often:
 | `run.run(iters=0)`, `run.run(until="tid=412:at=main")`, `run.back()` | runs to the next hit, or until a task reaches a location; goes back onto a branch at the newest hit |
 | `run.tasks.signal(412, "SIGTERM")` | sends a task a signal; a replay sends it at the same instruction |
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
+| `run.start(at="^booted")`, `run.start(at="^booted", read_only=True)`, `run.start(recover=False)` | replays from a checkpoint to the tip, opens a checkpoint to read, or refuses to replay the tail, as [`machine start`](commands.md#machine-start) does |
+| `run.fork(from_="^booted", name="b")`, `run.rewind("^booted")` | a branch forked at the checkpoint before a point and replayed to it; the run put back at a checkpoint |
+| `run.sync()`, `run.cancel()` | publishes the run to your storage; cancels the drive or checkpoint in progress |
+| `run.keep()` | keeps a run created in a `with` block when the block exits, such as one that just failed, with its tree |
+| `run.marks.add("good")`, `run.marks.list()`, `run.marks.remove("good")`, `client.marks.list()` | names a branch, as [Marks](checkpoints-and-branches.md#marks) describes; the last lists every mark |
+| `run.tasks.hold(56)`, `.release(56)`, `.yield_(56)`, `.slice(56, "10us")`, `.pin(56, "2")` | steers one thread, as [Holding threads](steering-programs.md#holding-threads) describes |
+| `run.syscalls.counts("/usr/bin/app")`, `run.ints.counts(...)`, `run.vtime.add("5s")` | counts a task's system calls or interrupts; pushes the clock forward |
+| `run.debug.log(lines=-20)`, `run.debug.err()`, `run.control.log()` | the run's debug output, its error log, and the commands issued to it |
 
 Every call returns a record with named fields, such as a `RunInfo` from
 `describe()` or a list of `TaskInfo` from `tasks()`. Call `as_json()` on one to get
@@ -159,6 +203,10 @@ tell you:
 | `vtime_elapsed` | how far the machine's clock moved, in nanoseconds |
 | `reached` | whether `until` held; `False` when `iters` ran out first |
 | `clauses` | each clause the drive drew from, with the iterations it applied to |
+| `entry_id` | the entry the drive ended at |
+| `entries` | where each vCPU stopped |
+| `hits` | the breakpoints, watchpoints and catchpoints the drive ended at; empty when none ended it |
+| `printed` | the lines the stops that print printed, in the order they hit |
 
 ```python
 done = run.run(iters=300, when="/app:on", mode="step")
@@ -168,6 +216,141 @@ for clause in done.clauses:
 
 `until` takes the conditions [`machine run`](commands.md#machine-run) `--until` does,
 including a machine time: `run.run(until="vtime=+10ms")`.
+
+### Bounding a drive
+
+`within` bounds a drive by the machine's clock, as `--within` does. With
+`until`, whichever comes first ends the drive, and `reached` says which it
+was. The machine checks the bound itself, so a slow host never ends the drive
+early:
+
+```python
+done = run.run(until="console~ready", within="30s")
+if not done.reached:
+    print("not ready after 30s of machine time")
+```
+
+`timeout` is different: it is how many seconds of your time the call waits,
+and it raises `Timeout` when they run out. To wait for a run that something
+else drives, such as another program or a run stopping in the background, use
+`run.wait`:
+
+```python
+run.stop(wait=False)
+run.wait(for_="stopped", timeout=60)
+```
+
+`for_` takes the predicates `machine wait` does: `ready`, `stopped`,
+`halted`, `entry>=N`, `vtime>=T`, `console~REGEX`, or a task event such as
+`/app:exit`.
+
+### Scheduling from Python
+
+Every option of `machine run` is a keyword. The draws described in
+[Schedules](running-a-machine.md#schedules) look like this, on a run whose
+program was focused with `run.focus.add("/app")` before `booted`, so that its
+branches have the focus too:
+
+```python
+for seed in range(10):
+    branch = run.fork(at="^booted", name=f"seed-{seed}")
+    done = branch.run(until="/app:exit", within="60s", mode="step,fast",
+                      step="1:200", task_sched="keep:hold:yield", seed=seed)
+```
+
+The `explore_seeds.py` example keeps the branches that fail and marks them.
+
+## Faults
+
+`run.inject` adds the faults [Fault injection](steering-programs.md#fault-injection)
+describes, with the same subsystems and options as keywords. Check the target
+first with `run.tasks.exist`, which raises `NotFound` when nothing runs it:
+
+```python
+run.tasks.exist(f"tgid={pid}")
+run.inject.add("syscall", ["open", "openat"], "ENOENT", in_=f"tgid={pid}", times=3)
+run.run(within="5s")
+for fault in run.inject():
+    print(fault.number, fault.syscall, fault.matched, fault.fired)
+run.inject.clear()
+```
+
+A C library opens a file with `open` or `openat`, depending on the library,
+so the fault takes both. `matched` counts the calls the fault saw and `fired`
+the ones it failed. A disk fault takes the file and the operation:
+
+```python
+run.inject.add("disk", in_="comm=dd", file="/var/data.bin", op="write")
+```
+
+The `fault_injection.py` example runs both and prints what the program saw.
+
+## Container faults
+
+`run.containers` puts a fault on one service of a Compose project, as
+[Container faults](steering-programs.md#container-faults) describes, while the
+others keep running. A crash loses what the service had not synced to the
+volumes its project names under `x-machine`:
+
+```python
+run.exec("echo synced > /data/kept && sync", container="app")
+run.exec("echo in memory > /data/lost", container="app")
+
+crashed = run.containers.crash("app", restart="0")
+print(crashed.volumes)                      # the volumes the crash cut
+run.run(within="5s")
+
+print(run.exec("ls /data", container="app").stdout)   # kept is there, lost is not
+```
+
+`stop`, `kill`, `start`, `pause`, `resume` and `throttle` work the same way.
+`stop` and `kill` take `restart=` as `crash` does, `stop` takes `grace=`,
+`fresh=True` starts a new container instead of the old one, `pause` and
+`throttle` take `for_=`, and `throttle` takes `cpus=`. `run.containers()` lists the containers with the
+service, name and state of each. The `container_crash.py` example builds a
+project, crashes one service and reads its volume after the restart.
+
+## Stopping at an event
+
+A catchpoint stops the run at an event of a task, as
+[`machine catch`](commands.md#machine-catch) does. The drive that reaches it
+returns the hit in `hits`:
+
+```python
+stop = run.breakpoints.catch("syscall", "open", "openat", in_="comm=cat")
+run.exec(["cat", "/etc/hostname"], wait=False)
+done = run.run(within="10s")
+for hit in done.hits:
+    print(hit.number, done.entry_id, hit.event)
+run.breakpoints.delete(stop.number)
+```
+
+The kinds are `exec`, `exit`, `fork`, `vfork`, `syscall`, `signal`, `load`,
+`unload`, `fault`, `io`, `throw`, `catch` and `rethrow`. An `io` catchpoint
+takes `file=` and `op=`, and stops at a file's disk request before any disk
+fault decides on it:
+
+```python
+run.breakpoints.catch("io", file="/var/lib/db/*/data.bin", op="write")
+```
+
+## Debugging a task
+
+`run.task(tid)` is a task to debug while the machine is stopped, by its tid,
+as [Debugging](debugging.md) describes for the command line:
+
+```python
+task = run.task(412)
+regs = task.registers()
+print(regs["rip"], regs["rsp"])
+print(task.read(regs["rsp"], 16))
+for frame in task.backtrace():
+    print(frame.level, frame.address, frame.function, frame.path)
+```
+
+The `debug_task.py` example stops at a catchpoint, reads the registers of the
+task that hit it, reads the path it was opening from its memory, and prints
+its stack.
 
 ## Points in a run's history
 
@@ -262,23 +445,46 @@ went wrong.
 | `InvalidArgument` | an argument is wrong, or a name matches more than one thing |
 | `NotRunning` | it exists, but it is not running |
 | `Conflict` | the request does not fit the thing's current state |
-| `Diverged` | a replay did not reproduce what was recorded |
-| `Timeout` | a wait ran out of time |
+| `NoCapacity` | no host of the session's class has room for it now; the same request can succeed later, or a smaller session or another class may fit |
+| `Diverged` | `play()` could not follow the recording; `replay()` returns a divergence in its result instead |
+| `Timeout` | a wait ran out of time; the work goes on in the service |
 | `ServiceUnavailable` | the service could not be reached |
 | `ApiError` | the service refused the request |
 
+A replay that does not reproduce the recording is a result, not an
+exception, so check it:
+
+```python
+result = branch.replay()
+if not result.converged:
+    print(branch.diff(entry=result.entry_id).diverged)
+```
+
+The exceptions you will usually handle are the ones with a way out. A full
+class can be retried or sized down, and a run that stopped can be started
+again:
+
 ```python
 try:
-    branch.replay()
-except machine.Diverged:
-    print(branch.diff())
+    session = client.sessions.create("ci-1", cpus=8)
+except machine.NoCapacity:
+    session = client.sessions.create("ci-1", cpus=4)
+
+try:
+    run.run(until="console~ready", within="60s")
+except machine.NotRunning:
+    run.start()
 ```
+
+The `error_handling.py` example goes through every exception.
 
 ## Examples
 
 The SDK comes with small scripts. Each one creates its own session and
 deletes it at the end. Most run as `python <script> --disk <name>`.
 `disks.py` builds the disk first and takes `--binary` and `--name`.
+`container_crash.py` builds its own disk too and takes `--name`, and deletes
+the disk at the end.
 
 | Script | Shows |
 |---|---|
@@ -299,6 +505,9 @@ deletes it at the end. Most run as `python <script> --disk <name>`.
 | `preload_and_offload.py` | preloads a disk onto the session, then drops the session's copy |
 | `ci_job.py` | a CI job with an API key, a session per job and an exit code |
 | `error_handling.py` | every error and how to recover from it |
+| `fault_injection.py` | fails a program's opens with a syscall fault and its synced write with a disk fault, and prints what the program saw and the fault counts |
+| `container_crash.py` | builds a Compose project with an `x-machine` volume, crashes one service, and reads what the volume kept; takes `--name` for the disk it builds |
+| `debug_task.py` | stops at a catchpoint on `open`, reads the task's registers, memory and stack |
 
 ## License
 

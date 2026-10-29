@@ -3306,9 +3306,9 @@ See also:
 
 Replay recorded entries from the parent lineage. See [Replay](replay.md).
 
-The command executes the recorded entries again. It checks each against the
-recording. A mismatch is a divergence. The command reports the entry, with the
-expected and actual values.
+The command executes the recorded entries again. During replay, Machine checks
+each entry against the original recording. If they don't match, Machine reports
+a divergence. It names the entry, with the expected and actual values.
 
 Without a line, the parent's entries are replayed. A fork at an entry leaves
 that entry with the parent. The branch starts at the next entry, so the entries
@@ -4076,8 +4076,7 @@ See also:
 
 ## machine branches
 
-Show the branch tree.
-See [The tree](checkpoints-and-branches.md#the-tree).
+Show the branch tree. See [The tree](checkpoints-and-branches.md#the-tree).
 
 The tree shows how each branch forked from its parent. Use `--running` to show
 only running branches.
@@ -4164,7 +4163,8 @@ See also:
 
 ## machine entries
 
-Show run log entries. See [Inspecting a run](running-a-machine.md#inspecting-a-run).
+Show run log entries.
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 An entry is one recorded event of the run, such as a vCPU run, an interrupt or a
 device input.
@@ -4226,9 +4226,9 @@ a run limits the listing to its tree. Use `--roots` for one row per tree, and
 
 ```
 machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value]
-             [--flag name[=value]] [--disk name|id] [--parents mode] [--synced |
-             --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse]
-             [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
+             [--flag name[=value]] [--disk name|id] [--parents mode]
+             [--synced | --not-synced] [--since date|age] [--until date|age] [--sort field]
+             [--reverse] [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
              [root]
 ```
 
@@ -4365,7 +4365,8 @@ See also:
 
 ## machine now
 
-Show where a run is. See [Inspecting a run](running-a-machine.md#inspecting-a-run).
+Show where a run is.
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The entry and the vtime are points for go, rewind, fork `--at` and detach
 `--at`. Nothing moves.

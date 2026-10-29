@@ -30,6 +30,16 @@ includes its ancestors' checkpoints, named in the ANCESTOR column. The point a
 branch was forked at is listed once, as its ancestor's checkpoint, because
 that is the one a fork there starts from.
 
+`--durable` lists only the checkpoints in your account's storage, the ones
+another session can start the run from:
+
+```bash
+machine checkpoints app --durable
+```
+
+From Python, `run.checkpoint("booted")` saves one and returns it, and
+`run.checkpoints()` lists them.
+
 ## Starting a branch
 
 [`machine fork`](commands.md#machine-fork) creates a new branch at a point. The branch runs in its own
@@ -50,6 +60,9 @@ the name you gave it. So [`machine fork app --name try-1`](commands.md#machine-f
 and a branch of `app/try-1` named `try-2` is `app/try-2`. That full name is what
 you use in every other command. [`machine lineage try-1`](commands.md#machine-lineage) says
 `Run not found`, and [`machine lineage app/try-1`](commands.md#machine-lineage) works.
+
+From Python, `run.fork(at="^booted", name="try-1")` returns the branch as a
+`Run`, so you drive it like any other: `branch.run(...)`, `branch.replay()`.
 
 ## Moving the machine
 
@@ -125,3 +138,6 @@ written with a percent sign.
 ```bash
 machine output %crashed
 ```
+
+From Python, `run.marks.add("crashed")` marks the branch, `run.marks.remove("crashed")`
+takes the mark off, and `client.marks.list()` lists every mark.

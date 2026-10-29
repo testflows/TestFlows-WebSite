@@ -62,3 +62,7 @@ At the [control prompt](running-a-machine.md#interactive-mode) the command is
 /fs ls /var/log at ^done
 /exec run sync;/checkpoint;/fs cat /var/log/app.log at now
 ```
+
+From Python, `run.fs.ls("/var/log", at="^done")` lists a directory,
+`run.fs.cat("/var/log/app.log", at="^done")` returns a file's bytes, and
+`run.fs.cp("/var/log", "./logs", at="^done", recursive=True)` copies it out.

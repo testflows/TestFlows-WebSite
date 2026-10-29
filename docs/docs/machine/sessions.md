@@ -11,7 +11,15 @@ machine sessions create ci-1 --cpus 4 --mem 8G
 
 `--cpus` sets the number of vCPUs, `--mem` the memory and `--storage` the
 disk space. `--class` picks the hardware class, and the default comes from your
-plan. The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
+plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
+the classes, with the CPU architecture of each. A run starts only in a session
+of the architecture it was recorded on.
+
+```bash
+machine sessions classes
+machine sessions create arm-1 --class <name>
+```
+ The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
 is. Add `--no-wait` if you would rather it didn't.
 
 Then Machine uses the new session in this terminal, so your next command goes
@@ -106,3 +114,7 @@ IDLE how long each session has gone without a command, and
 as `stopped idle`, with the idle time it reached under IDLE.
 In the control prompt, `/keep 30m` keeps the session you are driving, and the
 line under the clock shows the time left.
+
+From Python, `client.sessions` does the same: `create`, `use`, `show`, `keep`
+and `delete`. A session is a context manager, so a `with` block deletes it at
+the end. [The SDK's Sessions](python-sdk.md#sessions) has the calls.

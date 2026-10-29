@@ -153,17 +153,17 @@ put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
 machine account api-keys create ci --expiry 90
 ```
 
-The first session also sets up your account's storage, so it takes longer to
-create. To set the storage up before that, run
-[`machine account provision`](commands.md#machine-account-provision).
+When you create your first session, Machine sets up your account's storage
+first, so that session takes longer to create. To do that step on its own
+beforehand, run [`machine account provision`](commands.md#machine-account-provision).
 
 ## Your first run
 
-If you have not yet signed up, signed in and set up account storage, do that first: see [Signing up](getting-started.md#signing-up).
+If you have not yet signed up and signed in, do that first: see [Signing up](getting-started.md#signing-up).
 
-Here is a whole trip, from nothing to a branch. The program is one line of
-Python, and you need nothing installed but the client: no Docker and no
-compiler.
+This example creates a session, builds a disk, runs a program, saves a
+checkpoint and starts a branch from it. The program is one line of Python, and
+you need nothing installed but the client: no Docker and no compiler.
 
 First, create a session. Machine makes it the one your commands use.
 

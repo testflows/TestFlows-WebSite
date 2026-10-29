@@ -17,7 +17,8 @@ to change that, or `--retry 0` to try each entry once.
 `--to` stops at a point instead of the end. It takes a point as every command
 does: `--to ^booted` for a checkpoint, `--to '#300'` for an entry, `--to 10ms`
 for a time. The point is one of the line being replayed, so a checkpoint the
-parent took after the fork is a valid one.
+parent took after the fork is a valid one. `--trace` replays one iteration at
+a time and prints each entry as it goes, which is slower.
 
 Each entry holds hashes of the machine's state: its registers, its devices
 and its timers. A replay compares them all. A run created with `--mem-hash`
@@ -66,6 +67,69 @@ another run's log, name it: [`machine play app/try-1 app`](commands.md#machine-p
 machine play app/try-1 -n 16240:16243
 machine play app/try-1 --include irq random
 ```
+
+`--include` plays only the kinds of entry you name, and `--exclude` plays every
+kind but those.
+
+### Comparing entries
+
+`machine diff` compares one entry. A difference often starts a few entries
+before the one that shows it, so `--context` also prints the entries leading
+up to it, on both sides:
+
+```bash
+machine diff app/try-1 --entry 5000 --context 5      # a branch against the run it replayed
+machine diff app/try-1 app/try-2:4980 --entry 5000   # entry 5000 of try-1 against entry 4980 of try-2
+```
+
+Between two recordings, such as two branches with different seeds, a
+difference is expected: it shows where their paths parted.
+
+A replay that diverges is different. Every recording must replay, so a
+divergence is a bug in Machine, not in your program. Keep the run and the
+branch that diverged, and report it with the run's name, the entry
+`machine diff` names and the command that replayed it. The recording is what
+reproduces the bug.
+
+### At the control prompt
+
+Replay and diff are one loop at the [control prompt](running-a-machine.md#interactive-mode).
+Open it on the branch, and chain the two with `;+`, so `/diff` runs whether
+the replay converged or not:
+
+```bash
+machine control app/try-1
+```
+
+```text
+/replay to ^booted;+/diff
+/diff 120 regs
+/diff 120 context 5
+/play 295:300 +irq
+```
+
+`/replay` takes `to`, `retry` and `trace` as words. `/diff 120 regs` compares
+entry 120 with its recording and shows only the registers, and `context 5`
+adds the five entries before it. `/play` feeds the parent's entries 295 to 300
+without checking them, here only the interrupts.
+
+### From Python
+
+`run.replay()` returns the result instead of raising. Check `converged`, and
+`diverged` holds what differed:
+
+```python
+kid = run.fork(at="^booted", name="check", start=False)
+run.run(iters=200)
+kid.start()
+result = kid.replay()
+if not result.converged:
+    print(result.entry_id, result.diverged)
+    print(kid.diff(entry=result.entry_id).diverged)
+```
+
+`run.replay(to="^booted", retry=5, trace=True)` takes the options of the
+command. [The SDK](python-sdk.md) has the rest.
 
 ## Comparing two machines
 

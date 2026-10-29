@@ -45,6 +45,14 @@ argument `3`:
 machine disks build --binary ./data-race race -- 3
 ```
 
+From Python, `client.disks.build` takes the same sources as keywords:
+`binary=`, `from_=`, `image=` or `compose=`, with `command=` for the arguments
+after `--`. [The SDK's Disks](python-sdk.md#disks) has the rest.
+
+```python
+disk = client.disks.build("race", binary="./data-race", command=["3"])
+```
+
 ## Programs that need a runtime
 
 A program that is not a static executable needs an image that already contains
