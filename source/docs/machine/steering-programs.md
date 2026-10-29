@@ -180,8 +180,8 @@ fired on. For a program that connects once, it shows that one call failed. The
 seed is drawn, so yours differs:
 
 ```
-#   SYSCALL        ERRORS                   DELAY        IN               FIRES                 PROB       SEED  MATCHED   FIRED
-1   connect        ECONNREFUSED             -            /usr/bin/app     every call               1 1820473361        1       1
+#   INJECT                 ERRORS                   DELAY        IN               FIRES                 PROB       SEED  MATCHED   FIRED
+1   syscall connect        ECONNREFUSED             -            /usr/bin/app     every call               1 1820473361        1       1
 ```
 
 The guest kernel decides at each call, and the run records every fault you
