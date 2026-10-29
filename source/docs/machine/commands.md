@@ -6346,12 +6346,13 @@ machine inject [-h] run command ...
 Examples:
 
 ```
-machine inject run1                                    the faults, counted
-machine inject run1 add syscall connect EIO --in /app  every connect
-machine inject run1 add disk --prob 0.01 --in all      a request in 100
-machine inject run1 add slab --times 1 --in tgid=412   one allocation
-machine inject run1 delete 2                           the second fault
-machine inject run1 clear                              every fault
+machine inject run1                                       the faults
+machine inject run1 add syscall connect EIO --in /app     every connect
+machine inject run1 add disk --prob 0.01 --in all         a request in 100
+machine inject run1 add slab --times 1 --in tgid=412      one allocation
+machine inject run1 add disk-corrupt --file /db --in all  a file
+machine inject run1 delete 2                              the second fault
+machine inject run1 clear                                 every fault
 ```
 
 See also:
@@ -6366,8 +6367,11 @@ See also:
 Inject a fault into a subsystem of the guest.
 
 The subsystem is syscall, or one of the kernel's own fault sites: disk,
-disk-timeout, slab, pages, usercopy and futex-access. Every subsystem takes the
-same options, with the same meaning.
+disk-timeout, slab, pages, usercopy and futex-access. The subsystems
+disk-corrupt, disk-torn and disk-lost are faults of the disk itself.
+
+Every subsystem takes the same options, with the same meaning. The disk
+subsystems also take `--file`, `--op` and `--sectors`.
 
 A fault fires on every matching call by default. Use `--prob` to fire on a call
 by chance. A `--prob` of 0 fires on none and counts the matches.
@@ -6386,6 +6390,7 @@ machine inject run1 add syscall openat ENOENT --in /app      fail
 machine inject run1 add syscall read --delay 2ms --in /app   wait
 machine inject run1 add disk --times 3 --in /app             three requests
 machine inject run1 add pages --after 99 --times 1 --in all  the 100th
+machine inject run1 add disk-lost --file /db/wal --in all    lose
 ```
 
 See also:
@@ -6470,12 +6475,23 @@ kernel's flusher threads submit buffered writes later, so `--in` all or a
 kworker comm matches those. A request the kernel splits counts once for each
 part.
 
+A buffered read is a readahead request, then one more read of the page when the
+readahead fails. With `--times` 1 the kernel's second read succeeds and the
+program reads the file. Use `--times` 2 or no limit to return EIO to the
+program. An O_DIRECT read fails on its first request.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. A file matches from
+its next open. Buffered writes reach the disk from the kernel's flusher, so use
+`--in` all with `--file`.
+
 The guest kernel decides at the kernel's own fault site. It decides after the
 checks that keep a promised operation from failing. A site takes no errors and
 no delay, because it fails its own way.
 
 ```
 machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+                            [--file pattern] [--op {read,write}] [--sectors lo:hi]
 ```
 
 | Option | Does |
@@ -6485,18 +6501,23 @@ machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | Requests of one operation (default: both) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
 
 Examples:
 
 ```
 machine inject run1 add disk --in all              every block request
 machine inject run1 add disk --prob 0.1 --in /app  a request in ten
+machine inject run1 add disk --file /db --in all   one file
 ```
 
 See also:
 
 - [`machine inject`](#machine-inject)
 - [`machine inject add disk-timeout`](#machine-inject-add-disk-timeout)
+- [`machine inject add disk-corrupt`](#machine-inject-add-disk-corrupt)
 
 ### machine inject add disk-timeout
 
@@ -6507,13 +6528,19 @@ dropped when the disk answers. The guest's disk driver has no timeout handler,
 so the request never completes and the task waiting on it hangs. The tasks that
 submit a request are as for disk.
 
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. A file matches from
+its next open. Buffered writes reach the disk from the kernel's flusher, so use
+`--in` all with `--file`.
+
 The guest kernel decides at the kernel's own fault site. It decides after the
 checks that keep a promised operation from failing. A site takes no errors and
 no delay, because it fails its own way.
 
 ```
 machine inject run add disk-timeout [-h] --in who [--prob p] [--after n] [--times n]
-                                    [--seed n]
+                                    [--seed n] [--file pattern] [--op {read,write}]
+                                    [--sectors lo:hi]
 ```
 
 | Option | Does |
@@ -6523,6 +6550,9 @@ machine inject run add disk-timeout [-h] --in who [--prob p] [--after n] [--time
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | Requests of one operation (default: both) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
 
 Examples:
 
@@ -6674,6 +6704,144 @@ See also:
 
 - [`machine inject`](#machine-inject)
 - [`machine inject add syscall`](#machine-inject-add-syscall)
+
+### machine inject add disk-corrupt
+
+Change bytes of reads and writes of the guest's disks.
+
+The disk stores a write with bytes changed, or returns a read with bytes
+changed. The request succeeds. The changed bytes are drawn from the fault's
+seed. A program's own reads of a written file come from the page cache until the
+guest drops it.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. A file matches from
+its next open. Buffered writes reach the disk from the kernel's flusher, so use
+`--in` all with `--file`.
+
+The guest kernel decides on each request in the task that submits it. The
+virtual disk then changes what it stores or returns. A replay makes the same
+decisions and changes the same bytes.
+
+```
+machine inject run add disk-corrupt [-h] --in who [--prob p] [--after n] [--times n]
+                                    [--seed n] [--file pattern] [--op {read,write}]
+                                    [--sectors lo:hi] [--bytes n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | Requests of one operation (default: both) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+| `--bytes n` | Bytes of the request to change, 1 to 4096 (default: 1) |
+
+Examples:
+
+```
+machine inject run1 add disk-corrupt --file '/db/*/c.bin' --in all  parts
+machine inject run1 add disk-corrupt --op read --in /app            reads
+machine inject run1 add disk-corrupt --bytes 8 --times 1 --in all   once
+machine inject run1 add disk-corrupt --sectors 0:7 --in all         sectors
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-torn`](#machine-inject-add-disk-torn)
+- [`machine catch add`](#machine-catch-add)
+
+### machine inject add disk-torn
+
+Store part of a write of the guest's disks.
+
+The disk stores the first sectors of a write and reports success. It stores one
+sector at least, and fewer than all. The rest keeps what the disk held. A sector
+is written whole, so a write of one sector does not tear.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. A file matches from
+its next open. Buffered writes reach the disk from the kernel's flusher, so use
+`--in` all with `--file`.
+
+The guest kernel decides on each request in the task that submits it. The
+virtual disk then changes what it stores or returns. A replay makes the same
+decisions and changes the same bytes.
+
+```
+machine inject run add disk-torn [-h] --in who [--prob p] [--after n] [--times n]
+                                 [--seed n] [--file pattern] [--sectors lo:hi]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+
+Examples:
+
+```
+machine inject run1 add disk-torn --file /db/wal --in all  torn writes
+machine inject run1 add disk-torn --times 1 --in all       one write
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-lost`](#machine-inject-add-disk-lost)
+
+### machine inject add disk-lost
+
+Lose writes of the guest's disks.
+
+The disk reports a write done and stores none of it. The disk keeps what it
+held, as a disk that lost its cache does.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. A file matches from
+its next open. Buffered writes reach the disk from the kernel's flusher, so use
+`--in` all with `--file`.
+
+The guest kernel decides on each request in the task that submits it. The
+virtual disk then changes what it stores or returns. A replay makes the same
+decisions and changes the same bytes.
+
+```
+machine inject run add disk-lost [-h] --in who [--prob p] [--after n] [--times n]
+                                 [--seed n] [--file pattern] [--sectors lo:hi]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+
+Examples:
+
+```
+machine inject run1 add disk-lost --file /db/wal --in all        lost writes
+machine inject run1 add disk-lost --after 10 --times 1 --in all  the 11th
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-torn`](#machine-inject-add-disk-torn)
 
 ### machine inject delete
 

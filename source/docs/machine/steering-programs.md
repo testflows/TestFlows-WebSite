@@ -145,10 +145,10 @@ earlier time, branch there with [`machine go app 1.5s`](commands.md#machine-go).
 
 `machine inject` makes things fail inside the machine. A fault goes into a
 subsystem: a program's system calls, or one of the kernel's own places where
-things can fail, such as the disk or memory allocation. You find out what your
-program does when `openat` says `EACCES`, `write` says `ENOSPC`, the disk
-returns an I/O error or the kernel runs out of memory, at the call you choose or
-by chance.
+things can fail, such as the disk or memory allocation, or the disk itself. You
+find out what your program does when `openat` says `EACCES`, `write` says
+`ENOSPC`, the disk returns an I/O error, the kernel runs out of memory, or the
+disk quietly returns the wrong bytes, at the call you choose or by chance.
 
 | Subsystem | What fails |
 |---|---|
@@ -158,11 +158,15 @@ by chance.
 | `slab`, `pages` | a kernel memory allocation fails, usually as `ENOMEM` |
 | `usercopy` | the kernel fails to copy to or from the program's memory: `EFAULT` |
 | `futex-access` | a futex call fails to reach the program's memory: `EFAULT` |
+| `disk-corrupt` | a disk read or write succeeds with bytes changed |
+| `disk-torn` | a write succeeds, but only its first sectors reach the disk |
+| `disk-lost` | a write succeeds, and none of it reaches the disk |
 
 Every subsystem takes the same options: `--in` for whose calls, `--prob` for the
 chance, `--after` to let calls through first, `--times` to stop after a number,
-and `--seed`. The guest kernel decides each call itself, without stopping the
-machine, and a replay fails exactly the same calls.
+and `--seed`. The disk subsystems also take `--file`, `--op` and `--sectors` to
+say which requests. The guest kernel decides each call itself, without stopping
+the machine, and a replay fails exactly the same calls.
 
 ### System calls
 
@@ -346,11 +350,91 @@ A few things decide whether you see the failure:
 - **The kernel copes with some failures.** A failed page allocation is often
   retried, and the program never sees it. `MATCHED` and `FIRED` in the list
   still show that the fault fired.
+- **The kernel reads a page twice.** A buffered read goes out as readahead,
+  and when that fails the kernel reads the page once more before it gives up.
+  `disk --times 1` fails only the first try, so your program reads the file
+  fine; that is the kernel recovering. Use `--times 2`, or no limit, for the
+  program to get `EIO`. An `O_DIRECT` read fails on its first request.
 - **`disk-timeout` hangs.** The request is lost, and the task waiting for it
   stays stuck until the machine stops. That is the point: you find out what
   else in the program notices. Name your program in `--in`: with `--in all`
   the lost request may be the kernel's own, and whatever waits on that disk
   hangs with it.
+
+### Damaged data on the disk
+
+The faults above are errors: your program is told something failed. Real disks
+also fail silently. A write reports success and the data is wrong, half there,
+or not there at all. `disk-corrupt`, `disk-torn` and `disk-lost` are those
+failures. The request succeeds, and the damage is found later, or never.
+
+| You want to know | Fault |
+|---|---|
+| Does the database notice a bad block when it reads its data files? | `disk-corrupt --file '/var/lib/db/*/data.bin'` |
+| Does the program trust bytes it read without a checksum? | `disk-corrupt --op read --file /srv/app/state.json` |
+| Does recovery handle a log record only half written? | `disk-torn --file /var/lib/db/wal --times 1` |
+| Does it notice a committed write that never arrived? | `disk-lost --file /var/lib/db/wal --after 10 --times 1` |
+| Does the filesystem survive damage to its own metadata? | `disk-corrupt --sectors 2048:4095` |
+
+```bash
+machine inject app add disk-corrupt --file '/var/lib/db/*/data.bin' --op write --bytes 8 --times 1 --in all
+machine inject app add disk-torn --file /var/lib/db/wal --times 1 --in all
+machine inject app add disk-lost --file /var/lib/db/wal --after 10 --times 1 --in all
+machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
+```
+
+- **`--file` is a pattern.** `*` matches within a directory and `**` across
+  directories. Programs often name their files as they run, and a pattern names
+  them before they exist. A file matches from its next open, the way `--in`
+  matches a program from its exec. A file inside a container is named by its path
+  in the container.
+- **`--in all` with `--file`.** Ordinary writes reach the disk from the kernel's
+  flusher, not from your program, so `--in all` is what reaches them. `--file`
+  keeps the fault on your file.
+- **The page cache hides a damaged write.** The kernel keeps the bytes your
+  program wrote in memory, so the program reads them back clean until they are
+  read from the disk again: after a restart, after
+  `echo 3 > /proc/sys/vm/drop_caches`, or in a branch forked later. A damaged
+  read is the other way round: the bad bytes go into the page cache, and every
+  reader sees them until the kernel drops the page.
+- **A tear is whole sectors.** A sector is written whole or not at all, so a
+  write of one sector does not tear. A torn write keeps at least one sector of
+  the new data and loses at least one.
+- **`--sectors` aims below the files.** It names 512-byte sectors of the disk,
+  so it reaches what `--file` cannot: the filesystem's inodes, bitmaps and
+  journal.
+
+A replay damages the same bytes, so a bug you find this way is found again on
+every replay of the run.
+
+**A worked example: ClickHouse.** ClickHouse writes each part of a table into a
+directory it names as it goes, such as `all_12_12_0`, and checks the part's
+checksums when it reads it back. To damage one column file of the next part
+written and see what ClickHouse does:
+
+```bash
+machine inject app add disk-corrupt --file '/var/lib/clickhouse/data/db/t/*/data.bin' \
+    --op write --bytes 8 --times 1 --in all
+machine exec app run -- clickhouse-client -q "INSERT INTO db.t SELECT number FROM numbers(1000000)"
+machine exec app run -- sync
+machine exec app run -- sh -c 'echo 3 > /proc/sys/vm/drop_caches'
+machine exec app run -- clickhouse-client -q "CHECK TABLE db.t"
+```
+
+To damage one part you have already seen, find its name first on a branch, and
+keep your run where it is:
+
+```bash
+machine fork app --name peek
+machine exec app/peek run -- clickhouse-client -q "INSERT INTO db.t SELECT number FROM numbers(1000000)"
+machine exec app/peek run -- sync
+machine checkpoint app/peek
+machine fs ls app/peek /var/lib/clickhouse/data/db/t --at now
+```
+
+Then add the fault on `app` with the exact path. The run is deterministic, so it
+writes the same part. An insert's part name holds; a merge's can change, because
+any fault changes how the machine runs a little. A pattern covers both.
 
 ### Stopping at a fault
 
@@ -359,6 +443,7 @@ To look at the program at the moment a fault fires, add a catchpoint for it:
 ```bash
 machine catch app add fault openat
 machine catch app add fault disk
+machine catch app add fault disk-corrupt
 machine run app
 ```
 
