@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793312405291" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793312405291" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793310722878" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793312405291" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -375,7 +375,7 @@ it, so delete it when you are done.</p>
 <p><strong>Run.</strong> A deterministic machine booting a disk inside a session. Every run has a
 name. Nearly every action is something you do to a run.</p>
 <p><strong>Entry.</strong> A run writes its history as a log. Each item in the log is
-an entry, so for example, entry #42 is always the same point in that run.</p>
+an entry. Entry #42 is always the same point in that run.</p>
 <p><strong>Checkpoint.</strong> A saved copy of the whole machine at one point in the log. Every
 run has checkpoint 1, taken at its first entry, and you can add your own and
 name them.</p>
@@ -464,7 +464,7 @@ need another platform,
 download yourself.</p>
 <p><strong>Behind a proxy that inspects TLS.</strong> The client trusts only Let’s Encrypt,
 which issues the certificate of the Machine API, so a certificate from any other
-CA is refused, a proxy’s included. The error names
+CA is refused, including a proxy’s. The error names
 <code>TESTFLOWS_MACHINE_API_CA_FILE</code>, an environment variable the client reads: set
 it to a PEM file of the CAs to trust instead, such as your proxy’s.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> TESTFLOWS_MACHINE_API_CA_FILE=/etc/ssl/certs/corporate-proxy-ca.pem</span><br></pre></td></tr></table></figure>
@@ -631,7 +631,7 @@ it exactly one source.</p>
 <td>a Compose project directory and the images its services name</td>
 </tr>
 </tbody></table>
-<p>Everything a machine runs runs in Docker Compose, inside the machine. A
+<p>Everything that runs in a machine runs under Docker Compose, inside the machine. A
 Compose project is one container for each of its services. An image or a binary
 is a project of one service, and <code>--entrypoint</code> and the arguments after <code>--</code> are
 that service’s entrypoint and command. A binary is no exception: <code>--binary</code>
@@ -922,8 +922,10 @@ plan. <a href="#machine-sessions-classes"><code>machine sessions classes</code><
 the classes, with the CPU architecture of each. A run starts only in a session
 of the architecture it was recorded on.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine sessions classes</span><br><span class="line">machine sessions create arm-1 --class &lt;name&gt;</span><br></pre></td></tr></table></figure>
-<p> The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
-is. Add <code>--no-wait</code> if you would rather it didn’t.</p>
+
+<p>The name is optional. Leave it off and Machine makes one up. Machine waits
+until the session is running and tells you when it is. Add <code>--no-wait</code> to
+return once the request is accepted.</p>
 <p>Then Machine uses the new session in this terminal, so your next command goes
 to it. Add <code>--no-use</code> to keep using the session you are on. A session created
 with <code>--no-wait</code> is not running yet, so it is not used.</p>
@@ -1070,9 +1072,9 @@ reseeds its own generator at once.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine rng app seed 7</span><br></pre></td></tr></table></figure>
 
 <p>The run records that seed, so a replay seeds the device at the same point. A
-guest kernel that reads the seed reseeds at once. Another reseeds at its next
-reseed. A run created with <code>--no-rng</code> has no device, and the command refuses
-it.</p>
+guest kernel that reads the seed reseeds at once. A kernel that does not
+read the seed picks it up the next time that kernel reseeds. A run created with <code>--no-rng</code> has no
+device, and the command refuses it.</p>
 <p>A branch can draw other random numbers than its parent. <a href="#machine-fork"><code>machine fork</code></a>,
 <a href="#machine-detach"><code>machine detach</code></a> and <a href="#machine-go"><code>machine go</code></a>
 take <code>--rng-seed</code>, and the new run’s device is seeded from it once the run is
@@ -1261,9 +1263,9 @@ network or a timer pays much less. Replaying a repeatable run is as fast as
 replaying any other.</p>
 <p><code>--timer-slack</code> is how late a timer may be while a program runs code that
 takes no exit. The default is 20ms, and it applies to every fast run. A timer
-that comes due in code that does exit is delivered at that exit. <code>0</code> keeps
-every timer on time, which records slowest. A drive can draw the slack for
-that drive:</p>
+that comes due in code that exits to the machine is delivered at that exit. <code>0</code> keeps
+every timer on time, and recording is slowest that way. A drive can draw the
+slack for that drive:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine run app --timer-slack 0:20ms</span><br></pre></td></tr></table></figure>
 
 <p><code>--limit-margin</code> is how many conditional branches short of an exact stop the
@@ -1791,8 +1793,8 @@ far slower. Rebuild the disk to get the speed.</p>
 <code>source</code> can be bytes. <code>run.get(&quot;/var/log/app.log&quot;, &quot;./app.log&quot;)</code> gets one out,
 and without a destination the <code>Got</code> it returns carries the bytes in <code>data</code>.
 Both take <code>container=</code>.</p>
-<h2 id="core-dumps"><a href="#core-dumps" class="headerlink" title="Core dumps"></a>Core dumps</h2><p><a href="#machine-core"><code>machine core</code></a> has a process dump a core and copies
-the core to your machine, where a debugger reads it with the program:</p>
+<h2 id="core-dumps"><a href="#core-dumps" class="headerlink" title="Core dumps"></a>Core dumps</h2><p><a href="#machine-core"><code>machine core</code></a> tells a process to generate a core
+dump and copies it to your computer, where a debugger reads it with the program:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine core app 412 ./app.core                    <span class="comment"># pid 412 of the machine</span></span><br><span class="line">machine core app 7 ./db.core --container db        <span class="comment"># pid 7 of a container</span></span><br><span class="line">gdb ./app ./app.core</span><br></pre></td></tr></table></figure>
 
 <ul>
@@ -2100,7 +2102,7 @@ one, and it can’t read as a time, like <code>10ms</code>, because a time names
 <p>Machine takes some of its own as well, named after the entry they were taken at
 (like <code>10000</code>), so <a href="#machine-checkpoints"><code>machine checkpoints app</code></a> lists yours next to those.</p>
 <p>The DURABLE column says whether a checkpoint is in your account’s storage or
-only in the session. A new checkpoint reads <code>no</code> until the run is published,
+only in the session. A new checkpoint shows <code>no</code> until the run is published,
 with <a href="#machine-sync"><code>machine sync app</code></a> or by stopping the machine. On a branch, the listing
 includes its ancestors’ checkpoints, named in the ANCESTOR column. The point a
 branch was forked at is listed once, as its ancestor’s checkpoint, because
@@ -2270,10 +2272,10 @@ there yourself.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">hash</span> app</span><br><span class="line">machine <span class="built_in">hash</span> app mem,disk</span><br><span class="line">machine <span class="built_in">hash</span> app/try-1 vcpu --vcpu 1</span><br></pre></td></tr></table></figure>
 
 <p>The command computes the hashes of the machine as it stands: memory, the
-disk, each device, each part of each vCPU, and the interrupts
-<a href="#holding-interrupts"><code>--irq-delay</code></a> holds, as
-<code>irq_pending</code>. It changes nothing, and the run records nothing. Memory is
-read from all of RAM, so it takes as long as that reading takes. The machine
+disk, each device, each part of each vCPU, and <code>irq_pending</code>, the hash of
+the interrupts <a href="#holding-interrupts"><code>--irq-delay</code></a> is
+holding. It changes nothing, and the run records nothing. Memory is read
+from all of RAM, so it takes as long as that reading takes. The machine
 refuses commands that would change it until the command returns.
 <a href="#machine-cancel"><code>machine cancel</code></a> stops it.</p>
 <p><a href="#machine-dump"><code>machine dump --show hash</code></a> prints what the newest
@@ -2445,8 +2447,8 @@ subject can also be <code>tid=N</code>, <code>tgid=N</code>, <code>comm=NAME</co
 comment, and a file named <code>-</code> is read from standard input.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># Find the race: interrupt the writer, and move it between vCPUs.</span><br><span class="line">when /usr/bin/app:on            mode step[3],fast[1] step=1:200 fast=1:50k</span><br><span class="line">when tid=56:on                  task-int none[4],preempt[1]</span><br><span class="line">else                            mode fast  task-pin 56=golden:2[3],3[1]</span><br></pre></td></tr></table></figure>
 
-<p>The plan applies to the run of that <code>machine plan</code> command alone. A later
-<code>machine run</code> runs without it.</p>
+<p>The plan applies only to that <code>machine plan</code>. A later <code>machine run</code> does not
+use it.</p>
 <p>From Python, <code>run.plan(&quot;plan.txt&quot;, seed=3)</code> runs a plan from a file, and the
 <code>RunResult</code> it returns lists each clause with the iterations it applied to. The
 <code>plan_file.py</code> example shows one.</p>
@@ -2840,7 +2842,7 @@ container while the others keep running:</p>
 <td><code>crash db --restart 0</code></td>
 </tr>
 <tr>
-<td>Do the peers notice a node that hangs without dying?</td>
+<td>Do the other services notice a node that hangs without dying?</td>
 <td><code>pause db --for 30s</code></td>
 </tr>
 <tr>
@@ -2852,9 +2854,9 @@ container while the others keep running:</p>
 <td><code>kill db --restart 0 --fresh</code></td>
 </tr>
 </tbody></table>
-<p>A container you stop, kill or crash stays down. <code>--restart</code> brings it back
-after that much machine time, or at once with <code>0</code>, so its peers run through
-the outage:</p>
+<p>A container you stop, kill or crash stays down. <code>--restart 5s</code> brings it back
+after 5 seconds of machine time, and <code>--restart 0</code> at once, so the other
+containers keep running through the outage:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine containers app <span class="built_in">kill</span> db --restart 5s</span><br><span class="line">machine containers app crash db --restart 0          <span class="comment"># a power cycle</span></span><br><span class="line">machine containers app <span class="built_in">kill</span> db --restart 0 --fresh   <span class="comment"># back from its image</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Killed compose-db-1 (db)</span><br><span class="line">  Starts again in 5s of the machine&#x27;s time, process 28493p1</span><br></pre></td></tr></table></figure>
@@ -3246,8 +3248,8 @@ checkpoint saved it, so it never changes how the machine executes.</p>
 
 <p>Every read names its checkpoint with <code>--at</code>, as a point: <code>^booted</code> for a
 checkpoint by name, or <code>&#39;#4200&#39;</code> for the checkpoint at an entry. There is no
-default. This is not a view of the running machine, and a listing that did not
-say how old it is would read as one.</p>
+default. This is not a view of the running machine. A listing that did not
+say how old it is would look like one.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine fs <span class="built_in">ls</span> app /tmp</span><br><span class="line">✗ Checkpoint required: the disk is <span class="built_in">read</span> <span class="built_in">where</span> a checkpoint saved it.</span><br><span class="line">  List the checkpoints machine checkpoints app</span><br><span class="line">  Or take one machine checkpoint app</span><br><span class="line">  Then name it --at ^&lt;name&gt;</span><br></pre></td></tr></table></figure>
 
 <p>A point with no checkpoint at it is refused, and the refusal names the
@@ -6496,7 +6498,7 @@ ran free too.</p>
 <p><code>--when</code> takes on, kernel and off. Each is a state, not an edge.</p>
 <p>The options of run make one clause of a plan. Use machine plan <code>&lt;run&gt;</code> <code>&lt;file&gt;</code>
 for a run of more than one clause.</p>
-<p>A hit of a breakpoint, watchpoint or catchpoint ends the run. Use <code>--iters</code> 0 to
+<p>A hit of a breakpoint, watchpoint or catchpoint ends the run. Use <code>--iters 0</code> to
 run until one does, as GDB’s continue does.</p>
 <p>Use <code>--back</code> to go back to the newest breakpoint, watchpoint or catchpoint hit
 before now, as reverse-continue does. The machine switches onto a branch at that
@@ -6958,7 +6960,7 @@ this run stands on must be on the line replayed.</p>
 at most twice. It is not replayed again once it diverges the same way twice. An
 entry that the host interrupted is replayed again the same way. It is not a
 divergence.</p>
-<p>Use <code>--retry</code> to set how many retries. <code>--retry</code> 0 replays each entry once. Use
+<p>Use <code>--retry</code> to set how many retries. <code>--retry 0</code> replays each entry once. Use
 <code>--limit-margin</code> to set how many conditional branches short of each recorded
 entry the CPU’s counter interrupts. A smaller margin makes a miss more likely.</p>
 <p>The replay stores what the branch keeps of its output. A branch that keeps an
@@ -8569,7 +8571,8 @@ hashes after the entry, with its exit handled.</p>
 <h2 id="machine-hash"><a href="#machine-hash" class="headerlink" title="machine hash"></a>machine hash</h2><p>Show the state hashes of the machine. Each is computed as it stands.
 See <a href="#comparing-two-machines">Comparing two machines</a>.</p>
 <p>The command prints a hash of memory. It prints a hash of the disk. Each device
-has a hash too. The interrupts run <code>--irq-delay</code> holds have a hash, irq_pending.</p>
+has a hash too. Interrupts held by <code>--irq-delay</code> have their own hash,
+irq_pending.</p>
 <p>Each vCPU has a hash of each part of its state. Each vCPU also has a hash of the
 whole machine. Each hash compares with another machine’s at the same point, such
 as a replay’s.</p>
@@ -9801,8 +9804,9 @@ replay acts at the same point.</p>
 <h3 id="machine-containers-stop"><a href="#machine-containers-stop" class="headerlink" title="machine containers stop"></a>machine containers stop</h3><p>Stop a container.</p>
 <p>The container’s processes get SIGTERM, and SIGKILL after the grace period. A
 program that handles SIGTERM exits on its own first.</p>
-<p>The container stays down. Use <code>--restart</code> to start it again after a time of the
-machine, 0 for at once. Its peers run through the time it is down.</p>
+<p>The container stays down. Use <code>--restart 5s</code> to start it again after 5 seconds
+of machine time, or <code>--restart 0</code> to start it at once. Other containers keep
+running while it is down.</p>
 <p>A container started again keeps its writable layer and its volumes. Use
 <code>--fresh</code> to start it from its image instead, as Compose recreates a service.
 Its volumes are kept.</p>
@@ -9855,8 +9859,9 @@ Its volumes are kept.</p>
 <h3 id="machine-containers-kill"><a href="#machine-containers-kill" class="headerlink" title="machine containers kill"></a>machine containers kill</h3><p>Kill a container.</p>
 <p>Every process of the container gets SIGKILL and no cleanup runs. What the
 programs wrote stays, since the guest’s kernel writes it out.</p>
-<p>The container stays down. Use <code>--restart</code> to start it again after a time of the
-machine, 0 for at once. Its peers run through the time it is down.</p>
+<p>The container stays down. Use <code>--restart 5s</code> to start it again after 5 seconds
+of machine time, or <code>--restart 0</code> to start it at once. Other containers keep
+running while it is down.</p>
 <p>A container started again keeps its writable layer and its volumes. Use
 <code>--fresh</code> to start it from its image instead, as Compose recreates a service.
 Its volumes are kept.</p>
@@ -9913,8 +9918,9 @@ journal when the container starts again.</p>
 the disk. A write the kernel finishes between the two is kept. A volume that
 another running container mounts is refused, since the cut would fail its writes
 too.</p>
-<p>The container stays down. Use <code>--restart</code> to start it again after a time of the
-machine, 0 for at once. Its peers run through the time it is down.</p>
+<p>The container stays down. Use <code>--restart 5s</code> to start it again after 5 seconds
+of machine time, or <code>--restart 0</code> to start it at once. Other containers keep
+running while it is down.</p>
 <p>A container started again keeps its writable layer and its volumes. Use
 <code>--fresh</code> to start it from its image instead, as Compose recreates a service.
 Its volumes are kept.</p>
@@ -10006,9 +10012,9 @@ writable layer is discarded and its volumes are kept.</p>
 <li><a href="#machine-containers"><code>machine containers</code></a></li>
 </ul>
 <h3 id="machine-containers-pause"><a href="#machine-containers-pause" class="headerlink" title="machine containers pause"></a>machine containers pause</h3><p>Freeze a container.</p>
-<p>The container’s processes stop where they are, in the cgroup freezer. Its peers
-see it hang. Use <code>--for</code> to thaw it after a time of the machine, or resume to
-thaw it.</p>
+<p>The container’s processes are frozen using the cgroup freezer. Other containers
+see it as unresponsive. Use <code>--for 5s</code> to thaw it after 5 seconds of machine
+time. Use resume to thaw it now.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine containers run pause [-h] [--for duration] container</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -10076,7 +10082,7 @@ thaw it.</p>
 <h3 id="machine-containers-throttle"><a href="#machine-containers-throttle" class="headerlink" title="machine containers throttle"></a>machine containers throttle</h3><p>Limit the CPU of a container.</p>
 <p>The container’s cgroup gets a CPU quota of the number of CPUs given. A number of
 0 lifts the limit. The limit goes with the container’s next start.</p>
-<p>Use <code>--for</code> to set back the limit it had after a time of the machine.</p>
+<p>Use <code>--for 30s</code> to restore the previous limit after 30 seconds of machine time.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine containers run throttle [-h] --cpus n [--for duration] container</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -10104,7 +10110,7 @@ thaw it.</p>
 </tr>
 <tr>
 <td><code>--for duration</code></td>
-<td>Set back the limit it had after this machine time, such as 30s</td>
+<td>Restore the previous limit after this machine time, such as 30s</td>
 </tr>
 </tbody></table>
 <p>Examples:</p>
@@ -10120,7 +10126,7 @@ thaw it.</p>
 <li><a href="#machine-tasks-slice"><code>machine tasks slice</code></a></li>
 </ul>
 <h2 id="machine-core"><a href="#machine-core" class="headerlink" title="machine core"></a>machine core</h2><p>Get a core dump of a process.</p>
-<p>The command has a process dump a core and copies the core to a file on this
+<p>The command tells a process to generate a core dump and copies it to your
 computer. A debugger reads the core with the program of the process. Use
 <code>--container</code> for a process of a container, by the pid it has there.</p>
 <p>Taking a core ends the process. The process dies of the signal. Use fork first
@@ -10197,9 +10203,9 @@ not be running. A stretch profiled twice gives the same samples.</p>
 <p>Use <code>--pid</code> or <code>--container</code> to show one process or one container. Use
 <code>--folded</code> to print every stack with its count, one a line. That text is what
 flame graph tools read. Use <code>--flame</code> to draw a flame graph in the terminal.</p>
-<p>The names come from the program files of the machine’s disk as it stands when
-the stretch ends. No checkpoint is taken. A function in a file that is not on
-the disk is shown by the file’s name.</p>
+<p>The names come from the program files on the machine’s disk when the stretch
+ends. No checkpoint is taken. A function in a file that is not on the disk is
+shown by the file’s name.</p>
 <p>Time in the kernel is one frame for each system call, named like read_[k].</p>
 <p>Without <code>--from</code> the machine runs for the time sampled. A machine that is idle
 has no samples.</p>
@@ -11143,7 +11149,8 @@ See <a href="#random-numbers">Random numbers</a>.</p>
 seed from create <code>--rng-seed</code>.</p>
 <p>Use seed to seed it again here. The run records the seed, and a replay seeds the
 device at the same point. A guest kernel that reads the seed reseeds its own
-generator at once. Another reseeds at its next reseed.</p>
+generator at once. A kernel that does not read the seed picks it up the next
+time that kernel reseeds.</p>
 <p>A run created with <code>--no-rng</code> has no RNG device, and the command refuses it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine rng [-h] run command ...</span><br></pre></td></tr></table></figure>
 
@@ -11340,8 +11347,8 @@ of a unit after it. A page the tgid cannot write is not written.</p>
 </ul>
 <h2 id="machine-backtrace"><a href="#machine-backtrace" class="headerlink" title="machine backtrace"></a>machine backtrace</h2><p>Show the stack of a task.</p>
 <p>Each frame is a function the task is in, the innermost first. The frames are
-walked by the call frame rules of the program files. Code with no rules is
-walked by its frame pointer.</p>
+walked by the call frame information of the program files. Code with no call
+frame information is walked by its frame pointer.</p>
 <p>The names come from the program files on the machine’s disk as it stands. A
 frame of a file the disk does not have is named by its file. A frame of a
 program built with debug information names its source line.</p>
@@ -11444,8 +11451,9 @@ too, and the call is abandoned.</p>
 <p>The task goes on at the instruction after the call, in its caller. The caller’s
 stack pointer and the registers the function saved are restored, as GDB’s return
 does. A value goes in rax.</p>
-<p>The registers come from the call frame rules of the program files on the
-machine’s disk. A function with no rules is refused.</p>
+<p>The registers come from the call frame information of the program files on the
+machine’s disk. Machine refuses the operation if the function has no call frame
+information.</p>
 <p>The write is part of the run, and a replay makes it again. Memory is not
 changed.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine return [-h] run tid [value]</span><br></pre></td></tr></table></figure>
@@ -13180,7 +13188,7 @@ tell you:</p>
 </tr>
 <tr>
 <td><code>printed</code></td>
-<td>the lines the stops that print printed, in the order they hit</td>
+<td>the lines printed by stops that print, in the order the stops hit</td>
 </tr>
 </tbody></table>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">done = run.run(iters=<span class="number">300</span>, when=<span class="string">&quot;/app:on&quot;</span>, mode=<span class="string">&quot;step&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> clause <span class="keyword">in</span> done.clauses:</span><br><span class="line">    <span class="built_in">print</span>(clause.clause, clause.matched)   <span class="comment"># when /app:on mode step×246  246</span></span><br></pre></td></tr></table></figure>
@@ -13188,8 +13196,7 @@ tell you:</p>
 <p><code>until</code> takes the conditions <a href="#machine-run"><code>machine run</code></a> <code>--until</code> does,
 including a machine time: <code>run.run(until=&quot;vtime=+10ms&quot;)</code>.</p>
 <h3 id="bounding-a-drive"><a href="#bounding-a-drive" class="headerlink" title="Bounding a drive"></a>Bounding a drive</h3><p><code>within</code> bounds a drive by the machine’s clock, as <code>--within</code> does. With
-<code>until</code>, whichever comes first ends the drive, and <code>reached</code> says which it
-was. The machine checks the bound itself, so a slow host never ends the drive
+<code>until</code>, the one that happens first ends the drive, and <code>reached</code> says which. The machine checks the bound itself, so a slow host never ends the drive
 early:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">done = run.run(until=<span class="string">&quot;console~ready&quot;</span>, within=<span class="string">&quot;30s&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> done.reached:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;not ready after 30s of machine time&quot;</span>)</span><br></pre></td></tr></table></figure>
 
@@ -13616,10 +13623,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793310722879"></script>
-<script src="/js/machine-hero-type.js?v=1793310722879"></script>
-<script src="/js/download-platforms.js?v=1793310722879"></script>
-<script src="/js/anchor-case.js?v=1793310722879"></script>
+<script src="/js/index-code-type.js?v=1793312405291"></script>
+<script src="/js/machine-hero-type.js?v=1793312405291"></script>
+<script src="/js/download-platforms.js?v=1793312405291"></script>
+<script src="/js/anchor-case.js?v=1793312405291"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

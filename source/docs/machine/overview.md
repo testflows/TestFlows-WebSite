@@ -40,7 +40,7 @@ it, so delete it when you are done.
 name. Nearly every action is something you do to a run.
 
 **Entry.** A run writes its history as a log. Each item in the log is
-an entry, so for example, entry #42 is always the same point in that run.
+an entry. Entry #42 is always the same point in that run.
 
 **Checkpoint.** A saved copy of the whole machine at one point in the log. Every
 run has checkpoint 1, taken at its first entry, and you can add your own and

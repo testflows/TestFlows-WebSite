@@ -206,7 +206,7 @@ tell you:
 | `entry_id` | the entry the drive ended at |
 | `entries` | where each vCPU stopped |
 | `hits` | the breakpoints, watchpoints and catchpoints the drive ended at; empty when none ended it |
-| `printed` | the lines the stops that print printed, in the order they hit |
+| `printed` | the lines printed by stops that print, in the order the stops hit |
 
 ```python
 done = run.run(iters=300, when="/app:on", mode="step")
@@ -220,8 +220,7 @@ including a machine time: `run.run(until="vtime=+10ms")`.
 ### Bounding a drive
 
 `within` bounds a drive by the machine's clock, as `--within` does. With
-`until`, whichever comes first ends the drive, and `reached` says which it
-was. The machine checks the bound itself, so a slow host never ends the drive
+`until`, the one that happens first ends the drive, and `reached` says which. The machine checks the bound itself, so a slow host never ends the drive
 early:
 
 ```python

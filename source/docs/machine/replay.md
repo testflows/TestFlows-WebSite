@@ -143,10 +143,10 @@ machine hash app/try-1 vcpu --vcpu 1
 ```
 
 The command computes the hashes of the machine as it stands: memory, the
-disk, each device, each part of each vCPU, and the interrupts
-[`--irq-delay`](steering-programs.md#holding-interrupts) holds, as
-`irq_pending`. It changes nothing, and the run records nothing. Memory is
-read from all of RAM, so it takes as long as that reading takes. The machine
+disk, each device, each part of each vCPU, and `irq_pending`, the hash of
+the interrupts [`--irq-delay`](steering-programs.md#holding-interrupts) is
+holding. It changes nothing, and the run records nothing. Memory is read
+from all of RAM, so it takes as long as that reading takes. The machine
 refuses commands that would change it until the command returns.
 [`machine cancel`](commands.md#machine-cancel) stops it.
 

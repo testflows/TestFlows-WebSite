@@ -32,7 +32,7 @@ download yourself.
 
 **Behind a proxy that inspects TLS.** The client trusts only Let's Encrypt,
 which issues the certificate of the Machine API, so a certificate from any other
-CA is refused, a proxy's included. The error names
+CA is refused, including a proxy's. The error names
 `TESTFLOWS_MACHINE_API_CA_FILE`, an environment variable the client reads: set
 it to a PEM file of the CAs to trust instead, such as your proxy's.
 

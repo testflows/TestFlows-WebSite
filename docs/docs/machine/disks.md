@@ -12,7 +12,7 @@ it exactly one source.
 | `--image ref` | a Docker image of your own, as a save tar or a name in your local Docker |
 | `--compose dir` | a Compose project directory and the images its services name |
 
-Everything a machine runs runs in Docker Compose, inside the machine. A
+Everything that runs in a machine runs under Docker Compose, inside the machine. A
 Compose project is one container for each of its services. An image or a binary
 is a project of one service, and `--entrypoint` and the arguments after `--` are
 that service's entrypoint and command. A binary is no exception: `--binary`

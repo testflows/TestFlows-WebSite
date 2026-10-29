@@ -52,9 +52,9 @@ machine rng app seed 7
 ```
 
 The run records that seed, so a replay seeds the device at the same point. A
-guest kernel that reads the seed reseeds at once. Another reseeds at its next
-reseed. A run created with `--no-rng` has no device, and the command refuses
-it.
+guest kernel that reads the seed reseeds at once. A kernel that does not
+read the seed picks it up the next time that kernel reseeds. A run created with `--no-rng` has no
+device, and the command refuses it.
 
 A branch can draw other random numbers than its parent. [`machine fork`](commands.md#machine-fork),
 [`machine detach`](commands.md#machine-detach) and [`machine go`](commands.md#machine-go)
@@ -296,9 +296,9 @@ replaying any other.
 
 `--timer-slack` is how late a timer may be while a program runs code that
 takes no exit. The default is 20ms, and it applies to every fast run. A timer
-that comes due in code that does exit is delivered at that exit. `0` keeps
-every timer on time, which records slowest. A drive can draw the slack for
-that drive:
+that comes due in code that exits to the machine is delivered at that exit. `0` keeps
+every timer on time, and recording is slowest that way. A drive can draw the
+slack for that drive:
 
 ```bash
 machine run app --timer-slack 0:20ms
@@ -1095,8 +1095,8 @@ Both take `container=`.
 
 ## Core dumps
 
-[`machine core`](commands.md#machine-core) has a process dump a core and copies
-the core to your machine, where a debugger reads it with the program:
+[`machine core`](commands.md#machine-core) tells a process to generate a core
+dump and copies it to your computer, where a debugger reads it with the program:
 
 ```bash
 machine core app 412 ./app.core                    # pid 412 of the machine

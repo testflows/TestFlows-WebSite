@@ -19,8 +19,10 @@ of the architecture it was recorded on.
 machine sessions classes
 machine sessions create arm-1 --class <name>
 ```
- The name is optional, so leave it off and Machine makes one up. Machine waits until the session is running and tells you when it
-is. Add `--no-wait` if you would rather it didn't.
+
+The name is optional. Leave it off and Machine makes one up. Machine waits
+until the session is running and tells you when it is. Add `--no-wait` to
+return once the request is accepted.
 
 Then Machine uses the new session in this terminal, so your next command goes
 to it. Add `--no-use` to keep using the session you are on. A session created

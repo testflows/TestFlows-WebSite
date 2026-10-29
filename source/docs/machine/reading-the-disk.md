@@ -14,8 +14,8 @@ machine fs cp -r app /results ./results --at ^done
 
 Every read names its checkpoint with `--at`, as a point: `^booted` for a
 checkpoint by name, or `'#4200'` for the checkpoint at an entry. There is no
-default. This is not a view of the running machine, and a listing that did not
-say how old it is would read as one.
+default. This is not a view of the running machine. A listing that did not
+say how old it is would look like one.
 
 ```bash
 machine fs ls app /tmp

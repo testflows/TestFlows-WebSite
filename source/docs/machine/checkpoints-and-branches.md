@@ -24,7 +24,7 @@ Machine takes some of its own as well, named after the entry they were taken at
 (like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.
 
 The DURABLE column says whether a checkpoint is in your account's storage or
-only in the session. A new checkpoint reads `no` until the run is published,
+only in the session. A new checkpoint shows `no` until the run is published,
 with [`machine sync app`](commands.md#machine-sync) or by stopping the machine. On a branch, the listing
 includes its ancestors' checkpoints, named in the ANCESTOR column. The point a
 branch was forked at is listed once, as its ancestor's checkpoint, because

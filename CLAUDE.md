@@ -22,6 +22,9 @@ bottom; an agent often reads one section alone. Write for both.
 
 Write as an experienced engineer explaining the system to another engineer.
 
+- **Show a value, never stand in for it.** Not "after that much time" or
+  "after a specified amount of time", but "`--for 30s` restores it after 30
+  seconds of machine time".
 - **Professional, not playful.** No colloquial images such as "a whole trip".
   Natural sentences and transitions are welcome; jokes and slang are not.
 - **A heading names its subject.** "Comparing entries", not "What led up to

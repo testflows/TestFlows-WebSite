@@ -169,8 +169,8 @@ when tid=56:on                  task-int none[4],preempt[1]
 else                            mode fast  task-pin 56=golden:2[3],3[1]
 ```
 
-The plan applies to the run of that `machine plan` command alone. A later
-`machine run` runs without it.
+The plan applies only to that `machine plan`. A later `machine run` does not
+use it.
 
 From Python, `run.plan("plan.txt", seed=3)` runs a plan from a file, and the
 `RunResult` it returns lists each clause with the iterations it applied to. The
@@ -688,13 +688,13 @@ machine containers app start db
 | Does the cluster keep serving while one node restarts cleanly? | `stop db --restart 10s` |
 | Does a client retry when its server dies mid-request? | `kill db --restart 5s` |
 | Does the database keep what it committed through a power cut? | `crash db --restart 0` |
-| Do the peers notice a node that hangs without dying? | `pause db --for 30s` |
+| Do the other services notice a node that hangs without dying? | `pause db --for 30s` |
 | Does the system cope with one slow node? | `throttle db --cpus 0.1 --for 1m` |
 | Does the service keep state it never put in a volume? | `kill db --restart 0 --fresh` |
 
-A container you stop, kill or crash stays down. `--restart` brings it back
-after that much machine time, or at once with `0`, so its peers run through
-the outage:
+A container you stop, kill or crash stays down. `--restart 5s` brings it back
+after 5 seconds of machine time, and `--restart 0` at once, so the other
+containers keep running through the outage:
 
 ```bash
 machine containers app kill db --restart 5s

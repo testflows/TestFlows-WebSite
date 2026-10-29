@@ -2865,7 +2865,7 @@ ran free too.
 The options of run make one clause of a plan. Use machine plan `<run>` `<file>`
 for a run of more than one clause.
 
-A hit of a breakpoint, watchpoint or catchpoint ends the run. Use `--iters` 0 to
+A hit of a breakpoint, watchpoint or catchpoint ends the run. Use `--iters 0` to
 run until one does, as GDB's continue does.
 
 Use `--back` to go back to the newest breakpoint, watchpoint or catchpoint hit
@@ -3327,7 +3327,7 @@ at most twice. It is not replayed again once it diverges the same way twice. An
 entry that the host interrupted is replayed again the same way. It is not a
 divergence.
 
-Use `--retry` to set how many retries. `--retry` 0 replays each entry once. Use
+Use `--retry` to set how many retries. `--retry 0` replays each entry once. Use
 `--limit-margin` to set how many conditional branches short of each recorded
 entry the CPU's counter interrupts. A smaller margin makes a miss more likely.
 
@@ -4789,7 +4789,8 @@ Show the state hashes of the machine. Each is computed as it stands.
 See [Comparing two machines](replay.md#comparing-two-machines).
 
 The command prints a hash of memory. It prints a hash of the disk. Each device
-has a hash too. The interrupts run `--irq-delay` holds have a hash, irq_pending.
+has a hash too. Interrupts held by `--irq-delay` have their own hash,
+irq_pending.
 
 Each vCPU has a hash of each part of its state. Each vCPU also has a hash of the
 whole machine. Each hash compares with another machine's at the same point, such
@@ -6080,8 +6081,9 @@ Stop a container.
 The container's processes get SIGTERM, and SIGKILL after the grace period. A
 program that handles SIGTERM exits on its own first.
 
-The container stays down. Use `--restart` to start it again after a time of the
-machine, 0 for at once. Its peers run through the time it is down.
+The container stays down. Use `--restart 5s` to start it again after 5 seconds
+of machine time, or `--restart 0` to start it at once. Other containers keep
+running while it is down.
 
 A container started again keeps its writable layer and its volumes. Use
 `--fresh` to start it from its image instead, as Compose recreates a service.
@@ -6129,8 +6131,9 @@ Kill a container.
 Every process of the container gets SIGKILL and no cleanup runs. What the
 programs wrote stays, since the guest's kernel writes it out.
 
-The container stays down. Use `--restart` to start it again after a time of the
-machine, 0 for at once. Its peers run through the time it is down.
+The container stays down. Use `--restart 5s` to start it again after 5 seconds
+of machine time, or `--restart 0` to start it at once. Other containers keep
+running while it is down.
 
 A container started again keeps its writable layer and its volumes. Use
 `--fresh` to start it from its image instead, as Compose recreates a service.
@@ -6187,8 +6190,9 @@ the disk. A write the kernel finishes between the two is kept. A volume that
 another running container mounts is refused, since the cut would fail its writes
 too.
 
-The container stays down. Use `--restart` to start it again after a time of the
-machine, 0 for at once. Its peers run through the time it is down.
+The container stays down. Use `--restart 5s` to start it again after 5 seconds
+of machine time, or `--restart 0` to start it at once. Other containers keep
+running while it is down.
 
 A container started again keeps its writable layer and its volumes. Use
 `--fresh` to start it from its image instead, as Compose recreates a service.
@@ -6273,9 +6277,9 @@ See also:
 
 Freeze a container.
 
-The container's processes stop where they are, in the cgroup freezer. Its peers
-see it hang. Use `--for` to thaw it after a time of the machine, or resume to
-thaw it.
+The container's processes are frozen using the cgroup freezer. Other containers
+see it as unresponsive. Use `--for 5s` to thaw it after 5 seconds of machine
+time. Use resume to thaw it now.
 
 ```
 machine containers run pause [-h] [--for duration] container
@@ -6344,7 +6348,7 @@ Limit the CPU of a container.
 The container's cgroup gets a CPU quota of the number of CPUs given. A number of
 0 lifts the limit. The limit goes with the container's next start.
 
-Use `--for` to set back the limit it had after a time of the machine.
+Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
 
 ```
 machine containers run throttle [-h] --cpus n [--for duration] container
@@ -6357,7 +6361,7 @@ machine containers run throttle [-h] --cpus n [--for duration] container
 | Option | Does |
 |---|---|
 | `--cpus n` | CPUs it may use, such as 0.1; 0 for no limit |
-| `--for duration` | Set back the limit it had after this machine time, such as 30s |
+| `--for duration` | Restore the previous limit after this machine time, such as 30s |
 
 Examples:
 
@@ -6383,7 +6387,7 @@ See also:
 
 Get a core dump of a process.
 
-The command has a process dump a core and copies the core to a file on this
+The command tells a process to generate a core dump and copies it to your
 computer. A debugger reads the core with the program of the process. Use
 `--container` for a process of a container, by the pid it has there.
 
@@ -6457,9 +6461,9 @@ Use `--pid` or `--container` to show one process or one container. Use
 `--folded` to print every stack with its count, one a line. That text is what
 flame graph tools read. Use `--flame` to draw a flame graph in the terminal.
 
-The names come from the program files of the machine's disk as it stands when
-the stretch ends. No checkpoint is taken. A function in a file that is not on
-the disk is shown by the file's name.
+The names come from the program files on the machine's disk when the stretch
+ends. No checkpoint is taken. A function in a file that is not on the disk is
+shown by the file's name.
 
 Time in the kernel is one frame for each system call, named like read_[k].
 
@@ -7313,7 +7317,8 @@ seed from create `--rng-seed`.
 
 Use seed to seed it again here. The run records the seed, and a replay seeds the
 device at the same point. A guest kernel that reads the seed reseeds its own
-generator at once. Another reseeds at its next reseed.
+generator at once. A kernel that does not read the seed picks it up the next
+time that kernel reseeds.
 
 A run created with `--no-rng` has no RNG device, and the command refuses it.
 
@@ -7515,8 +7520,8 @@ See also:
 Show the stack of a task.
 
 Each frame is a function the task is in, the innermost first. The frames are
-walked by the call frame rules of the program files. Code with no rules is
-walked by its frame pointer.
+walked by the call frame information of the program files. Code with no call
+frame information is walked by its frame pointer.
 
 The names come from the program files on the machine's disk as it stands. A
 frame of a file the disk does not have is named by its file. A frame of a
@@ -7620,8 +7625,9 @@ The task goes on at the instruction after the call, in its caller. The caller's
 stack pointer and the registers the function saved are restored, as GDB's return
 does. A value goes in rax.
 
-The registers come from the call frame rules of the program files on the
-machine's disk. A function with no rules is refused.
+The registers come from the call frame information of the program files on the
+machine's disk. Machine refuses the operation if the function has no call frame
+information.
 
 The write is part of the run, and a replay makes it again. Memory is not
 changed.
