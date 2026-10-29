@@ -6627,7 +6627,7 @@ Inject faults into the guest's system calls and kernel.
 A fault makes a system call fail with an error, or wait. A fault at a kernel
 site fails a disk request or drops its completion. It also fails an allocation
 of the kernel, or a copy to or from a program's memory. The guest kernel decides
-at each call, without a stop of the machine.
+at each call, without stopping the machine.
 
 A replay acts on the same calls the same way. The faults are part of the
 machine. A checkpoint keeps them, and a fork has its parent's. The run records
@@ -6697,6 +6697,11 @@ by chance. A `--prob` of 0 fires on none and counts the matches.
 The fault draws from its seed which calls it fires on. A replay draws the same.
 Use `--seed` to draw as another run did.
 
+Use `--on` and `--off` to make a fault cycle on the machine's clock. With `--on
+2s` `--off 5s`, the fault is active for 2 seconds from when it is added. It then
+rests for 5 seconds, and the cycle repeats. A resting fault matches no call and
+counts none.
+
 ```
 machine inject run add [-h] subsystem ...
 ```
@@ -6709,6 +6714,7 @@ machine inject run1 add syscall read --delay 2ms --in /app   wait
 machine inject run1 add disk --times 3 --in /app             three requests
 machine inject run1 add pages --after 99 --times 1 --in all  the 100th
 machine inject run1 add disk-lost --file /db/wal --in all    lose
+machine inject run1 add disk --on 2s --off 5s --in all       2s in 7
 ```
 
 See also:
@@ -6744,7 +6750,8 @@ fault once the program is up.
 
 ```
 machine inject run add syscall [-h] [--delay span] [--pick n] --in who [--prob p]
-                               [--after n] [--times n] [--seed n]
+                               [--after n] [--times n] [--seed n] [--on duration]
+                               [--off duration]
                                syscall[,syscall...] [errors]
 ```
 
@@ -6762,6 +6769,8 @@ machine inject run add syscall [-h] [--delay span] [--pick n] --in who [--prob p
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 
 Examples:
 
@@ -6811,7 +6820,8 @@ no delay, because it fails its own way.
 
 ```
 machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
-                            [--file pattern] [--op {read,write}] [--sectors lo:hi]
+                            [--on duration] [--off duration] [--file pattern]
+                            [--op {read,write}] [--sectors lo:hi]
 ```
 
 | Option | Does |
@@ -6821,6 +6831,8 @@ machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 | `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
 | `--op {read,write}` | Requests of one operation (default: both) |
 | `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
@@ -6828,9 +6840,10 @@ machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--
 Examples:
 
 ```
-machine inject run1 add disk --in all              every block request
-machine inject run1 add disk --prob 0.1 --in /app  a request in ten
-machine inject run1 add disk --file /db --in all   one file
+machine inject run1 add disk --in all                    every block request
+machine inject run1 add disk --prob 0.1 --in /app        a request in ten
+machine inject run1 add disk --file /db --in all         one file
+machine inject run1 add disk --on 1s --off 10s --in all  1s outages
 ```
 
 See also:
@@ -6861,8 +6874,8 @@ no delay, because it fails its own way.
 
 ```
 machine inject run add disk-timeout [-h] --in who [--prob p] [--after n] [--times n]
-                                    [--seed n] [--file pattern] [--op {read,write}]
-                                    [--sectors lo:hi]
+                                    [--seed n] [--on duration] [--off duration]
+                                    [--file pattern] [--op {read,write}] [--sectors lo:hi]
 ```
 
 | Option | Does |
@@ -6872,6 +6885,8 @@ machine inject run add disk-timeout [-h] --in who [--prob p] [--after n] [--time
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 | `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
 | `--op {read,write}` | Requests of one operation (default: both) |
 | `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
@@ -6901,6 +6916,7 @@ no delay, because it fails its own way.
 
 ```
 machine inject run add slab [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+                            [--on duration] [--off duration]
 ```
 
 | Option | Does |
@@ -6910,6 +6926,8 @@ machine inject run add slab [-h] --in who [--prob p] [--after n] [--times n] [--
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 
 Examples:
 
@@ -6936,6 +6954,7 @@ no delay, because it fails its own way.
 
 ```
 machine inject run add pages [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+                             [--on duration] [--off duration]
 ```
 
 | Option | Does |
@@ -6945,6 +6964,8 @@ machine inject run add pages [-h] --in who [--prob p] [--after n] [--times n] [-
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 
 Examples:
 
@@ -6971,6 +6992,7 @@ no delay, because it fails its own way.
 
 ```
 machine inject run add usercopy [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+                                [--on duration] [--off duration]
 ```
 
 | Option | Does |
@@ -6980,6 +7002,8 @@ machine inject run add usercopy [-h] --in who [--prob p] [--after n] [--times n]
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 
 Examples:
 
@@ -7005,7 +7029,7 @@ no delay, because it fails its own way.
 
 ```
 machine inject run add futex-access [-h] --in who [--prob p] [--after n] [--times n]
-                                    [--seed n]
+                                    [--seed n] [--on duration] [--off duration]
 ```
 
 | Option | Does |
@@ -7015,6 +7039,8 @@ machine inject run add futex-access [-h] --in who [--prob p] [--after n] [--time
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 
 Examples:
 
@@ -7049,8 +7075,9 @@ decisions and changes the same bytes.
 
 ```
 machine inject run add disk-corrupt [-h] --in who [--prob p] [--after n] [--times n]
-                                    [--seed n] [--file pattern] [--op {read,write}]
-                                    [--sectors lo:hi] [--bytes n]
+                                    [--seed n] [--on duration] [--off duration]
+                                    [--file pattern] [--op {read,write}] [--sectors lo:hi]
+                                    [--bytes n]
 ```
 
 | Option | Does |
@@ -7060,6 +7087,8 @@ machine inject run add disk-corrupt [-h] --in who [--prob p] [--after n] [--time
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 | `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
 | `--op {read,write}` | Requests of one operation (default: both) |
 | `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
@@ -7101,7 +7130,8 @@ decisions and changes the same bytes.
 
 ```
 machine inject run add disk-torn [-h] --in who [--prob p] [--after n] [--times n]
-                                 [--seed n] [--file pattern] [--sectors lo:hi]
+                                 [--seed n] [--on duration] [--off duration]
+                                 [--file pattern] [--sectors lo:hi]
 ```
 
 | Option | Does |
@@ -7111,6 +7141,8 @@ machine inject run add disk-torn [-h] --in who [--prob p] [--after n] [--times n
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 | `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
 | `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
 
@@ -7146,7 +7178,8 @@ decisions and changes the same bytes.
 
 ```
 machine inject run add disk-lost [-h] --in who [--prob p] [--after n] [--times n]
-                                 [--seed n] [--file pattern] [--sectors lo:hi]
+                                 [--seed n] [--on duration] [--off duration]
+                                 [--file pattern] [--sectors lo:hi]
 ```
 
 | Option | Does |
@@ -7156,6 +7189,8 @@ machine inject run add disk-lost [-h] --in who [--prob p] [--after n] [--times n
 | `--after n` | Let n matching calls through first (default: 0) |
 | `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
 | `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
 | `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
 | `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
 

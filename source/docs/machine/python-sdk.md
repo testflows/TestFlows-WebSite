@@ -284,6 +284,11 @@ run.inject.add("disk", in_="comm=dd", file="/var/data.bin", op="write")
 
 The `fault_injection.py` example runs both and prints what the program saw.
 
+`on` and `off` make a fault [cycle](steering-programs.md#faults-that-cycle):
+`run.inject.add("disk", in_="all", on="2s", off="5s")` fails every disk
+request for 2 seconds in every 7 of machine time. Each `Fault` says where it
+is: `active`, and `left_ns`, the time left in that window.
+
 ## Container faults
 
 `run.containers` puts a fault on one service of a Compose project, as

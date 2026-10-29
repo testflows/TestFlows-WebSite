@@ -299,8 +299,9 @@ disk quietly returns the wrong bytes, at the call you choose or by chance.
 
 Every subsystem takes the same options: `--in` for whose calls, `--prob` for the
 chance, `--after` to let calls through first, `--times` to stop after a number,
-and `--seed`. The disk subsystems also take `--file`, `--op` and `--sectors` to
-say which requests. The guest kernel decides each call itself, without stopping
+`--seed`, and `--on` and `--off` to make the fault [cycle](#faults-that-cycle).
+The disk subsystems also take `--file`, `--op` and `--sectors` to say which
+requests. The guest kernel decides each call itself, without stopping
 the machine, and a replay fails exactly the same calls.
 
 ### System calls
@@ -578,6 +579,47 @@ machine fs ls app/peek /var/lib/clickhouse/data/db/t --at now
 Then add the fault on `app` with the exact path. The run is deterministic, so it
 writes the same part. An insert's part name holds; a merge's can change, because
 any fault changes how the machine runs a little. A pattern covers both.
+
+### Faults that cycle
+
+Real outages come in bursts: a disk that is flaky for two seconds, a network
+that drops for five. `--prob` fails calls one at a time and independently,
+which rarely exercises retries, backoff or a circuit breaker. `--on` and
+`--off` make a fault active for a stretch of machine time, rest for another,
+and repeat:
+
+```bash
+machine inject app add disk --file /var/lib/db/data --on 2s --off 5s --in all
+machine inject app add syscall open,openat ENOENT --in tgid=63 --on 2s --off 3s --seed 5
+```
+
+The first fails the data file's disk requests for 2 seconds in every 7. The
+cycle starts when the fault is added, active first, on the machine's own
+clock, so a slow host changes nothing and a replay crosses every edge at the
+same instruction. While a fault rests it matches no call and counts none, so
+`--after` and `--times` count only the calls in its active windows. Both
+options are needed, each a whole number of milliseconds from 1ms to a day.
+
+The listing says which window each fault is in and how long it has left. The
+second command printed:
+
+```
+#   INJECT                 ERRORS                   DELAY        IN               FIRES                 PROB       SEED  MATCHED   FIRED
+1   syscall open           ENOENT                   -            tgid=63          every call               1          5        0       0
+    on 2s  off 3s  now on, 2s left
+2   syscall openat         ENOENT                   -            tgid=63          every call               1          5        0       0
+    on 2s  off 3s  now on, 2s left
+```
+
+[`machine inject app`](commands.md#machine-inject) later shows the window
+moving: `now on, 996ms left` one second in, and `now off, 2496ms left` at two
+and a half seconds.
+
+A shell loop that opened a file twice a second under the second command
+printed 4 failures, then 6 successes, over and over: 2 seconds failing, 3
+seconds working. Each window has a fixed length. To try outages of other
+lengths, fork branches from one checkpoint and give each its own `--on` and
+`--off`.
 
 ### Stopping at a fault
 
