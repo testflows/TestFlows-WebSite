@@ -20,18 +20,56 @@ knowing about:
 | `--pin-cpu n` | run on host CPU `n`, for this start only (the default picks the least-loaded) |
 | `--like run` | start from another run's options, then apply the ones you give |
 | `--label name=value` | attach a label to the run, as many times as you like |
-| `--rng`, `--rng-seed n` | give the machine random numbers, seeded with `n` (the default is 0) |
+| `--rng`, `--rng-seed n` | an RNG device, on by default, seeded with `n`; the default seed is 0, and `--no-rng` leaves the device out |
 | `--fs-sync` | write to the disk as the program writes, instead of later |
 | `--mem-hash` | hash the machine's memory at every entry, so a replay compares it too (off by default) |
 | `--disk-hash` | hash the machine's disk at every entry, so a replay compares it too (off by default) |
-| `--repeatable` | record so that recording the run again gives the same entries (off by default, and recording is slower) |
-| `--fence-timer-slack d` | with `--repeatable`, how late a timer may arrive in a program that computes without waiting, 20ms by default |
+| `--timer-slack d` | how late a timer may be in code that takes no exit, 20ms by default; `0` keeps every timer on time |
+| `--limit-margin n` | how many conditional branches short of an exact stop the CPU's counter interrupts; the default is the host's |
+| `--repeatable` | record so that recording the run again gives the same entries; the default is the session's, which [`machine describe`](commands.md#machine-describe) shows, and recording is slower |
 | `--no-wait` | return as soon as the request is accepted |
 
-Change the seed and the program sees different random numbers. Keep it and it
-sees the same ones every time. This one is only about the random numbers the
-machine asks for. For exploring thread schedules there is another seed, on
-[`machine run`](commands.md#machine-run), covered next.
+## Random numbers
+
+A machine has an RNG device, on unless the run was created with `--no-rng`.
+The device gives the guest its random bytes from a seed. The default seed is
+0, so a program sees the same random numbers every time. `--rng-seed` chooses
+another, from 0 to 2^64-1.
+
+```bash
+machine create app --disk app --rng-seed 42
+machine rng app
+```
+
+[`machine rng`](commands.md#machine-rng) prints the seed, and whether the guest
+reseeds its own generator at once.
+
+To seed the device again, where the run is now:
+
+```bash
+machine rng app seed 7
+```
+
+The run records that seed, so a replay seeds the device at the same point. A
+guest kernel that reads the seed reseeds at once. Another reseeds at its next
+reseed. A run created with `--no-rng` has no device, and the command refuses
+it.
+
+A branch can draw other random numbers than its parent. [`machine fork`](commands.md#machine-fork),
+[`machine detach`](commands.md#machine-detach) and [`machine go`](commands.md#machine-go)
+take `--rng-seed`, and the new run's device is seeded from it once the run is
+up:
+
+```bash
+machine fork app --at ^booted --name other --rng-seed 7
+```
+
+At the [control prompt](#interactive-mode) the same commands are `/rng` and
+`/rng seed 7`, and a branch takes `rng-seed 7`.
+
+The seed on [`machine run`](commands.md#machine-run) `--seed` is a different
+one. It draws how long each stretch of execution lasts.
+[Schedules](#schedules) covers it.
 
 ## Multiple vCPUs
 
@@ -68,7 +106,7 @@ different vCPUs plays out the same way every time you replay it.
 
 Each scheduling cycle gives every vCPU a turn. To drive just one of them, use
 `machine run --vcpu N`. And to explore how threads on several vCPUs could
-interleave, see [Trying different schedules](running-a-machine.md#trying-different-schedules).
+interleave, see [Schedules](running-a-machine.md#schedules).
 
 ## Driving it
 
@@ -136,6 +174,23 @@ the time, a little late. A run that went too far is not lost:
 [`machine rewind`](commands.md#machine-rewind) and [`machine go`](commands.md#machine-go) take it back to an earlier
 point.
 
+### A time bound
+
+`--within` ends a run when the machine's clock has moved that far:
+
+```bash
+machine run app --within 10s                           # run for 10 s of machine time
+machine run app --until 'console~done' --within 30s    # the first of the two
+```
+
+Alone, it is the same run as `--until vtime=+10s`. With another `--until` it is
+a bound on it: if the clock gets there first, the run ends with exit status 3
+and says `Machine time ran out`. The machine checks the bound itself, so a slow
+host does not end the run sooner, which the global `--timeout` in seconds would.
+
+The clock moves as the programs in the machine work and while the machine is
+idle. A loop that does nothing but spin does not move it.
+
 Now and then the host interrupts an entry while it is being recorded. Machine
 records that entry again, and you see nothing except a short pause. `--retry`
 sets how many more times one entry is tried, 2 by default. If they are all
@@ -143,7 +198,7 @@ interrupted the run stops with `Host interrupted the run at entry N. It is not
 recorded.` and the [`machine rewind`](commands.md#machine-rewind) command that puts the run back at the
 entry before.
 
-## Trying different schedules
+## Schedules
 
 A program that uses threads can behave differently depending on how they
 interleave. Machine can draw how long each stretch of execution lasts, so every
@@ -171,28 +226,14 @@ Combine that with branches. Fork several from one checkpoint, give each its
 own seed, and keep the ones that crash. The `explore_seeds.py` example in the
 [SDK](python-sdk.md) does exactly that.
 
+To hold an interrupt a drawn time before it is delivered, see
+[Holding interrupts](steering-programs.md#holding-interrupts).
+
 A run takes checkpoints for you too. `--auto-checkpoints N` takes one every N
 entries, and 0 turns them off.
 
 If a drive or a checkpoint is taking too long, [`machine cancel app`](commands.md#machine-cancel) cancels
 whichever one is in progress.
-
-### Bounding a run by the machine's clock
-
-`--within` ends a run when the machine's clock has moved that far:
-
-```bash
-machine run app --within 10s                           # run for 10 s of machine time
-machine run app --until 'console~done' --within 30s    # the first of the two
-```
-
-Alone, it is the same run as `--until vtime=+10s`. With another `--until` it is
-a bound on it: if the clock gets there first, the run ends with exit status 3
-and says `Machine time ran out`. The machine checks the bound itself, so a slow
-host does not end the run sooner, which the global `--timeout` in seconds would.
-
-The clock moves as the programs in the machine work and while the machine is
-idle. A loop that does nothing but spin does not move it.
 
 ## Recording that repeats
 
@@ -222,17 +263,29 @@ against 4 seconds. A program that spends its time waiting on the disk, the
 network or a timer pays much less. Replaying a repeatable run is as fast as
 replaying any other.
 
-Two options trade recording speed against how closely the recording follows
-the clock. `--fence-timer-slack` is how late a timer may arrive while the
-program computes without waiting on anything: 20ms by default, `0` to keep
-every timer on time, which records slowest. `--fence-margin` is how early,
-counted in branches, the machine slows down to reach each exact stop: 10000 by
-default. A smaller margin records faster, and one too small leaves stops a
-later recording may not repeat.
+`--timer-slack` is how late a timer may be while a program runs code that
+takes no exit. The default is 20ms, and it applies to every fast run. A timer
+that comes due in code that does exit is delivered at that exit. `0` keeps
+every timer on time, which records slowest. A drive can draw the slack for
+that drive:
 
-A branch keeps whatever its parent does unless you give it `--repeatable` or
-`--no-repeatable`, and the same holds for the two options. `start` keeps what
-the run was created with.
+```bash
+machine run app --timer-slack 0:20ms
+```
+
+`--limit-margin` is how many conditional branches short of an exact stop the
+CPU's counter interrupts. The default is the host's, and
+[`machine describe`](commands.md#machine-describe) shows that default as
+`host's`. A smaller margin records faster. One too small misses stops, and a
+later recording may not repeat.
+[`machine replay --limit-margin`](commands.md#machine-replay) sets it for that
+replay.
+
+A branch keeps its parent's `--repeatable`, `--timer-slack` and
+`--limit-margin` unless you give it others. [`machine fork`](commands.md#machine-fork),
+[`machine detach`](commands.md#machine-detach) and [`machine go`](commands.md#machine-go)
+take the three. [`machine start`](commands.md#machine-start) keeps what the run
+was created with.
 
 What you send a run is part of what a recording repeats. Commands given with
 [`machine exec`](commands.md#machine-exec), `put` and `get` in the same order
@@ -267,7 +320,7 @@ real	0m2.802s
 
 Ten minutes went by in the guest, and 2.8 seconds went by for you.
 
-### On more than one vCPU
+### Every vCPU idle
 
 Time compression works the same way with [several vCPUs](running-a-machine.md#multiple-vcpus).
 The machine only moves the clock once all of them are idle, so a vCPU that
@@ -283,7 +336,7 @@ Sun Mar  1 00:10:07 UTC 2026
 real	0m7.166s
 ```
 
-### Replaying it
+### On replay
 
 Every move of the clock is recorded in the run's log, so a replay makes the same
 moves at the same points and ends up in the same state. Fork a branch from the
@@ -340,7 +393,7 @@ At the [control prompt](#interactive-mode) the two are `/run until` and
 prompt waits. `timeout 5` makes it wait 5 seconds, for a run another session
 drives.
 
-## Looking at it
+## Inspecting a run
 
 | Command | Shows |
 |---|---|
@@ -352,12 +405,15 @@ drives.
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
 | [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches, deletes) and how each ended, newest first; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
-| [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one) |
+| [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one); its hash section is what the newest entry recorded |
+| [`machine hash app`](commands.md#machine-hash) | the hashes of the machine as it stands, to compare with another stopped at the same point; see [Comparing two machines](replay.md#comparing-two-machines) |
+| [`machine vcpu app`](commands.md#machine-vcpu) | where one vCPU stopped, and how its last dispatch ended (`--vcpu` picks another) |
+| [`machine irqs app`](commands.md#machine-irqs) | the interrupts the machine owes or holds; see [Holding interrupts](steering-programs.md#holding-interrupts) |
 
 [`machine output`](commands.md#machine-output) also takes `--entries`, if you only want what a few
 entries printed.
 
-### Finding where something was printed
+### Finding a line
 
 Often you want the opposite: you know what the machine printed, and you want the
 entry that printed it, so you can go there. A line is printed over a range of
@@ -426,7 +482,7 @@ On a terminal, a control character the guest printed shows as text, such as
 `␛[?25l`, and your terminal does not act on it. Colors stay colors. A pipe or a
 file gets every byte as the guest printed it.
 
-### Reading the output of one source
+### Sources
 
 The console is not the only place a machine prints. It has four serial ports,
 `ttyS0` to `ttyS3`, and the console is the first. A program in the guest that
@@ -536,7 +592,7 @@ writes what a source printed exactly as it was written:
 machine output app bytes --source /output/keep/app/core.bin > core.bin
 ```
 
-### Output too large to keep
+### Dropped output
 
 Debug logs can be gigabytes, and a run that stores them is slow to copy and to
 read. A service writes those under a second directory, and what is written
@@ -651,7 +707,7 @@ types it on a US keyboard, a key pressed and released for each character, with
 Shift or Ctrl held where the character needs one. Use it for a program that
 reads the screen's terminal and not a serial line.
 
-## Executing commands
+## Commands in the guest
 
 [`machine exec`](commands.md#machine-exec) executes a command in the machine,
 beside the programs already running there:
@@ -889,13 +945,13 @@ machine run app --until '/output/exec/<id>/stdout~Continuing' --within 10s
 
 `<id>` is the id `exec start` printed for GDB.
 
-[GDB inside the machine](debugging.md#a-session-that-stays-attached) walks
+[GDB inside the machine](debugging.md#keeping-gdb-attached) walks
 through a whole session this way, on ClickHouse.
 
 `machine exec` uses the serial port `ttyS3` for its requests. A program in the
 machine that reads `ttyS3` takes them.
 
-## Putting a file into the machine, and getting one out
+## Copying files
 
 [`machine put`](commands.md#machine-put) copies a file of your machine into the
 running machine, or into one of its containers:
@@ -950,7 +1006,7 @@ with the same operands and options: `/put ./app.conf /etc/app.conf`.
 A machine whose disk was built before `put` used this path still takes a file,
 far slower. Rebuild the disk to get the speed.
 
-## Getting a core dump
+## Core dumps
 
 [`machine core`](commands.md#machine-core) has a process dump a core and copies
 the core to your machine, where a debugger reads it with the program:
@@ -1027,7 +1083,7 @@ it, so a run is the same with a profile and without. Your programs do not need
 frame pointers: a stack is walked by the unwind information every program
 carries for exceptions.
 
-### Profiling a run that already happened
+### A recorded stretch
 
 Because a run is recorded, you can profile a stretch of it after the fact, even
 if no profiler was on at the time:
@@ -1041,7 +1097,7 @@ The stretch is replayed on a branch, which is deleted afterwards. Your run is
 not touched, and it does not need to be running. Profile the same stretch twice
 and you get the same samples.
 
-### Good to know
+### Where names come from
 
 - Names come from the program files on the machine's disk as it is when the
   stretch ends. You do not need a checkpoint, and a profile does not take one.
@@ -1158,14 +1214,14 @@ a branch that repeats, with a smaller timer slack than the default, as
 [Recording that repeats](#recording-that-repeats) describes:
 
 ```text
-/fork at ^booted name exact repeatable fence-timer-slack 5ms
+/fork at ^booted name exact repeatable timer-slack 5ms
 ✔ Forked app/exact (whyvhjPaLbY3hsz3KyytQ)
   From checkpoint 27777 of app, nothing replayed
 ```
 
 `/fork` starts the branch beside the one you are on and leaves you where you
 are. `/switch app/exact` moves onto it, and `/describe:app/exact` shows
-`Repeatable: true` and `Fence Timer Slack: 5ms`.
+`Repeatable: true` and `Timer Slack: 5ms`.
 
 `-c` runs a single slash command and exits, as in
 [`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) prints the

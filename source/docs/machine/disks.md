@@ -45,7 +45,7 @@ argument `3`:
 machine disks build --binary ./data-race race -- 3
 ```
 
-## When the program is not static
+## Programs that need a runtime
 
 A program that is not a static executable needs an image that already contains
 what it runs: an interpreter, a runtime, its libraries. Public images have
@@ -53,6 +53,9 @@ those, so name one with `--from` and put your files in it with `--add`. It
 reads like a Dockerfile, `FROM` then `ADD` then the command, and you need no
 Docker for it. The build pulls the image itself, so only your files are
 uploaded.
+
+An image you built yourself, or one from a private registry, goes in with
+`--image` from your local Docker.
 
 A complex application, several services together, is a [Compose project](disks.md#compose-projects).
 
@@ -214,7 +217,7 @@ The same project can be run on this computer first, from its own directory,
 which is how to fix it without waiting for a boot. The build commands below
 are from the repository root.
 
-### Two services project
+### A two-service project
 
 `compose/two-services` is a busybox server and a client that fetches a file
 from it by the service name `server`. Services in a project reach each other
@@ -322,7 +325,7 @@ Compose resolves a bind on the machine's filesystem, not inside the container
 that asked for it, so the two paths have to be the same. The images still have
 to be in the local Docker, under those names, before the build.
 
-### What a project must satisfy
+### Project rules
 
 Every service names an `image` with a tag or a digest. An image with no tag
 is a different image tomorrow, and a service that only has `build` has nothing
@@ -386,7 +389,7 @@ The last one builds a Compose project's images for `linux/amd64`; setting
 emulation, which is slower than a native build but works. For `--binary`,
 compile for x86_64 Linux, for example `GOOS=linux GOARCH=amd64 go build`.
 
-## What a disk holds
+## Images at boot
 
 A disk boots with its images already loaded, so the project starts as soon as
 Docker does.

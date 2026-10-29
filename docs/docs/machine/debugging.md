@@ -162,12 +162,24 @@ machine catch app add fork --in tgid=1            # where tgid 1 forks
 machine catch app add syscall openat write        # either system call, by any task
 machine catch app add signal SIGSEGV --in tid=57  # a signal of tid 57
 machine catch app add throw --in tgid=57          # a C++ throw
+machine catch app add exit --in comm=cat          # a cat ends
+machine catch app add fault openat disk           # an injected fault fires
+machine catch app add io --file /var/lib/db/wal --op write   # a disk request of a file
 ```
 
 `watch add` takes `--on write`, `change`, `read` or `access`, and `--size` for
 a location that is not a variable. An `exit` catchpoint takes `--in tgid=N`,
 since an exit is the end of a process. A `throw`, `catch` or `rethrow`
 catchpoint needs `--in tgid=N`.
+
+`--in comm=NAME` stops at the events of the tasks with that name, the same
+tasks [`machine tasks app exist comm=NAME`](steering-programs.md#which-calls-fail)
+lists. That catches one tool of a busybox, or a script, before you know its
+ids. An `exec` catchpoint sees the new program's name. An `exit` catchpoint
+sees the name of the process's main thread, which ends last, so a worker
+thread named `cat` inside a differently named process does not stop it. A
+`syscall` catchpoint with a name makes the machine report every task's calls
+while it is set, which costs time on a busy machine.
 
 Each stop has a number, and the same verbs change any kind:
 
@@ -264,7 +276,7 @@ task with `registers()`, `read()`, `backtrace()`, `print()`, `step()`,
 `breakpoint()` and `watch()`, and `run.breakpoints` lists and changes the
 stops.
 
-## The 3 hardware breakpoints and watchpoints
+## Hardware breakpoints
 
 A run has 3 debug registers for its stops. These take one each:
 
@@ -320,7 +332,7 @@ alone, and one with the debug information. Its server prints the commit it was
 built from as it comes up, with a link to that source on GitHub, and the
 example shows how to put a source file where GDB finds it.
 
-### Running a session
+### A batch of commands
 
 Build the example's disk from its `server` image, and create a run on it.
 The [example's README](https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse)
@@ -376,7 +388,7 @@ Use `--user` to run GDB as the user of the process it attaches to. A
 container has no `CAP_SYS_PTRACE` by default, so root in it cannot attach to
 another user's process.
 
-### A session that stays attached
+### Keeping GDB attached
 
 `-batch` runs a list of commands chosen in advance. To decide the next
 command from what GDB just printed, keep GDB attached and give it its
@@ -632,7 +644,7 @@ GDB has exited, and the server carries on.
 The session is recorded with the run. Rewind to the checkpoint taken before
 it, and the same commands give the same answers.
 
-### Running it again
+### From the checkpoint
 
 The checkpoint holds the machine as it was before GDB attached. Rewind to it,
 and the next session starts from the same instruction:

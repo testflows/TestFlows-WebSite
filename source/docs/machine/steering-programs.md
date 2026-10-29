@@ -119,7 +119,7 @@ machine plan app plan.txt
 machine run app
 ```
 
-## Interrupts and time
+## Interrupts
 
 Inject an interrupt by name or number.
 
@@ -129,6 +129,40 @@ machine irq app preempt --vcpu 1
 
 The interrupt is queued, then delivered at the next boundary and recorded
 there, so a replay delivers it at the same place.
+
+### Holding interrupts
+
+[`machine run`](commands.md#machine-run) can hold each interrupt a drawn time
+before it is delivered, at most one second:
+
+```bash
+machine run app --irq-delay 0:2ms
+machine run app --irq-delay timer=0:2ms,blk=1ms
+```
+
+A bare span holds every interrupt. Name a target to hold one kind: `timer`,
+`ipi`, `init`, `blk`, `rng`, `console`, `serial`, `keyboard`, `device` or
+`all`. The most specific target wins. An interrupt is never delivered before
+one held earlier on its line, its MSI vector, or its vCPU's timer, IPI
+vector, or INIT and SIPI.
+
+[`machine irqs`](commands.md#machine-irqs) lists every interrupt the machine
+owes or holds, then the vectors [`machine irq`](commands.md#machine-irq)
+injects. An owed interrupt was raised by a device or a timer and is injected
+at the next dispatch. A held one waits for the time the draw gave it. The
+state hash `irq_pending` is of the held ones, and
+[`machine state`](commands.md#machine-state) shows how many are held.
+
+```bash
+machine irqs app
+```
+
+The run log keeps each hold, and a checkpoint keeps what is held. At the
+[control prompt](running-a-machine.md#interactive-mode) the same option is
+`irq-delay` on `/run`. From Python it is `run.run(irq_delay="0:2ms")`, and
+`run.irq.pending()` lists them.
+
+## Machine time
 
 Machine time is not the host's. [`machine vtime app rate`](commands.md#machine-vtime-rate)
 changes how fast it passes, and [`machine vtime app add`](commands.md#machine-vtime-add) pushes it forward
@@ -323,7 +357,7 @@ The wait is on the machine's own clock, and each call draws its time from the
 fault's seed, so a replay holds the same calls for the same time. `--prob`,
 `--after`, `--times` and `--in` work as they do for errors.
 
-### The disk and the kernel's memory
+### Kernel faults
 
 The other subsystems fail work inside the kernel, after a system call has
 started, where a syscall fault never reaches. They take no errors: each fails
@@ -508,7 +542,7 @@ Faults and [plans](#plans) work together. Add the faults, then run the plan:
 the faults apply to every stretch of execution, whatever the plan chooses. To
 change them partway, stop, change them, and run on.
 
-### Good to know
+### What a fault misses
 
 - **A C function is not always the system call of its name, and C libraries
   differ.** glibc's `open()` calls `openat`, musl's calls `open`, and glibc's

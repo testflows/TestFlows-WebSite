@@ -38,7 +38,7 @@ Leaving a `with` block deletes what it created, whether the block ends normally
 or with an error. That is how you make sure a session never outlives your
 program.
 
-## It looks like the client
+## The same names
 
 Every client command has a matching SDK call, and the names follow a simple
 rule.
@@ -110,6 +110,10 @@ And the calls you will reach for most often:
 | `run.checkpoint(name)`, `run.checkpoints()` | saves a checkpoint, lists them |
 | `run.fork(...)`, `run.go(point)`, `run.switch(branch)`, `run.detach(...)` | branches |
 | `run.replay()`, `run.play(...)`, `run.diff(...)` | replays and compares |
+| `run.hash()` | the hashes of the machine as it stands, memory and the disk included, as [`machine hash`](commands.md#machine-hash) |
+| `run.dump(show="regs")`, `run.vcpu()` | the machine's state, and where one vCPU stopped |
+| `run.rng()`, `run.rng.seed(7)`, `run.fork(at="^booted", rng_seed=7)` | the RNG device's seed, seeding it again, and a branch whose guest draws other random numbers |
+| `run.run(irq_delay="blk=1ms", timer_slack="0:20ms")`, `run.irq.pending()` | hold interrupts a drawn time, draw how late a timer may be, and list the interrupts owed and held |
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.output(...)` | reads what it printed |
 | `run.output.search(pattern, from_=..., to=...)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, between two points if you like; each match has the entry that printed it and a `place` to go to |
@@ -122,10 +126,12 @@ And the calls you will reach for most often:
 | `run.profile("2s", container=..., pid=...)` | samples what runs for a time and returns a `Profile`: `samples`, `functions`, `stacks`, and `folded` text for flame graph tools |
 | `run.profile(from_="^request", to="^reply")` | profiles a stretch the run already recorded, without changing the run |
 | `run.profile("2s", in_guest=True)` | samples with a process in the run, for the functions of the kernel by name |
-| `run.containers()` | lists the containers and the Compose service of each: `name`, `service`, `state`, `image` |
+| `run.containers()`, `run.containers.kill("db", restart="5s")`, `run.containers.crash("db", restart="0")` | lists the containers and the Compose service of each; `stop`, `kill`, `crash`, `start`, `pause`, `resume` and `throttle` put a fault on one, as `machine containers` does |
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
+| `run.inject.add("syscall", "read", "valid", in_="/usr/bin/app", pick=1, prob=0.1)`, `run.inject.add("syscall", "read", delay="0:20ms", in_="/usr/bin/app")`, `run.inject.add("disk", in_="all", prob=0.01)`, `run.inject.add("disk-corrupt", in_="all", file="/var/lib/db/*/data.bin", op="write", bytes=8, times=1)`, `run.inject()`, `run.inject.delete(2)`, `run.inject.clear()` | injects faults as `machine inject` does: system calls fail with chosen errors or wait first, and the kernel's disk, allocation, usercopy and futex-access sites fail, and the disk corrupts, tears or loses data; lists the faults with their counts, and deletes them; `in_` takes the words `--in` takes, `delay` the span `--delay` takes, and `file`, `op`, `sectors` and `bytes` the disk options |
+| `run.tasks.exist("/usr/bin/app")` | returns the tasks running that program, comm, tid or tgid now, or raises `NotFound`; it changes nothing |
 | `run.task(tid)` | a guest task to debug, by its tid: `registers()`, `read(address, size)`, `address("main+4")`, `symbol(address)`, `symbols(regex="^wait")`, `backtrace()`, `libraries()` |
 | `task.set(rax=0, rip="main+4")`, `task.write(address, data)` | writes its registers and its tgid's memory; a replay makes the writes again |
 | `task.print("shape->at.x", frame=1)`, `task.print("counter = 3")`, `task.locals(args=True)` | an expression in a frame, a write with `TARGET = VALUE`, the locals or the arguments of a frame |
@@ -133,7 +139,7 @@ And the calls you will reach for most often:
 | `task.back()`, `task.back(line=True, over=True)` | goes back over the task's code onto a branch, as reverse-stepi and reverse-next |
 | `task.call("strlen", "buf")`, `task.return_(0)` | calls a function in the task, or returns from its innermost one |
 | `task.breakpoint("main")`, `task.watch("counter", on="access")` | stops its tgid at a location, or at a write or an access of its bytes; `run.run(...).hits` names the one the run ended at |
-| `run.breakpoints.catch("fork", tgid=1)`, `run.breakpoints.catch("syscall", "openat")` | stops at an event of a task: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow |
+| `run.breakpoints.catch("fork", in_="tgid=1")`, `run.breakpoints.catch("io", file="/db/*/data.bin", op="write")` | stops at an event of a task: exec, exit, fork, vfork, syscall, signal, load, unload, fault, io, throw, catch, rethrow; `in_` takes the words `--in` takes, `tid=N`, `tgid=N` or `comm=NAME`; `file` and `op` are an `io` catchpoint's, as `--file` and `--op` |
 | `run.breakpoints.list()`, `.enable(2, False)`, `.condition(2, "n > 3")`, `.ignore(2, 5)`, `.delete(2)`, `.hits()` | the run's stops, changed one at a time, and the hits the run log keeps |
 | `run.run(iters=0)`, `run.run(until="tid=412:at=main")`, `run.back()` | runs to the next hit, or until a task reaches a location; goes back onto a branch at the newest hit |
 | `run.tasks.signal(412, "SIGTERM")` | sends a task a signal; a replay sends it at the same instruction |
@@ -270,12 +276,14 @@ except machine.Diverged:
 
 ## Examples
 
-The SDK comes with small scripts. Each one runs as
-`python <script> --disk <name>`, creates its own session, and deletes it at the end.
+The SDK comes with small scripts. Each one creates its own session and
+deletes it at the end. Most run as `python <script> --disk <name>`.
+`disks.py` builds the disk first and takes `--binary` and `--name`.
 
 | Script | Shows |
 |---|---|
 | `hello.py` | creates a run, boots it, reads its console |
+| `disks.py` | builds a disk from a static executable, boots a run from it, renames the disk and deletes it |
 | `checkpoint_and_fork.py` | a checkpoint after boot, and branches from it |
 | `replay_verify.py` | replays a recording and names what diverged |
 | `explore_seeds.py` | one branch per seed, with the failing ones marked and kept |
@@ -288,6 +296,7 @@ The SDK comes with small scripts. Each one runs as
 | `inject_interrupt.py` | injects an interrupt and replays it |
 | `stop_and_resume.py` | what `stop`, `kill`, `start` and `sync` keep |
 | `resume_elsewhere.py` | stops a run in one session and starts it in another |
+| `preload_and_offload.py` | preloads a disk onto the session, then drops the session's copy |
 | `ci_job.py` | a CI job with an API key, a session per job and an exit code |
 | `error_handling.py` | every error and how to recover from it |
 

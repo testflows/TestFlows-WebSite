@@ -28,7 +28,7 @@ machine fs ls app /tmp
 A point with no checkpoint at it is refused, and the refusal names the
 checkpoint before it.
 
-## What is not in a checkpoint
+## Unsynced writes
 
 Data the machine has not synced to its disk is not visible. A file a program
 wrote a moment before the checkpoint can be missing, short or empty, because

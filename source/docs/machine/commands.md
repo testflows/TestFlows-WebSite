@@ -3272,7 +3272,7 @@ See also:
 ## machine cancel
 
 Cancel the run or replay in progress.
-See [Trying different schedules](running-a-machine.md#trying-different-schedules).
+See [Schedules](running-a-machine.md#schedules).
 
 A run stops where it is. A replay stops before its next entry.
 
@@ -3618,7 +3618,7 @@ See also:
 ## machine go
 
 Branch at a point and switch onto it.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 Go starts another path from a point. The branch shares the history of the run up
 to the point.
@@ -3730,7 +3730,7 @@ See also:
 ## machine switch
 
 Switch a running machine onto a branch that exists.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 The first operand names the run that switches, as with fork and detach. The
 second names where it goes: a branch, a mark written %mark, parent or root.
@@ -3772,7 +3772,7 @@ See also:
 ## machine rewind
 
 Put a run back at a point and discard what follows.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 The run keeps its id and its name. The entries, checkpoints and console output
 after the point are discarded.
@@ -3818,7 +3818,7 @@ See also:
 ## machine detach
 
 Detach a new root from a run and start it.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 Without `--at`, the root is detached at the current point. The copy includes
 everything the root still owns. It shares nothing with the origin tree. It is
@@ -4077,7 +4077,7 @@ See also:
 ## machine branches
 
 Show the branch tree.
-See [Seeing the tree](checkpoints-and-branches.md#seeing-the-tree).
+See [The tree](checkpoints-and-branches.md#the-tree).
 
 The tree shows how each branch forked from its parent. Use `--running` to show
 only running branches.
@@ -4135,7 +4135,7 @@ See also:
 ## machine lineage
 
 Show the ancestors of a branch, from the root down.
-See [Seeing the tree](checkpoints-and-branches.md#seeing-the-tree).
+See [The tree](checkpoints-and-branches.md#the-tree).
 
 ```
 machine lineage [-h] run
@@ -4164,7 +4164,7 @@ See also:
 
 ## machine entries
 
-Show run log entries. See [Looking at it](running-a-machine.md#looking-at-it).
+Show run log entries. See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 An entry is one recorded event of the run, such as a vCPU run, an interrupt or a
 device input.
@@ -4216,7 +4216,7 @@ See also:
 ## machine runs
 
 List runs, newest first.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 Options filter by state, label, flag, disk, sync state and age.
 
@@ -4290,7 +4290,7 @@ See also:
 ## machine describe
 
 Show the full configuration of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The configuration covers the state, resources, options and lineage of the run.
 
@@ -4325,7 +4325,7 @@ See also:
 ## machine state
 
 Show the state of a run and of its machine.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The command shows the activity, machine time, entry and resources of the
 machine.
@@ -4365,7 +4365,7 @@ See also:
 
 ## machine now
 
-Show where a run is. See [Looking at it](running-a-machine.md#looking-at-it).
+Show where a run is. See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The entry and the vtime are points for go, rewind, fork `--at` and detach
 `--at`. Nothing moves.
@@ -4410,7 +4410,7 @@ See also:
 ## machine output
 
 Show the output of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The output is everything the machine printed, in the order it was printed. Each
 line has a source. The console is one source, and it is the one shown.
@@ -4506,7 +4506,7 @@ See also:
 ### machine output entry
 
 Show the entry that printed a byte of the output.
-See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
+See [Finding a line](running-a-machine.md#finding-a-line).
 
 A line is printed over a range of entries. A byte is printed by one. The command
 takes the offset of a byte and prints its entry.
@@ -4653,7 +4653,7 @@ See also:
 ### machine output search
 
 Find a pattern in the output and the entry of each match.
-See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
+See [Finding a line](running-a-machine.md#finding-a-line).
 
 The pattern is a regular expression. A match is within a line. Each match is
 printed with the entry that printed its first byte and the time of that entry.
@@ -4737,7 +4737,7 @@ See also:
 ## machine dump
 
 Dump the state of a machine.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The sections cover vCPU code, registers, stack and page tables, timers,
 interrupt controllers, devices, memory and hashes. Use `--show` to choose
@@ -4785,6 +4785,7 @@ See also:
 ## machine hash
 
 Show the state hashes of the machine. Each is computed as it stands.
+See [Comparing two machines](replay.md#comparing-two-machines).
 
 The command prints a hash of memory. It prints a hash of the disk. Each device
 has a hash too. The interrupts run `--irq-delay` holds have a hash, irq_pending.
@@ -4886,7 +4887,7 @@ See also:
 ## machine ops
 
 List operations on runs and how they finished.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The listing shows the newest 25 operations in every state. Use `--limit` for a
 different page size. Use `--state` to show some states.
@@ -4935,7 +4936,7 @@ See also:
 ## machine debug
 
 Show debug or error output from a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The log subcommand shows the debug output. The err subcommand shows errors and
 crashes.
@@ -4962,7 +4963,7 @@ See also:
 ### machine debug log
 
 Show the debug log of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 Use -n to select lines, and -f to follow new output.
 
@@ -4996,7 +4997,7 @@ See also:
 ### machine debug err
 
 Show the error and crash log of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 Use -n to select lines, and -f to follow new output.
 
@@ -6531,7 +6532,7 @@ See also:
 ## machine irq
 
 Inject an interrupt into the vCPUs.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Interrupts](steering-programs.md#interrupts).
 
 The command takes a vector, or `--nmi` alone for an NMI. Use irqs to list the
 vector names.
@@ -6579,6 +6580,7 @@ See also:
 ## machine irqs
 
 List the interrupts of a machine.
+See [Holding interrupts](steering-programs.md#holding-interrupts).
 
 The command lists every interrupt the machine owes or holds now, then the
 vectors irq injects.
@@ -7211,7 +7213,7 @@ See also:
 ## machine vtime
 
 Show and change machine time.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Machine time](steering-programs.md#machine-time).
 
 Machine time is the guest's clock. It is derived from what the machine executes,
 not from the host clock.
@@ -7245,7 +7247,7 @@ See also:
 ### machine vtime rate
 
 Set how fast machine time passes.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Machine time](steering-programs.md#machine-time).
 
 The rate is the nanoseconds of machine time for each conditional branch the
 guest retires. A run starts at 10 unless create was given `--vtime-rate`.
@@ -7276,7 +7278,7 @@ See also:
 ### machine vtime add
 
 Push the clock forward without running the machine.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Machine time](steering-programs.md#machine-time).
 
 Give a time such as 1s or 250ms. A bare number is nanoseconds.
 
@@ -7303,6 +7305,7 @@ See also:
 ## machine rng
 
 Show and seed the RNG device of a machine.
+See [Random numbers](running-a-machine.md#random-numbers).
 
 The RNG device gives the guest its random bytes from a seed. A run takes the
 seed from create `--rng-seed`.

@@ -45,7 +45,7 @@ argument `3`:
 machine disks build --binary ./data-race race -- 3
 ```
 
-## When the program is not static
+## Programs that need a runtime
 
 A program that is not a static executable needs an image that already contains
 what it runs: an interpreter, a runtime, its libraries. Public images have
@@ -53,6 +53,9 @@ those, so name one with `--from` and put your files in it with `--add`. It
 reads like a Dockerfile, `FROM` then `ADD` then the command, and you need no
 Docker for it. The build pulls the image itself, so only your files are
 uploaded.
+
+An image you built yourself, or one from a private registry, goes in with
+`--image` from your local Docker.
 
 A complex application, several services together, is a [Compose project](disks.md#compose-projects).
 
@@ -200,8 +203,10 @@ client, is a [Compose project](disks.md#compose-projects).
 environments under `compose/`. Clone it, pull each image for `linux/amd64`
 into the local Docker, then build the disk from the project directory.
 [`machine disks build`](commands.md#machine-disks-build) `--compose` packs
-those images and the project. The machine runs the project with
-`--abort-on-container-exit`, so it ends when a service exits.
+those images and the project. The machine runs the project and ends it when a
+service exits on its own, stopping the others, or when the project is taken
+down with `docker compose down`. A service that Machine stops, kills or crashes
+with [`machine containers`](commands.md#machine-containers) ends nothing.
 
 ```bash
 git clone https://github.com/testflows/Machine-Examples.git
@@ -212,7 +217,7 @@ The same project can be run on this computer first, from its own directory,
 which is how to fix it without waiting for a boot. The build commands below
 are from the repository root.
 
-### Two services project
+### A two-service project
 
 `compose/two-services` is a busybox server and a client that fetches a file
 from it by the service name `server`. Services in a project reach each other
@@ -320,7 +325,7 @@ Compose resolves a bind on the machine's filesystem, not inside the container
 that asked for it, so the two paths have to be the same. The images still have
 to be in the local Docker, under those names, before the build.
 
-### What a project must satisfy
+### Project rules
 
 Every service names an `image` with a tag or a digest. An image with no tag
 is a different image tomorrow, and a service that only has `build` has nothing
@@ -328,6 +333,42 @@ to pack. Build the image, then set `image`.
 
 The images have to be `linux/amd64` and already in the local Docker. A
 logging driver, if the project sets one, is `json-file`, `local`, or `none`.
+
+### Volumes a crash cuts
+
+[`machine containers crash`](commands.md#machine-containers) cuts a service's
+data the way a power cut would. It cuts the volumes the project names in an
+`x-machine` block, each with the most it may hold:
+
+```yaml
+services:
+  db:
+    image: postgres:16
+    volumes: [db-data:/var/lib/postgresql/data]
+volumes:
+  db-data: {}
+x-machine:
+  volumes:
+    db-data: 4G
+```
+
+Each becomes an ext4 filesystem of its own on the disk, which costs only what
+is written to it. The disk is made big enough for every volume to fill, and
+`--dry-run` shows the room they take:
+
+```text
+size
+  used      292MB
+  volumes   4096MB
+  capacity  5120MB
+```
+
+A volume in `x-machine` is a plain Compose volume: no `driver_opts`, not
+`external`. A project names 8 at most. A volume two services mount can't be
+crashed while both run. Such a volume has a journal, which is what recovers it
+after a crash, and an `fsync` on it takes about four times as long as on a
+volume the block doesn't name. Name only the volumes whose crashes you want to
+test.
 
 ## Building disks on an ARM machine
 
@@ -348,7 +389,7 @@ The last one builds a Compose project's images for `linux/amd64`; setting
 emulation, which is slower than a native build but works. For `--binary`,
 compile for x86_64 Linux, for example `GOOS=linux GOARCH=amd64 go build`.
 
-## What a disk holds
+## Images at boot
 
 A disk boots with its images already loaded, so the project starts as soon as
 Docker does.

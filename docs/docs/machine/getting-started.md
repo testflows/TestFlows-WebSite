@@ -153,6 +153,10 @@ put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
 machine account api-keys create ci --expiry 90
 ```
 
+The first session also sets up your account's storage, so it takes longer to
+create. To set the storage up before that, run
+[`machine account provision`](commands.md#machine-account-provision).
+
 ## Your first run
 
 If you have not yet signed up, signed in and set up account storage, do that first: see [Signing up](getting-started.md#signing-up).

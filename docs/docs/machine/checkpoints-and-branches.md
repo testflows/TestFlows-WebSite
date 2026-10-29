@@ -51,7 +51,7 @@ and a branch of `app/try-1` named `try-2` is `app/try-2`. That full name is what
 you use in every other command. [`machine lineage try-1`](commands.md#machine-lineage) says
 `Run not found`, and [`machine lineage app/try-1`](commands.md#machine-lineage) works.
 
-## Moving around
+## Moving the machine
 
 [`machine fork`](commands.md#machine-fork) gives the new branch a machine of its own and leaves you where
 you were. `go`, `switch` and `rewind` work in place instead: they change the
@@ -100,7 +100,7 @@ If you only want a branch to have its own copy of the data, run
 [`machine fork --rebase`](commands.md#machine-fork), which is quicker. Add `--lean` and Machine drops the
 history it copied, so the runs it came from can be deleted.
 
-## Seeing the tree
+## The tree
 
 ```bash
 machine branches app          # the whole tree this run belongs to

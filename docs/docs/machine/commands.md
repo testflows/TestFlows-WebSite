@@ -2373,8 +2373,8 @@ machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output
 | `--fs-sync, --no-fs-sync` | Mount filesystem with sync (default: off) |
 | `--fs-dirsync, --no-fs-dirsync` | Mount filesystem with dirsync (default: off) |
 | `--fb type` | Framebuffer type: vnc, gtk, sdl, or none |
-| `--rng, --no-rng` | Enable virtio RNG |
-| `--rng-seed n` | RNG seed (default: 0) |
+| `--rng, --no-rng` | Give the guest an RNG device, whose seed a branch can change (default: on) |
+| `--rng-seed n` | Seed of the RNG device, 0 to 2^64-1 (default: 0) |
 | `--daemon, --no-daemon` | Wait for commands instead of running to completion (default: on) |
 | `--single-step, --no-single-step` | Run in step mode, with `--no-daemon`. A run that waits for commands takes its mode from machine run `--mode` |
 | `--rdtsc-exit, --no-rdtsc-exit` | Record an entry for every RDTSC exit, with `--no-daemon` only |
@@ -2400,7 +2400,7 @@ Examples:
 ```
 machine create run1 --disk hello                      create run1 from hello
 machine create run1 --disk hello --mem 512 --cpus 2   with 512 MB, 2 CPUs
-machine create run1 --disk hello --rng --rng-seed 42  with a seeded RNG
+machine create run1 --disk hello --rng-seed 42        its RNG seeded from 42
 machine create run1 --disk hello --no-daemon          run to completion
 machine create run1 --disk hello --repeatable         so recording repeats
 machine create run1 --disk hello --timer-slack 0      no timer late
@@ -2878,8 +2878,9 @@ machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--str
             [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
             [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
             [--fast span] [--step span] [--step-into span] [--fence span]
-            [--vtime-rate span] [--vtime-add span] [--task-sched choices]
-            [--task-slice choices] [--task-int choices] [--when predicate]
+            [--vtime-rate span] [--vtime-add span] [--timer-slack span]
+            [--irq-delay [target=]span,...] [--task-sched choices] [--task-slice choices]
+            [--task-int choices] [--when predicate]
             run
 ```
 
@@ -2910,6 +2911,8 @@ machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--str
 | `--fence span` | Conditional branches to stop at when fence mode is drawn, overriding `--limit` |
 | `--vtime-rate span` | Vtime rate for this run: n, n/d, or a span of either |
 | `--vtime-add span` | Nanoseconds to push the clock forward before each dispatch |
+| `--timer-slack span` | How late a timer may be in code that takes no exit, drawn per dispatch, at most 1s |
+| `--irq-delay [target=]span,...` | Hold each interrupt a time drawn from its target's span, at most 1s. A target is timer, ipi, init, blk, rng, console, serial, keyboard, device or all, and a bare span is all |
 | `--task-sched choices` | Draw a scheduler mark per dispatch for the task on that vCPU: keep, hold, yield, drain, drain-all |
 | `--task-slice choices` | Draw that task's slice per dispatch: keep, default, or a duration range such as 10us:600us |
 | `--task-int choices` | Draw an interrupt for that task per dispatch: none, preempt |
@@ -2933,6 +2936,9 @@ machine run run1 --until tid=41:write=sum    until tid 41 writes sum
 machine run run1 --until tgid=7:access=buf   until tgid 7 touches buf
 machine run run1 --within 10s                until its clock has moved 10 s
 machine run run1 --until tasks --within 9s   the first of the two
+machine run run1 --irq-delay 0:2ms           hold each interrupt up to 2 ms
+machine run run1 --irq-delay blk=1ms         hold disk interrupts 1 ms
+machine run run1 --timer-slack 0:20ms        draw the timer slack
 ```
 
 Prints:
@@ -3007,7 +3013,8 @@ when <predicate>
     apply the clause only while the predicate holds. A
     predicate is [subject:]state. The state is on, kernel,
     off, syscall[=name] or int[=vec]. The subject is /path,
-    tid=N, tgid=N, cgroup=P or none for any focused task.
+    tid=N, tgid=N, cgroup=P, comm=NAME or none for any
+    focused task.
     vcpu=N[,N] ANDs a vCPU set onto it.
 mode <mode>[N],...
     the modes to draw among: fast, step, step-into, free, fence
@@ -3038,6 +3045,19 @@ task-pin [<tid>=]<set>[N],...
     already queued elsewhere keeps that vCPU until it wakes.
     <tid>= names the task. Without it, the task on the
     drawn vCPU is placed. none requires <tid>=.
+timer-slack <duration>
+    how late a timer may be in code that takes no exit, drawn
+    per dispatch: a duration or a span such as 0:20ms, at
+    most 1s. keep repeats the last slack drawn; with none
+    drawn yet, the run's own --timer-slack.
+irq-delay [<target>=]<duration>,...
+    how long each interrupt is held before it is injected,
+    drawn per interrupt: a duration or a span such as 0:2ms,
+    at most 1s. A target is timer, ipi, init, blk, rng,
+    console, serial, keyboard, device or all. A bare span is
+    all. The most specific target wins. An interrupt never
+    overtakes one held before it on its line, its MSI vector,
+    or its vCPU's timer, IPI vector or INIT and SIPI.
 ```
 
 A weight makes a choice win more often. mode step[3],fast[1] draws step three
@@ -3047,9 +3067,9 @@ value of the axis, so a clause can leave an axis alone part of the time.
 A span is a range written lo:hi[:strategy[:step]]. The strategy is random,
 golden or sweep. One value is drawn from the span per dispatch.
 
-A span is accepted by the mode member limit, vtime-rate, vtime-add, task-slice
-and the run-level `--limit`. The limit itself is not a clause axis. It is the
-default for a mode with no member limit of its own.
+A span is accepted by the mode member limit, vtime-rate, vtime-add, task-slice,
+timer-slack, irq-delay and the run-level `--limit`. The limit itself is not a
+clause axis. It is the default for a mode with no member limit of its own.
 
 The options of this command are plan-level. `--limit` and `--strategy` are the
 defaults for a clause that names no span of its own. A clause axis overrides
@@ -3193,10 +3213,10 @@ A console\~REGEX predicate holds once the console prints a match. The name of
 another source takes the place of console, as in ttyS1\~REGEX.
 
 A task predicate is [who:]what. The what is exec, exit, sched, desched, on,
-kernel or off. The who is /path, cgroup=path, tgid=N or tid=N. Omitting it means
-any focused task.
+kernel or off. The who is /path, cgroup=path, comm=name, tgid=N or tid=N.
+Omitting it means any focused task.
 
-A path or a cgroup must already be focused. A path or cgroup subject means its
+A path, a cgroup or a comm must already be focused. Such a subject means its
 tgid. tgid=N means the tgid for exit and any of its tasks for exec. Use machine
 tasks `<run>` `--focused` to see which task is on a vCPU.
 
@@ -3252,7 +3272,7 @@ See also:
 ## machine cancel
 
 Cancel the run or replay in progress.
-See [Trying different schedules](running-a-machine.md#trying-different-schedules).
+See [Schedules](running-a-machine.md#schedules).
 
 A run stops where it is. A replay stops before its next entry.
 
@@ -3328,7 +3348,7 @@ machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--limit-marg
 
 | Option | Does |
 |---|---|
-| `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark (default: the end of the line) |
+| `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark (default: the end of the line) |
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
 | `--limit-margin n` | Conditional branches short of each recorded stop where the CPU's counter interrupts (default: the host's) |
@@ -3369,7 +3389,12 @@ See also:
 
 Play recorded entries without checking divergence. See [Replay](replay.md).
 
-Use `--include` and `--exclude` to select the event types to play.
+Use `--include` and `--exclude` to select the event types to play. The entries
+no type names are always played. They are the clock's rate and steps, the focus,
+the stops and the debugger's writes. The RUN entries after them need them.
+
+A play that leaves out irq delivers the interrupts the machine raises itself, as
+a recording does. The run records them as its own.
 
 The line of a run is its entries from the root on, as replay says. The run named
 must be in the tree of this run, and need not be on its line. Divergence is not
@@ -3388,8 +3413,8 @@ machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type .
 | Option | Does |
 |---|---|
 | `-n, --entries range` | Entries: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
-| `--include type [type ...]` | Include only these event types: run, irq, exception, random, device_in, block_done, input, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid |
-| `--exclude type [type ...]` | Exclude these event types |
+| `--include type [type ...]` | Play only these event types: run, irq, exception, random, device_in, block_done, input, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid, rng_seed |
+| `--exclude type [type ...]` | Leave these event types out |
 
 Examples:
 
@@ -3531,9 +3556,10 @@ machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name na
              [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
              [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
              [--repeatable | --no-repeatable] [--limit-margin n] [--timer-slack duration]
-             [--disk-hash | --no-disk-hash] [--keep-output name] [--drop-output name]
-             [--no-wait] [--daemon | --no-daemon] [--single-step | --no-single-step]
-             [--limit n] [--backstop-limit n] [--pin-cpu n]
+             [--disk-hash | --no-disk-hash] [--rng-seed n] [--keep-output name]
+             [--drop-output name] [--no-wait] [--daemon | --no-daemon]
+             [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
+             [--pin-cpu n]
              run
 ```
 
@@ -3543,8 +3569,8 @@ machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name na
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
-| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
 | `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3557,6 +3583,7 @@ machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name na
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
+| `--rng-seed n` | Seed the new run's RNG device from n once it is up, so its guest draws other random numbers |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
@@ -3577,6 +3604,7 @@ machine fork run1 --at '#120' --no-start  create the branch, do not start it
 machine fork run1 --keep-output /output   store what is dropped
 machine fork run1 --drop-output ttyS1     store none of ttyS1
 machine fork run1 --from ^cp1             replay the branch from cp1 to now
+machine fork run1 --at ^cp1 --rng-seed 7  a branch seeded from 7
 machine fork run1 --no-repeatable         a branch without exact stops
 ```
 
@@ -3590,7 +3618,7 @@ See also:
 ## machine go
 
 Branch at a point and switch onto it.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 Go starts another path from a point. The branch shares the history of the run up
 to the point.
@@ -3608,6 +3636,9 @@ of console, as in ttyS1\~REGEX.
 A time such as 10ms counts from the start of the run. A minus sign, as in -10ms,
 counts back from now. A time may carry +N, as machine now prints it, to name one
 entry among several at that time.
+
+A minus sign before a number with no unit counts entries back from now. The
+point -10 is #-10, 10 entries before now.
 
 Go reaches a point that is not a checkpoint by branching at the nearest
 checkpoint at or before it. It then replays the difference.
@@ -3648,11 +3679,11 @@ machine go [options] <run> <point>
 | Argument | Does |
 |---|---|
 | `run` | The running machine that moves |
-| `[point ...]` | Where to branch: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
+| `[point ...]` | Where to branch: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
 
 | Option | Does |
 |---|---|
-| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
 | `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3664,6 +3695,7 @@ machine go [options] <run> <point>
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
+| `--rng-seed n` | Seed the new run's RNG device from n once it is up, so its guest draws other random numbers |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
@@ -3675,6 +3707,7 @@ machine go run1 ^cp1                 branch at checkpoint cp1 and switch
 machine go run1 '#120' --name probe  branch at entry 120 as probe
 machine go run1 parent               branch where run1 left its parent
 machine go run1 -10ms                branch 10 ms before now
+machine go run1 -10                  branch 10 entries before now
 machine go run1 console:120          branch where line 120 was printed
 machine go run1 now --from ^cp1      replay the branch from cp1
 ```
@@ -3697,7 +3730,7 @@ See also:
 ## machine switch
 
 Switch a running machine onto a branch that exists.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 The first operand names the run that switches, as with fork and detach. The
 second names where it goes: a branch, a mark written %mark, parent or root.
@@ -3739,7 +3772,7 @@ See also:
 ## machine rewind
 
 Put a run back at a point and discard what follows.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 The run keeps its id and its name. The entries, checkpoints and console output
 after the point are discarded.
@@ -3760,7 +3793,7 @@ machine rewind <run> to <point>
 | Argument | Does |
 |---|---|
 | `run` | The machine that rewinds |
-| `[point ...]` | Point to go back to, from #1 to the tip: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
+| `[point ...]` | Point to go back to, from #1 to the tip: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
 
 Examples:
 
@@ -3785,7 +3818,7 @@ See also:
 ## machine detach
 
 Detach a new root from a run and start it.
-See [Moving around](checkpoints-and-branches.md#moving-around).
+See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
 
 Without `--at`, the root is detached at the current point. The copy includes
 everything the root still owns. It shares nothing with the origin tree. It is
@@ -3827,7 +3860,7 @@ machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name 
                [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
                [--limit-margin n] [--timer-slack duration] [--disk-hash | --no-disk-hash]
-               [--keep-output name] [--drop-output name] [--no-wait]
+               [--rng-seed n] [--keep-output name] [--drop-output name] [--no-wait]
                [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
                [--backstop-limit n] [--pin-cpu n]
                run
@@ -3839,8 +3872,8 @@ machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name 
 
 | Option | Does |
 |---|---|
-| `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
-| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
 | `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--no-start` | Create the new run without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
@@ -3850,6 +3883,7 @@ machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name 
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
+| `--rng-seed n` | Seed the new run's RNG device from n once it is up, so its guest draws other random numbers |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--drop-output name` | Source that the run does not store: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
 | `--no-wait` | Return without waiting |
@@ -4043,7 +4077,7 @@ See also:
 ## machine branches
 
 Show the branch tree.
-See [Seeing the tree](checkpoints-and-branches.md#seeing-the-tree).
+See [The tree](checkpoints-and-branches.md#the-tree).
 
 The tree shows how each branch forked from its parent. Use `--running` to show
 only running branches.
@@ -4101,7 +4135,7 @@ See also:
 ## machine lineage
 
 Show the ancestors of a branch, from the root down.
-See [Seeing the tree](checkpoints-and-branches.md#seeing-the-tree).
+See [The tree](checkpoints-and-branches.md#the-tree).
 
 ```
 machine lineage [-h] run
@@ -4130,7 +4164,7 @@ See also:
 
 ## machine entries
 
-Show run log entries. See [Looking at it](running-a-machine.md#looking-at-it).
+Show run log entries. See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 An entry is one recorded event of the run, such as a vCPU run, an interrupt or a
 device input.
@@ -4182,7 +4216,7 @@ See also:
 ## machine runs
 
 List runs, newest first.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 Options filter by state, label, flag, disk, sync state and age.
 
@@ -4256,7 +4290,7 @@ See also:
 ## machine describe
 
 Show the full configuration of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The configuration covers the state, resources, options and lineage of the run.
 
@@ -4291,7 +4325,7 @@ See also:
 ## machine state
 
 Show the state of a run and of its machine.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The command shows the activity, machine time, entry and resources of the
 machine.
@@ -4331,7 +4365,7 @@ See also:
 
 ## machine now
 
-Show where a run is. See [Looking at it](running-a-machine.md#looking-at-it).
+Show where a run is. See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The entry and the vtime are points for go, rewind, fork `--at` and detach
 `--at`. Nothing moves.
@@ -4376,7 +4410,7 @@ See also:
 ## machine output
 
 Show the output of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The output is everything the machine printed, in the order it was printed. Each
 line has a source. The console is one source, and it is the one shown.
@@ -4472,7 +4506,7 @@ See also:
 ### machine output entry
 
 Show the entry that printed a byte of the output.
-See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
+See [Finding a line](running-a-machine.md#finding-a-line).
 
 A line is printed over a range of entries. A byte is printed by one. The command
 takes the offset of a byte and prints its entry.
@@ -4619,7 +4653,7 @@ See also:
 ### machine output search
 
 Find a pattern in the output and the entry of each match.
-See [Finding where something was printed](running-a-machine.md#finding-where-something-was-printed).
+See [Finding a line](running-a-machine.md#finding-a-line).
 
 The pattern is a regular expression. A match is within a line. Each match is
 printed with the entry that printed its first byte and the time of that entry.
@@ -4656,7 +4690,7 @@ machine output run search [-h] [-f] [--max n] [--from point [point ...]]
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
-| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root (default: the start of the output) |
+| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root (default: the start of the output) |
 | `--to point [point ...]` | Point the search ends at, as `--from` takes one (default: the end of the output) |
 | `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
@@ -4703,7 +4737,7 @@ See also:
 ## machine dump
 
 Dump the state of a machine.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The sections cover vCPU code, registers, stack and page tables, timers,
 interrupt controllers, devices, memory and hashes. Use `--show` to choose
@@ -4712,6 +4746,10 @@ sections. Use `--entry` to dump the state recorded at an entry.
 Without `--show`, every section the machine has is printed. Use `--mem` to print
 memory alone, or with `--show` beside other sections. Use -o json for one object
 per section.
+
+The hash section is what the entry recorded, before its exit was handled. Memory
+and the disk are 0 there unless the run hashes them. Use machine hash for the
+hashes after the entry, with its exit handled.
 
 ```
 machine dump [-h] [--entry n] [--show sections] [--mem addr] [--vcpu n] run
@@ -4742,6 +4780,65 @@ See also:
 - [`machine vcpu`](#machine-vcpu)
 - [`machine diff`](#machine-diff)
 - [`machine entries`](#machine-entries)
+- [`machine hash`](#machine-hash)
+
+## machine hash
+
+Show the state hashes of the machine. Each is computed as it stands.
+See [Comparing two machines](replay.md#comparing-two-machines).
+
+The command prints a hash of memory. It prints a hash of the disk. Each device
+has a hash too. The interrupts run `--irq-delay` holds have a hash, irq_pending.
+
+Each vCPU has a hash of each part of its state. Each vCPU also has a hash of the
+whole machine. Each hash compares with another machine's at the same point, such
+as a replay's.
+
+A hash is not the one dump `--show` hash prints. Dump prints the hashes the
+newest entry recorded, before its exit was handled. This command computes them
+after that entry, with its exit handled. Memory and the disk are in its hashes
+even when the entry hashed neither.
+
+The hashes are computed whether or not the run hashes memory and the disk at
+each entry. Memory is read from all of RAM.
+
+The vCPU hashes are of each vCPU now on a host kernel that computes them.
+Elsewhere they are of each vCPU's last exit. The command then says so.
+
+The command changes nothing. The run records nothing, and the machine stays
+where it is.
+
+The command waits until every hash is computed, however long reading RAM takes.
+The machine refuses commands that would change it until then. Use Ctrl-C or
+machine cancel to stop it.
+
+```
+machine hash [-h] [--vcpu n] run [hashes]
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+| `[hashes]` | One or more, comma-separated: vcpu, devices, mem, disk, irq_pending, or a component such as regs or rtc (default: all) |
+
+| Option | Does |
+|---|---|
+| `--vcpu n` | Show the hashes of this vCPU alone |
+
+Examples:
+
+```
+machine hash run1                every hash of the machine now
+machine hash run1 mem,disk       memory and the disk
+machine hash run1 vcpu --vcpu 1  the hashes of vCPU 1
+machine -o json hash run1        the hashes as JSON
+```
+
+See also:
+
+- [`machine dump`](#machine-dump)
+- [`machine diff`](#machine-diff)
+- [`machine replay`](#machine-replay)
 
 ## machine vcpu
 
@@ -4790,7 +4887,7 @@ See also:
 ## machine ops
 
 List operations on runs and how they finished.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The listing shows the newest 25 operations in every state. Use `--limit` for a
 different page size. Use `--state` to show some states.
@@ -4839,7 +4936,7 @@ See also:
 ## machine debug
 
 Show debug or error output from a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 The log subcommand shows the debug output. The err subcommand shows errors and
 crashes.
@@ -4866,7 +4963,7 @@ See also:
 ### machine debug log
 
 Show the debug log of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 Use -n to select lines, and -f to follow new output.
 
@@ -4900,7 +4997,7 @@ See also:
 ### machine debug err
 
 Show the error and crash log of a run.
-See [Looking at it](running-a-machine.md#looking-at-it).
+See [Inspecting a run](running-a-machine.md#inspecting-a-run).
 
 Use -n to select lines, and -f to follow new output.
 
@@ -5060,6 +5157,41 @@ See also:
 - [`machine tasks`](#machine-tasks)
 - [`machine tasks cgroups`](#machine-tasks-cgroups)
 - [`machine wait`](#machine-wait)
+
+### machine tasks exist
+
+Assert that the machine runs a program, a comm, a tid or a tgid.
+
+The command lists the tasks that match and is refused when none does. It takes
+the words inject add takes for `--in`, except all.
+
+A program is the absolute path of the file it runs, the EXE that tasks shows. A
+symlink's path matches no task.
+
+The command reads the task table. It changes nothing in the machine and the run
+records nothing.
+
+```
+machine tasks run exist [-h] path|comm=name|tid=n|tgid=n
+```
+
+| Argument | Does |
+|---|---|
+| `path\|comm=name\|tid=n\|tgid=n` | Program by absolute path, comm, tid or tgid |
+
+Examples:
+
+```
+machine tasks run1 exist /usr/bin/app  is /usr/bin/app running
+machine tasks run1 exist comm=cat      a task named cat
+machine tasks run1 exist tgid=412      tgid 412
+```
+
+See also:
+
+- [`machine tasks`](#machine-tasks)
+- [`machine inject add`](#machine-inject-add)
+- [`machine focus add`](#machine-focus-add)
 
 ### machine tasks hold
 
@@ -5248,8 +5380,8 @@ See [Looking at tasks](steering-programs.md#looking-at-tasks).
 A name filters the list to calls whose name contains that text.
 
 A task shows its syscall histogram instead. Name a task by tid, tgid, absolute
-path or cgroup=path. The histogram counts calls made while the focus entry of
-the task was armed with focus add `<path>` +syscalls.
+path, cgroup=path or comm=name. The histogram counts calls made while the focus
+entry of the task was armed with focus add `<path>` +syscalls.
 
 ```
 machine syscalls [-h] run [name|tid|tgid|path]
@@ -5284,8 +5416,8 @@ as the table is indexed. A name filters to handlers whose name contains that
 text.
 
 A task shows its interrupt histogram instead. Name a task by tid, tgid, absolute
-path or cgroup=path. The histogram counts interrupts taken while the focus entry
-of the task was armed with focus add `<path>` +ints.
+path, cgroup=path or comm=name. The histogram counts interrupts taken while the
+focus entry of the task was armed with focus add `<path>` +ints.
 
 ```
 machine ints [-h] run [name|tid|tgid|path]
@@ -5322,6 +5454,10 @@ The tasks subcommands then decide which task runs next.
 A program is named by its absolute path, matched exactly. Write cgroup=`<path>`
 to match the cgroup of a task. Write tgid=`<n>` to name a tgid. The tgid of a
 task is shown by tasks.
+
+Write comm=`<name>` to focus each process with a task of that comm, as inject
+add and tasks exist read it. A comm names a busybox applet or a script, which a
+path cannot. A task renamed after exec is seen at the next fork, exec or exit.
 
 Use add and remove to change the list. Use clear to empty it.
 
@@ -5362,16 +5498,16 @@ See also:
 
 Steer another program. See [Focus](steering-programs.md#focus).
 
-The entry is a program path, cgroup=`<path>` or tgid=`<n>`. Add +syscalls or
-+ints to count its system calls or interrupts.
+The entry is a program path, cgroup=`<path>`, comm=`<name>` or tgid=`<n>`. Add
++syscalls or +ints to count its system calls or interrupts.
 
 ```
-machine focus run add [-h] path|cgroup=path|tgid=n [+syscalls|+ints ...]
+machine focus run add [-h] path|cgroup=path|comm=name|tgid=n [+syscalls|+ints ...]
 ```
 
 | Argument | Does |
 |---|---|
-| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or tgid to match |
+| `path\|cgroup=path\|comm=name\|tgid=n` | Program path, cgroup, comm, or tgid to match |
 | `[+syscalls\|+ints ...]` | Count this program's syscalls or interrupts |
 
 Examples:
@@ -5379,6 +5515,7 @@ Examples:
 ```
 machine focus run1 add /test                  focus the program /test
 machine focus run1 add /test +syscalls +ints  count its calls and interrupts
+machine focus run1 add comm=cat               processes whose comm is cat
 ```
 
 See also:
@@ -5386,20 +5523,22 @@ See also:
 - [`machine focus remove`](#machine-focus-remove)
 - [`machine focus clear`](#machine-focus-clear)
 - [`machine tasks`](#machine-tasks)
+- [`machine tasks exist`](#machine-tasks-exist)
 
 ### machine focus remove
 
 Stop steering a program. See [Focus](steering-programs.md#focus).
 
-Name the entry as it was added, by program path, cgroup=`<path>` or tgid=`<n>`.
+Name the entry as it was added, by program path, cgroup=`<path>`, comm=`<name>`
+or tgid=`<n>`.
 
 ```
-machine focus run remove [-h] path|cgroup=path|tgid=n
+machine focus run remove [-h] path|cgroup=path|comm=name|tgid=n
 ```
 
 | Argument | Does |
 |---|---|
-| `path\|cgroup=path\|tgid=n` | Program path, cgroup, or tgid to match |
+| `path\|cgroup=path\|comm=name\|tgid=n` | Program path, cgroup, comm, or tgid to match |
 
 Examples:
 
@@ -5877,20 +6016,23 @@ See also:
 
 ## machine containers
 
-List the containers. Each row names its service.
+List the containers, or stop, kill, crash, pause or throttle one.
 
 The command prints each container with its Compose service, its state and its
 image. Stopped containers are listed too. A container that no service started
 has no service.
 
-The exec, put and get commands take either name with `--container`. A service
-name stands for its container when the service has one.
+A verb puts a fault on one container while the others run: a node of a cluster
+that stops, dies, loses power, freezes or starves. The exec, put and get
+commands take either name with `--container`. A service name stands for its
+container when the service has one.
 
 The machine runs until Docker has answered. The list is of the machine as it is
-then. The listing runs a process in the machine, and the run records it.
+then. The command runs processes in the machine, and the run records them, so a
+replay acts at the same point.
 
 ```
-machine containers [-h] [--within duration] run
+machine containers [-h] [--within duration] run command ...
 ```
 
 | Argument | Does |
@@ -5899,13 +6041,14 @@ machine containers [-h] [--within duration] run
 
 | Option | Does |
 |---|---|
-| `--within duration` | Machine time the listing gets to end in, such as 10s (default: 30m) |
+| `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
 
 Examples:
 
 ```
-machine containers run1          the containers of run1
-machine -o json containers run1  every field of each
+machine containers run1                       the containers of run1
+machine -o json containers run1               every field of each
+machine containers run1 kill db --restart 5s  db dies, back in 5s
 ```
 
 Prints:
@@ -5927,6 +6070,313 @@ See also:
 - [`machine exec`](#machine-exec)
 - [`machine put`](#machine-put)
 - [`machine get`](#machine-get)
+- [`machine containers kill`](#machine-containers-kill)
+
+### machine containers stop
+
+Stop a container.
+
+The container's processes get SIGTERM, and SIGKILL after the grace period. A
+program that handles SIGTERM exits on its own first.
+
+The container stays down. Use `--restart` to start it again after a time of the
+machine, 0 for at once. Its peers run through the time it is down.
+
+A container started again keeps its writable layer and its volumes. Use
+`--fresh` to start it from its image instead, as Compose recreates a service.
+Its volumes are kept.
+
+```
+machine containers run stop [-h] [--grace duration] [--restart duration|never] [--fresh]
+                            container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--grace duration` | Machine time between SIGTERM and SIGKILL, such as 5s (default: 10s) |
+| `--restart duration\|never` | Start it again after this machine time, 0 at once (default: never) |
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 stop db              db stops
+machine containers run1 stop db --grace 2s   SIGKILL after 2s
+machine containers run1 stop db --restart 0  and starts again
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running or paused  machine containers run1 start db
+```
+
+See also:
+
+- [`machine containers kill`](#machine-containers-kill)
+- [`machine containers start`](#machine-containers-start)
+- [`machine containers`](#machine-containers)
+
+### machine containers kill
+
+Kill a container.
+
+Every process of the container gets SIGKILL and no cleanup runs. What the
+programs wrote stays, since the guest's kernel writes it out.
+
+The container stays down. Use `--restart` to start it again after a time of the
+machine, 0 for at once. Its peers run through the time it is down.
+
+A container started again keeps its writable layer and its volumes. Use
+`--fresh` to start it from its image instead, as Compose recreates a service.
+Its volumes are kept.
+
+```
+machine containers run kill [-h] [--restart duration|never] [--fresh] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--restart duration\|never` | Start it again after this machine time, 0 at once (default: never) |
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 kill db                      db dies
+machine containers run1 kill db --restart 5s         back in 5s
+machine containers run1 kill db --restart 0          back at once
+machine containers run1 kill db --restart 0 --fresh  back from its image
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running or paused  machine containers run1 start db
+```
+
+See also:
+
+- [`machine containers stop`](#machine-containers-stop)
+- [`machine containers start`](#machine-containers-start)
+- [`machine tasks signal`](#machine-tasks-signal)
+
+### machine containers crash
+
+Cut a container as a power cut cuts a node.
+
+The container's volumes lose the writes they had not synced, and it dies. The
+others run on. A volume keeps what was synced, and loses the writes still in
+memory.
+
+A crash cuts the volumes the project's x-machine names, each a filesystem of its
+own. Name one by its path in the container to cut it alone. A volume replays its
+journal when the container starts again.
+
+The container is frozen first, and the cut is when its volumes stop writing to
+the disk. A write the kernel finishes between the two is kept. A volume that
+another running container mounts is refused, since the cut would fail its writes
+too.
+
+The container stays down. Use `--restart` to start it again after a time of the
+machine, 0 for at once. Its peers run through the time it is down.
+
+A container started again keeps its writable layer and its volumes. Use
+`--fresh` to start it from its image instead, as Compose recreates a service.
+Its volumes are kept.
+
+```
+machine containers run crash [-h] [--restart duration|never] [--fresh] container [path]
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+| `[path]` | A volume's path in the container, to cut it alone (default: every volume) |
+
+| Option | Does |
+|---|---|
+| `--restart duration\|never` | Start it again after this machine time, 0 at once (default: never) |
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 crash db              a power cut of db
+machine containers run1 crash db --restart 0  and its reboot
+machine containers run1 crash db /data        that volume alone
+```
+
+Refuses, and the way past:
+
+```
+a container with no volume of its own      machine containers run1
+a volume another running container mounts  machine containers run1 stop side
+a container that is not running or paused  machine containers run1 start db
+```
+
+See also:
+
+- [`machine containers kill`](#machine-containers-kill)
+- [`machine containers start`](#machine-containers-start)
+- [`machine catch add`](#machine-catch-add)
+
+### machine containers start
+
+Start a container that is down.
+
+Use `--fresh` to start it from its image, as Compose recreates a service. Its
+writable layer is discarded and its volumes are kept.
+
+```
+machine containers run start [-h] [--fresh] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 start db          db runs again
+machine containers run1 start db --fresh  from its image
+```
+
+Refuses, and the way past:
+
+```
+a container that is running  machine containers run1
+--fresh on an older disk     machine disks build --compose ./p app
+```
+
+See also:
+
+- [`machine containers stop`](#machine-containers-stop)
+- [`machine containers kill`](#machine-containers-kill)
+- [`machine containers`](#machine-containers)
+
+### machine containers pause
+
+Freeze a container.
+
+The container's processes stop where they are, in the cgroup freezer. Its peers
+see it hang. Use `--for` to thaw it after a time of the machine, or resume to
+thaw it.
+
+```
+machine containers run pause [-h] [--for duration] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Thaw it after this machine time, such as 5s |
+
+Examples:
+
+```
+machine containers run1 pause db           db freezes
+machine containers run1 pause db --for 5s  for 5s
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine containers resume`](#machine-containers-resume)
+- [`machine containers throttle`](#machine-containers-throttle)
+- [`machine tasks hold`](#machine-tasks-hold)
+
+### machine containers resume
+
+Thaw a frozen container.
+
+```
+machine containers run resume [-h] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+Examples:
+
+```
+machine containers run1 resume db  db thaws
+```
+
+Refuses, and the way past:
+
+```
+a container that is not paused  machine containers run1
+```
+
+See also:
+
+- [`machine containers pause`](#machine-containers-pause)
+- [`machine containers`](#machine-containers)
+
+### machine containers throttle
+
+Limit the CPU of a container.
+
+The container's cgroup gets a CPU quota of the number of CPUs given. A number of
+0 lifts the limit. The limit goes with the container's next start.
+
+Use `--for` to set back the limit it had after a time of the machine.
+
+```
+machine containers run throttle [-h] --cpus n [--for duration] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--cpus n` | CPUs it may use, such as 0.1; 0 for no limit |
+| `--for duration` | Set back the limit it had after this machine time, such as 30s |
+
+Examples:
+
+```
+machine containers run1 throttle db --cpus 0.1            a tenth of a CPU
+machine containers run1 throttle db --cpus 0.1 --for 30s  for 30s
+machine containers run1 throttle db --cpus 0              no limit
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine containers pause`](#machine-containers-pause)
+- [`machine containers`](#machine-containers)
+- [`machine tasks slice`](#machine-tasks-slice)
 
 ## machine core
 
@@ -6033,7 +6483,7 @@ machine profile [-h] [--for duration | --from point [point ...]] [--to point [po
 | Option | Does |
 |---|---|
 | `--for duration` | Machine time to run and sample for, such as 500ms (default: 1s) |
-| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The stretch is replayed on a branch |
+| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The stretch is replayed on a branch |
 | `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the run's last entry) |
 | `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
 | `--container name` | Container to show, by its name or its Compose service (default: the machine itself) |
@@ -6082,10 +6532,10 @@ See also:
 ## machine irq
 
 Inject an interrupt into the vCPUs.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Interrupts](steering-programs.md#interrupts).
 
-Without a vector, the command lists the vector names. The option `--nmi` alone
-delivers an NMI.
+The command takes a vector, or `--nmi` alone for an NMI. Use irqs to list the
+vector names.
 
 The vector is a number, or a name from irq_vectors.h of the guest kernel. The
 name preempt is 0xf5, the vector Machine preempts a task with. The name
@@ -6116,21 +6566,654 @@ machine irq [-h] [--vcpu n] [--nmi] run [vector]
 Examples:
 
 ```
-machine irq run1        list the interrupt vectors
-machine irq run1 0xec   inject vector 0xec
-machine irq run1 --nmi  inject an NMI
+machine irq run1 0xec     inject vector 0xec
+machine irq run1 preempt  inject the vector Machine preempts with
+machine irq run1 --nmi    inject an NMI
 ```
 
 See also:
 
+- [`machine irqs`](#machine-irqs)
 - [`machine ints`](#machine-ints)
 - [`machine vcpu`](#machine-vcpu)
-- [`machine vtime`](#machine-vtime)
+
+## machine irqs
+
+List the interrupts of a machine.
+See [Holding interrupts](steering-programs.md#holding-interrupts).
+
+The command lists every interrupt the machine owes or holds now, then the
+vectors irq injects.
+
+An owed interrupt was raised by a device or a timer and is injected at the next
+dispatch. A held interrupt waits for its due, which run `--irq-delay` drew. The
+state hash irq_pending is of the held ones, and dump `--show` irq keeps the
+first 32 of them.
+
+The command changes nothing. Use ints for the interrupts the guest took, by
+vector.
+
+```
+machine irqs [-h] run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine irqs run1          the pending interrupts and the vectors
+machine -o json irqs run1  the same as JSON
+```
+
+See also:
+
+- [`machine irq`](#machine-irq)
+- [`machine ints`](#machine-ints)
+- [`machine run`](#machine-run)
+- [`machine hash`](#machine-hash)
+
+## machine inject
+
+Inject faults into the guest's system calls and kernel.
+
+A fault makes a system call fail with an error, or wait. A fault at a kernel
+site fails a disk request or drops its completion. It also fails an allocation
+of the kernel, or a copy to or from a program's memory. The guest kernel decides
+at each call, without a stop of the machine.
+
+A replay acts on the same calls the same way. The faults are part of the
+machine. A checkpoint keeps them, and a fork has its parent's. The run records
+each change, and a replay makes it at the same point.
+
+Use `--in` to say whose calls a fault acts on. It is required. A program is the
+absolute path of the file it runs, the EXE that tasks shows. It takes the tasks
+running that file, and the processes they fork without exec.
+
+A comm is the name the kernel gives a task at exec, and comm=name takes the
+tasks of that comm. A script runs as its interpreter, so its comm names it.
+tid=n takes one task, tgid=n the tasks of one tgid, and all every task in the
+machine.
+
+A fault lets a number of matching calls through first. It then fires on each
+call by a chance, up to a number of calls or without end. Each fault counts the
+calls it matches on its own. The first fault that fires on a call acts on it.
+
+A program's fault can be added before the program starts. Its calls match from
+its exec on, and the commands that start it match none. A fault on a tgid
+applies to whatever that tgid runs, exec's setup of it first. Use tasks exist to
+check that what `--in` names is running.
+
+Without a verb the command lists the faults.
+
+```
+machine inject [-h] run command ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine inject run1                                       the faults
+machine inject run1 add syscall connect EIO --in /app     every connect
+machine inject run1 add disk --prob 0.01 --in all         a request in 100
+machine inject run1 add slab --times 1 --in tgid=412      one allocation
+machine inject run1 add disk-corrupt --file /db --in all  a file
+machine inject run1 delete 2                              the second fault
+machine inject run1 clear                                 every fault
+```
+
+See also:
+
+- [`machine inject add`](#machine-inject-add)
+- [`machine tasks exist`](#machine-tasks-exist)
+- [`machine syscalls`](#machine-syscalls)
+- [`machine catch add`](#machine-catch-add)
+
+### machine inject add
+
+Inject a fault into a subsystem of the guest.
+
+The subsystem is syscall, or one of the kernel's own fault sites: disk,
+disk-timeout, slab, pages, usercopy and futex-access. The subsystems
+disk-corrupt, disk-torn and disk-lost are faults of the disk itself.
+
+Every subsystem takes the same options, with the same meaning. The disk
+subsystems also take `--file`, `--op` and `--sectors`.
+
+A fault fires on every matching call by default. Use `--prob` to fire on a call
+by chance. A `--prob` of 0 fires on none and counts the matches.
+
+The fault draws from its seed which calls it fires on. A replay draws the same.
+Use `--seed` to draw as another run did.
+
+```
+machine inject run add [-h] subsystem ...
+```
+
+Examples:
+
+```
+machine inject run1 add syscall openat ENOENT --in /app      fail
+machine inject run1 add syscall read --delay 2ms --in /app   wait
+machine inject run1 add disk --times 3 --in /app             three requests
+machine inject run1 add pages --after 99 --times 1 --in all  the 100th
+machine inject run1 add disk-lost --file /db/wal --in all    lose
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+- [`machine inject add disk`](#machine-inject-add-disk)
+- [`machine catch add`](#machine-catch-add)
+
+### machine inject add syscall
+
+Fail calls of system calls with errors, or hold them.
+
+A failed call returns an error without running. Each system call gets its own
+fault. A failing call returns one error of the set, drawn at random.
+
+The set holds names or numbers. Use valid for the errors the system call's man
+page documents, and all for every error Linux names. A -ERRNO in the set takes
+that error out.
+
+Use `--delay` to hold each call the fault fires on for a time, drawn from a
+span. A fault with a delay and no errors runs the call after the hold. A fault
+with both holds the call, then fails it. The hold is on the guest's own clock,
+so a replay holds the same calls for the same time.
+
+Use `--pick` to take a number of the set at random when the fault is added. Each
+system call picks its own. A run then fails with its own few errors, as swarm
+testing does.
+
+A dynamic program's loader opens and reads its libraries after the exec. A fault
+on openat or read added before the program starts fails the loader. Add such a
+fault once the program is up.
+
+```
+machine inject run add syscall [-h] [--delay span] [--pick n] --in who [--prob p]
+                               [--after n] [--times n] [--seed n]
+                               syscall[,syscall...] [errors]
+```
+
+| Argument | Does |
+|---|---|
+| `syscall[,syscall...]` | System calls, by name or number |
+| `[errors]` | Errors: ENOENT, a number, valid or all, comma-separated; -ERRNO takes one out. Without them, `--delay` is required and the call runs |
+
+| Option | Does |
+|---|---|
+| `--delay span` | Hold each call the fault fires on for a time drawn from a span such as 0:20ms, at most 1s |
+| `--pick n` | Pick n of the errors at random when the fault is added (default: all of them) |
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add syscall connect EIO --in /a          every connect
+machine inject run1 add syscall open valid --in /a           documented
+machine inject run1 add syscall read all --pick 1 --in /a    one of all
+machine inject run1 add syscall read EIO --prob 0.1 --in /a  one in ten
+machine inject run1 add syscall read EIO --after 9 --in /a   past the 9th
+machine inject run1 add syscall open EIO --in comm=cat       a cat applet
+machine inject run1 add syscall write EIO --in tgid=412      one tgid
+machine inject run1 add syscall read --delay 20ms --in /a    slow reads
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine tasks`](#machine-tasks)
+- [`machine syscalls`](#machine-syscalls)
+- [`machine catch add`](#machine-catch-add)
+
+### machine inject add disk
+
+Fail block requests of the guest's disks with EIO.
+
+A read or write request fails with EIO in the task that submits it. A program
+submits its reads, its O_DIRECT writes and the writes its fsync forces. The
+kernel's flusher threads submit buffered writes later, so `--in` all or a
+kworker comm matches those. A request the kernel splits counts once for each
+part.
+
+A buffered read is a readahead request, then one more read of the page when the
+readahead fails. With `--times` 1 the kernel's second read succeeds and the
+program reads the file. Use `--times` 2 or no limit to return EIO to the
+program. An O_DIRECT read fails on its first request.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add disk [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+                            [--file pattern] [--op {read,write}] [--sectors lo:hi]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | Requests of one operation (default: both) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+
+Examples:
+
+```
+machine inject run1 add disk --in all              every block request
+machine inject run1 add disk --prob 0.1 --in /app  a request in ten
+machine inject run1 add disk --file /db --in all   one file
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-timeout`](#machine-inject-add-disk-timeout)
+- [`machine inject add disk-corrupt`](#machine-inject-add-disk-corrupt)
+
+### machine inject add disk-timeout
+
+Drop the completions of block requests.
+
+The request is decided in the task that submits it, and its completion is
+dropped when the disk answers. The guest's disk driver has no timeout handler,
+so the request never completes and the task waiting on it hangs. The tasks that
+submit a request are as for disk.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add disk-timeout [-h] --in who [--prob p] [--after n] [--times n]
+                                    [--seed n] [--file pattern] [--op {read,write}]
+                                    [--sectors lo:hi]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | Requests of one operation (default: both) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+
+Examples:
+
+```
+machine inject run1 add disk-timeout --times 1 --in comm=dd  dd hangs
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk`](#machine-inject-add-disk)
+
+### machine inject add slab
+
+Fail slab allocations of the guest kernel.
+
+The allocation returns NULL, and the call that made it fails with ENOMEM or as
+the kernel handles it. An allocation the kernel promised, with __GFP_NOFAIL,
+never fails.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add slab [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add slab --prob 0.001 --in comm=cat  rarely
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add pages`](#machine-inject-add-pages)
+
+### machine inject add pages
+
+Fail page allocations of the guest kernel.
+
+The allocation returns no pages, and the call that made it fails with ENOMEM or
+as the kernel handles it. An allocation the kernel promised, with __GFP_NOFAIL,
+never fails.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add pages [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add pages --after 99 --times 1 --in all  the 100th
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add slab`](#machine-inject-add-slab)
+
+### machine inject add usercopy
+
+Fail copies between the kernel and a program's memory.
+
+The copy fails, and the system call that made it returns EFAULT or a short
+count. A system call that copies a buffer to or from the program copies through
+it. A call that reads or writes one value with get_user or put_user does not.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add usercopy [-h] --in who [--prob p] [--after n] [--times n] [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add usercopy --times 1 --in tid=41  one copy
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+
+### machine inject add futex-access
+
+Fail a futex's access to a program's memory.
+
+A futex operation's access to the program's memory fails. The futex call returns
+EFAULT, or EDEADLK where a priority-inheritance futex checks its owner.
+
+The guest kernel decides at the kernel's own fault site. It decides after the
+checks that keep a promised operation from failing. A site takes no errors and
+no delay, because it fails its own way.
+
+```
+machine inject run add futex-access [-h] --in who [--prob p] [--after n] [--times n]
+                                    [--seed n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+
+Examples:
+
+```
+machine inject run1 add futex-access --in tgid=412  every futex call
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+
+### machine inject add disk-corrupt
+
+Change bytes of reads and writes of the guest's disks.
+
+The disk stores a write with bytes changed, or returns a read with bytes
+changed. The request succeeds. The changed bytes are drawn from the fault's
+seed. A program's own reads of a written file come from the page cache until the
+guest drops it.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
+
+The guest kernel decides on each request in the task that submits it. The
+virtual disk then changes what it stores or returns. A replay makes the same
+decisions and changes the same bytes.
+
+```
+machine inject run add disk-corrupt [-h] --in who [--prob p] [--after n] [--times n]
+                                    [--seed n] [--file pattern] [--op {read,write}]
+                                    [--sectors lo:hi] [--bytes n]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | Requests of one operation (default: both) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+| `--bytes n` | Bytes of the request to change, 1 to 4096 (default: 1) |
+
+Examples:
+
+```
+machine inject run1 add disk-corrupt --file '/db/*/c.bin' --in all  parts
+machine inject run1 add disk-corrupt --op read --in /app            reads
+machine inject run1 add disk-corrupt --bytes 8 --times 1 --in all   once
+machine inject run1 add disk-corrupt --sectors 0:7 --in all         sectors
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-torn`](#machine-inject-add-disk-torn)
+- [`machine catch add`](#machine-catch-add)
+
+### machine inject add disk-torn
+
+Store part of a write of the guest's disks.
+
+The disk stores the first sectors of a write and reports success. It stores one
+sector at least, and fewer than all. The rest keeps what the disk held. A sector
+is written whole, so a write of one sector does not tear.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
+
+The guest kernel decides on each request in the task that submits it. The
+virtual disk then changes what it stores or returns. A replay makes the same
+decisions and changes the same bytes.
+
+```
+machine inject run add disk-torn [-h] --in who [--prob p] [--after n] [--times n]
+                                 [--seed n] [--file pattern] [--sectors lo:hi]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+
+Examples:
+
+```
+machine inject run1 add disk-torn --file /db/wal --in all  torn writes
+machine inject run1 add disk-torn --times 1 --in all       one write
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-lost`](#machine-inject-add-disk-lost)
+
+### machine inject add disk-lost
+
+Lose writes of the guest's disks.
+
+The disk reports a write done and stores none of it. The disk keeps what it
+held, as a disk that lost its cache does.
+
+A disk fault matches a request by its operation, its sectors and its file. Use
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
+
+The guest kernel decides on each request in the task that submits it. The
+virtual disk then changes what it stores or returns. A replay makes the same
+decisions and changes the same bytes.
+
+```
+machine inject run add disk-lost [-h] --in who [--prob p] [--after n] [--times n]
+                                 [--seed n] [--file pattern] [--sectors lo:hi]
+```
+
+| Option | Does |
+|---|---|
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--file pattern` | Requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--sectors lo:hi` | Requests that touch 512-byte sectors lo to hi of the disk (default: the whole disk) |
+
+Examples:
+
+```
+machine inject run1 add disk-lost --file /db/wal --in all        lost writes
+machine inject run1 add disk-lost --after 10 --times 1 --in all  the 11th
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add disk-torn`](#machine-inject-add-disk-torn)
+
+### machine inject delete
+
+Delete a fault.
+
+The fault's calls run again from here.
+
+```
+machine inject run delete [-h] n
+```
+
+| Argument | Does |
+|---|---|
+| `n` | Fault number, as the listing shows it |
+
+Examples:
+
+```
+machine inject run1 delete 2  the second fault
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject clear`](#machine-inject-clear)
+
+### machine inject clear
+
+Delete every fault.
+
+```
+machine inject run clear [-h]
+```
+
+Examples:
+
+```
+machine inject run1 clear  every fault
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject delete`](#machine-inject-delete)
 
 ## machine vtime
 
 Show and change machine time.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Machine time](steering-programs.md#machine-time).
 
 Machine time is the guest's clock. It is derived from what the machine executes,
 not from the host clock.
@@ -6164,7 +7247,7 @@ See also:
 ### machine vtime rate
 
 Set how fast machine time passes.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Machine time](steering-programs.md#machine-time).
 
 The rate is the nanoseconds of machine time for each conditional branch the
 guest retires. A run starts at 10 unless create was given `--vtime-rate`.
@@ -6195,7 +7278,7 @@ See also:
 ### machine vtime add
 
 Push the clock forward without running the machine.
-See [Interrupts and time](steering-programs.md#interrupts-and-time).
+See [Machine time](steering-programs.md#machine-time).
 
 Give a time such as 1s or 250ms. A bare number is nanoseconds.
 
@@ -6218,6 +7301,68 @@ See also:
 - [`machine vtime rate`](#machine-vtime-rate)
 - [`machine vtime`](#machine-vtime)
 - [`machine fork`](#machine-fork)
+
+## machine rng
+
+Show and seed the RNG device of a machine.
+See [Random numbers](running-a-machine.md#random-numbers).
+
+The RNG device gives the guest its random bytes from a seed. A run takes the
+seed from create `--rng-seed`.
+
+Use seed to seed it again here. The run records the seed, and a replay seeds the
+device at the same point. A guest kernel that reads the seed reseeds its own
+generator at once. Another reseeds at its next reseed.
+
+A run created with `--no-rng` has no RNG device, and the command refuses it.
+
+```
+machine rng [-h] run command ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine rng run1         the seed and whether the guest reseeds at once
+machine rng run1 seed 7  seed the RNG device from 7
+```
+
+See also:
+
+- [`machine rng seed`](#machine-rng-seed)
+- [`machine fork`](#machine-fork)
+- [`machine create`](#machine-create)
+
+### machine rng seed
+
+Seed the RNG device again.
+
+The device gives its bytes from the new seed, as from create `--rng-seed`. The
+run records the seed, so a replay seeds the device at the same point.
+
+```
+machine rng run seed [-h] n
+```
+
+| Argument | Does |
+|---|---|
+| `n` | Seed, 0 to 2^64-1 |
+
+Examples:
+
+```
+machine rng run1 seed 7  seed the RNG device from 7
+```
+
+See also:
+
+- [`machine rng`](#machine-rng)
+- [`machine fork`](#machine-fork)
+- [`machine go`](#machine-go)
 
 ## machine regs
 
@@ -6750,7 +7895,7 @@ goes back over what the run recorded one instruction at a time. Past that it
 stops, and says the history ends there.
 
 ```
-machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run tid [count]
+machine step [-h] [--line] [--over] [--out] [--back [n]] [--skip name] run tid [count]
 ```
 
 | Argument | Does |
@@ -6764,7 +7909,7 @@ machine step [-h] [--line] [--over] [--out] [--back] [--skip name] run tid [coun
 | `--line` | Step a source line, not an instruction |
 | `--over` | Step over a call, the function it calls and all it calls being one step |
 | `--out` | Run until the function returns to the one that called it |
-| `--back` | Go back over dispatches of the task's vCPU, onto a branch |
+| `--back [n]` | Go back n steps over dispatches of the task's vCPU, onto a branch |
 | `--skip name` | Step out of a function or a source file of this name in a line step (repeatable) |
 
 Examples:
@@ -7499,15 +8644,40 @@ See also:
 Add a catchpoint.
 
 The catchpoint stops the run at an event of a task. The events are exec, exit,
-fork, vfork, syscall, signal, load and unload. The C++ events throw, catch and
-rethrow are breakpoints in one tgid.
+fork, vfork, syscall, signal, load, unload, fault and io. The C++ events throw,
+catch and rethrow are breakpoints in one tgid.
+
+A fault catchpoint stops where an injected fault fires. A syscall fault stops
+before its delay and its error. The hit names the call and the error, or delayed
+for a fault with no error. A site fault stops at the site, and the hit names the
+site.
+
+An io catchpoint stops at a disk request as its task submits it. No disk fault
+has decided on the request yet, so a fault added at the stop decides on it. The
+hit names the request's operation, sectors and tid in the form inject add takes
+them.
+
+Use `--file` to stop at the requests of the files a pattern matches, and `--op`
+for reads or writes alone. A file matches whether it is opened or mapped before
+or after the catchpoint is added.
 
 A syscall catchpoint names its system calls, and a signal catchpoint its
-signals, four at most. A load, unload or exec catchpoint names a path or a
+signals, four at most. A fault catchpoint names system calls or the sites of
+inject add, such as disk. A load, unload or exec catchpoint names a path or a
 file's name. Without one, every event of its kind stops the run.
 
 Use `--in` to stop at the events of one task or one tgid alone. The run log
 keeps the catchpoint, and a branch has its parent's.
+
+Use `--in` comm=NAME to stop at the events of the tasks of that comm. The comm
+is read as tasks exist reads it. An exec catchpoint sees the new program's comm.
+A task renamed after exec is seen by its new comm at the next fork, exec or
+exit.
+
+An exit catchpoint sees the comm of the tgid's leader, its last task to go. A
+worker of that comm in a tgid whose leader has another does not stop it. A
+syscall catchpoint with a comm makes the guest report every task's calls while
+it is armed.
 
 An exit is the end of a tgid, so an exit catchpoint takes `--in` tgid=N and not
 a tid. A throw, catch or rethrow catchpoint is a breakpoint at the C++ runtime's
@@ -7515,19 +8685,22 @@ function. It needs `--in` tgid=N and takes no values. It takes one of the run's
 3 breakpoints and watchpoints.
 
 ```
-machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--temporary]
+machine catch run add [-h] [--in tid=N|tgid=N|comm=NAME] [--file pattern]
+                      [--op {read,write}] [--disabled] [--ignore count] [--temporary]
                       [--condition condition] [--print format]
                       event [value ...]
 ```
 
 | Argument | Does |
 |---|---|
-| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow |
-| `[value ...]` | System call or signal, by name or number, or the path of a load, unload or exec |
+| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, fault, io, throw, catch, rethrow |
+| `[value ...]` | System call of a syscall or fault catchpoint, signal, by name or number, or the path of a load, unload or exec |
 
 | Option | Does |
 |---|---|
-| `--in tid=N\|tgid=N` | Stop at the events of this task or tgid alone (default: any task) |
+| `--in tid=N\|tgid=N\|comm=NAME` | Stop at the events of this task, tgid or comm alone (default: any task) |
+| `--file pattern` | An io catchpoint's requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | An io catchpoint's requests of one operation (default: both) |
 | `--disabled` | Add it and do not arm it |
 | `--ignore count` | Pass this many hits where the condition holds (default: 0) |
 | `--temporary` | Delete it at its first hit where the condition holds |
@@ -7542,13 +8715,17 @@ machine catch run1 add syscall openat write        either call
 machine catch run1 add signal SIGSEGV --in tid=57  a signal of 57
 machine catch run1 add load libssl.so.3            a library mapped
 machine catch run1 add throw --in tgid=57          a C++ throw
+machine catch run1 add exit --in comm=cat          a cat ends
+machine catch run1 add fault openat                a fault fires
+machine catch run1 add io --file '/db/*/c.bin'     a disk request
+machine catch run1 add io --op read --in tgid=57   a read of 57
 ```
 
 Prints:
 
 ```
-text  Catchpoint N: EVENT, in tgid TGID
-json  number kind tgid tid names
+text  Catchpoint N: EVENT, in tgid TGID, in tid TID or in comm NAME
+json  number kind tgid tid comm names
 ```
 
 See also:
@@ -7556,6 +8733,7 @@ See also:
 - [`machine catch`](#machine-catch)
 - [`machine run`](#machine-run)
 - [`machine break add`](#machine-break-add)
+- [`machine tasks exist`](#machine-tasks-exist)
 
 ### machine catch delete
 

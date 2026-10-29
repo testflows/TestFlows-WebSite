@@ -38,7 +38,7 @@ Leaving a `with` block deletes what it created, whether the block ends normally
 or with an error. That is how you make sure a session never outlives your
 program.
 
-## It looks like the client
+## The same names
 
 Every client command has a matching SDK call, and the names follow a simple
 rule.
@@ -110,6 +110,10 @@ And the calls you will reach for most often:
 | `run.checkpoint(name)`, `run.checkpoints()` | saves a checkpoint, lists them |
 | `run.fork(...)`, `run.go(point)`, `run.switch(branch)`, `run.detach(...)` | branches |
 | `run.replay()`, `run.play(...)`, `run.diff(...)` | replays and compares |
+| `run.hash()` | the hashes of the machine as it stands, memory and the disk included, as [`machine hash`](commands.md#machine-hash) |
+| `run.dump(show="regs")`, `run.vcpu()` | the machine's state, and where one vCPU stopped |
+| `run.rng()`, `run.rng.seed(7)`, `run.fork(at="^booted", rng_seed=7)` | the RNG device's seed, seeding it again, and a branch whose guest draws other random numbers |
+| `run.run(irq_delay="blk=1ms", timer_slack="0:20ms")`, `run.irq.pending()` | hold interrupts a drawn time, draw how late a timer may be, and list the interrupts owed and held |
 | `run.describe()`, `run.state()`, `run.now()`, `run.entries(...)` | reads it |
 | `run.output(...)` | reads what it printed |
 | `run.output.search(pattern, from_=..., to=...)`, `run.output.find(pattern)`, `run.output.entry(offset)` | finds text in what it printed, between two points if you like; each match has the entry that printed it and a `place` to go to |
@@ -272,12 +276,14 @@ except machine.Diverged:
 
 ## Examples
 
-The SDK comes with small scripts. Each one runs as
-`python <script> --disk <name>`, creates its own session, and deletes it at the end.
+The SDK comes with small scripts. Each one creates its own session and
+deletes it at the end. Most run as `python <script> --disk <name>`.
+`disks.py` builds the disk first and takes `--binary` and `--name`.
 
 | Script | Shows |
 |---|---|
 | `hello.py` | creates a run, boots it, reads its console |
+| `disks.py` | builds a disk from a static executable, boots a run from it, renames the disk and deletes it |
 | `checkpoint_and_fork.py` | a checkpoint after boot, and branches from it |
 | `replay_verify.py` | replays a recording and names what diverged |
 | `explore_seeds.py` | one branch per seed, with the failing ones marked and kept |
@@ -290,6 +296,7 @@ The SDK comes with small scripts. Each one runs as
 | `inject_interrupt.py` | injects an interrupt and replays it |
 | `stop_and_resume.py` | what `stop`, `kill`, `start` and `sync` keep |
 | `resume_elsewhere.py` | stops a run in one session and starts it in another |
+| `preload_and_offload.py` | preloads a disk onto the session, then drops the session's copy |
 | `ci_job.py` | a CI job with an API key, a session per job and an exit code |
 | `error_handling.py` | every error and how to recover from it |
 

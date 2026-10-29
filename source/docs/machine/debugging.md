@@ -276,7 +276,7 @@ task with `registers()`, `read()`, `backtrace()`, `print()`, `step()`,
 `breakpoint()` and `watch()`, and `run.breakpoints` lists and changes the
 stops.
 
-## The 3 hardware breakpoints and watchpoints
+## Hardware breakpoints
 
 A run has 3 debug registers for its stops. These take one each:
 
@@ -332,7 +332,7 @@ alone, and one with the debug information. Its server prints the commit it was
 built from as it comes up, with a link to that source on GitHub, and the
 example shows how to put a source file where GDB finds it.
 
-### Running a session
+### A batch of commands
 
 Build the example's disk from its `server` image, and create a run on it.
 The [example's README](https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse)
@@ -388,7 +388,7 @@ Use `--user` to run GDB as the user of the process it attaches to. A
 container has no `CAP_SYS_PTRACE` by default, so root in it cannot attach to
 another user's process.
 
-### A session that stays attached
+### Keeping GDB attached
 
 `-batch` runs a list of commands chosen in advance. To decide the next
 command from what GDB just printed, keep GDB attached and give it its
@@ -644,7 +644,7 @@ GDB has exited, and the server carries on.
 The session is recorded with the run. Rewind to the checkpoint taken before
 it, and the same commands give the same answers.
 
-### Running it again
+### From the checkpoint
 
 The checkpoint holds the machine as it was before GDB attached. Rewind to it,
 and the next session starts from the same instruction:

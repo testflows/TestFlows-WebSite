@@ -66,3 +66,33 @@ another run's log, name it: [`machine play app/try-1 app`](commands.md#machine-p
 machine play app/try-1 -n 16240:16243
 machine play app/try-1 --include irq random
 ```
+
+## Comparing two machines
+
+[`machine diff`](commands.md#machine-diff) compares an entry with the one it
+was replayed from. [`machine hash`](commands.md#machine-hash) compares two
+machines stopped at the same point: a recording, and a branch you drove
+there yourself.
+
+```bash
+machine hash app
+machine hash app mem,disk
+machine hash app/try-1 vcpu --vcpu 1
+```
+
+The command computes the hashes of the machine as it stands: memory, the
+disk, each device, each part of each vCPU, and the interrupts
+[`--irq-delay`](steering-programs.md#holding-interrupts) holds, as
+`irq_pending`. It changes nothing, and the run records nothing. Memory is
+read from all of RAM, so it takes as long as that reading takes. The machine
+refuses commands that would change it until the command returns.
+[`machine cancel`](commands.md#machine-cancel) stops it.
+
+[`machine dump --show hash`](commands.md#machine-dump) prints what the newest
+entry recorded, before its exit was handled. Memory and the disk are 0 there
+unless the run hashes them at each entry. `machine hash` is after that entry,
+with the exit handled, and it hashes memory and the disk whether or not the
+run does at each entry.
+
+A replay compares the hashes the recording stored at each entry. `hash` is
+for two machines you have in front of you.
