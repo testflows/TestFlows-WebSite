@@ -87,9 +87,7 @@ difference is expected: it shows where their paths parted.
 
 A replay that diverges is different. Every recording must replay, so a
 divergence is a bug in Machine, not in your program. Keep the run and the
-branch that diverged, and report it with the run's name, the entry
-`machine diff` names and the command that replayed it. The recording is what
-reproduces the bug.
+branch that diverged: the recording is what reproduces it.
 
 ### At the control prompt
 
