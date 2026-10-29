@@ -7921,14 +7921,24 @@ file's name. Without one, every event of its kind stops the run.
 Use `--in` to stop at the events of one task or one tgid alone. The run log
 keeps the catchpoint, and a branch has its parent's.
 
+Use `--in` comm=NAME to stop at the events of the tasks of that comm. The comm
+is read as tasks exist reads it. An exec catchpoint sees the new program's comm.
+A task renamed after exec is seen by its new comm at the next fork, exec or
+exit.
+
+An exit catchpoint sees the comm of the tgid's leader, its last task to go. A
+worker of that comm in a tgid whose leader has another does not stop it. A
+syscall catchpoint with a comm makes the guest report every task's calls while
+it is armed.
+
 An exit is the end of a tgid, so an exit catchpoint takes `--in` tgid=N and not
 a tid. A throw, catch or rethrow catchpoint is a breakpoint at the C++ runtime's
 function. It needs `--in` tgid=N and takes no values. It takes one of the run's
 3 breakpoints and watchpoints.
 
 ```
-machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--temporary]
-                      [--condition condition] [--print format]
+machine catch run add [-h] [--in tid=N|tgid=N|comm=NAME] [--disabled] [--ignore count]
+                      [--temporary] [--condition condition] [--print format]
                       event [value ...]
 ```
 
@@ -7939,7 +7949,7 @@ machine catch run add [-h] [--in tid=N|tgid=N] [--disabled] [--ignore count] [--
 
 | Option | Does |
 |---|---|
-| `--in tid=N\|tgid=N` | Stop at the events of this task or tgid alone (default: any task) |
+| `--in tid=N\|tgid=N\|comm=NAME` | Stop at the events of this task, tgid or comm alone (default: any task) |
 | `--disabled` | Add it and do not arm it |
 | `--ignore count` | Pass this many hits where the condition holds (default: 0) |
 | `--temporary` | Delete it at its first hit where the condition holds |
@@ -7954,13 +7964,14 @@ machine catch run1 add syscall openat write        either call
 machine catch run1 add signal SIGSEGV --in tid=57  a signal of 57
 machine catch run1 add load libssl.so.3            a library mapped
 machine catch run1 add throw --in tgid=57          a C++ throw
+machine catch run1 add exit --in comm=cat          a cat ends
 ```
 
 Prints:
 
 ```
-text  Catchpoint N: EVENT, in tgid TGID
-json  number kind tgid tid names
+text  Catchpoint N: EVENT, in tgid TGID, in tid TID or in comm NAME
+json  number kind tgid tid comm names
 ```
 
 See also:
@@ -7968,6 +7979,7 @@ See also:
 - [`machine catch`](#machine-catch)
 - [`machine run`](#machine-run)
 - [`machine break add`](#machine-break-add)
+- [`machine tasks exist`](#machine-tasks-exist)
 
 ### machine catch delete
 

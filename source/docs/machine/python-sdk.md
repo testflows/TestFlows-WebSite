@@ -135,7 +135,7 @@ And the calls you will reach for most often:
 | `task.back()`, `task.back(line=True, over=True)` | goes back over the task's code onto a branch, as reverse-stepi and reverse-next |
 | `task.call("strlen", "buf")`, `task.return_(0)` | calls a function in the task, or returns from its innermost one |
 | `task.breakpoint("main")`, `task.watch("counter", on="access")` | stops its tgid at a location, or at a write or an access of its bytes; `run.run(...).hits` names the one the run ended at |
-| `run.breakpoints.catch("fork", tgid=1)`, `run.breakpoints.catch("syscall", "openat")` | stops at an event of a task: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow |
+| `run.breakpoints.catch("fork", in_="tgid=1")`, `run.breakpoints.catch("exit", in_="comm=cat")` | stops at an event of a task: exec, exit, fork, vfork, syscall, signal, load, unload, throw, catch, rethrow; `in_` takes the words `--in` takes, `tid=N`, `tgid=N` or `comm=NAME` |
 | `run.breakpoints.list()`, `.enable(2, False)`, `.condition(2, "n > 3")`, `.ignore(2, 5)`, `.delete(2)`, `.hits()` | the run's stops, changed one at a time, and the hits the run log keeps |
 | `run.run(iters=0)`, `run.run(until="tid=412:at=main")`, `run.back()` | runs to the next hit, or until a task reaches a location; goes back onto a branch at the newest hit |
 | `run.tasks.signal(412, "SIGTERM")` | sends a task a signal; a replay sends it at the same instruction |
