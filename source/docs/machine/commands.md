@@ -6481,9 +6481,11 @@ program reads the file. Use `--times` 2 or no limit to return EIO to the
 program. An O_DIRECT read fails on its first request.
 
 A disk fault matches a request by its operation, its sectors and its file. Use
-`--file` to name the file whose data the request carries. A file matches from
-its next open. Buffered writes reach the disk from the kernel's flusher, so use
-`--in` all with `--file`.
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
 
 The guest kernel decides at the kernel's own fault site. It decides after the
 checks that keep a promised operation from failing. A site takes no errors and
@@ -6529,9 +6531,11 @@ so the request never completes and the task waiting on it hangs. The tasks that
 submit a request are as for disk.
 
 A disk fault matches a request by its operation, its sectors and its file. Use
-`--file` to name the file whose data the request carries. A file matches from
-its next open. Buffered writes reach the disk from the kernel's flusher, so use
-`--in` all with `--file`.
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
 
 The guest kernel decides at the kernel's own fault site. It decides after the
 checks that keep a promised operation from failing. A site takes no errors and
@@ -6715,9 +6719,11 @@ seed. A program's own reads of a written file come from the page cache until the
 guest drops it.
 
 A disk fault matches a request by its operation, its sectors and its file. Use
-`--file` to name the file whose data the request carries. A file matches from
-its next open. Buffered writes reach the disk from the kernel's flusher, so use
-`--in` all with `--file`.
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
 
 The guest kernel decides on each request in the task that submits it. The
 virtual disk then changes what it stores or returns. A replay makes the same
@@ -6765,9 +6771,11 @@ sector at least, and fewer than all. The rest keeps what the disk held. A sector
 is written whole, so a write of one sector does not tear.
 
 A disk fault matches a request by its operation, its sectors and its file. Use
-`--file` to name the file whose data the request carries. A file matches from
-its next open. Buffered writes reach the disk from the kernel's flusher, so use
-`--in` all with `--file`.
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
 
 The guest kernel decides on each request in the task that submits it. The
 virtual disk then changes what it stores or returns. A replay makes the same
@@ -6808,9 +6816,11 @@ The disk reports a write done and stores none of it. The disk keeps what it
 held, as a disk that lost its cache does.
 
 A disk fault matches a request by its operation, its sectors and its file. Use
-`--file` to name the file whose data the request carries. A file matches from
-its next open. Buffered writes reach the disk from the kernel's flusher, so use
-`--in` all with `--file`.
+`--file` to name the file whose data the request carries. Buffered writes reach
+the disk from the kernel's flusher, so use `--in` all with `--file`.
+
+A file matches whether it is opened or mapped before or after the fault is
+added.
 
 The guest kernel decides on each request in the task that submits it. The
 virtual disk then changes what it stores or returns. A replay makes the same
@@ -8320,13 +8330,22 @@ See also:
 Add a catchpoint.
 
 The catchpoint stops the run at an event of a task. The events are exec, exit,
-fork, vfork, syscall, signal, load, unload and fault. The C++ events throw,
+fork, vfork, syscall, signal, load, unload, fault and io. The C++ events throw,
 catch and rethrow are breakpoints in one tgid.
 
 A fault catchpoint stops where an injected fault fires. A syscall fault stops
 before its delay and its error. The hit names the call and the error, or delayed
 for a fault with no error. A site fault stops at the site, and the hit names the
 site.
+
+An io catchpoint stops at a disk request as its task submits it. No disk fault
+has decided on the request yet, so a fault added at the stop decides on it. The
+hit names the request's operation, sectors and tid in the form inject add takes
+them.
+
+Use `--file` to stop at the requests of the files a pattern matches, and `--op`
+for reads or writes alone. A file matches whether it is opened or mapped before
+or after the catchpoint is added.
 
 A syscall catchpoint names its system calls, and a signal catchpoint its
 signals, four at most. A fault catchpoint names system calls or the sites of
@@ -8352,19 +8371,22 @@ function. It needs `--in` tgid=N and takes no values. It takes one of the run's
 3 breakpoints and watchpoints.
 
 ```
-machine catch run add [-h] [--in tid=N|tgid=N|comm=NAME] [--disabled] [--ignore count]
-                      [--temporary] [--condition condition] [--print format]
+machine catch run add [-h] [--in tid=N|tgid=N|comm=NAME] [--file pattern]
+                      [--op {read,write}] [--disabled] [--ignore count] [--temporary]
+                      [--condition condition] [--print format]
                       event [value ...]
 ```
 
 | Argument | Does |
 |---|---|
-| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, fault, throw, catch, rethrow |
+| `event` | Event: exec, exit, fork, vfork, syscall, signal, load, unload, fault, io, throw, catch, rethrow |
 | `[value ...]` | System call of a syscall or fault catchpoint, signal, by name or number, or the path of a load, unload or exec |
 
 | Option | Does |
 |---|---|
 | `--in tid=N\|tgid=N\|comm=NAME` | Stop at the events of this task, tgid or comm alone (default: any task) |
+| `--file pattern` | An io catchpoint's requests of a file's data: an absolute path, where * matches within a directory and ** across them (default: any file) |
+| `--op {read,write}` | An io catchpoint's requests of one operation (default: both) |
 | `--disabled` | Add it and do not arm it |
 | `--ignore count` | Pass this many hits where the condition holds (default: 0) |
 | `--temporary` | Delete it at its first hit where the condition holds |
@@ -8381,6 +8403,8 @@ machine catch run1 add load libssl.so.3            a library mapped
 machine catch run1 add throw --in tgid=57          a C++ throw
 machine catch run1 add exit --in comm=cat          a cat ends
 machine catch run1 add fault openat                a fault fires
+machine catch run1 add io --file '/db/*/c.bin'     a disk request
+machine catch run1 add io --op read --in tgid=57   a read of 57
 ```
 
 Prints:

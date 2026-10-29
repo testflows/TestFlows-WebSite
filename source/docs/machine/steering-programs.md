@@ -374,7 +374,7 @@ failures. The request succeeds, and the damage is found later, or never.
 | Does the program trust bytes it read without a checksum? | `disk-corrupt --op read --file /srv/app/state.json` |
 | Does recovery handle a log record only half written? | `disk-torn --file /var/lib/db/wal --times 1` |
 | Does it notice a committed write that never arrived? | `disk-lost --file /var/lib/db/wal --after 10 --times 1` |
-| Does the filesystem survive damage to its own metadata? | `disk-corrupt --sectors 2048:4095` |
+| Does the filesystem survive damage to its own metadata? | `disk-corrupt --sectors LO:HI`, the sectors of its inode table or journal |
 
 ```bash
 machine inject app add disk-corrupt --file '/var/lib/db/*/data.bin' --op write --bytes 8 --times 1 --in all
@@ -385,9 +385,9 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
 
 - **`--file` is a pattern.** `*` matches within a directory and `**` across
   directories. Programs often name their files as they run, and a pattern names
-  them before they exist. A file matches from its next open, the way `--in`
-  matches a program from its exec. A file inside a container is named by its path
-  in the container.
+  them before they exist. A file the program already holds open or maps, such
+  as a running database's WAL, matches too. A file inside a container is named
+  by its path in the container.
 - **`--in all` with `--file`.** Ordinary writes reach the disk from the kernel's
   flusher, not from your program, so `--in all` is what reaches them. `--file`
   keeps the fault on your file.
@@ -400,9 +400,17 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
 - **A tear is whole sectors.** A sector is written whole or not at all, so a
   write of one sector does not tear. A torn write keeps at least one sector of
   the new data and loses at least one.
-- **`--sectors` aims below the files.** It names 512-byte sectors of the disk,
-  so it reaches what `--file` cannot: the filesystem's inodes, bitmaps and
-  journal.
+- **`--sectors` aims below the files.** It names 512-byte sectors of the whole
+  disk, so it reaches what `--file` cannot: the filesystem's inodes, bitmaps
+  and journal. The filesystem's own tools say where those are, such as
+  `dumpe2fs` and `debugfs` for ext4, in blocks of its partition. With 4 KiB
+  blocks, block N starts at sector 8 × N plus the partition's first sector,
+  which `/sys/class/block/vda1/start` holds, or 0 for a filesystem on the
+  whole disk. Or stop at a write with
+  `catch add io`, below, and read its sectors off the stop.
+- **`disk-lost` is one write, not a crash.** The lost write reports success,
+  and the writes after it still land. A power cut loses every write since the
+  last flush. Machine does not offer that.
 
 A replay damages the same bytes, so a bug you find this way is found again on
 every replay of the run.
@@ -450,6 +458,36 @@ machine run app
 The run stops where the fault fires, before a system call's wait and error, and
 says which: `Stopped at catchpoint 1: fault openat EACCES, in tid 229`, or
 `fault disk, in tid 77`. See [Debugging](debugging.md) for catchpoints.
+
+### Stopping at a file's I/O
+
+An `io` catchpoint stops the run at a disk request, with no fault. `--file`
+takes the same patterns as a disk fault, and `--op` takes `read` or `write`:
+
+```bash
+machine catch app add io --file '/var/lib/clickhouse/data/db/t/*/data.bin' --op write
+machine run app
+```
+
+The run stops as the request is sent, before any disk fault decides on it, and
+names the request: `Stopped at catchpoint 1: io write 1058144:1058151, in tid
+266`. A fault added there decides on that same request. Name it by its file:
+
+```bash
+machine inject app add disk-lost --file '/var/lib/clickhouse/data/db/t/*/data.bin' --times 1 --in all
+machine catch app delete 1
+machine run app
+```
+
+Or by its sectors and its task, which name this request and no other:
+
+```bash
+machine inject app add disk-corrupt --sectors 1058144:1058151 --times 1 --in tid=266
+```
+
+An ordinary write is sent by the kernel's flusher, so the stop names a kernel
+task such as `kworker/u4:1`. `--in tid=N` names that task as well as any
+other.
 
 ### Changing faults
 

@@ -164,6 +164,7 @@ machine catch app add signal SIGSEGV --in tid=57  # a signal of tid 57
 machine catch app add throw --in tgid=57          # a C++ throw
 machine catch app add exit --in comm=cat          # a cat ends
 machine catch app add fault openat disk           # an injected fault fires
+machine catch app add io --file /var/lib/db/wal --op write   # a disk request of a file
 ```
 
 `watch add` takes `--on write`, `change`, `read` or `access`, and `--size` for
