@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793312849463" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793312849463" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793312405291" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793312849463" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -8571,7 +8571,7 @@ hashes after the entry, with its exit handled.</p>
 <h2 id="machine-hash"><a href="#machine-hash" class="headerlink" title="machine hash"></a>machine hash</h2><p>Show the state hashes of the machine. Each is computed as it stands.
 See <a href="#comparing-two-machines">Comparing two machines</a>.</p>
 <p>The command prints a hash of memory. It prints a hash of the disk. Each device
-has a hash too. Interrupts held by <code>--irq-delay</code> have their own hash,
+has a hash too. The interrupts held by <code>--irq-delay</code> have their own hash,
 irq_pending.</p>
 <p>Each vCPU has a hash of each part of its state. Each vCPU also has a hash of the
 whole machine. Each hash compares with another machine’s at the same point, such
@@ -9805,7 +9805,7 @@ replay acts at the same point.</p>
 <p>The container’s processes get SIGTERM, and SIGKILL after the grace period. A
 program that handles SIGTERM exits on its own first.</p>
 <p>The container stays down. Use <code>--restart 5s</code> to start it again after 5 seconds
-of machine time, or <code>--restart 0</code> to start it at once. Other containers keep
+of machine time. Use <code>--restart 0</code> to start it at once. Other containers keep
 running while it is down.</p>
 <p>A container started again keeps its writable layer and its volumes. Use
 <code>--fresh</code> to start it from its image instead, as Compose recreates a service.
@@ -9860,7 +9860,7 @@ Its volumes are kept.</p>
 <p>Every process of the container gets SIGKILL and no cleanup runs. What the
 programs wrote stays, since the guest’s kernel writes it out.</p>
 <p>The container stays down. Use <code>--restart 5s</code> to start it again after 5 seconds
-of machine time, or <code>--restart 0</code> to start it at once. Other containers keep
+of machine time. Use <code>--restart 0</code> to start it at once. Other containers keep
 running while it is down.</p>
 <p>A container started again keeps its writable layer and its volumes. Use
 <code>--fresh</code> to start it from its image instead, as Compose recreates a service.
@@ -9919,7 +9919,7 @@ the disk. A write the kernel finishes between the two is kept. A volume that
 another running container mounts is refused, since the cut would fail its writes
 too.</p>
 <p>The container stays down. Use <code>--restart 5s</code> to start it again after 5 seconds
-of machine time, or <code>--restart 0</code> to start it at once. Other containers keep
+of machine time. Use <code>--restart 0</code> to start it at once. Other containers keep
 running while it is down.</p>
 <p>A container started again keeps its writable layer and its volumes. Use
 <code>--fresh</code> to start it from its image instead, as Compose recreates a service.
@@ -13623,10 +13623,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793312405291"></script>
-<script src="/js/machine-hero-type.js?v=1793312405291"></script>
-<script src="/js/download-platforms.js?v=1793312405291"></script>
-<script src="/js/anchor-case.js?v=1793312405291"></script>
+<script src="/js/index-code-type.js?v=1793312849463"></script>
+<script src="/js/machine-hero-type.js?v=1793312849463"></script>
+<script src="/js/download-platforms.js?v=1793312849463"></script>
+<script src="/js/anchor-case.js?v=1793312849463"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

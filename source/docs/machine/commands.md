@@ -4789,7 +4789,7 @@ Show the state hashes of the machine. Each is computed as it stands.
 See [Comparing two machines](replay.md#comparing-two-machines).
 
 The command prints a hash of memory. It prints a hash of the disk. Each device
-has a hash too. Interrupts held by `--irq-delay` have their own hash,
+has a hash too. The interrupts held by `--irq-delay` have their own hash,
 irq_pending.
 
 Each vCPU has a hash of each part of its state. Each vCPU also has a hash of the
@@ -6082,7 +6082,7 @@ The container's processes get SIGTERM, and SIGKILL after the grace period. A
 program that handles SIGTERM exits on its own first.
 
 The container stays down. Use `--restart 5s` to start it again after 5 seconds
-of machine time, or `--restart 0` to start it at once. Other containers keep
+of machine time. Use `--restart 0` to start it at once. Other containers keep
 running while it is down.
 
 A container started again keeps its writable layer and its volumes. Use
@@ -6132,7 +6132,7 @@ Every process of the container gets SIGKILL and no cleanup runs. What the
 programs wrote stays, since the guest's kernel writes it out.
 
 The container stays down. Use `--restart 5s` to start it again after 5 seconds
-of machine time, or `--restart 0` to start it at once. Other containers keep
+of machine time. Use `--restart 0` to start it at once. Other containers keep
 running while it is down.
 
 A container started again keeps its writable layer and its volumes. Use
@@ -6191,7 +6191,7 @@ another running container mounts is refused, since the cut would fail its writes
 too.
 
 The container stays down. Use `--restart 5s` to start it again after 5 seconds
-of machine time, or `--restart 0` to start it at once. Other containers keep
+of machine time. Use `--restart 0` to start it at once. Other containers keep
 running while it is down.
 
 A container started again keeps its writable layer and its volumes. Use
