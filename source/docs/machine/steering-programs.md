@@ -32,7 +32,13 @@ machine run app --until /app:exit
 Focus also takes a cgroup (`cgroup=/path`), a single process (`tgid=12`), or
 the processes with a task of a given name (`comm=cat`). A name picks out one
 tool of a multi-call binary such as busybox, or a script, which a path cannot.
-It means the same tasks [`machine tasks app exist`](#which-calls-fail) checks. `focus remove` and `focus clear` take them off again.
+[`machine tasks app exist comm=cat`](#which-calls-fail) lists the tasks with
+that name; focus takes every thread of their processes.
+
+A program that renames itself after it starts, with `prctl(PR_SET_NAME)` or
+`/proc/self/comm`, is focused by its new name at its next fork, exec or exit,
+not at the rename. Until then `--until comm=worker:on` waits. Focus the program
+by its path to steer it from the start. `focus remove` and `focus clear` take them off again.
 
 ```bash
 machine focus app add comm=cat
