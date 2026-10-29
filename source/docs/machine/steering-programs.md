@@ -526,3 +526,55 @@ change them partway, stop, change them, and run on.
 - **A fault matches the system call, whose call it is and the count of calls.**
   It does not look at the arguments, so "openat of /etc/passwd" is not a fault.
   Stop at the call and fail that one instead.
+
+## Container faults
+
+A project run as containers is a small cluster, and each service is a node.
+[`machine containers`](commands.md#machine-containers) puts a fault on one
+container while the others keep running:
+
+```bash
+machine containers app stop db                   # SIGTERM, then SIGKILL after 10s
+machine containers app kill db                   # SIGKILL, no cleanup
+machine containers app crash db                  # a power cut: its volumes lose what was not synced
+machine containers app pause db --for 5s         # frozen for 5s, then thawed
+machine containers app throttle db --cpus 0.1 --for 30s
+machine containers app start db
+```
+
+A container you stop, kill or crash stays down. `--restart` brings it back after
+a time of the machine, or at once with `0`, so its peers run through the outage:
+
+```bash
+machine containers app kill db --restart 5s
+machine containers app crash db --restart 0          # a power cycle
+machine containers app kill db --restart 0 --fresh   # back from its image
+```
+
+`--fresh` starts it from its image: a replaced node rather than a rebooted one.
+The files it wrote outside its volumes are gone, and its volumes are kept.
+
+Each fault is recorded with the run, so a replay faults the same container at
+the same point. Put one where the run is stopped, at a breakpoint, a catchpoint
+or a `run --until`, to fault a service at the moment that matters.
+
+### A crash
+
+`kill` loses nothing the program wrote: the kernel inside the machine keeps
+running and writes it out later. `crash` is a power cut of the service's node.
+Its volumes keep what was synced and lose the writes still in memory. When the
+service starts again, each volume replays its journal and the service runs its
+own recovery. That finds a commit acknowledged before its data was synced, a
+`rename` whose directory was never synced, and a log record that survived while
+the data it describes did not.
+
+A crash cuts the volumes the project names in `x-machine`; see
+[Volumes a crash cuts](disks.md#volumes-a-crash-cuts). The cut is when the
+volumes stop writing to the disk, just after the container is frozen; a write
+the kernel finishes in between is kept, as one a disk finished before the power
+went. A volume another running container also mounts is refused, since cutting
+it would cut that container too.
+
+```bash
+machine containers app crash db /var/lib/postgresql/data --restart 0   # that volume alone
+```

@@ -200,8 +200,10 @@ client, is a [Compose project](disks.md#compose-projects).
 environments under `compose/`. Clone it, pull each image for `linux/amd64`
 into the local Docker, then build the disk from the project directory.
 [`machine disks build`](commands.md#machine-disks-build) `--compose` packs
-those images and the project. The machine runs the project with
-`--abort-on-container-exit`, so it ends when a service exits.
+those images and the project. The machine runs the project and ends it when a
+service exits on its own, stopping the others, or when the project is taken
+down with `docker compose down`. A service that Machine stops, kills or crashes
+with [`machine containers`](commands.md#machine-containers) ends nothing.
 
 ```bash
 git clone https://github.com/testflows/Machine-Examples.git
@@ -328,6 +330,42 @@ to pack. Build the image, then set `image`.
 
 The images have to be `linux/amd64` and already in the local Docker. A
 logging driver, if the project sets one, is `json-file`, `local`, or `none`.
+
+### Volumes a crash cuts
+
+[`machine containers crash`](commands.md#machine-containers) cuts a service's
+data the way a power cut would. It cuts the volumes the project names in an
+`x-machine` block, each with the most it may hold:
+
+```yaml
+services:
+  db:
+    image: postgres:16
+    volumes: [db-data:/var/lib/postgresql/data]
+volumes:
+  db-data: {}
+x-machine:
+  volumes:
+    db-data: 4G
+```
+
+Each becomes an ext4 filesystem of its own on the disk, which costs only what
+is written to it. The disk is made big enough for every volume to fill, and
+`--dry-run` shows the room they take:
+
+```text
+size
+  used      292MB
+  volumes   4096MB
+  capacity  5120MB
+```
+
+A volume in `x-machine` is a plain Compose volume: no `driver_opts`, not
+`external`. A project names 8 at most. A volume two services mount can't be
+crashed while both run. Such a volume has a journal, which is what recovers it
+after a crash, and an `fsync` on it takes about four times as long as on a
+volume the block doesn't name. Name only the volumes whose crashes you want to
+test.
 
 ## Building disks on an ARM machine
 

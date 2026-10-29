@@ -6015,20 +6015,23 @@ See also:
 
 ## machine containers
 
-List the containers. Each row names its service.
+List the containers, or stop, kill, crash, pause or throttle one.
 
 The command prints each container with its Compose service, its state and its
 image. Stopped containers are listed too. A container that no service started
 has no service.
 
-The exec, put and get commands take either name with `--container`. A service
-name stands for its container when the service has one.
+A verb puts a fault on one container while the others run: a node of a cluster
+that stops, dies, loses power, freezes or starves. The exec, put and get
+commands take either name with `--container`. A service name stands for its
+container when the service has one.
 
 The machine runs until Docker has answered. The list is of the machine as it is
-then. The listing runs a process in the machine, and the run records it.
+then. The command runs processes in the machine, and the run records them, so a
+replay acts at the same point.
 
 ```
-machine containers [-h] [--within duration] run
+machine containers [-h] [--within duration] run command ...
 ```
 
 | Argument | Does |
@@ -6037,13 +6040,14 @@ machine containers [-h] [--within duration] run
 
 | Option | Does |
 |---|---|
-| `--within duration` | Machine time the listing gets to end in, such as 10s (default: 30m) |
+| `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
 
 Examples:
 
 ```
-machine containers run1          the containers of run1
-machine -o json containers run1  every field of each
+machine containers run1                       the containers of run1
+machine -o json containers run1               every field of each
+machine containers run1 kill db --restart 5s  db dies, back in 5s
 ```
 
 Prints:
@@ -6065,6 +6069,313 @@ See also:
 - [`machine exec`](#machine-exec)
 - [`machine put`](#machine-put)
 - [`machine get`](#machine-get)
+- [`machine containers kill`](#machine-containers-kill)
+
+### machine containers stop
+
+Stop a container.
+
+The container's processes get SIGTERM, and SIGKILL after the grace period. A
+program that handles SIGTERM exits on its own first.
+
+The container stays down. Use `--restart` to start it again after a time of the
+machine, 0 for at once. Its peers run through the time it is down.
+
+A container started again keeps its writable layer and its volumes. Use
+`--fresh` to start it from its image instead, as Compose recreates a service.
+Its volumes are kept.
+
+```
+machine containers run stop [-h] [--grace duration] [--restart duration|never] [--fresh]
+                            container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--grace duration` | Machine time between SIGTERM and SIGKILL, such as 5s (default: 10s) |
+| `--restart duration\|never` | Start it again after this machine time, 0 at once (default: never) |
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 stop db              db stops
+machine containers run1 stop db --grace 2s   SIGKILL after 2s
+machine containers run1 stop db --restart 0  and starts again
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running or paused  machine containers run1 start db
+```
+
+See also:
+
+- [`machine containers kill`](#machine-containers-kill)
+- [`machine containers start`](#machine-containers-start)
+- [`machine containers`](#machine-containers)
+
+### machine containers kill
+
+Kill a container.
+
+Every process of the container gets SIGKILL and no cleanup runs. What the
+programs wrote stays, since the guest's kernel writes it out.
+
+The container stays down. Use `--restart` to start it again after a time of the
+machine, 0 for at once. Its peers run through the time it is down.
+
+A container started again keeps its writable layer and its volumes. Use
+`--fresh` to start it from its image instead, as Compose recreates a service.
+Its volumes are kept.
+
+```
+machine containers run kill [-h] [--restart duration|never] [--fresh] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--restart duration\|never` | Start it again after this machine time, 0 at once (default: never) |
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 kill db                      db dies
+machine containers run1 kill db --restart 5s         back in 5s
+machine containers run1 kill db --restart 0          back at once
+machine containers run1 kill db --restart 0 --fresh  back from its image
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running or paused  machine containers run1 start db
+```
+
+See also:
+
+- [`machine containers stop`](#machine-containers-stop)
+- [`machine containers start`](#machine-containers-start)
+- [`machine tasks signal`](#machine-tasks-signal)
+
+### machine containers crash
+
+Cut a container as a power cut cuts a node.
+
+The container's volumes lose the writes they had not synced, and it dies. The
+others run on. A volume keeps what was synced, and loses the writes still in
+memory.
+
+A crash cuts the volumes the project's x-machine names, each a filesystem of its
+own. Name one by its path in the container to cut it alone. A volume replays its
+journal when the container starts again.
+
+The container is frozen first, and the cut is when its volumes stop writing to
+the disk. A write the kernel finishes between the two is kept. A volume that
+another running container mounts is refused, since the cut would fail its writes
+too.
+
+The container stays down. Use `--restart` to start it again after a time of the
+machine, 0 for at once. Its peers run through the time it is down.
+
+A container started again keeps its writable layer and its volumes. Use
+`--fresh` to start it from its image instead, as Compose recreates a service.
+Its volumes are kept.
+
+```
+machine containers run crash [-h] [--restart duration|never] [--fresh] container [path]
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+| `[path]` | A volume's path in the container, to cut it alone (default: every volume) |
+
+| Option | Does |
+|---|---|
+| `--restart duration\|never` | Start it again after this machine time, 0 at once (default: never) |
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 crash db              a power cut of db
+machine containers run1 crash db --restart 0  and its reboot
+machine containers run1 crash db /data        that volume alone
+```
+
+Refuses, and the way past:
+
+```
+a container with no volume of its own      machine containers run1
+a volume another running container mounts  machine containers run1 stop side
+a container that is not running or paused  machine containers run1 start db
+```
+
+See also:
+
+- [`machine containers kill`](#machine-containers-kill)
+- [`machine containers start`](#machine-containers-start)
+- [`machine catch add`](#machine-catch-add)
+
+### machine containers start
+
+Start a container that is down.
+
+Use `--fresh` to start it from its image, as Compose recreates a service. Its
+writable layer is discarded and its volumes are kept.
+
+```
+machine containers run start [-h] [--fresh] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--fresh` | Start it from its image, its writable layer discarded |
+
+Examples:
+
+```
+machine containers run1 start db          db runs again
+machine containers run1 start db --fresh  from its image
+```
+
+Refuses, and the way past:
+
+```
+a container that is running  machine containers run1
+--fresh on an older disk     machine disks build --compose ./p app
+```
+
+See also:
+
+- [`machine containers stop`](#machine-containers-stop)
+- [`machine containers kill`](#machine-containers-kill)
+- [`machine containers`](#machine-containers)
+
+### machine containers pause
+
+Freeze a container.
+
+The container's processes stop where they are, in the cgroup freezer. Its peers
+see it hang. Use `--for` to thaw it after a time of the machine, or resume to
+thaw it.
+
+```
+machine containers run pause [-h] [--for duration] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Thaw it after this machine time, such as 5s |
+
+Examples:
+
+```
+machine containers run1 pause db           db freezes
+machine containers run1 pause db --for 5s  for 5s
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine containers resume`](#machine-containers-resume)
+- [`machine containers throttle`](#machine-containers-throttle)
+- [`machine tasks hold`](#machine-tasks-hold)
+
+### machine containers resume
+
+Thaw a frozen container.
+
+```
+machine containers run resume [-h] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+Examples:
+
+```
+machine containers run1 resume db  db thaws
+```
+
+Refuses, and the way past:
+
+```
+a container that is not paused  machine containers run1
+```
+
+See also:
+
+- [`machine containers pause`](#machine-containers-pause)
+- [`machine containers`](#machine-containers)
+
+### machine containers throttle
+
+Limit the CPU of a container.
+
+The container's cgroup gets a CPU quota of the number of CPUs given. A number of
+0 lifts the limit. The limit goes with the container's next start.
+
+Use `--for` to set back the limit it had after a time of the machine.
+
+```
+machine containers run throttle [-h] --cpus n [--for duration] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--cpus n` | CPUs it may use, such as 0.1; 0 for no limit |
+| `--for duration` | Set back the limit it had after this machine time, such as 30s |
+
+Examples:
+
+```
+machine containers run1 throttle db --cpus 0.1            a tenth of a CPU
+machine containers run1 throttle db --cpus 0.1 --for 30s  for 30s
+machine containers run1 throttle db --cpus 0              no limit
+```
+
+Refuses, and the way past:
+
+```
+a container that is not running  machine containers run1
+```
+
+See also:
+
+- [`machine containers pause`](#machine-containers-pause)
+- [`machine containers`](#machine-containers)
+- [`machine tasks slice`](#machine-tasks-slice)
 
 ## machine core
 

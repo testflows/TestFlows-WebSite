@@ -734,6 +734,14 @@ app      compose-app-1  running  alpine:3.20
 db       compose-db-1   running  alpine:3.20
 ```
 
+Each service's output, every line it prints across every start of its
+container, is a source of its own. The console shows all of them together,
+each line after its service's name:
+
+```bash
+machine output app --source /output/keep/db/console
+```
+
 The command has the container's environment and working directory. `--user`
 picks the user it runs as, by name or as `uid:gid`; without it the command runs
 as the container's own user. A service that runs several containers is refused,
