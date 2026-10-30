@@ -22,6 +22,12 @@ permalink: docs/machine/index.html
 
 <!-- include: steering-programs.md -->
 
+<!-- include: fault-injection.md -->
+
+<!-- include: container-faults.md -->
+
+<!-- include: clock-faults.md -->
+
 <!-- include: debugging.md -->
 
 <!-- include: reading-the-disk.md -->
