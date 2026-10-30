@@ -1,3 +1,5 @@
+https://testflows.com/docs/machine/index.html
+https://testflows.com/docs/machine.md
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
@@ -38,8 +40,6 @@ https://testflows.com/machine/legal/terms-of-service/index.html
 https://testflows.com/machine/legal/terms-of-service.md
 https://testflows.com/machine/legal/usage-credit/index.html
 https://testflows.com/machine/legal/usage-credit.md
-https://testflows.com/docs/machine/index.html
-https://testflows.com/docs/machine.md
 https://testflows.com/machine/index.html
 https://testflows.com/machine.md
 https://testflows.com/legal/copyright-and-content-use/index.html
@@ -107,9 +107,12 @@ https://testflows.com/docs/framework/writing-tests.md
 https://testflows.com/docs/framework/yml-config-files.md
 https://testflows.com/docs/machine/account-and-billing.md
 https://testflows.com/docs/machine/checkpoints-and-branches.md
+https://testflows.com/docs/machine/clock-faults.md
 https://testflows.com/docs/machine/commands.md
+https://testflows.com/docs/machine/container-faults.md
 https://testflows.com/docs/machine/debugging.md
 https://testflows.com/docs/machine/disks.md
+https://testflows.com/docs/machine/fault-injection.md
 https://testflows.com/docs/machine/getting-started.md
 https://testflows.com/docs/machine/overview.md
 https://testflows.com/docs/machine/python-sdk.md

@@ -173,7 +173,7 @@ since an exit is the end of a process. A `throw`, `catch` or `rethrow`
 catchpoint needs `--in tgid=N`.
 
 `--in comm=NAME` stops at the events of the tasks with that name, the same
-tasks [`machine tasks app exist comm=NAME`](steering-programs.md#which-calls-fail)
+tasks [`machine tasks app exist comm=NAME`](fault-injection.md#which-calls-fail)
 lists. That catches one tool of a busybox, or a script, before you know its
 ids. An `exec` catchpoint sees the new program's name. An `exit` catchpoint
 sees the name of the process's main thread, which ends last, so a worker

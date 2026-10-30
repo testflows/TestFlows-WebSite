@@ -2385,7 +2385,7 @@ machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
 | `--vtime-base n` | The vtime base (Unix timestamp, default: 2026-03-01) |
-| `--vtime-rate rate` | Nanoseconds of machine time for each conditional branch the guest retires, a number or num/den (default: 10) |
+| `--vtime-rate rate` | Nanoseconds of machine time for each conditional branch the guest retires, a number or num/den, and N=rate for vCPU N's own, such as 10,1=40 (default: 10) |
 | `--vtime-io-cost ns` | IO exit vtime cost in ns (default: 2000) |
 | `--vtime-rdtsc-cost ns` | RDTSC exit vtime cost in ns (default: the IO cost) |
 | `--vtime-pause-cost ns` | Vtime cost of each PAUSE in ns (default: 2000) |
@@ -2876,11 +2876,13 @@ stays as it was.
 ```
 machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
             [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
-            [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n] [--mode list]
-            [--fast span] [--step span] [--step-into span] [--fence span]
+            [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n]
+            [--mode mode,...] [--fast span] [--step span] [--step-into span] [--fence span]
             [--vtime-rate span] [--vtime-add span] [--timer-slack span]
-            [--irq-delay [target=]span,...] [--task-sched choices] [--task-slice choices]
-            [--task-int choices] [--when predicate]
+            [--irq-delay [target=]span,...] [--vtime-io-cost span,...]
+            [--vtime-rdtsc-cost span,...] [--vtime-pause-cost span,...]
+            [--task-pin [tid=]set,...] [--task-sched mark,...] [--task-slice slice,...]
+            [--task-int int,...] [--when predicate]
             run
 ```
 
@@ -2904,7 +2906,7 @@ machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--str
 | `--rdtsc-exit` | Record an entry for every RDTSC exit |
 | `--no-idle-skip` | Keep machine time crawling while every vCPU is idle |
 | `--auto-checkpoints n` | Auto-checkpoint every N entries; 0 turns it off, default the machine's |
-| `--mode list` | Execution mode: fast, step, step-into, free, fence, or a comma list to draw among (default: fast) |
+| `--mode mode,...` | Execution mode: fast, step, step-into, free, fence, or a comma list to draw among, each with an optional [weight] (default: fast) |
 | `--fast span` | Limit fast draws when it wins (its member), overriding `--limit` |
 | `--step span` | Limit step draws when it wins (its member), overriding `--limit` |
 | `--step-into span` | Limit step-into draws when it wins (its member) |
@@ -2913,9 +2915,13 @@ machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--str
 | `--vtime-add span` | Nanoseconds to push the clock forward before each dispatch |
 | `--timer-slack span` | How late a timer may be in code that takes no exit, drawn per dispatch, at most 1s |
 | `--irq-delay [target=]span,...` | Hold each interrupt a time drawn from its target's span, at most 1s. A target is timer, ipi, init, blk, rng, console, serial, keyboard, device or all, and a bare span is all |
-| `--task-sched choices` | Draw a scheduler mark per dispatch for the task on that vCPU: keep, hold, yield, drain, drain-all |
-| `--task-slice choices` | Draw that task's slice per dispatch: keep, default, or a duration range such as 10us:600us |
-| `--task-int choices` | Draw an interrupt for that task per dispatch: none, preempt |
+| `--vtime-io-cost span,...` | Machine time an I/O, MMIO or hypercall exit costs, drawn per dispatch from spans such as 2us or 50:20us, 1ns to 1s |
+| `--vtime-rdtsc-cost span,...` | Machine time an RDTSC; it follows the I/O cost unless given costs, drawn per dispatch from spans such as 2us or 50:20us, 1ns to 1s |
+| `--vtime-pause-cost span,...` | Machine time each PAUSE a spin loop executes costs, drawn per dispatch from spans such as 2us or 50:20us, 1ns to 1s |
+| `--task-pin [tid=]set,...` | Draw per dispatch where a task is placed when it next wakes: a vCPU set such as 1-3, free or none; tid= names the task |
+| `--task-sched mark,...` | Draw a scheduler mark per dispatch for the task on that vCPU: keep, hold, yield, drain, drain-all |
+| `--task-slice slice,...` | Draw that task's slice per dispatch: keep, default, or a duration range such as 10us:600us |
+| `--task-int int,...` | Draw an interrupt for that task per dispatch: none, preempt |
 | `--when predicate` | Apply the clause only while this holds |
 
 Examples:
@@ -2935,6 +2941,8 @@ machine run run1 --until tgid=7:at=a.c:9     until tgid 7 reaches a.c:9
 machine run run1 --until tid=41:write=sum    until tid 41 writes sum
 machine run run1 --until tgid=7:access=buf   until tgid 7 touches buf
 machine run run1 --within 10s                until its clock has moved 10 s
+machine run run1 --vtime-pause-cost 50:20us  a PAUSE's cost drawn
+machine run run1 --task-pin 56=1,2           tid 56 on vCPU 1 or 2
 machine run run1 --until tasks --within 9s   the first of the two
 machine run run1 --irq-delay 0:2ms           hold each interrupt up to 2 ms
 machine run run1 --irq-delay blk=1ms         hold disk interrupts 1 ms
@@ -3005,8 +3013,7 @@ else  task-pin 56=golden:2[3],3[1]
 ```
 
 A clause names one when predicate, then any of these axes. An axis is a comma
-list of choices, one drawn per dispatch. [N] is an optional weight on a choice.
-The task-slice axis is the exception, a colon set that takes no weights:
+list of choices, one drawn per dispatch. [N] is an optional weight on a choice:
 
 ```text
 when <predicate>
@@ -3033,10 +3040,9 @@ task-sched <mark>[N],...
 task-int <int>[N],...
     an interrupt for that task: none or preempt. This axis has
     no keep: none is its do-nothing choice.
-task-slice <choice>:<choice>:...
-    that task's time slice, drawn from a colon set of keep,
-    default and a duration span, in any combination, as in
-    keep:default:10us:600us.
+task-slice <choice>[N],...
+    that task's time slice: keep, default, a duration or a
+    range of durations, as in keep,default,10us:600us.
 task-pin [<tid>=]<set>[N],...
     where a task is placed when it next wakes, each choice a
     set of vCPUs: 1-3 is all three, 1,2,3 is three choices of
@@ -3058,6 +3064,16 @@ irq-delay [<target>=]<duration>,...
     all. The most specific target wins. An interrupt never
     overtakes one held before it on its line, its MSI vector,
     or its vCPU's timer, IPI vector or INIT and SIPI.
+vtime-io-cost <duration>[N],...
+    what an I/O, MMIO or hypercall exit costs on the clock,
+    drawn per dispatch: a duration such as 2000 or 2us, a span
+    such as 1us:20us, or keep; 1ns to 1s. The run's own cost
+    comes back when the run ends.
+vtime-rdtsc-cost <duration>[N],...
+    what an RDTSC costs, the same way. Without it the RDTSC
+    cost follows the I/O cost.
+vtime-pause-cost <duration>[N],...
+    what each PAUSE of a spin loop costs, the same way.
 ```
 
 A weight makes a choice win more often. mode step[3],fast[1] draws step three
@@ -3068,8 +3084,9 @@ A span is a range written lo:hi[:strategy[:step]]. The strategy is random,
 golden or sweep. One value is drawn from the span per dispatch.
 
 A span is accepted by the mode member limit, vtime-rate, vtime-add, task-slice,
-timer-slack, irq-delay and the run-level `--limit`. The limit itself is not a
-clause axis. It is the default for a mode with no member limit of its own.
+timer-slack, irq-delay and the run-level `--limit`. The three exit costs take
+one too. The limit itself is not a clause axis. It is the default for a mode
+with no member limit of its own.
 
 The options of this command are plan-level. `--limit` and `--strategy` are the
 defaults for a clause that names no span of its own. A clause axis overrides
@@ -4226,9 +4243,9 @@ a run limits the listing to its tree. Use `--roots` for one row per tree, and
 
 ```
 machine runs [-h] [--state [^]state] [--running] [--roots] [--label name=value]
-             [--flag name[=value]] [--disk name|id] [--parents mode]
-             [--synced | --not-synced] [--since date|age] [--until date|age] [--sort field]
-             [--reverse] [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
+             [--flag name[=value]] [--disk name|id] [--parents mode] [--synced |
+             --not-synced] [--since date|age] [--until date|age] [--sort field] [--reverse]
+             [--limit n] [--offset n] [--no-trunc] [--wide] [--size] [-w]
              [root]
 ```
 
@@ -5749,7 +5766,7 @@ machine exec run run [-h] [-c line] [--container name] [--user user] [--within d
 | Option | Does |
 |---|---|
 | `-c line` | A line for the shell of the machine's disk, in place of a command |
-| `--container name` | Container to execute it in, by its name or its Compose service (default: the machine itself) |
+| `--container name` | Container to execute it in, by its id, its name or its Compose service (default: the machine itself) |
 | `--user user` | User the command runs as in the container, such as root or 1000:1000 |
 | `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
 
@@ -5805,7 +5822,7 @@ machine exec run start [-h] [-c line] [--container name] [--user user] [command 
 | Option | Does |
 |---|---|
 | `-c line` | A line for the shell of the machine's disk, in place of a command |
-| `--container name` | Container to execute it in, by its name or its Compose service (default: the machine itself) |
+| `--container name` | Container to execute it in, by its id, its name or its Compose service (default: the machine itself) |
 | `--user user` | User the command runs as in the container, such as root or 1000:1000 |
 
 Examples:
@@ -5921,7 +5938,7 @@ machine put [-h] [--container name] [--mode mode] [--owner uid:gid] [--no-pipe]
 
 | Option | Does |
 |---|---|
-| `--container name` | Container to put the file in, by its name or its Compose service (default: the machine itself) |
+| `--container name` | Container to put the file in, by its id, its name or its Compose service (default: the machine itself) |
 | `--mode mode` | Mode of the file, as octal digits (default: 644) |
 | `--owner uid:gid` | Owner of the file, as numbers (default: root) |
 | `--no-pipe` | Send the file over the serial port instead of the faster data channel |
@@ -5984,7 +6001,7 @@ machine get [-h] [--container name] [--within duration] run path file
 
 | Option | Does |
 |---|---|
-| `--container name` | Container to get the file from, by its name or its Compose service (default: the machine itself) |
+| `--container name` | Container to get the file from, by its id, its name or its Compose service (default: the machine itself) |
 | `--within duration` | Machine time allowed each time the command runs the machine, such as 10s (default: 30m) |
 
 Examples:
@@ -6025,9 +6042,19 @@ image. Stopped containers are listed too. A container that no service started
 has no service.
 
 A verb puts a fault on one container while the others run: a node of a cluster
-that stops, dies, loses power, freezes or starves. The exec, put and get
-commands take either name with `--container`. A service name stands for its
-container when the service has one.
+that stops, dies, loses power, freezes or starves.
+
+Every command that takes a container takes its id, its name or its Compose
+service. An id is the surer way to name one. The machine knows an id as soon as
+Docker creates the container. It knows a name shortly after the container
+starts.
+
+A running container is found with the machine stopped. A name not known yet is
+refused, and its id works. A service stands for its one running container. The
+start verb asks Docker for a stopped container.
+
+A name is matched first, then a service, then an id. An id takes 12 hex digits
+or more, as docker ps prints it.
 
 The machine runs until Docker has answered. The list is of the machine as it is
 then. The command runs processes in the machine, and the run records them, so a
@@ -6056,7 +6083,7 @@ machine containers run1 kill db --restart 5s  db dies, back in 5s
 Prints:
 
 ```
-text   SERVICE CONTAINER STATE IMAGE
+text   SERVICE CONTAINER ID STATE IMAGE
 STATE  running, exited, created, paused
 json   name service project state status image id
 ```
@@ -6096,7 +6123,7 @@ machine containers run stop [-h] [--grace duration] [--restart duration|never] [
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 
 | Option | Does |
 |---|---|
@@ -6145,7 +6172,7 @@ machine containers run kill [-h] [--restart duration|never] [--fresh] container
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 
 | Option | Does |
 |---|---|
@@ -6204,7 +6231,7 @@ machine containers run crash [-h] [--restart duration|never] [--fresh] container
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 | `[path]` | A volume's path in the container, to cut it alone (default: every volume) |
 
 | Option | Does |
@@ -6247,7 +6274,7 @@ machine containers run start [-h] [--fresh] container
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 
 | Option | Does |
 |---|---|
@@ -6287,7 +6314,7 @@ machine containers run pause [-h] [--for duration] container
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 
 | Option | Does |
 |---|---|
@@ -6322,7 +6349,7 @@ machine containers run resume [-h] container
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 
 Examples:
 
@@ -6356,7 +6383,7 @@ machine containers run throttle [-h] --cpus n [--for duration] container
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its name or its service's |
+| `container` | Container, by its id, its name or its service's |
 
 | Option | Does |
 |---|---|
@@ -6412,7 +6439,7 @@ machine core [-h] [--container name] [--signal signal] [--within duration] run p
 
 | Option | Does |
 |---|---|
-| `--container name` | Container the process is in, by its name or its Compose service (default: the machine itself) |
+| `--container name` | Container the process is in, by its id, its name or its Compose service (default: the machine itself) |
 | `--signal signal` | Signal the process dies of, by name or number (default: ABRT) |
 | `--within duration` | Machine time allowed each time the command runs the machine, such as 10s (default: 30m) |
 
@@ -6491,7 +6518,7 @@ machine profile [-h] [--for duration | --from point [point ...]] [--to point [po
 | `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The stretch is replayed on a branch |
 | `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the run's last entry) |
 | `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
-| `--container name` | Container to show, by its name or its Compose service (default: the machine itself) |
+| `--container name` | Container to show, by its id, its name or its Compose service (default: the machine itself) |
 | `--in-guest` | Sample with the profiler of the exec agent, a process of the guest: kernel functions by name, at the cost of changing the run |
 | `--folded` | Print the stacks, one a line with its count, for another tool to draw |
 | `--flame` | Draw a flame graph in the terminal |
@@ -7250,6 +7277,136 @@ See also:
 - [`machine inject`](#machine-inject)
 - [`machine inject delete`](#machine-inject-delete)
 
+## machine axis
+
+Set the defaults of the draw axes a run uses.
+
+A default is a plan clause the run keeps. Every run, exec and plan draws from
+the defaults until they are removed. The axes are the ones a plan clause takes,
+such as mode, vtime-rate, task-sched and irq-delay.
+
+A run option or a plan clause replaces a default for the axes it names. A
+default with a when condition replaces one with no condition where the condition
+holds. Of two conditions that hold, the default set last wins.
+
+The defaults are part of the machine. A checkpoint keeps them, and a fork has
+its parent's. The run records each change, and a replay makes it at the same
+point.
+
+Without a verb the command lists the defaults.
+
+```
+machine axis [-h] run command ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine axis run1                             the defaults
+machine axis run1 set task-sched hold         every dispatch
+machine axis run1 set when /app:on mode step  in /app
+machine axis run1 unset task-sched            no condition
+machine axis run1 clear                       every default
+```
+
+See also:
+
+- [`machine axis set`](#machine-axis-set)
+- [`machine axis unset`](#machine-axis-unset)
+- [`machine plan`](#machine-plan)
+- [`machine run`](#machine-run)
+
+### machine axis set
+
+Set a default of the draw axes.
+
+The default is a clause of a plan, written as a plan file writes it. It names
+one or more axes and their values. A clause that starts with when applies where
+its predicate holds.
+
+The default replaces the values its axes had under the same condition. A clause
+that names several axes draws them together.
+
+```
+machine axis run set [-h] ...
+```
+
+| Argument | Does |
+|---|---|
+| `...` | A plan clause, such as when /app:on task-sched hold |
+
+Examples:
+
+```
+machine axis run1 set vtime-rate 10:40                      a drawn rate
+machine axis run1 set irq-delay blk=1ms                     disk interrupts
+machine axis run1 set when /app:on mode step vtime-rate 40  together
+```
+
+See also:
+
+- [`machine axis`](#machine-axis)
+- [`machine axis unset`](#machine-axis-unset)
+- [`machine plan`](#machine-plan)
+
+### machine axis unset
+
+Remove defaults of the draw axes.
+
+The axes are named as a clause names them, without values. A clause that starts
+with when removes the defaults under that predicate. Without when, the command
+removes the defaults that have no condition.
+
+Use `--all` to remove the axes' defaults under every condition.
+
+```
+machine axis run unset [-h] [--all] ...
+```
+
+| Argument | Does |
+|---|---|
+| `...` | Axis names after an optional when predicate, such as when /app:on mode |
+
+| Option | Does |
+|---|---|
+| `--all` | Remove the axes' defaults under every condition |
+
+Examples:
+
+```
+machine axis run1 unset mode               no condition
+machine axis run1 unset when /app:on mode  in /app
+machine axis run1 unset --all mode         every condition
+```
+
+See also:
+
+- [`machine axis`](#machine-axis)
+- [`machine axis set`](#machine-axis-set)
+
+### machine axis clear
+
+Remove every default.
+
+```
+machine axis run clear [-h]
+```
+
+Examples:
+
+```
+machine axis run1 clear  every default
+```
+
+See also:
+
+- [`machine axis`](#machine-axis)
+- [`machine axis unset`](#machine-axis-unset)
+
 ## machine vtime
 
 Show and change machine time.
@@ -7258,9 +7415,11 @@ See [Machine time](steering-programs.md#machine-time).
 Machine time is the guest's clock. It is derived from what the machine executes,
 not from the host clock.
 
-Use rate to change how fast machine time passes. Use add to push the clock
-forward without running the machine. The clock only goes forward. Use rewind to
-put the run back at an earlier point.
+Use rate to change how fast machine time passes. Use cost to change what each
+exit costs on it. Use add to push the clock forward without running the machine.
+The clock only goes forward.
+
+Use rewind to put the run back at an earlier point.
 
 ```
 machine vtime [-h] run command ...
@@ -7292,7 +7451,12 @@ See [Machine time](steering-programs.md#machine-time).
 The rate is the nanoseconds of machine time for each conditional branch the
 guest retires. A run starts at 10 unless create was given `--vtime-rate`.
 
-Give the rate as a number or as num/den.
+Give the rate as a number or as num/den. Add N=rate to give vCPU N its own rate,
+so its work costs more or less time than the others'. A rate for every vCPU
+clears each vCPU's own.
+
+The run records each change, and a replay makes it at the same point. A run's
+`--vtime-rate` draws one rate for every vCPU for that run alone.
 
 ```
 machine vtime run rate [-h] rate
@@ -7300,13 +7464,15 @@ machine vtime run rate [-h] rate
 
 | Argument | Does |
 |---|---|
-| `rate` | Rate, or num/den |
+| `rate` | Rate, num/den, and N=rate for vCPU N's own, such as 10,1=40 |
 
 Examples:
 
 ```
-machine vtime run1 rate 20   20 ns for each conditional branch
-machine vtime run1 rate 1/2  1 ns for every two
+machine vtime run1 rate 20       20 ns for each conditional branch
+machine vtime run1 rate 1/2      1 ns for every two
+machine vtime run1 rate 10,1=40  vCPU 1 at 40, the rest at 10
+machine vtime run1 rate 1=20     vCPU 1's own rate alone
 ```
 
 See also:
@@ -7341,6 +7507,379 @@ See also:
 - [`machine vtime rate`](#machine-vtime-rate)
 - [`machine vtime`](#machine-vtime)
 - [`machine fork`](#machine-fork)
+
+### machine vtime cost
+
+Set what each exit costs on the machine's clock.
+
+Each exit of the guest advances machine time by a cost. The exits priced are an
+I/O, MMIO or hypercall exit, an RDTSC and each PAUSE of a spin loop. The rate
+prices the guest's computing, and the costs price its waiting. Their ratio
+decides whether a spin or an I/O completion wins a race.
+
+Give io=, rdtsc= or pause= with a time from 1ns to 1s. A bare number is
+nanoseconds. A cost not given stays as it is. The RDTSC cost follows the I/O
+cost until it is given, and rdtsc=io makes it follow again.
+
+The run records the change, and a replay makes it at the same point. A run's
+`--vtime-io-cost`, `--vtime-rdtsc-cost` or `--vtime-pause-cost` draws its own
+costs for that run alone.
+
+```
+machine vtime run cost [-h] exit=time [exit=time ...]
+```
+
+| Argument | Does |
+|---|---|
+| `exit=time [exit=time ...]` | An exit and its cost, such as io=2us, rdtsc=1us or pause=50; rdtsc=io follows the I/O cost |
+
+Examples:
+
+```
+machine vtime run1 cost io=20us    each I/O exit costs 20 us
+machine vtime run1 cost pause=50   each PAUSE costs 50 ns
+machine vtime run1 cost rdtsc=1us  an RDTSC apart from I/O
+machine vtime run1 cost rdtsc=io   an RDTSC as an I/O again
+```
+
+See also:
+
+- [`machine vtime rate`](#machine-vtime-rate)
+- [`machine vtime`](#machine-vtime)
+- [`machine run`](#machine-run)
+- [`machine plan`](#machine-plan)
+
+## machine clock
+
+Show and change the guest's date and each container's.
+
+The command steps the date and sets it. It makes a container's date drift, or
+slews it to a new value. It steps the date to a drawn offset each period, as NTP
+does. It inserts or deletes a leap second.
+
+The date is what date, time and gettimeofday return. A change moves it for every
+process in the guest. Elapsed time, the TSC and timers measured in elapsed time
+do not move. Use vtime to change how fast time runs.
+
+The guest kernel applies a change when the run next executes. The command
+answers with the date as it stands and the change waiting.
+
+A change is part of the machine. The run records it, and a replay makes it at
+the same point. A checkpoint keeps the date and a pending undo.
+
+A container's date is an offset from the guest's date. Every process of the
+container reads it, those docker exec starts included. A timer armed after a
+change agrees with it. A timer armed before keeps its deadline.
+
+Without a verb the command shows the date and each container's. The command
+finds a container with the machine stopped and never runs it. It tries a name
+first, then a service, then an id. An id works from the container's start, while
+a name is known shortly after.
+
+A jump or a set takes a running container. A show or a reset also takes a
+stopped one with an offset. A service stands for its one container of those.
+
+```
+machine clock [-h] [--container name] run command ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+| Option | Does |
+|---|---|
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1                                   the guest's date
+machine clock run1 jump +59m50s                      10s short of an hour
+machine clock run1 jump -2s                          a step back
+machine clock run1 set 2038-01-19T03:13:30Z          a date
+machine clock run1 reset                             machine time
+machine clock run1 --container db                    db's date
+machine clock run1 jump +2s --for 1m --container db  db alone
+machine clock run1 drift +200ppm --container db      db drifts
+machine clock run1 jitter -200ms:200ms --every 10m   NTP's steps
+machine clock run1 leap insert                       23:59:60 at midnight
+```
+
+See also:
+
+- [`machine clock jump`](#machine-clock-jump)
+- [`machine clock set`](#machine-clock-set)
+- [`machine clock drift`](#machine-clock-drift)
+- [`machine clock jitter`](#machine-clock-jitter)
+- [`machine clock leap`](#machine-clock-leap)
+- [`machine containers`](#machine-containers)
+- [`machine vtime`](#machine-vtime)
+
+### machine clock jump
+
+Step the guest's date forward or back.
+
+The step is the one an NTP step or date -s makes. A timer armed for an absolute
+date sees the step. A timerfd with TFD_TIMER_CANCEL_ON_SET is woken. Each step
+adds to the ones before it.
+
+Use `--for 30s` to undo the change after 30 seconds of machine time. The undo
+takes back the command's own change, and what a drift gave meanwhile stays. A
+later change cancels an undo still pending.
+
+Use `--slew 30s` with `--container` to move a container's date over 30 seconds
+of machine time. No read in it sees a jump. With `--for`, the date slews back
+over the same time.
+
+Use `--container` db to change one container's date alone. The container keeps
+its offset from the guest's date across a restart.
+
+```
+machine clock run jump [-h] [--for duration] [--slew duration] [--container name] offset
+```
+
+| Argument | Does |
+|---|---|
+| `offset` | The step, such as +5s, -2h or 59m50s; no sign is forward |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Undo the change after this much machine time, such as 30s |
+| `--slew duration` | Move a container's date over this machine time, such as 30s |
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1 jump +5s                            forward
+machine clock run1 jump -500ms --for 30s               back, then undone
+machine clock run1 jump +2s --container db             db alone
+machine clock run1 jump +1h --container 59636762b6f8   by id
+machine clock run1 jump +4s --slew 30s --container db  slewed
+```
+
+See also:
+
+- [`machine clock`](#machine-clock)
+- [`machine clock set`](#machine-clock-set)
+- [`machine clock reset`](#machine-clock-reset)
+
+### machine clock set
+
+Set the guest's date.
+
+The date is written with its zone, such as 2027-03-28T00:59:50Z. The change is a
+step, as date -s makes one.
+
+Use `--for 30s` to undo the change after 30 seconds of machine time. The undo
+takes back the command's own change, and what a drift gave meanwhile stays. A
+later change cancels an undo still pending.
+
+Use `--slew 30s` with `--container` to move a container's date over 30 seconds
+of machine time. No read in it sees a jump. With `--for`, the date slews back
+over the same time.
+
+Use `--container` db to change one container's date alone. The container keeps
+its offset from the guest's date across a restart.
+
+```
+machine clock run set [-h] [--for duration] [--slew duration] [--container name] date
+```
+
+| Argument | Does |
+|---|---|
+| `date` | The date with its zone, such as 2027-03-28T00:59:50Z |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Undo the change after this much machine time, such as 30s |
+| `--slew duration` | Move a container's date over this machine time, such as 30s |
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1 set 2026-12-31T23:59:50Z                 the year's end
+machine clock run1 set 2027-03-28T00:59:50Z --for 1m        for a minute
+machine clock run1 set 2038-01-19T03:13:30Z --container db  db alone
+```
+
+See also:
+
+- [`machine clock`](#machine-clock)
+- [`machine clock jump`](#machine-clock-jump)
+
+### machine clock drift
+
+Make a container's date gain or lose time.
+
+The container's date gains the rate of each second of machine time, such as
++200ppm, 0.72 seconds an hour. No read sees a jump. Its processes read it in the
+vDSO and in system calls. A timer armed after agrees with it.
+
+Use drift 0 to stop it and keep the offset it reached. A jump, a set or a jitter
+moves the date under the drift.
+
+The guest's date has no drift. Use vtime rate to make the whole machine's time
+run fast or slow.
+
+Use `--for 30s` to undo the change after 30 seconds of machine time. The undo
+takes back the command's own change, and what a drift gave meanwhile stays. A
+later change cancels an undo still pending.
+
+```
+machine clock run drift [-h] [--for duration] [--container name] rate
+```
+
+| Argument | Does |
+|---|---|
+| `rate` | The rate, such as +200ppm, -1.5ppm or 300ppb; 0 stops it |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Undo the change after this much machine time, such as 30s |
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1 drift +200ppm --container db          0.72s an hour
+machine clock run1 drift -50ppm --for 1h --container db  for an hour
+machine clock run1 drift 0 --container db                stopped
+```
+
+See also:
+
+- [`machine clock`](#machine-clock)
+- [`machine clock jump`](#machine-clock-jump)
+- [`machine vtime`](#machine-vtime)
+
+### machine clock jitter
+
+Step the guest's date to a drawn offset each period.
+
+Each period of machine time the date is set to a value drawn from the choices.
+The value is around the date the jitter leaves alone. A choice is a span such as
+-200ms:200ms or one value such as 1s. A weight in brackets draws a choice more
+often, as -1s[1],0[8],1s[1] does.
+
+The first step is taken when the guest takes the command, and the next a period
+later. Each step is a step of the date, as NTP makes one. A jump or a set moves
+the date under the jitter, which goes on around it. Use jitter off to stop it
+and return to the date without it.
+
+The draws come from `--seed`, or from a seed drawn at random and shown. A replay
+steps by the same amounts at the same points. A fork has its parent's jitter and
+draws on from where it was.
+
+Use `--for 30s` to undo the change after 30 seconds of machine time. The undo
+takes back the command's own change, and what a drift gave meanwhile stays. A
+later change cancels an undo still pending.
+
+Use `--container` db to change one container's date alone. The container keeps
+its offset from the guest's date across a restart.
+
+```
+machine clock run jitter [-h] [--every duration] [--seed n] [--for duration]
+                         [--container name]
+                         choices
+```
+
+| Argument | Does |
+|---|---|
+| `choices` | The choices, such as -200ms:200ms or -1s[1],0[8],1s[1]; off stops it |
+
+| Option | Does |
+|---|---|
+| `--every duration` | Machine time between two steps, such as 10m |
+| `--seed n` | The seed the steps are drawn from (default: one drawn at random) |
+| `--for duration` | Undo the change after this much machine time, such as 30s |
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1 jitter -200ms:200ms --every 10m        NTP's steps
+machine clock run1 jitter -1s[1],0[8],1s[1] --every 1m    weighted
+machine clock run1 jitter -50ms:50ms --every 1m --seed 7  a seed
+machine clock run1 jitter 1s --every 5s --container db    db alone
+machine clock run1 jitter off                             stopped
+```
+
+See also:
+
+- [`machine clock`](#machine-clock)
+- [`machine clock jump`](#machine-clock-jump)
+- [`machine clock reset`](#machine-clock-reset)
+
+### machine clock leap
+
+Insert or delete a second at the next UTC midnight.
+
+The guest kernel inserts 23:59:60 or skips 23:59:59 at the next midnight of the
+guest's date. It does so as an NTP daemon's leap flag asks it to. Then it clears
+the flag. Use leap off to cancel a leap still pending.
+
+A leap second is the guest kernel's timekeeping, so it moves every container
+with the guest's date. A reset cancels it too.
+
+```
+machine clock run leap [-h] [--container name] {insert,delete,off}
+```
+
+| Argument | Does |
+|---|---|
+| `{insert,delete,off}` | Insert, delete, or off to cancel a leap pending |
+
+| Option | Does |
+|---|---|
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1 leap insert  23:59:60 at midnight
+machine clock run1 leap delete  23:59:59 skipped
+machine clock run1 leap off     cancelled
+```
+
+See also:
+
+- [`machine clock`](#machine-clock)
+- [`machine clock set`](#machine-clock-set)
+- [`machine clock reset`](#machine-clock-reset)
+
+### machine clock reset
+
+Step the guest's date and every container's back to machine time.
+
+Machine time is the date the guest kernel had at boot, moved by elapsed time.
+The reset undoes every step, those of clock and those a process made, and
+cancels every pending undo.
+
+Use `--container` db to return one container to the guest's date. The guest's
+date and the other containers stay as they are.
+
+```
+machine clock run reset [-h] [--container name]
+```
+
+| Option | Does |
+|---|---|
+| `--container name` | A container by its id, its name or its Compose service |
+
+Examples:
+
+```
+machine clock run1 reset                 the guest and every container
+machine clock run1 reset --container db  db alone
+```
+
+See also:
+
+- [`machine clock`](#machine-clock)
+- [`machine clock jump`](#machine-clock-jump)
 
 ## machine rng
 

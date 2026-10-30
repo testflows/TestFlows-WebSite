@@ -261,7 +261,7 @@ The `explore_seeds.py` example keeps the branches that fail and marks them.
 
 ## Faults
 
-`run.inject` adds the faults [Fault injection](steering-programs.md#fault-injection)
+`run.inject` adds the faults [Fault injection](fault-injection.md)
 describes, with the same subsystems and options as keywords. Check the target
 first with `run.tasks.exist`, which raises `NotFound` when nothing runs it:
 
@@ -284,7 +284,7 @@ run.inject.add("disk", in_="comm=dd", file="/var/data.bin", op="write")
 
 The `fault_injection.py` example runs both and prints what the program saw.
 
-`on` and `off` make a fault [cycle](steering-programs.md#faults-that-cycle):
+`on` and `off` make a fault [cycle](fault-injection.md#faults-that-cycle):
 `run.inject.add("disk", in_="all", on="2s", off="5s")` fails every disk
 request for 2 seconds in every 7 of machine time. Each `Fault` says where it
 is: `active`, and `left_ns`, the time left in that window.
@@ -292,7 +292,7 @@ is: `active`, and `left_ns`, the time left in that window.
 ## Container faults
 
 `run.containers` puts a fault on one service of a Compose project, as
-[Container faults](steering-programs.md#container-faults) describes, while the
+[Container faults](container-faults.md) describes, while the
 others keep running. A crash loses what the service had not synced to the
 volumes its project names under `x-machine`:
 
@@ -313,6 +313,39 @@ print(run.exec("ls /data", container="app").stdout)   # kept is there, lost is n
 `throttle` take `for_=`, and `throttle` takes `cpus=`. `run.containers()` lists the containers with the
 service, name and state of each. The `container_crash.py` example builds a
 project, crashes one service and reads its volume after the restart.
+
+## Clock faults
+
+`run.clock` changes the guest's date or one container's, as
+[Clock faults](clock-faults.md) describes. Each method returns the date as it
+stands, with the change waiting for the run to execute:
+
+```python
+run.clock.jump("+59m50s")
+run.run(within="30s", until="console~token refresh")
+print(run.clock().offset)                    # ns from machine time
+
+run.clock.drift("+200ppm", container="db")
+run.clock.jump("+4s", for_="2m", slew="30s", container="db")
+run.clock.jitter("-200ms:200ms", every="10m", seed=42, container="api")
+run.clock.leap("insert")
+run.clock.reset()
+```
+
+`run.clock(container="db")` reads one container. `ClockInfo.containers` lists
+each container off the guest's date with its `offset`, `drift`, `slew` and
+`jitter`, and `ClockInfo.jitter` and `ClockInfo.leap` are the guest's.
+
+To find how much skew a system tolerates, fork one checkpoint into branches,
+one skew each:
+
+```python
+for skew_ms in (50, 100, 200, 400, 800):
+    branch = run.fork(at="^steady")
+    branch.clock.jump(f"+{skew_ms}ms", container="node2")
+    result = branch.run(within="2m", until="console~two leaders")
+    print(skew_ms, result.reached)
+```
 
 ## Stopping at an event
 
