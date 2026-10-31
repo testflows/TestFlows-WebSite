@@ -202,23 +202,55 @@ refused: the date, the guest's or a container's, would leave the range the kerne
 
 ### Clock fault use cases
 
-| You want to know | Command |
-|---|---|
-| Does the program refresh a token before it expires? | `jump +59m50s`, then `run --until 'console~token refresh'` |
-| Does a client accept a certificate issued in its future? | `jump -6m --container client` |
-| Do two nodes both lead when one clock runs fast? | `drift +5000ppm --container node2` |
-| Does last-write-wins lose the write from the slow data center? | `jump +3s --container dc2` |
-| Does the program survive the clock going backwards? | `jump -2s` |
-| Does the system cope with the NTP correction that follows a bad clock? | `jump +4s --for 2m --slew 30s --container db` |
-| Does a node shut itself down on skew, and come back? | `drift +1000ppm --container roach3` |
-| Does the program survive 23:59:60? | `set 2026-12-31T23:59:50Z`, then `leap insert` |
-| Does a scheduled job run twice or not at all across a time zone change? | `set 2027-03-28T00:59:50Z`, with `TZ` set in the container |
-| Does the program handle 2038 and February 29? | `set 2038-01-19T03:13:30Z`, `set 2028-02-28T23:59:55Z` |
-| Do services that compare timestamps agree when clocks wobble? | `jitter -200ms:200ms --every 10m --container api` |
-| Does a cache or session expire when its day is over? | `jump +1d --container redis` |
+Each block below is a question a clock fault answers, and the commands that
+ask it. Run the machine afterwards, with `machine run app --within 2m` or with
+an `--until` the program prints, and read what it did.
 
-**How much skew does the system tolerate?** Fork the same checkpoint into
-branches, one skew each, and run each to the same point. Every branch starts
+```bash
+# Does the program refresh a token before it expires?
+machine clock app jump +59m50s
+machine run app --within 30s --until 'console~token refresh'
+
+# Does a client accept a certificate issued in its future?
+machine clock app jump -6m --container client
+
+# Do two nodes both lead when one clock runs fast?
+machine clock app drift +5000ppm --container node2
+
+# Does last-write-wins lose the write from the slow data center?
+machine clock app jump +3s --container dc2
+
+# Does the program survive the clock going backwards?
+machine clock app jump -2s
+
+# Does the system cope with the NTP correction that follows a bad clock?
+machine clock app jump +4s --for 2m --slew 30s --container db
+
+# Does a node shut itself down on skew, and come back?
+machine clock app drift +1000ppm --container roach3
+
+# Does the program survive 23:59:60?
+machine clock app set 2026-12-31T23:59:50Z
+machine clock app leap insert
+
+# Does a scheduled job run twice or not at all across a time zone change?
+# Set TZ in the container first.
+machine clock app set 2027-03-28T00:59:50Z
+
+# Does the program handle 2038 and February 29?
+machine clock app set 2038-01-19T03:13:30Z
+machine clock app set 2028-02-28T23:59:55Z
+
+# Do services that compare timestamps agree when clocks wobble?
+machine clock app jitter -200ms:200ms --every 10m --container api
+
+# Does a cache or session expire when its day is over?
+machine clock app jump +1d --container redis
+```
+
+#### How much skew the system tolerates
+
+Fork the same checkpoint into branches, one skew each, and run each to the same point. Every branch starts
 from the identical machine, so the skew is the only difference:
 
 ```bash
@@ -230,7 +262,9 @@ for skew in 50ms 100ms 200ms 400ms 800ms; do
 done
 ```
 
-**A jump inside one request.** Most time bugs are check-then-use: the process
+#### A jump inside one request
+
+Most time bugs are check-then-use: the process
 checks a token's expiry, the clock steps, and it uses what it checked. Stop the
 run where the check is done, jump, and go on:
 

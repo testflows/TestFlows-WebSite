@@ -689,3 +689,10 @@ blockquote::-webkit-scrollbar {
     .handbook .toc > .toc-level-1 { padding-left: 2.5rem; }
 }
 
+
+/* Space after a code block and a Markdown table, as after a paragraph:
+   highlight.css zeroes the block's margin, and a bare table has none, so the
+   text that follows sat against it. A code block's own table is inside its
+   figure and keeps none. */
+main.content figure.highlight { margin-bottom: 1rem; }
+main.content :not(figure) > table { margin-bottom: 1rem; }
