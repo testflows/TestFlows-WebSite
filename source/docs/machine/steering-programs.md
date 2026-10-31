@@ -276,7 +276,6 @@ From Python, `client.create("app", disk="app", vtime_base=1893456000)` sets
 the starting date, `run.vtime.rate("20")` the rate, and `run.vtime.add("5s")`
 pushes the clock forward.
 
-Faults have pages of their own: [Fault injection](fault-injection.md) for
-system calls, the kernel and the disk, [Container faults](container-faults.md)
-for a service's container, and [Clock faults](clock-faults.md) for the
-date the guest and its containers read.
+[Fault injection](fault-injection.md) makes things fail: system calls, the
+kernel and the disk, a service's container, and the date the guest and its
+containers read.

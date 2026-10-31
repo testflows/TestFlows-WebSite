@@ -71,7 +71,7 @@ machine play app/try-1 --include irq random
 `--include` plays only the kinds of entry you name, and `--exclude` plays every
 kind but those.
 
-### Comparing entries
+## Comparing entries
 
 `machine diff` compares one entry. A difference often starts a few entries
 before the one that shows it, so `--context` also prints the entries leading
@@ -89,7 +89,7 @@ A replay that diverges is different. Every recording must replay, so a
 divergence is a bug in Machine, not in your program. Keep the run and the
 branch that diverged: the recording is what reproduces it.
 
-### At the control prompt
+## At the control prompt
 
 Replay and diff are one loop at the [control prompt](running-a-machine.md#interactive-mode).
 Open it on the branch, and chain the two with `;+`, so `/diff` runs whether
@@ -111,7 +111,7 @@ entry 120 with its recording and shows only the registers, and `context 5`
 adds the five entries before it. `/play` feeds the parent's entries 295 to 300
 without checking them, here only the interrupts.
 
-### From Python
+## From Python
 
 `run.replay()` returns the result instead of raising. Check `converged`, and
 `diverged` holds what differed:

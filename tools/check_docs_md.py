@@ -150,8 +150,10 @@ def check_sections(p):
             titles[key] = key
         else:
             first = headings(body)
-            if not body.lstrip().startswith("# ") or not first:
-                problems.append(f"{where}: after the note, the first line must be a '# ' heading")
+            # '## ' for a part the page nests under the part before it, as
+            # Container faults and Clock faults are under Fault injection.
+            if not body.lstrip().startswith(("# ", "## ")) or not first:
+                problems.append(f"{where}: after the note, the first line must be a '# ' or '## ' heading")
                 continue
             titles[key] = p["title_for"].get(key, first[0])
     page_only = 0
@@ -309,12 +311,15 @@ def check_built(p, order, extra_pairs):
     html = page.read_text()
     if "<!-- include:" in html or "<!-- agents:" in html:
         problems.append(f"{page} still has an include or agent note in it")
-    ids = set(re.findall(r'<h1 id="([^"]+)"', html))
+    ids = set(re.findall(r'<h[12] id="([^"]+)"', html))
     for key in order:
         src = d / f"{key}.md"
         if not src.exists() or key in p["no_heading"]:
             continue
-        for h in re.findall(r"^# (.+?)\s*$", prose(AGENT_NOTE.sub("", src.read_text(), count=1)), re.M):
+        text = prose(AGENT_NOTE.sub("", src.read_text(), count=1))
+        # Its '# ' headings, and the '## ' a nested part opens with.
+        nested = re.match(r"\s*## (.+?)\s*$", text, re.M)
+        for h in re.findall(r"^# (.+?)\s*$", text, re.M) + ([nested.group(1)] if nested else []):
             if slugize(h) not in ids:
                 problems.append(f"the page has no heading '{h}' from {key}.md; it is stale, run npx hexo generate")
     return problems

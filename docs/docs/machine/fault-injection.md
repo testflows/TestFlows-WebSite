@@ -2,6 +2,17 @@
 
 # Fault injection
 
+Machine makes things fail inside the machine, at the point you choose or by
+chance, and records each fault with the run, so a replay fails exactly the same
+way. There are three kinds of fault, each with its own command:
+
+| Command | What it makes fail | Section |
+|---|---|---|
+| `machine inject` | a program's system calls, the kernel's disk requests and memory allocations, and the disk's data | [System call faults](#system-call-faults), [Kernel faults](#kernel-faults), [Disk faults](#disk-faults) |
+| `machine containers` | one service's container: stopped, killed, crashed, paused or throttled | [Container faults](container-faults.md) |
+| `machine clock` | the date the guest or one container reads: stepped, drifting, jittering, or a leap second | [Clock faults](clock-faults.md) |
+
+
 `machine inject` makes things fail inside the machine. A fault goes into a
 subsystem: a program's system calls, or one of the kernel's own places where
 things can fail, such as the disk or memory allocation, or the disk itself. You
@@ -28,7 +39,7 @@ The disk subsystems also take `--file`, `--op` and `--sectors` to say which
 requests. The guest kernel decides each call itself, without stopping
 the machine, and a replay fails exactly the same calls.
 
-## System calls
+## System call faults
 
 A syscall fault names a system call and the errors it may return, and the
 program's calls of it return one of them without running.
@@ -52,7 +63,7 @@ The guest kernel decides at each call, and the run records every fault you
 add, so a replay fails the same calls with the same errors. A checkpoint keeps
 the faults and their counts, and a branch has its parent's.
 
-## Which calls fail
+### Which calls fail
 
 `--in` says whose calls fail, and you always give it:
 
@@ -134,7 +145,7 @@ Name several system calls at once and each gets a fault of its own:
 machine inject app add syscall open,openat,creat EACCES --in /usr/bin/app
 ```
 
-## Which errors
+### Which errors
 
 Any Linux error goes, by name or by number, whether or not the system call's
 manual lists it. Give a set and each failing call returns one of them. The
@@ -150,7 +161,7 @@ machine inject app add syscall openat valid,-EINTR --in /usr/bin/app           #
 `valid` is the errors the system call's manual page lists. `all` is every error
 Linux names, which is more than a fault holds, so pick some of it.
 
-## Picking errors at random
+### Picking errors at random
 
 `--pick` takes a number of errors from the set when you add the fault, and the
 fault keeps those. This is swarm testing: each run fails with its own few errors.
@@ -168,7 +179,7 @@ draw as another run did:
 machine inject app add syscall openat valid --pick 2 --seed 7 --in /usr/bin/app
 ```
 
-## Slow calls
+### Slow calls
 
 A fault can hold a call instead of failing it. `--delay` takes a time, or a
 span to draw one from for each call, up to a second:
@@ -221,7 +232,7 @@ A few things decide whether you see the failure:
   the lost request may be the kernel's own, and whatever waits on that disk
   hangs with it.
 
-## Damaged data on the disk
+## Disk faults
 
 The faults above are errors: your program is told something failed. Real disks
 also fail silently. A write reports success and the data is wrong, half there,
@@ -360,7 +371,7 @@ The run stops where the fault fires, before a system call's wait and error, and
 says which: `Stopped at catchpoint 1: fault openat EACCES, in tid 229`, or
 `fault disk, in tid 77`. See [Debugging](debugging.md) for catchpoints.
 
-## Stopping at a file's I/O
+### Stopping at a file's I/O
 
 An `io` catchpoint stops the run at a disk request, with no fault. `--file`
 takes the same patterns as a disk fault, and `--op` takes `read` or `write`:

@@ -1,6 +1,6 @@
 <!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
-# Clock faults
+## Clock faults
 
 Software reads two kinds of time. Elapsed time, `CLOCK_MONOTONIC` and the TSC,
 is the machine's own, and [Machine time](steering-programs.md#machine-time)
@@ -25,7 +25,7 @@ executes. The run records every change: a replay makes it at the same
 instruction, a checkpoint keeps the date, and a branch starts with its
 parent's date.
 
-## The guest's date
+### The guest's date
 
 `jump`, `set` and `reset` change the date every process in the guest reads,
 in every container. The step is a real step of the guest kernel's clock: a
@@ -51,7 +51,7 @@ Steps add up: `jump +5s` and then `jump -2s` leave the date 3 seconds ahead.
 a date before 1970, or one on or after 2232-04-18T23:47:16Z, because the
 kernel cannot set either.
 
-## A container's date
+### A container's date
 
 With `--container`, a change moves one container's date alone, as an offset
 from the guest's date. Every process of the container reads it, including
@@ -84,7 +84,7 @@ A stopped container that has an offset keeps it, and takes it again when it
 starts. `machine clock app reset --container db` returns it to the guest's
 date, stopped or running.
 
-## Drift and slew
+### Drift and slew
 
 A clock that runs fast or slow is the fault a jump cannot fake: nodes do not
 jump apart, they wander apart until an assumption breaks. `drift` makes one
@@ -121,7 +121,7 @@ refuses a shorter one:
 The guest's date has no drift. To make the whole machine's time run fast or
 slow, use the [clock rate](steering-programs.md#clock-rate).
 
-## Jitter
+### Jitter
 
 An NTP-disciplined fleet is never exactly in sync: each host's offset wobbles
 within a bound. `jitter` sets the date to a value drawn around it each period:
@@ -145,7 +145,7 @@ parent was. A jump or a set moves the date under the jitter, which goes on
 around the new date. `machine clock app jitter off` stops the jitter and
 returns the date to where it would be without it.
 
-## Leap seconds
+### Leap seconds
 
 In 2012 a leap second livelocked Linux futexes, and services across the
 industry went down with it. `leap insert` makes the guest kernel repeat a
@@ -163,7 +163,7 @@ without the leap. A leap second moves the guest's date and every container
 with it, so `leap` takes no `--container`. `leap off` cancels a leap still
 pending, and so does `reset`.
 
-## Undoing a change after a time
+### Undoing a change after a time
 
 `--for 2m` takes a change back after 2 minutes of machine time, at the same
 instruction in every replay. `jump +4s --for 2m` is a step forward and, 2
@@ -174,7 +174,7 @@ The undo takes back the command's own change. What else moved the date
 meanwhile stays: a drift's accrual, a leap second, or another program's step.
 A later change cancels an undo still pending.
 
-## Reading the date
+### Reading the date
 
 `machine clock app` reads the date without running the machine. It shows the
 guest's date and its offset from machine time, then each container whose date
@@ -200,7 +200,7 @@ why:
 refused: the date, the guest's or a container's, would leave the range the kernel takes, 1970 to 2232-04-18T23:47:16Z
 ```
 
-## Clock fault use cases
+### Clock fault use cases
 
 | You want to know | Command |
 |---|---|
@@ -250,7 +250,7 @@ under skew comes back when you replay the recording; there is no timing to
 reconstruct. Investigate it as any other failure, with
 [`rewind`](checkpoints-and-branches.md), [`diff`](replay.md) and the debugger.
 
-## What a clock change misses
+### What a clock change misses
 
 - **File timestamps.** The kernel stamps files with its own clock, so `make`
   in a container behind the guest reports clock skew.

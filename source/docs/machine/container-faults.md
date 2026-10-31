@@ -1,6 +1,6 @@
 <!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
-# Container faults
+## Container faults
 
 A project run as containers is a small cluster, and each service is a node.
 [`machine containers`](commands.md#machine-containers) puts a fault on one
@@ -48,7 +48,7 @@ Each fault is recorded with the run, so a replay faults the same container at
 the same point. Put one where the run is stopped, at a breakpoint, a catchpoint
 or a `run --until`, to fault a service at the moment that matters.
 
-## A crash
+### A crash
 
 `kill` loses nothing the program wrote: the kernel inside the machine keeps
 running and writes it out later. `crash` is a power cut of the service's node.
