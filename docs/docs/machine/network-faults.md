@@ -283,10 +283,20 @@ Every disk has tcpdump in the machine itself, at `/usr/sbin/tcpdump`, so a
 capture needs nothing in the containers' images. Run in the machine, it sees
 every container's packets on the host ends of their links. Write the capture
 under `/.machine/output/keep`, and the run keeps it as its output, named
-`/output/keep/db.pcap`:
+`/output/keep/db.pcap`.
+
+A capture filters by address. Docker knows each container's address, by
+the container's name, which `machine containers app` lists:
 
 ```bash
-machine exec app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/db.pcap host 172.18.0.2
+machine exec app run -- docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' compose-db-1    # 172.18.0.4
+```
+
+Addresses differ from run to run, so read them in the run you capture.
+Then capture db's packets:
+
+```bash
+machine exec app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/db.pcap host 172.18.0.4
 machine run app --within 1s                            # tcpdump starts listening
 machine exec app run --container api -- ping -c 3 db
 machine exec app run -- sh -c 'killall -INT tcpdump; while pidof tcpdump >/dev/null; do sleep 0.1; done'
@@ -303,8 +313,7 @@ from the sender's link, `P`, and as it leaves toward the receiver's,
 `Out`. A packet a fault dropped or still holds is in neither, since the
 capture sees what the sender's faults let through. The file records each
 packet's interface by an index that means nothing on this computer, so
-filter by address, `host 172.18.0.2`. `machine exec app run -- ip -o addr`
-lists the addresses.
+filter by address, `host 172.18.0.4`, rather than by interface.
 
 To capture one container's packets alone, capture on its own link. A
 container's `eth0` is one end of a pair, and the other end is an interface of
