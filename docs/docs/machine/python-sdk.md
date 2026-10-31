@@ -158,11 +158,12 @@ And the calls you will reach for most often:
 | `run.send(text, device=...)` | sends input to a device or to a file in the machine, as [`machine send`](commands.md#machine-send) does; returns a `Sent` with `queued`, and `process` for a file |
 | `run.exec(command)`, `run.exec(command, wait=False)`, `run.process(id)`, `run.processes()` | executes a command in the machine, a list for a program and a str for a shell line, and returns its `Process`: `pid`, `exit_code`, `stdout`, `stderr`, `events`, `exits` |
 | `run.exec(command, container="db", user="root")` | executes it in a container, named by its Compose service or by its own name, as a user of it |
+| `run.exec(command, net="db")` | runs a program of the machine on db's network, such as tcpdump on its `eth0` |
 | `run.core(pid, dest, container=...)` | gets a core dump of a process into a file; the process dies of it |
 | `run.profile("2s", container=..., pid=...)` | samples what runs for a time and returns a `Profile`: `samples`, `functions`, `stacks`, and `folded` text for flame graph tools |
 | `run.profile(from_="^request", to="^reply")` | profiles a stretch the run already recorded, without changing the run |
 | `run.profile("2s", in_guest=True)` | samples with a process in the run, for the functions of the kernel by name |
-| `run.containers()`, `run.containers.kill("db", restart="5s")`, `run.containers.crash("db", restart="0")` | lists the containers and the Compose service of each; `stop`, `kill`, `crash`, `start`, `pause`, `resume` and `throttle` put a fault on one, as `machine containers` does |
+| `run.containers()`, `run.containers.kill("db", restart="5s")`, `run.containers.crash("db", restart="0")` | lists the containers, the Compose service of each, and its `addresses` and `links`; `stop`, `kill`, `crash`, `start`, `pause`, `resume` and `throttle` put a fault on one, as `machine containers` does |
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |

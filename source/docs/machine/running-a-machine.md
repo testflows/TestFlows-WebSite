@@ -851,9 +851,21 @@ machine exec app run --container db --user root -- id        # as another user
 machine exec app start --container app -- ./worker
 ```
 
+`--net` runs a program of the machine on a container's network instead: the
+program comes from the machine's disk, so it needs nothing in the container's
+image, and it sees the container's interfaces and addresses. A capture of db's
+packets with the machine's tcpdump, in [Network faults](network-faults.md):
+
+```bash
+machine exec app start --net db -- tcpdump --immediate-mode -U -i eth0 -w /.machine/output/keep/db.pcap
+```
+
 [`machine containers`](commands.md#machine-containers) lists the containers
-with the columns `SERVICE`, `CONTAINER`, `ID`, `STATE` and `IMAGE`. The
-service, the container name and the id are what `--container` takes:
+with the columns `SERVICE`, `CONTAINER`, `ID`, `STATE`, `IMAGE`, `ADDRESS`
+and `LINK`: each container's address on each of its networks, and the
+machine's interface at the other end of its link, which a capture names in
+[Network faults](network-faults.md). The service, the container name and the
+id are what `--container` takes:
 
 ```bash
 machine containers app

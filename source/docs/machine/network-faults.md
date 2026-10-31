@@ -162,9 +162,13 @@ full-size packets and drops the ones past them.
 
 ### Resetting connections
 
-`reset` aborts TCP connections. The program on the container's side sees
-its socket fail with `ECONNABORTED`, and the peer receives a TCP reset, as
-from a middlebox that dropped the connection or a server that restarted.
+`reset` aborts TCP connections. The container's side of each connection is
+aborted, and the peer receives a TCP reset, as from a middlebox that dropped
+the connection or a server that restarted. What a program sees depends on
+the call it makes. On the aborted side, the first call after the data it
+already received fails with `ECONNABORTED`; after that a read returns end of
+file and a write fails with `EPIPE`. On the peer, the first call fails with
+`ECONNRESET`, and the same follows.
 Unlike a partition, nothing waits for a timeout:
 
 ```bash
@@ -280,23 +284,29 @@ program sends, and a capture shows the packets.
 ### Capturing the packets
 
 Every disk has tcpdump in the machine itself, at `/usr/sbin/tcpdump`, so a
-capture needs nothing in the containers' images. Run in the machine, it sees
-every container's packets on the host ends of their links. Write the capture
-under `/.machine/output/keep`, and the run keeps it as its output, named
+capture needs nothing in the containers' images. Write the capture under
+`/.machine/output/keep`, and the run keeps it as its output, named
 `/output/keep/db.pcap`.
 
-A capture filters by address. Docker knows each container's address, by
-the container's name, which `machine containers app` lists:
+`machine containers` lists what a capture needs: each container's `ADDRESS`,
+and its `LINK`, the machine's interface at the other end of the
+container's own:
 
 ```bash
-machine exec app run -- docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' compose-db-1    # 172.18.0.4
+machine containers app
 ```
 
-Addresses differ from run to run, so read them in the run you capture.
-Then capture db's packets:
+```text
+SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK
+api      compose-api-1   2aaef0f5d567  running  clockprobe:test  172.18.0.4  veth60a586c
+db       compose-db-1    41b6ae3b5fb0  running  clockprobe:test  172.18.0.2  veth45c3e2e
+nest     compose-nest-1  3da165f7aa0f  running  clockprobe:test  172.18.0.3  veth80fa747
+```
+
+To capture one container's packets, capture on its `LINK`:
 
 ```bash
-machine exec app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/db.pcap host 172.18.0.4
+machine exec app start -- tcpdump --immediate-mode -U -i veth45c3e2e -w /.machine/output/keep/db.pcap
 machine run app --within 1s                            # tcpdump starts listening
 machine exec app run --container api -- ping -c 3 db
 machine exec app run -- sh -c 'killall -INT tcpdump; while pidof tcpdump >/dev/null; do sleep 0.1; done'
@@ -306,31 +316,53 @@ machine output app bytes --source /output/keep/db.pcap > db.pcap
 `--immediate-mode` and `-U` write each packet as it is captured: without
 them, the packets tcpdump has not written yet when it stops are lost. The
 stop waits for tcpdump to exit, so the file is whole before it is read.
+Open `db.pcap` in Wireshark or read it with tcpdump on this computer.
 
-Open `db.pcap` in Wireshark or read it with tcpdump on this computer. With
-`-i any`, each packet between two containers appears twice: as it arrives
-from the sender's link, `P`, and as it leaves toward the receiver's,
-`Out`. A packet a fault dropped or still holds is in neither, since the
-capture sees what the sender's faults let through. The file records each
-packet's interface by an index that means nothing on this computer, so
-filter by address, `host 172.18.0.4`, rather than by interface.
+On its link each packet db sends or receives appears once, as an Ethernet
+frame, ARP included. Broadcasts from the other containers appear too, since
+the bridge sends them to every link. A packet a fault on db dropped or still
+holds is not there: the capture sees what db's faults let through, and what
+reaches db. The `LINK` changes when docker starts the container again, and
+so do addresses from run to run, so read them in the run you capture.
 
-To capture one container's packets alone, capture on its own link. A
-container's `eth0` is one end of a pair, and the other end is an interface of
-the machine. The container's `iflink` is that interface's number:
+`--net db` runs tcpdump on db's own network instead, so its `eth0` is db's
+link, and the name stays the same across restarts:
 
 ```bash
-machine exec app run --container db -- cat /sys/class/net/eth0/iflink    # 10
-machine exec app run -- ip -o link | grep '^10:'                         # 10: veth42a9fae@if9: ...
-machine exec app start -- tcpdump --immediate-mode -U -i veth42a9fae -w /.machine/output/keep/db.pcap
+machine exec app start --net db -- tcpdump --immediate-mode -U -i eth0 -w /.machine/output/keep/db.pcap
 ```
 
-On its own link each packet db sends or receives appears once, as an
-Ethernet frame, ARP included: what db sends, and what reaches db.
-Broadcasts from the other containers appear too, since the bridge sends them
-to every link. The interface's name changes when docker starts the container
-again, so find it again after a restart. `host` with db's address, as above,
-also takes db's packets, each one twice.
+It captures the same packets as a capture on the `LINK`: with db's ICMP
+lost by `loss db 100% --proto icmp`, both showed the pings reaching db and
+none of db's replies.
+
+To capture every container at once, use `-i any` and filter by `ADDRESS`:
+
+```bash
+machine exec app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/all.pcap host 172.18.0.2
+```
+
+With `-i any`, each packet between two containers appears twice: as it
+arrives from the sender's link, `P`, and as it leaves toward the receiver's,
+`Out`. The file records each packet's interface by an index that means
+nothing on this computer, so filter by address rather than by interface.
+
+#### Finding the address and the link by hand
+
+`machine containers` reads both from the machine; they can be read by hand
+as well. Docker knows each container's address by the container's name:
+
+```bash
+machine exec app run -- docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}} {{end}}' compose-db-1    # 172.18.0.2
+```
+
+A container's `eth0` is one end of a pair, and the container's `iflink` is
+the number of the machine's interface at the other end:
+
+```bash
+machine exec app run --container db -- cat /sys/class/net/eth0/iflink    # 6
+machine exec app run -- ip -o link | grep '^6:'                          # 6: veth45c3e2e@if5: ...
+```
 
 A replay writes the same capture, byte for byte, with loss, delay and clock
 jumps in effect. The timestamps are the machine's date: `clock jump` of the

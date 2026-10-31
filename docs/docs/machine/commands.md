@@ -5747,6 +5747,10 @@ standard error each on its own. The exit status is that of the command.
 Use `--container` to execute it in a container. The command then has the
 environment of the container. Use `--user` to choose the user it runs as there.
 
+Use `--net` to run a program of the machine on a container's network, such as
+tcpdump on its eth0. The program has the machine's files and the container's
+interfaces.
+
 The machine runs until the command ends. Other programs of the machine run with
 it.
 
@@ -5755,7 +5759,8 @@ another. A command that has not ended by then stays, and the refusal names its
 id.
 
 ```
-machine exec run run [-h] [-c line] [--container name] [--user user] [--within duration]
+machine exec run run [-h] [-c line] [--container name] [--user user] [--net name]
+                     [--within duration]
                      [command ...]
 ```
 
@@ -5768,6 +5773,7 @@ machine exec run run [-h] [-c line] [--container name] [--user user] [--within d
 | `-c line` | A line for the shell of the machine's disk, in place of a command |
 | `--container name` | Container to execute it in, by its id, its name or its Compose service (default: the machine itself) |
 | `--user user` | User the command runs as in the container, such as root or 1000:1000 |
+| `--net name` | Container whose network a program of the machine runs on, by its id, its name or its Compose service |
 | `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
 
 Examples:
@@ -5776,6 +5782,7 @@ Examples:
 machine exec run1 run -- ls -la /           execute ls and print its output
 machine exec run1 run -c 'echo $PATH'       a line for the shell
 machine exec run1 run --container db -- ls  in a container
+machine exec run1 run --net db -- ip addr   db's interfaces
 machine -o json exec run1 run -- ls         the process and its events
 ```
 
@@ -5811,8 +5818,12 @@ starts the next time the run executes.
 
 Use the proc subcommand with the id to read the process.
 
+Use `--container` to execute it in a container. Use `--net` to run a program of
+the machine on a container's network.
+
 ```
-machine exec run start [-h] [-c line] [--container name] [--user user] [command ...]
+machine exec run start [-h] [-c line] [--container name] [--user user] [--net name]
+                       [command ...]
 ```
 
 | Argument | Does |
@@ -5824,6 +5835,7 @@ machine exec run start [-h] [-c line] [--container name] [--user user] [command 
 | `-c line` | A line for the shell of the machine's disk, in place of a command |
 | `--container name` | Container to execute it in, by its id, its name or its Compose service (default: the machine itself) |
 | `--user user` | User the command runs as in the container, such as root or 1000:1000 |
+| `--net name` | Container whose network a program of the machine runs on, by its id, its name or its Compose service |
 
 Examples:
 
@@ -5831,6 +5843,7 @@ Examples:
 machine exec run1 start -- sleep 5               send it and return its id
 machine exec run1 start -- /app/load --rows 9    options after --
 machine exec run1 start -c 'gdb -p 36 < /dev/p'  input on a pipe
+machine exec run1 start --net db -- tcpdump      on db's network
 ```
 
 Prints:
@@ -6083,7 +6096,7 @@ machine containers run1 kill db --restart 5s  db dies, back in 5s
 Prints:
 
 ```
-text   SERVICE CONTAINER ID STATE IMAGE
+text   SERVICE CONTAINER ID STATE IMAGE ADDRESS LINK
 STATE  running, exited, created, paused
 json   name service project state status image id
 ```
