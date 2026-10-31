@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793489373023" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793489373023" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793487276552" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793489373023" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3462,7 +3462,8 @@ keeps it from the start is read at any time:</p>
 <p><code>machine output</code> prints the last 25 lines unless <code>-n</code> says otherwise; <code>-n :</code>
 prints every line. A line reaches the run within 1 millisecond of machine
 time of its decision, so the log is complete when the command that sent the
-packets returns.</p>
+packets returns. Lines decided in the last millisecond before the machine
+stops reach the run when it runs again; a checkpoint keeps them.</p>
 <p>A run that does not keep the log still makes it, and replay brings it back.
 Fork a branch from a checkpoint before the stretch, keeping that output, and
 the branch replays the stretch and stores the same lines:</p>
@@ -3480,10 +3481,13 @@ parent’s log and two branches replayed from the same checkpoint were the
 same, byte for byte.</p>
 <p>The decisions are <code>pass</code>, <code>drop</code>, <code>delay</code> with the time the fault drew,
 <code>ahead</code> for a packet <code>reorder</code> sent before the delayed ones, and <code>duplicate</code>
-and <code>corrupt</code> beside the first word. A duplicated packet has two lines: the
+and <code>corrupt</code> beside the first word. <code>drop limit</code> is a packet dropped
+because the link already held 1000, delayed or held, and <code>DROPPED</code> counts
+it too. Every packet the link carries has its line and its number. A duplicated packet has two lines: the
 original says <code>duplicate</code>, and the copy, logged first, says <code>copy</code>. A delay
 is what the fault drew; the packet can leave later by the machine’s timer
-slack, as a timer can.</p>
+slack, as a timer can. A container on two networks writes both links’
+decisions to the one file.</p>
 <p>Every decision is logged; none is dropped however fast the packets come. A
 200MB TCP transfer under a logged fault decided 19,586 packets and the log
 held 19,586 lines, the listing’s <code>SENT</code> and <code>DROPPED</code> added up.</p>
@@ -3498,9 +3502,8 @@ its seed through later changes. The run records every change, so a replay
 delays and drops exactly the same packets, and so does a branch forked from a
 checkpoint before them.</p>
 <p>A change to a link starts its draws again from the seed: <code>loss db 10% --seed 7</code>, then <code>delay db 50ms</code>, loses packets from the start of seed 7’s
-sequence again. Which packet <code>corrupt</code> changes follows the seed, and which
-bit it flips follows the guest kernel’s own random numbers, which a replay
-repeats.</p>
+sequence again. Which packet <code>corrupt</code> changes, and which byte and bit
+of it, follow the seed.</p>
 <p>A checkpoint keeps a link’s faults: a rewind to it brings them back. A
 container that docker starts again, after <code>containers kill --restart</code> or a
 crash, gets its faults back, toward each peer at the address it has now.</p>
@@ -16005,10 +16008,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793487276553"></script>
-<script src="/js/machine-hero-type.js?v=1793487276553"></script>
-<script src="/js/download-platforms.js?v=1793487276553"></script>
-<script src="/js/anchor-case.js?v=1793487276553"></script>
+<script src="/js/index-code-type.js?v=1793489373023"></script>
+<script src="/js/machine-hero-type.js?v=1793489373023"></script>
+<script src="/js/download-platforms.js?v=1793489373023"></script>
+<script src="/js/anchor-case.js?v=1793489373023"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -297,7 +297,8 @@ machine output app --source /output/drop/.machine/net/compose-db-1.log --plain -
 `machine output` prints the last 25 lines unless `-n` says otherwise; `-n :`
 prints every line. A line reaches the run within 1 millisecond of machine
 time of its decision, so the log is complete when the command that sent the
-packets returns.
+packets returns. Lines decided in the last millisecond before the machine
+stops reach the run when it runs again; a checkpoint keeps them.
 
 A run that does not keep the log still makes it, and replay brings it back.
 Fork a branch from a checkpoint before the stretch, keeping that output, and
@@ -329,10 +330,13 @@ same, byte for byte.
 
 The decisions are `pass`, `drop`, `delay` with the time the fault drew,
 `ahead` for a packet `reorder` sent before the delayed ones, and `duplicate`
-and `corrupt` beside the first word. A duplicated packet has two lines: the
+and `corrupt` beside the first word. `drop limit` is a packet dropped
+because the link already held 1000, delayed or held, and `DROPPED` counts
+it too. Every packet the link carries has its line and its number. A duplicated packet has two lines: the
 original says `duplicate`, and the copy, logged first, says `copy`. A delay
 is what the fault drew; the packet can leave later by the machine's timer
-slack, as a timer can.
+slack, as a timer can. A container on two networks writes both links'
+decisions to the one file.
 
 Every decision is logged; none is dropped however fast the packets come. A
 200MB TCP transfer under a logged fault decided 19,586 packets and the log
@@ -354,9 +358,8 @@ checkpoint before them.
 
 A change to a link starts its draws again from the seed: `loss db 10%
 --seed 7`, then `delay db 50ms`, loses packets from the start of seed 7's
-sequence again. Which packet `corrupt` changes follows the seed, and which
-bit it flips follows the guest kernel's own random numbers, which a replay
-repeats.
+sequence again. Which packet `corrupt` changes, and which byte and bit
+of it, follow the seed.
 
 A checkpoint keeps a link's faults: a rewind to it brings them back. A
 container that docker starts again, after `containers kill --restart` or a
