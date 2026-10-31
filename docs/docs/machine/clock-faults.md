@@ -97,8 +97,10 @@ machine clock app drift 0 --container node2              # stopped; the offset r
 ```
 
 No read sees a jump, and a timer armed in the container agrees with its
-drifting date. At +100000ppm, a timerfd armed for 2 seconds ahead by the
-container's date fired after 1.802 seconds of machine time.
+drifting date: it fires when the container's own date reaches the deadline,
+never before. At +100000ppm, a timerfd armed for 2 seconds ahead by the
+container's date fired after 1.821 seconds of machine time, which is 2
+seconds of a clock running 10% fast.
 
 `--slew` moves a container's date to a new value over a time instead of in one
 step, as NTP slews a small correction:
