@@ -114,6 +114,7 @@ https://testflows.com/docs/machine/debugging.md
 https://testflows.com/docs/machine/disks.md
 https://testflows.com/docs/machine/fault-injection.md
 https://testflows.com/docs/machine/getting-started.md
+https://testflows.com/docs/machine/network-faults.md
 https://testflows.com/docs/machine/overview.md
 https://testflows.com/docs/machine/python-sdk.md
 https://testflows.com/docs/machine/reading-the-disk.md

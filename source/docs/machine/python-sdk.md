@@ -358,6 +358,28 @@ for skew_ms in (50, 100, 200, 400, 800):
     print(skew_ms, result.reached)
 ```
 
+## Network faults
+
+`run.net` puts faults on the links between a run's containers, as
+[Network faults](network-faults.md) describes. A link is what a container
+sends, to every peer or with `to` to one:
+
+```python
+run.net.delay("db", "100ms", jitter="20ms", seed=7)
+run.net.loss("db", "10%", to="api")
+run.net.partition("db", "nest", for_="10s")
+run.run(within="30s")
+
+for link in run.net():
+    print(link.container, link.peer or "-", link.delay, link.loss, link.seed)
+
+run.net.heal()
+```
+
+Each method returns a `LinkChange`, the link before and after. `duplicate`,
+`corrupt` and `reorder` take a share as `loss` does, and `rate` takes bits a
+second, such as `"1mbit"`. A replay delays and drops the same packets.
+
 ## Stopping at an event
 
 A catchpoint stops the run at an event of a task, as

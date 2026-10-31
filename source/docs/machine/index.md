@@ -28,6 +28,8 @@ permalink: docs/machine/index.html
 
 <!-- include: clock-faults.md -->
 
+<!-- include: network-faults.md -->
+
 <!-- include: debugging.md -->
 
 <!-- include: reading-the-disk.md -->

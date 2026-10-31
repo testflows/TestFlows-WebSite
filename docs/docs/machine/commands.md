@@ -6410,6 +6410,381 @@ See also:
 - [`machine containers`](#machine-containers)
 - [`machine tasks slice`](#machine-tasks-slice)
 
+## machine net
+
+Show the faults of each container's link, or put faults on one.
+
+A link is what a container sends to the others. The command delays it, loses
+packets, sends them twice, changes them, sends them out of order or limits its
+rate. It cuts two containers apart, one way or both.
+
+A fault is on the whole link, or with `--to` on the link toward one peer. The
+other links stay as they are.
+
+The faults are part of the machine. The run records each change, and a replay
+makes it at the same point. A checkpoint keeps a link's faults.
+
+Every command that takes a container takes its id, its name or its Compose
+service, as containers does. The machine runs until the link is set.
+
+```
+machine net [-h] [--within duration] run command ...
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+| Option | Does |
+|---|---|
+| `--within duration` | Machine time the command gets to end in, such as 10s (default: 30m) |
+
+Examples:
+
+```
+machine net run1                               each link and its faults
+machine net run1 delay db 100ms --jitter 20ms  db's packets wait
+machine net run1 partition db api              db and api cut apart
+machine net run1 heal                          every link healed
+```
+
+See also:
+
+- [`machine containers`](#machine-containers)
+- [`machine inject`](#machine-inject)
+- [`machine clock`](#machine-clock)
+
+### machine net delay
+
+Delay the packets a container sends.
+
+Each packet waits the delay before it leaves, give or take the jitter. A delay
+of 0 takes the delay away. The link keeps its other faults.
+
+Use `--to` db to put the fault on what the container sends to db alone. A link
+toward a peer with a fault of its own takes that fault, not the whole link's.
+
+The link draws from a seed, so a replay acts on the same packets. Use `--seed`
+to give one. A link keeps its seed, and a link without one draws a new seed.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run delay [-h] [--jitter duration] [--to container] [--seed n] [--for duration]
+                      container delay
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `delay` | Delay of each packet, such as 100ms |
+
+| Option | Does |
+|---|---|
+| `--jitter duration` | Each packet's delay differs by up to this, such as 20ms |
+| `--to container` | The link toward this container alone (default: the whole link) |
+| `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 delay db 100ms                db's packets wait 100ms
+machine net run1 delay db 100ms --jitter 20ms  80 to 120ms
+machine net run1 delay db 300ms --to api       only to api
+machine net run1 delay db 0                    no delay
+```
+
+See also:
+
+- [`machine net loss`](#machine-net-loss)
+- [`machine net heal`](#machine-net-heal)
+- [`machine net`](#machine-net)
+
+### machine net loss
+
+Lose some of the packets a container sends.
+
+Each packet is lost by chance, the share given. A share of 0% takes the fault
+away. The link keeps its other faults.
+
+Use `--to` db to put the fault on what the container sends to db alone. A link
+toward a peer with a fault of its own takes that fault, not the whole link's.
+
+The link draws from a seed, so a replay acts on the same packets. Use `--seed`
+to give one. A link keeps its seed, and a link without one draws a new seed.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run loss [-h] [--to container] [--seed n] [--for duration] container share
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `share` | Share of the packets, such as 10% |
+
+| Option | Does |
+|---|---|
+| `--to container` | The link toward this container alone (default: the whole link) |
+| `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 loss db 10%            a tenth of db's packets lost
+machine net run1 loss db 100% --for 5s  db cut off for 5s
+machine net run1 loss db 0%             none lost
+```
+
+See also:
+
+- [`machine net partition`](#machine-net-partition)
+- [`machine net heal`](#machine-net-heal)
+- [`machine net`](#machine-net)
+
+### machine net duplicate
+
+Send some of a container's packets twice.
+
+Each packet is sent twice by chance, the share given. A share of 0% takes the
+fault away. The link keeps its other faults.
+
+Use `--to` db to put the fault on what the container sends to db alone. A link
+toward a peer with a fault of its own takes that fault, not the whole link's.
+
+The link draws from a seed, so a replay acts on the same packets. Use `--seed`
+to give one. A link keeps its seed, and a link without one draws a new seed.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run duplicate [-h] [--to container] [--seed n] [--for duration] container share
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `share` | Share of the packets, such as 10% |
+
+| Option | Does |
+|---|---|
+| `--to container` | The link toward this container alone (default: the whole link) |
+| `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 duplicate db 5%  one packet in 20 sent twice
+machine net run1 duplicate db 0%  none sent twice
+```
+
+See also:
+
+- [`machine net loss`](#machine-net-loss)
+- [`machine net reorder`](#machine-net-reorder)
+- [`machine net`](#machine-net)
+
+### machine net corrupt
+
+Change a bit of some of the packets a container sends.
+
+Each packet has one bit flipped by chance, the share given. A checksum finds
+most of them. A share of 0% takes the fault away. The link keeps its other
+faults.
+
+Use `--to` db to put the fault on what the container sends to db alone. A link
+toward a peer with a fault of its own takes that fault, not the whole link's.
+
+The link draws from a seed, so a replay acts on the same packets. Use `--seed`
+to give one. A link keeps its seed, and a link without one draws a new seed.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run corrupt [-h] [--to container] [--seed n] [--for duration] container share
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `share` | Share of the packets, such as 10% |
+
+| Option | Does |
+|---|---|
+| `--to container` | The link toward this container alone (default: the whole link) |
+| `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 corrupt db 1%  one packet in 100 changed
+machine net run1 corrupt db 0%  none changed
+```
+
+See also:
+
+- [`machine net loss`](#machine-net-loss)
+- [`machine net duplicate`](#machine-net-duplicate)
+- [`machine net`](#machine-net)
+
+### machine net reorder
+
+Send some of a container's packets ahead of the others.
+
+Each packet is sent at once by chance, the share given, while the rest wait the
+link's delay. A link to reorder needs a delay. A share of 0% takes the fault
+away.
+
+Use `--to` db to put the fault on what the container sends to db alone. A link
+toward a peer with a fault of its own takes that fault, not the whole link's.
+
+The link draws from a seed, so a replay acts on the same packets. Use `--seed`
+to give one. A link keeps its seed, and a link without one draws a new seed.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run reorder [-h] [--to container] [--seed n] [--for duration] container share
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `share` | Share of the packets sent ahead, such as 25% |
+
+| Option | Does |
+|---|---|
+| `--to container` | The link toward this container alone (default: the whole link) |
+| `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 reorder db 25%  a quarter sent ahead
+machine net run1 reorder db 0%   in order again
+```
+
+See also:
+
+- [`machine net delay`](#machine-net-delay)
+- [`machine net duplicate`](#machine-net-duplicate)
+- [`machine net`](#machine-net)
+
+### machine net rate
+
+Limit how fast a container sends.
+
+The link sends at most the rate given, and the packets past it wait. A rate of 0
+takes the limit away. The link keeps its other faults.
+
+Use `--to` db to put the fault on what the container sends to db alone. A link
+toward a peer with a fault of its own takes that fault, not the whole link's.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run rate [-h] [--to container] [--for duration] container rate
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `rate` | Bits a second, such as 1mbit or 500kbit; 0 for no limit |
+
+| Option | Does |
+|---|---|
+| `--to container` | The link toward this container alone (default: the whole link) |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 rate db 1mbit  db sends 1 megabit a second
+machine net run1 rate db 0      no limit
+```
+
+See also:
+
+- [`machine net delay`](#machine-net-delay)
+- [`machine net loss`](#machine-net-loss)
+- [`machine net`](#machine-net)
+
+### machine net partition
+
+Cut the link between two containers.
+
+Everything each container sends the other is lost, and their other links stay as
+they are. Use `--one-way` to cut what the first sends the second alone.
+
+Use `--for 30s` to set the link back after 30 seconds of machine time.
+
+```
+machine net run partition [-h] [--one-way] [--for duration] container other
+```
+
+| Argument | Does |
+|---|---|
+| `container` | One container of the two |
+| `other` | The other container |
+
+| Option | Does |
+|---|---|
+| `--one-way` | Cut what the first sends the second, not the reverse |
+| `--for duration` | Set the link back after this machine time, such as 30s |
+
+Examples:
+
+```
+machine net run1 partition db api            nothing between db and api
+machine net run1 partition db api --one-way  db to api cut
+machine net run1 partition db api --for 10s  for 10s
+```
+
+See also:
+
+- [`machine net heal`](#machine-net-heal)
+- [`machine net loss`](#machine-net-loss)
+- [`machine net`](#machine-net)
+
+### machine net heal
+
+Take the faults off a container's links.
+
+Without a container the command heals every link. Use `--to` db to heal the link
+toward db alone.
+
+```
+machine net run heal [-h] [--to container] [container]
+```
+
+| Argument | Does |
+|---|---|
+| `[container]` | Container, by its id, its name or its service's (default: every one) |
+
+| Option | Does |
+|---|---|
+| `--to container` | The link toward this container alone (default: the whole link) |
+
+Examples:
+
+```
+machine net run1 heal db           db's links healed
+machine net run1 heal db --to api  db's link to api healed
+machine net run1 heal              every link healed
+```
+
+See also:
+
+- [`machine net partition`](#machine-net-partition)
+- [`machine net delay`](#machine-net-delay)
+- [`machine net`](#machine-net)
+
 ## machine core
 
 Get a core dump of a process.
@@ -7562,7 +7937,8 @@ process in the guest. Elapsed time, the TSC and timers measured in elapsed time
 do not move. Use vtime to change how fast time runs.
 
 The guest kernel applies a change when the run next executes. The command
-answers with the date as it stands and the change waiting.
+answers with the date as it stands and the change waiting. The reading after
+that run names a change the guest kernel refused.
 
 A change is part of the machine. The run records it, and a replay makes it at
 the same point. A checkpoint keeps the date and a pending undo.
