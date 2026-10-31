@@ -82,11 +82,12 @@ FENCE = re.compile(r"^[ \t>]*(```|~~~)")
 
 
 def slugize(text):
-    """The id Hexo gives a heading on the page (hexo-util slugize)."""
+    """The id Hexo gives a heading on the page: hexo-util slugize, lower case,
+    as `marked.modifyAnchors: 1` in _config.yml makes it."""
     text = "".join(c for c in unicodedata.normalize("NFD", text) if not unicodedata.combining(c))
     text = re.sub(r"[\x00-\x1f]", "", text)
     text = re.sub(r"[\s~`!@#$%^&*()\-_+=\[\]{}|\\;:\"'<>,.?/]+", "-", text)
-    return re.sub(r"-{2,}", "-", text).strip("-")
+    return re.sub(r"-{2,}", "-", text).strip("-").lower()
 
 
 def slug(text):

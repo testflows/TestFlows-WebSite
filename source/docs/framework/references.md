@@ -34,7 +34,7 @@
 [`quiet`]: controlling-output.md#quiet-Output
 [`raw`]: controlling-output.md#raw-Output
 [YML]: https://yaml.org/
-[using current_module()]: loading-tests.md#Using-current-module
+[using current_module()]: loading-tests.md#using-current-module
 [pattern]: test-program-options.md#pattern
 [--name]: #–name
 [--tag]: #–tag
@@ -214,8 +214,8 @@
 [setattr()]: https://docs.python.org/3/library/functions.html#setattr
 [IPOG]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
 [IPOG: A General Strategy for T-Way Software Testing]: https://citeseerx.ist.psu.edu/document?repid=rep1&type=pdf&doi=1362e14b8210a766099a9516491693c0c08bc04a
-[Covering Arrays]: combinatorial-tests.md#Covering-Arrays-Pairwise-N-wise-Testing
-[Covering Array]: combinatorial-tests.md#Covering-Arrays-Pairwise-N-wise-Testing
+[Covering Arrays]: combinatorial-tests.md#covering-arrays-pairwise-n-wise-testing
+[Covering Array]: combinatorial-tests.md#covering-arrays-pairwise-n-wise-testing
 [Example: Pressure Switch]: #example-pressure-switch
 [Cartesian Product]: combinatorial-tests.md#Cartesian-Product
 [nested for-loops]: combinatorial-tests.md#Simple-Approach-Nested-For-loops
