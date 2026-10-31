@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793474707891" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793474707891" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793474032618" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793474707891" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3396,8 +3396,13 @@ there. <code>release</code> or <code>heal</code> without a container lets every 
 <p>The hold is part of the recording, so a replay holds at the same point, and
 a checkpoint taken during a hold keeps it. Run the machine to an exact point
 first, and the hold lands there:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;console~ready&#x27;</span>                <span class="comment"># stop where the cluster is ready</span></span><br><span class="line">machine net app hold                                   <span class="comment"># hold every link at that point</span></span><br><span class="line">machine net app loss db 30% --to api                   <span class="comment"># change the faults while nothing moves</span></span><br><span class="line">machine net app release                                <span class="comment"># traffic resumes under the new faults</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;console~ready&#x27;</span>                <span class="comment"># stop where the cluster is ready</span></span><br><span class="line">machine net app hold                                   <span class="comment"># hold every link at that point</span></span><br><span class="line">machine net app loss db 100% --to api                  <span class="comment"># change the faults while nothing moves</span></span><br><span class="line">machine net app release                                <span class="comment"># traffic resumes under the new faults</span></span><br></pre></td></tr></table></figure>
 
+<p>With api pinging db every 100 milliseconds, db received none of api’s
+requests while the links were held and the fault was set. After the
+release, db received the 47 held and later requests, the new fault dropped
+all 47 replies, and the listing’s <code>DROPPED</code> read 47. No packet crossed a
+link under the old faults after the hold.</p>
 <p>The guest’s programs and timers keep running during a hold. A
 retransmission or an application timeout can expire while the links are
 held. To hold for a time, run the machine for that time between the two
@@ -15966,10 +15971,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793474032618"></script>
-<script src="/js/machine-hero-type.js?v=1793474032618"></script>
-<script src="/js/download-platforms.js?v=1793474032618"></script>
-<script src="/js/anchor-case.js?v=1793474032618"></script>
+<script src="/js/index-code-type.js?v=1793474707891"></script>
+<script src="/js/machine-hero-type.js?v=1793474707891"></script>
+<script src="/js/download-platforms.js?v=1793474707891"></script>
+<script src="/js/anchor-case.js?v=1793474707891"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

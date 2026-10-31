@@ -180,9 +180,15 @@ first, and the hold lands there:
 ```bash
 machine run app --until 'console~ready'                # stop where the cluster is ready
 machine net app hold                                   # hold every link at that point
-machine net app loss db 30% --to api                   # change the faults while nothing moves
+machine net app loss db 100% --to api                  # change the faults while nothing moves
 machine net app release                                # traffic resumes under the new faults
 ```
+
+With api pinging db every 100 milliseconds, db received none of api's
+requests while the links were held and the fault was set. After the
+release, db received the 47 held and later requests, the new fault dropped
+all 47 replies, and the listing's `DROPPED` read 47. No packet crossed a
+link under the old faults after the hold.
 
 The guest's programs and timers keep running during a hold. A
 retransmission or an application timeout can expire while the links are
