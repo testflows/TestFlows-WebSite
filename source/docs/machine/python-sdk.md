@@ -395,14 +395,13 @@ holds now. A replay delays and drops the same packets.
 
 `log=True` on a fault writes each of its decisions to the container's file
 under `/output/drop/.machine/net`, and `log=False` stops it, as `--log` and
-`--no-log` do. A `Link`'s `log_lost` counts the decisions the log dropped
-because its buffer was full, of any container; a log is complete while it
-is 0:
+`--no-log` do:
 
 ```python
 run.net.loss("db", "30%", to="nest", seed=7, log=True)
 run.run(within="5s")
-assert all(link.log_lost == 0 for link in run.net())
+for line in run.output(source="/output/drop/.machine/net/compose-db-1.log"):
+    print(line)
 ```
 
 `hold` keeps a link's packets until `release`, or for `for_`, and they then

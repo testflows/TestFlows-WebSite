@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793487276552" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793487276552" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793482062289" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793487276552" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3452,7 +3452,7 @@ ahead. It answers which exact packet a fault dropped, which the counts and a
 capture do not. <code>--no-log</code> with the same fault stops it:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span>   <span class="comment"># the link&#x27;s decisions are logged</span></span><br><span class="line">machine net app                                        <span class="comment"># FAULTS: loss 30% log</span></span><br><span class="line">machine net app loss db 30% --to nest --seed 7 --no-log  <span class="comment"># the same fault, no longer logged</span></span><br></pre></td></tr></table></figure>
 
-<p>The machine writes one line per decision to
+<p>The guest kernel writes one line per decision, where the fault decides, to
 <code>/output/drop/.machine/net/&lt;container&gt;.log</code>. The <code>.machine</code> folder holds the
 files the machine itself writes, apart from a program’s own, and it is under
 <code>drop</code>, so a run stores the log only when it keeps that output. A run that
@@ -3460,9 +3460,9 @@ keeps it from the start is read at any time:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine create app --disk app.img --keep-output /output/drop/.machine/net</span><br><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container nest -- ping -c 20 -i 0.05 db</span><br><span class="line">machine output app --<span class="built_in">source</span> /output/drop/.machine/net/compose-db-1.<span class="built_in">log</span> --plain -n :</span><br></pre></td></tr></table></figure>
 
 <p><code>machine output</code> prints the last 25 lines unless <code>-n</code> says otherwise; <code>-n :</code>
-prints every line. The lines are written while the guest runs, shortly after
-the packets: run the machine for a moment, or run the next command, before
-reading the last ones.</p>
+prints every line. A line reaches the run within 1 millisecond of machine
+time of its decision, so the log is complete when the command that sent the
+packets returns.</p>
 <p>A run that does not keep the log still makes it, and replay brings it back.
 Fork a branch from a checkpoint before the stretch, keeping that output, and
 the branch replays the stretch and stores the same lines:</p>
@@ -3484,17 +3484,13 @@ and <code>corrupt</code> beside the first word. A duplicated packet has two line
 original says <code>duplicate</code>, and the copy, logged first, says <code>copy</code>. A delay
 is what the fault drew; the packet can leave later by the machine’s timer
 slack, as a timer can.</p>
-<p>The guest kernel keeps 8192 decisions until the machine writes them. A
-burst that decides more first loses the rest, and the log says so: every
-open log gets a line <code>lost N decisions of the machine&#39;s</code>, and the listing
-warns <code>The log lost N decisions</code>. The count is <code>log_lost</code> in
-<code>machine -o json net app</code> and in the SDK’s <code>Link</code>; a log is complete while
-it is 0. In one test, 50MB of TCP decided 7,267 packets and logged all of
-them, and 200MB decided 30,267 and lost 3,290, each loss reported.</p>
-<p>Each decision costs about 45 microseconds of machine time to write. A
-50MB TCP transfer under a logged fault took 0.77 seconds of machine time,
-against 0.46 seconds under the same fault without the log, and wrote 7,267
-lines. Log the stretch being examined, not a whole run.</p>
+<p>Every decision is logged; none is dropped however fast the packets come. A
+200MB TCP transfer under a logged fault decided 19,586 packets and the log
+held 19,586 lines, the listing’s <code>SENT</code> and <code>DROPPED</code> added up.</p>
+<p>Each decision costs about 32 microseconds of machine time to write. A
+50MB TCP transfer under a logged fault took 0.66 seconds of machine time
+on average, against 0.47 seconds under the same fault without the log. Log
+the stretch being examined, not a whole run.</p>
 <h3 id="seeds-replay-and-–for"><a href="#seeds-replay-and-–for" class="headerlink" title="Seeds, replay and –for"></a>Seeds, replay and –for</h3><p>Loss, jitter, duplicate, corrupt and reorder decide each packet by chance,
 from the link’s seed. Give one with <code>--seed</code>, or the link draws one and shows
 it. A delay or a rate alone draws nothing, and shows no seed. A link keeps
@@ -15612,10 +15608,8 @@ fault did since it was set: <code>sent</code>, <code>dropped</code>, and <code>q
 holds now. A replay delays and drops the same packets.</p>
 <p><code>log=True</code> on a fault writes each of its decisions to the container’s file
 under <code>/output/drop/.machine/net</code>, and <code>log=False</code> stops it, as <code>--log</code> and
-<code>--no-log</code> do. A <code>Link</code>‘s <code>log_lost</code> counts the decisions the log dropped
-because its buffer was full, of any container; a log is complete while it
-is 0:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">run.net.loss(<span class="string">&quot;db&quot;</span>, <span class="string">&quot;30%&quot;</span>, to=<span class="string">&quot;nest&quot;</span>, seed=<span class="number">7</span>, log=<span class="literal">True</span>)</span><br><span class="line">run.run(within=<span class="string">&quot;5s&quot;</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(link.log_lost == <span class="number">0</span> <span class="keyword">for</span> link <span class="keyword">in</span> run.net())</span><br></pre></td></tr></table></figure>
+<code>--no-log</code> do:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run.net.loss(<span class="string">&quot;db&quot;</span>, <span class="string">&quot;30%&quot;</span>, to=<span class="string">&quot;nest&quot;</span>, seed=<span class="number">7</span>, log=<span class="literal">True</span>)</span><br><span class="line">run.run(within=<span class="string">&quot;5s&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> run.output(source=<span class="string">&quot;/output/drop/.machine/net/compose-db-1.log&quot;</span>):</span><br><span class="line">    <span class="built_in">print</span>(line)</span><br></pre></td></tr></table></figure>
 
 <p><code>hold</code> keeps a link’s packets until <code>release</code>, or for <code>for_</code>, and they then
 leave together. With no name, <code>hold</code> holds every link where the machine
@@ -16011,10 +16005,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793482062290"></script>
-<script src="/js/machine-hero-type.js?v=1793482062290"></script>
-<script src="/js/download-platforms.js?v=1793482062290"></script>
-<script src="/js/anchor-case.js?v=1793482062290"></script>
+<script src="/js/index-code-type.js?v=1793487276553"></script>
+<script src="/js/machine-hero-type.js?v=1793487276553"></script>
+<script src="/js/download-platforms.js?v=1793487276553"></script>
+<script src="/js/anchor-case.js?v=1793487276553"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

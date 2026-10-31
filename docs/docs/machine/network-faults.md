@@ -281,7 +281,7 @@ machine net app                                        # FAULTS: loss 30% log
 machine net app loss db 30% --to nest --seed 7 --no-log  # the same fault, no longer logged
 ```
 
-The machine writes one line per decision to
+The guest kernel writes one line per decision, where the fault decides, to
 `/output/drop/.machine/net/<container>.log`. The `.machine` folder holds the
 files the machine itself writes, apart from a program's own, and it is under
 `drop`, so a run stores the log only when it keeps that output. A run that
@@ -295,9 +295,9 @@ machine output app --source /output/drop/.machine/net/compose-db-1.log --plain -
 ```
 
 `machine output` prints the last 25 lines unless `-n` says otherwise; `-n :`
-prints every line. The lines are written while the guest runs, shortly after
-the packets: run the machine for a moment, or run the next command, before
-reading the last ones.
+prints every line. A line reaches the run within 1 millisecond of machine
+time of its decision, so the log is complete when the command that sent the
+packets returns.
 
 A run that does not keep the log still makes it, and replay brings it back.
 Fork a branch from a checkpoint before the stretch, keeping that output, and
@@ -334,18 +334,14 @@ original says `duplicate`, and the copy, logged first, says `copy`. A delay
 is what the fault drew; the packet can leave later by the machine's timer
 slack, as a timer can.
 
-The guest kernel keeps 8192 decisions until the machine writes them. A
-burst that decides more first loses the rest, and the log says so: every
-open log gets a line `lost N decisions of the machine's`, and the listing
-warns `The log lost N decisions`. The count is `log_lost` in
-`machine -o json net app` and in the SDK's `Link`; a log is complete while
-it is 0. In one test, 50MB of TCP decided 7,267 packets and logged all of
-them, and 200MB decided 30,267 and lost 3,290, each loss reported.
+Every decision is logged; none is dropped however fast the packets come. A
+200MB TCP transfer under a logged fault decided 19,586 packets and the log
+held 19,586 lines, the listing's `SENT` and `DROPPED` added up.
 
-Each decision costs about 45 microseconds of machine time to write. A
-50MB TCP transfer under a logged fault took 0.77 seconds of machine time,
-against 0.46 seconds under the same fault without the log, and wrote 7,267
-lines. Log the stretch being examined, not a whole run.
+Each decision costs about 32 microseconds of machine time to write. A
+50MB TCP transfer under a logged fault took 0.66 seconds of machine time
+on average, against 0.47 seconds under the same fault without the log. Log
+the stretch being examined, not a whole run.
 
 ### Seeds, replay and --for
 
