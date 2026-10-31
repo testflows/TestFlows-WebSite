@@ -306,6 +306,23 @@ packet's interface by an index that means nothing on this computer, so
 filter by address, `host 172.18.0.2`. `machine exec app run -- ip -o addr`
 lists the addresses.
 
+To capture one container's packets alone, capture on its own link. A
+container's `eth0` is one end of a pair, and the other end is an interface of
+the machine. The container's `iflink` is that interface's number:
+
+```bash
+machine exec app run --container db -- cat /sys/class/net/eth0/iflink    # 10
+machine exec app run -- ip -o link | grep '^10:'                         # 10: veth42a9fae@if9: ...
+machine exec app start -- tcpdump --immediate-mode -U -i veth42a9fae -w /.machine/output/keep/db.pcap
+```
+
+On its own link each packet db sends or receives appears once, as an
+Ethernet frame, ARP included: what db sends, and what reaches db.
+Broadcasts from the other containers appear too, since the bridge sends them
+to every link. The interface's name changes when docker starts the container
+again, so find it again after a restart. `host` with db's address, as above,
+also takes db's packets, each one twice.
+
 A replay writes the same capture, byte for byte, with loss, delay and clock
 jumps in effect. The timestamps are the machine's date: `clock jump` of the
 whole guest moves them, and a container's offset does not. A link between

@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793465157471" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793465157471" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793464684692" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793465157471" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3454,6 +3454,17 @@ capture sees what the sender’s faults let through. The file records each
 packet’s interface by an index that means nothing on this computer, so
 filter by address, <code>host 172.18.0.2</code>. <code>machine exec app run -- ip -o addr</code>
 lists the addresses.</p>
+<p>To capture one container’s packets alone, capture on its own link. A
+container’s <code>eth0</code> is one end of a pair, and the other end is an interface of
+the machine. The container’s <code>iflink</code> is that interface’s number:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">cat</span> /sys/class/net/eth0/iflink    <span class="comment"># 10</span></span><br><span class="line">machine <span class="built_in">exec</span> app run -- ip -o <span class="built_in">link</span> | grep <span class="string">&#x27;^10:&#x27;</span>                         <span class="comment"># 10: veth42a9fae@if9: ...</span></span><br><span class="line">machine <span class="built_in">exec</span> app start -- tcpdump --immediate-mode -U -i veth42a9fae -w /.machine/output/keep/db.pcap</span><br></pre></td></tr></table></figure>
+
+<p>On its own link each packet db sends or receives appears once, as an
+Ethernet frame, ARP included: what db sends, and what reaches db.
+Broadcasts from the other containers appear too, since the bridge sends them
+to every link. The interface’s name changes when docker starts the container
+again, so find it again after a restart. <code>host</code> with db’s address, as above,
+also takes db’s packets, each one twice.</p>
 <p>A replay writes the same capture, byte for byte, with loss, delay and clock
 jumps in effect. The timestamps are the machine’s date: <code>clock jump</code> of the
 whole guest moves them, and a container’s offset does not. A link between
@@ -15811,10 +15822,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793464684692"></script>
-<script src="/js/machine-hero-type.js?v=1793464684692"></script>
-<script src="/js/download-platforms.js?v=1793464684692"></script>
-<script src="/js/anchor-case.js?v=1793464684692"></script>
+<script src="/js/index-code-type.js?v=1793465157472"></script>
+<script src="/js/machine-hero-type.js?v=1793465157472"></script>
+<script src="/js/download-platforms.js?v=1793465157472"></script>
+<script src="/js/anchor-case.js?v=1793465157472"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
