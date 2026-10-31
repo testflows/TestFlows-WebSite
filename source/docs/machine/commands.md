@@ -6866,7 +6866,8 @@ Use `--to` db to put the fault on what the container sends to db alone. Use
 `--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
 packet a match takes gets only the match's faults, not the whole link's.
 
-Use `--for 5s` to release the packets after 5 seconds of machine time.
+Use `--for 5s` with a container to release its packets after 5 seconds of
+machine time. The hold of every link ends with a release.
 
 ```
 machine net run hold [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]

@@ -291,14 +291,17 @@ keeps it from the start is read at any time:
 machine create app --disk app.img --keep-output /output/drop/.machine/net
 machine net app loss db 30% --to nest --seed 7 --log
 machine exec app run --container nest -- ping -c 20 -i 0.05 db
+machine run app --within 10ms                          # the last batch of lines reaches the run
 machine output app --source /output/drop/.machine/net/compose-db-1.log --plain -n :
 ```
 
 `machine output` prints the last 25 lines unless `-n` says otherwise; `-n :`
-prints every line. A line reaches the run within 1 millisecond of machine
-time of its decision, so the log is complete when the command that sent the
-packets returns. Lines decided in the last millisecond before the machine
-stops reach the run when it runs again; a checkpoint keeps them.
+prints every line. The guest kernel writes the lines in batches, at most 1
+millisecond of machine time after the first line of a batch. Lines decided
+in the last millisecond before the machine stops reach the run when the
+machine runs again, and a checkpoint keeps them: run the machine for a
+moment, as `machine run app --within 10ms`, before reading the last
+packets' lines.
 
 A run that does not keep the log still makes it, and replay brings it back.
 Fork a branch from a checkpoint before the stretch, keeping that output, and
@@ -331,8 +334,11 @@ same, byte for byte.
 The decisions are `pass`, `drop`, `delay` with the time the fault drew,
 `ahead` for a packet `reorder` sent before the delayed ones, and `duplicate`
 and `corrupt` beside the first word. `drop limit` is a packet dropped
-because the link already held 1000, delayed or held, and `DROPPED` counts
-it too. Every packet the link carries has its line and its number. A duplicated packet has two lines: the
+because the fault's queue already held 1000 delayed packets, and `drop hold`
+one dropped because a hold already held 1000 full-size packets; `DROPPED`
+counts both. Every packet the link carries has its line and its number,
+and a packet a hold drops has a second line, `drop hold`, under the number
+of its first. A duplicated packet has two lines: the
 original says `duplicate`, and the copy, logged first, says `copy`. A delay
 is what the fault drew; the packet can leave later by the machine's timer
 slack, as a timer can. A container on two networks writes both links'
