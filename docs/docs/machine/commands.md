@@ -6492,8 +6492,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
-Use `--log` to write each decision of the fault to /output/drop/net, a file for
-each container. The run drops that output unless it keeps it.
+Use `--log` to write each decision of the fault to /output/drop/.machine/net, a
+file for each container. The run drops that output unless it keeps it.
 
 ```
 machine net run delay [-h] [--jitter duration] [--to container]
@@ -6551,8 +6551,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
-Use `--log` to write each decision of the fault to /output/drop/net, a file for
-each container. The run drops that output unless it keeps it.
+Use `--log` to write each decision of the fault to /output/drop/.machine/net, a
+file for each container. The run drops that output unless it keeps it.
 
 ```
 machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
@@ -6609,8 +6609,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
-Use `--log` to write each decision of the fault to /output/drop/net, a file for
-each container. The run drops that output unless it keeps it.
+Use `--log` to write each decision of the fault to /output/drop/.machine/net, a
+file for each container. The run drops that output unless it keeps it.
 
 ```
 machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
@@ -6664,8 +6664,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
-Use `--log` to write each decision of the fault to /output/drop/net, a file for
-each container. The run drops that output unless it keeps it.
+Use `--log` to write each decision of the fault to /output/drop/.machine/net, a
+file for each container. The run drops that output unless it keeps it.
 
 ```
 machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
@@ -6719,8 +6719,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
-Use `--log` to write each decision of the fault to /output/drop/net, a file for
-each container. The run drops that output unless it keeps it.
+Use `--log` to write each decision of the fault to /output/drop/.machine/net, a
+file for each container. The run drops that output unless it keeps it.
 
 ```
 machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
@@ -6770,8 +6770,8 @@ packet a match takes gets only the match's faults, not the whole link's.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
-Use `--log` to write each decision of the fault to /output/drop/net, a file for
-each container. The run drops that output unless it keeps it.
+Use `--log` to write each decision of the fault to /output/drop/.machine/net, a
+file for each container. The run drops that output unless it keeps it.
 
 ```
 machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]

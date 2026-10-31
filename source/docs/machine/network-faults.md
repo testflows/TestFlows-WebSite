@@ -271,44 +271,81 @@ again begins with an empty table, as a host that restarts does.
 ### The decision log
 
 `--log` writes each decision a fault makes to a log: which packet it took,
-whether it dropped, delayed, duplicated, corrupted or sent it ahead, and
-when. It answers which exact packet a fault dropped, which the counts and a
-capture do not:
+and whether it dropped it, delayed it, duplicated it, corrupted it or sent it
+ahead. It answers which exact packet a fault dropped, which the counts and a
+capture do not. `--no-log` with the same fault stops it:
 
 ```bash
-machine net app loss db 30% --to nest --seed 7 --log
+machine net app loss db 30% --to nest --seed 7 --log   # the link's decisions are logged
 machine net app                                        # FAULTS: loss 30% log
+machine net app loss db 30% --to nest --seed 7 --no-log  # the same fault, no longer logged
 ```
 
-The guest kernel records each decision where netem makes it, and the
-machine writes one line per decision to `/output/drop/net/<container>.log`,
-a file of the run's output under `drop`. The run drops that output unless
-it keeps it, so a log costs nothing to keep until it is needed. To read the
-log of a stretch already run, fork a branch from a checkpoint before it,
-keeping that output, and the branch replays the stretch and stores it:
+The machine writes one line per decision to
+`/output/drop/.machine/net/<container>.log`. The `.machine` folder holds the
+files the machine itself writes, apart from a program's own, and it is under
+`drop`, so a run stores the log only when it keeps that output. A run that
+keeps it from the start is read at any time:
+
+```bash
+machine create app --disk app.img --keep-output /output/drop/.machine/net
+machine net app loss db 30% --to nest --seed 7 --log
+machine exec app run --container nest -- ping -c 20 -i 0.05 db
+machine output app --source /output/drop/.machine/net/compose-db-1.log --plain -n :
+```
+
+`machine output` prints the last 25 lines unless `-n` says otherwise; `-n :`
+prints every line. The lines are written while the guest runs, shortly after
+the packets: run the machine for a moment, or run the next command, before
+reading the last ones.
+
+A run that does not keep the log still makes it, and replay brings it back.
+Fork a branch from a checkpoint before the stretch, keeping that output, and
+the branch replays the stretch and stores the same lines:
 
 ```bash
 machine checkpoint app before
 machine net app loss db 30% --to nest --seed 7 --log
 machine exec app run --container nest -- ping -c 20 -i 0.05 db
-machine fork app --from ^before --keep-output /output/drop/net --name logged
-machine output app/logged --source /output/drop/net/compose-db-1.log --plain
+machine fork app --from ^before --keep-output /output/drop/.machine/net --name logged
+machine output app/logged --source /output/drop/.machine/net/compose-db-1.log --plain -n :
 ```
 
 ```text
-2026-03-01T00:01:00.361521Z #1 to compose-nest-1 pass ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 0
-2026-03-01T00:01:00.416546Z #2 to compose-nest-1 drop ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 1
-2026-03-01T00:01:00.470314Z #3 to compose-nest-1 pass ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 2
-2026-03-01T00:01:00.530400Z #4 to compose-nest-1 drop ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 3
+2026-03-01T00:01:31.691986Z #8 to compose-nest-1 pass ICMP 172.18.0.4 > 172.18.0.3 echo reply id 25 seq 0 len 84
+2026-03-01T00:01:31.742177Z #9 to compose-nest-1 drop ICMP 172.18.0.4 > 172.18.0.3 echo reply id 25 seq 1 len 84
+2026-03-01T00:01:31.794040Z #10 to compose-nest-1 pass ICMP 172.18.0.4 > 172.18.0.3 echo reply id 25 seq 2 len 84
+2026-03-01T00:01:31.846051Z #11 to compose-nest-1 drop ICMP 172.18.0.4 > 172.18.0.3 echo reply id 25 seq 3 len 84
 ```
 
-Each line has the machine's date, the fault's packet count, the match, the
-decision, and the packet. The 8 drops of the 20 lines were the 8 pings the
-ping lost, and `DROPPED` in the listing read 8. Two branches replayed from
-the same checkpoint wrote the same log, line for line. To keep the log from the start, give
-`create` or `fork` `--keep-output /output/drop/net`. `--no-log` stops it.
-The guest kernel keeps 1024 decisions until the machine writes them; past
-that, a line says how many were lost.
+Each line has the machine's date, the packet's number on its link, the
+match, the decision and the packet with its IP length. The number counts
+every packet the link carried since the container started, logged or not,
+so a later stretch starts at a higher number: here the link had carried 7
+packets before the ping. The 8 drops of the 20 lines
+were the 8 pings the ping lost, and `DROPPED` in the listing read 8. The
+parent's log and two branches replayed from the same checkpoint were the
+same, byte for byte.
+
+The decisions are `pass`, `drop`, `delay` with the time the fault drew,
+`ahead` for a packet `reorder` sent before the delayed ones, and `duplicate`
+and `corrupt` beside the first word. A duplicated packet has two lines: the
+original says `duplicate`, and the copy, logged first, says `copy`. A delay
+is what the fault drew; the packet can leave later by the machine's timer
+slack, as a timer can.
+
+The guest kernel keeps 8192 decisions until the machine writes them. A
+burst that decides more first loses the rest, and the log says so: every
+open log gets a line `lost N decisions of the machine's`, and the listing
+warns `The log lost N decisions`. The count is `log_lost` in
+`machine -o json net app` and in the SDK's `Link`; a log is complete while
+it is 0. In one test, 50MB of TCP decided 7,267 packets and logged all of
+them, and 200MB decided 30,267 and lost 3,290, each loss reported.
+
+Each decision costs about 45 microseconds of machine time to write. A
+50MB TCP transfer under a logged fault took 0.77 seconds of machine time,
+against 0.46 seconds under the same fault without the log, and wrote 7,267
+lines. Log the stretch being examined, not a whole run.
 
 ### Seeds, replay and --for
 
@@ -361,9 +398,9 @@ db dropped are the 14 api lost. A hold shows what it holds as `QUEUED` until
 the release. The counts are what the fault processed, packet by packet, not
 a measure of its probability: over many packets 30% loss drops close to 30%
 of them, and over a few the count can be anything. A container that docker
-starts again counts from 0, and so does one a network is disconnected from. A large TCP write reaches the fault as one
-packet larger than the MTU, so the counts count it once and `loss` drops it
-whole.
+starts again counts from 0, and so does one a network is disconnected from.
+The counts are packets as the fault decides them, the unit of the log's
+lines: a large TCP write that reaches the fault as one packet is one.
 
 The counts are packets on the link, not sends by a program. A TCP write can
 wait in the socket's buffer, and the kernel retransmits without a system
@@ -496,3 +533,9 @@ segments them only where a real interface needs it.
 - **IPv4 alone.** Ports and SYNs are matched in packets without IP options,
   which Docker's networks send.
 - **The path's MTU** stays as Docker sets it.
+- **Loss of TCP is per unit the kernel hands the link, not per wire
+  segment.** Between containers the kernel sends a large TCP write as one
+  packet many times the MTU, segmented only where a real interface needs it:
+  in one test most were 8244 bytes. `loss 1%` drops 1% of those units, each
+  as many segments as it holds, and TCP sends the whole unit again. The
+  log's `len` shows each unit's size.

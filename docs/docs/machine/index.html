@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793482062289" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793482062289" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793474707891" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793482062289" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3447,28 +3447,54 @@ connection’s own traffic confirms the peer first. The table is part of the
 machine, so a replay makes the same changes. A container that docker starts
 again begins with an empty table, as a host that restarts does.</p>
 <h3 id="the-decision-log"><a href="#the-decision-log" class="headerlink" title="The decision log"></a>The decision log</h3><p><code>--log</code> writes each decision a fault makes to a log: which packet it took,
-whether it dropped, delayed, duplicated, corrupted or sent it ahead, and
-when. It answers which exact packet a fault dropped, which the counts and a
-capture do not:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span></span><br><span class="line">machine net app                                        <span class="comment"># FAULTS: loss 30% log</span></span><br></pre></td></tr></table></figure>
+and whether it dropped it, delayed it, duplicated it, corrupted it or sent it
+ahead. It answers which exact packet a fault dropped, which the counts and a
+capture do not. <code>--no-log</code> with the same fault stops it:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span>   <span class="comment"># the link&#x27;s decisions are logged</span></span><br><span class="line">machine net app                                        <span class="comment"># FAULTS: loss 30% log</span></span><br><span class="line">machine net app loss db 30% --to nest --seed 7 --no-log  <span class="comment"># the same fault, no longer logged</span></span><br></pre></td></tr></table></figure>
 
-<p>The guest kernel records each decision where netem makes it, and the
-machine writes one line per decision to <code>/output/drop/net/&lt;container&gt;.log</code>,
-a file of the run’s output under <code>drop</code>. The run drops that output unless
-it keeps it, so a log costs nothing to keep until it is needed. To read the
-log of a stretch already run, fork a branch from a checkpoint before it,
-keeping that output, and the branch replays the stretch and stores it:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine checkpoint app before</span><br><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container nest -- ping -c 20 -i 0.05 db</span><br><span class="line">machine fork app --from ^before --keep-output /output/drop/net --name logged</span><br><span class="line">machine output app/logged --<span class="built_in">source</span> /output/drop/net/compose-db-1.<span class="built_in">log</span> --plain</span><br></pre></td></tr></table></figure>
+<p>The machine writes one line per decision to
+<code>/output/drop/.machine/net/&lt;container&gt;.log</code>. The <code>.machine</code> folder holds the
+files the machine itself writes, apart from a program’s own, and it is under
+<code>drop</code>, so a run stores the log only when it keeps that output. A run that
+keeps it from the start is read at any time:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine create app --disk app.img --keep-output /output/drop/.machine/net</span><br><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container nest -- ping -c 20 -i 0.05 db</span><br><span class="line">machine output app --<span class="built_in">source</span> /output/drop/.machine/net/compose-db-1.<span class="built_in">log</span> --plain -n :</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2026-03-01T00:01:00.361521Z #1 to compose-nest-1 pass ICMP 172.18.0.3 &gt; 172.18.0.4 echo reply id 25 seq 0</span><br><span class="line">2026-03-01T00:01:00.416546Z #2 to compose-nest-1 drop ICMP 172.18.0.3 &gt; 172.18.0.4 echo reply id 25 seq 1</span><br><span class="line">2026-03-01T00:01:00.470314Z #3 to compose-nest-1 pass ICMP 172.18.0.3 &gt; 172.18.0.4 echo reply id 25 seq 2</span><br><span class="line">2026-03-01T00:01:00.530400Z #4 to compose-nest-1 drop ICMP 172.18.0.3 &gt; 172.18.0.4 echo reply id 25 seq 3</span><br></pre></td></tr></table></figure>
+<p><code>machine output</code> prints the last 25 lines unless <code>-n</code> says otherwise; <code>-n :</code>
+prints every line. The lines are written while the guest runs, shortly after
+the packets: run the machine for a moment, or run the next command, before
+reading the last ones.</p>
+<p>A run that does not keep the log still makes it, and replay brings it back.
+Fork a branch from a checkpoint before the stretch, keeping that output, and
+the branch replays the stretch and stores the same lines:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine checkpoint app before</span><br><span class="line">machine net app loss db 30% --to nest --seed 7 --<span class="built_in">log</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container nest -- ping -c 20 -i 0.05 db</span><br><span class="line">machine fork app --from ^before --keep-output /output/drop/.machine/net --name logged</span><br><span class="line">machine output app/logged --<span class="built_in">source</span> /output/drop/.machine/net/compose-db-1.<span class="built_in">log</span> --plain -n :</span><br></pre></td></tr></table></figure>
 
-<p>Each line has the machine’s date, the fault’s packet count, the match, the
-decision, and the packet. The 8 drops of the 20 lines were the 8 pings the
-ping lost, and <code>DROPPED</code> in the listing read 8. Two branches replayed from
-the same checkpoint wrote the same log, line for line. To keep the log from the start, give
-<code>create</code> or <code>fork</code> <code>--keep-output /output/drop/net</code>. <code>--no-log</code> stops it.
-The guest kernel keeps 1024 decisions until the machine writes them; past
-that, a line says how many were lost.</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">2026-03-01T00:01:31.691986Z #8 to compose-nest-1 pass ICMP 172.18.0.4 &gt; 172.18.0.3 echo reply id 25 seq 0 len 84</span><br><span class="line">2026-03-01T00:01:31.742177Z #9 to compose-nest-1 drop ICMP 172.18.0.4 &gt; 172.18.0.3 echo reply id 25 seq 1 len 84</span><br><span class="line">2026-03-01T00:01:31.794040Z #10 to compose-nest-1 pass ICMP 172.18.0.4 &gt; 172.18.0.3 echo reply id 25 seq 2 len 84</span><br><span class="line">2026-03-01T00:01:31.846051Z #11 to compose-nest-1 drop ICMP 172.18.0.4 &gt; 172.18.0.3 echo reply id 25 seq 3 len 84</span><br></pre></td></tr></table></figure>
+
+<p>Each line has the machine’s date, the packet’s number on its link, the
+match, the decision and the packet with its IP length. The number counts
+every packet the link carried since the container started, logged or not,
+so a later stretch starts at a higher number: here the link had carried 7
+packets before the ping. The 8 drops of the 20 lines
+were the 8 pings the ping lost, and <code>DROPPED</code> in the listing read 8. The
+parent’s log and two branches replayed from the same checkpoint were the
+same, byte for byte.</p>
+<p>The decisions are <code>pass</code>, <code>drop</code>, <code>delay</code> with the time the fault drew,
+<code>ahead</code> for a packet <code>reorder</code> sent before the delayed ones, and <code>duplicate</code>
+and <code>corrupt</code> beside the first word. A duplicated packet has two lines: the
+original says <code>duplicate</code>, and the copy, logged first, says <code>copy</code>. A delay
+is what the fault drew; the packet can leave later by the machine’s timer
+slack, as a timer can.</p>
+<p>The guest kernel keeps 8192 decisions until the machine writes them. A
+burst that decides more first loses the rest, and the log says so: every
+open log gets a line <code>lost N decisions of the machine&#39;s</code>, and the listing
+warns <code>The log lost N decisions</code>. The count is <code>log_lost</code> in
+<code>machine -o json net app</code> and in the SDK’s <code>Link</code>; a log is complete while
+it is 0. In one test, 50MB of TCP decided 7,267 packets and logged all of
+them, and 200MB decided 30,267 and lost 3,290, each loss reported.</p>
+<p>Each decision costs about 45 microseconds of machine time to write. A
+50MB TCP transfer under a logged fault took 0.77 seconds of machine time,
+against 0.46 seconds under the same fault without the log, and wrote 7,267
+lines. Log the stretch being examined, not a whole run.</p>
 <h3 id="seeds-replay-and-–for"><a href="#seeds-replay-and-–for" class="headerlink" title="Seeds, replay and –for"></a>Seeds, replay and –for</h3><p>Loss, jitter, duplicate, corrupt and reorder decide each packet by chance,
 from the link’s seed. Give one with <code>--seed</code>, or the link draws one and shows
 it. A delay or a rate alone draws nothing, and shows no seed. A link keeps
@@ -3503,9 +3529,9 @@ db dropped are the 14 api lost. A hold shows what it holds as <code>QUEUED</code
 the release. The counts are what the fault processed, packet by packet, not
 a measure of its probability: over many packets 30% loss drops close to 30%
 of them, and over a few the count can be anything. A container that docker
-starts again counts from 0, and so does one a network is disconnected from. A large TCP write reaches the fault as one
-packet larger than the MTU, so the counts count it once and <code>loss</code> drops it
-whole.</p>
+starts again counts from 0, and so does one a network is disconnected from.
+The counts are packets as the fault decides them, the unit of the log’s
+lines: a large TCP write that reaches the fault as one packet is one.</p>
 <p>The counts are packets on the link, not sends by a program. A TCP write can
 wait in the socket’s buffer, and the kernel retransmits without a system
 call. <code>machine catch add syscall sendto --in /usr/bin/app</code> shows what a
@@ -3602,6 +3628,13 @@ uniform jitter: a fault decides each packet on its own, by its chance.</p>
 which Docker’s networks send.</p>
 </li>
 <li><p><strong>The path’s MTU</strong> stays as Docker sets it.</p>
+</li>
+<li><p><strong>Loss of TCP is per unit the kernel hands the link, not per wire
+segment.</strong> Between containers the kernel sends a large TCP write as one
+packet many times the MTU, segmented only where a real interface needs it:
+in one test most were 8244 bytes. <code>loss 1%</code> drops 1% of those units, each
+as many segments as it holds, and TCP sends the whole unit again. The
+log’s <code>len</code> shows each unit’s size.</p>
 </li>
 </ul>
 <h1 id="debugging"><a href="#debugging" class="headerlink" title="Debugging"></a>Debugging</h1><p>There are two ways to debug a program in a machine. The machine’s own
@@ -10936,8 +10969,8 @@ packet a match takes gets only the match’s faults, not the whole link’s.</p>
 to give one. A link keeps its seed, and a link without one draws a new seed.</p>
 <p>Use <code>--for 30s</code> to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.</p>
-<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;net, a file for
-each container. The run drops that output unless it keeps it.</p>
+<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;.machine&#x2F;net, a
+file for each container. The run drops that output unless it keeps it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine net run delay [-h] [--jitter duration] [--to container]</span><br><span class="line">                      [--proto &#123;tcp,udp,icmp,arp&#125;] [--port n] [--syn] [--seed n]</span><br><span class="line">                      [--for duration] [--log | --no-log]</span><br><span class="line">                      container delay</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11015,8 +11048,8 @@ packet a match takes gets only the match’s faults, not the whole link’s.</p>
 to give one. A link keeps its seed, and a link without one draws a new seed.</p>
 <p>Use <code>--for 30s</code> to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.</p>
-<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;net, a file for
-each container. The run drops that output unless it keeps it.</p>
+<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;.machine&#x2F;net, a
+file for each container. The run drops that output unless it keeps it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net run loss [-h] [--to container] [--proto &#123;tcp,udp,icmp,arp&#125;] [--port n] [--syn]</span><br><span class="line">                     [--seed n] [--for duration] [--log | --no-log]</span><br><span class="line">                     container share</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11090,8 +11123,8 @@ packet a match takes gets only the match’s faults, not the whole link’s.</p>
 to give one. A link keeps its seed, and a link without one draws a new seed.</p>
 <p>Use <code>--for 30s</code> to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.</p>
-<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;net, a file for
-each container. The run drops that output unless it keeps it.</p>
+<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;.machine&#x2F;net, a
+file for each container. The run drops that output unless it keeps it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net run duplicate [-h] [--to container] [--proto &#123;tcp,udp,icmp,arp&#125;] [--port n]</span><br><span class="line">                          [--syn] [--seed n] [--for duration] [--log | --no-log]</span><br><span class="line">                          container share</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11166,8 +11199,8 @@ packet a match takes gets only the match’s faults, not the whole link’s.</p>
 to give one. A link keeps its seed, and a link without one draws a new seed.</p>
 <p>Use <code>--for 30s</code> to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.</p>
-<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;net, a file for
-each container. The run drops that output unless it keeps it.</p>
+<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;.machine&#x2F;net, a
+file for each container. The run drops that output unless it keeps it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net run corrupt [-h] [--to container] [--proto &#123;tcp,udp,icmp,arp&#125;] [--port n]</span><br><span class="line">                        [--syn] [--seed n] [--for duration] [--log | --no-log]</span><br><span class="line">                        container share</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11242,8 +11275,8 @@ packet a match takes gets only the match’s faults, not the whole link’s.</p>
 to give one. A link keeps its seed, and a link without one draws a new seed.</p>
 <p>Use <code>--for 30s</code> to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.</p>
-<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;net, a file for
-each container. The run drops that output unless it keeps it.</p>
+<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;.machine&#x2F;net, a
+file for each container. The run drops that output unless it keeps it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net run reorder [-h] [--to container] [--proto &#123;tcp,udp,icmp,arp&#125;] [--port n]</span><br><span class="line">                        [--syn] [--seed n] [--for duration] [--log | --no-log]</span><br><span class="line">                        container share</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11315,8 +11348,8 @@ takes the limit away. The link keeps its other faults.</p>
 packet a match takes gets only the match’s faults, not the whole link’s.</p>
 <p>Use <code>--for 30s</code> to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.</p>
-<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;net, a file for
-each container. The run drops that output unless it keeps it.</p>
+<p>Use <code>--log</code> to write each decision of the fault to &#x2F;output&#x2F;drop&#x2F;.machine&#x2F;net, a
+file for each container. The run drops that output unless it keeps it.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net run rate [-h] [--to container] [--proto &#123;tcp,udp,icmp,arp&#125;] [--port n] [--syn]</span><br><span class="line">                     [--for duration] [--log | --no-log]</span><br><span class="line">                     container rate</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -15577,6 +15610,13 @@ and <code>rate</code> takes bits a second, such as <code>&quot;1mbit&quot;</code
 and jitter in nanoseconds and its shares in parts per billion, and what the
 fault did since it was set: <code>sent</code>, <code>dropped</code>, and <code>queued</code>, the packets it
 holds now. A replay delays and drops the same packets.</p>
+<p><code>log=True</code> on a fault writes each of its decisions to the container’s file
+under <code>/output/drop/.machine/net</code>, and <code>log=False</code> stops it, as <code>--log</code> and
+<code>--no-log</code> do. A <code>Link</code>‘s <code>log_lost</code> counts the decisions the log dropped
+because its buffer was full, of any container; a log is complete while it
+is 0:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">run.net.loss(<span class="string">&quot;db&quot;</span>, <span class="string">&quot;30%&quot;</span>, to=<span class="string">&quot;nest&quot;</span>, seed=<span class="number">7</span>, log=<span class="literal">True</span>)</span><br><span class="line">run.run(within=<span class="string">&quot;5s&quot;</span>)</span><br><span class="line"><span class="keyword">assert</span> <span class="built_in">all</span>(link.log_lost == <span class="number">0</span> <span class="keyword">for</span> link <span class="keyword">in</span> run.net())</span><br></pre></td></tr></table></figure>
+
 <p><code>hold</code> keeps a link’s packets until <code>release</code>, or for <code>for_</code>, and they then
 leave together. With no name, <code>hold</code> holds every link where the machine
 stopped, until <code>release</code> with no name. <code>reset</code> aborts TCP connections and
@@ -15971,10 +16011,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793474707891"></script>
-<script src="/js/machine-hero-type.js?v=1793474707891"></script>
-<script src="/js/download-platforms.js?v=1793474707891"></script>
-<script src="/js/anchor-case.js?v=1793474707891"></script>
+<script src="/js/index-code-type.js?v=1793482062290"></script>
+<script src="/js/machine-hero-type.js?v=1793482062290"></script>
+<script src="/js/download-platforms.js?v=1793482062290"></script>
+<script src="/js/anchor-case.js?v=1793482062290"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
