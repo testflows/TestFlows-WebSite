@@ -6414,12 +6414,17 @@ See also:
 
 Show the faults of each container's link, or put faults on one.
 
-A link is what a container sends to the others. The command delays it, loses
-packets, sends them twice, changes them, sends them out of order or limits its
-rate. It cuts two containers apart, one way or both.
+A link connects a container to a peer. A fault acts on the packets the container
+sends. The command delays them, loses some, sends some twice, changes them,
+sends them out of order or limits their rate. It holds them and releases them
+together.
 
-A fault is on the whole link, or with `--to` on the link toward one peer. The
-other links stay as they are.
+The command cuts two containers apart, one way or both. It resets their TCP
+connections.
+
+A fault is on every packet the container sends, or on the packets a match takes.
+A match names a peer, a protocol, a port or TCP SYNs. The other links stay as
+they are.
 
 The faults are part of the machine. The run records each change, and a replay
 makes it at the same point. A checkpoint keeps a link's faults.
@@ -6443,8 +6448,11 @@ Examples:
 
 ```
 machine net run1                               each link and its faults
-machine net run1 delay db 100ms --jitter 20ms  db's packets wait
+machine net run1 delay db 100ms --jitter 20ms  80 to 120ms each
 machine net run1 partition db api              db and api cut apart
+machine net run1 loss db 100% --port 5432      port 5432 alone
+machine net run1 hold db --for 5s              a stall, then a burst
+machine net run1 reset api --to db             api's connections to db
 machine net run1 heal                          every link healed
 ```
 
@@ -6461,8 +6469,9 @@ Delay the packets a container sends.
 Each packet waits the delay before it leaves, give or take the jitter. A delay
 of 0 takes the delay away. The link keeps its other faults.
 
-Use `--to` db to put the fault on what the container sends to db alone. A link
-toward a peer with a fault of its own takes that fault, not the whole link's.
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
 
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
@@ -6470,7 +6479,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run delay [-h] [--jitter duration] [--to container] [--seed n] [--for duration]
+machine net run delay [-h] [--jitter duration] [--to container] [--proto {tcp,udp,icmp}]
+                      [--port n] [--syn] [--seed n] [--for duration]
                       container delay
 ```
 
@@ -6482,7 +6492,10 @@ machine net run delay [-h] [--jitter duration] [--to container] [--seed n] [--fo
 | Option | Does |
 |---|---|
 | `--jitter duration` | Each packet's delay differs by up to this, such as 20ms |
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
@@ -6492,6 +6505,7 @@ Examples:
 machine net run1 delay db 100ms                db's packets wait 100ms
 machine net run1 delay db 100ms --jitter 20ms  80 to 120ms
 machine net run1 delay db 300ms --to api       only to api
+machine net run1 delay db 1s --port 5432       port 5432 alone
 machine net run1 delay db 0                    no delay
 ```
 
@@ -6508,8 +6522,9 @@ Lose some of the packets a container sends.
 Each packet is lost by chance, the share given. A share of 0% takes the fault
 away. The link keeps its other faults.
 
-Use `--to` db to put the fault on what the container sends to db alone. A link
-toward a peer with a fault of its own takes that fault, not the whole link's.
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
 
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
@@ -6517,7 +6532,9 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run loss [-h] [--to container] [--seed n] [--for duration] container share
+machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                     [--seed n] [--for duration]
+                     container share
 ```
 
 | Argument | Does |
@@ -6527,7 +6544,10 @@ machine net run loss [-h] [--to container] [--seed n] [--for duration] container
 
 | Option | Does |
 |---|---|
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
@@ -6535,7 +6555,8 @@ Examples:
 
 ```
 machine net run1 loss db 10%            a tenth of db's packets lost
-machine net run1 loss db 100% --for 5s  db cut off for 5s
+machine net run1 loss db 100% --for 5s  db's packets lost for 5s
+machine net run1 loss api 100% --syn    no new connections
 machine net run1 loss db 0%             none lost
 ```
 
@@ -6552,8 +6573,9 @@ Send some of a container's packets twice.
 Each packet is sent twice by chance, the share given. A share of 0% takes the
 fault away. The link keeps its other faults.
 
-Use `--to` db to put the fault on what the container sends to db alone. A link
-toward a peer with a fault of its own takes that fault, not the whole link's.
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
 
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
@@ -6561,7 +6583,9 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run duplicate [-h] [--to container] [--seed n] [--for duration] container share
+machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                          [--seed n] [--for duration]
+                          container share
 ```
 
 | Argument | Does |
@@ -6571,7 +6595,10 @@ machine net run duplicate [-h] [--to container] [--seed n] [--for duration] cont
 
 | Option | Does |
 |---|---|
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
@@ -6596,8 +6623,9 @@ Each packet has one bit flipped by chance, the share given. A checksum finds
 most of them. A share of 0% takes the fault away. The link keeps its other
 faults.
 
-Use `--to` db to put the fault on what the container sends to db alone. A link
-toward a peer with a fault of its own takes that fault, not the whole link's.
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
 
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
@@ -6605,7 +6633,9 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run corrupt [-h] [--to container] [--seed n] [--for duration] container share
+machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                        [--seed n] [--for duration]
+                        container share
 ```
 
 | Argument | Does |
@@ -6615,7 +6645,10 @@ machine net run corrupt [-h] [--to container] [--seed n] [--for duration] contai
 
 | Option | Does |
 |---|---|
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
@@ -6640,8 +6673,9 @@ Each packet is sent at once by chance, the share given, while the rest wait the
 link's delay. A link to reorder needs a delay. A share of 0% takes the fault
 away.
 
-Use `--to` db to put the fault on what the container sends to db alone. A link
-toward a peer with a fault of its own takes that fault, not the whole link's.
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
 
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
@@ -6649,7 +6683,9 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run reorder [-h] [--to container] [--seed n] [--for duration] container share
+machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                        [--seed n] [--for duration]
+                        container share
 ```
 
 | Argument | Does |
@@ -6659,14 +6695,17 @@ machine net run reorder [-h] [--to container] [--seed n] [--for duration] contai
 
 | Option | Does |
 |---|---|
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
 Examples:
 
 ```
-machine net run1 reorder db 25%  a quarter sent ahead
+machine net run1 reorder db 25%  a quarter ahead of the delay
 machine net run1 reorder db 0%   in order again
 ```
 
@@ -6683,13 +6722,16 @@ Limit how fast a container sends.
 The link sends at most the rate given, and the packets past it wait. A rate of 0
 takes the limit away. The link keeps its other faults.
 
-Use `--to` db to put the fault on what the container sends to db alone. A link
-toward a peer with a fault of its own takes that fault, not the whole link's.
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
 
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run rate [-h] [--to container] [--for duration] container rate
+machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                     [--for duration]
+                     container rate
 ```
 
 | Argument | Does |
@@ -6699,7 +6741,10 @@ machine net run rate [-h] [--to container] [--for duration] container rate
 
 | Option | Does |
 |---|---|
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
 Examples:
@@ -6720,12 +6765,16 @@ See also:
 Cut the link between two containers.
 
 Everything each container sends the other is lost, and their other links stay as
-they are. Use `--one-way` to cut what the first sends the second alone.
+they are. Use `--one-way` to cut what the first sends the second alone. Use
+`--port` 5432 to cut the packets of port 5432 alone.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set both directions back together after 30 seconds of machine
+time.
 
 ```
-machine net run partition [-h] [--one-way] [--for duration] container other
+machine net run partition [-h] [--one-way] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                          [--for duration]
+                          container other
 ```
 
 | Argument | Does |
@@ -6736,14 +6785,18 @@ machine net run partition [-h] [--one-way] [--for duration] container other
 | Option | Does |
 |---|---|
 | `--one-way` | Cut what the first sends the second, not the reverse |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 | `--for duration` | Set the link back after this machine time, such as 30s |
 
 Examples:
 
 ```
-machine net run1 partition db api            nothing between db and api
-machine net run1 partition db api --one-way  db to api cut
-machine net run1 partition db api --for 10s  for 10s
+machine net run1 partition db api              nothing between db and api
+machine net run1 partition db api --one-way    db to api cut
+machine net run1 partition db api --for 10s    for 10s
+machine net run1 partition db api --port 5432  port 5432 alone
 ```
 
 See also:
@@ -6752,15 +6805,61 @@ See also:
 - [`machine net loss`](#machine-net-loss)
 - [`machine net`](#machine-net)
 
-### machine net heal
+### machine net hold
 
-Take the faults off a container's links.
+Hold the packets a container sends.
 
-Without a container the command heals every link. Use `--to` db to heal the link
-toward db alone.
+Every packet waits in the link until a release, and then they all leave
+together. The link holds 1000 full-size packets and drops the ones past them.
+
+Use `--to` db to put the fault on what the container sends to db alone. Use
+`--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
+packet a match takes gets only the match's faults, not the whole link's.
+
+Use `--for 5s` to release the packets after 5 seconds of machine time.
 
 ```
-machine net run heal [-h] [--to container] [container]
+machine net run hold [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                     [--for duration]
+                     container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
+| `--for duration` | Release the packets after this machine time, such as 5s |
+
+Examples:
+
+```
+machine net run1 hold db                       until a release
+machine net run1 hold db --for 5s              released after 5s
+machine net run1 hold db --to api --port 5432  one flow alone
+```
+
+See also:
+
+- [`machine net release`](#machine-net-release)
+- [`machine net delay`](#machine-net-delay)
+- [`machine net`](#machine-net)
+
+### machine net release
+
+Release the packets a container's links hold.
+
+The held packets leave together, in the order they were sent. The link keeps its
+other faults. Without a container the command releases every link.
+
+```
+machine net run release [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                        [container]
 ```
 
 | Argument | Does |
@@ -6769,14 +6868,90 @@ machine net run heal [-h] [--to container] [container]
 
 | Option | Does |
 |---|---|
-| `--to container` | The link toward this container alone (default: the whole link) |
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
 
 Examples:
 
 ```
-machine net run1 heal db           db's links healed
-machine net run1 heal db --to api  db's link to api healed
-machine net run1 heal              every link healed
+machine net run1 release db  db's held packets leave
+machine net run1 release     every link released
+```
+
+See also:
+
+- [`machine net hold`](#machine-net-hold)
+- [`machine net heal`](#machine-net-heal)
+- [`machine net`](#machine-net)
+
+### machine net reset
+
+Reset the TCP connections of a container.
+
+The command closes the container's side of each connection, and the peer
+receives a reset. A listening socket stays open. Use `--to` db and `--port` 5432
+to reset some connections alone.
+
+```
+machine net run reset [-h] [--to container] [--port n] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+
+| Option | Does |
+|---|---|
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--port n` | The connections with this local or remote port alone |
+
+Examples:
+
+```
+machine net run1 reset api             every connection of api
+machine net run1 reset api --to db     its connections to db
+machine net run1 reset db --port 5432  those of port 5432
+```
+
+See also:
+
+- [`machine net partition`](#machine-net-partition)
+- [`machine inject`](#machine-inject)
+- [`machine net`](#machine-net)
+
+### machine net heal
+
+Take the faults off a container's links.
+
+Without a container the command heals every link. Use `--to` db to heal the
+faults on packets to db alone. A packet the link delays already still leaves at
+its time.
+
+```
+machine net run heal [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+                     [container]
+```
+
+| Argument | Does |
+|---|---|
+| `[container]` | Container, by its id, its name or its service's (default: every one) |
+
+| Option | Does |
+|---|---|
+| `--to container` | The packets to this container alone (default: to every peer) |
+| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--port n` | The packets with this source or destination port alone |
+| `--syn` | The TCP SYNs that open a connection alone |
+
+Examples:
+
+```
+machine net run1 heal db              db's links healed
+machine net run1 heal db --to api     db's link to api healed
+machine net run1 heal db --port 5432  the faults on port 5432
+machine net run1 heal                 every link healed
 ```
 
 See also:
