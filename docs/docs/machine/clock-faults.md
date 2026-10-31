@@ -205,12 +205,27 @@ container: compose-db-1
 ```
 
 `--container db` shows one container, and `machine -o json clock app` gives
-every field. When the guest kernel refuses a change, the next reading says
-why:
+every field.
+
+A change is taken when the run next executes, so the command that asks for it
+cannot say whether the guest kernel accepts it. Read the clock after the run
+that takes it. The reading names each change of the last batch the guest
+kernel refused, as you typed it, and why:
+
+```bash
+machine clock app set 1970-01-01T00:00:01Z
+machine clock app jitter -5ms:5ms --every 1s --seed 1
+machine run app --within 1s
+machine clock app
+```
 
 ```text
-refused: the date, the guest's or a container's, would leave the range the kernel takes: from 1970 plus the time since the guest booted, to 2232-04-18T23:47:16Z
+date:    2026-03-01T00:00:40.556767815Z
+jitter:  -5ms:5ms every 1s, seed 1, at +0.000356s after 1 draw
+refused: clock set 1970-01-01T00:00:01Z: the date, the guest's or a container's, would leave the range the kernel takes: from 1970 plus the time since the guest booted, to 2232-04-18T23:47:16Z
 ```
+
+The jitter applied and the set did not. A refused change changes nothing.
 
 ### Clock fault use cases
 

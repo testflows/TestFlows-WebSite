@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793421888006" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793421888006" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793418442546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793421888006" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3126,10 +3126,16 @@ program reads, ask from inside its container, which runs the machine:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">date:    2026-12-31T23:59:54.977514123Z</span><br><span class="line">offset:  +305d23h58m18.362410928s from machine time</span><br><span class="line">jitter:  -200ms:200ms every 10m, seed 42, at -0.022376s after 1 draw</span><br><span class="line">leap:    23:59:60 inserted before 2027-01-01T00:00:00Z</span><br><span class="line">container: compose-db-1</span><br><span class="line">  date:    2026-12-31T23:59:57.645176188Z</span><br><span class="line">  offset:  +2.667662065s from the guest&#x27;s date</span><br><span class="line">  drift:   +200ppm</span><br><span class="line">  slew:    to +6.00600183s at 122.130465170s of machine time</span><br></pre></td></tr></table></figure>
 
 <p><code>--container db</code> shows one container, and <code>machine -o json clock app</code> gives
-every field. When the guest kernel refuses a change, the next reading says
-why:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">refused: the date, the guest&#x27;s or a container&#x27;s, would leave the range the kernel takes: from 1970 plus the time since the guest booted, to 2232-04-18T23:47:16Z</span><br></pre></td></tr></table></figure>
+every field.</p>
+<p>A change is taken when the run next executes, so the command that asks for it
+cannot say whether the guest kernel accepts it. Read the clock after the run
+that takes it. The reading names each change of the last batch the guest
+kernel refused, as you typed it, and why:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine clock app <span class="built_in">set</span> 1970-01-01T00:00:01Z</span><br><span class="line">machine clock app jitter -5ms:5ms --every 1s --seed 1</span><br><span class="line">machine run app --within 1s</span><br><span class="line">machine clock app</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">date:    2026-03-01T00:00:40.556767815Z</span><br><span class="line">jitter:  -5ms:5ms every 1s, seed 1, at +0.000356s after 1 draw</span><br><span class="line">refused: clock set 1970-01-01T00:00:01Z: the date, the guest&#x27;s or a container&#x27;s, would leave the range the kernel takes: from 1970 plus the time since the guest booted, to 2232-04-18T23:47:16Z</span><br></pre></td></tr></table></figure>
+
+<p>The jitter applied and the set did not. A refused change changes nothing.</p>
 <h3 id="clock-fault-use-cases"><a href="#clock-fault-use-cases" class="headerlink" title="Clock fault use cases"></a>Clock fault use cases</h3><p>Each block below is a question a clock fault answers, and the commands that
 ask it. Run the machine afterwards, with <code>machine run app --within 2m</code> or with
 an <code>--until</code> the program prints, and read what it did.</p>
@@ -14137,6 +14143,11 @@ stands, with the change waiting for the run to execute:</p>
 <p><code>run.clock(container=&quot;db&quot;)</code> reads one container. <code>ClockInfo.containers</code> lists
 each container off the guest’s date with its <code>offset</code>, <code>drift</code>, <code>slew</code> and
 <code>jitter</code>, and <code>ClockInfo.jitter</code> and <code>ClockInfo.leap</code> are the guest’s.</p>
+<p>The guest kernel takes a change when the run executes, so read the clock after
+that run to see whether it was refused. <code>ClockInfo.refused</code> names each change
+of the last batch the guest refused, with its errno and the reason:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run.clock.<span class="built_in">set</span>(<span class="string">&quot;2038-01-19T03:13:30Z&quot;</span>)</span><br><span class="line">run.run(within=<span class="string">&quot;1s&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> refused <span class="keyword">in</span> run.clock().refused:</span><br><span class="line">    <span class="built_in">print</span>(refused.command, refused.error, refused.reason)</span><br></pre></td></tr></table></figure>
+
 <p>To find how much skew a system tolerates, fork one checkpoint into branches,
 one skew each:</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> skew_ms <span class="keyword">in</span> (<span class="number">50</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">400</span>, <span class="number">800</span>):</span><br><span class="line">    branch = run.fork(at=<span class="string">&quot;^steady&quot;</span>)</span><br><span class="line">    branch.clock.jump(<span class="string">f&quot;+<span class="subst">&#123;skew_ms&#125;</span>ms&quot;</span>, container=<span class="string">&quot;node2&quot;</span>)</span><br><span class="line">    result = branch.run(within=<span class="string">&quot;2m&quot;</span>, until=<span class="string">&quot;console~two leaders&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(skew_ms, result.reached)</span><br></pre></td></tr></table></figure>
@@ -14525,10 +14536,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793418442547"></script>
-<script src="/js/machine-hero-type.js?v=1793418442547"></script>
-<script src="/js/download-platforms.js?v=1793418442547"></script>
-<script src="/js/anchor-case.js?v=1793418442547"></script>
+<script src="/js/index-code-type.js?v=1793421888006"></script>
+<script src="/js/machine-hero-type.js?v=1793421888006"></script>
+<script src="/js/download-platforms.js?v=1793421888006"></script>
+<script src="/js/anchor-case.js?v=1793421888006"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

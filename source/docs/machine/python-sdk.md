@@ -336,6 +336,17 @@ run.clock.reset()
 each container off the guest's date with its `offset`, `drift`, `slew` and
 `jitter`, and `ClockInfo.jitter` and `ClockInfo.leap` are the guest's.
 
+The guest kernel takes a change when the run executes, so read the clock after
+that run to see whether it was refused. `ClockInfo.refused` names each change
+of the last batch the guest refused, with its errno and the reason:
+
+```python
+run.clock.set("2038-01-19T03:13:30Z")
+run.run(within="1s")
+for refused in run.clock().refused:
+    print(refused.command, refused.error, refused.reason)
+```
+
 To find how much skew a system tolerates, fork one checkpoint into branches,
 one skew each:
 
