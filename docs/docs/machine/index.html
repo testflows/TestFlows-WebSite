@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793474032618" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793474032618" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793471628540" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793474032618" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3288,7 +3288,11 @@ change, so the run moves forward.</p>
 </tr>
 <tr>
 <td>Does the cluster recover when the whole network stalls and comes back at once?</td>
-<td><code>hold --for 3s</code></td>
+<td><code>hold</code>, <code>run --within 3s</code>, <code>release</code></td>
+</tr>
+<tr>
+<td>What happens if the network stalls at one exact point?</td>
+<td><code>run --until &lt;point&gt;</code>, then <code>hold</code></td>
 </tr>
 <tr>
 <td>Do established connections keep working while new ones cannot open?</td>
@@ -3384,16 +3388,27 @@ message that arrives after a leader change or after its sender timed out:</p>
 
 <p><code>--for 10s</code> releases them after 10 seconds of machine time. A link holds 1000
 full-size packets and drops the ones past them.</p>
-<p>Without a container, <code>hold</code> holds every link of the machine at once: the
-guest kernel stops every container’s link at one instruction, and all
-networking between the containers stops. <code>release</code> or <code>heal</code> without a
-container lets them all go:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine net app hold                                   <span class="comment"># the whole cluster&#x27;s network stops</span></span><br><span class="line">machine net app                                        <span class="comment"># says every link is held</span></span><br><span class="line">machine net app release                                <span class="comment"># everything held leaves at once</span></span><br><span class="line">machine net app hold --<span class="keyword">for</span> 3s                          <span class="comment"># or for 3 seconds of machine time</span></span><br></pre></td></tr></table></figure>
+<p>Without a container, <code>hold</code> holds every link at the instruction the
+machine is stopped at, and all networking between the containers stops
+there. <code>release</code> or <code>heal</code> without a container lets every packet go:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net app hold                                   <span class="comment"># the whole cluster&#x27;s network stops here</span></span><br><span class="line">machine net app                                        <span class="comment"># says every link is held</span></span><br><span class="line">machine net app release                                <span class="comment"># everything held leaves at once</span></span><br></pre></td></tr></table></figure>
 
-<p>With api and nest each pinging db during a hold, each received only the
-replies sent before it, and all 8 after the release. A container on
-another’s network, the machine’s or none has no link of its own and is
-left out, and so is a process outside every container.</p>
+<p>The hold is part of the recording, so a replay holds at the same point, and
+a checkpoint taken during a hold keeps it. Run the machine to an exact point
+first, and the hold lands there:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;console~ready&#x27;</span>                <span class="comment"># stop where the cluster is ready</span></span><br><span class="line">machine net app hold                                   <span class="comment"># hold every link at that point</span></span><br><span class="line">machine net app loss db 30% --to api                   <span class="comment"># change the faults while nothing moves</span></span><br><span class="line">machine net app release                                <span class="comment"># traffic resumes under the new faults</span></span><br></pre></td></tr></table></figure>
+
+<p>The guest’s programs and timers keep running during a hold. A
+retransmission or an application timeout can expire while the links are
+held. To hold for a time, run the machine for that time between the two
+commands:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net app hold</span><br><span class="line">machine run app --within 3s                            <span class="comment"># 3 seconds of machine time, all held</span></span><br><span class="line">machine net app release</span><br></pre></td></tr></table></figure>
+
+<p>With api pinging db every 250 milliseconds, the 3 replies sent before the
+hold arrived, none arrived in 3 seconds of hold, and all 20 arrived after the
+release. A container on another’s network, the machine’s or none has no
+link of its own and is left out, and so is a process outside every
+container. The listing names a container whose link could not be held.</p>
 <h3 id="resetting-connections"><a href="#resetting-connections" class="headerlink" title="Resetting connections"></a>Resetting connections</h3><p><code>reset</code> aborts TCP connections. The container’s side of each connection is
 aborted, and the peer receives a TCP reset, as from a middlebox that dropped
 the connection or a server that restarted. What a program sees depends on
@@ -11420,9 +11435,9 @@ time.</p>
 <h3 id="machine-net-hold"><a href="#machine-net-hold" class="headerlink" title="machine net hold"></a>machine net hold</h3><p>Hold the packets a container sends.</p>
 <p>Every packet waits in the link until a release, and then they all leave
 together. The link holds 1000 full-size packets and drops the ones past them.</p>
-<p>Without a container the command holds every link of the machine at once. All
-networking between the containers stops. A release without a container lets them
-all go.</p>
+<p>Without a container the command holds every link at the instruction the machine
+is stopped at. All networking between the containers stops there, and a replay
+holds at the same point. A release without a container lets every packet go.</p>
 <p>Use <code>--to</code> db to put the fault on what the container sends to db alone. Use
 <code>--proto</code>, <code>--port</code> and <code>--syn</code> to take some packets alone, such as port 5432. A
 packet a match takes gets only the match’s faults, not the whole link’s.</p>
@@ -11470,7 +11485,7 @@ packet a match takes gets only the match’s faults, not the whole link’s.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine net run1 hold db                       until a release</span><br><span class="line">machine net run1 hold db --for 5s              released after 5s</span><br><span class="line">machine net run1 hold --for 5s                 every container, 5s</span><br><span class="line">machine net run1 hold db --to api --port 5432  one flow alone</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine net run1 hold db                       until a release</span><br><span class="line">machine net run1 hold db --for 5s              released after 5s</span><br><span class="line">machine net run1 hold                          every link, here</span><br><span class="line">machine net run1 hold db --to api --port 5432  one flow alone</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -15558,8 +15573,10 @@ and jitter in nanoseconds and its shares in parts per billion, and what the
 fault did since it was set: <code>sent</code>, <code>dropped</code>, and <code>queued</code>, the packets it
 holds now. A replay delays and drops the same packets.</p>
 <p><code>hold</code> keeps a link’s packets until <code>release</code>, or for <code>for_</code>, and they then
-leave together. <code>reset</code> aborts TCP connections and returns how many:</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">run.net.hold(<span class="string">&quot;node1&quot;</span>, for_=<span class="string">&quot;10s&quot;</span>)         <span class="comment"># node1&#x27;s messages arrive late, in a burst</span></span><br><span class="line">run.net.reset(<span class="string">&quot;api&quot;</span>, to=<span class="string">&quot;db&quot;</span>, port=<span class="number">5432</span>)  <span class="comment"># api&#x27;s connections to db get a reset</span></span><br></pre></td></tr></table></figure>
+leave together. With no name, <code>hold</code> holds every link where the machine
+stopped, until <code>release</code> with no name. <code>reset</code> aborts TCP connections and
+returns how many:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">run.net.hold(<span class="string">&quot;node1&quot;</span>, for_=<span class="string">&quot;10s&quot;</span>)         <span class="comment"># node1&#x27;s messages arrive late, in a burst</span></span><br><span class="line">run.net.hold()                            <span class="comment"># every link, at the machine&#x27;s stop</span></span><br><span class="line">run.net.release()                         <span class="comment"># every packet held leaves</span></span><br><span class="line">run.net.reset(<span class="string">&quot;api&quot;</span>, to=<span class="string">&quot;db&quot;</span>, port=<span class="number">5432</span>)  <span class="comment"># api&#x27;s connections to db get a reset</span></span><br></pre></td></tr></table></figure>
 
 <p><code>run.net.arp</code> shows and changes a container’s neighbour table, and returns
 the table as <code>Neighbor</code> entries:</p>
@@ -15949,10 +15966,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793471628541"></script>
-<script src="/js/machine-hero-type.js?v=1793471628541"></script>
-<script src="/js/download-platforms.js?v=1793471628541"></script>
-<script src="/js/anchor-case.js?v=1793471628541"></script>
+<script src="/js/index-code-type.js?v=1793474032618"></script>
+<script src="/js/machine-hero-type.js?v=1793474032618"></script>
+<script src="/js/download-platforms.js?v=1793474032618"></script>
+<script src="/js/anchor-case.js?v=1793474032618"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

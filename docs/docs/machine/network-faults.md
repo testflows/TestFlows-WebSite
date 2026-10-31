@@ -44,7 +44,8 @@ Each command follows `machine net <run>`.
 | Does the client reconnect, and retry safely, when its connection is reset mid-transaction? | `reset api --to db` |
 | What happens when a server's responses to one client are lost, and nothing else? | `loss db 100% --to api --port 5432` |
 | Do messages that arrive late, after a leader change or a timeout, do harm? | `hold node1 --for 10s` |
-| Does the cluster recover when the whole network stalls and comes back at once? | `hold --for 3s` |
+| Does the cluster recover when the whole network stalls and comes back at once? | `hold`, `run --within 3s`, `release` |
+| What happens if the network stalls at one exact point? | `run --until <point>`, then `hold` |
 | Do established connections keep working while new ones cannot open? | `loss api 100% --to db --syn` |
 | Does the cluster settle when a link keeps going down and coming back? | a loop of `partition --for`, below |
 | What happens when a node cannot resolve a peer's address? | `loss db 100% --proto arp --to api`, then `arp flush api` and `arp flush db` |
@@ -162,22 +163,43 @@ machine net app release node1                           # they all arrive now
 `--for 10s` releases them after 10 seconds of machine time. A link holds 1000
 full-size packets and drops the ones past them.
 
-Without a container, `hold` holds every link of the machine at once: the
-guest kernel stops every container's link at one instruction, and all
-networking between the containers stops. `release` or `heal` without a
-container lets them all go:
+Without a container, `hold` holds every link at the instruction the
+machine is stopped at, and all networking between the containers stops
+there. `release` or `heal` without a container lets every packet go:
 
 ```bash
-machine net app hold                                   # the whole cluster's network stops
+machine net app hold                                   # the whole cluster's network stops here
 machine net app                                        # says every link is held
 machine net app release                                # everything held leaves at once
-machine net app hold --for 3s                          # or for 3 seconds of machine time
 ```
 
-With api and nest each pinging db during a hold, each received only the
-replies sent before it, and all 8 after the release. A container on
-another's network, the machine's or none has no link of its own and is
-left out, and so is a process outside every container.
+The hold is part of the recording, so a replay holds at the same point, and
+a checkpoint taken during a hold keeps it. Run the machine to an exact point
+first, and the hold lands there:
+
+```bash
+machine run app --until 'console~ready'                # stop where the cluster is ready
+machine net app hold                                   # hold every link at that point
+machine net app loss db 30% --to api                   # change the faults while nothing moves
+machine net app release                                # traffic resumes under the new faults
+```
+
+The guest's programs and timers keep running during a hold. A
+retransmission or an application timeout can expire while the links are
+held. To hold for a time, run the machine for that time between the two
+commands:
+
+```bash
+machine net app hold
+machine run app --within 3s                            # 3 seconds of machine time, all held
+machine net app release
+```
+
+With api pinging db every 250 milliseconds, the 3 replies sent before the
+hold arrived, none arrived in 3 seconds of hold, and all 20 arrived after the
+release. A container on another's network, the machine's or none has no
+link of its own and is left out, and so is a process outside every
+container. The listing names a container whose link could not be held.
 
 ### Resetting connections
 

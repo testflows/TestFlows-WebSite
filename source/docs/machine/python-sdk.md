@@ -394,10 +394,14 @@ fault did since it was set: `sent`, `dropped`, and `queued`, the packets it
 holds now. A replay delays and drops the same packets.
 
 `hold` keeps a link's packets until `release`, or for `for_`, and they then
-leave together. `reset` aborts TCP connections and returns how many:
+leave together. With no name, `hold` holds every link where the machine
+stopped, until `release` with no name. `reset` aborts TCP connections and
+returns how many:
 
 ```python
 run.net.hold("node1", for_="10s")         # node1's messages arrive late, in a burst
+run.net.hold()                            # every link, at the machine's stop
+run.net.release()                         # every packet held leaves
 run.net.reset("api", to="db", port=5432)  # api's connections to db get a reset
 ```
 

@@ -6858,9 +6858,9 @@ Hold the packets a container sends.
 Every packet waits in the link until a release, and then they all leave
 together. The link holds 1000 full-size packets and drops the ones past them.
 
-Without a container the command holds every link of the machine at once. All
-networking between the containers stops. A release without a container lets them
-all go.
+Without a container the command holds every link at the instruction the machine
+is stopped at. All networking between the containers stops there, and a replay
+holds at the same point. A release without a container lets every packet go.
 
 Use `--to` db to put the fault on what the container sends to db alone. Use
 `--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
@@ -6891,7 +6891,7 @@ Examples:
 ```
 machine net run1 hold db                       until a release
 machine net run1 hold db --for 5s              released after 5s
-machine net run1 hold --for 5s                 every container, 5s
+machine net run1 hold                          every link, here
 machine net run1 hold db --to api --port 5432  one flow alone
 ```
 
