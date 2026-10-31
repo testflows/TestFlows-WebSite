@@ -387,8 +387,9 @@ return a `LinkChange`, the link before and after; `partition` returns one
 for each link it cuts, and `heal` and `release` return the links they
 changed. `duplicate`, `corrupt` and `reorder` take a share as `loss` does,
 and `rate` takes bits a second, such as `"1mbit"`. A `Link` gives its delay
-and jitter in nanoseconds and its shares in parts per billion. A replay
-delays and drops the same packets.
+and jitter in nanoseconds and its shares in parts per billion, and what the
+fault did since it was set: `sent`, `dropped`, and `queued`, the packets it
+holds now. A replay delays and drops the same packets.
 
 `hold` keeps a link's packets until `release`, or for `for_`, and they then
 leave together. `reset` aborts TCP connections and returns how many:

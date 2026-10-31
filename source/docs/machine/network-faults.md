@@ -54,11 +54,11 @@ machine net app
 ```
 
 ```text
-SERVICE  CONTAINER       TO             MATCH  FAULTS       SEED
-api      compose-api-1   -              -      -            -
-db       compose-db-1    -              -      -            -
-db       compose-db-1    compose-api-1  -      delay 100ms  3
-nest     compose-nest-1  -              -      -            -
+SERVICE  CONTAINER       TO             MATCH  FAULTS       SEED  SENT  DROPPED  QUEUED
+api      compose-api-1   -              -      -            -     -     -        -
+db       compose-db-1    -              -      -            -     -     -        -
+db       compose-db-1    compose-api-1  -      delay 100ms  3     0     0        0
+nest     compose-nest-1  -              -      -            -     -     -        -
 ```
 
 A ping from `api` to `db` now takes 103ms, because `db`'s replies to `api`
@@ -69,6 +69,31 @@ after `loss db 10%` and then `delay db 100ms --to api`, what `db` sends to
 `api` is delayed and none of it is lost. Each verb changes the fault it
 names and keeps the others, so `delay` and then `loss` give a link that is
 slow and lossy. A value of 0, or 0%, takes that fault away.
+
+### What a fault did
+
+`SENT`, `DROPPED` and `QUEUED` count what each fault did with the packets
+it took, from the moment the fault was set. `SENT` is the packets it passed
+on, a duplicate counting once more. `DROPPED` is the packets it lost, by
+`loss`, or past what a `hold` has room for. `QUEUED` is the packets it holds
+now, delayed or held: neither sent nor dropped yet. After 50 pings from api
+to db with `loss db 30% --to api --seed 9`:
+
+```text
+SERVICE  CONTAINER       TO             MATCH  FAULTS    SEED  SENT  DROPPED  QUEUED
+db       compose-db-1    compose-api-1  -      loss 30%  9     36    14       0
+```
+
+The ping printed `50 packets transmitted, 36 packets received`, so the 14
+db dropped are the 14 api lost. A hold shows what it holds as `QUEUED` until
+the release. The counts are what the fault processed, packet by packet, not
+a measure of its probability: 30% loss drops close to 30% of many packets,
+and any number of few. A container that docker starts again counts from 0.
+
+A system call is a different question. `machine catch add syscall sendto
+--in /usr/bin/app` shows what a program asked to send; a TCP write may wait
+in the socket's buffer, and the kernel retransmits without a call. The
+counts show what the fault did, and a capture, below, shows the packets.
 
 ### Matching packets: protocol, port and SYN
 
@@ -85,7 +110,9 @@ machine net app loss api 100% --to db --syn             # api opens no new conne
 ```
 
 The last one leaves every connection api already has to db working: only
-the packets that open a new one are lost. A container takes 15 matches
+the packets that open a new one are lost. A port belongs to TCP and UDP and
+a SYN to TCP, so `--proto icmp --port 5432` and `--proto udp --syn` are
+refused. A container takes 15 matches
 beside its whole link.
 
 ### Partitions
@@ -183,6 +210,41 @@ An entry `set` sets is permanent, so ARP never corrects it: api reaches db
 again only after `arp delete`. The table is part of the machine, so a replay
 makes the same changes. A container that docker starts again begins with an
 empty table, as a host that restarts does.
+
+### Capturing the packets
+
+Every disk has tcpdump in the machine itself, at `/usr/sbin/tcpdump`, so a
+capture needs nothing in the containers' images. Run in the machine, it sees
+every container's packets on the host ends of their links. Write the capture
+under `/.machine/output/keep`, and the run keeps it as its output:
+
+```bash
+machine exec app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/db.pcap host 172.18.0.2
+machine run app --within 1s                            # tcpdump starts listening
+machine exec app run --container api -- ping -c 3 db
+machine exec app run -- sh -c 'killall -INT tcpdump; while pidof tcpdump >/dev/null; do sleep 0.1; done'
+machine output app bytes --source /output/keep/db.pcap > db.pcap
+```
+
+`--immediate-mode` and `-U` write each packet as it is captured: without
+them, the packets tcpdump has not written yet when it stops are lost. The
+stop waits for tcpdump to exit, so the file is whole before it is read.
+
+Open `db.pcap` in Wireshark or read it with tcpdump on this computer. With
+`-i any`, each packet between two containers appears twice: as it arrives
+from the sender's link, `P`, and as it leaves toward the receiver's,
+`Out`. A packet a fault dropped or still holds is in neither, since the
+capture sees what the sender's faults let through. The file names
+interfaces by number, so filter by address, `host 172.18.0.2`, rather than by
+interface. `machine exec app run -- ip -o addr` lists the addresses.
+
+A capture is part of the run, so a replay captures the same packets: a
+branch forked before a capture and replayed through it wrote a file
+identical to the recording's, byte for byte, with `loss`, `delay` and a
+container's `clock jump` in effect. The timestamps are the machine's date:
+`clock jump` of the whole guest moves them, and a container's offset does
+not. A link between containers carries TCP segments larger than its MTU,
+since the kernel segments them only where a real interface needs it.
 
 ### Seeds and replay
 
