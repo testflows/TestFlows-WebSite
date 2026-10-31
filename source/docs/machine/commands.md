@@ -6424,7 +6424,7 @@ connections. It shows and changes a container's neighbour table.
 
 A fault is on every packet the container sends, or on the packets a match takes.
 A match names a peer, a protocol, a port or TCP SYNs. ARP is a protocol a match
-names. The other links stay as they are.
+names. A fault on one match leaves the container's other links as they are.
 
 The faults are part of the machine. The run records each change, and a replay
 makes it at the same point. A checkpoint keeps a link's faults.
@@ -6476,7 +6476,8 @@ packet a match takes gets only the match's faults, not the whole link's.
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set back what the command set after 30 seconds of machine
+time. The link keeps a change made in between.
 
 ```
 machine net run delay [-h] [--jitter duration] [--to container]
@@ -6530,7 +6531,8 @@ packet a match takes gets only the match's faults, not the whole link's.
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set back what the command set after 30 seconds of machine
+time. The link keeps a change made in between.
 
 ```
 machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
@@ -6582,7 +6584,8 @@ packet a match takes gets only the match's faults, not the whole link's.
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set back what the command set after 30 seconds of machine
+time. The link keeps a change made in between.
 
 ```
 machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
@@ -6632,7 +6635,8 @@ packet a match takes gets only the match's faults, not the whole link's.
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set back what the command set after 30 seconds of machine
+time. The link keeps a change made in between.
 
 ```
 machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
@@ -6682,7 +6686,8 @@ packet a match takes gets only the match's faults, not the whole link's.
 The link draws from a seed, so a replay acts on the same packets. Use `--seed`
 to give one. A link keeps its seed, and a link without one draws a new seed.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set back what the command set after 30 seconds of machine
+time. The link keeps a change made in between.
 
 ```
 machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
@@ -6728,7 +6733,8 @@ Use `--to` db to put the fault on what the container sends to db alone. Use
 `--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
 packet a match takes gets only the match's faults, not the whole link's.
 
-Use `--for 30s` to set the link back after 30 seconds of machine time.
+Use `--for 30s` to set back what the command set after 30 seconds of machine
+time. The link keeps a change made in between.
 
 ```
 machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
@@ -6893,9 +6899,9 @@ See also:
 
 Reset the TCP connections of a container.
 
-The command closes the container's side of each connection, and the peer
-receives a reset. A listening socket stays open. Use `--to` db and `--port` 5432
-to reset some connections alone.
+The program on the container's side sees its socket fail with ECONNABORTED, and
+the peer receives a TCP reset. A listening socket stays open. Use `--to` db and
+`--port` 5432 to reset some connections alone.
 
 ```
 machine net run reset [-h] [--to container] [--port n] container
@@ -6907,7 +6913,7 @@ machine net run reset [-h] [--to container] [--port n] container
 
 | Option | Does |
 |---|---|
-| `--to container` | The packets to this container alone (default: to every peer) |
+| `--to container` | The connections to this container alone (default: every one) |
 | `--port n` | The connections with this local or remote port alone |
 
 Examples:
@@ -7122,8 +7128,8 @@ See also:
 Take the faults off a container's links.
 
 Without a container the command heals every link. Use `--to` db to heal the
-faults on packets to db alone. A packet the link delays already still leaves at
-its time.
+faults on packets to db alone. The command releases the packets a hold keeps. A
+packet the link delays already still leaves at its time.
 
 ```
 machine net run heal [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
@@ -7238,7 +7244,7 @@ The names come from the program files on the machine's disk when the stretch
 ends. No checkpoint is taken. A function in a file that is not on the disk is
 shown by the file's name.
 
-Time in the kernel is one frame for each system call, named like read_[k].
+Time in the kernel is one frame for each system call, named like sys_read_[k].
 
 Without `--from` the machine runs for the time sampled. A machine that is idle
 has no samples.

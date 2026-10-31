@@ -365,9 +365,10 @@ for skew_ms in (50, 100, 200, 400, 800):
 ## Network faults
 
 `run.net` puts faults on the links between a run's containers, as
-[Network faults](network-faults.md) describes. A fault acts on the packets a
-container sends: every one, or those a match takes, `to` a peer, of a
-`proto`, of a `port`, or the TCP SYNs that open a connection with `syn`:
+[Network faults](network-faults.md) describes. A fault acts on every packet a
+container sends, or on those a match takes. A match is any of `to`, a peer;
+`proto`, `tcp`, `udp`, `icmp` or `arp`; `port`, a source or destination
+port; and `syn=True`, the TCP SYNs that open a connection:
 
 ```python
 run.net.delay("db", "100ms", jitter="20ms", seed=7)
@@ -384,8 +385,8 @@ run.net.heal()
 
 `delay`, `loss`, `duplicate`, `corrupt`, `reorder`, `rate` and `hold`
 return a `LinkChange`, the link before and after; `partition` returns one
-for each link it cuts, and `heal` and `release` return the links they
-changed. `duplicate`, `corrupt` and `reorder` take a share as `loss` does,
+for each link it cuts, and `heal` and `release` return the links as they
+were before. `duplicate`, `corrupt` and `reorder` take a share as `loss` does,
 and `rate` takes bits a second, such as `"1mbit"`. A `Link` gives its delay
 and jitter in nanoseconds and its shares in parts per billion, and what the
 fault did since it was set: `sent`, `dropped`, and `queued`, the packets it

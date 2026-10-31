@@ -6,9 +6,14 @@ A distributed system fails at its links: one that is slow, one that loses
 packets, one that stalls and then delivers everything at once, a node cut
 off from one peer while it still reaches the others, a connection reset in
 the middle of a transaction. [`machine net`](commands.md#machine-net) puts
-those faults on the links between the containers of a run. A link connects
-a container to a peer. A fault acts on the packets the container sends: to
-every peer, or only the packets a match takes.
+those faults on the links between the containers of a run.
+
+Each container has one link: everything it sends. A fault on the whole link
+acts on every packet the container sends. A match narrows a fault to some of
+those packets: the ones to one peer, of one protocol, of one port, or the
+TCP SYNs that open a connection. Each match has faults, a seed and counts of
+its own. Every `net` command runs the machine until the guest has made the
+change, so the run moves forward.
 
 ```bash
 machine net app                                        # each link and its faults
@@ -26,6 +31,8 @@ machine net app heal                                   # every link as it was
 
 ### Use cases
 
+Each command follows `machine net <run>`.
+
 | You want to know | Command |
 |---|---|
 | Does a client time out and retry when its server answers slowly? | `delay db 2s` |
@@ -33,14 +40,30 @@ machine net app heal                                   # every link as it was
 | Does a leader election hold when one node is cut off? | `partition node1 node2`, then `partition node1 node3` |
 | What happens when only one direction fails? | `partition db api --one-way` |
 | Does replication keep up over a slow link? | `rate primary 1mbit --to replica` |
-| Does the application notice a damaged message? | `corrupt db 1%` |
+| Does the protocol recover when the network damages packets? | `corrupt db 1%` |
 | Does the client reconnect, and retry safely, when its connection is reset mid-transaction? | `reset api --to db` |
-| What happens when one request's response is lost, and nothing else? | `loss db 100% --to api --port 5432` |
+| What happens when a server's responses to one client are lost, and nothing else? | `loss db 100% --to api --port 5432` |
 | Do messages that arrive late, after a leader change or a timeout, do harm? | `hold node1 --for 10s` |
 | Do established connections keep working while new ones cannot open? | `loss api 100% --to db --syn` |
 | Does the cluster settle when a link keeps going down and coming back? | a loop of `partition --for`, below |
-| What happens when a node cannot resolve a peer's address? | `loss db 100% --proto arp --to api` |
-| What happens when a node sends a peer's traffic to the wrong machine? | `arp set api db 02:42:ac:12:00:99` |
+| What happens when a node cannot resolve a peer's address? | `loss db 100% --proto arp --to api`, then `arp flush api` and `arp flush db` |
+| What happens when a node holds a wrong MAC for a peer? | `arp set api db 02:42:ac:12:00:99` |
+| Did the fault drop the packets, or did the program never send them? | `machine net app`: each fault's `SENT` and `DROPPED`, below |
+| What exactly went between two containers, to open in Wireshark? | tcpdump in the machine, in Capturing the packets, below |
+
+Other commands cover the failures around a network fault:
+
+- **A refused connection**, rather than one that times out:
+  `machine inject app add syscall connect ECONNREFUSED --in /usr/bin/app`,
+  in [Fault injection](fault-injection.md).
+- **A node that freezes** rather than one that is cut off:
+  `machine containers app pause db --for 5s`, in
+  [Container faults](container-faults.md).
+- **Clocks that disagree between nodes**:
+  `machine clock app jump +2s --container db`, in
+  [Clock faults](clock-faults.md).
+- **A cluster split into two groups**: one `partition` for each pair of
+  containers across the split.
 
 ### One link or all of them
 
@@ -57,7 +80,7 @@ machine net app
 SERVICE  CONTAINER       TO             MATCH  FAULTS       SEED  SENT  DROPPED  QUEUED
 api      compose-api-1   -              -      -            -     -     -        -
 db       compose-db-1    -              -      -            -     -     -        -
-db       compose-db-1    compose-api-1  -      delay 100ms  3     0     0        0
+db       compose-db-1    compose-api-1  -      delay 100ms  -     0     0        0
 nest     compose-nest-1  -              -      -            -     -     -        -
 ```
 
@@ -66,54 +89,34 @@ wait 100ms. A ping from `nest` to `db` still takes 0.04ms.
 
 Packets a match takes get only the match's faults, not the whole link's:
 after `loss db 10%` and then `delay db 100ms --to api`, what `db` sends to
-`api` is delayed and none of it is lost. Each verb changes the fault it
-names and keeps the others, so `delay` and then `loss` give a link that is
-slow and lossy. A value of 0, or 0%, takes that fault away.
-
-### What a fault did
-
-`SENT`, `DROPPED` and `QUEUED` count what each fault did with the packets
-it took, from the moment the fault was set. `SENT` is the packets it passed
-on, a duplicate counting once more. `DROPPED` is the packets it lost, by
-`loss`, or past what a `hold` has room for. `QUEUED` is the packets it holds
-now, delayed or held: neither sent nor dropped yet. After 50 pings from api
-to db with `loss db 30% --to api --seed 9`:
-
-```text
-SERVICE  CONTAINER       TO             MATCH  FAULTS    SEED  SENT  DROPPED  QUEUED
-db       compose-db-1    compose-api-1  -      loss 30%  9     36    14       0
-```
-
-The ping printed `50 packets transmitted, 36 packets received`, so the 14
-db dropped are the 14 api lost. A hold shows what it holds as `QUEUED` until
-the release. The counts are what the fault processed, packet by packet, not
-a measure of its probability: 30% loss drops close to 30% of many packets,
-and any number of few. A container that docker starts again counts from 0.
-
-A system call is a different question. `machine catch add syscall sendto
---in /usr/bin/app` shows what a program asked to send; a TCP write may wait
-in the socket's buffer, and the kernel retransmits without a call. The
-counts show what the fault did, and a capture, below, shows the packets.
+`api` is delayed and none of it is lost. A packet two matches take gets the
+faults of the one listed first. Each verb changes the fault it names and
+keeps the others, so `delay` and then `loss` give a link that is slow and
+lossy. A value of 0, or 0%, takes that fault away. A jitter also reorders
+packets, since each one leaves at its own time.
 
 ### Matching packets: protocol, port and SYN
 
 `--proto tcp`, `--proto udp` or `--proto icmp` takes the packets of one
 protocol. `--port 5432` takes the packets with 5432 as their source or
 destination port, so on a server it takes its responses, and on a client its
-requests. `--syn` takes the TCP SYNs that open a connection. Every match takes
-`--to` as well, and every verb that sets a fault takes a match:
+requests; without `--proto` it takes both TCP and UDP. `--syn` takes the
+TCP SYNs that open a connection. The options combine with each other and
+with `--to`, and a packet must satisfy all of them. Every verb that sets a
+fault takes them:
 
 ```bash
-machine net app loss db 100% --to api --port 5432      # db's responses to api's queries, nothing else
+machine net app loss db 100% --to api --port 5432      # every packet db sends api on port 5432
 machine net app delay db 1s --proto udp                 # db's UDP traffic, a second late
 machine net app loss api 100% --to db --syn             # api opens no new connection to db
 ```
 
-The last one leaves every connection api already has to db working: only
-the packets that open a new one are lost. A port belongs to TCP and UDP and
-a SYN to TCP, so `--proto icmp --port 5432` and `--proto udp --syn` are
-refused. A container takes 15 matches
-beside its whole link.
+The first loses db's responses to api on that port, and its SYN-ACKs too, so
+api can open no new connection there either. The last leaves every
+connection api already has to db working: only the packets that open a new
+one are lost. A port belongs to TCP and UDP and a SYN to TCP, so
+`--proto icmp --port 5432` and `--proto udp --syn` are refused. A container
+holds at most 15 matches besides its whole link.
 
 ### Partitions
 
@@ -159,10 +162,10 @@ full-size packets and drops the ones past them.
 
 ### Resetting connections
 
-`reset` aborts TCP connections. The container's side of each connection is
-closed, and the peer receives a reset, as from a middlebox that dropped the
-connection or a server that restarted. Unlike a partition, nothing waits for
-a timeout:
+`reset` aborts TCP connections. The program on the container's side sees
+its socket fail with `ECONNABORTED`, and the peer receives a TCP reset, as
+from a middlebox that dropped the connection or a server that restarted.
+Unlike a partition, nothing waits for a timeout:
 
 ```bash
 machine net app reset api --to db                       # api's connections to db
@@ -176,8 +179,9 @@ A listening socket stays open, so the server takes new connections at once.
 A container finds a peer's MAC by ARP and keeps it in its neighbour table.
 `--proto arp` puts a fault on the ARP frames a container sends, and with
 `--to` on those about one peer: its requests for the peer's address and its
-replies to the peer. With db's replies lost, api cannot resolve db, while
-nest still reaches it:
+replies to the peer. A fault on ARP acts when a container resolves a peer
+again, so flush the tables to see it at once. With db's replies lost, api
+cannot resolve db, while nest still reaches it:
 
 ```bash
 machine net app loss db 100% --proto arp --to api
@@ -199,24 +203,87 @@ eth0       172.18.0.2  compose-db-1  02:42:ac:12:00:02  reachable
 ```
 
 ```bash
-machine net app arp set api db 02:42:ac:12:00:99       # api sends db's frames to a wrong MAC
-machine net app arp stale api db                       # used, then confirmed by ARP
+machine net app arp set api db 02:42:ac:12:00:99       # api sends db's frames to a MAC nobody has
+machine net app arp stale api db                       # used, and checked again by ARP soon after
 machine net app arp delete api db                      # resolved again at the next packet
 machine net app arp flush api                          # every peer resolved again
 machine net app arp reachable api 1s                   # entries go stale after about a second
 ```
 
-An entry `set` sets is permanent, so ARP never corrects it: api reaches db
-again only after `arp delete`. The table is part of the machine, so a replay
-makes the same changes. A container that docker starts again begins with an
-empty table, as a host that restarts does.
+An entry made by `arp set` is permanent, so ARP never corrects it: api
+reaches db again only after `arp delete`. A stale entry is still used; at
+the next packet the kernel checks it by ARP within seconds, unless the
+connection's own traffic confirms the peer first. The table is part of the
+machine, so a replay makes the same changes. A container that docker starts
+again begins with an empty table, as a host that restarts does.
+
+### Seeds, replay and --for
+
+Loss, jitter, duplicate, corrupt and reorder decide each packet by chance,
+from the link's seed. Give one with `--seed`, or the link draws one and shows
+it. A delay or a rate alone draws nothing, and shows no seed. A link keeps
+its seed through later changes. The run records every change, so a replay
+delays and drops exactly the same packets, and so does a branch forked from a
+checkpoint before them.
+
+A change to a link starts its draws again from the seed: `loss db 10%
+--seed 7`, then `delay db 50ms`, loses packets from the start of seed 7's
+sequence again. Which packet `corrupt` changes follows the seed, and which
+bit it flips follows the guest kernel's own random numbers, which a replay
+repeats.
+
+A checkpoint keeps a link's faults: a rewind to it brings them back. A
+container that docker starts again, after `containers kill --restart` or a
+crash, gets its faults back, toward each peer at the address it has now.
+
+`--for 30s` sets back what its command set after 30 seconds of machine time,
+and leaves the rest of the link as it is then:
+
+```bash
+machine net app loss api 100% --for 3s       # everything api sends lost for 3 seconds
+machine net app delay api 50ms               # still there after the 3 seconds
+```
+
+A heal takes every fault off and releases what a hold keeps. A heal, and a
+`--for` that ends, act on new packets: a packet the link already delays
+still leaves at its time.
+
+### What a fault did
+
+`SENT`, `DROPPED` and `QUEUED` count what each fault did with the packets
+it took. They count from when the match, or the whole link, first got a
+fault, and a later change to it keeps counting. `SENT` is the packets it
+passed on, a duplicate counting once more. `DROPPED` is the packets it lost,
+by `loss`, or past what a `hold` has room for. `QUEUED` is the packets it
+holds now, delayed or held: neither sent nor dropped yet. After 50 pings
+from api to db with `loss db 30% --to api --seed 9`, the row of that match:
+
+```text
+SERVICE  CONTAINER       TO             MATCH  FAULTS    SEED  SENT  DROPPED  QUEUED
+db       compose-db-1    compose-api-1  -      loss 30%  9     36    14       0
+```
+
+The ping printed `50 packets transmitted, 36 packets received`, so the 14
+db dropped are the 14 api lost. A hold shows what it holds as `QUEUED` until
+the release. The counts are what the fault processed, packet by packet, not
+a measure of its probability: over many packets 30% loss drops close to 30%
+of them, and over a few the count can be anything. A container that docker
+starts again counts from 0, and so does one a network is disconnected from. A large TCP write reaches the fault as one
+packet larger than the MTU, so the counts count it once and `loss` drops it
+whole.
+
+The counts are packets on the link, not sends by a program. A TCP write can
+wait in the socket's buffer, and the kernel retransmits without a system
+call. `machine catch add syscall sendto --in /usr/bin/app` shows what a
+program sends, and a capture shows the packets.
 
 ### Capturing the packets
 
 Every disk has tcpdump in the machine itself, at `/usr/sbin/tcpdump`, so a
 capture needs nothing in the containers' images. Run in the machine, it sees
 every container's packets on the host ends of their links. Write the capture
-under `/.machine/output/keep`, and the run keeps it as its output:
+under `/.machine/output/keep`, and the run keeps it as its output, named
+`/output/keep/db.pcap`:
 
 ```bash
 machine exec app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/db.pcap host 172.18.0.2
@@ -234,43 +301,16 @@ Open `db.pcap` in Wireshark or read it with tcpdump on this computer. With
 `-i any`, each packet between two containers appears twice: as it arrives
 from the sender's link, `P`, and as it leaves toward the receiver's,
 `Out`. A packet a fault dropped or still holds is in neither, since the
-capture sees what the sender's faults let through. The file names
-interfaces by number, so filter by address, `host 172.18.0.2`, rather than by
-interface. `machine exec app run -- ip -o addr` lists the addresses.
+capture sees what the sender's faults let through. The file records each
+packet's interface by an index that means nothing on this computer, so
+filter by address, `host 172.18.0.2`. `machine exec app run -- ip -o addr`
+lists the addresses.
 
-A capture is part of the run, so a replay captures the same packets: a
-branch forked before a capture and replayed through it wrote a file
-identical to the recording's, byte for byte, with `loss`, `delay` and a
-container's `clock jump` in effect. The timestamps are the machine's date:
-`clock jump` of the whole guest moves them, and a container's offset does
-not. A link between containers carries TCP segments larger than its MTU,
-since the kernel segments them only where a real interface needs it.
-
-### Seeds and replay
-
-Loss, jitter, duplicate, corrupt and reorder decide each packet by chance,
-from the link's seed. Give one with `--seed`, or the link draws one and shows
-it. A link keeps its seed through later changes. The run records every change,
-so a replay delays and drops exactly the same packets, and so does a branch
-forked from a checkpoint before them.
-
-A change to a link starts its draws again from the seed: `loss db 10%
---seed 7`, then `delay db 50ms`, loses packets from the start of seed 7's
-sequence again. Which packet `corrupt` changes follows the seed, and which
-bit it flips follows the guest kernel's own random numbers, which a replay
-repeats.
-
-A checkpoint keeps a link's faults: a rewind to it brings them back. A
-container that docker starts again, after `containers kill --restart` or a
-crash, gets its faults back, toward each peer at the address it has now.
-
-`--for 30s` sets a link back after 30 seconds of machine time. A heal, and a
-`--for` that ends, take the faults off new packets: a packet the link
-already delays still leaves at its time.
-
-```bash
-machine net app loss api 100% --for 3s       # everything api sends lost for 3 seconds
-```
+A replay writes the same capture, byte for byte, with loss, delay and clock
+jumps in effect. The timestamps are the machine's date: `clock jump` of the
+whole guest moves them, and a container's offset does not. A link between
+containers carries TCP segments larger than its MTU, since the kernel
+segments them only where a real interface needs it.
 
 ### What a network fault misses
 
@@ -291,14 +331,21 @@ machine net app loss api 100% --for 3s       # everything api sends lost for 3 s
 - **A fault is on what a container sends.** To fault what `db` receives, put
   the fault on each container that sends to it, with `--to db`. To slow both
   directions between two containers, put a fault on each, as `partition` does.
+- **A container on another's network**, with `network_mode: service:db`,
+  `host` or `none`, has no link of its own, and a fault on it is refused.
+  Put the fault on the container whose network it uses.
 - **A process outside every container**, on the machine itself, sends on no
   container's link. What it sends to a container takes no fault, and only the
   container's replies do.
 - **A rate is per sender.** Three containers each limited to 1mbit toward
   `db` give `db` 3 megabits a second, not one link of 1 megabit.
-- **A corrupted packet has one bit changed** anywhere in its frame. A bit in
-  the Ethernet addresses is not caught by a checksum, so fewer packets are
-  dropped than are changed.
+- **A damaged packet rarely reaches the program.** `corrupt` changes one bit
+  anywhere in a packet's frame, and the IP, TCP and UDP checksums drop
+  nearly every damaged packet; TCP then sends it again. A bit in the
+  Ethernet addresses is not caught by a checksum. No fault hands a damaged
+  payload to the program.
+- **Losing exactly the Nth packet**, bursts of loss, and delays other than a
+  uniform jitter: a fault decides each packet on its own, by its chance.
 - **IPv4 alone.** Ports and SYNs are matched in packets without IP options,
   which Docker's networks send.
 - **The path's MTU** stays as Docker sets it.
