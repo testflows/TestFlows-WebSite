@@ -27,7 +27,7 @@ one command.
 
 ## Concepts
 
-There are only a few of them, and the rest builds on them.
+There are seven of them, and the rest builds on them.
 
 **Disk.** What a machine boots. It is your program (or a whole application)
 packaged with a small Linux system. You build one with [`machine disks build`](commands.md#machine-disks-build).
@@ -72,13 +72,17 @@ name one in several ways.
 | `%crashed` | the branch with the `crashed` mark |
 | `console~login` | where the console first printed a match of `login` |
 
-The same points work everywhere a point is taken: `--at` and `--from` on
-`fork`, `detach` and `go`, `rewind ... to`, and `replay --to`. A bare word is
+The same points work everywhere a point is taken: `--at` on `fork`, `detach`
+and `go`, `rewind ... to`, and `replay --to`. `--from` takes them too, except
+`now` and a mark. A bare word is
 read as a checkpoint's name first, then as a time, then as an entry, so write
 `^name` or `#42` when you mean one of them for sure.
 
-A branch can only start from a checkpoint. [`machine go`](commands.md#machine-go) takes any of these
-points, and if the one you name isn't a checkpoint, it starts the branch at the
-nearest checkpoint before it and replays the rest of the way for you. A machine
+A branch can only start from a checkpoint.
+[`machine go`](commands.md#machine-go) and [`machine fork`](commands.md#machine-fork)
+take any of these points. If the one you name isn't a checkpoint, they start
+the branch at the nearest checkpoint before it and replay the rest of the way
+for you. `fork --no-start` refuses such a point, because it leaves no machine
+to replay on, and so does `detach`. A machine
 time such as `1.5s` or `-10ms` names the first entry at the last machine time
 at or before the one you asked for.

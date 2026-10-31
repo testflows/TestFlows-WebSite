@@ -27,7 +27,7 @@ machine containers app start db
 | Does the service keep state it never put in a volume? | `kill db --restart 0 --fresh` |
 
 A container you stop, kill or crash stays down. `--restart 5s` brings it back
-after 5 seconds of machine time, and `--restart 0` at once, so the other
+after 5 seconds of machine time, and `--restart 0` at once. The other
 containers keep running through the outage:
 
 ```bash
@@ -46,6 +46,10 @@ A restart is a reboot: the container comes back with every file it had.
 the same image. The files it wrote outside its volumes are gone, and its
 volumes are kept. Use it to find state a service keeps in its own files when it
 should keep it in a volume.
+
+A throttle limit carries over to the container's next start. Use
+`throttle db --cpus 0` to lift it, or `--for 30s` to restore the previous limit
+after 30 seconds of machine time.
 
 Each fault is recorded with the run, so a replay faults the same container at
 the same point. Put one where the run is stopped, at a breakpoint, a catchpoint

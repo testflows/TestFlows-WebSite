@@ -4,15 +4,14 @@
 
 ## Creating a run
 
-[`machine create`](commands.md#machine-create) makes a run from a disk and boots it. The run's name goes
-first and is optional. Without one, Machine makes up a name.
+[`machine create`](commands.md#machine-create) creates a run from a disk and starts it. The run's name goes
+first and is optional. Without one, Machine generates a name.
 
 ```bash
 machine create app --disk app --cpus 2 --mem 512
 ```
 
-The defaults are 1 CPU and 256 MB of memory. A few other options are worth
-knowing about:
+The defaults are 1 CPU and 256 MB of memory. Other options of `create`:
 
 | Option | What it does |
 |---|---|
@@ -79,11 +78,10 @@ From Python, `client.create("app", disk="app", rng_seed=42)` seeds a new run,
 ## Multiple vCPUs
 
 A machine can have more than one vCPU. Ask for them with `--cpus` and the guest
-sees every one, so its kernel spreads threads across them just as it would on
-your own computer.
+sees every one, so its kernel spreads threads across them.
 
-Here is a quick way to see it. Build a disk from Ubuntu 26.04 whose container
-just runs `sleep infinity`, so it stays up and waits for your commands. Then
+Build a disk from Ubuntu 26.04 whose container runs `sleep infinity`, so it
+stays up and waits for your commands. Then
 create a run with four vCPUs and ask the guest what it has:
 
 ```bash
@@ -143,8 +141,10 @@ These are the conditions you can wait for. [`machine run`](commands.md#machine-r
 | `vtime=+T` | the machine's clock has moved T from where it was |
 | `/app:exit` | the program at `/app` has exited |
 
-The last row is one example of a task condition. There are more of them
-under [Steering programs](steering-programs.md).
+The last row is one example of a task condition. A condition on a program needs
+the program focused first, with `machine focus app add /app`, and the command
+refuses it otherwise. There are more task conditions under
+[Steering programs](steering-programs.md).
 
 The two commands read a text condition differently. `run --until` waits for
 text printed during the run, so a line already on the console does not end
@@ -194,7 +194,7 @@ and says `Machine time ran out`. The machine checks the bound itself, so a slow
 host does not end the run sooner, which the global `--timeout` in seconds would.
 
 The clock moves as the programs in the machine work and while the machine is
-idle. A loop that does nothing but spin does not move it.
+idle.
 
 Now and then the host interrupts an entry while it is being recorded. Machine
 records that entry again, and you see nothing except a short pause. `--retry`
@@ -211,6 +211,7 @@ run explores a different interleaving, and `--seed` makes those draws
 repeatable.
 
 ```bash
+machine focus app add /usr/bin/app
 machine run app --until /usr/bin/app:exit --mode step,fast --step 1:200 --seed 1
 ```
 
@@ -234,17 +235,18 @@ what the guest's scheduler does with them, draw a mark for the task on the vCPU
 at each dispatch:
 
 ```bash
-machine run app --task-sched keep:hold:yield --task-slice 10us:600us --seed 3 --iters 500
+machine run app --task-sched keep,hold,yield --task-slice 10us:600us --seed 3 --iters 500
 machine focus app add /usr/bin/app
-machine run app --task-int none:preempt --when /usr/bin/app:on --seed 4 --iters 500
+machine run app --task-int none,preempt --when /usr/bin/app:on --seed 4 --iters 500
 ```
 
 `--task-sched` draws among `keep`, `hold`, `yield`, `drain` and `drain-all`:
-`hold` takes the task off the run queue, `yield` puts it behind its peers, and
+`hold` takes the task off the run queue, `yield` puts it behind its peers,
+`drain` undoes the oldest of those marks, `drain-all` undoes every one, and
 `keep` changes nothing. `--task-slice` draws how long the task runs before the
 scheduler decides again, from a span such as `10us:600us`, and `default` puts
 the kernel's own back. `--task-int` draws whether to preempt it. Each takes a
-colon list to draw from, and `--seed` makes the draws repeatable.
+comma list to draw from, and `--seed` makes the draws repeatable.
 
 `--when` applies the draws only while a predicate holds, such as
 `/usr/bin/app:on` for the program running its own code. A predicate on a
@@ -278,7 +280,7 @@ run has one vCPU or several, and a branch you fork from one of its checkpoints
 records exactly what its parent recorded after that checkpoint.
 
 ```bash
-machine create app --disk app.img --repeatable --cpus 2
+machine create app --disk app --repeatable --cpus 2
 machine run app --until tasks
 machine checkpoint app booted
 machine run app --until 'console~done'
@@ -431,7 +433,7 @@ At the [control prompt](#interactive-mode) the two are `/run until` and
 ```
 
 `/wait for` answers at once, because nothing drives the machine while the
-prompt waits. `timeout 5` makes it wait 5 seconds, for a run another session
+prompt waits. `timeout 5` makes it wait 5 seconds, for a run another terminal
 drives.
 
 From Python, `run.run(until="console~ready", within="30s")` drives until a
@@ -448,7 +450,7 @@ driving. [Bounding a drive](python-sdk.md#bounding-a-drive) shows both.
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
 | [`machine output app`](commands.md#machine-output) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines, `--source` reads another source than the console) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
-| [`machine ops`](commands.md#machine-ops) | operations on runs (checkpoints, branches, switches, deletes) and how each ended, newest first; one you interrupted with Ctrl-C is still listed |
+| [`machine ops`](commands.md#machine-ops) | operations on runs and how each ended, newest first: checkpoint, branch, switch, rewind, start and delete; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
 | [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one); its hash section is what the newest entry recorded |
 | [`machine hash app`](commands.md#machine-hash) | the hashes of the machine as it stands, to compare with another stopped at the same point; see [Comparing two machines](replay.md#comparing-two-machines) |
@@ -484,10 +486,11 @@ each match:
 ```bash
 machine output app search 'Linux version'
 ```
-```
-    ENTRY  SOURCE       LINE  TEXT
-     1276  ttyS0          16  Linux version 6.11.11-testflows-os-v1.0 (user@host) (gcc ...
-```
+
+Each match is a row with the columns `ENTRY`, `TIME`, `SOURCE`, `LINE:COL` and
+`TEXT`. `ENTRY` is the entry that printed the first byte of the match, and
+`TIME` is that entry's time, a point such as `1.194000000s+2`. `TEXT` is the
+whole line, with the match in bold.
 
 A match has to cover at least one character, because it is the entry that
 printed it that you get back. A pattern that can match nothing at all, such as
@@ -839,7 +842,7 @@ are the files `/.machine/output/exec/23090p1/stdout` and
 ### Inside a container
 
 Use `--container` to run a command in a container of your Compose project. It
-takes the name of the service, or the name of the container:
+takes the container's id, its name or the name of its service:
 
 ```bash
 machine exec app run --container db -- psql -c 'select 1'
@@ -848,17 +851,12 @@ machine exec app run --container db --user root -- id        # as another user
 machine exec app start --container app -- ./worker
 ```
 
-[`machine containers`](commands.md#machine-containers) lists the containers and
-the service of each, which are the names `--container` takes:
+[`machine containers`](commands.md#machine-containers) lists the containers
+with the columns `SERVICE`, `CONTAINER`, `ID`, `STATE` and `IMAGE`. The
+service, the container name and the id are what `--container` takes:
 
 ```bash
 machine containers app
-```
-
-```text
-SERVICE  CONTAINER      STATE    IMAGE
-app      compose-app-1  running  alpine:3.20
-db       compose-db-1   running  alpine:3.20
 ```
 
 Each service's output, every line it prints across every start of its
@@ -1000,8 +998,9 @@ machine exec app proc 40787p1 stdout                       # what gdb printed
 A `--device` that begins with `/` is the path of a file in the machine, and
 [`machine send`](commands.md#machine-send) puts the bytes at its end. A process
 in the machine writes them, and `send` prints its id: `machine exec app proc`
-with that id says whether they were written. One send to a path carries about
-2000 bytes.
+with that id says whether they were written. One send to a path is one
+request of at most 4096 bytes. A send too large for it is refused, and the
+message gives the most bytes that fit.
 
 `machine send` writes the machine's own files. For a program in a container,
 make the pipe in the container and write it from there:
@@ -1046,7 +1045,7 @@ machine put app ./d.bin /data/d.bin --owner 1000:1000       # with an owner
 machine put app - /tmp/in < data.bin                        # standard input
 ```
 
-- A file of any size is put, at tens of megabytes a second.
+- A file of any size is put.
 - The directories on the way to the path are made, and a file already there is
   replaced.
 - The file has its name only once all of it is written, so a program never
@@ -1058,15 +1057,15 @@ machine put app - /tmp/in < data.bin                        # standard input
 - The file is on the disk when `put` returns. A checkpoint taken after it has
   the file, and [`machine fs`](reading-the-disk.md) reads it there.
 
-`--container` takes a container's name, as
-`machine exec app run -- docker ps --format '{{.Names}}'` lists them, or the
+`--container` takes a container's id or name, as
+[`machine containers app`](commands.md#machine-containers) lists them, or the
 name of its Compose service: `--container db` is the container of the service
 `db`. A service that runs several containers is refused, and the message names
 them, so you pick one. The container must be running. A path is resolved inside
 the container, as a program there would resolve it.
 
 [`machine send --device <path>`](commands.md#machine-send) is for a line into a
-pipe and carries about 2000 bytes. `put` is for a file.
+pipe, one request of at most 4096 bytes. `put` is for a file.
 
 [`machine get`](commands.md#machine-get) copies a file the other way, from the
 machine or from a container to your machine:
@@ -1318,8 +1317,8 @@ are. `/switch app/exact` moves onto it, and `/describe:app/exact` shows
 `Repeatable: true` and `Timer Slack: 5ms`.
 
 `-c` runs a single slash command and exits, as in
-[`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) prints the
-history of the commands you have issued.
+[`machine control app -c '/state'`](commands.md#machine-control), and [`machine control log app`](commands.md#machine-control) lists the
+commands that changed the run.
 
 ### Keys
 
@@ -1351,7 +1350,7 @@ runs fast and `/s` steps. A suffix picks the vCPU and the number of dispatches:
 /s@20
 /f=1@10
 /run@50 mode fast,step seed 3
-/run@200 task-sched keep:hold:yield task-slice 10us:600us seed 7
+/run@200 task-sched keep,hold,yield task-slice 10us:600us seed 7
 ```
 
 The first runs fast until `ready` appears on the console, or for 30 seconds of
@@ -1381,7 +1380,7 @@ options of commands that act written as words. These differ:
 | `/d regs` | `machine dump app --show regs` |
 | `/checkpoint booted` | `machine checkpoint app booted`; `/checkpoint name booted` also works |
 | `/auto-checkpoints 10000` | `machine run app --auto-checkpoints 10000`, at the prompt a setting that stays |
-| `/now` | none: the run's time, entry, vCPU and RIP in one line |
+| `/now` | `machine now app` |
 
 `create`, `start`, `stop`, `pause`, `resume`, `kill`, `runs`, `sessions` and
 `disks` have no slash command. Use them from the command line beside the prompt.
@@ -1413,8 +1412,10 @@ machine kill app
 machine delete app
 ```
 
-`pause` freezes a running machine and `resume` lets it carry on. `kill` ends it
-abruptly, where `stop` shuts a run down and keeps everything it recorded. In
+`pause` freezes a running machine and `resume` lets it carry on. `stop` shuts a
+run down and keeps everything it recorded. `kill` asks the machine to stop and
+save as `stop` does, and ends it if it does not stop. The next `start` replays
+a tip that was not saved. In
 a session, both wait until what the run recorded is saved to your storage,
 and show how far the save has got. `start` brings it
 back at the end of its log. If the run had gone past its last checkpoint

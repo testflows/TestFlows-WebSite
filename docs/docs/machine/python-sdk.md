@@ -275,11 +275,15 @@ run.inject.clear()
 ```
 
 A C library opens a file with `open` or `openat`, depending on the library,
-so the fault takes both. `matched` counts the calls the fault saw and `fired`
-the ones it failed. A disk fault takes the file and the operation:
+so the fault takes both. glibc's `open()` makes no `open` call, so the add
+issues a `UserWarning` that names `openat`; the fault on `open` is added all
+the same. `matched` counts the calls the fault saw and `fired` the ones it
+failed. A disk fault takes the file and the operation. The kernel's flusher
+sends an ordinary write, so the example syncs it, and the request is dd's own:
 
 ```python
 run.inject.add("disk", in_="comm=dd", file="/var/data.bin", op="write")
+run.exec("dd if=/dev/zero of=/var/data.bin bs=4096 count=1 conv=fsync", within="10s")
 ```
 
 The `fault_injection.py` example runs both and prints what the program saw.
@@ -361,24 +365,51 @@ for skew_ms in (50, 100, 200, 400, 800):
 ## Network faults
 
 `run.net` puts faults on the links between a run's containers, as
-[Network faults](network-faults.md) describes. A link is what a container
-sends, to every peer or with `to` to one:
+[Network faults](network-faults.md) describes. A fault acts on every packet a
+container sends, or on those a match takes. A match is any of `to`, a peer;
+`proto`, `tcp`, `udp`, `icmp` or `arp`; `port`, a source or destination
+port; and `syn=True`, the TCP SYNs that open a connection:
 
 ```python
 run.net.delay("db", "100ms", jitter="20ms", seed=7)
 run.net.loss("db", "10%", to="api")
+run.net.loss("api", "100%", to="db", port=5432, for_="5s")
 run.net.partition("db", "nest", for_="10s")
 run.run(within="30s")
 
 for link in run.net():
-    print(link.container, link.peer or "-", link.delay, link.loss, link.seed)
+    print(link.container, link.peer or "-", link.port, link.delay, link.loss, link.seed)
 
 run.net.heal()
 ```
 
-Each method returns a `LinkChange`, the link before and after. `duplicate`,
-`corrupt` and `reorder` take a share as `loss` does, and `rate` takes bits a
-second, such as `"1mbit"`. A replay delays and drops the same packets.
+`delay`, `loss`, `duplicate`, `corrupt`, `reorder`, `rate` and `hold`
+return a `LinkChange`, the link before and after; `partition` returns one
+for each link it cuts, and `heal` and `release` return the links as they
+were before. `duplicate`, `corrupt` and `reorder` take a share as `loss` does,
+and `rate` takes bits a second, such as `"1mbit"`. A `Link` gives its delay
+and jitter in nanoseconds and its shares in parts per billion, and what the
+fault did since it was set: `sent`, `dropped`, and `queued`, the packets it
+holds now. A replay delays and drops the same packets.
+
+`hold` keeps a link's packets until `release`, or for `for_`, and they then
+leave together. `reset` aborts TCP connections and returns how many:
+
+```python
+run.net.hold("node1", for_="10s")         # node1's messages arrive late, in a burst
+run.net.reset("api", to="db", port=5432)  # api's connections to db get a reset
+```
+
+`run.net.arp` shows and changes a container's neighbour table, and returns
+the table as `Neighbor` entries:
+
+```python
+run.net.loss("db", "100%", proto="arp", to="api")   # db's ARP to api lost
+run.net.arp.set("api", "db", "02:42:ac:12:00:99")   # a wrong MAC for db
+for entry in run.net.arp.show("api"):
+    print(entry.address, entry.peer, entry.mac, entry.state)
+run.net.arp.flush("api")
+```
 
 ## Stopping at an event
 

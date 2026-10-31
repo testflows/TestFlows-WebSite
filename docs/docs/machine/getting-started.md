@@ -11,11 +11,23 @@ command:
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-That downloads a single binary named `machine` over HTTPS, checks it against the
-SHA-256 checksum published next to it, and puts it in `~/.local/bin`, with
-`machine-env` beside it. If the checksum doesn't match, nothing is installed. If that folder isn't on your `PATH`
-yet, the installer says so and shows the line to add for your shell. Run the same
-command again whenever you want to update.
+The client is given to a TestFlows account, so the installer first signs you
+in, or creates your account, at the terminal: you give your email and the code
+sent to it. An account that has not accepted the current Terms of Service and
+Client EULA is shown both and accepts them before anything is downloaded. The
+installer signs out when it ends, so sign in with `machine login` afterwards.
+Without a terminal, as in CI, the installer takes an API key from
+`TESTFLOWS_MACHINE_API_KEY` instead, from an account that has accepted them.
+
+The installer then downloads the client over HTTPS, checks it against the
+SHA-256 checksum published next to it, and puts `machine` and `machine-env` in
+`~/.local/bin`. If the checksum doesn't match, nothing is installed. Where
+another program named `machine` is already on your `PATH`, as
+`/usr/bin/machine` is on a Mac, `machine` goes to `~/.local/share/machine/bin`
+instead, which is not on your `PATH`, and `~/.local/bin` holds `machine-env`
+alone. If `~/.local/bin` isn't on your `PATH` yet, the installer says so and
+shows the line to add for your shell. Run the same command again whenever you
+want to update.
 
 **Supported systems.** The client runs on Linux, x86_64 and arm64, and on Macs
 with Apple Silicon. It needs only the OpenSSH client, which macOS and most
@@ -72,7 +84,9 @@ machine-env -- machine --version
 
 That form runs one command in that environment and starts no shell, which
 suits scripts and CI. To see which `machine` you get, run `which machine`:
-`~/.local/bin/machine` is the client and `/usr/bin/machine` is the system's. If
+`/usr/bin/machine` is the system's, and the client is
+`~/.local/share/machine/bin/machine` on a Mac or `~/.local/bin/machine` on
+Linux. If
 `machine --version` prints a processor type instead of a version, you are
 running the system command. On Linux, if another command on your system is
 also named `machine`, use `machine-env` the same way.
@@ -100,16 +114,15 @@ machine --version
  |   o       o   |
  | 1 o 10010 o 0 |
  |   o       o   |  TestFlows™ Machine Client YYYYMMDD-HHMM
-  ---  o o oxx --
+  ---  o o oxx --   https://testflows.com
  /           xx   \
 /  ^^^        xx   \
  ------------------
 
 Copyright (C) 2026 Katteli Inc. All rights reserved.
-TestFlows.com Open-Source Software Testing Framework (https://testflows.com)
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, ...
+Licensed under the Client EULA:
+https://testflows.com/machine/legal/client-eula/
 ```
 
 If something does not work, [`machine ping`](commands.md#machine-ping) checks that you can reach the
@@ -135,8 +148,8 @@ completes in that shell until it exits, and no other shell changes.
 
 ## Signing up
 
-Create your account on the [sign-up page](/machine/portal/signup/), or from
-the terminal with [`machine account signup`](commands.md#machine-account-signup). Then sign in from the terminal.
+The installer creates your account if you have none. You can also create it on
+the [sign-up page](/machine/portal/signup/), or from the terminal with [`machine account signup`](commands.md#machine-account-signup). Then sign in from the terminal.
 
 ```bash
 machine login
@@ -161,7 +174,7 @@ beforehand, run [`machine account provision`](commands.md#machine-account-provis
 
 If you have not yet signed up and signed in, do that first: see [Signing up](getting-started.md#signing-up).
 
-This example creates a session, builds a disk, runs a program, saves a
+This example creates a session, builds a disk, runs a program, creates a
 checkpoint and starts a branch from it. The program is one line of Python, and
 you need nothing installed but the client: no Docker and no compiler.
 
@@ -191,7 +204,7 @@ machine disks build --from python:3.12-slim --add hello.py hello -- python hello
 ```bash
 ➤ Packing hello (1 service)
 ➤ Hashing hello.pack
-➤ Waiting for the receiver…
+➤ Waiting for the upload to start…
 ➤ Uploading 20.5kB → hello
 ➤ Building the disk…
 ✔ Built hello
@@ -228,10 +241,12 @@ VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP    
 0     HYPERCALL  15791  271676660  192153  271676660  0x785930775efa707  0xffffffff81f9eeda  43778048  15645
 ```
 
-Read the last five lines the machine printed.
+Read the last five lines the machine printed. `--plain` prints the lines
+alone. Without it, a terminal also shows the entries, the source and the
+number of each line.
 
 ```bash
-machine output hello-run -n -5
+machine output hello-run -n -5 --plain
 ```
 ```bash
 futex hash table entries: 256 (order: 2, 16384 bytes, linear)
@@ -245,8 +260,8 @@ To see the full console log, use `-n :`. Ranges use the same colon as a Python s
 
 A negative number counts from the end, and `-1` is the last line. `-n -5` and `-n -5:` are the last five lines, and `-n -10:-2` is the tenth line from the end through the second. Both ends of a range count from the same end.
 
-Save the machine's state so you can come back to it, and start a branch from
-that point.
+Create a checkpoint of the machine's state so you can come back to it, and
+start a branch from there.
 
 ```bash
 machine checkpoint hello-run booted
@@ -275,7 +290,7 @@ slash, and the name you gave it. Look at the tree.
 machine branches hello-run
 ```
 ```bash
-● hello-run (whUxdR33Zad9Qxc0ASfig) [0, ∞)  ← current
+● hello-run (whUxdR33Zad9Qxc0ASfig) [0, ∞)  ← this run
 ╰─ @15792 0.692741050s+1 → ● hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH) [15793, ∞)
 ```
 
@@ -313,5 +328,5 @@ machine delete hello-run --recursive --stop --yes
 machine sessions delete first --yes
 ```
 
-That's the whole loop. You built a disk, saved a point in a run, branched from
-there and ran a program to its end. Everything else in this page is a variation on it.
+That's the whole loop. You built a disk, created a checkpoint in a run, branched
+from it and ran a program to its end. Everything else in this page is a variation on it.

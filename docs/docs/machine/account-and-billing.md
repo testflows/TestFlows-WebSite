@@ -24,11 +24,15 @@ Most of what the account page on the website does, the client does too.
 | [`machine account email`](commands.md#machine-account-email) | changes your email address |
 | [`machine account close`](commands.md#machine-account-close) | closes the account, in two steps (`--cancel` stops it) |
 
-`payment`, `portal` and `cancel` open a browser. Add `--link` to print the
-address instead.
+`payment`, `portal`, `cancel`, `upgrade` and `downgrade` open a browser. Add
+`--link` to print the address instead.
 
-Sessions use credits, shown as `⊜`. A standard session uses ⊜0.10 an hour
-per unit. Your plan includes credits every month, and you buy usage credits
+Sessions use credits, shown as `⊜`. The price is per unit and hour, and
+depends on the hardware class. A session is created on `standard-ip` unless you
+pick another class, and it uses ⊜0.15 an hour per unit. `standard` uses ⊜0.10
+and `standard-ie` ⊜0.12.
+[`machine sessions classes`](commands.md#machine-sessions-classes) lists the
+current price of each class. Your plan includes credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.
 
 A running session is charged an hour ahead. When it stops, the unused part
@@ -41,7 +45,8 @@ is in the [usage credit terms](/machine/legal/usage-credit/).
 
 Runs, logs and disks take up space in your account. [`machine storage show`](commands.md#machine-storage-show) says
 how much, and [`machine storage prune`](commands.md#machine-storage-prune) frees the space that deleted runs and
-disks left behind. [`machine storage prune`](commands.md#machine-storage-prune) `--status` shows the current or last
+disks left behind. A prune does nothing while that space is less than 5% of
+your storage. [`machine storage prune`](commands.md#machine-storage-prune) `--status` shows the current or last
 prune.
 
 [`machine storage check`](commands.md#machine-storage-check) reads everything in your account's
@@ -56,6 +61,6 @@ counts until you prune. The figures are from the last measurement, and
 
 At the quota, a session starts no machine and creates no branch:
 `machine create`, `machine start`, `machine fork`, `machine go`,
-`machine detach`, `machine disks build` and `machine disks push` are refused.
+`machine detach` and `machine disks build` are refused.
 A machine that is already running keeps recording and saving. To get under
 the quota, delete runs or disks, stop your sessions, and prune.

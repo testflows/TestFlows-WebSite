@@ -26,7 +26,7 @@ disk quietly returns the wrong bytes, at the call you choose or by chance.
 | `syscall` | a system call returns an error you choose, or waits first |
 | `disk` | a disk read or write returns an I/O error |
 | `disk-timeout` | a disk request never completes, and its task waits forever |
-| `slab`, `pages` | a kernel memory allocation fails, usually as `ENOMEM` |
+| `slab`, `pages` | a kernel memory allocation fails, as `ENOMEM` in most calls |
 | `usercopy` | the kernel fails to copy to or from the program's memory: `EFAULT` |
 | `futex-access` | a futex call fails to reach the program's memory: `EFAULT` |
 | `disk-corrupt` | a disk read or write succeeds with bytes changed |
@@ -160,7 +160,7 @@ machine inject app add syscall openat valid,-EINTR --in /usr/bin/app           #
 ```
 
 `valid` is the errors the system call's manual page lists. `all` is every error
-Linux names, which is more than a fault holds, so pick some of it.
+Linux names, which is more than the 30 a fault holds, so use `--pick` with it.
 
 An error the manual does not list is one Linux would not return from that
 call. `getpid` failing with `ENOSPC` never happens on a real system. Machine
@@ -215,7 +215,7 @@ machine inject app add usercopy --after 100 --times 1 --in /usr/bin/app
 machine inject app add disk-timeout --times 1 --in /usr/bin/app # its next disk request never completes
 ```
 
-A few things decide whether you see the failure:
+Five things decide whether you see the failure:
 
 - **Who sends a disk request.** `--in` names the task that sends the request,
   not the program the data belongs to. Your program sends its reads, its
@@ -251,8 +251,8 @@ failures. The request succeeds, and the damage is found later, or never.
 
 | You want to know | Fault |
 |---|---|
-| Does the database notice a bad block when it reads its data files? | `disk-corrupt --file '/var/lib/db/*/data.bin'` |
-| Does the program trust bytes it read without a checksum? | `disk-corrupt --op read --file /srv/app/state.json` |
+| Does the database notice a bad block when it reads its data files? | `disk-corrupt --file '/var/lib/db/*/data.bin' --in all` |
+| Does the program trust bytes it read without a checksum? | `disk-corrupt --op read --file /srv/app/state.json --in all` |
 | Does recovery handle a log record only half written? | `disk-torn --file /var/lib/db/wal --times 1` |
 | Does it notice a committed write that never arrived? | `disk-lost --file /var/lib/db/wal --after 10 --times 1` |
 | Does the filesystem survive damage to its own metadata? | `disk-corrupt --sectors LO:HI`, the sectors of its inode table or journal |
@@ -274,7 +274,7 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
   keeps the fault on your file.
 - **The page cache hides a damaged write.** The kernel keeps the bytes your
   program wrote in memory, so the program reads them back clean until they are
-  read from the disk again: after a restart, after
+  read from the disk again: with `O_DIRECT`, after
   `echo 3 > /proc/sys/vm/drop_caches`, or in a branch forked later. A damaged
   read is the other way round: the bad bytes go into the page cache, and every
   reader sees them until the kernel drops the page.
@@ -451,10 +451,10 @@ their counts. [The SDK's Faults](python-sdk.md#faults) has an example.
   its own seed. A replay needs none: the run keeps the fault as it was added.
 - **64-bit system calls only.** A 32-bit call, made with `int 0x80`, never fails.
 - **Calls the vDSO answers never reach the kernel.** `clock_gettime`,
-  `gettimeofday`, `time` and `getcpu` usually return without a system call, so
+  `gettimeofday`, `time` and `getcpu` return from the vDSO without a system call, so
   a fault on them matches nothing and MATCHED stays 0.
-- **16 faults, and 34 errors in one.** Delete one to add another; pick some of
-  `all`.
+- **16 faults, and 30 errors in one.** Delete a fault to add another, and use
+  `--pick` to take 30 or fewer of `all`.
 - **A fault that fired is not a failure the program saw.** The kernel retries
   an allocation, rereads a page and recovers a filesystem, and a program
   retries a call. `FIRED` says the fault fired, and `MATCHED` 0 says it never
