@@ -82,7 +82,10 @@ container starts. `machine containers app` lists both.
 
 A stopped container that has an offset keeps it, and takes it again when it
 starts. `machine clock app reset --container db` returns it to the guest's
-date, stopped or running.
+date, stopped or running. A container Docker removes, with `docker rm` or a
+`--fresh` restart, loses its offset, and the container that replaces it starts
+on the guest's date. At most 8 containers have dates of their own at once;
+the next is refused until one is reset or removed.
 
 ### Drift and slew
 
@@ -161,7 +164,7 @@ machine run app --within 20s
 ```
 
 After the 20 seconds the date is a second behind where it would have been
-without the leap. A leap second moves the guest's date and every container
+without the leap. With `leap delete` it is a second ahead. A leap second moves the guest's date and every container
 with it, so `leap` takes no `--container`. `leap off` cancels a leap still
 pending, and so does `reset`.
 
@@ -180,7 +183,14 @@ A later change cancels an undo still pending.
 
 `machine clock app` reads the date without running the machine. It shows the
 guest's date and its offset from machine time, then each container whose date
-is off the guest's, with its offset, drift, slew and jitter:
+is off the guest's, with its offset, drift, slew and jitter. To see the date a
+program reads, ask from inside its container, which runs the machine:
+
+```bash
+machine exec app run --container db -- date -u
+```
+
+The reading looks like this:
 
 ```text
 date:    2026-12-31T23:59:54.977514123Z
@@ -199,7 +209,7 @@ every field. When the guest kernel refuses a change, the next reading says
 why:
 
 ```text
-refused: the date, the guest's or a container's, would leave the range the kernel takes, 1970 to 2232-04-18T23:47:16Z
+refused: the date, the guest's or a container's, would leave the range the kernel takes: from 1970 plus the time since the guest booted, to 2232-04-18T23:47:16Z
 ```
 
 ### Clock fault use cases
@@ -280,6 +290,28 @@ machine run app --within 30s
 
 The jump finds the container by its id without running the machine, so it
 lands while the run is stopped at `check_expiry`.
+
+#### A step back reorders events
+
+A database that stamps rows with the time they were written sorts them by
+that stamp. Step its container's date back between two writes, and the second
+row sorts before the first:
+
+```bash
+machine exec app run --container db -- psql -U postgres -tAc "create table ev(id serial, at timestamptz default clock_timestamp())"
+machine exec app run --container db -- psql -U postgres -tAc "insert into ev default values"
+machine clock app jump -10m --container db
+machine exec app run --container db -- psql -U postgres -tAc "insert into ev default values"
+machine exec app run --container db -- psql -U postgres -tAc "select id, at from ev order by at"
+```
+
+```text
+2|2026-03-01 00:50:42.230825+00
+1|2026-03-01 01:00:41.531503+00
+```
+
+Any code that takes the newest stamp as the latest event, such as
+last-write-wins or a cursor over `at`, now picks row 1.
 
 Because every clock change is part of the run's recording, a failure found
 under skew comes back when you replay the recording; there is no timing to
