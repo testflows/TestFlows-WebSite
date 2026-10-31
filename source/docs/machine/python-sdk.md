@@ -394,6 +394,17 @@ run.net.hold("node1", for_="10s")         # node1's messages arrive late, in a b
 run.net.reset("api", to="db", port=5432)  # api's connections to db get a reset
 ```
 
+`run.net.arp` shows and changes a container's neighbour table, and returns
+the table as `Neighbor` entries:
+
+```python
+run.net.loss("db", "100%", proto="arp", to="api")   # db's ARP to api lost
+run.net.arp.set("api", "db", "02:42:ac:12:00:99")   # a wrong MAC for db
+for entry in run.net.arp.show("api"):
+    print(entry.address, entry.peer, entry.mac, entry.state)
+run.net.arp.flush("api")
+```
+
 ## Stopping at an event
 
 A catchpoint stops the run at an event of a task, as

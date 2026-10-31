@@ -6420,11 +6420,11 @@ sends them out of order or limits their rate. It holds them and releases them
 together.
 
 The command cuts two containers apart, one way or both. It resets their TCP
-connections.
+connections. It shows and changes a container's neighbour table.
 
 A fault is on every packet the container sends, or on the packets a match takes.
-A match names a peer, a protocol, a port or TCP SYNs. The other links stay as
-they are.
+A match names a peer, a protocol, a port or TCP SYNs. ARP is a protocol a match
+names. The other links stay as they are.
 
 The faults are part of the machine. The run records each change, and a replay
 makes it at the same point. A checkpoint keeps a link's faults.
@@ -6479,8 +6479,9 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run delay [-h] [--jitter duration] [--to container] [--proto {tcp,udp,icmp}]
-                      [--port n] [--syn] [--seed n] [--for duration]
+machine net run delay [-h] [--jitter duration] [--to container]
+                      [--proto {tcp,udp,icmp,arp}] [--port n] [--syn] [--seed n]
+                      [--for duration]
                       container delay
 ```
 
@@ -6493,7 +6494,7 @@ machine net run delay [-h] [--jitter duration] [--to container] [--proto {tcp,ud
 |---|---|
 | `--jitter duration` | Each packet's delay differs by up to this, such as 20ms |
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
@@ -6532,7 +6533,7 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
                      [--seed n] [--for duration]
                      container share
 ```
@@ -6545,7 +6546,7 @@ machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
@@ -6554,10 +6555,11 @@ machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [
 Examples:
 
 ```
-machine net run1 loss db 10%            a tenth of db's packets lost
-machine net run1 loss db 100% --for 5s  db's packets lost for 5s
-machine net run1 loss api 100% --syn    no new connections
-machine net run1 loss db 0%             none lost
+machine net run1 loss db 10%               a tenth of db's packets lost
+machine net run1 loss db 100% --for 5s     db's packets lost for 5s
+machine net run1 loss api 100% --syn       no new connections
+machine net run1 loss db 100% --proto arp  db's ARP lost
+machine net run1 loss db 0%                none lost
 ```
 
 See also:
@@ -6583,8 +6585,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
-                          [--seed n] [--for duration]
+machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
+                          [--syn] [--seed n] [--for duration]
                           container share
 ```
 
@@ -6596,7 +6598,7 @@ machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp}] [--port
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
@@ -6633,8 +6635,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
-                        [--seed n] [--for duration]
+machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
+                        [--syn] [--seed n] [--for duration]
                         container share
 ```
 
@@ -6646,7 +6648,7 @@ machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
@@ -6683,8 +6685,8 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
-                        [--seed n] [--for duration]
+machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
+                        [--syn] [--seed n] [--for duration]
                         container share
 ```
 
@@ -6696,7 +6698,7 @@ machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
@@ -6729,7 +6731,7 @@ packet a match takes gets only the match's faults, not the whole link's.
 Use `--for 30s` to set the link back after 30 seconds of machine time.
 
 ```
-machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
                      [--for duration]
                      container rate
 ```
@@ -6742,7 +6744,7 @@ machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--for duration` | Set the link back after this machine time, such as 30s |
@@ -6772,7 +6774,7 @@ Use `--for 30s` to set both directions back together after 30 seconds of machine
 time.
 
 ```
-machine net run partition [-h] [--one-way] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+machine net run partition [-h] [--one-way] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
                           [--for duration]
                           container other
 ```
@@ -6785,7 +6787,7 @@ machine net run partition [-h] [--one-way] [--proto {tcp,udp,icmp}] [--port n] [
 | Option | Does |
 |---|---|
 | `--one-way` | Cut what the first sends the second, not the reverse |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--for duration` | Set the link back after this machine time, such as 30s |
@@ -6819,7 +6821,7 @@ packet a match takes gets only the match's faults, not the whole link's.
 Use `--for 5s` to release the packets after 5 seconds of machine time.
 
 ```
-machine net run hold [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+machine net run hold [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
                      [--for duration]
                      container
 ```
@@ -6831,7 +6833,7 @@ machine net run hold [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--for duration` | Release the packets after this machine time, such as 5s |
@@ -6858,7 +6860,8 @@ The held packets leave together, in the order they were sent. The link keeps its
 other faults. Without a container the command releases every link.
 
 ```
-machine net run release [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+machine net run release [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
+                        [--syn]
                         [container]
 ```
 
@@ -6869,7 +6872,7 @@ machine net run release [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 
@@ -6921,6 +6924,199 @@ See also:
 - [`machine inject`](#machine-inject)
 - [`machine net`](#machine-net)
 
+### machine net arp
+
+Show or change a container's neighbour table.
+
+The table maps each peer's address to the MAC that ARP resolved. The show verb
+lists it, with the peer each address belongs to and the state of each entry.
+
+The other verbs change the table. They set a wrong MAC, mark an entry stale or
+delete entries. The reachable verb sets how long an entry stays reachable. A
+container that starts again begins with an empty table.
+
+```
+machine net run arp [-h] command ...
+```
+
+Examples:
+
+```
+machine net run1 arp show api                      api's neighbour table
+machine net run1 arp set api db 02:42:ac:12:00:99  a wrong MAC
+machine net run1 arp flush api                     resolved again by ARP
+```
+
+See also:
+
+- [`machine net loss`](#machine-net-loss)
+- [`machine net`](#machine-net)
+- [`machine containers`](#machine-containers)
+
+### machine net arp show
+
+List a container's neighbour table.
+
+Each entry shows its interface, the address, the peer it belongs to, the MAC and
+its state.
+
+```
+machine net run arp show [-h] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+
+Examples:
+
+```
+machine net run1 arp show api  api's neighbour table
+```
+
+See also:
+
+- [`machine net arp set`](#machine-net-arp-set)
+- [`machine net arp`](#machine-net-arp)
+- [`machine net`](#machine-net)
+
+### machine net arp set
+
+Map a peer's address to a MAC.
+
+The entry is permanent, so ARP never corrects it. The container sends the peer's
+frames to that MAC until the entry is deleted.
+
+```
+machine net run arp set [-h] container peer mac
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `peer` | The peer, by its id, its name or its service's |
+| `mac` | The MAC, such as 02:42:ac:12:00:99 |
+
+Examples:
+
+```
+machine net run1 arp set api db 02:42:ac:12:00:99  a wrong MAC
+```
+
+See also:
+
+- [`machine net arp delete`](#machine-net-arp-delete)
+- [`machine net arp`](#machine-net-arp)
+- [`machine net`](#machine-net)
+
+### machine net arp stale
+
+Mark a peer's entry stale.
+
+The kernel uses the entry, then confirms it by ARP at the next packet.
+
+```
+machine net run arp stale [-h] container peer
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `peer` | The peer, by its id, its name or its service's |
+
+Examples:
+
+```
+machine net run1 arp stale api db  confirmed by ARP next
+```
+
+See also:
+
+- [`machine net arp reachable`](#machine-net-arp-reachable)
+- [`machine net arp`](#machine-net-arp)
+- [`machine net`](#machine-net)
+
+### machine net arp delete
+
+Delete a peer's entry.
+
+The next packet to the peer resolves its address by ARP again.
+
+```
+machine net run arp delete [-h] container peer
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `peer` | The peer, by its id, its name or its service's |
+
+Examples:
+
+```
+machine net run1 arp delete api db  db resolved again
+```
+
+See also:
+
+- [`machine net arp flush`](#machine-net-arp-flush)
+- [`machine net arp`](#machine-net-arp)
+- [`machine net`](#machine-net)
+
+### machine net arp flush
+
+Delete every entry of the table.
+
+Every peer is resolved by ARP again at its next packet.
+
+```
+machine net run arp flush [-h] container
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+
+Examples:
+
+```
+machine net run1 arp flush api  every entry deleted
+```
+
+See also:
+
+- [`machine net arp delete`](#machine-net-arp-delete)
+- [`machine net arp`](#machine-net-arp)
+- [`machine net`](#machine-net)
+
+### machine net arp reachable
+
+Set how long an entry stays reachable.
+
+After ARP confirms an entry, the kernel keeps it reachable for a random time
+around this one. The entry is then stale.
+
+```
+machine net run arp reachable [-h] container duration
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `duration` | The base reachable time, such as 1s |
+
+Examples:
+
+```
+machine net run1 arp reachable api 1s  stale after about 1s
+```
+
+See also:
+
+- [`machine net arp stale`](#machine-net-arp-stale)
+- [`machine net arp`](#machine-net-arp)
+- [`machine net`](#machine-net)
+
 ### machine net heal
 
 Take the faults off a container's links.
@@ -6930,7 +7126,7 @@ faults on packets to db alone. A packet the link delays already still leaves at
 its time.
 
 ```
-machine net run heal [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [--syn]
+machine net run heal [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
                      [container]
 ```
 
@@ -6941,7 +7137,7 @@ machine net run heal [-h] [--to container] [--proto {tcp,udp,icmp}] [--port n] [
 | Option | Does |
 |---|---|
 | `--to container` | The packets to this container alone (default: to every peer) |
-| `--proto {tcp,udp,icmp}` | The packets of this protocol alone |
+| `--proto {tcp,udp,icmp,arp}` | The packets of this protocol alone |
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 

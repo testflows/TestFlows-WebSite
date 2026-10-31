@@ -39,6 +39,8 @@ machine net app heal                                   # every link as it was
 | Do messages that arrive late, after a leader change or a timeout, do harm? | `hold node1 --for 10s` |
 | Do established connections keep working while new ones cannot open? | `loss api 100% --to db --syn` |
 | Does the cluster settle when a link keeps going down and coming back? | a loop of `partition --for`, below |
+| What happens when a node cannot resolve a peer's address? | `loss db 100% --proto arp --to api` |
+| What happens when a node sends a peer's traffic to the wrong machine? | `arp set api db 02:42:ac:12:00:99` |
 
 ### One link or all of them
 
@@ -142,6 +144,46 @@ machine net app reset db --port 5432                    # every connection to db
 
 A listening socket stays open, so the server takes new connections at once.
 
+### Address resolution
+
+A container finds a peer's MAC by ARP and keeps it in its neighbour table.
+`--proto arp` puts a fault on the ARP frames a container sends, and with
+`--to` on those about one peer: its requests for the peer's address and its
+replies to the peer. With db's replies lost, api cannot resolve db, while
+nest still reaches it:
+
+```bash
+machine net app loss db 100% --proto arp --to api
+machine net app arp flush api                          # api resolves db again
+machine net app arp flush db
+machine exec app run --container api -- ping -c 3 -W 1 db     # 100% packet loss
+machine exec app run --container nest -- ping -c 3 -W 1 db    # 0% packet loss
+```
+
+`machine net app arp` shows and changes a container's neighbour table:
+
+```bash
+machine net app arp show api
+```
+
+```text
+INTERFACE  ADDRESS     PEER          MAC                STATE
+eth0       172.18.0.2  compose-db-1  02:42:ac:12:00:02  reachable
+```
+
+```bash
+machine net app arp set api db 02:42:ac:12:00:99       # api sends db's frames to a wrong MAC
+machine net app arp stale api db                       # used, then confirmed by ARP
+machine net app arp delete api db                      # resolved again at the next packet
+machine net app arp flush api                          # every peer resolved again
+machine net app arp reachable api 1s                   # entries go stale after about a second
+```
+
+An entry `set` sets is permanent, so ARP never corrects it: api reaches db
+again only after `arp delete`. The table is part of the machine, so a replay
+makes the same changes. A container that docker starts again begins with an
+empty table, as a host that restarts does.
+
 ### Seeds and replay
 
 Loss, jitter, duplicate, corrupt and reorder decide each packet by chance,
@@ -180,10 +222,10 @@ machine net app loss api 100% --for 3s       # everything api sends lost for 3 s
   machine exec app run --container api --user root -- sh -c 'cat /etc/resolv.keep > /etc/resolv.conf'
   ```
 
-- **Address resolution follows the whole link's faults.** A match takes IP
-  packets, so ARP is never in one. With `loss db 30%`, db's ARP requests
-  are lost too, and right after a start, with nothing resolved yet, db can
-  take seconds to reach a peer.
+- **Address resolution follows the whole link's faults** unless a match
+  names `--proto arp`: a match of another protocol takes IP packets alone.
+  With `loss db 30%`, db's ARP requests are lost too, and right after a
+  start, with nothing resolved yet, db can take seconds to reach a peer.
 - **A fault is on what a container sends.** To fault what `db` receives, put
   the fault on each container that sends to it, with `--to db`. To slow both
   directions between two containers, put a fault on each, as `partition` does.
