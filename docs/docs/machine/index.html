@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793414374308" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793414374308" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793414374308" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793414374308" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793414374308" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793414374308" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793414374309" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793408556565" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793414374309" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2674,6 +2674,11 @@ examples here fail <code>openat</code> of <code>/usr/bin/app</code>, so add them
 
 <p><code>valid</code> is the errors the system call’s manual page lists. <code>all</code> is every error
 Linux names, which is more than a fault holds, so pick some of it.</p>
+<p>An error the manual does not list is one Linux would not return from that
+call. <code>getpid</code> failing with <code>ENOSPC</code> never happens on a real system. Machine
+allows it on purpose: it tests whether the program handles an error it did not
+expect. Use <code>valid</code> for failures a real system produces, and an error by name
+or <code>all</code> to test the program’s handling of any error.</p>
 <h3 id="picking-errors-at-random"><a href="#picking-errors-at-random" class="headerlink" title="Picking errors at random"></a>Picking errors at random</h3><p><code>--pick</code> takes a number of errors from the set when you add the fault, and the
 fault keeps those. This is swarm testing: each run fails with its own few errors.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine inject app add syscall openat,<span class="built_in">read</span>,write valid --pick 1 --<span class="keyword">in</span> /usr/bin/app   <span class="comment"># one error each</span></span><br><span class="line">machine inject app add syscall openat all --pick 3 --<span class="keyword">in</span> /usr/bin/app                <span class="comment"># three of any</span></span><br></pre></td></tr></table></figure>
@@ -2697,10 +2702,12 @@ the way the kernel would.</p>
 
 <p>A few things decide whether you see the failure:</p>
 <ul>
-<li><strong>Who sends a disk request.</strong> Your program sends its reads, its <code>O_DIRECT</code>
-writes and the writes <code>fsync</code> forces, so <code>--in /usr/bin/app</code> fails those.
-Ordinary writes wait in memory and the kernel’s flusher writes them later, so
-only <code>--in all</code> reaches them.</li>
+<li><strong>Who sends a disk request.</strong> <code>--in</code> names the task that sends the request,
+not the program the data belongs to. Your program sends its reads, its
+<code>O_DIRECT</code> writes and the writes <code>fsync</code> forces, so <code>--in /usr/bin/app</code> fails
+those. Ordinary writes wait in memory and the kernel’s flusher writes them
+later, so only <code>--in all</code> reaches them. To fail a program’s writes, name its
+files with <code>--file</code> and use <code>--in all</code>, as <a href="#disk-faults">Disk faults</a> does.</li>
 <li><strong>A program’s first moments.</strong> When a program starts, the kernel copies its
 arguments in and allocates for it. A <code>usercopy</code> or allocation fault that fires
 then kills the program before your code runs. Use <code>--after</code>, or add the fault
@@ -2714,7 +2721,8 @@ and when that fails the kernel reads the page once more before it gives up.
 fine; that is the kernel recovering. Use <code>--times 2</code>, or no limit, for the
 program to get <code>EIO</code>. An <code>O_DIRECT</code> read fails on its first request.</li>
 <li><strong><code>disk-timeout</code> hangs.</strong> The request is lost, and the task waiting for it
-stays stuck until the machine stops. That is the point: you find out what
+stays stuck until the machine stops. This is a hung device: no timeout fires
+and no reset follows. That is the point: you find out what
 else in the program notices. Name your program in <code>--in</code>: with <code>--in all</code>
 the lost request may be the kernel’s own, and whatever waits on that disk
 hangs with it.</li>
@@ -2768,9 +2776,11 @@ read from the disk again: after a restart, after
 <code>echo 3 &gt; /proc/sys/vm/drop_caches</code>, or in a branch forked later. A damaged
 read is the other way round: the bad bytes go into the page cache, and every
 reader sees them until the kernel drops the page.</li>
-<li><strong>A tear is whole sectors.</strong> A sector is written whole or not at all, so a
-write of one sector does not tear. A torn write keeps at least one sector of
-the new data and loses at least one.</li>
+<li><strong>A tear is whole sectors.</strong> Machine tears a write at sector granularity:
+each 512-byte sector is written whole or not at all, so a write of one sector
+does not tear. A torn write keeps at least one sector of the new data and
+loses at least one. Real disks differ in what they write atomically; this is
+the model Machine applies.</li>
 <li><strong><code>--sectors</code> aims below the files.</strong> It names 512-byte sectors of the whole
 disk, so it reaches what <code>--file</code> cannot: the filesystem’s inodes, bitmaps
 and journal. The filesystem’s own tools say where those are, such as
@@ -2781,7 +2791,9 @@ whole disk. Or stop at a write with
 <code>catch add io</code>, below, and read its sectors off the stop.</li>
 <li><strong><code>disk-lost</code> is one write, not a crash.</strong> The lost write reports success,
 and the writes after it still land. A power cut loses every write since the
-last flush. Machine does not offer that.</li>
+last flush, and the disk faults do not model one. For that, use
+<a href="#a-crash"><code>machine containers crash</code></a>: it loses the
+writes a service’s volumes had not synced.</li>
 </ul>
 <p>A replay damages the same bytes, so a bug you find this way is found again on
 every replay of the run.</p>
@@ -2808,7 +2820,9 @@ and repeat:</p>
 <p>The first fails the data file’s disk requests for 2 seconds in every 7. The
 cycle starts when the fault is added, active first, on the machine’s own
 clock, so a slow host changes nothing and a replay crosses every edge at the
-same instruction. While a fault rests it matches no call and counts none, so
+same instruction. The machine’s clock is not the date the guest reads, so a
+<code>machine clock</code> change does not move a window. While a fault rests it matches
+no call and counts none, so
 <code>--after</code> and <code>--times</code> count only the calls in its active windows. Both
 options are needed, each a whole number of milliseconds from 1ms to a day.</p>
 <p>The listing says which window each fault is in and how long it has left. The
@@ -2869,6 +2883,12 @@ its own seed. A replay needs none: the run keeps the fault as it was added.</li>
 a fault on them matches nothing and MATCHED stays 0.</li>
 <li><strong>16 faults, and 34 errors in one.</strong> Delete one to add another; pick some of
 <code>all</code>.</li>
+<li><strong>A fault that fired is not a failure the program saw.</strong> The kernel retries
+an allocation, rereads a page and recovers a filesystem, and a program
+retries a call. <code>FIRED</code> says the fault fired, and <code>MATCHED</code> 0 says it never
+met a call, so nothing was tested. Whether the program failed is a question
+for the program: check its output, its exit status or its data after the
+fault, as well as the counts.</li>
 <li><strong>A fault matches the system call, whose call it is and the count of calls.</strong>
 It does not look at the arguments, so “openat of &#x2F;etc&#x2F;passwd” is not a fault.
 Stop at the call and fail that one instead.</li>
@@ -2917,8 +2937,11 @@ containers keep running through the outage:</p>
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Killed compose-db-1 (db)</span><br><span class="line">  Starts again in 5s of the machine&#x27;s time, process 28493p1</span><br></pre></td></tr></table></figure>
 
-<p><code>--fresh</code> starts it from its image: a replaced node rather than a rebooted one.
-The files it wrote outside its volumes are gone, and its volumes are kept.</p>
+<p>A restart is a reboot: the container comes back with every file it had.
+<code>--fresh</code> replaces it instead, as a failed node is replaced by a new one from
+the same image. The files it wrote outside its volumes are gone, and its
+volumes are kept. Use it to find state a service keeps in its own files when it
+should keep it in a volume.</p>
 <p>Each fault is recorded with the run, so a replay faults the same container at
 the same point. Put one where the run is stopped, at a breakpoint, a catchpoint
 or a <code>run --until</code>, to fault a service at the moment that matters.</p>
@@ -14484,10 +14507,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793408556566"></script>
-<script src="/js/machine-hero-type.js?v=1793408556566"></script>
-<script src="/js/download-platforms.js?v=1793408556566"></script>
-<script src="/js/anchor-case.js?v=1793408556566"></script>
+<script src="/js/index-code-type.js?v=1793414374309"></script>
+<script src="/js/machine-hero-type.js?v=1793414374309"></script>
+<script src="/js/download-platforms.js?v=1793414374309"></script>
+<script src="/js/anchor-case.js?v=1793414374309"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

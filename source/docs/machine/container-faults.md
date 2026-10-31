@@ -41,8 +41,11 @@ machine containers app kill db --restart 0 --fresh   # back from its image
   Starts again in 5s of the machine's time, process 28493p1
 ```
 
-`--fresh` starts it from its image: a replaced node rather than a rebooted one.
-The files it wrote outside its volumes are gone, and its volumes are kept.
+A restart is a reboot: the container comes back with every file it had.
+`--fresh` replaces it instead, as a failed node is replaced by a new one from
+the same image. The files it wrote outside its volumes are gone, and its
+volumes are kept. Use it to find state a service keeps in its own files when it
+should keep it in a volume.
 
 Each fault is recorded with the run, so a replay faults the same container at
 the same point. Put one where the run is stopped, at a breakpoint, a catchpoint

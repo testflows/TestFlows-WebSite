@@ -161,6 +161,12 @@ machine inject app add syscall openat valid,-EINTR --in /usr/bin/app           #
 `valid` is the errors the system call's manual page lists. `all` is every error
 Linux names, which is more than a fault holds, so pick some of it.
 
+An error the manual does not list is one Linux would not return from that
+call. `getpid` failing with `ENOSPC` never happens on a real system. Machine
+allows it on purpose: it tests whether the program handles an error it did not
+expect. Use `valid` for failures a real system produces, and an error by name
+or `all` to test the program's handling of any error.
+
 ### Picking errors at random
 
 `--pick` takes a number of errors from the set when you add the fault, and the
@@ -210,10 +216,12 @@ machine inject app add disk-timeout --times 1 --in /usr/bin/app # its next disk 
 
 A few things decide whether you see the failure:
 
-- **Who sends a disk request.** Your program sends its reads, its `O_DIRECT`
-  writes and the writes `fsync` forces, so `--in /usr/bin/app` fails those.
-  Ordinary writes wait in memory and the kernel's flusher writes them later, so
-  only `--in all` reaches them.
+- **Who sends a disk request.** `--in` names the task that sends the request,
+  not the program the data belongs to. Your program sends its reads, its
+  `O_DIRECT` writes and the writes `fsync` forces, so `--in /usr/bin/app` fails
+  those. Ordinary writes wait in memory and the kernel's flusher writes them
+  later, so only `--in all` reaches them. To fail a program's writes, name its
+  files with `--file` and use `--in all`, as [Disk faults](#disk-faults) does.
 - **A program's first moments.** When a program starts, the kernel copies its
   arguments in and allocates for it. A `usercopy` or allocation fault that fires
   then kills the program before your code runs. Use `--after`, or add the fault
@@ -227,7 +235,8 @@ A few things decide whether you see the failure:
   fine; that is the kernel recovering. Use `--times 2`, or no limit, for the
   program to get `EIO`. An `O_DIRECT` read fails on its first request.
 - **`disk-timeout` hangs.** The request is lost, and the task waiting for it
-  stays stuck until the machine stops. That is the point: you find out what
+  stays stuck until the machine stops. This is a hung device: no timeout fires
+  and no reset follows. That is the point: you find out what
   else in the program notices. Name your program in `--in`: with `--in all`
   the lost request may be the kernel's own, and whatever waits on that disk
   hangs with it.
@@ -268,9 +277,11 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
   `echo 3 > /proc/sys/vm/drop_caches`, or in a branch forked later. A damaged
   read is the other way round: the bad bytes go into the page cache, and every
   reader sees them until the kernel drops the page.
-- **A tear is whole sectors.** A sector is written whole or not at all, so a
-  write of one sector does not tear. A torn write keeps at least one sector of
-  the new data and loses at least one.
+- **A tear is whole sectors.** Machine tears a write at sector granularity:
+  each 512-byte sector is written whole or not at all, so a write of one sector
+  does not tear. A torn write keeps at least one sector of the new data and
+  loses at least one. Real disks differ in what they write atomically; this is
+  the model Machine applies.
 - **`--sectors` aims below the files.** It names 512-byte sectors of the whole
   disk, so it reaches what `--file` cannot: the filesystem's inodes, bitmaps
   and journal. The filesystem's own tools say where those are, such as
@@ -281,7 +292,9 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
   `catch add io`, below, and read its sectors off the stop.
 - **`disk-lost` is one write, not a crash.** The lost write reports success,
   and the writes after it still land. A power cut loses every write since the
-  last flush. Machine does not offer that.
+  last flush, and the disk faults do not model one. For that, use
+  [`machine containers crash`](container-faults.md#a-crash): it loses the
+  writes a service's volumes had not synced.
 
 A replay damages the same bytes, so a bug you find this way is found again on
 every replay of the run.
@@ -331,7 +344,9 @@ machine inject app add syscall open,openat ENOENT --in tgid=63 --on 2s --off 3s 
 The first fails the data file's disk requests for 2 seconds in every 7. The
 cycle starts when the fault is added, active first, on the machine's own
 clock, so a slow host changes nothing and a replay crosses every edge at the
-same instruction. While a fault rests it matches no call and counts none, so
+same instruction. The machine's clock is not the date the guest reads, so a
+`machine clock` change does not move a window. While a fault rests it matches
+no call and counts none, so
 `--after` and `--times` count only the calls in its active windows. Both
 options are needed, each a whole number of milliseconds from 1ms to a day.
 
@@ -439,6 +454,12 @@ their counts. [The SDK's Faults](python-sdk.md#faults) has an example.
   a fault on them matches nothing and MATCHED stays 0.
 - **16 faults, and 34 errors in one.** Delete one to add another; pick some of
   `all`.
+- **A fault that fired is not a failure the program saw.** The kernel retries
+  an allocation, rereads a page and recovers a filesystem, and a program
+  retries a call. `FIRED` says the fault fired, and `MATCHED` 0 says it never
+  met a call, so nothing was tested. Whether the program failed is a question
+  for the program: check its output, its exit status or its data after the
+  fault, as well as the counts.
 - **A fault matches the system call, whose call it is and the count of calls.**
   It does not look at the arguments, so "openat of /etc/passwd" is not a fault.
   Stop at the call and fail that one instead.
