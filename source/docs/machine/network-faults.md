@@ -44,11 +44,13 @@ Each command follows `machine net <run>`.
 | Does the client reconnect, and retry safely, when its connection is reset mid-transaction? | `reset api --to db` |
 | What happens when a server's responses to one client are lost, and nothing else? | `loss db 100% --to api --port 5432` |
 | Do messages that arrive late, after a leader change or a timeout, do harm? | `hold node1 --for 10s` |
+| Does the cluster recover when the whole network stalls and comes back at once? | `hold --for 3s` |
 | Do established connections keep working while new ones cannot open? | `loss api 100% --to db --syn` |
 | Does the cluster settle when a link keeps going down and coming back? | a loop of `partition --for`, below |
 | What happens when a node cannot resolve a peer's address? | `loss db 100% --proto arp --to api`, then `arp flush api` and `arp flush db` |
 | What happens when a node holds a wrong MAC for a peer? | `arp set api db 02:42:ac:12:00:99` |
 | Did the fault drop the packets, or did the program never send them? | `machine net app`: each fault's `SENT` and `DROPPED`, below |
+| Which exact packet did the fault drop, and why? | `loss db 30% --log`, then read the decision log, below |
 | What exactly went between two containers, to open in Wireshark? | tcpdump in the machine, in Capturing the packets, below |
 
 Other commands cover the failures around a network fault:
@@ -160,6 +162,23 @@ machine net app release node1                           # they all arrive now
 `--for 10s` releases them after 10 seconds of machine time. A link holds 1000
 full-size packets and drops the ones past them.
 
+Without a container, `hold` holds every link of the machine at once: the
+guest kernel stops every container's link at one instruction, and all
+networking between the containers stops. `release` or `heal` without a
+container lets them all go:
+
+```bash
+machine net app hold                                   # the whole cluster's network stops
+machine net app                                        # says every link is held
+machine net app release                                # everything held leaves at once
+machine net app hold --for 3s                          # or for 3 seconds of machine time
+```
+
+With api and nest each pinging db during a hold, each received only the
+replies sent before it, and all 8 after the release. A container on
+another's network, the machine's or none has no link of its own and is
+left out, and so is a process outside every container.
+
 ### Resetting connections
 
 `reset` aborts TCP connections. The container's side of each connection is
@@ -220,6 +239,48 @@ the next packet the kernel checks it by ARP within seconds, unless the
 connection's own traffic confirms the peer first. The table is part of the
 machine, so a replay makes the same changes. A container that docker starts
 again begins with an empty table, as a host that restarts does.
+
+### The decision log
+
+`--log` writes each decision a fault makes to a log: which packet it took,
+whether it dropped, delayed, duplicated, corrupted or sent it ahead, and
+when. It answers which exact packet a fault dropped, which the counts and a
+capture do not:
+
+```bash
+machine net app loss db 30% --to nest --seed 7 --log
+machine net app                                        # FAULTS: loss 30% log
+```
+
+The guest kernel records each decision where netem makes it, and the
+machine writes one line per decision to `/output/drop/net/<container>.log`,
+a file of the run's output under `drop`. The run drops that output unless
+it keeps it, so a log costs nothing to keep until it is needed. To read the
+log of a stretch already run, fork a branch from a checkpoint before it,
+keeping that output, and the branch replays the stretch and stores it:
+
+```bash
+machine checkpoint app before
+machine net app loss db 30% --to nest --seed 7 --log
+machine exec app run --container nest -- ping -c 20 -i 0.05 db
+machine fork app --from ^before --keep-output /output/drop/net --name logged
+machine output app/logged --source /output/drop/net/compose-db-1.log --plain
+```
+
+```text
+2026-03-01T00:01:00.361521Z #1 to compose-nest-1 pass ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 0
+2026-03-01T00:01:00.416546Z #2 to compose-nest-1 drop ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 1
+2026-03-01T00:01:00.470314Z #3 to compose-nest-1 pass ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 2
+2026-03-01T00:01:00.530400Z #4 to compose-nest-1 drop ICMP 172.18.0.3 > 172.18.0.4 echo reply id 25 seq 3
+```
+
+Each line has the machine's date, the fault's packet count, the match, the
+decision, and the packet. The 8 drops of the 20 lines were the 8 pings the
+ping lost, and `DROPPED` in the listing read 8. Two branches replayed from
+the same checkpoint wrote the same log, line for line. To keep the log from the start, give
+`create` or `fork` `--keep-output /output/drop/net`. `--no-log` stops it.
+The guest kernel keeps 1024 decisions until the machine writes them; past
+that, a line says how many were lost.
 
 ### Seeds, replay and --for
 

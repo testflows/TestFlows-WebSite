@@ -6492,10 +6492,13 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
+Use `--log` to write each decision of the fault to /output/drop/net, a file for
+each container. The run drops that output unless it keeps it.
+
 ```
 machine net run delay [-h] [--jitter duration] [--to container]
                       [--proto {tcp,udp,icmp,arp}] [--port n] [--syn] [--seed n]
-                      [--for duration]
+                      [--for duration] [--log | --no-log]
                       container delay
 ```
 
@@ -6513,6 +6516,7 @@ machine net run delay [-h] [--jitter duration] [--to container]
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
+| `--log, --no-log` | Write each decision of the fault to the container's log (default: as the link has it) |
 
 Examples:
 
@@ -6547,9 +6551,12 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
+Use `--log` to write each decision of the fault to /output/drop/net, a file for
+each container. The run drops that output unless it keeps it.
+
 ```
 machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
-                     [--seed n] [--for duration]
+                     [--seed n] [--for duration] [--log | --no-log]
                      container share
 ```
 
@@ -6566,11 +6573,13 @@ machine net run loss [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port 
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
+| `--log, --no-log` | Write each decision of the fault to the container's log (default: as the link has it) |
 
 Examples:
 
 ```
 machine net run1 loss db 10%               a tenth of db's packets lost
+machine net run1 loss db 10% --log         each decision logged
 machine net run1 loss db 100% --for 5s     db's packets lost for 5s
 machine net run1 loss api 100% --syn       no new connections
 machine net run1 loss db 100% --proto arp  db's ARP lost
@@ -6600,9 +6609,12 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
+Use `--log` to write each decision of the fault to /output/drop/net, a file for
+each container. The run drops that output unless it keeps it.
+
 ```
 machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
-                          [--syn] [--seed n] [--for duration]
+                          [--syn] [--seed n] [--for duration] [--log | --no-log]
                           container share
 ```
 
@@ -6619,6 +6631,7 @@ machine net run duplicate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
+| `--log, --no-log` | Write each decision of the fault to the container's log (default: as the link has it) |
 
 Examples:
 
@@ -6651,9 +6664,12 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
+Use `--log` to write each decision of the fault to /output/drop/net, a file for
+each container. The run drops that output unless it keeps it.
+
 ```
 machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
-                        [--syn] [--seed n] [--for duration]
+                        [--syn] [--seed n] [--for duration] [--log | --no-log]
                         container share
 ```
 
@@ -6670,6 +6686,7 @@ machine net run corrupt [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--po
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
+| `--log, --no-log` | Write each decision of the fault to the container's log (default: as the link has it) |
 
 Examples:
 
@@ -6702,9 +6719,12 @@ to give one. A link keeps its seed, and a link without one draws a new seed.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
+Use `--log` to write each decision of the fault to /output/drop/net, a file for
+each container. The run drops that output unless it keeps it.
+
 ```
 machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n]
-                        [--syn] [--seed n] [--for duration]
+                        [--syn] [--seed n] [--for duration] [--log | --no-log]
                         container share
 ```
 
@@ -6721,6 +6741,7 @@ machine net run reorder [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--po
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--seed n` | Seed of the draws (default: the link's seed, or one drawn) |
 | `--for duration` | Set the link back after this machine time, such as 30s |
+| `--log, --no-log` | Write each decision of the fault to the container's log (default: as the link has it) |
 
 Examples:
 
@@ -6749,9 +6770,12 @@ packet a match takes gets only the match's faults, not the whole link's.
 Use `--for 30s` to set back what the command set after 30 seconds of machine
 time. The link keeps a change made in between.
 
+Use `--log` to write each decision of the fault to /output/drop/net, a file for
+each container. The run drops that output unless it keeps it.
+
 ```
 machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
-                     [--for duration]
+                     [--for duration] [--log | --no-log]
                      container rate
 ```
 
@@ -6767,6 +6791,7 @@ machine net run rate [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port 
 | `--port n` | The packets with this source or destination port alone |
 | `--syn` | The TCP SYNs that open a connection alone |
 | `--for duration` | Set the link back after this machine time, such as 30s |
+| `--log, --no-log` | Write each decision of the fault to the container's log (default: as the link has it) |
 
 Examples:
 
@@ -6833,6 +6858,10 @@ Hold the packets a container sends.
 Every packet waits in the link until a release, and then they all leave
 together. The link holds 1000 full-size packets and drops the ones past them.
 
+Without a container the command holds every link of the machine at once. All
+networking between the containers stops. A release without a container lets them
+all go.
+
 Use `--to` db to put the fault on what the container sends to db alone. Use
 `--proto`, `--port` and `--syn` to take some packets alone, such as port 5432. A
 packet a match takes gets only the match's faults, not the whole link's.
@@ -6842,12 +6871,12 @@ Use `--for 5s` to release the packets after 5 seconds of machine time.
 ```
 machine net run hold [-h] [--to container] [--proto {tcp,udp,icmp,arp}] [--port n] [--syn]
                      [--for duration]
-                     container
+                     [container]
 ```
 
 | Argument | Does |
 |---|---|
-| `container` | Container, by its id, its name or its service's |
+| `[container]` | Container, by its id, its name or its service's (default: every one) |
 
 | Option | Does |
 |---|---|
@@ -6862,6 +6891,7 @@ Examples:
 ```
 machine net run1 hold db                       until a release
 machine net run1 hold db --for 5s              released after 5s
+machine net run1 hold --for 5s                 every container, 5s
 machine net run1 hold db --to api --port 5432  one flow alone
 ```
 
