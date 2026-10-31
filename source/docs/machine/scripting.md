@@ -8,7 +8,7 @@ Everything the client does can be done from a script.
 * `-q` turns off progress output and spinners.
 * `--timeout s` gives up after that many seconds. It goes before the command too. The default is no limit, and `0` means check once.
 * `--no-colors` turns off colors.
-* Waiting commands exit with 3 on a timeout and 2 on an error.
+* A command exits with 2 when it fails or is refused, and with 1 when it cannot reach the service or a session. A waiting command exits with 3 on a timeout. Ctrl-C exits with 130.
 
 ```bash
 machine -q --timeout 300 run app --until tasks || echo "boot did not finish"

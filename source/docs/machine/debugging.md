@@ -80,8 +80,9 @@ address in the task's process:
 | `$rsp` | a register of the task, as it is now |
 | `main+4`, `$rsp-8` | any of these, moved by `+N` or `-N` |
 
-A breakpoint at a function by its name is placed past its prologue, as GDB's
-`break FUNCTION` is.
+When the program has debug information, a breakpoint at a function by its name
+is placed past its prologue, as GDB's `break FUNCTION` is. Without it, the
+breakpoint is at the function's first instruction.
 
 ### Registers and memory
 
@@ -147,8 +148,9 @@ machine step app 412 --line --skip memcpy   # step out of memcpy, as GDB's skip
 
 A breakpoint stops the run when a task of its tgid reaches its location. A
 watchpoint stops it after an instruction writes the bytes it watches. A
-catchpoint stops it at an event of a task: an exec, an exit, a fork, a system
-call, a signal, a file mapped or a C++ exception.
+catchpoint stops it at an event of a task: an exec, an exit, a fork or vfork,
+a system call, a signal, a file mapped or unmapped, an injected fault, a disk
+request or a C++ exception.
 
 ```bash
 machine break app add 412 main                    # stop tgid of 412 at main
@@ -178,7 +180,7 @@ lists. That catches one tool of a busybox, or a script, before you know its
 ids. An `exec` catchpoint sees the new program's name. An `exit` catchpoint
 sees the name of the process's main thread, which ends last, so a worker
 thread named `cat` inside a differently named process does not stop it. A
-`syscall` catchpoint with a name makes the machine report every task's calls
+`syscall` catchpoint with `--in comm=NAME` makes the machine report every task's calls
 while it is set, which costs time on a busy machine.
 
 Each stop has a number, and the same verbs change any kind:
@@ -207,9 +209,9 @@ not while it replays.
 ```bash
 machine run app --iters 0                      # until the next hit, as continue
 machine run app --until 'tid=412:at=init.c:106'   # until tid 412 reaches a line, as until and advance
-machine run app --until 'tgid=7:at=0x401136'   # until any thread of tgid 7 reaches an address
+machine run app --until 'tgid=7:at=0x401136'   # until any task of tgid 7 reaches an address
 machine run app --until 'tid=412:write=counter'   # until tid 412 writes counter, as watch
-machine run app --until 'tgid=7:access=buf[0]'    # until any thread of tgid 7 reads or writes buf[0], as awatch
+machine run app --until 'tgid=7:access=buf[0]'    # until any task of tgid 7 reads or writes buf[0], as awatch
 ```
 
 `tid=N:at=LOC` and `tgid=N:at=LOC` take any location. `write=LOC` and
@@ -223,7 +225,7 @@ says the value the access left in the bytes:
 
 ```
 ✔ Written counter at main+116, watched.c:63, in tid 191
-Value = 4
+Value = 4, 0x4
 ```
 
 ### Going back
@@ -394,7 +396,7 @@ another user's process.
 command from what GDB just printed, keep GDB attached and give it its
 commands through a named pipe in the container.
 
-This works on the server's own image with GDB added, the example's `gdb`
+This works on the server's own image with GDB added, the example's `server`
 image: ClickHouse 26.8 with no debug information. GDB finds functions by
 name in the program's symbol table, and attaches in about 16 seconds. With
 the debug information of the `debug` image it takes minutes instead.

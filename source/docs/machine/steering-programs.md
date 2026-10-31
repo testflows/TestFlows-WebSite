@@ -14,9 +14,9 @@ Everything here is recorded, so a replay repeats it exactly.
 machine tasks app
 ```
 
-That lists the tasks in the machine, one row per thread, with the process each one
-belongs to. You will want a thread's id, or a program's path, in the commands
-below. [`machine syscalls app`](commands.md#machine-syscalls) and [`machine ints app`](commands.md#machine-ints) list the kernel's
+That lists the tasks in the machine, one row per task by its tid, with the
+tgid each one belongs to. You will want a tid, or a program's path, in the
+commands below. [`machine syscalls app`](commands.md#machine-syscalls) and [`machine ints app`](commands.md#machine-ints) list the kernel's
 system calls and interrupt vectors.
 
 ## Focus
@@ -62,12 +62,12 @@ conditions take the form `program:what`, where `what` is one of:
 | `off` | the thread is not on a CPU at all |
 
 A run can also stop where a thread reaches a location, or after it writes or
-touches bytes. These need no focus. They name a thread or a process by its id:
+touches bytes. These need no focus. They name a tid or a tgid:
 
 ```bash
-machine run app --until 'tid=56:at=parse'          # until thread 56 reaches parse
-machine run app --until 'tid=56:write=counter'     # until thread 56 writes counter
-machine run app --until 'tgid=12:access=buf[0]'    # until any thread of process 12 reads or writes buf[0]
+machine run app --until 'tid=56:at=parse'          # until tid 56 reaches parse
+machine run app --until 'tid=56:write=counter'     # until tid 56 writes counter
+machine run app --until 'tgid=12:access=buf[0]'    # until any task of tgid 12 reads or writes buf[0]
 ```
 
 Each takes one of the run's 3 hardware breakpoints and watchpoints, for that
@@ -77,15 +77,15 @@ what the run says when it stops.
 ## Holding threads
 
 ```bash
-machine tasks app hold 56         # take thread 56 off the run queue
+machine tasks app hold 56         # take tid 56 off the run queue
 machine tasks app release 56      # put it back
 machine tasks app yield 56        # let its peers go first
 machine tasks app slice 56 10us   # how long it runs between decisions
 ```
 
 Each of these takes effect at the next scheduling decision. If you hold the
-last thread that could run, there is no next decision coming, so force one
-with [`machine irq app preempt --vcpu all`](commands.md#machine-irq).
+last task that could run, the machine has nothing to run. Release it, then
+force a decision with [`machine irq app preempt --vcpu all`](commands.md#machine-irq).
 
 There is also `pin`, which places a thread on the vCPUs you choose the next
 time it wakes:
@@ -128,7 +128,7 @@ clause overrides an earlier one. `else` covers whatever nothing matched.
 Each `when` names a state of a program (`/test:on` is the program running its
 own code, and `/test:kernel` is the program running in the kernel). After that come the
 things to choose for each stretch of execution it covers, such as the mode, how
-many instructions to run, or what to do with the scheduler. [`machine plan`](commands.md#machine-plan)
+many conditional branches to run, or what to do with the scheduler. [`machine plan`](commands.md#machine-plan)
 `--help` lists all of them.
 
 ```bash
@@ -136,21 +136,22 @@ machine plan app plan.txt
 machine run app
 ```
 
-A clause draws any of these, once per dispatch:
+A clause draws any of these, once per dispatch, and `irq-delay` once per
+interrupt:
 
 | Axis | Draws |
 |---|---|
 | `mode` | how the machine runs: `fast`, `step`, `step-into`, `free`, `fence` or `keep`, with the length of a stretch as `fast=1:100k` |
 | `task-sched` | what the task on the vCPU does: `keep`, `hold`, `yield`, `drain`, `drain-all` |
 | `task-int` | whether to preempt that task: `none` or `preempt` |
-| `task-slice` | how long that task runs between decisions: `keep:default:10us:600us` |
+| `task-slice` | how long that task runs between decisions: `keep,default,10us:600us` |
 | `task-pin` | where a task goes when it next wakes: a vCPU set, `free` or `none` |
 | `vtime-rate` | how fast the machine's clock passes, as in [Clock rate](#clock-rate) |
 | `vtime-add` | time added to the clock before the dispatch, such as `10us:2ms` |
 | `timer-slack` | how late a timer may be, such as `0:20ms` |
 | `irq-delay` | how long each interrupt is held, as in [Holding interrupts](#holding-interrupts) |
 
-Every axis but `task-slice` is a comma list of choices, and `[N]` makes a
+Every axis is a comma list of choices, and `[N]` makes a
 choice N times as likely: `mode step[3],fast[1]` draws step three times as
 often as fast. `keep` draws nothing and leaves the axis as it was, so a clause
 can leave an axis alone part of the time. A range such as `1:200` draws one

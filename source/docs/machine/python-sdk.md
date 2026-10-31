@@ -275,11 +275,15 @@ run.inject.clear()
 ```
 
 A C library opens a file with `open` or `openat`, depending on the library,
-so the fault takes both. `matched` counts the calls the fault saw and `fired`
-the ones it failed. A disk fault takes the file and the operation:
+so the fault takes both. glibc's `open()` makes no `open` call, so the add
+issues a `UserWarning` that names `openat`; the fault on `open` is added all
+the same. `matched` counts the calls the fault saw and `fired` the ones it
+failed. A disk fault takes the file and the operation. The kernel's flusher
+sends an ordinary write, so the example syncs it, and the request is dd's own:
 
 ```python
 run.inject.add("disk", in_="comm=dd", file="/var/data.bin", op="write")
+run.exec("dd if=/dev/zero of=/var/data.bin bs=4096 count=1 conv=fsync", within="10s")
 ```
 
 The `fault_injection.py` example runs both and prints what the program saw.

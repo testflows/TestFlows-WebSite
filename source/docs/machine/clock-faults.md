@@ -143,8 +143,8 @@ guest takes the command. A weight in brackets draws a choice more often:
 `-1s[1],0[8],1s[1]` is in sync most of the time and a second off now and then.
 A jitter takes 4 choices at most, each a whole number of microseconds.
 
-The draws come from `--seed`, or from a seed drawn at random and shown, so
-typing the same command again steps the date the same way. A replay steps by
+The draws come from `--seed`, or from a seed drawn at random and shown. Give
+that seed with `--seed` to step the date the same way again. A replay steps by
 the same amounts at the same points, and a branch draws on from where its
 parent was. A jump or a set moves the date under the jitter, which goes on
 around the new date. `machine clock app jitter off` stops the jitter and
@@ -254,7 +254,10 @@ machine clock app jump -2s
 machine clock app jump +4s --for 2m --slew 30s --container db
 
 # Does a node shut itself down on skew, and come back?
+# At +1000ppm the offset passes a 500ms tolerance after 500s of machine time.
 machine clock app drift +1000ppm --container roach3
+machine run app --within 10m
+machine clock app reset --container roach3
 
 # Does the program survive 23:59:60?
 machine clock app set 2026-12-31T23:59:50Z

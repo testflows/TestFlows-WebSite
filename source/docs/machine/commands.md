@@ -3635,7 +3635,7 @@ See also:
 ## machine go
 
 Branch at a point and switch onto it.
-See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
+See [Switching the machine](checkpoints-and-branches.md#switching-the-machine).
 
 Go starts another path from a point. The branch shares the history of the run up
 to the point.
@@ -3747,7 +3747,7 @@ See also:
 ## machine switch
 
 Switch a running machine onto a branch that exists.
-See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
+See [Switching the machine](checkpoints-and-branches.md#switching-the-machine).
 
 The first operand names the run that switches, as with fork and detach. The
 second names where it goes: a branch, a mark written %mark, parent or root.
@@ -3789,7 +3789,7 @@ See also:
 ## machine rewind
 
 Put a run back at a point and discard what follows.
-See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
+See [Switching the machine](checkpoints-and-branches.md#switching-the-machine).
 
 The run keeps its id and its name. The entries, checkpoints and console output
 after the point are discarded.
@@ -3835,7 +3835,7 @@ See also:
 ## machine detach
 
 Detach a new root from a run and start it.
-See [Moving the machine](checkpoints-and-branches.md#moving-the-machine).
+See [Switching the machine](checkpoints-and-branches.md#switching-the-machine).
 
 Without `--at`, the root is detached at the current point. The copy includes
 everything the root still owns. It shares nothing with the origin tree. It is

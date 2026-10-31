@@ -20,7 +20,7 @@ A name uses letters, digits, `.`, `-` and `_`, and starts with a letter or
 digit. It can't be a number, because numbers name the checkpoints taken without
 one, and it can't read as a time, like `10ms`, because a time names a point too.
 
-Machine takes some of its own as well, named after the entry they were taken at
+Machine also takes its own, at the interval `create` sets, named after the entry they were taken at
 (like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.
 
 The DURABLE column says whether a checkpoint is in your account's storage or
@@ -57,14 +57,16 @@ entry it landed on. Add `--no-start` to create the branch without starting it.
 
 A branch's full name is the name of the run its tree starts from, a slash, and
 the name you gave it. So [`machine fork app --name try-1`](commands.md#machine-fork) makes `app/try-1`,
-and a branch of `app/try-1` named `try-2` is `app/try-2`. That full name is what
-you use in every other command. [`machine lineage try-1`](commands.md#machine-lineage) says
-`Run not found`, and [`machine lineage app/try-1`](commands.md#machine-lineage) works.
+and a branch of `app/try-1` named `try-2` is `app/try-2`. Every other command
+takes the name you gave it, [`machine lineage try-1`](commands.md#machine-lineage),
+as long as no other run has a branch of that name. When two trees both have a
+`try-1`, Machine refuses the short name and lists both, so use the full name:
+[`machine lineage app/try-1`](commands.md#machine-lineage).
 
 From Python, `run.fork(at="^booted", name="try-1")` returns the branch as a
 `Run`, so you drive it like any other: `branch.run(...)`, `branch.replay()`.
 
-## Moving the machine
+## Switching the machine
 
 [`machine fork`](commands.md#machine-fork) gives the new branch a machine of its own and leaves you where
 you were. `go`, `switch` and `rewind` work in place instead: they change the
@@ -73,12 +75,12 @@ machine you are on. `detach` is the odd one out, and is explained below.
 | Command | Does |
 |---|---|
 | [`machine go app ^booted`](commands.md#machine-go) | creates a branch at a point and switches this machine onto it, in place |
-| [`machine switch app app/try-1`](commands.md#machine-switch) | moves the machine onto a branch that already exists, and never creates one |
+| [`machine switch app app/try-1`](commands.md#machine-switch) | switches the machine onto a branch that already exists, and never creates one |
 | [`machine detach app --at ^booted`](commands.md#machine-detach) | copies a point into a new root, a self-contained run in a tree of its own |
 | [`machine rewind app to ^booted`](commands.md#machine-rewind) | puts the run back at a point and throws away what came after |
 
 `go` is the one you will use most. It creates a branch the way `fork` does, but
-it doesn't start another machine. It moves the one you are on, in place.
+it doesn't start another machine. It switches the one you are on, in place.
 
 ```bash
 machine go app ^booted --name g1
@@ -87,17 +89,25 @@ machine go app ^booted --name g1
 ✔ Branched app/g1 (whUxiqseEZ7Si8R4osT8K) at entry 16239 and switched onto it.
 ```
 
-After a `go` or a `switch`, the run you moved away from is listed as `switched`
+After a `go` or a `switch`, the run the machine left is listed as `switched`
 and no longer running. [`machine start app`](commands.md#machine-start) brings it back at its tip, and tells
-you how many entries it had to replay to get there. The machine you moved is now
-the new branch, so talk to it by that name: `app/g1`.
+you how many entries it had to replay to get there. The machine you switched is
+now the new branch, so talk to it by that name: `app/g1`.
 
 A `switch` needs a branch that isn't running somewhere else. Pointing it at a
-branch that is gives `✗ Already running`, so stop that one first or create it
-with `--no-start`.
+branch that is gets refused:
+
+```text
+✗ Already running: app/try-1.
+  Stop it first machine stop app/try-1
+  Then switch machine switch app app/try-1
+  Or drive it where it is machine control app/try-1
+```
+
+Creating the branch with `--no-start` avoids this.
 
 `rewind` changes the run itself, not a copy of it. Use it when you want to
-replay from an earlier point. The run keeps its name. Machine refuses to rewind
+record again from an earlier point. The run keeps its name. Machine refuses to rewind
 past a branch that starts after that point, since that branch depends on entries
 that would no longer exist.
 
@@ -110,8 +120,8 @@ slower than a fork, so only reach for it when you want to get rid of the
 original.
 
 If you only want a branch to have its own copy of the data, run
-[`machine fork --rebase`](commands.md#machine-fork), which is quicker. Add `--lean` and Machine drops the
-history it copied, so the runs it came from can be deleted.
+[`machine fork --rebase`](commands.md#machine-fork), which is quicker. Add `--lean` and the branch keeps no
+history shared with its ancestors, so they can be deleted.
 
 ## The tree
 

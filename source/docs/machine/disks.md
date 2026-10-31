@@ -37,8 +37,8 @@ machine disks build --compose ./deploy stack
 ```
 
 The name defaults to whatever the source is called. Use `--entrypoint` to
-choose the executable the service runs. Flags go before the name, and the
-service's own arguments go after a `--`. This one runs `data-race` with the
+choose the executable the service runs. The service's own arguments go after
+a `--`. This one runs `data-race` with the
 argument `3`:
 
 ```bash
@@ -255,8 +255,7 @@ Both services use one image, so the disk carries that image once. The client
 waits until the server is healthy, prints its result, and exits, which ends
 the project.
 
-The server takes tens of seconds of machine time before it accepts a query,
-so the project uses a healthcheck rather than a sleep. `config.xml` in the
+The server takes time to start before it accepts a query, so the project uses a healthcheck rather than a sleep. `config.xml` in the
 project replaces the image's config. It listens on IPv4 only, because the
 machine's kernel has no IPv6, and it caps the background pools, because the
 image's defaults hang startup in a small machine. `CLICKHOUSE_SKIP_USER_SETUP`
@@ -366,10 +365,13 @@ is written to it. The disk is made big enough for every volume to fill, and
 
 ```text
 size
-  used      292MB
+  used      811MB
   volumes   4096MB
-  capacity  5120MB
+  capacity  6144MB
 ```
+
+The capacity is what the disk holds, plus the volumes full, plus a gigabyte,
+rounded up to a whole GB.
 
 A volume in `x-machine` is a plain Compose volume: no `driver_opts`, not
 `external`. A project names 8 at most. A volume two services mount can't be
@@ -457,8 +459,8 @@ as the machine sees it. DATA is what the disk takes in your account's storage,
 after deduplication and compression.
 
 ```bash
-NAME   ID            SIZE   DATA   STATE  CREATED
-hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago
+NAME   ID            SIZE   DATA   STATE  CREATED  LABELS
+hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago   —
 ```
 
 Disks share what they have in common: every disk carries the same platform,
@@ -482,6 +484,6 @@ takes about as long as reading the disk, and a disk that does not read as it
 was stored is reported as damaged, in which case build it again.
 
 Deleting a disk is permanent. Machine refuses to delete one that a run still
-boots, and `--force` deletes it anyway and takes those runs with it.
+boots. `--force` deletes it anyway. Those runs stay, and can no longer start.
 [`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
 [`machine disks cancel`](commands.md#machine-disks-cancel) stops one.

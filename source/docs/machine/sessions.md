@@ -6,11 +6,14 @@ Runs live in a session, and you create one with [`machine sessions create`](comm
 Pick its size when you create it.
 
 ```bash
-machine sessions create ci-1 --cpus 4 --mem 8G
+machine sessions create ci-1 --cpus 2 --mem 4G
 ```
 
 `--cpus` sets the number of vCPUs, `--mem` the memory and `--storage` the
-disk space. `--class` picks the hardware class, and the default comes from your
+disk space. Your plan caps each session: 2 vCPUs, 4G of memory and 32G of
+storage on Free, 4 vCPUs, 40G and 128G on Starter and on Free with usage
+credits, and 8 vCPUs, 110G and 256G on Pro. A hardware class can give a
+session less than the plan allows, and the smaller of the two applies. `--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
 the classes, with the CPU architecture of each. A run starts only in a session
 of the architecture it was recorded on.
@@ -39,7 +42,7 @@ with `--mem 2048` needs 2176MB, so a 4G session holds one and an 8G session
 holds three. A machine holds its memory until you stop it, whether or not its
 program has finished.
 
-A branch you move onto with [`machine go`](commands.md#machine-go) uses the machine that is
+A branch you switch onto with [`machine go`](commands.md#machine-go) uses the machine that is
 already running, so it needs no more memory. A branch you start with
 [`machine fork`](commands.md#machine-fork) is another machine and needs its own.
 
@@ -112,8 +115,9 @@ machine sessions keep ci-1 30m
 A keep holds the session idle for up to 30 minutes on Free, and an hour on
 Starter, Free with usage credits and Pro. `machine sessions list` shows under
 IDLE how long each session has gone without a command, and
-`machine sessions show` when it stops. A session that stopped idle is listed
-as `stopped idle`, with the idle time it reached under IDLE.
+`machine sessions show` when it stops. `machine sessions list --all` also lists
+the sessions that stopped. One that stopped idle is listed as `stopped idle`,
+with the idle time it reached under IDLE.
 In the control prompt, `/keep 30m` keeps the session you are driving, and the
 line under the clock shows the time left.
 
