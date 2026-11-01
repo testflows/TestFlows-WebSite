@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793506552417" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793506552417" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793502612930" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793506552417" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2787,7 +2787,7 @@ Each has its own fault:</p>
 </tr>
 </thead>
 <tbody><tr>
-<td>Does the program handle <code>malloc</code> returning NULL?</td>
+<td>Does the program handle <code>malloc</code> returning NULL? (errno is not set)</td>
 <td><code>inject add function malloc --return 0 --after 5 --times 1 --in /usr/bin/app</code></td>
 </tr>
 <tr>
@@ -2860,12 +2860,21 @@ out-of-memory killer kills a process of the container when it cannot:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">⚠ Exit status 137: killed by SIGKILL, as Docker reports a signal</span><br></pre></td></tr></table></figure>
 
 <p><code>--soft</code> sets the limit past which the kernel reclaims and slows the
-container’s processes, and kills none of them, as memory pressure does. With
-no swap in the machine, memory a program holds cannot be reclaimed, so past a
-soft limit its processes slow to a crawl. In one test, a shell holding 40MB
-against a soft limit of 16MB made no progress in 2 seconds of machine time,
-the cgroup counted 27,935 times over the limit and killed nothing, and the
-shell went on once the limit was lifted:</p>
+container’s processes, and kills none of them, as memory pressure does. What
+the kernel can reclaim decides what the program sees, and the machine has no
+swap:</p>
+<ul>
+<li><strong>Files the program reads</strong> are cached in memory the kernel can drop and
+read again. Past a soft limit the program keeps running, slower: reading a
+100MB file took 0.20 seconds of machine time against a soft limit of 16MB,
+0.02 seconds without, its cache fell from 103MB to 8MB, the cgroup counted
+202 times over the limit and killed nothing.</li>
+<li><strong>Memory the program allocates</strong> has nowhere to go without swap, so past a
+soft limit its processes slow to a crawl. A shell holding 40MB against a
+soft limit of 16MB made no progress in 2 seconds of machine time, the cgroup
+counted 27,935 times over the limit and killed nothing, and the shell went
+on once the limit was lifted:</li>
+</ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine containers app memory db 16m --soft</span><br><span class="line">machine containers app memory db 0 --soft       <span class="comment"># the soft limit lifted</span></span><br></pre></td></tr></table></figure>
 
 <p><code>machine containers app</code> shows each container’s limits in its LIMITS column,
@@ -16433,10 +16442,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793502612930"></script>
-<script src="/js/machine-hero-type.js?v=1793502612930"></script>
-<script src="/js/download-platforms.js?v=1793502612930"></script>
-<script src="/js/anchor-case.js?v=1793502612930"></script>
+<script src="/js/index-code-type.js?v=1793506552418"></script>
+<script src="/js/machine-hero-type.js?v=1793506552418"></script>
+<script src="/js/download-platforms.js?v=1793506552418"></script>
+<script src="/js/anchor-case.js?v=1793506552418"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

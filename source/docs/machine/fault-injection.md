@@ -246,7 +246,7 @@ Each has its own fault:
 
 | You want to know | Fault |
 |---|---|
-| Does the program handle `malloc` returning NULL? | `inject add function malloc --return 0 --after 5 --times 1 --in /usr/bin/app` |
+| Does the program handle `malloc` returning NULL? (errno is not set) | `inject add function malloc --return 0 --after 5 --times 1 --in /usr/bin/app` |
 | Does it survive one allocation in a hundred failing? | `inject add function malloc --return 0 --prob 0.01 --in /usr/bin/app` |
 | Does it handle the kernel refusing to grow its heap? | `inject add syscall brk ENOMEM --in /usr/bin/app` |
 | Does a system call fail cleanly when the kernel cannot allocate? | `inject add slab --after 50 --times 1 --in /usr/bin/app` |
@@ -321,12 +321,20 @@ machine exec app run --container db -- sh -c 'x=$(head -c 64000000 /dev/zero | t
 ```
 
 `--soft` sets the limit past which the kernel reclaims and slows the
-container's processes, and kills none of them, as memory pressure does. With
-no swap in the machine, memory a program holds cannot be reclaimed, so past a
-soft limit its processes slow to a crawl. In one test, a shell holding 40MB
-against a soft limit of 16MB made no progress in 2 seconds of machine time,
-the cgroup counted 27,935 times over the limit and killed nothing, and the
-shell went on once the limit was lifted:
+container's processes, and kills none of them, as memory pressure does. What
+the kernel can reclaim decides what the program sees, and the machine has no
+swap:
+
+- **Files the program reads** are cached in memory the kernel can drop and
+  read again. Past a soft limit the program keeps running, slower: reading a
+  100MB file took 0.20 seconds of machine time against a soft limit of 16MB,
+  0.02 seconds without, its cache fell from 103MB to 8MB, the cgroup counted
+  202 times over the limit and killed nothing.
+- **Memory the program allocates** has nowhere to go without swap, so past a
+  soft limit its processes slow to a crawl. A shell holding 40MB against a
+  soft limit of 16MB made no progress in 2 seconds of machine time, the cgroup
+  counted 27,935 times over the limit and killed nothing, and the shell went
+  on once the limit was lifted:
 
 ```bash
 machine containers app memory db 16m --soft
