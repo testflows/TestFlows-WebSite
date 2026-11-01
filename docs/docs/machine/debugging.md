@@ -106,10 +106,13 @@ machine mem app 412 --mapped                # the pages the tgid maps, as info p
 machine mem app 412 buf --find GET --length 4096
 machine mem app 412 buf --dump buf.bin --length 4096
 machine mem app 412 buf --restore buf.bin
+machine mem app 412 buf --fill 0xde --length 4096   # a pattern written over a span
 ```
 
 A write is part of the run, and a replay makes it again. A page the tgid has
-not written yet is shared, and is refused for a write. `^=` flips the bits a
+not written yet is shared, and is refused for a write. A name two files of the program define is
+refused with each file to name, `/lib/libc.so.6:optind`, by its path in the
+container as `machine symbols` lists it. `^=` flips the bits a
 mask sets, at the variable's width or a unit's, such as
 `machine mem app 412 '$sp^=0x1' b`; it reads, flips and writes with the
 machine stopped, and says the value before and after.

@@ -16,6 +16,7 @@ machine containers app throttle db --cpus 0.1 --for 30s
 machine containers app throttle db --cpus 0      # the limit lifted
 machine containers app memory db 64m --for 30s   # past 64MB, its out-of-memory killer
 machine containers app memory db 0               # the limit lifted
+machine containers app memory db 48m --soft      # past 48MB, reclaimed and slowed, not killed
 machine containers app start db
 ```
 

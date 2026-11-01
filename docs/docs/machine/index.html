@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793502612930" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793502612930" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793501089546" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793502612930" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2807,12 +2807,20 @@ Each has its own fault:</p>
 <td><code>containers memory db 64m</code></td>
 </tr>
 <tr>
+<td>How does a service behave under memory pressure, short of a kill?</td>
+<td><code>containers memory db 48m --soft</code></td>
+</tr>
+<tr>
 <td>Does the program notice a flipped bit in its data?</td>
 <td><code>mem 412 &#39;checksum^=0x1&#39;</code></td>
 </tr>
 <tr>
 <td>What does a pointer set to 0 do?</td>
 <td><code>mem 412 &#39;head=0&#39;</code></td>
+</tr>
+<tr>
+<td>What does a buffer of garbage do?</td>
+<td><code>mem 412 buf --fill 0xde --length 4096</code></td>
 </tr>
 </tbody></table>
 <h3 id="a-program’s-allocations"><a href="#a-program’s-allocations" class="headerlink" title="A program’s allocations"></a>A program’s allocations</h3><p>A program asks its C library for memory, and the library serves most
@@ -2851,15 +2859,30 @@ out-of-memory killer kills a process of the container when it cannot:</p>
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">⚠ Exit status 137: killed by SIGKILL, as Docker reports a signal</span><br></pre></td></tr></table></figure>
 
-<p><code>machine containers app</code> shows each container’s limit in its LIMITS column.</p>
-<h3 id="wrong-data"><a href="#wrong-data" class="headerlink" title="Wrong data"></a>Wrong data</h3><p><a href="#debugging"><code>machine mem</code></a> writes a program’s memory with the machine
-stopped, and <code>^=</code> flips bits of a value, as C’s <code>^=</code> does. Stop the program
-where the data is live first, at a breakpoint or a <code>run --until</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">break</span> app add 412 process_record</span><br><span class="line">machine run app</span><br><span class="line">machine mem app 412 <span class="string">&#x27;checksum^=0x1&#x27;</span>                    <span class="comment"># one bit of checksum flipped</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;head=0&#x27;</span>                           <span class="comment"># a pointer set to NULL</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$sp+8=-1&#x27;</span> g                       <span class="comment"># a word of the stack overwritten</span></span><br></pre></td></tr></table></figure>
+<p><code>--soft</code> sets the limit past which the kernel reclaims and slows the
+container’s processes, and kills none of them, as memory pressure does. With
+no swap in the machine, memory a program holds cannot be reclaimed, so past a
+soft limit its processes slow to a crawl. In one test, a shell holding 40MB
+against a soft limit of 16MB made no progress in 2 seconds of machine time,
+the cgroup counted 27,935 times over the limit and killed nothing, and the
+shell went on once the limit was lifted:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine containers app memory db 16m --soft</span><br><span class="line">machine containers app memory db 0 --soft       <span class="comment"># the soft limit lifted</span></span><br></pre></td></tr></table></figure>
 
-<p>The answer names the bits, the address and the value before and after, here
-for a word of a shell’s stack:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">✔ Flipped 0x10 at 0x7ffdf2d731f0 of tid 281: 0x000055d658e084b0 became 0x000055d658e084a0</span><br></pre></td></tr></table></figure>
+<p><code>machine containers app</code> shows each container’s limits in its LIMITS column,
+such as <code>memory 64MB soft 48MB</code>.</p>
+<h3 id="wrong-data"><a href="#wrong-data" class="headerlink" title="Wrong data"></a>Wrong data</h3><p><a href="#debugging"><code>machine mem</code></a> writes a program’s memory with the machine
+stopped, <code>^=</code> flips bits of a value, as C’s <code>^=</code> does, and <code>--fill</code> writes a
+pattern over a span. Stop the program where the data is live first, at a
+breakpoint or a <code>run --until</code>. The names below stand for the program’s own
+variables and function:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">break</span> app add 412 process_record</span><br><span class="line">machine run app</span><br><span class="line">machine mem app 412 <span class="string">&#x27;checksum^=0x1&#x27;</span>                    <span class="comment"># one bit of checksum flipped</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;head=0&#x27;</span>                           <span class="comment"># a pointer set to NULL</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$sp+8=-1&#x27;</span> g                       <span class="comment"># a word of the stack overwritten</span></span><br><span class="line">machine mem app 412 buf --fill 0xde --length 4096      <span class="comment"># a buffer of garbage</span></span><br></pre></td></tr></table></figure>
+
+<p>The answer names the bits, the address and the value before and after. Here
+<code>optind</code>, a variable of the C library a shell of a container maps, is named
+by its file, as <code>machine symbols</code> lists it, since the shell has one too:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 628 <span class="string">&#x27;/lib/libc.so.6:optind^=0x1&#x27;</span></span><br><span class="line">machine mem app 628 <span class="string">&#x27;$sp-64&#x27;</span> --fill AB --length 5</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✔ Flipped 0x1 at 0x7fe1a2385248 &lt;optind&gt; of tid 628: 0x00000001 became 0x00000000</span><br><span class="line">✔ Filled 5 bytes at 0x7ffe41563260 of tid 628 with AB</span><br></pre></td></tr></table></figure>
 
 <p>Each write is recorded with the run, so a replay corrupts the same value at
 the same point, and a fork from before it runs the program unharmed.</p>
@@ -3064,7 +3087,7 @@ Stop at the call and fail that one instead.</li>
 <h2 id="container-faults"><a href="#container-faults" class="headerlink" title="Container faults"></a>Container faults</h2><p>A project run as containers is a small cluster, and each service is a node.
 <a href="#machine-containers"><code>machine containers</code></a> puts a fault on one
 container while the others keep running:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">machine containers app stop db                   <span class="comment"># SIGTERM, then SIGKILL after 10s</span></span><br><span class="line">machine containers app stop db --grace 2s        <span class="comment"># SIGKILL after 2s of machine time</span></span><br><span class="line">machine containers app <span class="built_in">kill</span> db                   <span class="comment"># SIGKILL, no cleanup</span></span><br><span class="line">machine containers app crash db                  <span class="comment"># a power cut: its volumes lose what was not synced</span></span><br><span class="line">machine containers app pause db --<span class="keyword">for</span> 5s         <span class="comment"># frozen for 5s, then thawed</span></span><br><span class="line">machine containers app throttle db --cpus 0.1 --<span class="keyword">for</span> 30s</span><br><span class="line">machine containers app throttle db --cpus 0      <span class="comment"># the limit lifted</span></span><br><span class="line">machine containers app memory db 64m --<span class="keyword">for</span> 30s   <span class="comment"># past 64MB, its out-of-memory killer</span></span><br><span class="line">machine containers app memory db 0               <span class="comment"># the limit lifted</span></span><br><span class="line">machine containers app start db</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">machine containers app stop db                   <span class="comment"># SIGTERM, then SIGKILL after 10s</span></span><br><span class="line">machine containers app stop db --grace 2s        <span class="comment"># SIGKILL after 2s of machine time</span></span><br><span class="line">machine containers app <span class="built_in">kill</span> db                   <span class="comment"># SIGKILL, no cleanup</span></span><br><span class="line">machine containers app crash db                  <span class="comment"># a power cut: its volumes lose what was not synced</span></span><br><span class="line">machine containers app pause db --<span class="keyword">for</span> 5s         <span class="comment"># frozen for 5s, then thawed</span></span><br><span class="line">machine containers app throttle db --cpus 0.1 --<span class="keyword">for</span> 30s</span><br><span class="line">machine containers app throttle db --cpus 0      <span class="comment"># the limit lifted</span></span><br><span class="line">machine containers app memory db 64m --<span class="keyword">for</span> 30s   <span class="comment"># past 64MB, its out-of-memory killer</span></span><br><span class="line">machine containers app memory db 0               <span class="comment"># the limit lifted</span></span><br><span class="line">machine containers app memory db 48m --soft      <span class="comment"># past 48MB, reclaimed and slowed, not killed</span></span><br><span class="line">machine containers app start db</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -3882,10 +3905,12 @@ breakpoint is at the function’s first instruction.</p>
 
 <p><a href="#machine-mem"><code>machine mem</code></a> shows memory as GDB’s <code>x</code> does, with
 a count, a letter and a unit after the location, such as <code>8xg</code>, <code>4i</code> or <code>s</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 412 <span class="string">&#x27;$sp&#x27;</span>                   <span class="comment"># eight giant words at the stack</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$pc&#x27;</span> 4i                <span class="comment"># the next four instructions</span></span><br><span class="line">machine mem app 412 main 16xb               <span class="comment"># sixteen bytes of main</span></span><br><span class="line">machine mem app 412 counter=42              <span class="comment"># write counter, at its size</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;counter^=0x10&#x27;</span>         <span class="comment"># flip bit 4 of counter, as ^= does in C</span></span><br><span class="line">machine mem app 412 --mapped                <span class="comment"># the pages the tgid maps, as info proc mappings</span></span><br><span class="line">machine mem app 412 buf --find GET --length 4096</span><br><span class="line">machine mem app 412 buf --dump buf.bin --length 4096</span><br><span class="line">machine mem app 412 buf --restore buf.bin</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 412 <span class="string">&#x27;$sp&#x27;</span>                   <span class="comment"># eight giant words at the stack</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$pc&#x27;</span> 4i                <span class="comment"># the next four instructions</span></span><br><span class="line">machine mem app 412 main 16xb               <span class="comment"># sixteen bytes of main</span></span><br><span class="line">machine mem app 412 counter=42              <span class="comment"># write counter, at its size</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;counter^=0x10&#x27;</span>         <span class="comment"># flip bit 4 of counter, as ^= does in C</span></span><br><span class="line">machine mem app 412 --mapped                <span class="comment"># the pages the tgid maps, as info proc mappings</span></span><br><span class="line">machine mem app 412 buf --find GET --length 4096</span><br><span class="line">machine mem app 412 buf --dump buf.bin --length 4096</span><br><span class="line">machine mem app 412 buf --restore buf.bin</span><br><span class="line">machine mem app 412 buf --fill 0xde --length 4096   <span class="comment"># a pattern written over a span</span></span><br></pre></td></tr></table></figure>
 
 <p>A write is part of the run, and a replay makes it again. A page the tgid has
-not written yet is shared, and is refused for a write. <code>^=</code> flips the bits a
+not written yet is shared, and is refused for a write. A name two files of the program define is
+refused with each file to name, <code>/lib/libc.so.6:optind</code>, by its path in the
+container as <code>machine symbols</code> lists it. <code>^=</code> flips the bits a
 mask sets, at the variable’s width or a unit’s, such as
 <code>machine mem app 412 &#39;$sp^=0x1&#39; b</code>; it reads, flips and writes with the
 machine stopped, and says the value before and after.</p>
@@ -11111,8 +11136,10 @@ lifts the limit. The limit ends at the container’s next start.</p>
 <p>A limit below what they use makes the guest kernel reclaim memory. What it
 cannot reclaim, its out-of-memory killer takes: a process of the container is
 killed.</p>
+<p>A soft limit, with <code>--soft</code>, is the memory past which the kernel reclaims and
+slows the processes. It kills none of them, and the hard limit stays as it was.</p>
 <p>Use <code>--for 30s</code> to restore the previous limit after 30 seconds of machine time.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine containers run memory [-h] [--for duration] container size</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine containers run memory [-h] [--soft] [--for duration] container size</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -11138,6 +11165,10 @@ killed.</p>
 </tr>
 </thead>
 <tbody><tr>
+<td><code>--soft</code></td>
+<td>Reclaim and slow its processes past the size, and kill none</td>
+</tr>
+<tr>
 <td><code>--for duration</code></td>
 <td>Restore the previous limit after this machine time, such as 30s</td>
 </tr>
@@ -13953,7 +13984,7 @@ of a unit after it. A page the tgid cannot write is not written.</p>
 <p>LOCATION^&#x3D;MASK flips the bits the mask sets in the value there, as ^&#x3D; does in C.
 The value is as wide as the variable or the unit after it. The flip is a write
 and is part of the run.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [--mapped]</span><br><span class="line">            run tid [location] [format]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine mem [-h] [--find pattern] [--dump file] [--restore file] [--fill pattern]</span><br><span class="line">            [--length n] [--mapped]</span><br><span class="line">            run tid [location] [format]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -13999,8 +14030,12 @@ and is part of the run.</p>
 <td>Write the bytes of a file on this computer at the location</td>
 </tr>
 <tr>
+<td><code>--fill pattern</code></td>
+<td>Write a pattern over <code>--length</code> bytes: text, or 0x and hex bytes</td>
+</tr>
+<tr>
 <td><code>--length n</code></td>
-<td>Bytes a find or a dump reaches over</td>
+<td>Bytes a find, a dump or a fill reaches over</td>
 </tr>
 <tr>
 <td><code>--mapped</code></td>
@@ -14008,7 +14043,7 @@ and is part of the run.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">machine mem run1 412 &#x27;$sp&#x27;                  eight 8-byte words at the stack</span><br><span class="line">machine mem run1 412 &#x27;$pc&#x27; 4i               the next four instructions</span><br><span class="line">machine mem run1 412 main 16xb              sixteen bytes of main</span><br><span class="line">machine mem run1 412 environ a              what environ points at</span><br><span class="line">machine mem run1 412 counter=42             write counter, at its size</span><br><span class="line">machine mem run1 412 &#x27;$sp+8=-1&#x27; w           write a word at the stack</span><br><span class="line">machine mem run1 412 &#x27;counter^=0x10&#x27;        flip bit 4 of counter</span><br><span class="line">machine mem run1 412 --mapped               the pages the tgid maps</span><br><span class="line">machine mem run1 412 b --find x --length 9  find x</span><br><span class="line">machine mem run1 412 b --dump f --length 8  into file f</span><br><span class="line">machine mem run1 412 b --restore f          file f back</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">machine mem run1 412 &#x27;$sp&#x27;                  eight 8-byte words at the stack</span><br><span class="line">machine mem run1 412 &#x27;$pc&#x27; 4i               the next four instructions</span><br><span class="line">machine mem run1 412 main 16xb              sixteen bytes of main</span><br><span class="line">machine mem run1 412 environ a              what environ points at</span><br><span class="line">machine mem run1 412 counter=42             write counter, at its size</span><br><span class="line">machine mem run1 412 &#x27;$sp+8=-1&#x27; w           write a word at the stack</span><br><span class="line">machine mem run1 412 &#x27;counter^=0x10&#x27;        flip bit 4 of counter</span><br><span class="line">machine mem run1 412 --mapped               the pages the tgid maps</span><br><span class="line">machine mem run1 412 b --find x --length 9  find x</span><br><span class="line">machine mem run1 412 b --dump f --length 8  into file f</span><br><span class="line">machine mem run1 412 b --restore f          file f back</span><br><span class="line">machine mem run1 412 b --fill x --length 8  8 bytes of x</span><br></pre></td></tr></table></figure>
 
 <p>Prints:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">text  &lt;address&gt; &lt;symbol+offset&gt;: units, as GDB&#x27;s x</span><br><span class="line">json  tid address format unit lines unmapped</span><br></pre></td></tr></table></figure>
@@ -16398,10 +16433,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793501089547"></script>
-<script src="/js/machine-hero-type.js?v=1793501089547"></script>
-<script src="/js/download-platforms.js?v=1793501089547"></script>
-<script src="/js/anchor-case.js?v=1793501089547"></script>
+<script src="/js/index-code-type.js?v=1793502612930"></script>
+<script src="/js/machine-hero-type.js?v=1793502612930"></script>
+<script src="/js/download-platforms.js?v=1793502612930"></script>
+<script src="/js/anchor-case.js?v=1793502612930"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

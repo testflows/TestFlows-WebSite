@@ -251,8 +251,10 @@ Each has its own fault:
 | Does it handle the kernel refusing to grow its heap? | `inject add syscall brk ENOMEM --in /usr/bin/app` |
 | Does a system call fail cleanly when the kernel cannot allocate? | `inject add slab --after 50 --times 1 --in /usr/bin/app` |
 | What happens when a service runs out of memory? | `containers memory db 64m` |
+| How does a service behave under memory pressure, short of a kill? | `containers memory db 48m --soft` |
 | Does the program notice a flipped bit in its data? | `mem 412 'checksum^=0x1'` |
 | What does a pointer set to 0 do? | `mem 412 'head=0'` |
+| What does a buffer of garbage do? | `mem 412 buf --fill 0xde --length 4096` |
 
 ### A program's allocations
 
@@ -318,13 +320,29 @@ machine exec app run --container db -- sh -c 'x=$(head -c 64000000 /dev/zero | t
 ⚠ Exit status 137: killed by SIGKILL, as Docker reports a signal
 ```
 
-`machine containers app` shows each container's limit in its LIMITS column.
+`--soft` sets the limit past which the kernel reclaims and slows the
+container's processes, and kills none of them, as memory pressure does. With
+no swap in the machine, memory a program holds cannot be reclaimed, so past a
+soft limit its processes slow to a crawl. In one test, a shell holding 40MB
+against a soft limit of 16MB made no progress in 2 seconds of machine time,
+the cgroup counted 27,935 times over the limit and killed nothing, and the
+shell went on once the limit was lifted:
+
+```bash
+machine containers app memory db 16m --soft
+machine containers app memory db 0 --soft       # the soft limit lifted
+```
+
+`machine containers app` shows each container's limits in its LIMITS column,
+such as `memory 64MB soft 48MB`.
 
 ### Wrong data
 
 [`machine mem`](debugging.md) writes a program's memory with the machine
-stopped, and `^=` flips bits of a value, as C's `^=` does. Stop the program
-where the data is live first, at a breakpoint or a `run --until`:
+stopped, `^=` flips bits of a value, as C's `^=` does, and `--fill` writes a
+pattern over a span. Stop the program where the data is live first, at a
+breakpoint or a `run --until`. The names below stand for the program's own
+variables and function:
 
 ```bash
 machine break app add 412 process_record
@@ -332,13 +350,21 @@ machine run app
 machine mem app 412 'checksum^=0x1'                    # one bit of checksum flipped
 machine mem app 412 'head=0'                           # a pointer set to NULL
 machine mem app 412 '$sp+8=-1' g                       # a word of the stack overwritten
+machine mem app 412 buf --fill 0xde --length 4096      # a buffer of garbage
 ```
 
-The answer names the bits, the address and the value before and after, here
-for a word of a shell's stack:
+The answer names the bits, the address and the value before and after. Here
+`optind`, a variable of the C library a shell of a container maps, is named
+by its file, as `machine symbols` lists it, since the shell has one too:
+
+```bash
+machine mem app 628 '/lib/libc.so.6:optind^=0x1'
+machine mem app 628 '$sp-64' --fill AB --length 5
+```
 
 ```text
-✔ Flipped 0x10 at 0x7ffdf2d731f0 of tid 281: 0x000055d658e084b0 became 0x000055d658e084a0
+✔ Flipped 0x1 at 0x7fe1a2385248 <optind> of tid 628: 0x00000001 became 0x00000000
+✔ Filled 5 bytes at 0x7ffe41563260 of tid 628 with AB
 ```
 
 Each write is recorded with the run, so a replay corrupts the same value at

@@ -6488,10 +6488,13 @@ A limit below what they use makes the guest kernel reclaim memory. What it
 cannot reclaim, its out-of-memory killer takes: a process of the container is
 killed.
 
+A soft limit, with `--soft`, is the memory past which the kernel reclaims and
+slows the processes. It kills none of them, and the hard limit stays as it was.
+
 Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
 
 ```
-machine containers run memory [-h] [--for duration] container size
+machine containers run memory [-h] [--soft] [--for duration] container size
 ```
 
 | Argument | Does |
@@ -6501,6 +6504,7 @@ machine containers run memory [-h] [--for duration] container size
 
 | Option | Does |
 |---|---|
+| `--soft` | Reclaim and slow its processes past the size, and kill none |
 | `--for duration` | Restore the previous limit after this machine time, such as 30s |
 
 Examples:
@@ -9028,7 +9032,8 @@ The value is as wide as the variable or the unit after it. The flip is a write
 and is part of the run.
 
 ```
-machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [--mapped]
+machine mem [-h] [--find pattern] [--dump file] [--restore file] [--fill pattern]
+            [--length n] [--mapped]
             run tid [location] [format]
 ```
 
@@ -9044,7 +9049,8 @@ machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [-
 | `--find pattern` | Find a pattern in `--length` bytes: text, or 0x and hex bytes |
 | `--dump file` | Write `--length` bytes to a file on this computer |
 | `--restore file` | Write the bytes of a file on this computer at the location |
-| `--length n` | Bytes a find or a dump reaches over |
+| `--fill pattern` | Write a pattern over `--length` bytes: text, or 0x and hex bytes |
+| `--length n` | Bytes a find, a dump or a fill reaches over |
 | `--mapped` | List the pages the tgid maps, with their access and file |
 
 Examples:
@@ -9061,6 +9067,7 @@ machine mem run1 412 --mapped               the pages the tgid maps
 machine mem run1 412 b --find x --length 9  find x
 machine mem run1 412 b --dump f --length 8  into file f
 machine mem run1 412 b --restore f          file f back
+machine mem run1 412 b --fill x --length 8  8 bytes of x
 ```
 
 Prints:
