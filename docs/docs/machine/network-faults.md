@@ -163,6 +163,15 @@ machine net app release node1                           # they all arrive now
 `--for 10s` releases them after 10 seconds of machine time. A link holds 1000
 full-size packets and drops the ones past them.
 
+A held packet still counts against the send buffer of the socket that sent
+it, about 208KB by `net.core.wmem_default`. Once that buffer is full, the
+socket's sends fail, or for TCP block, before the link's queue is reached,
+so one socket cannot fill a hold by itself. For example, when api sends db
+1200 pings of 1400 bytes during a hold of db, db receives all 1200 and its
+link holds 117 replies. The other 1084 replies fail in db's kernel and count
+as `OutErrors` in its `/proc/net/snmp`. With pings of 56 bytes, 321 replies
+are held.
+
 Without a container, `hold` holds every link at the instruction the
 machine is stopped at, and all networking between the containers stops
 there. `release` or `heal` without a container lets every packet go:

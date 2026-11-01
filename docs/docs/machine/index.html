@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793550688100" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793550688100" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793550132962" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793550688100" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3847,6 +3847,14 @@ message that arrives after a leader change or after its sender timed out:</p>
 
 <p><code>--for 10s</code> releases them after 10 seconds of machine time. A link holds 1000
 full-size packets and drops the ones past them.</p>
+<p>A held packet still counts against the send buffer of the socket that sent
+it, about 208KB by <code>net.core.wmem_default</code>. Once that buffer is full, the
+socket’s sends fail, or for TCP block, before the link’s queue is reached,
+so one socket cannot fill a hold by itself. For example, when api sends db
+1200 pings of 1400 bytes during a hold of db, db receives all 1200 and its
+link holds 117 replies. The other 1084 replies fail in db’s kernel and count
+as <code>OutErrors</code> in its <code>/proc/net/snmp</code>. With pings of 56 bytes, 321 replies
+are held.</p>
 <p>Without a container, <code>hold</code> holds every link at the instruction the
 machine is stopped at, and all networking between the containers stops
 there. <code>release</code> or <code>heal</code> without a container lets every packet go:</p>
@@ -16895,10 +16903,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793550132962"></script>
-<script src="/js/machine-hero-type.js?v=1793550132962"></script>
-<script src="/js/download-platforms.js?v=1793550132962"></script>
-<script src="/js/anchor-case.js?v=1793550132962"></script>
+<script src="/js/index-code-type.js?v=1793550688101"></script>
+<script src="/js/machine-hero-type.js?v=1793550688101"></script>
+<script src="/js/download-platforms.js?v=1793550688101"></script>
+<script src="/js/anchor-case.js?v=1793550688101"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
