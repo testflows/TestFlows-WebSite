@@ -163,7 +163,7 @@ And the calls you will reach for most often:
 | `run.profile("2s", container=..., pid=...)` | samples what runs for a time and returns a `Profile`: `samples`, `functions`, `stacks`, and `folded` text for flame graph tools |
 | `run.profile(from_="^request", to="^reply")` | profiles a stretch the run already recorded, without changing the run |
 | `run.profile("2s", in_guest=True)` | samples with a process in the run, for the functions of the kernel by name |
-| `run.containers()`, `run.containers.kill("db", restart="5s")`, `run.containers.crash("db", restart="0")` | lists the containers, the Compose service of each, and its `addresses` and `links`; `stop`, `kill`, `crash`, `start`, `pause`, `resume` and `throttle` put a fault on one, as `machine containers` does |
+| `run.containers()`, `run.containers.kill("db", restart="5s")`, `run.containers.crash("db", restart="0")` | lists the containers, the Compose service of each, and its `addresses` and `links`; `stop`, `kill`, `crash`, `start`, `pause`, `resume`, `throttle` and `memory` put a fault on one, as `machine containers` does |
 | `run.put(source, path, container=..., mode=..., owner=...)` | puts a file of any size into the machine or into a container of it; `source` is bytes or the path of a file |
 | `run.get(path, dest, container=...)` | gets a file out, as it is now; returns a `Got` with `size`, `mode`, `uid`, `gid`, and `data` when no `dest` is given |
 | `run.tasks()`, `run.focus.add(...)`, `run.irq(...)`, `run.vtime.rate(...)` | steers the machine |
@@ -312,10 +312,11 @@ run.run(within="5s")
 print(run.exec("ls /data", container="app").stdout)   # kept is there, lost is not
 ```
 
-`stop`, `kill`, `start`, `pause`, `resume` and `throttle` work the same way.
+`stop`, `kill`, `start`, `pause`, `resume`, `throttle` and `memory` work the same way.
 `stop` and `kill` take `restart=` as `crash` does, `stop` takes `grace=`,
 `fresh=True` starts a new container instead of the old one, `pause` and
-`throttle` take `for_=`, and `throttle` takes `cpus=`. `run.containers()` lists the containers with the
+`throttle` take `for_=`, `throttle` takes `cpus=`, and `memory("db", "64m",
+for_="30s")` limits a container's memory. `run.containers()` lists the containers with the
 service, name and state of each. The `container_crash.py` example builds a
 project, crashes one service and reads its volume after the restart.
 

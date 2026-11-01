@@ -101,6 +101,7 @@ machine mem app 412 '$sp'                   # eight giant words at the stack
 machine mem app 412 '$pc' 4i                # the next four instructions
 machine mem app 412 main 16xb               # sixteen bytes of main
 machine mem app 412 counter=42              # write counter, at its size
+machine mem app 412 'counter^=0x10'         # flip bit 4 of counter, as ^= does in C
 machine mem app 412 --mapped                # the pages the tgid maps, as info proc mappings
 machine mem app 412 buf --find GET --length 4096
 machine mem app 412 buf --dump buf.bin --length 4096
@@ -108,7 +109,10 @@ machine mem app 412 buf --restore buf.bin
 ```
 
 A write is part of the run, and a replay makes it again. A page the tgid has
-not written yet is shared, and is refused for a write.
+not written yet is shared, and is refused for a write. `^=` flips the bits a
+mask sets, at the variable's width or a unit's, such as
+`machine mem app 412 '$sp^=0x1' b`; it reads, flips and writes with the
+machine stopped, and says the value before and after.
 
 ### The stack, symbols and variables
 

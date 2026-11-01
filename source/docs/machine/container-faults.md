@@ -14,6 +14,8 @@ machine containers app crash db                  # a power cut: its volumes lose
 machine containers app pause db --for 5s         # frozen for 5s, then thawed
 machine containers app throttle db --cpus 0.1 --for 30s
 machine containers app throttle db --cpus 0      # the limit lifted
+machine containers app memory db 64m --for 30s   # past 64MB, its out-of-memory killer
+machine containers app memory db 0               # the limit lifted
 machine containers app start db
 ```
 
@@ -24,6 +26,7 @@ machine containers app start db
 | Does the database keep what it committed through a power cut? | `crash db --restart 0` |
 | Do the other services notice a node that hangs without dying? | `pause db --for 30s` |
 | Does the system cope with one slow node? | `throttle db --cpus 0.1 --for 1m` |
+| What happens when a node runs out of memory? | `memory db 64m` |
 | Does the service keep state it never put in a volume? | `kill db --restart 0 --fresh` |
 
 A container you stop, kill or crash stays down. `--restart 5s` brings it back
@@ -47,9 +50,27 @@ the same image. The files it wrote outside its volumes are gone, and its
 volumes are kept. Use it to find state a service keeps in its own files when it
 should keep it in a volume.
 
-A throttle limit carries over to the container's next start. Use
-`throttle db --cpus 0` to lift it, or `--for 30s` to restore the previous limit
-after 30 seconds of machine time.
+A throttle limit ends at the container's next start, which gives it what its
+Compose file says. Use `throttle db --cpus 0` to lift it sooner, or `--for 30s`
+to restore the previous limit after 30 seconds of machine time.
+
+`memory` limits the memory a container's processes may use, as its cgroup's
+`memory.max`. A limit below what they use makes the guest kernel reclaim
+memory, and its out-of-memory killer kill a process of the container when it
+cannot. A process killed that way exits 137, by SIGKILL:
+
+```bash
+machine containers app memory db 32m
+machine exec app run --container db -- sh -c 'x=$(head -c 64000000 /dev/zero | tr "\0" a)'
+echo $?                                          # 137: killed by its out-of-memory killer
+machine containers app memory db 0
+```
+
+`memory` takes `--for`, and its limit ends at the container's next start, as
+`throttle`'s does. `machine containers app` lists each container's limits in its
+LIMITS column, `cpus 0.1 memory 64MB` or `-` for none.
+An out-of-memory kill is part of the run: a replay kills the same process at
+the same point.
 
 Each fault is recorded with the run, so a replay faults the same container at
 the same point. Put one where the run is stopped, at a breakpoint, a catchpoint

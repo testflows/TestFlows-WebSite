@@ -9,7 +9,7 @@ way. There are four kinds of fault, each with its own command:
 | Command | What it makes fail | Section |
 |---|---|---|
 | `machine inject` | a program's system calls, the kernel's disk requests and memory allocations, and the disk's data | [System call faults](#system-call-faults), [Kernel faults](#kernel-faults), [Disk faults](#disk-faults) |
-| `machine containers` | one service's container: stopped, killed, crashed, paused or throttled | [Container faults](container-faults.md) |
+| `machine containers` | one service's container: stopped, killed, crashed, paused, throttled or limited in memory | [Container faults](container-faults.md) |
 | `machine clock` | the date the guest or one container reads: stepped, drifting, jittering, or a leap second | [Clock faults](clock-faults.md) |
 | `machine net` | the links between containers: slow, lossy, out of order, rate limited, or cut | [Network faults](network-faults.md) |
 

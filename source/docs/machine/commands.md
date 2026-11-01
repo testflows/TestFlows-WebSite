@@ -5115,6 +5115,35 @@ See also:
 - [`machine syscalls`](#machine-syscalls)
 - [`machine ints`](#machine-ints)
 
+### machine tasks list
+
+List the tasks.
+
+The listing is the one the command prints with no verb. Use `--vcpu` to list the
+tasks of one vCPU.
+
+```
+machine tasks run list [-h] [--vcpu n] [--focused]
+```
+
+| Option | Does |
+|---|---|
+| `--vcpu n` | Only tasks on this vCPU |
+| `--focused` | Only the tasks focus is steering |
+
+Examples:
+
+```
+machine tasks run1 list           every task
+machine tasks run1 list --vcpu 0  the tasks of vCPU 0
+```
+
+See also:
+
+- [`machine tasks`](#machine-tasks)
+- [`machine tasks cgroups`](#machine-tasks-cgroups)
+- [`machine tasks exits`](#machine-tasks-exits)
+
 ### machine tasks cgroups
 
 List the tasks grouped by cgroup.
@@ -6048,14 +6077,15 @@ See also:
 
 ## machine containers
 
-List the containers, or stop, kill, crash, pause or throttle one.
+List the containers, or stop, kill, crash, pause or limit one.
 
 The command prints each container with its Compose service, its state and its
 image. Stopped containers are listed too. A container that no service started
 has no service.
 
 A verb puts a fault on one container while the others run: a node of a cluster
-that stops, dies, loses power, freezes or starves.
+that stops, dies, loses power, freezes or starves. Throttle limits its CPU, and
+memory its memory.
 
 Every command that takes a container takes its id, its name or its Compose
 service. An id is the surer way to name one. The machine knows an id as soon as
@@ -6381,12 +6411,36 @@ See also:
 - [`machine containers pause`](#machine-containers-pause)
 - [`machine containers`](#machine-containers)
 
+### machine containers list
+
+List the containers.
+
+The command prints each container with its Compose service, its state and its
+image. Each running one has its addresses, its links and the limits of its
+cgroup. The listing is the one the command prints with no verb.
+
+```
+machine containers run list [-h]
+```
+
+Examples:
+
+```
+machine containers run1 list  each container and its limits
+```
+
+See also:
+
+- [`machine containers`](#machine-containers)
+- [`machine containers memory`](#machine-containers-memory)
+- [`machine containers throttle`](#machine-containers-throttle)
+
 ### machine containers throttle
 
 Limit the CPU of a container.
 
 The container's cgroup gets a CPU quota of the number of CPUs given. A number of
-0 lifts the limit. The limit goes with the container's next start.
+0 lifts the limit. The limit ends at the container's next start.
 
 Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
 
@@ -6419,9 +6473,49 @@ a container that is not running  machine containers run1
 
 See also:
 
+- [`machine containers memory`](#machine-containers-memory)
 - [`machine containers pause`](#machine-containers-pause)
-- [`machine containers`](#machine-containers)
 - [`machine tasks slice`](#machine-tasks-slice)
+
+### machine containers memory
+
+Limit the memory of a container.
+
+The container's processes may use the memory given and no more. A size of 0
+lifts the limit. The limit ends at the container's next start.
+
+A limit below what they use makes the guest kernel reclaim memory. What it
+cannot reclaim, its out-of-memory killer takes: a process of the container is
+killed.
+
+Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
+
+```
+machine containers run memory [-h] [--for duration] container size
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `size` | Memory it may use, such as 256m or 1g; 0 for no limit |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Restore the previous limit after this machine time, such as 30s |
+
+Examples:
+
+```
+machine containers run1 memory db 256m           db may use 256MB
+machine containers run1 memory db 64m --for 30s  for 30s
+machine containers run1 memory db 0              no limit
+```
+
+See also:
+
+- [`machine containers throttle`](#machine-containers-throttle)
+- [`machine containers`](#machine-containers)
+- [`machine catch`](#machine-catch)
 
 ## machine net
 
@@ -6850,6 +6944,28 @@ See also:
 - [`machine net heal`](#machine-net-heal)
 - [`machine net loss`](#machine-net-loss)
 - [`machine net`](#machine-net)
+
+### machine net list
+
+List each container's links and their faults.
+
+The listing is the one the command prints with no verb.
+
+```
+machine net run list [-h]
+```
+
+Examples:
+
+```
+machine net run1 list  each link and its faults
+```
+
+See also:
+
+- [`machine net`](#machine-net)
+- [`machine net heal`](#machine-net-heal)
+- [`machine containers`](#machine-containers)
 
 ### machine net hold
 
@@ -8054,6 +8170,28 @@ See also:
 - [`machine inject`](#machine-inject)
 - [`machine inject clear`](#machine-inject-clear)
 
+### machine inject list
+
+List the faults.
+
+The listing is the one the command prints with no verb.
+
+```
+machine inject run list [-h]
+```
+
+Examples:
+
+```
+machine inject run1 list  the faults, by number
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add`](#machine-inject-add)
+- [`machine inject delete`](#machine-inject-delete)
+
 ### machine inject clear
 
 Delete every fault.
@@ -8830,6 +8968,10 @@ LOCATION=VALUE writes there, and the write is part of the run. A quoted string
 writes its bytes. A number takes the size of the variable it is written to, or
 of a unit after it. A page the tgid cannot write is not written.
 
+LOCATION^=MASK flips the bits the mask sets in the value there, as ^= does in C.
+The value is as wide as the variable or the unit after it. The flip is a write
+and is part of the run.
+
 ```
 machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [--mapped]
             run tid [location] [format]
@@ -8839,7 +8981,7 @@ machine mem [-h] [--find pattern] [--dump file] [--restore file] [--length n] [-
 |---|---|
 | `run` | Run name |
 | `tid` | Task of the machine, by its tid, the thread id ps -L shows. Its tgid is the pid of its process |
-| `[location]` | Address to read at: a number, *ADDR, $register, NAME, PATH:NAME or FILE:LINE, moved by +N or -N. LOCATION=VALUE writes there |
+| `[location]` | Address to read at: a number, *ADDR, $register, NAME, PATH:NAME or FILE:LINE, moved by +N or -N. LOCATION=VALUE writes there, LOCATION^=MASK flips bits |
 | `[format]` | Count, format letter and unit, as GDB's x takes them, such as 8xg, 4i or s (default: 8xg) |
 
 | Option | Does |
@@ -8859,6 +9001,7 @@ machine mem run1 412 main 16xb              sixteen bytes of main
 machine mem run1 412 environ a              what environ points at
 machine mem run1 412 counter=42             write counter, at its size
 machine mem run1 412 '$sp+8=-1' w           write a word at the stack
+machine mem run1 412 'counter^=0x10'        flip bit 4 of counter
 machine mem run1 412 --mapped               the pages the tgid maps
 machine mem run1 412 b --find x --length 9  find x
 machine mem run1 412 b --dump f --length 8  into file f
@@ -9394,6 +9537,28 @@ See also:
 - [`machine run`](#machine-run)
 - [`machine symbols`](#machine-symbols)
 
+### machine break list
+
+List the breakpoints.
+
+The listing is the one the command prints with no verb.
+
+```
+machine break run list [-h]
+```
+
+Examples:
+
+```
+machine break run1 list  the breakpoints, by number
+```
+
+See also:
+
+- [`machine break`](#machine-break)
+- [`machine break add`](#machine-break-add)
+- [`machine watch list`](#machine-watch-list)
+
 ### machine break add
 
 Add a breakpoint.
@@ -9717,6 +9882,28 @@ See also:
 - [`machine run`](#machine-run)
 - [`machine mem`](#machine-mem)
 
+### machine watch list
+
+List the watchpoints.
+
+The listing is the one the command prints with no verb.
+
+```
+machine watch run list [-h]
+```
+
+Examples:
+
+```
+machine watch run1 list  the watchpoints, by number
+```
+
+See also:
+
+- [`machine watch`](#machine-watch)
+- [`machine watch add`](#machine-watch-add)
+- [`machine break list`](#machine-break-list)
+
 ### machine watch add
 
 Add a watchpoint.
@@ -10016,6 +10203,28 @@ See also:
 - [`machine break`](#machine-break)
 - [`machine watch`](#machine-watch)
 - [`machine run`](#machine-run)
+
+### machine catch list
+
+List the catchpoints.
+
+The listing is the one the command prints with no verb.
+
+```
+machine catch run list [-h]
+```
+
+Examples:
+
+```
+machine catch run1 list  the catchpoints, by number
+```
+
+See also:
+
+- [`machine catch`](#machine-catch)
+- [`machine catch add`](#machine-catch-add)
+- [`machine break list`](#machine-break-list)
 
 ### machine catch add
 
