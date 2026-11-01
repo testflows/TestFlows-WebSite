@@ -15,8 +15,7 @@
     "hexo-math": "^5.0.0",
     "hexo-renderer-ejs": "^2.0.0",
     "hexo-renderer-marked": "^6.0.0",
-    "hexo-server": "^0.3.3",
-    "highlight": "^0.2.4"
+    "hexo-server": "^0.3.3"
   },
   "overrides": {
     "brace-expansion": "5.0.12"
