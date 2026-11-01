@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793491531296" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793491531296" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793491031535" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793491531296" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3446,7 +3446,10 @@ the next packet the kernel checks it by ARP within seconds, unless the
 connection’s own traffic confirms the peer first. The table is part of the
 machine, so a replay makes the same changes. A container that docker starts
 again begins with an empty table, as a host that restarts does.</p>
-<h3 id="the-decision-log"><a href="#the-decision-log" class="headerlink" title="The decision log"></a>The decision log</h3><p><code>--log</code> writes each decision a fault makes to a log: which packet it took,
+<h3 id="the-decision-log"><a href="#the-decision-log" class="headerlink" title="The decision log"></a>The decision log</h3><p>Run the machine for 10 milliseconds before reading a log just after a run
+stops: the last millisecond’s lines reach the run when the machine runs
+again.</p>
+<p><code>--log</code> writes each decision a fault makes to a log: which packet it took,
 and whether it dropped it, delayed it, duplicated it, corrupted it or sent it
 ahead. It answers which exact packet a fault dropped, which the counts and a
 capture do not. <code>--no-log</code> with the same fault stops it:</p>
@@ -3496,10 +3499,15 @@ decisions to the one file.</p>
 <p>Every decision is logged; none is dropped however fast the packets come. A
 200MB TCP transfer under a logged fault decided 19,586 packets and the log
 held 19,586 lines, the listing’s <code>SENT</code> and <code>DROPPED</code> added up.</p>
-<p>Each decision costs about 32 microseconds of machine time to write. A
+<p>Each decision costs about 32 microseconds of machine time to write, and a
+decision is a packet as the kernel hands the link, whatever its size. A
 50MB TCP transfer under a logged fault took 0.66 seconds of machine time
-on average, against 0.47 seconds under the same fault without the log. Log
-the stretch being examined, not a whole run.</p>
+on average, against 0.47 seconds under the same fault without the log: its
+packets were large. Small packets cost the same each, so a stream of them
+spends far more of its time on the log; 10,000 packets cost about 0.32
+seconds. Log the stretch being examined, not a whole run. A decision is a
+packet’s, never a program message’s: see the limits below on TCP units and
+retransmission.</p>
 <h3 id="seeds-replay-and-–for"><a href="#seeds-replay-and-–for" class="headerlink" title="Seeds, replay and –for"></a>Seeds, replay and –for</h3><p>Loss, jitter, duplicate, corrupt and reorder decide each packet by chance,
 from the link’s seed. Give one with <code>--seed</code>, or the link draws one and shows
 it. A delay or a rate alone draws nothing, and shows no seed. A link keeps
@@ -16014,10 +16022,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793491031536"></script>
-<script src="/js/machine-hero-type.js?v=1793491031536"></script>
-<script src="/js/download-platforms.js?v=1793491031536"></script>
-<script src="/js/anchor-case.js?v=1793491031536"></script>
+<script src="/js/index-code-type.js?v=1793491531301"></script>
+<script src="/js/machine-hero-type.js?v=1793491531301"></script>
+<script src="/js/download-platforms.js?v=1793491531301"></script>
+<script src="/js/anchor-case.js?v=1793491531301"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -270,6 +270,10 @@ again begins with an empty table, as a host that restarts does.
 
 ### The decision log
 
+Run the machine for 10 milliseconds before reading a log just after a run
+stops: the last millisecond's lines reach the run when the machine runs
+again.
+
 `--log` writes each decision a fault makes to a log: which packet it took,
 and whether it dropped it, delayed it, duplicated it, corrupted it or sent it
 ahead. It answers which exact packet a fault dropped, which the counts and a
@@ -348,10 +352,15 @@ Every decision is logged; none is dropped however fast the packets come. A
 200MB TCP transfer under a logged fault decided 19,586 packets and the log
 held 19,586 lines, the listing's `SENT` and `DROPPED` added up.
 
-Each decision costs about 32 microseconds of machine time to write. A
+Each decision costs about 32 microseconds of machine time to write, and a
+decision is a packet as the kernel hands the link, whatever its size. A
 50MB TCP transfer under a logged fault took 0.66 seconds of machine time
-on average, against 0.47 seconds under the same fault without the log. Log
-the stretch being examined, not a whole run.
+on average, against 0.47 seconds under the same fault without the log: its
+packets were large. Small packets cost the same each, so a stream of them
+spends far more of its time on the log; 10,000 packets cost about 0.32
+seconds. Log the stretch being examined, not a whole run. A decision is a
+packet's, never a program message's: see the limits below on TCP units and
+retransmission.
 
 ### Seeds, replay and --for
 
