@@ -416,9 +416,11 @@ covers memory. The rest of this section covers the other resources.
 
 ### Limits on a container
 
-`machine containers` sets each limit on one running container, and the limit
-ends at the container's next start. Use `--for 30s` to set the previous limit
-back after 30 seconds of machine time:
+`machine containers` sets each limit on one container. The limit holds when
+the container starts again, until it is lifted, so a service that crashes on
+the limit and restarts meets it again. A container that Compose recreates
+starts without it. Use `--for 30s` to set the previous limit back after 30
+seconds of machine time:
 
 ```bash
 machine containers app pids db 20                # 20 processes and threads

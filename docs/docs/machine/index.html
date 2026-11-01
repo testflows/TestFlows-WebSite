@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793538136146" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793538136146" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793536623131" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793538136146" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2994,9 +2994,11 @@ covers memory. The rest of this section covers the other resources.</p>
 <td><code>containers throttle db --cpus 0.1 --for 1m</code></td>
 </tr>
 </tbody></table>
-<h3 id="limits-on-a-container"><a href="#limits-on-a-container" class="headerlink" title="Limits on a container"></a>Limits on a container</h3><p><code>machine containers</code> sets each limit on one running container, and the limit
-ends at the container’s next start. Use <code>--for 30s</code> to set the previous limit
-back after 30 seconds of machine time:</p>
+<h3 id="limits-on-a-container"><a href="#limits-on-a-container" class="headerlink" title="Limits on a container"></a>Limits on a container</h3><p><code>machine containers</code> sets each limit on one container. The limit holds when
+the container starts again, until it is lifted, so a service that crashes on
+the limit and restarts meets it again. A container that Compose recreates
+starts without it. Use <code>--for 30s</code> to set the previous limit back after 30
+seconds of machine time:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">machine containers app pids db 20                <span class="comment"># 20 processes and threads</span></span><br><span class="line">machine containers app files api 64              <span class="comment"># 64 open files a process</span></span><br><span class="line">machine containers app ports api 40000-40009     <span class="comment"># 10 local ports</span></span><br><span class="line">machine containers app pids db 20 --<span class="keyword">for</span> 30s      <span class="comment"># set back after 30 seconds of machine time</span></span><br><span class="line">machine containers app pids db 0                 <span class="comment"># no limit</span></span><br><span class="line">machine containers app files api 0               <span class="comment"># the container&#x27;s own limit</span></span><br><span class="line">machine containers app ports api 0               <span class="comment"># the kernel&#x27;s range, 32768-60999</span></span><br></pre></td></tr></table></figure>
 
 <p><code>machine containers app</code> shows each container’s limits in its LIMITS column:</p>
@@ -3347,18 +3349,23 @@ containers keep running through the outage:</p>
 the same image. The files it wrote outside its volumes are gone, and its
 volumes are kept. Use it to find state a service keeps in its own files when it
 should keep it in a volume.</p>
-<p>A throttle limit ends at the container’s next start, which gives it what its
-Compose file says. Use <code>throttle db --cpus 0</code> to lift it sooner, or <code>--for 30s</code>
-to restore the previous limit after 30 seconds of machine time.</p>
+<p>A limit holds when the container starts again, as a limit in its Compose file
+would: a service the out-of-memory killer stops comes back to the same limit.
+Use <code>throttle db --cpus 0</code> to lift it, or <code>--for 30s</code> to restore the previous
+limit after 30 seconds of machine time, on whichever start of the container
+runs then. A limit set on a stopped container applies when it starts. A
+container that Compose recreates, or <code>start --fresh</code> replaces, is a new
+container and starts without the limit.</p>
 <p><code>memory</code> limits the memory a container’s processes may use, as its cgroup’s
 <code>memory.max</code>. A limit below what they use makes the guest kernel reclaim
 memory, and its out-of-memory killer kill a process of the container when it
 cannot. A process killed that way exits 137, by SIGKILL:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine containers app memory db 32m</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- sh -c <span class="string">&#x27;x=$(head -c 64000000 /dev/zero | tr &quot;\0&quot; a)&#x27;</span></span><br><span class="line"><span class="built_in">echo</span> $?                                          <span class="comment"># 137: killed by its out-of-memory killer</span></span><br><span class="line">machine containers app memory db 0</span><br></pre></td></tr></table></figure>
 
-<p><code>memory</code> takes <code>--for</code>, and its limit ends at the container’s next start, as
+<p><code>memory</code> takes <code>--for</code>, and its limit holds through restarts, as
 <code>throttle</code>‘s does. <code>machine containers app</code> lists each container’s limits in its
-LIMITS column, <code>cpus 0.1 memory 64MB</code> or <code>-</code> for none.
+LIMITS column, <code>cpus 0.1 memory 64MB</code> or <code>-</code> for none. A disk built before
+container limits is refused, with a hint to build it again.
 An out-of-memory kill is part of the run: a replay kills the same process at
 the same point.</p>
 <p>Each fault is recorded with the run, so a replay faults the same container at
@@ -16796,10 +16803,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793536623132"></script>
-<script src="/js/machine-hero-type.js?v=1793536623132"></script>
-<script src="/js/download-platforms.js?v=1793536623132"></script>
-<script src="/js/anchor-case.js?v=1793536623132"></script>
+<script src="/js/index-code-type.js?v=1793538136146"></script>
+<script src="/js/machine-hero-type.js?v=1793538136146"></script>
+<script src="/js/download-platforms.js?v=1793538136146"></script>
+<script src="/js/anchor-case.js?v=1793538136146"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

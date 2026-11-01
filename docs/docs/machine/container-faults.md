@@ -55,9 +55,13 @@ the same image. The files it wrote outside its volumes are gone, and its
 volumes are kept. Use it to find state a service keeps in its own files when it
 should keep it in a volume.
 
-A throttle limit ends at the container's next start, which gives it what its
-Compose file says. Use `throttle db --cpus 0` to lift it sooner, or `--for 30s`
-to restore the previous limit after 30 seconds of machine time.
+A limit holds when the container starts again, as a limit in its Compose file
+would: a service the out-of-memory killer stops comes back to the same limit.
+Use `throttle db --cpus 0` to lift it, or `--for 30s` to restore the previous
+limit after 30 seconds of machine time, on whichever start of the container
+runs then. A limit set on a stopped container applies when it starts. A
+container that Compose recreates, or `start --fresh` replaces, is a new
+container and starts without the limit.
 
 `memory` limits the memory a container's processes may use, as its cgroup's
 `memory.max`. A limit below what they use makes the guest kernel reclaim
@@ -71,9 +75,10 @@ echo $?                                          # 137: killed by its out-of-mem
 machine containers app memory db 0
 ```
 
-`memory` takes `--for`, and its limit ends at the container's next start, as
+`memory` takes `--for`, and its limit holds through restarts, as
 `throttle`'s does. `machine containers app` lists each container's limits in its
-LIMITS column, `cpus 0.1 memory 64MB` or `-` for none.
+LIMITS column, `cpus 0.1 memory 64MB` or `-` for none. A disk built before
+container limits is refused, with a hint to build it again.
 An out-of-memory kill is part of the run: a replay kills the same process at
 the same point.
 
