@@ -756,11 +756,13 @@ Five things decide whether you see the failure:
 - **The kernel copes with some failures.** A failed page allocation is often
   retried, and the program never sees it. `MATCHED` and `FIRED` in the list
   still show that the fault fired.
-- **The kernel reads a page twice.** A buffered read goes out as readahead,
-  and when that fails the kernel reads the page once more before it gives up.
-  `disk --times 1` fails only the first try, so your program reads the file
-  fine; that is the kernel recovering. Use `--times 2`, or no limit, for the
-  program to get `EIO`. An `O_DIRECT` read fails on its first request.
+- **The kernel reads a page more than once.** A buffered read goes out as
+  readahead, and when that fails the kernel reads the pages again before it
+  gives up. How many requests it makes depends on how it splits the read: for
+  a file of 8KB, `cat` read the file fine with `--times 1` and `--times 2`,
+  and got `I/O error` with `--times 3`, all 3 of its requests failed. Leave
+  out `--times` for the program to get `EIO`. An `O_DIRECT` read fails on its
+  first request.
 - **`disk-timeout` hangs.** The request is lost, and the task waiting for it
   stays stuck until the machine stops. This is a hung device: no timeout fires
   and no reset follows. That is the point: you find out what

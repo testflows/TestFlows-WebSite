@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793550132962" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793550132962" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793546527615" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793550132962" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -3195,11 +3195,13 @@ once the program is up.</li>
 <li><strong>The kernel copes with some failures.</strong> A failed page allocation is often
 retried, and the program never sees it. <code>MATCHED</code> and <code>FIRED</code> in the list
 still show that the fault fired.</li>
-<li><strong>The kernel reads a page twice.</strong> A buffered read goes out as readahead,
-and when that fails the kernel reads the page once more before it gives up.
-<code>disk --times 1</code> fails only the first try, so your program reads the file
-fine; that is the kernel recovering. Use <code>--times 2</code>, or no limit, for the
-program to get <code>EIO</code>. An <code>O_DIRECT</code> read fails on its first request.</li>
+<li><strong>The kernel reads a page more than once.</strong> A buffered read goes out as
+readahead, and when that fails the kernel reads the pages again before it
+gives up. How many requests it makes depends on how it splits the read: for
+a file of 8KB, <code>cat</code> read the file fine with <code>--times 1</code> and <code>--times 2</code>,
+and got <code>I/O error</code> with <code>--times 3</code>, all 3 of its requests failed. Leave
+out <code>--times</code> for the program to get <code>EIO</code>. An <code>O_DIRECT</code> read fails on its
+first request.</li>
 <li><strong><code>disk-timeout</code> hangs.</strong> The request is lost, and the task waiting for it
 stays stuck until the machine stops. This is a hung device: no timeout fires
 and no reset follows. That is the point: you find out what
@@ -16893,10 +16895,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793546527616"></script>
-<script src="/js/machine-hero-type.js?v=1793546527616"></script>
-<script src="/js/download-platforms.js?v=1793546527616"></script>
-<script src="/js/anchor-case.js?v=1793546527616"></script>
+<script src="/js/index-code-type.js?v=1793550132962"></script>
+<script src="/js/machine-hero-type.js?v=1793550132962"></script>
+<script src="/js/download-platforms.js?v=1793550132962"></script>
+<script src="/js/anchor-case.js?v=1793550132962"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
