@@ -6088,6 +6088,10 @@ that stops, dies, loses power, freezes or starves. Throttle limits its CPU, and
 memory its memory. Pids, files and ports run it out of processes, open files and
 local ports.
 
+A limit holds when the container starts again, until it is lifted. A container
+that Compose recreates starts without it. A limit set with `--for` is set back
+after the duration, whichever start of the container runs then.
+
 Every command that takes a container takes its id, its name or its Compose
 service. An id is the surer way to name one. The machine knows an id as soon as
 Docker creates the container. It knows a name shortly after the container
@@ -6441,7 +6445,7 @@ See also:
 Limit the CPU of a container.
 
 The container's cgroup gets a CPU quota of the number of CPUs given. A number of
-0 lifts the limit. The limit ends at the container's next start.
+0 lifts the limit. The limit holds when the container starts again.
 
 Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
 
@@ -6483,7 +6487,7 @@ See also:
 Limit the memory of a container.
 
 The container's processes may use the memory given and no more. A size of 0
-lifts the limit. The limit ends at the container's next start.
+lifts the limit. The limit holds when the container starts again.
 
 A limit below what they use makes the guest kernel reclaim memory. What it
 cannot reclaim, its out-of-memory killer takes: a process of the container is
@@ -6528,7 +6532,7 @@ See also:
 Limit the processes of a container.
 
 The container's processes and threads may number the count given and no more. A
-count of 0 lifts the limit. The limit ends at the container's next start.
+count of 0 lifts the limit. The limit holds when the container starts again.
 
 Past the limit, a fork or a new thread in the container fails with EAGAIN. The
 processes already running go on.
@@ -6567,8 +6571,8 @@ See also:
 Narrow the ephemeral ports of a container.
 
 A connection the container opens takes its local port from the range given. A
-range of 0 sets back the kernel's own, 32768-60999. The range ends at the
-container's next start.
+range of 0 sets back the kernel's own, 32768-60999. The range holds when the
+container starts again.
 
 Once every port of the range is taken, a connect fails with EADDRNOTAVAIL. A
 program that binds port 0 before it connects gets EADDRINUSE. A port stays taken
@@ -6626,8 +6630,8 @@ Past the limit, an open, a socket or an accept fails with EMFILE. A file already
 open stays open.
 
 The limit is set on the processes that run now, and what they start takes it. A
-process docker exec starts takes the container's own limit. The limit ends at
-the container's next start.
+process docker exec starts takes the container's own limit. The limit holds when
+the container starts again.
 
 Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
 

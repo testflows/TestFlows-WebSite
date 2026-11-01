@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793538158141" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793538158141" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793538136146" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793538158141" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -10955,6 +10955,9 @@ has no service.</p>
 that stops, dies, loses power, freezes or starves. Throttle limits its CPU, and
 memory its memory. Pids, files and ports run it out of processes, open files and
 local ports.</p>
+<p>A limit holds when the container starts again, until it is lifted. A container
+that Compose recreates starts without it. A limit set with <code>--for</code> is set back
+after the duration, whichever start of the container runs then.</p>
 <p>Every command that takes a container takes its id, its name or its Compose
 service. An id is the surer way to name one. The machine knows an id as soon as
 Docker creates the container. It knows a name shortly after the container
@@ -11304,7 +11307,7 @@ cgroup. The listing is the one the command prints with no verb.</p>
 </ul>
 <h3 id="machine-containers-throttle"><a href="#machine-containers-throttle" class="headerlink" title="machine containers throttle"></a>machine containers throttle</h3><p>Limit the CPU of a container.</p>
 <p>The container’s cgroup gets a CPU quota of the number of CPUs given. A number of
-0 lifts the limit. The limit ends at the container’s next start.</p>
+0 lifts the limit. The limit holds when the container starts again.</p>
 <p>Use <code>--for 30s</code> to restore the previous limit after 30 seconds of machine time.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine containers run throttle [-h] --cpus n [--for duration] container</span><br></pre></td></tr></table></figure>
 
@@ -11350,7 +11353,7 @@ cgroup. The listing is the one the command prints with no verb.</p>
 </ul>
 <h3 id="machine-containers-memory"><a href="#machine-containers-memory" class="headerlink" title="machine containers memory"></a>machine containers memory</h3><p>Limit the memory of a container.</p>
 <p>The container’s processes may use the memory given and no more. A size of 0
-lifts the limit. The limit ends at the container’s next start.</p>
+lifts the limit. The limit holds when the container starts again.</p>
 <p>A limit below what they use makes the guest kernel reclaim memory. What it
 cannot reclaim, its out-of-memory killer takes: a process of the container is
 killed.</p>
@@ -11403,7 +11406,7 @@ slows the processes. It kills none of them, and the hard limit stays as it was.<
 </ul>
 <h3 id="machine-containers-pids"><a href="#machine-containers-pids" class="headerlink" title="machine containers pids"></a>machine containers pids</h3><p>Limit the processes of a container.</p>
 <p>The container’s processes and threads may number the count given and no more. A
-count of 0 lifts the limit. The limit ends at the container’s next start.</p>
+count of 0 lifts the limit. The limit holds when the container starts again.</p>
 <p>Past the limit, a fork or a new thread in the container fails with EAGAIN. The
 processes already running go on.</p>
 <p>Use <code>--for 30s</code> to restore the previous limit after 30 seconds of machine time.</p>
@@ -11448,8 +11451,8 @@ processes already running go on.</p>
 </ul>
 <h3 id="machine-containers-ports"><a href="#machine-containers-ports" class="headerlink" title="machine containers ports"></a>machine containers ports</h3><p>Narrow the ephemeral ports of a container.</p>
 <p>A connection the container opens takes its local port from the range given. A
-range of 0 sets back the kernel’s own, 32768-60999. The range ends at the
-container’s next start.</p>
+range of 0 sets back the kernel’s own, 32768-60999. The range holds when the
+container starts again.</p>
 <p>Once every port of the range is taken, a connect fails with EADDRNOTAVAIL. A
 program that binds port 0 before it connects gets EADDRINUSE. A port stays taken
 after its connection closes, in TIME_WAIT for 60 seconds.</p>
@@ -11506,8 +11509,8 @@ container’s own limit.</p>
 <p>Past the limit, an open, a socket or an accept fails with EMFILE. A file already
 open stays open.</p>
 <p>The limit is set on the processes that run now, and what they start takes it. A
-process docker exec starts takes the container’s own limit. The limit ends at
-the container’s next start.</p>
+process docker exec starts takes the container’s own limit. The limit holds when
+the container starts again.</p>
 <p>Use <code>--for 30s</code> to restore the previous limit after 30 seconds of machine time.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine containers run files [-h] [--for duration] container count</span><br></pre></td></tr></table></figure>
 
@@ -16803,10 +16806,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793538136146"></script>
-<script src="/js/machine-hero-type.js?v=1793538136146"></script>
-<script src="/js/download-platforms.js?v=1793538136146"></script>
-<script src="/js/anchor-case.js?v=1793538136146"></script>
+<script src="/js/index-code-type.js?v=1793538158141"></script>
+<script src="/js/machine-hero-type.js?v=1793538158141"></script>
+<script src="/js/download-platforms.js?v=1793538158141"></script>
+<script src="/js/anchor-case.js?v=1793538158141"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
