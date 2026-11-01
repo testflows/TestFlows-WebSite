@@ -13,9 +13,9 @@ machine containers app kill db                   # SIGKILL, no cleanup
 machine containers app crash db                  # a power cut: its volumes lose what was not synced
 machine containers app pause db --for 5s         # frozen for 5s, then thawed
 machine containers app throttle db --cpus 0.1 --for 30s
-machine containers app throttle db --cpus 0      # the limit lifted
+machine containers app throttle db --cpus 0      # the container's own limit again
 machine containers app memory db 64m --for 30s   # past 64MB, its out-of-memory killer
-machine containers app memory db 0               # the limit lifted
+machine containers app memory db 0               # the container's own limit again
 machine containers app memory db 48m --soft      # past 48MB, reclaimed and slowed, not killed
 machine containers app pids db 20                # past 20 processes, fork fails with EAGAIN
 machine containers app files api 64              # a process past 64 open files: open fails with EMFILE
@@ -57,7 +57,9 @@ should keep it in a volume.
 
 A limit holds when the container starts again, as a limit in its Compose file
 would: a service the out-of-memory killer stops comes back to the same limit.
-Use `throttle db --cpus 0` to lift it, or `--for 30s` to restore the previous
+Every start has the limit before the container's program runs. Use
+`throttle db --cpus 0` to set back the container's own limit, its Compose
+file's or none, or `--for 30s` to restore the previous
 limit after 30 seconds of machine time, on whichever start of the container
 runs then. A limit set on a stopped container applies when it starts. A
 container that Compose recreates, or `start --fresh` replaces, is a new

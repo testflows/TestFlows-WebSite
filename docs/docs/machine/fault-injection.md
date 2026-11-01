@@ -411,6 +411,7 @@ covers the other resources.
 | Does a program cope when it runs out of file descriptors? | `containers files api 32` | [Open files](#open-files) |
 | Does a client cope when it runs out of local ports, or churns through them? | `containers ports api 40000-40001` | [Ephemeral ports](#ephemeral-ports) |
 | Does the system cope with one slow service? | `containers throttle db --cpus 0.1` | [CPU](#cpu) |
+| Does a service that crashes on a limit recover once the limit is lifted? | `containers memory hog 64m`, then `memory hog 0` | [A service that crashes on its limit](#a-service-that-crashes-on-its-limit) |
 | Does a service survive its disk filling up? | a volume of 64MB, filled with `dd` | [A full disk](#a-full-disk) |
 | Does a program report a failed fork, a full disk or no inodes? | `inject add syscall clone EAGAIN`, `write ENOSPC`, `mkdir ENOSPC` | [One failed call](#one-failed-call) |
 
@@ -418,11 +419,18 @@ covers the other resources.
 
 `machine containers` sets each limit on one container. The limit holds when
 the container starts again, until it is lifted, so a service that crashes on
-the limit and restarts meets it again. A limit set on a stopped container
-applies when it starts. A container that Compose recreates starts without
-it. Use `--for 30s` to set the previous limit back
-after 30 seconds of machine time. A disk built before the guest kept
-container limits is refused, with a hint to build the disk again.
+the limit and restarts meets it again. Every start has the limit before the
+container's program runs its first instruction. A limit set on a stopped
+container applies when it starts. A container that Compose recreates starts
+without it. Use `--for 30s` to set the previous limit back after 30 seconds
+of machine time, on whichever start of the container runs then. A disk built
+before the guest kept container limits is refused, with a hint to build the
+disk again.
+
+A limit of 0 sets back the container's own: what its Compose file gives it,
+such as `mem_limit` or `pids_limit`, or no limit. A container with
+`mem_limit: 512m` and `memory api 128m` goes back to 512MB on `memory api 0`,
+running or stopped.
 
 After `pids db 10`, `machine containers app` shows the limit in the LIMITS
 column:
@@ -446,13 +454,46 @@ machine containers app pids db 20                # 20 processes and threads
 machine containers app files api 64              # 64 open files a process
 machine containers app ports api 40000-40009     # 10 local ports for each destination
 machine containers app pids db 20 --for 30s      # set back after 30 seconds of machine time
-machine containers app pids db 0                 # no limit
+machine containers app pids db 0                 # the container's own limit
 machine containers app files api 0               # the container's own limit
-machine containers app ports api 0               # the kernel's range, 32768-60999
+machine containers app ports api 0               # the container's own range
 ```
 
 Each limit is set by a command the run records, so a replay sets it at the
-same point.
+same point. A branch replayed from boot through every example in this
+section, the restarts included, showed no differences.
+
+### A service that crashes on its limit
+
+A service that dies of a limit and restarts by its Compose file's
+`restart:` policy meets the limit again, and the run goes on. Here `hog`
+grows to 100MB five seconds after it starts, under `restart: always`:
+
+```yaml
+services:
+  hog:
+    image: clockprobe:test
+    restart: always
+    command: ["sh", "-c", "sleep 5; x=$$(head -c 100000000 /dev/zero | tr '\\0' a); echo grew; sleep 100000"]
+```
+
+```bash
+machine containers app memory hog 64m
+machine containers app stop hog
+machine containers app start hog
+machine run app --within 40s
+```
+
+The out-of-memory killer took it 3 times in 40 seconds of machine time, and
+the console said each time:
+
+```text
+=== hog exited by itself: code 137. Its restart policy starts it again ===
+```
+
+`memory hog 0` while it restarted let it grow, and it printed `grew`. A
+service with no `restart:` policy that exits by itself ends the run, with
+its code.
 
 ### Processes
 

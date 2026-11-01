@@ -6445,7 +6445,8 @@ See also:
 Limit the CPU of a container.
 
 The container's cgroup gets a CPU quota of the number of CPUs given. A number of
-0 lifts the limit. The limit holds when the container starts again.
+0 sets back the container's own limit, its Compose file's or none. The limit
+holds when the container starts again.
 
 Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
 
@@ -6459,7 +6460,7 @@ machine containers run throttle [-h] --cpus n [--for duration] container
 
 | Option | Does |
 |---|---|
-| `--cpus n` | CPUs it may use, such as 0.1; 0 for no limit |
+| `--cpus n` | CPUs it may use, such as 0.1; 0 for the container's own limit |
 | `--for duration` | Restore the previous limit after this machine time, such as 30s |
 
 Examples:
@@ -6486,8 +6487,9 @@ See also:
 
 Limit the memory of a container.
 
-The container's processes may use the memory given and no more. A size of 0
-lifts the limit. The limit holds when the container starts again.
+The container's processes may use the memory given and no more. A size of 0 sets
+back the container's own limit, its Compose file's or none. The limit holds when
+the container starts again.
 
 A limit below what they use makes the guest kernel reclaim memory. What it
 cannot reclaim, its out-of-memory killer takes: a process of the container is
@@ -6505,7 +6507,7 @@ machine containers run memory [-h] [--soft] [--for duration] container size
 | Argument | Does |
 |---|---|
 | `container` | Container, by its id, its name or its service's |
-| `size` | Memory it may use, such as 256m or 1g; 0 for no limit |
+| `size` | Memory it may use, such as 256m or 1g; 0 for the container's own limit |
 
 | Option | Does |
 |---|---|
@@ -6532,7 +6534,8 @@ See also:
 Limit the processes of a container.
 
 The container's processes and threads may number the count given and no more. A
-count of 0 lifts the limit. The limit holds when the container starts again.
+count of 0 sets back the container's own limit, its Compose file's or none. The
+limit holds when the container starts again.
 
 Past the limit, a fork or a new thread in the container fails with EAGAIN. The
 processes already running go on.
@@ -6546,7 +6549,7 @@ machine containers run pids [-h] [--for duration] container count
 | Argument | Does |
 |---|---|
 | `container` | Container, by its id, its name or its service's |
-| `count` | Processes and threads it may have; 0 for no limit |
+| `count` | Processes and threads it may have; 0 for the container's own limit |
 
 | Option | Does |
 |---|---|
@@ -6571,8 +6574,8 @@ See also:
 Narrow the ephemeral ports of a container.
 
 A connection the container opens takes its local port from the range given. A
-range of 0 sets back the kernel's own, 32768-60999. The range holds when the
-container starts again.
+range of 0 sets back the container's own range, its Compose file's or the
+kernel's 32768-60999. The range holds when the container starts again.
 
 Once every port of the range is taken for one destination, a connect to it fails
 with EADDRNOTAVAIL. Two connections to different destinations can share a port.
@@ -6592,7 +6595,7 @@ machine containers run ports [-h] [--for duration] container range
 | Argument | Does |
 |---|---|
 | `container` | Container, by its id, its name or its service's |
-| `range` | Ports it may connect from, such as 32768-32770; 0 for the kernel's own |
+| `range` | Ports it may connect from, such as 32768-32770; 0 for the container's own |
 
 | Option | Does |
 |---|---|
