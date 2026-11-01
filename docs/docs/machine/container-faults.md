@@ -17,6 +17,9 @@ machine containers app throttle db --cpus 0      # the limit lifted
 machine containers app memory db 64m --for 30s   # past 64MB, its out-of-memory killer
 machine containers app memory db 0               # the limit lifted
 machine containers app memory db 48m --soft      # past 48MB, reclaimed and slowed, not killed
+machine containers app pids db 20                # past 20 processes, fork fails with EAGAIN
+machine containers app files api 64              # past 64 open files, open fails with EMFILE
+machine containers app ports api 40000-40009     # past 10 connections, connect fails with EADDRNOTAVAIL
 machine containers app start db
 ```
 
@@ -28,6 +31,7 @@ machine containers app start db
 | Do the other services notice a node that hangs without dying? | `pause db --for 30s` |
 | Does the system cope with one slow node? | `throttle db --cpus 0.1 --for 1m` |
 | What happens when a node runs out of memory? | `memory db 64m` |
+| What happens when a node cannot start a process, open a file or connect? | `pids db 20`, `files api 64`, `ports api 40000-40009`; see [Resource exhaustion](fault-injection.md#resource-exhaustion) |
 | Does the service keep state it never put in a volume? | `kill db --restart 0 --fresh` |
 
 A container you stop, kill or crash stays down. `--restart 5s` brings it back

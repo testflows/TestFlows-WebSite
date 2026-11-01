@@ -378,6 +378,204 @@ machine mem app 628 '$sp-64' --fill AB --length 5
 Each write is recorded with the run, so a replay corrupts the same value at
 the same point, and a fork from before it runs the program unharmed.
 
+## Resource exhaustion
+
+A program runs out of a resource in two ways, and Machine tests both:
+
+- **The resource runs out.** A Linux limit on one container makes every
+  process in it meet the limit, as it would on a full production host. Use
+  it to see how a service behaves as a whole when it hits the limit.
+- **One call fails.** A system call fault makes one program get the error
+  the resource gives, at the call chosen, while everything else runs on.
+  Use it to test one error path, exactly and repeatably.
+
+| Resource | Run it out | Fail one call | The error |
+|---|---|---|---|
+| CPU | `containers throttle db --cpus 0.1` | | none: everything slows |
+| Memory | `containers memory db 64m` | `inject add function malloc --return 0` | the OOM killer, or NULL |
+| Processes | `containers pids db 50` | `inject add syscall clone EAGAIN` | EAGAIN |
+| Open files | `containers files api 64` | `inject add syscall openat EMFILE` | EMFILE |
+| Ephemeral ports | `containers ports api 40000-40009` | `inject add syscall connect EADDRNOTAVAIL` | EADDRNOTAVAIL |
+| Disk space, inodes | | `inject add syscall write ENOSPC` | ENOSPC |
+
+[Memory faults](#memory-faults) covers memory. The rest of this section
+covers the other resources.
+
+| You want to know | Command |
+|---|---|
+| Does the service keep serving when it cannot start a worker? | `containers pids db 20` |
+| Does the server keep its listener when it runs out of descriptors? | `containers files api 64` |
+| Does a client recover when it runs out of local ports? | `containers ports api 40000-40009` |
+| Does connection churn exhaust the ports? | `containers ports api 40000-40001` and a loop of short connections |
+| Does the program report a failed `fork`? | `inject add syscall clone EAGAIN --times 1 --in /usr/bin/app` |
+| Does it handle a full disk mid-write? | `inject add syscall write ENOSPC --after 100 --times 1 --in /usr/bin/app` |
+| Does it handle running out of inodes? | `inject add syscall mkdir ENOSPC --in /usr/bin/app` |
+| Does the system cope with one slow service? | `containers throttle db --cpus 0.1 --for 1m` |
+
+### Limits on a container
+
+`machine containers` sets each limit on one running container. Each limit
+takes `--for` to set the previous one back after that much machine time, and
+each ends at the container's next start:
+
+```bash
+machine containers app pids db 20                # 20 processes and threads
+machine containers app files api 64              # 64 open files a process
+machine containers app ports api 40000-40009     # 10 local ports
+machine containers app pids db 20 --for 30s      # set back after 30 seconds of machine time
+machine containers app pids db 0                 # no limit
+machine containers app files api 0               # the container's own limit
+machine containers app ports api 0               # the kernel's range, 32768-60999
+```
+
+`machine containers app` shows each container's limits in its LIMITS column:
+
+```text
+SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK         LIMITS
+api      compose-api-1   0474e6006f79  running  clockprobe:test  172.18.0.3  veth3ede11a  -
+db       compose-db-1    8ef3a4936249  running  clockprobe:test  172.18.0.4  veth31535d2  pids 10
+nest     compose-nest-1  6830a8b2a2fc  running  clockprobe:test  172.18.0.2  vetha032499  -
+```
+
+Each limit is set by a command the run records, so a replay sets it at the
+same point. A branch replayed through every example in this section showed
+no differences.
+
+### Processes
+
+`pids` limits the processes and threads of a container. Past the limit, a
+`fork` or a new thread fails with EAGAIN, and the processes already running
+go on. Here a shell in `db` starts background jobs under a limit of 10:
+
+```bash
+machine containers app pids db 10
+machine exec app run --container db -- sh -c 'for i in $(seq 20); do sleep 30 & done'
+```
+
+```text
+sh: can't fork: Resource temporarily unavailable
+```
+
+With the limit lifted, `pids db 0`, the same shell starts all 20.
+
+### Open files
+
+`files` limits the files each process of a container may hold open.
+Sockets and pipes count as files. Past the limit, an `open`, a `socket` or
+an `accept` fails with EMFILE, and files already open stay open.
+
+The limit is set on the processes running now, and the processes they start
+take it. A process that `docker exec` starts, `machine exec --container`
+included, takes the container's own limit. So set the limit while the
+program runs. Here a shell in `api` was already running when the limit was
+set:
+
+```bash
+machine exec app start --container api -- sh -c \
+  'cd /tmp; sleep 10; ulimit -n; timeout 2 tail -f f*'
+machine containers app files api 32
+```
+
+The shell printed `32`. Then `tail` opened the files `f1` to `f100`, in
+the order `f1`, `f10` to `f19`, `f100`, `f2`. It held 29 of them and its
+standard input, output and error, 32 files, and every file after that failed:
+
+```text
+tail: can't open 'f35': Too many open files
+```
+
+A new `machine exec --container api -- sh -c 'ulimit -n'` printed 1024, the
+container's own limit. `files api 0` sets back the container's own limit,
+both its soft and its hard number. A disk built before file limits is
+refused, with a hint to build it again.
+
+### Ephemeral ports
+
+`ports` narrows the range of local ports a container's connections take
+from. Every outgoing connection holds one port of the range, so a few ports
+run out quickly. Here `api` connects to a server in `db` with 2 ports:
+
+```bash
+machine containers app ports api 40000-40001
+machine exec app run --container api -- sh -c \
+  'for i in 1 2 3; do (sleep 5 | telnet 172.18.0.4 9000 >/dev/null) & done; wait'
+```
+
+```text
+telnet: can't connect to remote host (172.18.0.4): Cannot assign requested address
+```
+
+Two connections took both ports, and the third failed with EADDRNOTAVAIL.
+Four things follow from how the kernel gives out ports:
+
+- **A closed connection keeps its port for 60 seconds.** Its side stays in
+  TIME_WAIT. Short connections in a loop therefore run out of a small range
+  even though no more than one is open at a time. Right after the two
+  connections closed, `netstat -tan` showed both ports in TIME_WAIT, and 65
+  seconds later neither.
+- **Name lookups need a port too.** A DNS query takes a UDP port from the
+  same range. With both ports held, a client connecting to `db` by name
+  failed with `telnet: bad address 'db'`, before it tried to connect.
+- **A program that binds port 0 before it connects gets EADDRINUSE.**
+  BusyBox `nc` does this: `nc: bind: Address already in use`.
+- **A program that binds port 0 uses an even count of the range.** Of a
+  range of 3 ports, `nc` used 2.
+
+The range belongs to the container's network. The command refuses a
+container on the machine's network, whose range is every process's. It also
+refuses a container on another container's network, with a hint naming the
+container whose network it is:
+
+```text
+✗ Not set: sidecar is on the network of compose-db-1.
+  Narrow the ports of compose-db-1 machine containers app ports compose-db-1 RANGE
+```
+
+### CPU
+
+`throttle` gives a container a share of a CPU. Nothing fails: every process
+of the container runs slower. A loop in `db` took 4.58 seconds of machine
+time, and 46.80 seconds with `--cpus 0.1`:
+
+```bash
+machine containers app throttle db --cpus 0.1
+```
+
+### One failed call
+
+A [system call fault](#system-call-faults) gives one program the error a
+resource gives, at the call chosen. Nothing runs out, and every other
+program runs on. Each fault below was run against BusyBox programs in a
+container:
+
+```bash
+machine inject app add syscall clone EAGAIN --after 1 --times 1 --in comm=worker.sh
+machine inject app add syscall openat EMFILE --after 14 --times 1 --in comm=tail
+machine inject app add syscall connect EADDRNOTAVAIL --times 1 --in comm=telnet
+machine inject app add syscall write ENOSPC --after 10 --times 1 --in comm=dd
+machine inject app add syscall mkdir ENOSPC --in comm=mkdir
+```
+
+```text
+/tmp/worker.sh: line 0: can't fork: Resource temporarily unavailable
+tail: can't open 'f3': Too many open files
+telnet: can't connect to remote host (172.18.0.4): Cannot assign requested address
+dd: error writing '/tmp/out': No space left on device
+mkdir: can't create directory '/tmp/new': No space left on device
+```
+
+`fork` in the C library is the `clone` system call. A script run by its own
+path, `/tmp/worker.sh`, has its file name as its comm, so the fault takes
+that script and no other shell. Running out of inodes gives ENOSPC from the
+call that creates a file or a directory, as running out of space does.
+
+A count of calls includes the program's start. The dynamic loader opens the
+program's libraries with `openat` before `main` runs: 12 calls for `tail`
+here, of 20 in all for 8 files. `--after 9` made the loader fail with
+`error while loading shared libraries: libm.so.6`, and `--after 14` failed
+the third file. Read MATCHED in `machine inject app` to
+count a program's calls, or use `--prob 0.01` to fail calls at random.
+
 ## Kernel faults
 
 The other subsystems fail work inside the kernel, after a system call has

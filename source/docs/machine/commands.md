@@ -6518,8 +6518,144 @@ machine containers run1 memory db 0              no limit
 See also:
 
 - [`machine containers throttle`](#machine-containers-throttle)
+- [`machine containers pids`](#machine-containers-pids)
 - [`machine containers`](#machine-containers)
 - [`machine catch`](#machine-catch)
+
+### machine containers pids
+
+Limit the processes of a container.
+
+The container's processes and threads may number the count given and no more. A
+count of 0 lifts the limit. The limit ends at the container's next start.
+
+Past the limit, a fork or a new thread in the container fails with EAGAIN. The
+processes already running go on.
+
+Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
+
+```
+machine containers run pids [-h] [--for duration] container count
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `count` | Processes and threads it may have; 0 for no limit |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Restore the previous limit after this machine time, such as 30s |
+
+Examples:
+
+```
+machine containers run1 pids db 50            50 processes and threads
+machine containers run1 pids db 20 --for 30s  for 30s
+machine containers run1 pids db 0             no limit
+```
+
+See also:
+
+- [`machine containers files`](#machine-containers-files)
+- [`machine containers memory`](#machine-containers-memory)
+- [`machine inject add`](#machine-inject-add)
+
+### machine containers ports
+
+Narrow the ephemeral ports of a container.
+
+A connection the container opens takes its local port from the range given. A
+range of 0 sets back the kernel's own, 32768-60999. The range ends at the
+container's next start.
+
+Once every port of the range is taken, a connect fails with EADDRNOTAVAIL. A
+program that binds port 0 before it connects gets EADDRINUSE. A port stays taken
+after its connection closes, in TIME_WAIT for 60 seconds.
+
+The range applies to every process on the container's network. The command
+refuses a container on the machine's network. It also refuses a container that
+uses another container's network.
+
+Use `--for 30s` to restore the previous range after 30 seconds of machine time.
+
+```
+machine containers run ports [-h] [--for duration] container range
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `range` | Ports it may connect from, such as 32768-32770; 0 for the kernel's own |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Restore the previous limit after this machine time, such as 30s |
+
+Examples:
+
+```
+machine containers run1 ports api 40000-40009      10 ports
+machine containers run1 ports api 40000 --for 30s  1 port, 30s
+machine containers run1 ports api 0                the kernel's range
+```
+
+Refuses, and the way past:
+
+```
+a container on the machine's network  machine containers run1
+one on another's network              machine containers run1 ports db 40000
+```
+
+See also:
+
+- [`machine containers files`](#machine-containers-files)
+- [`machine net`](#machine-net)
+- [`machine inject add`](#machine-inject-add)
+
+### machine containers files
+
+Limit the open files of a container.
+
+Each process of the container may hold open the count of files given and no
+more. A socket or a pipe counts as a file. A count of 0 sets back the
+container's own limit.
+
+Past the limit, an open, a socket or an accept fails with EMFILE. A file already
+open stays open.
+
+The limit is set on the processes that run now, and what they start takes it. A
+process docker exec starts takes the container's own limit. The limit ends at
+the container's next start.
+
+Use `--for 30s` to restore the previous limit after 30 seconds of machine time.
+
+```
+machine containers run files [-h] [--for duration] container count
+```
+
+| Argument | Does |
+|---|---|
+| `container` | Container, by its id, its name or its service's |
+| `count` | Files each process may hold open; 0 for the container's own limit |
+
+| Option | Does |
+|---|---|
+| `--for duration` | Restore the previous limit after this machine time, such as 30s |
+
+Examples:
+
+```
+machine containers run1 files api 64            64 open files
+machine containers run1 files api 32 --for 30s  for 30s
+machine containers run1 files api 0             the container's own
+```
+
+See also:
+
+- [`machine containers pids`](#machine-containers-pids)
+- [`machine containers ports`](#machine-containers-ports)
+- [`machine inject add`](#machine-inject-add)
 
 ## machine net
 
