@@ -238,6 +238,112 @@ and a branch replayed from a checkpoint before them failed the same calls.
   the `docker exec` that started it: `machine tasks app` shows each task's
   program as the container sees it, such as `/bin/sh`.
 
+## Memory faults
+
+Memory goes wrong in four places: a program's allocator returns nothing, the
+kernel refuses memory, a service runs out of it, or the data in it is wrong.
+Each has its own fault:
+
+| You want to know | Fault |
+|---|---|
+| Does the program handle `malloc` returning NULL? | `inject add function malloc --return 0 --after 5 --times 1 --in /usr/bin/app` |
+| Does it survive one allocation in a hundred failing? | `inject add function malloc --return 0 --prob 0.01 --in /usr/bin/app` |
+| Does it handle the kernel refusing to grow its heap? | `inject add syscall brk ENOMEM --in /usr/bin/app` |
+| Does a system call fail cleanly when the kernel cannot allocate? | `inject add slab --after 50 --times 1 --in /usr/bin/app` |
+| What happens when a service runs out of memory? | `containers memory db 64m` |
+| Does the program notice a flipped bit in its data? | `mem 412 'checksum^=0x1'` |
+| What does a pointer set to 0 do? | `mem 412 'head=0'` |
+
+### A program's allocations
+
+A program asks its C library for memory, and the library serves most
+requests from memory it already has, without a system call. A
+[function fault](#function-faults) on `malloc` reaches every allocation:
+
+```bash
+machine inject app add function malloc --return 0 --after 5 --times 1 --in comm=sort --at 628
+machine exec app run --container api -- sort -n /tmp/numbers
+```
+
+```text
+sort: out of memory
+```
+
+`sort` failed on its sixth allocation, and the next run, with the fault used
+up, sorted as before. `calloc`, `realloc` and `strdup` are functions of their
+own: name each that the program calls.
+
+### The kernel's answer
+
+`brk` grows the heap and `mmap` maps new memory. A fault on them is the
+kernel refusing, which the C library sees first: it turns a refused `brk`
+into an `mmap`, and a refused `mmap` into `malloc` returning NULL.
+
+```bash
+machine inject app add syscall brk ENOMEM --in /usr/bin/app
+```
+
+A refused `brk` returns the break unchanged, as the kernel's own refusal does,
+and the C library moves to `mmap`: with every `brk` of `sort` failing, all 12,
+it sorted 100,000 lines and exited 0. That is the test of a program that
+assumes its heap is contiguous.
+
+A program's first `mmap` calls are its dynamic loader's, mapping its
+libraries, and a fault on those stops the program before it runs: `sort`
+failed with `error while loading shared libraries: libc.so.6: failed to map
+segment from shared object` with `mmap` failing after its 13th call. A program
+with a small heap makes no `mmap` of its own, so `function malloc` is the
+fault that reaches its allocations.
+
+### The kernel's own allocations
+
+`slab` and `pages` fail allocations inside the kernel, for work a system call
+or a page fault does for the program, as [Kernel faults](#kernel-faults)
+describes. The program sees what the kernel does with the failure: a system
+call that returns `ENOMEM`, or a page fault that cannot be served. In one
+test, failing the 51st slab allocation of `sort` killed it with `SIGSEGV`.
+
+### A service out of memory
+
+[`machine containers memory`](container-faults.md) limits a container's
+memory. Past the limit the guest kernel reclaims memory, and its
+out-of-memory killer kills a process of the container when it cannot:
+
+```bash
+machine containers app memory db 32m
+machine exec app run --container db -- sh -c 'x=$(head -c 64000000 /dev/zero | tr "\0" a)'
+```
+
+```text
+⚠ Exit status 137: killed by SIGKILL, as Docker reports a signal
+```
+
+`machine containers app` shows each container's limit in its LIMITS column.
+
+### Wrong data
+
+[`machine mem`](debugging.md) writes a program's memory with the machine
+stopped, and `^=` flips bits of a value, as C's `^=` does. Stop the program
+where the data is live first, at a breakpoint or a `run --until`:
+
+```bash
+machine break app add 412 process_record
+machine run app
+machine mem app 412 'checksum^=0x1'                    # one bit of checksum flipped
+machine mem app 412 'head=0'                           # a pointer set to NULL
+machine mem app 412 '$sp+8=-1' g                       # a word of the stack overwritten
+```
+
+The answer names the bits, the address and the value before and after, here
+for a word of a shell's stack:
+
+```text
+✔ Flipped 0x10 at 0x7ffdf2d731f0 of tid 281: 0x000055d658e084b0 became 0x000055d658e084a0
+```
+
+Each write is recorded with the run, so a replay corrupts the same value at
+the same point, and a fork from before it runs the program unharmed.
+
 ## Kernel faults
 
 The other subsystems fail work inside the kernel, after a system call has
