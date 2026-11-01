@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793550872365" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793550872365" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793550688100" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793550872365" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1280,10 +1280,10 @@ records exactly what its parent recorded after that checkpoint.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine create app --disk app --repeatable --cpus 2</span><br><span class="line">machine run app --<span class="keyword">until</span> tasks</span><br><span class="line">machine checkpoint app booted</span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;console~done&#x27;</span></span><br><span class="line">machine fork app --at ^booted --name again       <span class="comment"># records the same entries again</span></span><br><span class="line">machine fork app --at ^booted --no-repeatable    <span class="comment"># a branch that records as usual</span></span><br></pre></td></tr></table></figure>
 
 <p>Repeatable recording is slower, and how much slower depends on the program.
-Booting PostgreSQL 17 on one vCPU took 1 minute 10 seconds to record with
-<code>--repeatable</code> and 14 seconds without it. Loading its test data with
-<code>pgbench -i</code>, which computes with hardly a pause, took 1 minute 20 seconds
-against 4 seconds. A program that spends its time waiting on the disk, the
+For example, booting PostgreSQL 17 on one vCPU takes 1 minute 10 seconds to
+record with <code>--repeatable</code> and 14 seconds without it. Loading its test data
+with <code>pgbench -i</code>, which computes with hardly a pause, takes 1 minute 20
+seconds against 4 seconds. A program that spends its time waiting on the disk, the
 network or a timer pays much less. Replaying a repeatable run is as fast as
 replaying any other.</p>
 <p><code>--timer-slack</code> is how late a timer may be while a program runs code that
@@ -1938,8 +1938,8 @@ keeps that point as a checkpoint, and removes a file:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/f until console~Attaching within 60s</span><br><span class="line">iterations: 24957  run ic: 1525715866  vtime: +3.730915228s  checkpoints: 1</span><br><span class="line"></span><br><span class="line">VCPU  EXIT  ID     RUN IC   RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER</span><br><span class="line">0     IO    27777  1905719  148  1525715866  0x26180340852cf271  0xffffffff8104880d  1    4</span><br><span class="line"></span><br><span class="line">/checkpoint name booted</span><br><span class="line">✔ Created checkpoint booted at entry 27777</span><br><span class="line">  Make it durable /sync</span><br><span class="line"></span><br><span class="line">/exec run cat /etc/hostname</span><br><span class="line">docker-test</span><br><span class="line"></span><br><span class="line">/exec run rm /etc/hostname</span><br><span class="line"></span><br><span class="line">/exec run cat /etc/hostname</span><br><span class="line">cat: can&#x27;t open &#x27;/etc/hostname&#x27;: No such file or directory</span><br><span class="line">✗ Exited 1.</span><br></pre></td></tr></table></figure>
 
 <p><code>/f</code> runs the machine until <code>Attaching</code> appears on the console, or for 60
-seconds of the machine’s own time at most. It took 3.7 seconds of the machine’s
-time here, and the table shows where each vCPU stopped. To see the
+seconds of the machine’s own time at most. Here it takes 3.7 seconds of the
+machine’s time, and the table shows where each vCPU stopped. To see the
 machine as it was before the file was removed, fork a branch at <code>booted</code> and
 switch onto it:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/go to ^booted</span><br><span class="line">✔ Branched app/27777 (whyvg0aXMSf6g7H2pU5wa) at entry 27777 and switched onto it.</span><br><span class="line"></span><br><span class="line">/exec run cat /etc/hostname</span><br><span class="line">docker-test</span><br><span class="line"></span><br><span class="line">/switch app</span><br><span class="line">✔ Switched to app (whyvcWEKxc7c5b2UwO7r6)</span><br></pre></td></tr></table></figure>
@@ -2760,10 +2760,10 @@ the same file and that <code>--in</code> names. With <code>--in</code> naming a 
 now, the function is found in that program. With one that does not run yet,
 name with <code>--at</code> a task that maps the same library, such as a shell of the
 same container.</p>
-<p>In one test, <code>--in comm=sort</code> with <code>--return 0</code> made busybox’s <code>sort</code> exit 2 on
-its first allocation, while <code>seq</code> and <code>tail</code> in the same container ran as
-before. With <code>--prob 0.05</code>, four runs of <code>sort</code> matched 60 calls and failed 4,
-and a branch replayed from a checkpoint before them failed the same calls.</p>
+<p>For example, <code>--in comm=sort</code> with <code>--return 0</code> makes BusyBox’s <code>sort</code> exit 2
+on its first allocation, while <code>seq</code> and <code>tail</code> in the same container run as
+before. With <code>--prob 0.05</code>, four runs of <code>sort</code> match 60 calls and fail 4. The
+seed decides which calls fail, so a replay fails the same calls.</p>
 <ul>
 <li><strong>errno is not set.</strong> The C library keeps errno in each thread’s own memory,
 so a caller that checks the return sees the failure, and one that reads
@@ -2865,15 +2865,15 @@ the kernel can reclaim decides what the program sees, and the machine has no
 swap:</p>
 <ul>
 <li><strong>Files the program reads</strong> are cached in memory the kernel can drop and
-read again. Past a soft limit the program keeps running, slower: reading a
-100MB file took 0.20 seconds of machine time against a soft limit of 16MB,
-0.02 seconds without, its cache fell from 103MB to 8MB, the cgroup counted
-202 times over the limit and killed nothing.</li>
+read again. Past a soft limit the program keeps running, slower. For
+example, reading a 100MB file takes 0.20 seconds of machine time against a
+soft limit of 16MB and 0.02 seconds without. Its cache falls from 103MB to
+8MB, the cgroup counts 202 times over the limit, and nothing is killed.</li>
 <li><strong>Memory the program allocates</strong> has nowhere to go without swap, so past a
-soft limit its processes slow to a crawl. A shell holding 40MB against a
-soft limit of 16MB made no progress in 2 seconds of machine time, the cgroup
-counted 27,935 times over the limit and killed nothing, and the shell went
-on once the limit was lifted:</li>
+soft limit its processes slow to a crawl. For example, a shell holding 40MB
+against a soft limit of 16MB makes no progress in 2 seconds of machine
+time. The cgroup counts 27,935 times over the limit and kills nothing, and
+the shell goes on once the limit is lifted:</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine containers app memory db 16m --soft</span><br><span class="line">machine containers app memory db 0 --soft       <span class="comment"># the soft limit lifted</span></span><br></pre></td></tr></table></figure>
 
@@ -3023,8 +3023,7 @@ column:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">machine containers app pids db 20                <span class="comment"># 20 processes and threads</span></span><br><span class="line">machine containers app files api 64              <span class="comment"># 64 open files a process</span></span><br><span class="line">machine containers app ports api 40000-40009     <span class="comment"># 10 local ports for each destination</span></span><br><span class="line">machine containers app pids db 20 --<span class="keyword">for</span> 30s      <span class="comment"># set back after 30 seconds of machine time</span></span><br><span class="line">machine containers app pids db 0                 <span class="comment"># the container&#x27;s own limit</span></span><br><span class="line">machine containers app files api 0               <span class="comment"># the container&#x27;s own limit</span></span><br><span class="line">machine containers app ports api 0               <span class="comment"># the container&#x27;s own range</span></span><br></pre></td></tr></table></figure>
 
 <p>Each limit is set by a command the run records, so a replay sets it at the
-same point. A branch replayed from boot through every example in this
-section, the restarts included, showed no differences.</p>
+same point, the restarts included.</p>
 <h3 id="a-service-that-crashes-on-its-limit"><a href="#a-service-that-crashes-on-its-limit" class="headerlink" title="A service that crashes on its limit"></a>A service that crashes on its limit</h3><p>A service that dies of a limit and restarts by its Compose file’s
 <code>restart:</code> policy meets the limit again, and the run goes on. Here <code>hog</code>
 grows to 100MB five seconds after it starts, under <code>restart: always</code>:</p>
@@ -3032,11 +3031,11 @@ grows to 100MB five seconds after it starts, under <code>restart: always</code>:
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine containers app memory hog 64m</span><br><span class="line">machine containers app stop hog</span><br><span class="line">machine containers app start hog</span><br><span class="line">machine run app --within 40s</span><br></pre></td></tr></table></figure>
 
-<p>The out-of-memory killer took it 3 times in 40 seconds of machine time, and
-the console said each time:</p>
+<p>The out-of-memory killer takes it each time it grows, 3 times in 40 seconds
+of machine time, and the console says each time:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">=== hog exited by itself: code 137. Its restart policy starts it again ===</span><br></pre></td></tr></table></figure>
 
-<p><code>memory hog 0</code> while it restarted let it grow, and it printed <code>grew</code>. A
+<p><code>memory hog 0</code> while it restarts lets it grow, and it prints <code>grew</code>. A
 service with no <code>restart:</code> policy that exits by itself ends the run, with
 its code.</p>
 <h3 id="processes-1"><a href="#processes-1" class="headerlink" title="Processes"></a>Processes</h3><p><code>pids</code> limits the processes and threads of a container. Past the limit, a
@@ -3057,14 +3056,14 @@ program runs. Here a shell in <code>api</code> was already running when the limi
 set:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app start --container api -- sh -c \</span><br><span class="line">  <span class="string">&#x27;cd /tmp; for i in $(seq 100); do : &gt; f$i; done; sleep 10; ulimit -n; timeout 2 tail -f f*&#x27;</span></span><br><span class="line">machine containers app files api 32</span><br><span class="line">machine run app --within 15s</span><br></pre></td></tr></table></figure>
 
-<p>The shell printed <code>32</code>. Then <code>tail</code> opened the files <code>f1</code> to <code>f100</code>, in
-the order <code>f1</code>, <code>f10</code> to <code>f19</code>, <code>f100</code>, <code>f2</code>. It held 29 of them and its
-standard input, output and error, 32 files, and every file after that failed:</p>
+<p>The shell prints <code>32</code>. Then <code>tail</code> opens the files <code>f1</code> to <code>f100</code>, in the
+order <code>f1</code>, <code>f10</code> to <code>f19</code>, <code>f100</code>, <code>f2</code>. It holds 29 of them and its
+standard input, output and error, 32 files, and every file after that fails:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail: can&#x27;t open &#x27;f35&#x27;: Too many open files</span><br></pre></td></tr></table></figure>
 
-<p>A later <code>machine exec --container api -- sh -c &#39;ulimit -n&#39;</code> printed 1024.
-A process <code>docker exec</code> starts does not take the limit set on the processes
-already running. It takes the container’s own limit. <code>files api 0</code> sets
+<p>A later <code>machine exec --container api -- sh -c &#39;ulimit -n&#39;</code> prints 1024,
+because a process <code>docker exec</code> starts does not take the limit set on the
+processes already running. It takes the container’s own limit. <code>files api 0</code> sets
 that own limit back, both its soft and its hard number.</p>
 <h3 id="ephemeral-ports"><a href="#ephemeral-ports" class="headerlink" title="Ephemeral ports"></a>Ephemeral ports</h3><p><code>ports</code> narrows the range of local ports a container’s connections take
 from. A connection is told apart by its local and remote address and port,
@@ -3076,13 +3075,13 @@ db’s address from the listing above, <code>172.18.0.4</code>, with 2 ports:</p
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet: can&#x27;t connect to remote host (172.18.0.4): Cannot assign requested address</span><br></pre></td></tr></table></figure>
 
-<p>Two connections took both ports, and the third failed with EADDRNOTAVAIL.
+<p>Two connections take both ports, and the third fails with EADDRNOTAVAIL.
 Four things follow from how the kernel gives out ports:</p>
 <ul>
 <li><strong>A closed connection keeps its port for 60 seconds.</strong> Its side stays in
 TIME_WAIT. Short connections in a loop therefore run out of a small range
-even though no more than one is open at a time. Right after the two
-connections closed, <code>netstat -tan</code> showed both ports in TIME_WAIT, and 65
+even though no more than one is open at a time. Right after two
+connections close, <code>netstat -tan</code> shows both ports in TIME_WAIT, and 65
 seconds later neither.</li>
 <li><strong>Name lookups need a port too.</strong> A DNS query takes a UDP port from the
 same range. With both ports held, a client connecting to <code>db</code> by name
@@ -3133,21 +3132,22 @@ how the disk is built. Here <code>db</code> has a volume of 64MB at <code>/data<
 out of inodes:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=/data/fill bs=1M</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=/data/more bs=4k count=10 conv=fsync</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">rm</span> /data/fill /data/more</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- sh -c \</span><br><span class="line">  <span class="string">&#x27;mkdir /data/many; cd /data/many; i=0; while : &gt; f$i; do i=$((i+1)); done&#x27;</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">rm</span> -r /data/many</span><br></pre></td></tr></table></figure>
 
-<p>The fill stopped at 54.7MB of the filesystem’s 57MB, and the write after it
-stored one block of 10 and failed. The files stopped at the 16,373rd, with
+<p>The fill stops at 54.7MB of the filesystem’s 57MB, and the write after it
+stores one block of 10 and fails. The files stop at the 16,373rd, with
 blocks still free:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh: can&#x27;t create f16372: No space left on device</span><br></pre></td></tr></table></figure>
 
-<p>Meanwhile <code>db</code> wrote its own files outside <code>/data</code>, <code>api</code> wrote its files,
-and the machine’s disk stayed 17% full. Deleting the files ends the full
-disk. A tmpfs volume of 40MB, in the same test, stopped a <code>dd</code> at 40MB with
-<code>No space left on device</code>, and was empty after <code>api</code> restarted.</p>
+<p>Meanwhile <code>db</code> writes its own files outside <code>/data</code>, <code>api</code> writes its files,
+and the machine’s disk is untouched. Deleting the files ends the full disk.
+A tmpfs volume of 40MB stops a <code>dd</code> at 40MB with <code>No space left on device</code>,
+and is empty after its container restarts.</p>
 <p>Filling the machine’s own disk instead makes every container meet it, and
 the container runtime with them: <code>machine exec --container</code> then fails with
 <code>OCI runtime exec failed</code>. <code>machine exec</code> without <code>--container</code> still runs.</p>
 <h3 id="cpu"><a href="#cpu" class="headerlink" title="CPU"></a>CPU</h3><p><code>throttle</code> gives a container a share of a CPU. Nothing fails: every process
-of the container runs slower. A loop in <code>db</code> that counts to 200,000 took
-4.58 seconds of machine time, and 46.80 seconds with <code>--cpus 0.1</code>:</p>
+of the container runs slower. For example, a loop in <code>db</code> that counts to
+200,000 takes 4.58 seconds of machine time, and 46.80 seconds with
+<code>--cpus 0.1</code>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine containers app throttle db --cpus 0.1</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- sh -c <span class="string">&#x27;i=0; while [ $i -lt 200000 ]; do i=$((i+1)); done&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <h3 id="one-failed-call"><a href="#one-failed-call" class="headerlink" title="One failed call"></a>One failed call</h3><p>A <a href="#system-call-faults">system call fault</a> gives one program the error a
@@ -3307,16 +3307,16 @@ same instruction. The machine’s clock is not the date the guest reads, so a
 no call and counts none, so
 <code>--after</code> and <code>--times</code> count only the calls in its active windows. Both
 options are needed, each a whole number of milliseconds from 1ms to a day.</p>
-<p>The listing says which window each fault is in and how long it has left. The
-second command printed:</p>
+<p>The listing says which window each fault is in and how long it has left.
+After the second command it reads:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#   INJECT                 ERRORS                   DELAY        IN               FIRES                 PROB       SEED  MATCHED   FIRED</span><br><span class="line">1   syscall open           ENOENT                   -            tgid=63          every call               1          5        0       0</span><br><span class="line">    on 2s  off 3s  now on, 2s left</span><br><span class="line">2   syscall openat         ENOENT                   -            tgid=63          every call               1          5        0       0</span><br><span class="line">    on 2s  off 3s  now on, 2s left</span><br></pre></td></tr></table></figure>
 
 <p><a href="#machine-inject"><code>machine inject app</code></a> later shows the window
 moving: <code>now on, 996ms left</code> one second in, and <code>now off, 2496ms left</code> at two
 and a half seconds.</p>
-<p>A shell loop that opened a file twice a second under the second command
-printed 4 failures, then 6 successes, over and over: 2 seconds failing, 3
-seconds working. Each window has a fixed length. To try outages of other
+<p>A shell loop that opens a file twice a second under the second command sees
+4 failures, then 6 successes, over and over: 2 seconds failing, 3 seconds
+working. Each window has a fixed length. To try outages of other
 lengths, fork branches from one checkpoint and give each its own <code>--on</code> and
 <code>--off</code>.</p>
 <h2 id="stopping-at-a-fault"><a href="#stopping-at-a-fault" class="headerlink" title="Stopping at a fault"></a>Stopping at a fault</h2><p>To look at the program at the moment a fault fires, add a catchpoint for it:</p>
@@ -3865,10 +3865,10 @@ a checkpoint taken during a hold keeps it. Run the machine to an exact point
 first, and the hold lands there:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;console~ready&#x27;</span>                <span class="comment"># stop where the cluster is ready</span></span><br><span class="line">machine net app hold                                   <span class="comment"># hold every link at that point</span></span><br><span class="line">machine net app loss db 100% --to api                  <span class="comment"># change the faults while nothing moves</span></span><br><span class="line">machine net app release                                <span class="comment"># traffic resumes under the new faults</span></span><br></pre></td></tr></table></figure>
 
-<p>With api pinging db every 100 milliseconds, db received none of api’s
-requests while the links were held and the fault was set. After the
-release, db received the 47 held and later requests, the new fault dropped
-all 47 replies, and the listing’s <code>DROPPED</code> read 47. No packet crossed a
+<p>For example, with api pinging db every 100 milliseconds, db receives none of
+api’s requests while the links are held and the fault is set. After the
+release, db receives the 47 held and later requests, the new fault drops
+all 47 replies, and the listing’s <code>DROPPED</code> reads 47. No packet crosses a
 link under the old faults after the hold.</p>
 <p>The guest’s programs and timers keep running during a hold. A
 retransmission or an application timeout can expire while the links are
@@ -3876,9 +3876,9 @@ held. To hold for a time, run the machine for that time between the two
 commands:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine net app hold</span><br><span class="line">machine run app --within 3s                            <span class="comment"># 3 seconds of machine time, all held</span></span><br><span class="line">machine net app release</span><br></pre></td></tr></table></figure>
 
-<p>With api pinging db every 250 milliseconds, the 3 replies sent before the
-hold arrived, none arrived in 3 seconds of hold, and all 20 arrived after the
-release. A container on another’s network, the machine’s or none has no
+<p>For example, with api pinging db every 250 milliseconds, the 3 replies sent
+before the hold arrive, none arrives in 3 seconds of hold, and all 20 arrive
+after the release. A container on another’s network, the machine’s or none has no
 link of its own and is left out, and so is a process outside every
 container. The listing names a container whose link could not be held.</p>
 <h3 id="resetting-connections"><a href="#resetting-connections" class="headerlink" title="Resetting connections"></a>Resetting connections</h3><p><code>reset</code> aborts TCP connections. The container’s side of each connection is
@@ -3947,10 +3947,9 @@ the branch replays the stretch and stores the same lines:</p>
 match, the decision and the packet with its IP length. The number counts
 every packet the link carried since the container started, logged or not,
 so a later stretch starts at a higher number: here the link had carried 7
-packets before the ping. The 8 drops of the 20 lines
-were the 8 pings the ping lost, and <code>DROPPED</code> in the listing read 8. The
-parent’s log and two branches replayed from the same checkpoint were the
-same, byte for byte.</p>
+packets before the ping. The 8 drops of the 20 lines are the 8 pings the
+ping lost, and <code>DROPPED</code> in the listing reads 8. A replay from a checkpoint
+writes the same log, byte for byte.</p>
 <p>The decisions are <code>pass</code>, <code>drop</code>, <code>delay</code> with the time the fault drew,
 <code>ahead</code> for a packet <code>reorder</code> sent before the delayed ones, and <code>duplicate</code>
 and <code>corrupt</code> beside the first word. <code>drop limit</code> is a packet dropped
@@ -3963,14 +3962,15 @@ original says <code>duplicate</code>, and the copy, logged first, says <code>cop
 is what the fault drew; the packet can leave later by the machine’s timer
 slack, as a timer can. A container on two networks writes both links’
 decisions to the one file.</p>
-<p>Every decision is logged; none is dropped however fast the packets come. A
-200MB TCP transfer under a logged fault decided 19,586 packets and the log
-held 19,586 lines, the listing’s <code>SENT</code> and <code>DROPPED</code> added up.</p>
+<p>Every decision is logged; none is dropped however fast the packets come. For
+example, a 200MB TCP transfer under a logged fault decides 19,586 packets,
+the log holds 19,586 lines, and the listing’s <code>SENT</code> and <code>DROPPED</code> add up to
+them.</p>
 <p>Each decision costs about 32 microseconds of machine time to write, and a
 decision is a packet as the kernel hands the link, whatever its size. A
-50MB TCP transfer under a logged fault took 0.66 seconds of machine time
-on average, against 0.47 seconds under the same fault without the log: its
-packets were large. Small packets cost the same each, so a stream of them
+50MB TCP transfer under a logged fault takes 0.66 seconds of machine time
+on average, against 0.47 seconds under the same fault without the log,
+because its packets are large. Small packets cost the same each, so a stream of them
 spends far more of its time on the log; 10,000 packets cost about 0.32
 seconds. Log the stretch being examined, not a whole run. A decision is a
 packet’s, never a program message’s: see the limits below on TCP units and
@@ -4003,7 +4003,7 @@ holds now, delayed or held: neither sent nor dropped yet. After 50 pings
 from api to db with <code>loss db 30% --to api --seed 9</code>, the row of that match:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">SERVICE  CONTAINER       TO             MATCH  FAULTS    SEED  SENT  DROPPED  QUEUED</span><br><span class="line">db       compose-db-1    compose-api-1  -      loss 30%  9     36    14       0</span><br></pre></td></tr></table></figure>
 
-<p>The ping printed <code>50 packets transmitted, 36 packets received</code>, so the 14
+<p>The ping prints <code>50 packets transmitted, 36 packets received</code>, so the 14
 db dropped are the 14 api lost. A hold shows what it holds as <code>QUEUED</code> until
 the release. The counts are what the fault processed, packet by packet, not
 a measure of its probability: over many packets 30% loss drops close to 30%
@@ -4043,9 +4043,9 @@ so do addresses from run to run, so read them in the run you capture.</p>
 link, and the name stays the same across restarts:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app start --net db -- tcpdump --immediate-mode -U -i eth0 -w /.machine/output/keep/db.pcap</span><br></pre></td></tr></table></figure>
 
-<p>It captures the same packets as a capture on the <code>LINK</code>: with db’s ICMP
-lost by <code>loss db 100% --proto icmp</code>, both showed the pings reaching db and
-none of db’s replies.</p>
+<p>It captures the same packets as a capture on the <code>LINK</code>. For example, with
+db’s ICMP lost by <code>loss db 100% --proto icmp</code>, both show the pings reaching
+db and none of db’s replies.</p>
 <p>To capture every container at once, use <code>-i any</code> and filter by <code>ADDRESS</code>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app start -- tcpdump --immediate-mode -U -i any -w /.machine/output/keep/all.pcap host 172.18.0.2</span><br></pre></td></tr></table></figure>
 
@@ -4111,7 +4111,7 @@ which Docker’s networks send.</p>
 <li><p><strong>Loss of TCP is per unit the kernel hands the link, not per wire
 segment.</strong> Between containers the kernel sends a large TCP write as one
 packet many times the MTU, segmented only where a real interface needs it:
-in one test most were 8244 bytes. <code>loss 1%</code> drops 1% of those units, each
+for example, most are 8244 bytes. <code>loss 1%</code> drops 1% of those units, each
 as many segments as it holds, and TCP sends the whole unit again. The
 log’s <code>len</code> shows each unit’s size.</p>
 </li>
@@ -16903,10 +16903,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793550688101"></script>
-<script src="/js/machine-hero-type.js?v=1793550688101"></script>
-<script src="/js/download-platforms.js?v=1793550688101"></script>
-<script src="/js/anchor-case.js?v=1793550688101"></script>
+<script src="/js/index-code-type.js?v=1793550872365"></script>
+<script src="/js/machine-hero-type.js?v=1793550872365"></script>
+<script src="/js/download-platforms.js?v=1793550872365"></script>
+<script src="/js/anchor-case.js?v=1793550872365"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

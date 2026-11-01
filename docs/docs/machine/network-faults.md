@@ -193,10 +193,10 @@ machine net app loss db 100% --to api                  # change the faults while
 machine net app release                                # traffic resumes under the new faults
 ```
 
-With api pinging db every 100 milliseconds, db received none of api's
-requests while the links were held and the fault was set. After the
-release, db received the 47 held and later requests, the new fault dropped
-all 47 replies, and the listing's `DROPPED` read 47. No packet crossed a
+For example, with api pinging db every 100 milliseconds, db receives none of
+api's requests while the links are held and the fault is set. After the
+release, db receives the 47 held and later requests, the new fault drops
+all 47 replies, and the listing's `DROPPED` reads 47. No packet crosses a
 link under the old faults after the hold.
 
 The guest's programs and timers keep running during a hold. A
@@ -210,9 +210,9 @@ machine run app --within 3s                            # 3 seconds of machine ti
 machine net app release
 ```
 
-With api pinging db every 250 milliseconds, the 3 replies sent before the
-hold arrived, none arrived in 3 seconds of hold, and all 20 arrived after the
-release. A container on another's network, the machine's or none has no
+For example, with api pinging db every 250 milliseconds, the 3 replies sent
+before the hold arrive, none arrives in 3 seconds of hold, and all 20 arrive
+after the release. A container on another's network, the machine's or none has no
 link of its own and is left out, and so is a process outside every
 container. The listing names a container whose link could not be held.
 
@@ -339,10 +339,9 @@ Each line has the machine's date, the packet's number on its link, the
 match, the decision and the packet with its IP length. The number counts
 every packet the link carried since the container started, logged or not,
 so a later stretch starts at a higher number: here the link had carried 7
-packets before the ping. The 8 drops of the 20 lines
-were the 8 pings the ping lost, and `DROPPED` in the listing read 8. The
-parent's log and two branches replayed from the same checkpoint were the
-same, byte for byte.
+packets before the ping. The 8 drops of the 20 lines are the 8 pings the
+ping lost, and `DROPPED` in the listing reads 8. A replay from a checkpoint
+writes the same log, byte for byte.
 
 The decisions are `pass`, `drop`, `delay` with the time the fault drew,
 `ahead` for a packet `reorder` sent before the delayed ones, and `duplicate`
@@ -357,15 +356,16 @@ is what the fault drew; the packet can leave later by the machine's timer
 slack, as a timer can. A container on two networks writes both links'
 decisions to the one file.
 
-Every decision is logged; none is dropped however fast the packets come. A
-200MB TCP transfer under a logged fault decided 19,586 packets and the log
-held 19,586 lines, the listing's `SENT` and `DROPPED` added up.
+Every decision is logged; none is dropped however fast the packets come. For
+example, a 200MB TCP transfer under a logged fault decides 19,586 packets,
+the log holds 19,586 lines, and the listing's `SENT` and `DROPPED` add up to
+them.
 
 Each decision costs about 32 microseconds of machine time to write, and a
 decision is a packet as the kernel hands the link, whatever its size. A
-50MB TCP transfer under a logged fault took 0.66 seconds of machine time
-on average, against 0.47 seconds under the same fault without the log: its
-packets were large. Small packets cost the same each, so a stream of them
+50MB TCP transfer under a logged fault takes 0.66 seconds of machine time
+on average, against 0.47 seconds under the same fault without the log,
+because its packets are large. Small packets cost the same each, so a stream of them
 spends far more of its time on the log; 10,000 packets cost about 0.32
 seconds. Log the stretch being examined, not a whole run. A decision is a
 packet's, never a program message's: see the limits below on TCP units and
@@ -416,7 +416,7 @@ SERVICE  CONTAINER       TO             MATCH  FAULTS    SEED  SENT  DROPPED  QU
 db       compose-db-1    compose-api-1  -      loss 30%  9     36    14       0
 ```
 
-The ping printed `50 packets transmitted, 36 packets received`, so the 14
+The ping prints `50 packets transmitted, 36 packets received`, so the 14
 db dropped are the 14 api lost. A hold shows what it holds as `QUEUED` until
 the release. The counts are what the fault processed, packet by packet, not
 a measure of its probability: over many packets 30% loss drops close to 30%
@@ -481,9 +481,9 @@ link, and the name stays the same across restarts:
 machine exec app start --net db -- tcpdump --immediate-mode -U -i eth0 -w /.machine/output/keep/db.pcap
 ```
 
-It captures the same packets as a capture on the `LINK`: with db's ICMP
-lost by `loss db 100% --proto icmp`, both showed the pings reaching db and
-none of db's replies.
+It captures the same packets as a capture on the `LINK`. For example, with
+db's ICMP lost by `loss db 100% --proto icmp`, both show the pings reaching
+db and none of db's replies.
 
 To capture every container at once, use `-i any` and filter by `ADDRESS`:
 
@@ -559,6 +559,6 @@ segments them only where a real interface needs it.
 - **Loss of TCP is per unit the kernel hands the link, not per wire
   segment.** Between containers the kernel sends a large TCP write as one
   packet many times the MTU, segmented only where a real interface needs it:
-  in one test most were 8244 bytes. `loss 1%` drops 1% of those units, each
+  for example, most are 8244 bytes. `loss 1%` drops 1% of those units, each
   as many segments as it holds, and TCP sends the whole unit again. The
   log's `len` shows each unit's size.

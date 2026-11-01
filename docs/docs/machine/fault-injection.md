@@ -222,10 +222,10 @@ now, the function is found in that program. With one that does not run yet,
 name with `--at` a task that maps the same library, such as a shell of the
 same container.
 
-In one test, `--in comm=sort` with `--return 0` made busybox's `sort` exit 2 on
-its first allocation, while `seq` and `tail` in the same container ran as
-before. With `--prob 0.05`, four runs of `sort` matched 60 calls and failed 4,
-and a branch replayed from a checkpoint before them failed the same calls.
+For example, `--in comm=sort` with `--return 0` makes BusyBox's `sort` exit 2
+on its first allocation, while `seq` and `tail` in the same container run as
+before. With `--prob 0.05`, four runs of `sort` match 60 calls and fail 4. The
+seed decides which calls fail, so a replay fails the same calls.
 
 - **errno is not set.** The C library keeps errno in each thread's own memory,
   so a caller that checks the return sees the failure, and one that reads
@@ -326,15 +326,15 @@ the kernel can reclaim decides what the program sees, and the machine has no
 swap:
 
 - **Files the program reads** are cached in memory the kernel can drop and
-  read again. Past a soft limit the program keeps running, slower: reading a
-  100MB file took 0.20 seconds of machine time against a soft limit of 16MB,
-  0.02 seconds without, its cache fell from 103MB to 8MB, the cgroup counted
-  202 times over the limit and killed nothing.
+  read again. Past a soft limit the program keeps running, slower. For
+  example, reading a 100MB file takes 0.20 seconds of machine time against a
+  soft limit of 16MB and 0.02 seconds without. Its cache falls from 103MB to
+  8MB, the cgroup counts 202 times over the limit, and nothing is killed.
 - **Memory the program allocates** has nowhere to go without swap, so past a
-  soft limit its processes slow to a crawl. A shell holding 40MB against a
-  soft limit of 16MB made no progress in 2 seconds of machine time, the cgroup
-  counted 27,935 times over the limit and killed nothing, and the shell went
-  on once the limit was lifted:
+  soft limit its processes slow to a crawl. For example, a shell holding 40MB
+  against a soft limit of 16MB makes no progress in 2 seconds of machine
+  time. The cgroup counts 27,935 times over the limit and kills nothing, and
+  the shell goes on once the limit is lifted:
 
 ```bash
 machine containers app memory db 16m --soft
@@ -460,8 +460,7 @@ machine containers app ports api 0               # the container's own range
 ```
 
 Each limit is set by a command the run records, so a replay sets it at the
-same point. A branch replayed from boot through every example in this
-section, the restarts included, showed no differences.
+same point, the restarts included.
 
 ### A service that crashes on its limit
 
@@ -484,14 +483,14 @@ machine containers app start hog
 machine run app --within 40s
 ```
 
-The out-of-memory killer took it 3 times in 40 seconds of machine time, and
-the console said each time:
+The out-of-memory killer takes it each time it grows, 3 times in 40 seconds
+of machine time, and the console says each time:
 
 ```text
 === hog exited by itself: code 137. Its restart policy starts it again ===
 ```
 
-`memory hog 0` while it restarted let it grow, and it printed `grew`. A
+`memory hog 0` while it restarts lets it grow, and it prints `grew`. A
 service with no `restart:` policy that exits by itself ends the run, with
 its code.
 
@@ -531,17 +530,17 @@ machine containers app files api 32
 machine run app --within 15s
 ```
 
-The shell printed `32`. Then `tail` opened the files `f1` to `f100`, in
-the order `f1`, `f10` to `f19`, `f100`, `f2`. It held 29 of them and its
-standard input, output and error, 32 files, and every file after that failed:
+The shell prints `32`. Then `tail` opens the files `f1` to `f100`, in the
+order `f1`, `f10` to `f19`, `f100`, `f2`. It holds 29 of them and its
+standard input, output and error, 32 files, and every file after that fails:
 
 ```text
 tail: can't open 'f35': Too many open files
 ```
 
-A later `machine exec --container api -- sh -c 'ulimit -n'` printed 1024.
-A process `docker exec` starts does not take the limit set on the processes
-already running. It takes the container's own limit. `files api 0` sets
+A later `machine exec --container api -- sh -c 'ulimit -n'` prints 1024,
+because a process `docker exec` starts does not take the limit set on the
+processes already running. It takes the container's own limit. `files api 0` sets
 that own limit back, both its soft and its hard number.
 
 ### Ephemeral ports
@@ -564,13 +563,13 @@ machine exec app run --container api -- sh -c \
 telnet: can't connect to remote host (172.18.0.4): Cannot assign requested address
 ```
 
-Two connections took both ports, and the third failed with EADDRNOTAVAIL.
+Two connections take both ports, and the third fails with EADDRNOTAVAIL.
 Four things follow from how the kernel gives out ports:
 
 - **A closed connection keeps its port for 60 seconds.** Its side stays in
   TIME_WAIT. Short connections in a loop therefore run out of a small range
-  even though no more than one is open at a time. Right after the two
-  connections closed, `netstat -tan` showed both ports in TIME_WAIT, and 65
+  even though no more than one is open at a time. Right after two
+  connections close, `netstat -tan` shows both ports in TIME_WAIT, and 65
   seconds later neither.
 - **Name lookups need a port too.** A DNS query takes a UDP port from the
   same range. With both ports held, a client connecting to `db` by name
@@ -630,18 +629,18 @@ machine exec app run --container db -- sh -c \
 machine exec app run --container db -- rm -r /data/many
 ```
 
-The fill stopped at 54.7MB of the filesystem's 57MB, and the write after it
-stored one block of 10 and failed. The files stopped at the 16,373rd, with
+The fill stops at 54.7MB of the filesystem's 57MB, and the write after it
+stores one block of 10 and fails. The files stop at the 16,373rd, with
 blocks still free:
 
 ```text
 sh: can't create f16372: No space left on device
 ```
 
-Meanwhile `db` wrote its own files outside `/data`, `api` wrote its files,
-and the machine's disk stayed 17% full. Deleting the files ends the full
-disk. A tmpfs volume of 40MB, in the same test, stopped a `dd` at 40MB with
-`No space left on device`, and was empty after `api` restarted.
+Meanwhile `db` writes its own files outside `/data`, `api` writes its files,
+and the machine's disk is untouched. Deleting the files ends the full disk.
+A tmpfs volume of 40MB stops a `dd` at 40MB with `No space left on device`,
+and is empty after its container restarts.
 
 Filling the machine's own disk instead makes every container meet it, and
 the container runtime with them: `machine exec --container` then fails with
@@ -650,8 +649,9 @@ the container runtime with them: `machine exec --container` then fails with
 ### CPU
 
 `throttle` gives a container a share of a CPU. Nothing fails: every process
-of the container runs slower. A loop in `db` that counts to 200,000 took
-4.58 seconds of machine time, and 46.80 seconds with `--cpus 0.1`:
+of the container runs slower. For example, a loop in `db` that counts to
+200,000 takes 4.58 seconds of machine time, and 46.80 seconds with
+`--cpus 0.1`:
 
 ```bash
 machine containers app throttle db --cpus 0.1
@@ -879,8 +879,8 @@ no call and counts none, so
 `--after` and `--times` count only the calls in its active windows. Both
 options are needed, each a whole number of milliseconds from 1ms to a day.
 
-The listing says which window each fault is in and how long it has left. The
-second command printed:
+The listing says which window each fault is in and how long it has left.
+After the second command it reads:
 
 ```
 #   INJECT                 ERRORS                   DELAY        IN               FIRES                 PROB       SEED  MATCHED   FIRED
@@ -894,9 +894,9 @@ second command printed:
 moving: `now on, 996ms left` one second in, and `now off, 2496ms left` at two
 and a half seconds.
 
-A shell loop that opened a file twice a second under the second command
-printed 4 failures, then 6 successes, over and over: 2 seconds failing, 3
-seconds working. Each window has a fixed length. To try outages of other
+A shell loop that opens a file twice a second under the second command sees
+4 failures, then 6 successes, over and over: 2 seconds failing, 3 seconds
+working. Each window has a fixed length. To try outages of other
 lengths, fork branches from one checkpoint and give each its own `--on` and
 `--off`.
 

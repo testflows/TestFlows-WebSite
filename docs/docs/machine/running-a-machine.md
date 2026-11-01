@@ -289,10 +289,10 @@ machine fork app --at ^booted --no-repeatable    # a branch that records as usua
 ```
 
 Repeatable recording is slower, and how much slower depends on the program.
-Booting PostgreSQL 17 on one vCPU took 1 minute 10 seconds to record with
-`--repeatable` and 14 seconds without it. Loading its test data with
-`pgbench -i`, which computes with hardly a pause, took 1 minute 20 seconds
-against 4 seconds. A program that spends its time waiting on the disk, the
+For example, booting PostgreSQL 17 on one vCPU takes 1 minute 10 seconds to
+record with `--repeatable` and 14 seconds without it. Loading its test data
+with `pgbench -i`, which computes with hardly a pause, takes 1 minute 20
+seconds against 4 seconds. A program that spends its time waiting on the disk, the
 network or a timer pays much less. Replaying a repeatable run is as fast as
 replaying any other.
 
@@ -1290,8 +1290,8 @@ cat: can't open '/etc/hostname': No such file or directory
 ```
 
 `/f` runs the machine until `Attaching` appears on the console, or for 60
-seconds of the machine's own time at most. It took 3.7 seconds of the machine's
-time here, and the table shows where each vCPU stopped. To see the
+seconds of the machine's own time at most. Here it takes 3.7 seconds of the
+machine's time, and the table shows where each vCPU stopped. To see the
 machine as it was before the file was removed, fork a branch at `booted` and
 switch onto it:
 
