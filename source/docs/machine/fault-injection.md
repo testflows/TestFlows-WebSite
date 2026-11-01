@@ -382,9 +382,11 @@ the same point, and a fork from before it runs the program unharmed.
 
 A program runs out of a resource in two ways, and Machine tests both:
 
-- **The resource runs out.** A Linux limit on one container makes every
-  process in it meet the limit, as it would on a full production host. Use
-  it to see how a service behaves as a whole when it hits the limit.
+- **The resource runs out.** A Linux limit on one container makes its
+  processes meet the limit, as they would on a full production host. Use it
+  to see how a service behaves as a whole when it hits the limit. Memory,
+  processes and CPU are shared by the container's processes. The open-file
+  limit is each process's own count.
 - **One call fails.** A system call fault makes one program get the error
   the resource gives, at the call chosen, while everything else runs on.
   Use it to test one error path, exactly and repeatably.
@@ -396,12 +398,11 @@ A program runs out of a resource in two ways, and Machine tests both:
 | Processes | `containers pids db 50` | `inject add syscall clone EAGAIN` | EAGAIN |
 | Open files | `containers files api 64` | `inject add syscall openat EMFILE` | EMFILE |
 | Ephemeral ports | `containers ports api 40000-40009` | `inject add syscall connect EADDRNOTAVAIL` | EADDRNOTAVAIL |
-| Disk space, inodes | | `inject add syscall write ENOSPC` | ENOSPC |
+| Disk space, inodes | fill a volume of its own | `inject add syscall write ENOSPC` | ENOSPC |
 
 A fault that fails one call also takes `--in`, the program it fails, as
-[One failed call](#one-failed-call) shows. A running container's disk cannot
-be shrunk, so disk space and inodes run out only as one failed call.
-[Memory faults](#memory-faults) covers memory. The rest of this section
+[One failed call](#one-failed-call) shows. [Memory faults](#memory-faults)
+covers memory. The rest of this section
 covers the other resources.
 
 | You want to know | Command | Example |
@@ -410,6 +411,7 @@ covers the other resources.
 | Does a program cope when it runs out of file descriptors? | `containers files api 32` | [Open files](#open-files) |
 | Does a client cope when it runs out of local ports, or churns through them? | `containers ports api 40000-40001` | [Ephemeral ports](#ephemeral-ports) |
 | Does the system cope with one slow service? | `containers throttle db --cpus 0.1` | [CPU](#cpu) |
+| Does a service survive its disk filling up? | a volume of 64MB, filled with `dd` | [A full disk](#a-full-disk) |
 | Does a program report a failed fork, a full disk or no inodes? | `inject add syscall clone EAGAIN`, `write ENOSPC`, `mkdir ENOSPC` | [One failed call](#one-failed-call) |
 
 ### Limits on a container
@@ -442,7 +444,7 @@ The other limits, and lifting one:
 ```bash
 machine containers app pids db 20                # 20 processes and threads
 machine containers app files api 64              # 64 open files a process
-machine containers app ports api 40000-40009     # 10 local ports
+machine containers app ports api 40000-40009     # 10 local ports for each destination
 machine containers app pids db 20 --for 30s      # set back after 30 seconds of machine time
 machine containers app pids db 0                 # no limit
 machine containers app files api 0               # the container's own limit
@@ -504,8 +506,10 @@ that own limit back, both its soft and its hard number.
 ### Ephemeral ports
 
 `ports` narrows the range of local ports a container's connections take
-from. Every outgoing connection holds one port of the range, so a few ports
-run out quickly. Here `db` runs a server on port 9000, and `api` connects to
+from. A connection is told apart by its local and remote address and port,
+so connections to different servers can share a local port. The range is
+not a count of connections: it runs out for one destination at a time. Here
+`db` runs a server on port 9000, and `api` connects to
 db's address from the listing above, `172.18.0.4`, with 2 ports:
 
 ```bash
@@ -544,6 +548,63 @@ range on the container whose network it is:
 ✗ Not set: sidecar is on the network of compose-db-1.
   Narrow the ports of compose-db-1 machine containers app ports compose-db-1 40000-40009
 ```
+
+### A full disk
+
+A container's own files are on the machine's disk, shared by every
+container, so filling them fills the machine. A volume that is a filesystem
+of its own fills alone: only the services that mount it meet the full disk.
+A Compose file makes one in two ways:
+
+| Volume | Full as a disk is | After a restart | Costs |
+|---|---|---|---|
+| A volume named in `x-machine`, with its size | yes: an ext4 filesystem on a block device, with a journal, metadata and `fsync` | its files are kept | room on the disk, up to its size |
+| A tmpfs volume, `driver_opts` with `size=` | no: in memory, where `fsync` does nothing and no write is delayed | its files are gone | the machine's memory, up to its size |
+
+Use the `x-machine` volume to see what a service does on a full disk. A
+tmpfs volume answers whether it handles ENOSPC on a write, with no change to
+how the disk is built. Here `db` has a volume of 64MB at `/data`:
+
+```yaml
+services:
+  db:
+    image: clockprobe:test
+    volumes: [db-data:/data]
+volumes:
+  db-data: {}
+x-machine:
+  volumes:
+    db-data: 64M
+```
+
+Filling it with one file runs it out of space, and many empty files run it
+out of inodes:
+
+```bash
+machine exec app run --container db -- dd if=/dev/zero of=/data/fill bs=1M
+machine exec app run --container db -- dd if=/dev/zero of=/data/more bs=4k count=10 conv=fsync
+machine exec app run --container db -- rm /data/fill /data/more
+machine exec app run --container db -- sh -c \
+  'mkdir /data/many; cd /data/many; i=0; while : > f$i; do i=$((i+1)); done'
+machine exec app run --container db -- rm -r /data/many
+```
+
+The fill stopped at 54.7MB of the filesystem's 57MB, and the write after it
+stored one block of 10 and failed. The files stopped at the 16,373rd, with
+blocks still free:
+
+```text
+sh: can't create f16372: No space left on device
+```
+
+Meanwhile `db` wrote its own files outside `/data`, `api` wrote its files,
+and the machine's disk stayed 17% full. Deleting the files ends the full
+disk. A tmpfs volume of 40MB, in the same test, stopped a `dd` at 40MB with
+`No space left on device`, and was empty after `api` restarted.
+
+Filling the machine's own disk instead makes every container meet it, and
+the container runtime with them: `machine exec --container` then fails with
+`OCI runtime exec failed`. `machine exec` without `--container` still runs.
 
 ### CPU
 

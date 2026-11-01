@@ -18,8 +18,8 @@ machine containers app memory db 64m --for 30s   # past 64MB, its out-of-memory 
 machine containers app memory db 0               # the limit lifted
 machine containers app memory db 48m --soft      # past 48MB, reclaimed and slowed, not killed
 machine containers app pids db 20                # past 20 processes, fork fails with EAGAIN
-machine containers app files api 64              # past 64 open files, open fails with EMFILE
-machine containers app ports api 40000-40009     # past 10 connections, connect fails with EADDRNOTAVAIL
+machine containers app files api 64              # a process past 64 open files: open fails with EMFILE
+machine containers app ports api 40000-40009     # 10 local ports: connect fails with EADDRNOTAVAIL
 machine containers app start db
 ```
 

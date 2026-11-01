@@ -6574,9 +6574,10 @@ A connection the container opens takes its local port from the range given. A
 range of 0 sets back the kernel's own, 32768-60999. The range holds when the
 container starts again.
 
-Once every port of the range is taken, a connect fails with EADDRNOTAVAIL. A
-program that binds port 0 before it connects gets EADDRINUSE. A port stays taken
-after its connection closes, in TIME_WAIT for 60 seconds.
+Once every port of the range is taken for one destination, a connect to it fails
+with EADDRNOTAVAIL. Two connections to different destinations can share a port.
+A program that binds port 0 before it connects gets EADDRINUSE. A port stays
+taken after its connection closes, in TIME_WAIT for 60 seconds.
 
 The range applies to every process on the container's network. The command
 refuses a container on the machine's network. It also refuses a container that
