@@ -6085,7 +6085,8 @@ has no service.
 
 A verb puts a fault on one container while the others run: a node of a cluster
 that stops, dies, loses power, freezes or starves. Throttle limits its CPU, and
-memory its memory.
+memory its memory. Pids, files and ports run it out of processes, open files and
+local ports.
 
 Every command that takes a container takes its id, its name or its Compose
 service. An id is the surer way to name one. The machine knows an id as soon as

@@ -398,8 +398,10 @@ A program runs out of a resource in two ways, and Machine tests both:
 | Ephemeral ports | `containers ports api 40000-40009` | `inject add syscall connect EADDRNOTAVAIL` | EADDRNOTAVAIL |
 | Disk space, inodes | | `inject add syscall write ENOSPC` | ENOSPC |
 
-[Memory faults](#memory-faults) covers memory. The rest of this section
-covers the other resources.
+A fault that fails one call also takes `--in`, the program it fails, as the
+examples below show. A running container's disk cannot be shrunk, so disk
+space and inodes run out only as one failed call. [Memory faults](#memory-faults)
+covers memory. The rest of this section covers the other resources.
 
 | You want to know | Command |
 |---|---|
@@ -414,9 +416,9 @@ covers the other resources.
 
 ### Limits on a container
 
-`machine containers` sets each limit on one running container. Each limit
-takes `--for` to set the previous one back after that much machine time, and
-each ends at the container's next start:
+`machine containers` sets each limit on one running container, and the limit
+ends at the container's next start. Use `--for 30s` to set the previous limit
+back after 30 seconds of machine time:
 
 ```bash
 machine containers app pids db 20                # 20 processes and threads
@@ -472,8 +474,9 @@ set:
 
 ```bash
 machine exec app start --container api -- sh -c \
-  'cd /tmp; sleep 10; ulimit -n; timeout 2 tail -f f*'
+  'cd /tmp; for i in $(seq 100); do : > f$i; done; sleep 10; ulimit -n; timeout 2 tail -f f*'
 machine containers app files api 32
+machine run app --within 15s
 ```
 
 The shell printed `32`. Then `tail` opened the files `f1` to `f100`, in
@@ -493,9 +496,11 @@ refused, with a hint to build it again.
 
 `ports` narrows the range of local ports a container's connections take
 from. Every outgoing connection holds one port of the range, so a few ports
-run out quickly. Here `api` connects to a server in `db` with 2 ports:
+run out quickly. Here `db` runs a server on port 9000, and `api` connects to
+it with 2 ports:
 
 ```bash
+machine exec app start --container db -- tcpsvd 0 9000 cat
 machine containers app ports api 40000-40001
 machine exec app run --container api -- sh -c \
   'for i in 1 2 3; do (sleep 5 | telnet 172.18.0.4 9000 >/dev/null) & done; wait'
@@ -523,38 +528,68 @@ Four things follow from how the kernel gives out ports:
 
 The range belongs to the container's network. The command refuses a
 container on the machine's network, whose range is every process's. It also
-refuses a container on another container's network, with a hint naming the
-container whose network it is:
+refuses a container on another container's network, with a hint to set the
+range on the container whose network it is:
 
 ```text
 ✗ Not set: sidecar is on the network of compose-db-1.
-  Narrow the ports of compose-db-1 machine containers app ports compose-db-1 RANGE
+  Narrow the ports of compose-db-1 machine containers app ports compose-db-1 40000-40009
 ```
 
 ### CPU
 
 `throttle` gives a container a share of a CPU. Nothing fails: every process
-of the container runs slower. A loop in `db` took 4.58 seconds of machine
-time, and 46.80 seconds with `--cpus 0.1`:
+of the container runs slower. A loop in `db` that counts to 200,000 took
+4.58 seconds of machine time, and 46.80 seconds with `--cpus 0.1`:
 
 ```bash
 machine containers app throttle db --cpus 0.1
+machine exec app run --container db -- sh -c 'i=0; while [ $i -lt 200000 ]; do i=$((i+1)); done'
 ```
 
 ### One failed call
 
 A [system call fault](#system-call-faults) gives one program the error a
 resource gives, at the call chosen. Nothing runs out, and every other
-program runs on. Each fault below was run against BusyBox programs in a
-container:
+program runs on. Each fault below was added, then the program after it was
+run, then the fault was deleted with `machine inject app clear`. The
+programs are BusyBox's, in the containers of the
+[ports example](#ephemeral-ports), and `tail` reads the files of the
+[open-files example](#open-files). `worker.sh` starts 3 background jobs and
+waits for them, and `machine put` copies it into `db`:
+
+```sh
+#!/bin/sh
+for i in 1 2 3; do sleep 1 & done
+wait
+echo all started
+```
 
 ```bash
+machine put app ./worker.sh /tmp/worker.sh --container db --mode 755
+
+# A failed fork: the script's second
 machine inject app add syscall clone EAGAIN --after 1 --times 1 --in comm=worker.sh
+machine exec app run --container db -- /tmp/worker.sh
+
+# Out of descriptors: the third file of 8
 machine inject app add syscall openat EMFILE --after 14 --times 1 --in comm=tail
+machine exec app run --container api -- sh -c 'cd /tmp; timeout 1 tail -f f1 f2 f3 f4 f5 f6 f7 f8'
+
+# Out of local ports
 machine inject app add syscall connect EADDRNOTAVAIL --times 1 --in comm=telnet
+machine exec app run --container api -- sh -c 'sleep 2 | telnet 172.18.0.4 9000'
+
+# A full disk: the 11th write
 machine inject app add syscall write ENOSPC --after 10 --times 1 --in comm=dd
+machine exec app run --container db -- dd if=/dev/zero of=/tmp/out bs=4k count=100
+
+# Out of inodes
 machine inject app add syscall mkdir ENOSPC --in comm=mkdir
+machine exec app run --container db -- mkdir /tmp/new
 ```
+
+Each program reported its error:
 
 ```text
 /tmp/worker.sh: line 0: can't fork: Resource temporarily unavailable
