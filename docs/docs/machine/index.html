@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793540236630" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793540236630" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793538158141" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793540236630" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2576,8 +2576,8 @@ way. There are four kinds of fault, each with its own command:</p>
 </tr>
 <tr>
 <td><code>machine containers</code></td>
-<td>one service’s container: stopped, killed, crashed, paused, throttled or limited in memory</td>
-<td><a href="#container-faults">Container faults</a></td>
+<td>one service’s container: stopped, killed, crashed, paused, throttled, or limited in memory, processes, open files or local ports</td>
+<td><a href="#container-faults">Container faults</a>, <a href="#resource-exhaustion">Resource exhaustion</a></td>
 </tr>
 <tr>
 <td><code>machine clock</code></td>
@@ -2923,7 +2923,7 @@ Use it to test one error path, exactly and repeatably.</li>
 <td>Memory</td>
 <td><code>containers memory db 64m</code></td>
 <td><code>inject add function malloc --return 0</code></td>
-<td>the OOM killer, or NULL</td>
+<td>SIGKILL, or <code>malloc</code> returns NULL</td>
 </tr>
 <tr>
 <td>Processes</td>
@@ -2950,63 +2950,63 @@ Use it to test one error path, exactly and repeatably.</li>
 <td>ENOSPC</td>
 </tr>
 </tbody></table>
-<p>A fault that fails one call also takes <code>--in</code>, the program it fails, as the
-examples below show. A running container’s disk cannot be shrunk, so disk
-space and inodes run out only as one failed call. <a href="#memory-faults">Memory faults</a>
-covers memory. The rest of this section covers the other resources.</p>
+<p>A fault that fails one call also takes <code>--in</code>, the program it fails, as
+<a href="#one-failed-call">One failed call</a> shows. A running container’s disk cannot
+be shrunk, so disk space and inodes run out only as one failed call.
+<a href="#memory-faults">Memory faults</a> covers memory. The rest of this section
+covers the other resources.</p>
 <table>
 <thead>
 <tr>
 <th>You want to know</th>
 <th>Command</th>
+<th>Example</th>
 </tr>
 </thead>
 <tbody><tr>
-<td>Does the service keep serving when it cannot start a worker?</td>
-<td><code>containers pids db 20</code></td>
+<td>Does a service survive when it cannot start a process?</td>
+<td><code>containers pids db 10</code></td>
+<td><a href="#processes">Processes</a></td>
 </tr>
 <tr>
-<td>Does the server keep its listener when it runs out of descriptors?</td>
-<td><code>containers files api 64</code></td>
+<td>Does a program cope when it runs out of file descriptors?</td>
+<td><code>containers files api 32</code></td>
+<td><a href="#open-files">Open files</a></td>
 </tr>
 <tr>
-<td>Does a client recover when it runs out of local ports?</td>
-<td><code>containers ports api 40000-40009</code></td>
-</tr>
-<tr>
-<td>Does connection churn exhaust the ports?</td>
-<td><code>containers ports api 40000-40001</code> and a loop of short connections</td>
-</tr>
-<tr>
-<td>Does the program report a failed <code>fork</code>?</td>
-<td><code>inject add syscall clone EAGAIN --times 1 --in /usr/bin/app</code></td>
-</tr>
-<tr>
-<td>Does it handle a full disk mid-write?</td>
-<td><code>inject add syscall write ENOSPC --after 100 --times 1 --in /usr/bin/app</code></td>
-</tr>
-<tr>
-<td>Does it handle running out of inodes?</td>
-<td><code>inject add syscall mkdir ENOSPC --in /usr/bin/app</code></td>
+<td>Does a client cope when it runs out of local ports, or churns through them?</td>
+<td><code>containers ports api 40000-40001</code></td>
+<td><a href="#ephemeral-ports">Ephemeral ports</a></td>
 </tr>
 <tr>
 <td>Does the system cope with one slow service?</td>
-<td><code>containers throttle db --cpus 0.1 --for 1m</code></td>
+<td><code>containers throttle db --cpus 0.1</code></td>
+<td><a href="#cpu">CPU</a></td>
+</tr>
+<tr>
+<td>Does a program report a failed fork, a full disk or no inodes?</td>
+<td><code>inject add syscall clone EAGAIN</code>, <code>write ENOSPC</code>, <code>mkdir ENOSPC</code></td>
+<td><a href="#one-failed-call">One failed call</a></td>
 </tr>
 </tbody></table>
 <h3 id="limits-on-a-container"><a href="#limits-on-a-container" class="headerlink" title="Limits on a container"></a>Limits on a container</h3><p><code>machine containers</code> sets each limit on one container. The limit holds when
 the container starts again, until it is lifted, so a service that crashes on
-the limit and restarts meets it again. A container that Compose recreates
-starts without it. Use <code>--for 30s</code> to set the previous limit back after 30
-seconds of machine time:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">machine containers app pids db 20                <span class="comment"># 20 processes and threads</span></span><br><span class="line">machine containers app files api 64              <span class="comment"># 64 open files a process</span></span><br><span class="line">machine containers app ports api 40000-40009     <span class="comment"># 10 local ports</span></span><br><span class="line">machine containers app pids db 20 --<span class="keyword">for</span> 30s      <span class="comment"># set back after 30 seconds of machine time</span></span><br><span class="line">machine containers app pids db 0                 <span class="comment"># no limit</span></span><br><span class="line">machine containers app files api 0               <span class="comment"># the container&#x27;s own limit</span></span><br><span class="line">machine containers app ports api 0               <span class="comment"># the kernel&#x27;s range, 32768-60999</span></span><br></pre></td></tr></table></figure>
+the limit and restarts meets it again. A limit set on a stopped container
+applies when it starts. A container that Compose recreates starts without
+it. Use <code>--for 30s</code> to set the previous limit back
+after 30 seconds of machine time. A disk built before the guest kept
+container limits is refused, with a hint to build the disk again.</p>
+<p>After <code>pids db 10</code>, <code>machine containers app</code> shows the limit in the LIMITS
+column:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine containers app pids db 10</span><br><span class="line">machine containers app</span><br></pre></td></tr></table></figure>
 
-<p><code>machine containers app</code> shows each container’s limits in its LIMITS column:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK         LIMITS</span><br><span class="line">api      compose-api-1   0474e6006f79  running  clockprobe:test  172.18.0.3  veth3ede11a  -</span><br><span class="line">db       compose-db-1    8ef3a4936249  running  clockprobe:test  172.18.0.4  veth31535d2  pids 10</span><br><span class="line">nest     compose-nest-1  6830a8b2a2fc  running  clockprobe:test  172.18.0.2  vetha032499  -</span><br></pre></td></tr></table></figure>
 
+<p>The other limits, and lifting one:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">machine containers app pids db 20                <span class="comment"># 20 processes and threads</span></span><br><span class="line">machine containers app files api 64              <span class="comment"># 64 open files a process</span></span><br><span class="line">machine containers app ports api 40000-40009     <span class="comment"># 10 local ports</span></span><br><span class="line">machine containers app pids db 20 --<span class="keyword">for</span> 30s      <span class="comment"># set back after 30 seconds of machine time</span></span><br><span class="line">machine containers app pids db 0                 <span class="comment"># no limit</span></span><br><span class="line">machine containers app files api 0               <span class="comment"># the container&#x27;s own limit</span></span><br><span class="line">machine containers app ports api 0               <span class="comment"># the kernel&#x27;s range, 32768-60999</span></span><br></pre></td></tr></table></figure>
+
 <p>Each limit is set by a command the run records, so a replay sets it at the
-same point. A branch replayed through every example in this section showed
-no differences.</p>
+same point.</p>
 <h3 id="processes-1"><a href="#processes-1" class="headerlink" title="Processes"></a>Processes</h3><p><code>pids</code> limits the processes and threads of a container. Past the limit, a
 <code>fork</code> or a new thread fails with EAGAIN, and the processes already running
 go on. Here a shell in <code>db</code> starts background jobs under a limit of 10:</p>
@@ -3014,7 +3014,7 @@ go on. Here a shell in <code>db</code> starts background jobs under a limit of 1
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh: can&#x27;t fork: Resource temporarily unavailable</span><br></pre></td></tr></table></figure>
 
-<p>With the limit lifted, <code>pids db 0</code>, the same shell starts all 20.</p>
+<p>After <code>pids db 0</code>, running that command again starts all 20.</p>
 <h3 id="open-files"><a href="#open-files" class="headerlink" title="Open files"></a>Open files</h3><p><code>files</code> limits the files each process of a container may hold open.
 Sockets and pipes count as files. Past the limit, an <code>open</code>, a <code>socket</code> or
 an <code>accept</code> fails with EMFILE, and files already open stay open.</p>
@@ -3030,14 +3030,14 @@ the order <code>f1</code>, <code>f10</code> to <code>f19</code>, <code>f100</cod
 standard input, output and error, 32 files, and every file after that failed:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tail: can&#x27;t open &#x27;f35&#x27;: Too many open files</span><br></pre></td></tr></table></figure>
 
-<p>A new <code>machine exec --container api -- sh -c &#39;ulimit -n&#39;</code> printed 1024, the
-container’s own limit. <code>files api 0</code> sets back the container’s own limit,
-both its soft and its hard number. A disk built before file limits is
-refused, with a hint to build it again.</p>
+<p>A later <code>machine exec --container api -- sh -c &#39;ulimit -n&#39;</code> printed 1024.
+A process <code>docker exec</code> starts does not take the limit set on the processes
+already running. It takes the container’s own limit. <code>files api 0</code> sets
+that own limit back, both its soft and its hard number.</p>
 <h3 id="ephemeral-ports"><a href="#ephemeral-ports" class="headerlink" title="Ephemeral ports"></a>Ephemeral ports</h3><p><code>ports</code> narrows the range of local ports a container’s connections take
 from. Every outgoing connection holds one port of the range, so a few ports
 run out quickly. Here <code>db</code> runs a server on port 9000, and <code>api</code> connects to
-it with 2 ports:</p>
+db’s address from the listing above, <code>172.18.0.4</code>, with 2 ports:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">exec</span> app start --container db -- tcpsvd 0 9000 <span class="built_in">cat</span></span><br><span class="line">machine containers app ports api 40000-40001</span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c \</span><br><span class="line">  <span class="string">&#x27;for i in 1 2 3; do (sleep 5 | telnet 172.18.0.4 9000 &gt;/dev/null) &amp; done; wait&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">telnet: can&#x27;t connect to remote host (172.18.0.4): Cannot assign requested address</span><br></pre></td></tr></table></figure>
@@ -3079,7 +3079,7 @@ programs are BusyBox’s, in the containers of the
 waits for them, and <code>machine put</code> copies it into <code>db</code>:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> 1 2 3; <span class="keyword">do</span> <span class="built_in">sleep</span> 1 &amp; <span class="keyword">done</span></span><br><span class="line"><span class="built_in">wait</span></span><br><span class="line"><span class="built_in">echo</span> all started</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">machine put app ./worker.sh /tmp/worker.sh --container db --mode 755</span><br><span class="line"></span><br><span class="line"><span class="comment"># A failed fork: the script&#x27;s second</span></span><br><span class="line">machine inject app add syscall <span class="built_in">clone</span> EAGAIN --after 1 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=worker.sh</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- /tmp/worker.sh</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of descriptors: the third file of 8</span></span><br><span class="line">machine inject app add syscall openat EMFILE --after 14 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">tail</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;cd /tmp; timeout 1 tail -f f1 f2 f3 f4 f5 f6 f7 f8&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of local ports</span></span><br><span class="line">machine inject app add syscall connect EADDRNOTAVAIL --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=telnet</span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;sleep 2 | telnet 172.18.0.4 9000&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># A full disk: the 11th write</span></span><br><span class="line">machine inject app add syscall write ENOSPC --after 10 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">dd</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=/tmp/out bs=4k count=100</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of inodes</span></span><br><span class="line">machine inject app add syscall <span class="built_in">mkdir</span> ENOSPC --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">mkdir</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">mkdir</span> /tmp/new</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">machine put app ./worker.sh /tmp/worker.sh --container db --mode 755</span><br><span class="line"></span><br><span class="line"><span class="comment"># A failed fork: the script&#x27;s second</span></span><br><span class="line">machine inject app add syscall <span class="built_in">clone</span> EAGAIN --after 1 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=worker.sh</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- /tmp/worker.sh</span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of descriptors: the third file of 8</span></span><br><span class="line">machine inject app add syscall openat EMFILE --after 14 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">tail</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;cd /tmp; timeout 1 tail -f f1 f2 f3 f4 f5 f6 f7 f8&#x27;</span></span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of local ports</span></span><br><span class="line">machine inject app add syscall connect EADDRNOTAVAIL --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=telnet</span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;sleep 2 | telnet 172.18.0.4 9000&#x27;</span></span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># A full disk: the 11th write</span></span><br><span class="line">machine inject app add syscall write ENOSPC --after 10 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">dd</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=/tmp/out bs=4k count=100</span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of inodes</span></span><br><span class="line">machine inject app add syscall <span class="built_in">mkdir</span> ENOSPC --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">mkdir</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">mkdir</span> /tmp/new</span><br><span class="line">machine inject app clear</span><br></pre></td></tr></table></figure>
 
 <p>Each program reported its error:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/tmp/worker.sh: line 0: can&#x27;t fork: Resource temporarily unavailable</span><br><span class="line">tail: can&#x27;t open &#x27;f3&#x27;: Too many open files</span><br><span class="line">telnet: can&#x27;t connect to remote host (172.18.0.4): Cannot assign requested address</span><br><span class="line">dd: error writing &#x27;/tmp/out&#x27;: No space left on device</span><br><span class="line">mkdir: can&#x27;t create directory &#x27;/tmp/new&#x27;: No space left on device</span><br></pre></td></tr></table></figure>
@@ -16806,10 +16806,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793538158141"></script>
-<script src="/js/machine-hero-type.js?v=1793538158141"></script>
-<script src="/js/download-platforms.js?v=1793538158141"></script>
-<script src="/js/anchor-case.js?v=1793538158141"></script>
+<script src="/js/index-code-type.js?v=1793540236631"></script>
+<script src="/js/machine-hero-type.js?v=1793540236631"></script>
+<script src="/js/download-platforms.js?v=1793540236631"></script>
+<script src="/js/anchor-case.js?v=1793540236631"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

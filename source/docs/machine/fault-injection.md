@@ -9,7 +9,7 @@ way. There are four kinds of fault, each with its own command:
 | Command | What it makes fail | Section |
 |---|---|---|
 | `machine inject` | a program's system calls and its functions, the kernel's disk requests and memory allocations, and the disk's data | [System call faults](#system-call-faults), [Function faults](#function-faults), [Kernel faults](#kernel-faults), [Disk faults](#disk-faults) |
-| `machine containers` | one service's container: stopped, killed, crashed, paused, throttled or limited in memory | [Container faults](container-faults.md) |
+| `machine containers` | one service's container: stopped, killed, crashed, paused, throttled, or limited in memory, processes, open files or local ports | [Container faults](container-faults.md), [Resource exhaustion](#resource-exhaustion) |
 | `machine clock` | the date the guest or one container reads: stepped, drifting, jittering, or a leap second | [Clock faults](clock-faults.md) |
 | `machine net` | the links between containers: slow, lossy, out of order, rate limited, or cut | [Network faults](network-faults.md) |
 
@@ -392,35 +392,52 @@ A program runs out of a resource in two ways, and Machine tests both:
 | Resource | Run it out | Fail one call | The error |
 |---|---|---|---|
 | CPU | `containers throttle db --cpus 0.1` | | none: everything slows |
-| Memory | `containers memory db 64m` | `inject add function malloc --return 0` | the OOM killer, or NULL |
+| Memory | `containers memory db 64m` | `inject add function malloc --return 0` | SIGKILL, or `malloc` returns NULL |
 | Processes | `containers pids db 50` | `inject add syscall clone EAGAIN` | EAGAIN |
 | Open files | `containers files api 64` | `inject add syscall openat EMFILE` | EMFILE |
 | Ephemeral ports | `containers ports api 40000-40009` | `inject add syscall connect EADDRNOTAVAIL` | EADDRNOTAVAIL |
 | Disk space, inodes | | `inject add syscall write ENOSPC` | ENOSPC |
 
-A fault that fails one call also takes `--in`, the program it fails, as the
-examples below show. A running container's disk cannot be shrunk, so disk
-space and inodes run out only as one failed call. [Memory faults](#memory-faults)
-covers memory. The rest of this section covers the other resources.
+A fault that fails one call also takes `--in`, the program it fails, as
+[One failed call](#one-failed-call) shows. A running container's disk cannot
+be shrunk, so disk space and inodes run out only as one failed call.
+[Memory faults](#memory-faults) covers memory. The rest of this section
+covers the other resources.
 
-| You want to know | Command |
-|---|---|
-| Does the service keep serving when it cannot start a worker? | `containers pids db 20` |
-| Does the server keep its listener when it runs out of descriptors? | `containers files api 64` |
-| Does a client recover when it runs out of local ports? | `containers ports api 40000-40009` |
-| Does connection churn exhaust the ports? | `containers ports api 40000-40001` and a loop of short connections |
-| Does the program report a failed `fork`? | `inject add syscall clone EAGAIN --times 1 --in /usr/bin/app` |
-| Does it handle a full disk mid-write? | `inject add syscall write ENOSPC --after 100 --times 1 --in /usr/bin/app` |
-| Does it handle running out of inodes? | `inject add syscall mkdir ENOSPC --in /usr/bin/app` |
-| Does the system cope with one slow service? | `containers throttle db --cpus 0.1 --for 1m` |
+| You want to know | Command | Example |
+|---|---|---|
+| Does a service survive when it cannot start a process? | `containers pids db 10` | [Processes](#processes) |
+| Does a program cope when it runs out of file descriptors? | `containers files api 32` | [Open files](#open-files) |
+| Does a client cope when it runs out of local ports, or churns through them? | `containers ports api 40000-40001` | [Ephemeral ports](#ephemeral-ports) |
+| Does the system cope with one slow service? | `containers throttle db --cpus 0.1` | [CPU](#cpu) |
+| Does a program report a failed fork, a full disk or no inodes? | `inject add syscall clone EAGAIN`, `write ENOSPC`, `mkdir ENOSPC` | [One failed call](#one-failed-call) |
 
 ### Limits on a container
 
 `machine containers` sets each limit on one container. The limit holds when
 the container starts again, until it is lifted, so a service that crashes on
-the limit and restarts meets it again. A container that Compose recreates
-starts without it. Use `--for 30s` to set the previous limit back after 30
-seconds of machine time:
+the limit and restarts meets it again. A limit set on a stopped container
+applies when it starts. A container that Compose recreates starts without
+it. Use `--for 30s` to set the previous limit back
+after 30 seconds of machine time. A disk built before the guest kept
+container limits is refused, with a hint to build the disk again.
+
+After `pids db 10`, `machine containers app` shows the limit in the LIMITS
+column:
+
+```bash
+machine containers app pids db 10
+machine containers app
+```
+
+```text
+SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK         LIMITS
+api      compose-api-1   0474e6006f79  running  clockprobe:test  172.18.0.3  veth3ede11a  -
+db       compose-db-1    8ef3a4936249  running  clockprobe:test  172.18.0.4  veth31535d2  pids 10
+nest     compose-nest-1  6830a8b2a2fc  running  clockprobe:test  172.18.0.2  vetha032499  -
+```
+
+The other limits, and lifting one:
 
 ```bash
 machine containers app pids db 20                # 20 processes and threads
@@ -432,18 +449,8 @@ machine containers app files api 0               # the container's own limit
 machine containers app ports api 0               # the kernel's range, 32768-60999
 ```
 
-`machine containers app` shows each container's limits in its LIMITS column:
-
-```text
-SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK         LIMITS
-api      compose-api-1   0474e6006f79  running  clockprobe:test  172.18.0.3  veth3ede11a  -
-db       compose-db-1    8ef3a4936249  running  clockprobe:test  172.18.0.4  veth31535d2  pids 10
-nest     compose-nest-1  6830a8b2a2fc  running  clockprobe:test  172.18.0.2  vetha032499  -
-```
-
 Each limit is set by a command the run records, so a replay sets it at the
-same point. A branch replayed through every example in this section showed
-no differences.
+same point.
 
 ### Processes
 
@@ -460,7 +467,7 @@ machine exec app run --container db -- sh -c 'for i in $(seq 20); do sleep 30 & 
 sh: can't fork: Resource temporarily unavailable
 ```
 
-With the limit lifted, `pids db 0`, the same shell starts all 20.
+After `pids db 0`, running that command again starts all 20.
 
 ### Open files
 
@@ -489,17 +496,17 @@ standard input, output and error, 32 files, and every file after that failed:
 tail: can't open 'f35': Too many open files
 ```
 
-A new `machine exec --container api -- sh -c 'ulimit -n'` printed 1024, the
-container's own limit. `files api 0` sets back the container's own limit,
-both its soft and its hard number. A disk built before file limits is
-refused, with a hint to build it again.
+A later `machine exec --container api -- sh -c 'ulimit -n'` printed 1024.
+A process `docker exec` starts does not take the limit set on the processes
+already running. It takes the container's own limit. `files api 0` sets
+that own limit back, both its soft and its hard number.
 
 ### Ephemeral ports
 
 `ports` narrows the range of local ports a container's connections take
 from. Every outgoing connection holds one port of the range, so a few ports
 run out quickly. Here `db` runs a server on port 9000, and `api` connects to
-it with 2 ports:
+db's address from the listing above, `172.18.0.4`, with 2 ports:
 
 ```bash
 machine exec app start --container db -- tcpsvd 0 9000 cat
@@ -573,22 +580,27 @@ machine put app ./worker.sh /tmp/worker.sh --container db --mode 755
 # A failed fork: the script's second
 machine inject app add syscall clone EAGAIN --after 1 --times 1 --in comm=worker.sh
 machine exec app run --container db -- /tmp/worker.sh
+machine inject app clear
 
 # Out of descriptors: the third file of 8
 machine inject app add syscall openat EMFILE --after 14 --times 1 --in comm=tail
 machine exec app run --container api -- sh -c 'cd /tmp; timeout 1 tail -f f1 f2 f3 f4 f5 f6 f7 f8'
+machine inject app clear
 
 # Out of local ports
 machine inject app add syscall connect EADDRNOTAVAIL --times 1 --in comm=telnet
 machine exec app run --container api -- sh -c 'sleep 2 | telnet 172.18.0.4 9000'
+machine inject app clear
 
 # A full disk: the 11th write
 machine inject app add syscall write ENOSPC --after 10 --times 1 --in comm=dd
 machine exec app run --container db -- dd if=/dev/zero of=/tmp/out bs=4k count=100
+machine inject app clear
 
 # Out of inodes
 machine inject app add syscall mkdir ENOSPC --in comm=mkdir
 machine exec app run --container db -- mkdir /tmp/new
+machine inject app clear
 ```
 
 Each program reported its error:
