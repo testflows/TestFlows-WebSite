@@ -7625,7 +7625,8 @@ Inject a fault into a subsystem of the guest.
 
 The subsystem is syscall, or one of the kernel's own fault sites: disk,
 disk-timeout, slab, pages, usercopy and futex-access. The subsystems
-disk-corrupt, disk-torn and disk-lost are faults of the disk itself.
+disk-corrupt, disk-torn and disk-lost are faults of the disk itself. The
+function subsystem makes a function of a program return a value.
 
 Every subsystem takes the same options, with the same meaning. The disk
 subsystems also take `--file`, `--op` and `--sectors`.
@@ -7730,6 +7731,60 @@ See also:
 - [`machine tasks`](#machine-tasks)
 - [`machine syscalls`](#machine-syscalls)
 - [`machine catch add`](#machine-catch-add)
+
+### machine inject add function
+
+Make a function of a program return a value without running.
+
+A call the fault fires on returns the value of `--return` to its caller, and the
+function does not run. A malloc that returns 0 is an allocation that failed. The
+C library does not set errno, so a caller that reads errno reads what was there.
+
+The function is found by its name in the files a running task maps, a library or
+the program itself. The task is one `--in` names, or the task of `--at` when
+what `--in` names does not run yet. The fault acts on every task that maps the
+same file and that `--in` names.
+
+The guest kernel puts a breakpoint at the function in the tasks `--in` names.
+Each call there traps into the kernel, which decides as for every fault.
+
+```
+machine inject run add function [-h] [--return value] [--at tid] --in who [--prob p]
+                                [--after n] [--times n] [--seed n] [--on duration]
+                                [--off duration]
+                                function
+```
+
+| Argument | Does |
+|---|---|
+| `function` | Function, by its name |
+
+| Option | Does |
+|---|---|
+| `--return value` | Value it returns, such as 0 or -1; 0 by default |
+| `--at tid` | Task whose files the function is found in, when `--in` names none running |
+| `--in who` | Whose calls the fault acts on: a program by the absolute path of its file, comm=name, tid=n, tgid=n, or all for every task |
+| `--prob p` | Chance a matching call fires the fault, 0 to 1, such as 0.1 (default: 1) |
+| `--after n` | Let n matching calls through first (default: 0) |
+| `--times n` | Fire on at most n calls, then let the rest through (default: no end) |
+| `--seed n` | Seed the draws of the fault (default: a random seed) |
+| `--on duration` | Machine time the fault is active in each cycle, such as 2s; needs `--off` (default: always active) |
+| `--off duration` | Machine time the fault rests in each cycle, such as 5s; needs `--on` |
+
+Examples:
+
+```
+machine inject run1 add function malloc --in /app        malloc fails
+machine inject run1 add function f --prob 0.1 --in /app  1 in 10
+machine inject run1 add function f --in comm=c --at 4    found in 4
+```
+
+See also:
+
+- [`machine inject`](#machine-inject)
+- [`machine inject add syscall`](#machine-inject-add-syscall)
+- [`machine symbols`](#machine-symbols)
+- [`machine tasks exist`](#machine-tasks-exist)
 
 ### machine inject add disk
 

@@ -8,7 +8,7 @@ way. There are four kinds of fault, each with its own command:
 
 | Command | What it makes fail | Section |
 |---|---|---|
-| `machine inject` | a program's system calls, the kernel's disk requests and memory allocations, and the disk's data | [System call faults](#system-call-faults), [Kernel faults](#kernel-faults), [Disk faults](#disk-faults) |
+| `machine inject` | a program's system calls and its functions, the kernel's disk requests and memory allocations, and the disk's data | [System call faults](#system-call-faults), [Function faults](#function-faults), [Kernel faults](#kernel-faults), [Disk faults](#disk-faults) |
 | `machine containers` | one service's container: stopped, killed, crashed, paused, throttled or limited in memory | [Container faults](container-faults.md) |
 | `machine clock` | the date the guest or one container reads: stepped, drifting, jittering, or a leap second | [Clock faults](clock-faults.md) |
 | `machine net` | the links between containers: slow, lossy, out of order, rate limited, or cut | [Network faults](network-faults.md) |
@@ -24,6 +24,7 @@ disk quietly returns the wrong bytes, at the call you choose or by chance.
 | Subsystem | What fails |
 |---|---|
 | `syscall` | a system call returns an error you choose, or waits first |
+| `function` | a function of a program, such as `malloc`, returns a value you choose without running |
 | `disk` | a disk read or write returns an I/O error |
 | `disk-timeout` | a disk request never completes, and its task waits forever |
 | `slab`, `pages` | a kernel memory allocation fails, as `ENOMEM` in most calls |
@@ -200,6 +201,42 @@ machine inject app add syscall write --delay 5ms --prob 0.1 --in /usr/bin/app   
 The wait is on the machine's own clock, and each call draws its time from the
 fault's seed, so a replay holds the same calls for the same time. `--prob`,
 `--after`, `--times` and `--in` work as they do for errors.
+
+## Function faults
+
+`function` makes a function of a program return a value without running. A
+`malloc` that returns 0 is an allocation that failed, which no system call
+fault reaches: the C library serves most allocations from memory it already
+has, without asking the kernel.
+
+```bash
+machine inject app add function malloc --return 0 --prob 0.01 --in /usr/bin/app
+machine inject app add function malloc --in comm=sort --at 628   # found in task 628's files
+machine inject app add function fopen --after 3 --times 1 --in /usr/bin/app
+```
+
+The function is found by its name in the files a running task maps, its C
+library or the program itself, and the fault acts on every task that maps
+the same file and that `--in` names. With `--in` naming a program that runs
+now, the function is found in that program. With one that does not run yet,
+name with `--at` a task that maps the same library, such as a shell of the
+same container.
+
+In one test, `--in comm=sort` with `--return 0` made busybox's `sort` exit 2 on
+its first allocation, while `seq` and `tail` in the same container ran as
+before. With `--prob 0.05`, four runs of `sort` matched 60 calls and failed 4,
+and a branch replayed from a checkpoint before them failed the same calls.
+
+- **errno is not set.** The C library keeps errno in each thread's own memory,
+  so a caller that checks the return sees the failure, and one that reads
+  errno reads what was there before.
+- **The function's first instruction.** The kernel puts a breakpoint there, in
+  the tasks `--in` names alone, and a fire returns to the caller before the
+  function sets up its frame. Each call traps into the kernel, which costs
+  time in a function called often.
+- **The task `--at` names.** It must be a task inside the container, not
+  the `docker exec` that started it: `machine tasks app` shows each task's
+  program as the container sees it, such as `/bin/sh`.
 
 ## Kernel faults
 
