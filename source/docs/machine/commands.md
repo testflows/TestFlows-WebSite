@@ -2304,7 +2304,8 @@ RNG seed and the virtual time base, rate and costs fix the sources of
 nondeterminism.
 
 Use `--auto-checkpoints` to set how often checkpoints are taken. Use `--like` to
-inherit the options of another run.
+inherit the options of another run. The disk is not inherited, so `--disk` is
+always given.
 
 The machine waits for commands. Use `--no-daemon` to run it to completion
 instead.
@@ -2359,7 +2360,7 @@ machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output
 
 | Option | Does |
 |---|---|
-| `--like run` | Inherit options from another run, overridden by explicit ones |
+| `--like run` | Inherit options from another run, its disk aside, overridden by explicit ones |
 | `--label name=value` | Attach a label, repeatable; an empty value removes an inherited one |
 | `--no-wait` | Return without waiting |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -2789,7 +2790,7 @@ Use machine wait `--for` to ask whether text was printed.
 
 tid=N:at=LOC runs until tid N reaches LOC in its own code. tgid=N:at=LOC runs
 until any thread of the process does. The address is resolved when the run
-starts. The stop takes one of the run's 3 breakpoints and watchpoints.
+starts. The stop takes one of the 3 places the run's watchpoints use.
 
 tid=N:write=LOC runs until an instruction writes the bytes LOC names while tid N
 is on a vCPU. tid=N:access=LOC runs until one reads or writes them.
@@ -2797,7 +2798,7 @@ tgid=N:write=LOC and tgid=N:access=LOC stop for any thread of the process.
 
 The run stops after the access. A write the kernel makes for the task counts. A
 variable or an expression is watched at its size of 1, 2, 4 or 8 bytes. The
-watch takes one of the run's 3 breakpoints and watchpoints.
+watch takes one of the 3 places the run's watchpoints use.
 
 An address is watched through a cast that gives it a type, as GDB's watch takes
 one. The address is a multiple of the size. tgid=N also stops for a kernel
@@ -9610,6 +9611,11 @@ Each step runs the machine, and the run records it, so a replay makes it again.
 A breakpoint the step reaches ends it. A line step steps out of a function that
 has no line tables.
 
+A C++ exception that leaves the function ends `--over` and `--out` at the catch
+that takes it, as GDB does. In a C++ program such a step takes 2 of the run's 3
+breakpoint places. With fewer free, the step is refused. A longjmp out of the
+function ends the step after 30 minutes of machine time.
+
 Use `--skip` NAME with `--line` to step out of a function or a source file of
 that name. It does as GDB's skip does. Give it once for each name.
 
@@ -9710,7 +9716,11 @@ listing has the run's breakpoints, each by its number. Use points to list them
 with the watchpoints and catchpoints.
 
 The run keeps them in its run log. A branch has the ones its parent had where it
-was forked. A run holds 3 breakpoints and watchpoints together.
+was forked. A run holds 64 breakpoints.
+
+The guest puts each breakpoint in the tgid's own copy of its code. Another
+process that maps the same file does not stop. A read of the task's memory shows
+the program's byte, not the breakpoint's.
 
 A run that reaches one ends there, and says which. The breakpoints are armed
 while the run records, and not while it replays.
@@ -9777,9 +9787,14 @@ on.
 The location is resolved now, from the tgid's program files. The run log keeps
 the breakpoint, and a branch has its parent's.
 
+Use `--hardware` to put it in one of the 3 debug registers, as GDB's hbreak
+does. A breakpoint in code the program allocated needs one, as does one in code
+the program reads.
+
 ```
 machine break run add [-h] [--disabled] [--ignore count] [--temporary]
                       [--condition condition] [--print format] [--regex pattern]
+                      [--hardware]
                       tid [location]
 ```
 
@@ -9796,6 +9811,7 @@ machine break run add [-h] [--disabled] [--ignore count] [--temporary]
 | `--condition condition` | Count a hit only where this expression holds, as print takes one, such as '$rax == 0' |
 | `--print format` | Print this at a hit and go on. {EXPR} prints an expression as print takes one, {EXPR:x} in a print format letter: 'n={counter} p={$rdi:x}' |
 | `--regex pattern` | Add one at each function whose name matches, in place of a location |
+| `--hardware` | Put it in a debug register, as GDB's hbreak |
 
 Examples:
 
@@ -10059,7 +10075,8 @@ them with `--on` access. The listing has the run's watchpoints, each by its
 number. Use points to list them with the breakpoints and catchpoints.
 
 The run keeps them in its run log, as it keeps its breakpoints. A run holds 3
-breakpoints and watchpoints together.
+watchpoints. A step and a run until an address or a write take the same 3 places
+while they run.
 
 ```
 machine watch [-h] run command ...
@@ -10475,8 +10492,8 @@ it is armed.
 
 An exit is the end of a tgid, so an exit catchpoint takes `--in` tgid=N and not
 a tid. A throw, catch or rethrow catchpoint is a breakpoint at the C++ runtime's
-function. It needs `--in` tgid=N and takes no values. It takes one of the run's
-3 breakpoints and watchpoints.
+function. It needs `--in` tgid=N and takes no values. It is one of the run's 64
+breakpoints.
 
 ```
 machine catch run add [-h] [--in tid=N|tgid=N|comm=NAME] [--file pattern]

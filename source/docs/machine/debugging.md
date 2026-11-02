@@ -165,6 +165,7 @@ machine break app add 412 init.c:104 --temporary  # deleted at its first hit, as
 machine break app add 412 main --condition '$rdi != 0'
 machine break app add 412 --regex '^parse_'       # at each function that matches, as rbreak
 machine break app add 412 puts --print 'puts {$rdi:s}'   # print and go on, as dprintf
+machine break app add 412 '*0x7f35d1580000' --hardware  # in a debug register, as hbreak
 machine watch app add 412 counter                 # after a write of counter
 machine watch app add 412 counter --on access     # after a read or a write
 machine catch app add fork --in tgid=1            # where tgid 1 forks
@@ -285,25 +286,113 @@ task with `registers()`, `read()`, `backtrace()`, `print()`, `step()`,
 `breakpoint()` and `watch()`, and `run.breakpoints` lists and changes the
 stops.
 
-## Hardware breakpoints
+## How many stops a run holds
 
-A run has 3 debug registers for its stops. These take one each:
+A run holds 64 breakpoints. The machine puts each one into the program as a
+software breakpoint, an `int3` in the tgid's own copy of its code, as GDB's
+`break` does. Another process that maps the same library does not stop, and
+other threads of the tgid stop at it too. A read of the task's memory, with
+`mem` or the instruction a step shows, shows the program's byte, not the
+`int3`. A write over that byte is refused while the breakpoint is there.
 
-- a breakpoint or a watchpoint of `machine break add` or `machine watch add`
+The `throw`, `catch` and `rethrow` catchpoints are breakpoints too. The other
+catchpoints are events the machine reports, and a run holds 8 of them.
+
+A run has 3 debug registers. These take one each:
+
+- a watchpoint of `machine watch add`
+- a breakpoint added with `--hardware`
 - the stop of `run --until tid=N:at=LOC`, `write=LOC` or `access=LOC`, for that run
-- a `throw`, `catch` or `rethrow` catchpoint
+- the stop of a step: `step --over` and `step --out` take one, and two in a
+  C++ program, where the second stops at a catch the exception reaches
 - a hardware breakpoint or watchpoint of GDB inside the machine, `hbreak` or
   `watch`
 
-Other catchpoints take none, and a run holds 8 of them. GDB's `break` writes an
-`int3` into the program, as on any host, and takes none.
-
-When the 3 are taken, the next is refused. A `machine break add` refused while
+When the 3 are taken, the next is refused. A `machine watch add` refused while
 GDB holds some says how many:
 
 ```text
-No room: a run holds 3 breakpoints and watchpoints. The debugger in the guest holds 1.
+No room: a run holds 3 watchpoints. The debugger in the guest holds 1.
 ```
+
+### A breakpoint in a library every process maps
+
+A breakpoint at `malloc` stops one process, though every process of the
+machine calls libc's `malloc`. The others run on, and pay nothing for it:
+
+```text
+$ machine break app add 218 malloc
+✔ Breakpoint 2 at malloc, in tgid 218
+$ machine run app
+✔ Stopped at breakpoint 2: malloc, in tid 218
+$ machine backtrace app 218
+#  ADDRESS         FUNCTION                     SOURCE           FILE
+0  0x7f998847d930  malloc                                        /usr/lib/x86_64-linux-gnu/libc.so.6
+1  0x5654d1e931b4  __cxa_allocate_exception+20                   /usr/bin/cxxprobe
+2  0x5654d1e92d51  work+24 (round=20)           cxxprobe.cpp:12  /usr/bin/cxxprobe
+```
+
+A breakpoint in a library the program loads later is placed when it loads,
+and again each time it is loaded after being unloaded.
+
+### Many breakpoints at once
+
+A pattern adds a breakpoint at each function that matches, as GDB's `rbreak`
+does. For example, 38 of libc's string functions:
+
+```bash
+machine break app add 251 --regex '^str[a-n]'
+```
+
+A pattern that matches more functions than the run has room for adds none, and
+says how many it matched and how many the run holds:
+
+```text
+✗ 79 functions match: strcasecmp, strcasecmp_l, strcasestr, strcat, strchr and 74 more. The run holds 64 more breakpoints.
+  List the matches machine symbols app 251 --regex ^str
+  See the breakpoints to delete machine break app
+```
+
+### Threads
+
+Every thread of the tgid stops at a breakpoint, each with its own tid. For
+example, two worker threads that run the same function:
+
+```text
+$ machine break app add 251 worker_tick
+✔ Breakpoint 1 at worker_tick+7, bpprobe.c:20, in tgid 251
+$ machine run app
+✔ Stopped at breakpoint 1: worker_tick+7, bpprobe.c:20, in tid 303
+$ machine run app
+✔ Stopped at breakpoint 1: worker_tick+7, bpprobe.c:20, in tid 302
+```
+
+A child the process forks, or vforks, is another tgid and runs on, though it
+shares the parent's copy of the code until it writes.
+
+### When to use --hardware
+
+A software breakpoint is the right one almost always. `--hardware` is for the
+cases an `int3` in the program cannot cover:
+
+- Code in memory the program allocated, as a JIT writes. The listing says the
+  breakpoint is not placed, with the command that puts it in a register:
+
+  ```text
+  $ machine break app
+  #  KIND        ADDRESS         SIZE  WHERE            TGID                  HITS  WHEN
+  1  breakpoint  0x7f35d1580000     1  *0x7f35d1580000  251 /usr/bin/bpprobe     0  not placed: the address maps no file
+    Put it in a debug register machine break app add 251 '*0x7f35d1580000' --hardware
+  ```
+
+- Code the program reads. The program sees the `int3`, as it does under GDB's
+  `break`: a checksum of its own code changes, for example. A hardware
+  breakpoint changes no byte.
+- An instruction the kernel does not let a breakpoint sit on, such as
+  `syscall`. The listing says `not placed: the kernel refused the instruction`.
+
+A hardware breakpoint lists as `hw breakpoint` and takes one of the 3 debug
+registers.
 
 A GDB `hbreak` or `watch` refused for the same reason makes GDB say
 `Couldn't write debug register: No space left on device` at the `continue`
