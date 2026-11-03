@@ -72,7 +72,7 @@ address in the task's process:
 | Location | What it names |
 |---|---|
 | `0x401136` | an address |
-| `*0x401136` | an address |
+| `*0x401136` | the same address, written with a `*` |
 | `main` | a function or a variable, by its name |
 | `libc.so.6:malloc` | a name in one file of the process, by its path or its file name |
 | `init.c:106` | a source line, at its first code |
