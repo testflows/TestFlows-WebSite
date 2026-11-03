@@ -50,9 +50,8 @@ finds it in any layer of a container's image.
 A server is built optimized, as it ships. Its arguments and locals are where
 the compiler kept them at each instruction: on the stack, in registers, or in
 pieces of both, as clang keeps a C++ `std::string_view` in two registers. One
-kept nowhere is `optimized out`, as GDB says it. A C++ function is named short,
-as GDB names it, `DB::executeQuery`; `machine --signatures` names it by its
-whole signature.
+kept nowhere is `optimized out`. A C++ function is named short, such as
+`DB::executeQuery`. `machine --signatures` names it by its whole signature.
 
 Without debug information, read the arguments from the registers the ABI
 passes them in, and give a global a type with a cast:
@@ -73,7 +72,7 @@ address in the task's process:
 | Location | What it names |
 |---|---|
 | `0x401136` | an address |
-| `*0x401136` | an address, as GDB writes it |
+| `*0x401136` | an address |
 | `main` | a function or a variable, by its name |
 | `libc.so.6:malloc` | a name in one file of the process, by its path or its file name |
 | `init.c:106` | a source line, at its first code |
@@ -81,7 +80,7 @@ address in the task's process:
 | `main+4`, `$rsp-8` | any of these, moved by `+N` or `-N` |
 
 When the program has debug information, a breakpoint at a function by its name
-is placed past its prologue, as GDB's `break FUNCTION` is. Without it, the
+is placed past its prologue. Without it, the
 breakpoint is at the function's first instruction.
 
 ### Registers and memory
@@ -93,8 +92,8 @@ machine regs app 412 --all             # with x87, SSE and AVX
 machine regs app 412 rax=0 rip=main+4  # write two of them
 ```
 
-[`machine mem`](commands.md#machine-mem) shows memory as GDB's `x` does, with
-a count, a letter and a unit after the location, such as `8xg`, `4i` or `s`:
+[`machine mem`](commands.md#machine-mem) shows memory in the format given
+after the location: a count, a letter and a unit, such as `8xg`, `4i` or `s`:
 
 ```bash
 machine mem app 412 '$sp'                   # eight giant words at the stack
@@ -151,9 +150,8 @@ machine step app 412 --out             # until the function returns, as finish
 machine step app 412 --line --skip memcpy   # step out of memcpy, as GDB's skip
 ```
 
-A step of an instruction that faults ends after the instruction runs, as
-GDB's `stepi` does. A write to a copy-on-write page is an example. The kernel
-handles the fault inside the step, and the step lands on the next instruction.
+A step of an instruction that faults, such as a write to a copy-on-write page,
+ends on the next instruction.
 
 ### Breakpoints, watchpoints and catchpoints
 
@@ -292,9 +290,8 @@ stops.
 
 ## How many stops a run holds
 
-A run holds 64 breakpoints. The machine puts each one into the program as a
-software breakpoint, an `int3` in the tgid's own copy of its code, as GDB's
-`break` does. Another process that maps the same library does not stop, and
+A run holds 64 breakpoints. The machine puts each one into the tgid's own copy
+of its code as an `int3` instruction. Another process that maps the same library does not stop, and
 other threads of the tgid stop at it too. A read of the task's memory, with
 `mem` or the instruction a step shows, shows the program's byte, not the
 `int3`. A write over that byte is refused while the breakpoint is there.
@@ -320,8 +317,8 @@ No room: a run holds 3 hardware breakpoints and watchpoints. The debugger in the
 ```
 
 A step of one instruction takes none, from a breakpoint's hit too. The one
-exception is a task that returns into a signal handler: the step stops where
-the handler returns, as GDB's does, and takes a debug register for that stop.
+exception is a task that returns into a signal handler. The step stops where
+the handler returns and takes a debug register for that stop.
 
 ### A breakpoint in a library every process maps
 
@@ -345,8 +342,7 @@ and again each time it is loaded after being unloaded.
 
 ### Many breakpoints at once
 
-A pattern adds a breakpoint at each function that matches, as GDB's `rbreak`
-does. For example, 38 of libc's string functions:
+A pattern adds a breakpoint at each function that matches. For example, 38 of libc's string functions:
 
 ```bash
 machine break app add 251 --regex '^str[a-n]'
@@ -393,15 +389,14 @@ cases an `int3` in the program cannot cover:
     Put it in a debug register machine break app add 251 '*0x7f35d1580000' --hardware
   ```
 
-- Code the program reads. The program sees the `int3`, as it does under GDB's
-  `break`: a checksum of its own code changes, for example. A hardware
+- Code the program reads. The program sees the `int3`, so a checksum of its
+  own code changes, for example. A hardware
   breakpoint changes no byte.
 - An instruction the kernel does not let a breakpoint sit on, such as
   `syscall`. The listing says `not placed: the kernel refused the instruction`.
 
 A hardware breakpoint lists as `hw breakpoint` and takes one of the 3 debug
-registers. `break add --hardware` answers `Hardware breakpoint N`, as GDB's
-`hbreak` does.
+registers.
 
 A GDB `hbreak` or `watch` refused for the same reason makes GDB say
 `Couldn't write debug register: No space left on device` at the `continue`

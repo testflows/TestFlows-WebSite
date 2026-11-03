@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793710115339" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793710115339" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793709960946" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793710115340" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -4161,9 +4161,8 @@ finds it in any layer of a container’s image.</p>
 <p>A server is built optimized, as it ships. Its arguments and locals are where
 the compiler kept them at each instruction: on the stack, in registers, or in
 pieces of both, as clang keeps a C++ <code>std::string_view</code> in two registers. One
-kept nowhere is <code>optimized out</code>, as GDB says it. A C++ function is named short,
-as GDB names it, <code>DB::executeQuery</code>; <code>machine --signatures</code> names it by its
-whole signature.</p>
+kept nowhere is <code>optimized out</code>. A C++ function is named short, such as
+<code>DB::executeQuery</code>. <code>machine --signatures</code> names it by its whole signature.</p>
 <p>Without debug information, read the arguments from the registers the ABI
 passes them in, and give a global a type with a cast:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 412 <span class="string">&#x27;$rsi&#x27;</span> s                                  <span class="comment"># the second argument, a string</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tgid=7:write=*(long *)&amp;queries&#x27;</span>      <span class="comment"># a global of no type, as a long</span></span><br></pre></td></tr></table></figure>
@@ -4185,7 +4184,7 @@ address in the task’s process:</p>
 </tr>
 <tr>
 <td><code>*0x401136</code></td>
-<td>an address, as GDB writes it</td>
+<td>an address</td>
 </tr>
 <tr>
 <td><code>main</code></td>
@@ -4209,12 +4208,12 @@ address in the task’s process:</p>
 </tr>
 </tbody></table>
 <p>When the program has debug information, a breakpoint at a function by its name
-is placed past its prologue, as GDB’s <code>break FUNCTION</code> is. Without it, the
+is placed past its prologue. Without it, the
 breakpoint is at the function’s first instruction.</p>
 <h3 id="registers-and-memory"><a href="#registers-and-memory" class="headerlink" title="Registers and memory"></a>Registers and memory</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine regs app 412                   <span class="comment"># the general registers of tid 412</span></span><br><span class="line">machine regs app 412 rip rsp           <span class="comment"># two of them</span></span><br><span class="line">machine regs app 412 --all             <span class="comment"># with x87, SSE and AVX</span></span><br><span class="line">machine regs app 412 rax=0 rip=main+4  <span class="comment"># write two of them</span></span><br></pre></td></tr></table></figure>
 
-<p><a href="#machine-mem"><code>machine mem</code></a> shows memory as GDB’s <code>x</code> does, with
-a count, a letter and a unit after the location, such as <code>8xg</code>, <code>4i</code> or <code>s</code>:</p>
+<p><a href="#machine-mem"><code>machine mem</code></a> shows memory in the format given
+after the location: a count, a letter and a unit, such as <code>8xg</code>, <code>4i</code> or <code>s</code>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 412 <span class="string">&#x27;$sp&#x27;</span>                   <span class="comment"># eight giant words at the stack</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$pc&#x27;</span> 4i                <span class="comment"># the next four instructions</span></span><br><span class="line">machine mem app 412 main 16xb               <span class="comment"># sixteen bytes of main</span></span><br><span class="line">machine mem app 412 counter=42              <span class="comment"># write counter, at its size</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;counter^=0x10&#x27;</span>         <span class="comment"># flip bit 4 of counter, as ^= does in C</span></span><br><span class="line">machine mem app 412 --mapped                <span class="comment"># the pages the tgid maps, as info proc mappings</span></span><br><span class="line">machine mem app 412 buf --find GET --length 4096</span><br><span class="line">machine mem app 412 buf --dump buf.bin --length 4096</span><br><span class="line">machine mem app 412 buf --restore buf.bin</span><br><span class="line">machine mem app 412 buf --fill 0xde --length 4096   <span class="comment"># a pattern written over a span</span></span><br></pre></td></tr></table></figure>
 
 <p>A write is part of the run, and a replay makes it again. A page the tgid has
@@ -4233,9 +4232,8 @@ machine stopped, and says the value before and after.</p>
 whichever task the guest schedules, so other tasks run meanwhile:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine step app 412                   <span class="comment"># one instruction, as stepi</span></span><br><span class="line">machine step app 412 5 --over          <span class="comment"># five, a call being one, as nexti</span></span><br><span class="line">machine step app 412 --line            <span class="comment"># a source line, as step</span></span><br><span class="line">machine step app 412 --line --over     <span class="comment"># a line over calls, as next</span></span><br><span class="line">machine step app 412 --out             <span class="comment"># until the function returns, as finish</span></span><br><span class="line">machine step app 412 --line --skip memcpy   <span class="comment"># step out of memcpy, as GDB&#x27;s skip</span></span><br></pre></td></tr></table></figure>
 
-<p>A step of an instruction that faults ends after the instruction runs, as
-GDB’s <code>stepi</code> does. A write to a copy-on-write page is an example. The kernel
-handles the fault inside the step, and the step lands on the next instruction.</p>
+<p>A step of an instruction that faults, such as a write to a copy-on-write page,
+ends on the next instruction.</p>
 <h3 id="breakpoints-watchpoints-and-catchpoints"><a href="#breakpoints-watchpoints-and-catchpoints" class="headerlink" title="Breakpoints, watchpoints and catchpoints"></a>Breakpoints, watchpoints and catchpoints</h3><p>A breakpoint stops the run when a task of its tgid reaches its location. A
 watchpoint stops it after an instruction writes the bytes it watches. A
 catchpoint stops it at an event of a task: an exec, an exit, a fork or vfork,
@@ -4295,9 +4293,8 @@ the session steps out of:</p>
 task with <code>registers()</code>, <code>read()</code>, <code>backtrace()</code>, <code>print()</code>, <code>step()</code>,
 <code>breakpoint()</code> and <code>watch()</code>, and <code>run.breakpoints</code> lists and changes the
 stops.</p>
-<h2 id="how-many-stops-a-run-holds"><a href="#how-many-stops-a-run-holds" class="headerlink" title="How many stops a run holds"></a>How many stops a run holds</h2><p>A run holds 64 breakpoints. The machine puts each one into the program as a
-software breakpoint, an <code>int3</code> in the tgid’s own copy of its code, as GDB’s
-<code>break</code> does. Another process that maps the same library does not stop, and
+<h2 id="how-many-stops-a-run-holds"><a href="#how-many-stops-a-run-holds" class="headerlink" title="How many stops a run holds"></a>How many stops a run holds</h2><p>A run holds 64 breakpoints. The machine puts each one into the tgid’s own copy
+of its code as an <code>int3</code> instruction. Another process that maps the same library does not stop, and
 other threads of the tgid stop at it too. A read of the task’s memory, with
 <code>mem</code> or the instruction a step shows, shows the program’s byte, not the
 <code>int3</code>. A write over that byte is refused while the breakpoint is there.</p>
@@ -4318,16 +4315,15 @@ GDB holds some says how many:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">No room: a run holds 3 hardware breakpoints and watchpoints. The debugger in the guest holds 1.</span><br></pre></td></tr></table></figure>
 
 <p>A step of one instruction takes none, from a breakpoint’s hit too. The one
-exception is a task that returns into a signal handler: the step stops where
-the handler returns, as GDB’s does, and takes a debug register for that stop.</p>
+exception is a task that returns into a signal handler. The step stops where
+the handler returns and takes a debug register for that stop.</p>
 <h3 id="a-breakpoint-in-a-library-every-process-maps"><a href="#a-breakpoint-in-a-library-every-process-maps" class="headerlink" title="A breakpoint in a library every process maps"></a>A breakpoint in a library every process maps</h3><p>A breakpoint at <code>malloc</code> stops one process, though every process of the
 machine calls libc’s <code>malloc</code>. The others run on, and pay nothing for it:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ machine break app add 218 malloc</span><br><span class="line">✔ Breakpoint 2 at malloc, in tgid 218</span><br><span class="line">$ machine run app</span><br><span class="line">✔ Stopped at breakpoint 2: malloc, in tid 218</span><br><span class="line">$ machine backtrace app 218</span><br><span class="line">#  ADDRESS         FUNCTION                     SOURCE           FILE</span><br><span class="line">0  0x7f998847d930  malloc                                        /usr/lib/x86_64-linux-gnu/libc.so.6</span><br><span class="line">1  0x5654d1e931b4  __cxa_allocate_exception+20                   /usr/bin/cxxprobe</span><br><span class="line">2  0x5654d1e92d51  work+24 (round=20)           cxxprobe.cpp:12  /usr/bin/cxxprobe</span><br></pre></td></tr></table></figure>
 
 <p>A breakpoint in a library the program loads later is placed when it loads,
 and again each time it is loaded after being unloaded.</p>
-<h3 id="many-breakpoints-at-once"><a href="#many-breakpoints-at-once" class="headerlink" title="Many breakpoints at once"></a>Many breakpoints at once</h3><p>A pattern adds a breakpoint at each function that matches, as GDB’s <code>rbreak</code>
-does. For example, 38 of libc’s string functions:</p>
+<h3 id="many-breakpoints-at-once"><a href="#many-breakpoints-at-once" class="headerlink" title="Many breakpoints at once"></a>Many breakpoints at once</h3><p>A pattern adds a breakpoint at each function that matches. For example, 38 of libc’s string functions:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">break</span> app add 251 --regex <span class="string">&#x27;^str[a-n]&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p>A pattern that matches more functions than the run has room for adds none, and
@@ -4347,8 +4343,8 @@ cases an <code>int3</code> in the program cannot cover:</p>
 breakpoint is not placed, with the command that puts it in a register:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ machine break app</span><br><span class="line">#  KIND        ADDRESS         SIZE  WHERE            TGID                  HITS  WHEN</span><br><span class="line">1  breakpoint  0x7f35d1580000     1  *0x7f35d1580000  251 /usr/bin/bpprobe     0  not placed: the address maps no file</span><br><span class="line">  Put it in a debug register machine break app add 251 &#x27;*0x7f35d1580000&#x27; --hardware</span><br></pre></td></tr></table></figure>
 </li>
-<li><p>Code the program reads. The program sees the <code>int3</code>, as it does under GDB’s
-<code>break</code>: a checksum of its own code changes, for example. A hardware
+<li><p>Code the program reads. The program sees the <code>int3</code>, so a checksum of its
+own code changes, for example. A hardware
 breakpoint changes no byte.</p>
 </li>
 <li><p>An instruction the kernel does not let a breakpoint sit on, such as
@@ -4356,8 +4352,7 @@ breakpoint changes no byte.</p>
 </li>
 </ul>
 <p>A hardware breakpoint lists as <code>hw breakpoint</code> and takes one of the 3 debug
-registers. <code>break add --hardware</code> answers <code>Hardware breakpoint N</code>, as GDB’s
-<code>hbreak</code> does.</p>
+registers.</p>
 <p>A GDB <code>hbreak</code> or <code>watch</code> refused for the same reason makes GDB say
 <code>Couldn&#39;t write debug register: No space left on device</code> at the <code>continue</code>
 that inserts it. An x86 computer has 4, so a GDB session that uses all 4 there
@@ -16972,10 +16967,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793709960946"></script>
-<script src="/js/machine-hero-type.js?v=1793709960946"></script>
-<script src="/js/download-platforms.js?v=1793709960946"></script>
-<script src="/js/anchor-case.js?v=1793709960946"></script>
+<script src="/js/index-code-type.js?v=1793710115340"></script>
+<script src="/js/machine-hero-type.js?v=1793710115340"></script>
+<script src="/js/download-platforms.js?v=1793710115340"></script>
+<script src="/js/anchor-case.js?v=1793710115340"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
