@@ -151,6 +151,10 @@ machine step app 412 --out             # until the function returns, as finish
 machine step app 412 --line --skip memcpy   # step out of memcpy, as GDB's skip
 ```
 
+A step of an instruction that faults ends after the instruction runs, as
+GDB's `stepi` does. A write to a copy-on-write page is an example. The kernel
+handles the fault inside the step, and the step lands on the next instruction.
+
 ### Breakpoints, watchpoints and catchpoints
 
 A breakpoint stops the run when a task of its tgid reaches its location. A
@@ -312,8 +316,12 @@ When the 3 are taken, the next is refused. A `machine watch add` refused while
 GDB holds some says how many:
 
 ```text
-No room: a run holds 3 watchpoints. The debugger in the guest holds 1.
+No room: a run holds 3 hardware breakpoints and watchpoints. The debugger in the guest holds 1.
 ```
+
+A step of one instruction takes none, from a breakpoint's hit too. The one
+exception is a task that returns into a signal handler: the step stops where
+the handler returns, as GDB's does, and takes a debug register for that stop.
 
 ### A breakpoint in a library every process maps
 
@@ -392,7 +400,8 @@ cases an `int3` in the program cannot cover:
   `syscall`. The listing says `not placed: the kernel refused the instruction`.
 
 A hardware breakpoint lists as `hw breakpoint` and takes one of the 3 debug
-registers.
+registers. `break add --hardware` answers `Hardware breakpoint N`, as GDB's
+`hbreak` does.
 
 A GDB `hbreak` or `watch` refused for the same reason makes GDB say
 `Couldn't write debug register: No space left on device` at the `continue`

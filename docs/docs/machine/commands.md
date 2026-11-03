@@ -10075,8 +10075,9 @@ them with `--on` access. The listing has the run's watchpoints, each by its
 number. Use points to list them with the breakpoints and catchpoints.
 
 The run keeps them in its run log, as it keeps its breakpoints. A run holds 3
-watchpoints. A step and a run until an address or a write take the same 3 places
-while they run.
+watchpoints and hardware breakpoints together. A step over a call takes one of
+the 3 places while it runs. So do a finish and a run until an address or a
+write.
 
 ```
 machine watch [-h] run command ...
