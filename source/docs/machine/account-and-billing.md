@@ -11,9 +11,9 @@ Most of what the account page on the website does, the client does too.
 | [`machine account credits`](commands.md#machine-account-credits) | shows your usage credits |
 | [`machine account activity`](commands.md#machine-account-activity) | lists what they were spent on |
 | [`machine account products list`](commands.md#machine-account-products-list) | lists what is for sale |
-| [`machine account buy usage`](commands.md#machine-account-buy-usage) | opens checkout for a pack of usage credits, as listed by `products` |
-| [`machine account buy plan`](commands.md#machine-account-buy-plan) | subscribes to a plan, or switches tier if you already have a paid one |
-| [`machine account upgrade`](commands.md#machine-account-upgrade), [`machine account downgrade`](commands.md#machine-account-downgrade) | moves you to a higher or lower plan |
+| [`machine account buy-usage`](commands.md#machine-account-buy-usage) | opens checkout for a pack of usage credits, as listed by `products` |
+| [`machine account buy-plan`](commands.md#machine-account-buy-plan) | subscribes to a plan, or switches tier if you already have a paid one |
+| [`machine account upgrade-plan`](commands.md#machine-account-upgrade-plan), [`machine account downgrade-plan`](commands.md#machine-account-downgrade-plan) | moves you to a higher or lower plan |
 | [`machine account cancel`](commands.md#machine-account-cancel) | cancels the subscription: the plan stays until it renews, then drops to Free, and your usage credits stay |
 | [`machine account invoices`](commands.md#machine-account-invoices) | lists your invoices |
 | [`machine account orders`](commands.md#machine-account-orders) | lists your purchases, and resumes or cancels a pending checkout |

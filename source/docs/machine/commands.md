@@ -491,36 +491,15 @@ See also:
 - [`machine login`](#machine-login)
 - [`machine logout`](#machine-logout)
 
-### machine account buy
+### machine account buy-usage
 
-Buy usage credits or a plan. See [Account and billing](account-and-billing.md).
-
-```
-machine account buy [-h] command ...
-```
-
-Examples:
-
-```
-machine account buy usage 10      buy 10 usage credits for €10
-machine account buy plan starter  subscribe to starter
-```
-
-See also:
-
-- [`machine account buy usage`](#machine-account-buy-usage)
-- [`machine account buy plan`](#machine-account-buy-plan)
-- [`machine account products`](#machine-account-products)
-
-### machine account buy usage
-
-Buy usage credits.
+Buy usage credits. See [Account and billing](account-and-billing.md).
 
 The command opens checkout for the pack of the named number of credits. A credit
 costs one euro. A credit has no cash value.
 
 ```
-machine account buy usage [-h] [-y] credits
+machine account buy-usage [-h] [-y] credits
 ```
 
 | Argument | Does |
@@ -534,24 +513,24 @@ machine account buy usage [-h] [-y] credits
 Examples:
 
 ```
-machine account buy usage 10     buy 10 usage credits for €10
-machine account buy usage 10 -y  without asking
+machine account buy-usage 10     buy 10 usage credits for €10
+machine account buy-usage 10 -y  without asking
 ```
 
 See also:
 
-- [`machine account buy plan`](#machine-account-buy-plan)
+- [`machine account buy-plan`](#machine-account-buy-plan)
 - [`machine account credits`](#machine-account-credits)
 - [`machine account products list`](#machine-account-products-list)
 
-### machine account buy plan
+### machine account buy-plan
 
-Subscribe to a plan.
+Subscribe to a plan. See [Account and billing](account-and-billing.md).
 
 On a paid plan, the command upgrades or downgrades to the named tier instead.
 
 ```
-machine account buy plan [-h] [-y] plan
+machine account buy-plan [-h] [-y] plan
 ```
 
 | Argument | Does |
@@ -565,17 +544,17 @@ machine account buy plan [-h] [-y] plan
 Examples:
 
 ```
-machine account buy plan starter     subscribe to starter
-machine account buy plan starter -y  without asking
+machine account buy-plan starter     subscribe to starter
+machine account buy-plan starter -y  without asking
 ```
 
 See also:
 
-- [`machine account upgrade`](#machine-account-upgrade)
-- [`machine account buy usage`](#machine-account-buy-usage)
+- [`machine account upgrade-plan`](#machine-account-upgrade-plan)
+- [`machine account buy-usage`](#machine-account-buy-usage)
 - [`machine account products list`](#machine-account-products-list)
 
-### machine account upgrade
+### machine account upgrade-plan
 
 Upgrade to a higher plan. See [Account and billing](account-and-billing.md).
 
@@ -583,7 +562,7 @@ An omitted tier is the next one up. Use `--link` to print the URL without
 opening a browser.
 
 ```
-machine account upgrade [-h] [--link] [-y] [plan]
+machine account upgrade-plan [-h] [--link] [-y] [plan]
 ```
 
 | Argument | Does |
@@ -598,17 +577,17 @@ machine account upgrade [-h] [--link] [-y] [plan]
 Examples:
 
 ```
-machine account upgrade      upgrade to the next plan
-machine account upgrade pro  upgrade to pro
+machine account upgrade-plan      upgrade to the next plan
+machine account upgrade-plan pro  upgrade to pro
 ```
 
 See also:
 
-- [`machine account downgrade`](#machine-account-downgrade)
-- [`machine account buy plan`](#machine-account-buy-plan)
+- [`machine account downgrade-plan`](#machine-account-downgrade-plan)
+- [`machine account buy-plan`](#machine-account-buy-plan)
 - [`machine account show`](#machine-account-show)
 
-### machine account downgrade
+### machine account downgrade-plan
 
 Downgrade to a lower plan. See [Account and billing](account-and-billing.md).
 
@@ -616,7 +595,7 @@ An omitted tier is the next one down. Use `--link` to print the URL without
 opening a browser.
 
 ```
-machine account downgrade [-h] [--link] [-y] [plan]
+machine account downgrade-plan [-h] [--link] [-y] [plan]
 ```
 
 | Argument | Does |
@@ -631,13 +610,13 @@ machine account downgrade [-h] [--link] [-y] [plan]
 Examples:
 
 ```
-machine account downgrade          downgrade to the previous plan
-machine account downgrade starter  downgrade to starter
+machine account downgrade-plan          downgrade to the previous plan
+machine account downgrade-plan starter  downgrade to starter
 ```
 
 See also:
 
-- [`machine account upgrade`](#machine-account-upgrade)
+- [`machine account upgrade-plan`](#machine-account-upgrade-plan)
 - [`machine account cancel`](#machine-account-cancel)
 - [`machine account show`](#machine-account-show)
 
@@ -815,8 +794,8 @@ machine account cancel --link  print the link only
 
 See also:
 
-- [`machine account downgrade`](#machine-account-downgrade)
-- [`machine account buy plan`](#machine-account-buy-plan)
+- [`machine account downgrade-plan`](#machine-account-downgrade-plan)
+- [`machine account buy-plan`](#machine-account-buy-plan)
 - [`machine account show`](#machine-account-show)
 
 ### machine account email
@@ -865,7 +844,7 @@ machine account products list  products for sale
 See also:
 
 - [`machine account products list`](#machine-account-products-list)
-- [`machine account buy`](#machine-account-buy)
+- [`machine account buy-usage`](#machine-account-buy-usage)
 
 ### machine account products list
 
@@ -883,8 +862,8 @@ machine account products list  products for sale
 
 See also:
 
-- [`machine account buy usage`](#machine-account-buy-usage)
-- [`machine account buy plan`](#machine-account-buy-plan)
+- [`machine account buy-usage`](#machine-account-buy-usage)
+- [`machine account buy-plan`](#machine-account-buy-plan)
 
 ### machine account show
 
@@ -923,7 +902,7 @@ machine account credits  the credit balance
 See also:
 
 - [`machine account activity`](#machine-account-activity)
-- [`machine account buy usage`](#machine-account-buy-usage)
+- [`machine account buy-usage`](#machine-account-buy-usage)
 - [`machine account show`](#machine-account-show)
 
 ### machine account activity
@@ -1002,7 +981,7 @@ machine account orders cancel  cancel the pending order
 See also:
 
 - [`machine account orders list`](#machine-account-orders-list)
-- [`machine account buy`](#machine-account-buy)
+- [`machine account buy-usage`](#machine-account-buy-usage)
 - [`machine account activity`](#machine-account-activity)
 
 ### machine account orders list
@@ -1080,7 +1059,7 @@ machine account orders cancel  cancel the pending order
 See also:
 
 - [`machine account orders list`](#machine-account-orders-list)
-- [`machine account buy`](#machine-account-buy)
+- [`machine account buy-usage`](#machine-account-buy-usage)
 
 ### machine account api-keys
 
@@ -1313,6 +1292,47 @@ See also:
 
 - [`machine login`](#machine-login)
 - [`machine account`](#machine-account)
+
+## machine upgrade
+
+Install the latest client. See [Download](/machine/download/).
+
+The command runs the installer at https://testflows.com/machine/install. The
+installer downloads the release and checks its signed checksum. It puts the
+client where it puts every install. It removes the files older versions
+unpacked.
+
+The installer uses the client's own sign-in. A client signed in asks for nothing
+and stays signed in. A client signed out signs in at the terminal for the
+download. It stays signed out after.
+
+Name a version to install that version. An older version installs the same way.
+Use `--list` to see the versions there are.
+
+```
+machine upgrade [-h] [--list | version]
+```
+
+| Argument | Does |
+|---|---|
+| `[version]` | Version to install, YYYYMMDD-HHMM (default: the latest) |
+
+| Option | Does |
+|---|---|
+| `--list` | List the versions there are |
+
+Examples:
+
+```
+machine upgrade                install the latest client
+machine upgrade --list         the versions there are
+machine upgrade 20261106-1233  install that version
+```
+
+See also:
+
+- [`machine login`](#machine-login)
+- [`machine logout`](#machine-logout)
 
 ## machine completion
 

@@ -384,6 +384,19 @@ wsl --install
 </div>
 
 <div class="download-section">
+<h2>Upgrade</h2>
+<p>An installed client upgrades itself. <code>machine upgrade</code> runs the installer with the client's own sign-in, so it asks for nothing, and the client stays signed in. <code>machine upgrade --list</code> shows the versions there are, and <code>machine upgrade YYYYMMDD-HHMM</code> installs one of them:</p>
+
+```bash
+machine upgrade
+machine upgrade --list
+machine upgrade YYYYMMDD-HHMM
+```
+
+<p>A client older than 20261106-1345 has no <code>machine upgrade</code>. It upgrades with the install command above.</p>
+</div>
+
+<div class="download-section">
 <h2>A specific version</h2>
 <p>The installer gets the latest release. <code>--list</code> shows the versions there are, newest first, and <code>--version</code> installs one of them:</p>
 
