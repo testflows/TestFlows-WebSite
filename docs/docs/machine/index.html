@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793967534443" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793967534443" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793926034000" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793967534443" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -2342,14 +2342,16 @@ A <code>start</code>, a <code>start --at</code>, a rewind and a <code>fork --fro
 the larger of the two as well.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine replay app/try-1 --limit-margin 20000</span><br><span class="line">machine replay app/try-1 --instr-margin 100000</span><br></pre></td></tr></table></figure>
 
-<p>A replay that passes a recorded stop diverges and says by how much. A replay
-given <code>--instr-margin 5</code>, far below the CPU’s skid, answers:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">✗ Divergence at entry 19737. The replay passed the recorded stop by 6,521 instructions, with its margin 5.</span><br><span class="line">  Rewind to the entry before it machine rewind a2/a2s to #19736</span><br><span class="line">  Then replay with a margin past the skid machine replay a2/a2s --instr-margin 13052</span><br></pre></td></tr></table></figure>
+<p>A replay that passes a recorded stop diverges and says by how much. On an AMD
+host, a replay given <code>--instr-margin 5</code>, far below the CPU’s skid, answers:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">✗ Divergence at entry 804. The replay passed the recorded stop by 3,370 instructions, with its margin 5.</span><br><span class="line">  Rewind to the entry before it machine rewind trq/ex to #803</span><br><span class="line">  Then replay with a margin past the skid machine replay trq/ex --instr-margin 50000</span><br></pre></td></tr></table></figure>
 
-<p>The suggested margin is twice the overshoot and the margin together. A stop
+<p>The suggested margin is twice the overshoot and the margin together, and
+never less than the host CPU’s margin. Here twice the overshoot and the
+margin is 6,750, so the hint is the AMD CPU’s margin, 50,000. A stop
 counted in branches names <code>--limit-margin</code> instead. At the
 <a href="#at-the-control-prompt">control prompt</a> the hint is
-<code>/replay instr-margin 13052</code>. A replay that reaches the stop’s
+<code>/replay instr-margin 50000</code>. A replay that reaches the stop’s
 address on a later pass, with other registers, gets no margin hint, because
 no margin explains it.</p>
 <p>If a run does diverge, <a href="#machine-diff"><code>machine diff</code></a> shows how.</p>
@@ -17154,10 +17156,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793926034001"></script>
-<script src="/js/machine-hero-type.js?v=1793926034001"></script>
-<script src="/js/download-platforms.js?v=1793926034001"></script>
-<script src="/js/anchor-case.js?v=1793926034001"></script>
+<script src="/js/index-code-type.js?v=1793967534444"></script>
+<script src="/js/machine-hero-type.js?v=1793967534444"></script>
+<script src="/js/download-platforms.js?v=1793967534444"></script>
+<script src="/js/anchor-case.js?v=1793967534444"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

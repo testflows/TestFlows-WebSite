@@ -59,19 +59,21 @@ machine replay app/try-1 --limit-margin 20000
 machine replay app/try-1 --instr-margin 100000
 ```
 
-A replay that passes a recorded stop diverges and says by how much. A replay
-given `--instr-margin 5`, far below the CPU's skid, answers:
+A replay that passes a recorded stop diverges and says by how much. On an AMD
+host, a replay given `--instr-margin 5`, far below the CPU's skid, answers:
 
 ```
-✗ Divergence at entry 19737. The replay passed the recorded stop by 6,521 instructions, with its margin 5.
-  Rewind to the entry before it machine rewind a2/a2s to #19736
-  Then replay with a margin past the skid machine replay a2/a2s --instr-margin 13052
+✗ Divergence at entry 804. The replay passed the recorded stop by 3,370 instructions, with its margin 5.
+  Rewind to the entry before it machine rewind trq/ex to #803
+  Then replay with a margin past the skid machine replay trq/ex --instr-margin 50000
 ```
 
-The suggested margin is twice the overshoot and the margin together. A stop
+The suggested margin is twice the overshoot and the margin together, and
+never less than the host CPU's margin. Here twice the overshoot and the
+margin is 6,750, so the hint is the AMD CPU's margin, 50,000. A stop
 counted in branches names `--limit-margin` instead. At the
 [control prompt](#at-the-control-prompt) the hint is
-`/replay instr-margin 13052`. A replay that reaches the stop's
+`/replay instr-margin 50000`. A replay that reaches the stop's
 address on a later pass, with other registers, gets no margin hint, because
 no margin explains it.
 
