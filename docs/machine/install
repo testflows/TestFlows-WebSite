@@ -263,7 +263,8 @@ Install the TestFlows™ Machine client.
 
 Options:
   --list          list the versions there are, newest first, instead of installing
-  --version V     install version V, YYYYMMDD-HHMM, instead of the latest
+  --version V     install version V, YYYYMMDD-HHMM, instead of the latest; V is
+                  installed even when it is installed already
   --checksum      print the published SHA-256 checksum instead of installing
   --download      download this system's file, its checksum and their signatures
                   into the current folder instead of installing, to check by hand
@@ -1397,6 +1398,17 @@ next_in_env() {
     path_line "$dir"
 }
 
+# up_to_date VERSION TARGET: the latest is installed already; say so, and how to
+# install it again.
+up_to_date() {
+    ok "machine $1 is the latest, and is installed at $(tilde "$2")"
+    if [ "$SIGNED_IN" = "client" ]; then
+        say "  Reinstall ${BOLD}machine upgrade $1${RESET}"
+    else
+        say "  Reinstall ${BOLD}curl https://testflows.com/machine/install -fsS | bash -s -- --version $1${RESET}"
+    fi
+}
+
 main() {
     local mode="install" arg
     while [ $# -gt 0 ]; do
@@ -1483,6 +1495,13 @@ main() {
         before="$(version_of "$candidate" || true)"
         [ -z "$before" ] || break
     done
+
+    # The latest, installed already, is not downloaded again. A version named is
+    # installed whatever is there, which is how an install is repaired.
+    if [ -z "${MACHINE_VERSION:-}" ] && [ "$before" = "$release" ]; then
+        up_to_date "$release" "$target"
+        return 0
+    fi
 
     say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
     mkdir -p "$dir" || die "Could not create $(tilde "$dir")."
