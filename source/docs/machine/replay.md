@@ -44,6 +44,37 @@ The host can interrupt an entry too. That is not a divergence. Replay prints
 counted against the same `--retry`. A recording does the same on its own, see
 [Driving it](running-a-machine.md#driving-it).
 
+## Replay margins
+
+A replay reaches each recorded stop by letting the CPU's counter interrupt a
+margin short of it, then stepping to the stop. `--limit-margin` is that margin
+in conditional branches, and `--instr-margin` in instructions, for a stop
+placed by an instruction count. A replay that names either uses the values it
+names. Without them, it uses the larger of the run's margin and the host CPU's.
+A `start`, a `start --at`, a rewind and a `fork --from` name none, so they use
+the larger of the two as well.
+
+```bash
+machine replay app/try-1 --limit-margin 20000
+machine replay app/try-1 --instr-margin 100000
+```
+
+A replay that passes a recorded stop diverges and says by how much. A replay
+given `--instr-margin 5`, far below the CPU's skid, answers:
+
+```
+✗ Divergence at entry 19737. The replay passed the recorded stop by 6,521 instructions, with its margin 5.
+  Rewind to the entry before it machine rewind a2/a2s to #19736
+  Then replay with a margin past the skid machine replay a2/a2s --instr-margin 13052
+```
+
+The suggested margin is twice the overshoot and the margin together. A stop
+counted in branches names `--limit-margin` instead. At the
+[control prompt](#at-the-control-prompt) the hint is
+`/replay instr-margin 13052`. A replay that reaches the stop's
+address on a later pass, with other registers, gets no margin hint, because
+no margin explains it.
+
 If a run does diverge, [`machine diff`](commands.md#machine-diff) shows how.
 
 ```bash
@@ -106,7 +137,8 @@ machine control app/try-1
 /play 295:300 +irq
 ```
 
-`/replay` takes `to`, `retry` and `trace` as words. `/diff 120 regs` compares
+`/replay` takes `to`, `retry`, `trace`, `limit-margin` and `instr-margin` as
+words. `/diff 120 regs` compares
 entry 120 with its recording and shows only the registers, and `context 5`
 adds the five entries before it. `/play` feeds the parent's entries 295 to 300
 without checking them, here only the interrupts.

@@ -265,8 +265,29 @@ To hold an interrupt a drawn time before it is delivered, see
 A run takes checkpoints for you too. `--auto-checkpoints N` takes one every N
 entries, and 0 turns them off.
 
+### Cancelling a drive
+
 If a drive or a checkpoint is taking too long, [`machine cancel app`](commands.md#machine-cancel) cancels
-whichever one is in progress.
+whichever one is in progress. A run stops at once, where the host's clock put
+the stop, so a repeatable run no longer repeats from that entry. A replay stops
+before its next entry.
+
+`--soft` stops the run at the end of the dispatch in progress instead. That
+stop is an ordinary entry, so the run stays repeatable. It takes at most the
+run's dispatch bound, 1s by default.
+
+```bash
+machine cancel app           # stop now
+machine cancel app --soft    # stop at the end of the dispatch in progress
+```
+
+Ctrl-C on a drive cancels softly, and so does the global `--timeout` on `run`
+and `exec run`. Ctrl-C prints `Stopping at the end of the current dispatch.
+Press Ctrl-C again to stop now`, and a second Ctrl-C stops the run at once. A
+run still busy 10 seconds after a Ctrl-C or a timeout is stopped at once as
+well. At the
+[control prompt](#interactive-mode), `/cancel` stops the run at once and
+`/cancel soft` at the end of its dispatch.
 
 ## Recording that repeats
 
@@ -299,7 +320,8 @@ replaying any other.
 `--timer-slack` is how late a timer may be while a program runs code that
 takes no exit. The default is 20ms, and it applies to every fast run. A timer
 that comes due in code that exits to the machine is delivered at that exit. `0` keeps
-every timer on time, and recording is slowest that way. A drive can draw the
+every timer on time, and recording is slowest that way. The slack takes `ns`,
+`us`, `ms` or `s`, as in `--timer-slack 1s`. A drive can draw the
 slack for that drive:
 
 ```bash
@@ -314,11 +336,61 @@ later recording may not repeat.
 [`machine replay --limit-margin`](commands.md#machine-replay) sets it for that
 replay.
 
-A branch keeps its parent's `--repeatable`, `--timer-slack` and
-`--limit-margin` unless you give it others. [`machine fork`](commands.md#machine-fork),
+Four more options decide where a recording stops. Each takes `0` for its
+default, and [`machine describe`](commands.md#machine-describe) shows them as
+`Instr Margin`, `Dispatch Bound`, `Fast Backstop` and `IRQ Wait`:
+
+| Option | What it does |
+|---|---|
+| `--instr-margin n` | how many instructions short of a stop placed by an instruction count the CPU's counter interrupts; the default is the host's, 50,000 on AMD and 3,630 on Intel, which `describe` shows as `host's` |
+| `--dispatch-bound d` | how much host time a fast dispatch runs before it stops, 1s by default; it takes a duration such as `500ms` or `2s` |
+| `--fast-backstop n` | how many instructions a fast dispatch runs with no other stop, 100,000,000 by default |
+| `--irq-wait n` | how many conditional branches a dispatch runs while an interrupt waits for the guest to take it, 200 by default |
+
+A stop placed by `--dispatch-bound` falls where host time put it, so another
+recording of the same state does not stop there. A margin the run gives must
+be smaller than its backstop, and the run is refused otherwise.
+
+```bash
+machine create app --disk app --repeatable --instr-margin 100000 --dispatch-bound 2s
+```
+
+A branch keeps its parent's `--repeatable`, `--timer-slack`, `--limit-margin`,
+`--instr-margin`, `--dispatch-bound`, `--fast-backstop` and `--irq-wait`
+unless you give it others. [`machine fork`](commands.md#machine-fork),
 [`machine detach`](commands.md#machine-detach) and [`machine go`](commands.md#machine-go)
-take the three. [`machine start`](commands.md#machine-start) keeps what the run
+take all seven. [`machine start`](commands.md#machine-start) keeps what the run
 was created with.
+
+### Where a run stops repeating
+
+Some stops are placed by host time, and no other recording of the same state
+stops at the same instruction: a stop at the dispatch bound, an immediate
+[`machine cancel`](commands.md#machine-cancel) and a signal the host sends the
+machine. A
+repeatable run repeats up to the first such entry. For a repeatable run,
+[`machine describe`](commands.md#machine-describe) shows that entry as
+`Repeats To`, and `tip` when the whole run repeats:
+
+```
+Repeatable:             true
+Repeats To:             entry 804, a host-time stop
+```
+
+[`machine checkpoints`](commands.md#machine-checkpoints) has a `REPEATS TO`
+column for a repeatable run: for each of its own checkpoints, the first entry
+after it where recording again from that checkpoint stops repeating:
+
+```
+NAME  ID     VTIME              DURABLE  REPEATS TO
+1     1      0.000013850s       no       entry 804, a host-time stop
+pre   19502  1.380127790s       no       entry 19580, a host-time stop
+```
+
+A
+`machine cancel --soft` and a Ctrl-C end the run at the end of the dispatch in
+progress, so they keep the run repeatable. See
+[Cancelling a drive](#cancelling-a-drive).
 
 What you send a run is part of what a recording repeats. Commands given with
 [`machine exec`](commands.md#machine-exec), `put` and `get` in the same order
@@ -1340,7 +1412,7 @@ The prompt edits a line the way your shell does.
 |---|---|
 | Tab | completes a command, and after `/h` a command or a type |
 | Up, Down | walk the commands typed at this prompt, the last 500; they are not saved when it closes |
-| Ctrl+C | cancels the run, checkpoint or hash in progress, and keeps the prompt |
+| Ctrl+C | cancels the run, checkpoint or hash in progress, and keeps the prompt; a run stops at the end of its dispatch, and a second Ctrl+C stops it at once |
 | Ctrl+D, `/q` | leaves the prompt; the run carries on as it was |
 | `;` | runs the next command after this one, and stops at the first that fails: `/s;/d` |
 | `;+` | runs the next command whatever this one did: `/replay;+/diff` |
@@ -1444,6 +1516,11 @@ machine start app --at ^booted              # replay from booted to the end of t
 machine start app --read-only --at ^booted  # the machine at booted, to read
 machine start app --no-recover              # refuse rather than replay the tail
 ```
+
+A run recorded by another version of Machine does not start. Its recording
+replays only on the version that made it, so `start` refuses it with
+`it was recorded by another version`, followed by the version of its run log
+and the version the session reads.
 
 `--at` brings the run up at the checkpoint and replays every entry after it,
 so the run ends at its tip as it would have without the option, and you see

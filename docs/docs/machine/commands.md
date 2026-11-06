@@ -2346,11 +2346,13 @@ machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output
                [--fs-dirsync | --no-fs-dirsync] [--fb type] [--rng | --no-rng]
                [--rng-seed n] [--daemon | --no-daemon] [--single-step | --no-single-step]
                [--rdtsc-exit | --no-rdtsc-exit] [--repeatable | --no-repeatable]
-               [--limit-margin n] [--timer-slack duration] [--limit n] [--backstop-limit n]
-               [--pin-cpu n] [--vtime-base n] [--vtime-rate rate] [--vtime-io-cost ns]
-               [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns] [--auto-checkpoints n]
-               [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
-               [--mem-hash | --no-mem-hash] [--disk-hash | --no-disk-hash]
+               [--limit-margin n] [--timer-slack duration] [--instr-margin n]
+               [--dispatch-bound duration] [--fast-backstop n] [--irq-wait n] [--limit n]
+               [--backstop-limit n] [--pin-cpu n] [--vtime-base n] [--vtime-rate rate]
+               [--vtime-io-cost ns] [--vtime-rdtsc-cost ns] [--vtime-pause-cost ns]
+               [--auto-checkpoints n] [--side-dump | --no-side-dump]
+               [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
+               [--disk-hash | --no-disk-hash]
                [name]
 ```
 
@@ -2382,6 +2384,10 @@ machine create [-h] [--like run] [--label name=value] [--no-wait] [--keep-output
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries (default: the session's) |
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the host's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: 20ms) |
+| `--instr-margin n` | Instructions short of a stop placed by an instruction count where the CPU's counter interrupts, 0 for the host's (default: the host's) |
+| `--dispatch-bound duration` | Host time a fast dispatch may run before it stops, 0 for 1s. A stop it places does not repeat (default: 1s) |
+| `--fast-backstop n` | Instructions a fast dispatch may run with no other stop, 0 for 100000000 (default: 100000000) |
+| `--irq-wait n` | Conditional branches a dispatch runs while an interrupt waits for the guest to take it, 0 for 200 (default: 200) |
 | `--limit n` | Conditional branches per dispatch in fast mode, steps in step mode, 0 to leave it to the machine (default: 0) |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--pin-cpu n` | Pin to this host CPU (default: the least-loaded) |
@@ -2790,7 +2796,7 @@ Use machine wait `--for` to ask whether text was printed.
 
 tid=N:at=LOC runs until tid N reaches LOC in its own code. tgid=N:at=LOC runs
 until any thread of the process does. The address is resolved when the run
-starts. The stop takes one of the 3 places the run's watchpoints use.
+starts. The stop takes one of the 3 debug registers the run's watchpoints use.
 
 tid=N:write=LOC runs until an instruction writes the bytes LOC names while tid N
 is on a vCPU. tid=N:access=LOC runs until one reads or writes them.
@@ -2798,7 +2804,7 @@ tgid=N:write=LOC and tgid=N:access=LOC stop for any thread of the process.
 
 The run stops after the access. A write the kernel makes for the task counts. A
 variable or an expression is watched at its size of 1, 2, 4 or 8 bytes. The
-watch takes one of the 3 places the run's watchpoints use.
+watch takes one of the 3 debug registers the run's watchpoints use.
 
 An address is watched through a cast that gives it a type, as GDB's watch takes
 one. The address is a multiple of the size. tgid=N also stops for a kernel
@@ -2870,9 +2876,9 @@ A hit of a breakpoint, watchpoint or catchpoint ends the run. Use `--iters 0` to
 run until one does, as GDB's continue does.
 
 Use `--back` to go back to the newest breakpoint, watchpoint or catchpoint hit
-before now, as reverse-continue does. The machine switches onto a branch at that
-entry, as go does. The branch keeps the run's stops as they are now. The run
-stays as it was.
+the run recorded, as reverse-continue does. The machine switches onto a branch
+at that entry, as go does. The branch keeps the run's stops as they are now. The
+run stays as it was.
 
 ```
 machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
@@ -2968,6 +2974,7 @@ task:          the task event an --until predicate was met by
 guest event    a stop the guest asked for, such as a task switch
 matched <n>    with --when, how many dispatches it applied to
                the rest of the iterations ran free
+Stopped at     the breakpoint, watchpoint or catchpoint hit, and tid
 ```
 
 See also:
@@ -2976,6 +2983,8 @@ See also:
 - [`machine plan`](#machine-plan)
 - [`machine wait`](#machine-wait)
 - [`machine cancel`](#machine-cancel)
+- [`machine points`](#machine-points)
+- [`machine break`](#machine-break)
 
 ## machine plan
 
@@ -3290,22 +3299,34 @@ See also:
 ## machine cancel
 
 Cancel the run or replay in progress.
-See [Schedules](running-a-machine.md#schedules).
+See [Cancelling a drive](running-a-machine.md#cancelling-a-drive).
 
-A run stops where it is. A replay stops before its next entry.
+A run stops where it is. The stop falls where the host's clock put it, so
+another recording of the same state does not stop there. Describe reports the
+run as not repeatable from that entry. A replay stops before its next entry.
+
+Use `--soft` to stop the run at the end of the dispatch in progress. That stop
+is an ordinary entry, and the run stays repeatable. It takes at most the run's
+dispatch bound, 1s by default. Ctrl-C stops a run this way, and a second Ctrl-C
+stops it now.
 
 ```
-machine cancel [-h] run
+machine cancel [-h] [--soft] run
 ```
 
 | Argument | Does |
 |---|---|
 | `run` | Run name |
 
+| Option | Does |
+|---|---|
+| `--soft` | Stop at the end of the dispatch in progress, which keeps the run repeatable |
+
 Examples:
 
 ```
-machine cancel run1  cancel what run1 is running
+machine cancel run1         cancel what run1 is running
+machine cancel run1 --soft  at the end of its dispatch
 ```
 
 Refuses, and the way past:
@@ -3356,6 +3377,7 @@ executes.
 
 ```
 machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--limit-margin n]
+               [--instr-margin n]
                run [line]
 ```
 
@@ -3369,16 +3391,18 @@ machine replay [-h] [--to point [point ...]] [--trace] [--retry n] [--limit-marg
 | `--to point [point ...]` | Point of the line to replay to: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark (default: the end of the line) |
 | `--trace` | Trace each iteration one by one |
 | `--retry n` | Retries for an entry that diverges or the host interrupted, default 2; 0 does not retry |
-| `--limit-margin n` | Conditional branches short of each recorded stop where the CPU's counter interrupts (default: the host's) |
+| `--limit-margin n` | Conditional branches short of each recorded stop where the CPU's counter interrupts (default: the run's) |
+| `--instr-margin n` | Instructions short of each stop placed by an instruction count where the CPU's counter interrupts (default: the run's) |
 
 Examples:
 
 ```
-machine replay try2                     replay the parent's entries
-machine replay try2 --to '#300'         replay up to entry 300
-machine replay try2 --to ^cp2           replay up to checkpoint cp2
-machine replay try2 run1 --to '#420'    replay the line to run1
-machine replay try2 --limit-margin 100  100 branches short of each stop
+machine replay try2                        replay the parent's entries
+machine replay try2 --to '#300'            replay up to entry 300
+machine replay try2 --to ^cp2              replay up to checkpoint cp2
+machine replay try2 run1 --to '#420'       replay the line to run1
+machine replay try2 --limit-margin 100     100 branches short of each stop
+machine replay try2 --instr-margin 100000  100,000 instructions short
 ```
 
 Prints:
@@ -3574,8 +3598,9 @@ machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name na
              [--rebase] [--depth n] [--lean] [--no-start] [--side-dump | --no-side-dump]
              [--side-trace | --no-side-trace] [--mem-hash | --no-mem-hash]
              [--repeatable | --no-repeatable] [--limit-margin n] [--timer-slack duration]
-             [--disk-hash | --no-disk-hash] [--rng-seed n] [--keep-output name]
-             [--drop-output name] [--no-wait] [--daemon | --no-daemon]
+             [--instr-margin n] [--dispatch-bound duration] [--fast-backstop n]
+             [--irq-wait n] [--disk-hash | --no-disk-hash] [--rng-seed n]
+             [--keep-output name] [--drop-output name] [--no-wait] [--daemon | --no-daemon]
              [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
              [--pin-cpu n]
              run
@@ -3600,6 +3625,10 @@ machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name na
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
+| `--instr-margin n` | Instructions short of a stop placed by an instruction count where the CPU's counter interrupts, 0 for the host's (default: the run's) |
+| `--dispatch-bound duration` | Host time a fast dispatch may run before it stops, 0 for 1s. A stop it places does not repeat (default: the run's) |
+| `--fast-backstop n` | Instructions a fast dispatch may run with no other stop, 0 for 100000000 (default: the run's) |
+| `--irq-wait n` | Conditional branches a dispatch runs while an interrupt waits for the guest to take it, 0 for 200 (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--rng-seed n` | Seed the new run's RNG device from n once it is up, so its guest draws other random numbers |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3712,6 +3741,10 @@ machine go [options] <run> <point>
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
+| `--instr-margin n` | Instructions short of a stop placed by an instruction count where the CPU's counter interrupts, 0 for the host's (default: the run's) |
+| `--dispatch-bound duration` | Host time a fast dispatch may run before it stops, 0 for 1s. A stop it places does not repeat (default: the run's) |
+| `--fast-backstop n` | Instructions a fast dispatch may run with no other stop, 0 for 100000000 (default: the run's) |
+| `--irq-wait n` | Conditional branches a dispatch runs while an interrupt waits for the guest to take it, 0 for 200 (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--rng-seed n` | Seed the new run's RNG device from n once it is up, so its guest draws other random numbers |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -3877,10 +3910,12 @@ where the run would have the names of another run.
 machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name name]
                [--no-start] [--side-dump | --no-side-dump] [--side-trace | --no-side-trace]
                [--mem-hash | --no-mem-hash] [--repeatable | --no-repeatable]
-               [--limit-margin n] [--timer-slack duration] [--disk-hash | --no-disk-hash]
-               [--rng-seed n] [--keep-output name] [--drop-output name] [--no-wait]
-               [--daemon | --no-daemon] [--single-step | --no-single-step] [--limit n]
-               [--backstop-limit n] [--pin-cpu n]
+               [--limit-margin n] [--timer-slack duration] [--instr-margin n]
+               [--dispatch-bound duration] [--fast-backstop n] [--irq-wait n]
+               [--disk-hash | --no-disk-hash] [--rng-seed n] [--keep-output name]
+               [--drop-output name] [--no-wait] [--daemon | --no-daemon]
+               [--single-step | --no-single-step] [--limit n] [--backstop-limit n]
+               [--pin-cpu n]
                run
 ```
 
@@ -3900,6 +3935,10 @@ machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name 
 | `--repeatable, --no-repeatable` | Stop fast exactly at the limit, so recording again gives the same entries, whatever the run it comes from does |
 | `--limit-margin n` | Conditional branches short of a stop where the CPU's counter interrupts (default: the run's) |
 | `--timer-slack duration` | How late a timer may be in code that takes no exit, 0 for none (default: the run's) |
+| `--instr-margin n` | Instructions short of a stop placed by an instruction count where the CPU's counter interrupts, 0 for the host's (default: the run's) |
+| `--dispatch-bound duration` | Host time a fast dispatch may run before it stops, 0 for 1s. A stop it places does not repeat (default: the run's) |
+| `--fast-backstop n` | Instructions a fast dispatch may run with no other stop, 0 for 100000000 (default: the run's) |
+| `--irq-wait n` | Conditional branches a dispatch runs while an interrupt waits for the guest to take it, 0 for 200 (default: the run's) |
 | `--disk-hash, --no-disk-hash` | Hash the guest's disk at every entry, whatever the run it comes from records |
 | `--rng-seed n` | Seed the new run's RNG device from n once it is up, so its guest draws other random numbers |
 | `--keep-output name` | Source that the run stores though it is dropped: a path under /output, a device such as ttyS1, a pattern, or none (repeatable) |
@@ -9613,15 +9652,17 @@ has no line tables.
 
 A C++ exception that leaves the function ends `--over` and `--out` at the catch
 that takes it, as GDB does. In a C++ program such a step takes 2 of the run's 3
-breakpoint places. With fewer free, the step is refused. A longjmp out of the
-function ends the step after 30 minutes of machine time.
+debug registers. With fewer free, the step is refused.
+
+A longjmp out of the function ends the step after 30 minutes of machine time.
+Use cancel to end it sooner.
 
 Use `--skip` NAME with `--line` to step out of a function or a source file of
 that name. It does as GDB's skip does. Give it once for each name.
 
-Use `--back` to go back over dispatches of the vCPU the task is on, as
-reverse-stepi does. A dispatch is one entry into the machine, one instruction
-where the run stepped. The machine switches onto a new branch there, as go does.
+Use `--back` to go back over the task's executions on any vCPU, as reverse-stepi
+does. An execution is one stretch the task ran, one instruction where the run
+stepped. The machine switches onto a new branch there, as go does.
 
 With `--line`, `--over` or `--out`, `--back` goes back over the task's own code.
 It does as reverse-step, reverse-next, reverse-nexti and reverse-finish do. It
@@ -9643,7 +9684,7 @@ machine step [-h] [--line] [--over] [--out] [--back [n]] [--skip name] run tid [
 | `--line` | Step a source line, not an instruction |
 | `--over` | Step over a call, the function it calls and all it calls being one step |
 | `--out` | Run until the function returns to the one that called it |
-| `--back [n]` | Go back n steps over dispatches of the task's vCPU, onto a branch |
+| `--back [n]` | Go back n steps over the task's dispatches, onto a branch |
 | `--skip name` | Step out of a function or a source file of this name in a line step (repeatable) |
 
 Examples:
@@ -9716,14 +9757,16 @@ listing has the run's breakpoints, each by its number. Use points to list them
 with the watchpoints and catchpoints.
 
 The run keeps them in its run log. A branch has the ones its parent had where it
-was forked. A run holds 64 breakpoints.
+was forked. A run holds 64 breakpoints. Hardware breakpoints and watchpoints
+share the 3 debug registers.
 
-The guest puts each breakpoint in the tgid's own copy of its code. Another
-process that maps the same file does not stop. A read of the task's memory shows
-the program's byte, not the breakpoint's.
+A breakpoint stops the tasks of its tgid alone. Another process that maps the
+same file does not stop. A read of the task's memory shows the program's byte,
+not the breakpoint's.
 
-A run that reaches one ends there, and says which. The breakpoints are armed
-while the run records, and not while it replays.
+A run that reaches a breakpoint ends there and names it. The run arms its
+breakpoints while it records and not while it replays. So run `--back` finds
+only the hits the run recorded.
 
 ```
 machine break [-h] run command ...
@@ -9751,6 +9794,9 @@ json  breakpoints
 See also:
 
 - [`machine watch`](#machine-watch)
+- [`machine catch`](#machine-catch)
+- [`machine points`](#machine-points)
+- [`machine break hits`](#machine-break-hits)
 - [`machine run`](#machine-run)
 - [`machine symbols`](#machine-symbols)
 
@@ -9924,7 +9970,7 @@ A hit is a breakpoint that stopped the run. It has the entry it stopped at, its
 machine time and the number of the breakpoint. The run log keeps each one, so a
 branch lists its parent's hits before it.
 
-Use the run command with `--back` to switch onto a branch at the newest hit.
+Use run `--back` to switch onto a branch at the newest hit.
 
 ```
 machine break run hits [-h] [-n range]
@@ -10075,9 +10121,9 @@ them with `--on` access. The listing has the run's watchpoints, each by its
 number. Use points to list them with the breakpoints and catchpoints.
 
 The run keeps them in its run log, as it keeps its breakpoints. A run holds 3
-watchpoints and hardware breakpoints together. A step over a call takes one of
-the 3 places while it runs. So do a finish and a run until an address or a
-write.
+watchpoints and hardware breakpoints together, one in each debug register. A
+step over a call takes one of the 3 while it runs. So do step `--out` and run
+`--until` at= or write=.
 
 ```
 machine watch [-h] run command ...
@@ -10247,7 +10293,7 @@ A hit is a watchpoint that stopped the run. It has the entry it stopped at, its
 machine time and the number of the watchpoint. The run log keeps each one, so a
 branch lists its parent's hits before it.
 
-Use the run command with `--back` to switch onto a branch at the newest hit.
+Use run `--back` to switch onto a branch at the newest hit.
 
 ```
 machine watch run hits [-h] [-n range]
@@ -10393,10 +10439,10 @@ See also:
 
 List and manage catchpoints.
 
-A catchpoint stops the run at an event of a task rather than at an address: an
-exec, an exit, a fork, a system call, a signal, or a file mapped. The listing
-has the run's catchpoints, each by its number. Use points to list them with the
-breakpoints and watchpoints.
+A catchpoint stops the run at an event of a task rather than at an address. The
+events are exec, exit, fork, system call, signal, fault, disk request, file
+mapped and C++ exception. The listing has the run's catchpoints, each by its
+number. Use points to list them with the breakpoints and watchpoints.
 
 The run keeps them in its run log, as it keeps its breakpoints. A run holds 8
 catchpoints at most.
@@ -10607,7 +10653,7 @@ machine time and the number of the catchpoint. A catchpoint's hit also has its
 event. The run log keeps each one, so a branch lists its parent's hits before
 it.
 
-Use the run command with `--back` to switch onto a branch at the newest hit.
+Use run `--back` to switch onto a branch at the newest hit.
 
 ```
 machine catch run hits [-h] [-n range]

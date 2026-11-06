@@ -183,7 +183,8 @@ And the calls you will reach for most often:
 | `run.start()`, `run.stop()`, `run.pause()`, `run.kill()`, `run.delete()` | lifecycle |
 | `run.start(at="^booted")`, `run.start(at="^booted", read_only=True)`, `run.start(recover=False)` | replays from a checkpoint to the tip, opens a checkpoint to read, or refuses to replay the tail, as [`machine start`](commands.md#machine-start) does |
 | `run.fork(from_="^booted", name="b")`, `run.rewind("^booted")` | a branch forked at the checkpoint before a point and replayed to it; the run put back at a checkpoint |
-| `run.sync()`, `run.cancel()` | publishes the run to your storage; cancels the drive or checkpoint in progress |
+| `run.sync()`, `run.cancel()`, `run.cancel(soft=True)` | publishes the run to your storage; cancels the drive or checkpoint in progress, at once or, with `soft=True`, at the end of the dispatch in progress so the run stays repeatable |
+| `client.create(disk="app", instr_margin=100000, dispatch_bound="2s")`, `run.replay(instr_margin=100000)`, `run.describe().repeats_to` | sets where a recording stops, as [Recording that repeats](running-a-machine.md#recording-that-repeats) describes; replays with that margin; the first entry where recording the run again stops repeating, `None` when it repeats to its tip |
 | `run.keep()` | keeps a run created in a `with` block when the block exits, such as one that just failed, with its tree |
 | `run.marks.add("good")`, `run.marks.list()`, `run.marks.remove("good")`, `client.marks.list()` | names a branch, as [Marks](checkpoints-and-branches.md#marks) describes; the last lists every mark |
 | `run.tasks.hold(56)`, `.release(56)`, `.yield_(56)`, `.slice(56, "10us")`, `.pin(56, "2")` | steers one thread, as [Holding threads](steering-programs.md#holding-threads) describes |
