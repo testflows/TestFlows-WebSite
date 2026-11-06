@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1793968468619" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1793968468619" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1793967534443" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1793968468619" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -16529,7 +16529,7 @@ does. A build takes the same sources: <code>binary</code>, <code>from_</code>, <
 </tr>
 <tr>
 <td><code>run.inject.add(&quot;syscall&quot;, &quot;read&quot;, &quot;valid&quot;, in_=&quot;/usr/bin/app&quot;, pick=1, prob=0.1)</code>, <code>run.inject.add(&quot;syscall&quot;, &quot;read&quot;, delay=&quot;0:20ms&quot;, in_=&quot;/usr/bin/app&quot;)</code>, <code>run.inject.add(&quot;disk&quot;, in_=&quot;all&quot;, prob=0.01)</code>, <code>run.inject.add(&quot;function&quot;, &quot;malloc&quot;, ret=0, prob=0.01, in_=&quot;/usr/bin/app&quot;)</code>, <code>run.inject.add(&quot;disk-corrupt&quot;, in_=&quot;all&quot;, file=&quot;/var/lib/db/*/data.bin&quot;, op=&quot;write&quot;, bytes=8, times=1)</code>, <code>run.inject()</code>, <code>run.inject.delete(2)</code>, <code>run.inject.clear()</code></td>
-<td>injects faults as <code>machine inject</code> does: system calls fail with chosen errors or wait first, a program’s function returns <code>ret</code> without running, and the kernel’s disk, allocation, usercopy and futex-access sites fail, and the disk corrupts, tears or loses data; lists the faults with their counts, and deletes them; <code>in_</code> takes the words <code>--in</code> takes, <code>delay</code> the span <code>--delay</code> takes, and <code>file</code>, <code>op</code>, <code>sectors</code> and <code>bytes</code> the disk options</td>
+<td>injects faults as <code>machine inject</code> does: system calls fail with chosen errors or wait first, a program’s function returns <code>ret</code> without running, and the kernel’s disk, allocation, usercopy and futex-access sites fail, and the disk corrupts, tears or loses data; lists the faults with their counts, and deletes them; <code>in_</code> takes the words <code>--in</code> takes, <code>delay</code> the span <code>--delay</code> takes, <code>at</code> the tid whose files hold the function, as <code>--at</code> takes it, and <code>file</code>, <code>op</code>, <code>sectors</code> and <code>bytes</code> the disk options</td>
 </tr>
 <tr>
 <td><code>run.tasks.exist(&quot;/usr/bin/app&quot;)</code></td>
@@ -17156,10 +17156,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1793967534444"></script>
-<script src="/js/machine-hero-type.js?v=1793967534444"></script>
-<script src="/js/download-platforms.js?v=1793967534444"></script>
-<script src="/js/anchor-case.js?v=1793967534444"></script>
+<script src="/js/index-code-type.js?v=1793968468619"></script>
+<script src="/js/machine-hero-type.js?v=1793968468619"></script>
+<script src="/js/download-platforms.js?v=1793968468619"></script>
+<script src="/js/anchor-case.js?v=1793968468619"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
