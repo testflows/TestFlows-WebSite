@@ -48,6 +48,9 @@
 #   TESTFLOWS_MACHINE_ACCESS_TOKEN
 #                         the client's own sign-in, which `machine upgrade` hands over
 #                         in place of signing in again; it is never signed out
+#   TESTFLOWS_MACHINE_API_CA_FILE
+#                         a PEM file of the CAs to trust for the API, as the client
+#                         reads it; `machine upgrade` hands over the client's
 #
 # To upgrade an installed client, run `machine upgrade`.
 #
@@ -78,6 +81,8 @@ HELPER=""
 API_POW=""
 API_HEADERS=""
 API_BODY=""
+# An empty CA directory, made when TESTFLOWS_MACHINE_API_CA_FILE names the API's CAs.
+API_NO_CAS=""
 API_STATUS=""
 SIGNED_IN=""
 ACCOUNT=""
@@ -282,6 +287,9 @@ Environment:
   TESTFLOWS_MACHINE_ACCESS_TOKEN
                         the client's own sign-in, which machine upgrade hands over;
                         the client stays signed in
+  TESTFLOWS_MACHINE_API_CA_FILE
+                        a PEM file of the CAs to trust for the API, as the client
+                        reads it
   MACHINE_NO_MODIFY_PATH  set to anything, do not ask to put the directory on PATH
 USAGE
 }
@@ -432,6 +440,10 @@ api_call() {
         -o "$API_BODY" -w '%{http_code}')
     [ -z "$API_POW" ] || args+=(-H "X-Tf-Pow: $API_POW")
     [ -z "$body" ] || args+=(-H "Content-Type: application/json" --data-binary "$body")
+    # The CAs the client trusts for the API, which machine upgrade hands over with its
+    # sign-in: its token then meets only the API the client itself would talk to. An
+    # empty --capath as well, since curl reads its default CA directory beside --cacert.
+    [ -z "$API_NO_CAS" ] || args+=(--cacert "$TESTFLOWS_MACHINE_API_CA_FILE" --capath "$API_NO_CAS")
     API_STATUS="$(curl "${args[@]}" "$API_URL$path" 2>/dev/null)" || API_STATUS="${API_STATUS:-000}"
 }
 
@@ -481,6 +493,10 @@ sign_in() {
     API_HEADERS="$(mktemp)" || die "Could not create a temporary file."
     API_BODY="$(mktemp)" || die "Could not create a temporary file."
     chmod 600 "$API_HEADERS"
+    if [ -n "${TESTFLOWS_MACHINE_API_CA_FILE:-}" ]; then
+        [ -r "$TESTFLOWS_MACHINE_API_CA_FILE" ] || die "TESTFLOWS_MACHINE_API_CA_FILE names no file to read: $TESTFLOWS_MACHINE_API_CA_FILE"
+        API_NO_CAS="$(mktemp -d)" || die "Could not create a temporary directory."
+    fi
     if [ -n "${TESTFLOWS_MACHINE_API_KEY:-}" ]; then
         printf 'Authorization: Bearer %s\n' "$TESTFLOWS_MACHINE_API_KEY" > "$API_HEADERS"
         SIGNED_IN="api"
@@ -599,6 +615,9 @@ read_agreement() {
 accept_terms() {
     local version accepted
     api_call GET /terms
+    if [ "$API_STATUS" = "401" ] && [ "$SIGNED_IN" = "client" ]; then
+        die "The client's sign-in has ended." "Sign in again machine login"
+    fi
     [ "$API_STATUS" = "200" ] || die "Could not read the Agreement's version. $(api_refusal)"
     version="$(json_get "$API_BODY" version)"
     accepted="$(json_get "$API_BODY" accepted)"
@@ -606,6 +625,12 @@ accept_terms() {
     if [ "$SIGNED_IN" = "api" ]; then
         die "This API key's account has not accepted the Agreement of $version." \
             "Accept them by installing at a terminal curl https://testflows.com/machine/install -fsS | bash"
+    fi
+    # The Agreement is read and accepted at the terminal: a client's sign-in handed over
+    # with none has no one to show it to.
+    if [ "$SIGNED_IN" = "client" ] && ! ( : < /dev/tty ) 2>/dev/null; then
+        die "The Agreement of $version is to be accepted, and there is no terminal to show it at." \
+            "Upgrade at a terminal machine upgrade"
     fi
     read_agreement "$version"
     api_call POST /terms/accept "$(json_object version "$version")"
@@ -621,6 +646,8 @@ sign_out() {
     fi
     SIGNED_IN=""
     rm -f "${API_HEADERS:-}" "${API_BODY:-}"
+    [ -z "$API_NO_CAS" ] || rmdir "$API_NO_CAS" 2>/dev/null || true
+    API_NO_CAS=""
 }
 
 # release_url PATH: where to download a release file from: a
@@ -1014,6 +1041,18 @@ install_tree() {
     mv -f "$link" "$target"
 }
 
+# tree_in_use DIR: whether a running process executes a file in DIR. lsof lists each
+# process's executable by its resolved path, so it finds a client started through the
+# link in bin/, whose command line does not name DIR: machine upgrade waits on this
+# script from that client. pgrep is the check where there is no lsof.
+tree_in_use() {
+    local dir="$1"
+    if command -v lsof >/dev/null 2>&1; then
+        lsof -d txt -Fn 2>/dev/null | grep -qF "n$dir/" && return 0
+    fi
+    pgrep -f "$dir/machine" > /dev/null 2>&1
+}
+
 # remove_old_trees SHARE KEEP: remove the folders older versions were unpacked into, except
 # one a running machine uses.
 remove_old_trees() {
@@ -1023,7 +1062,7 @@ remove_old_trees() {
         [ -d "$dir" ] || continue
         version_valid "$(basename "$dir")" || continue
         [ "$(basename "$dir")" = "$keep" ] && continue
-        pgrep -f "$dir/machine" > /dev/null 2>&1 && continue
+        tree_in_use "$dir" && continue
         rm -rf "$dir" && freed=$((freed + 1))
     done
     case "$freed" in
