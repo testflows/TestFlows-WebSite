@@ -7,10 +7,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=4957902679e8";
-import { setStatus, showSpinner } from "../ui.js?v=4957902679e8";
-import { credits, eur, titleCase } from "./format.js?v=4957902679e8";
-import { tierRank } from "./plans.js?v=4957902679e8";
+} from "../api.js?v=d9a2c1eacc6d";
+import { setStatus, showSpinner } from "../ui.js?v=d9a2c1eacc6d";
+import { credits, eur, titleCase } from "./format.js?v=d9a2c1eacc6d";
+import { tierRank } from "./plans.js?v=d9a2c1eacc6d";
 
 /**
  * @param {string|undefined} url
@@ -32,7 +32,7 @@ export function renderBuy(panel, account, ctx) {
   const h2 = document.createElement("h2");
   h2.textContent = "Buy";
   const p = document.createElement("p");
-  p.textContent = "Subscribe to a plan or purchase usage credits.";
+  p.textContent = "Subscribe to a plan or buy Usage Credits.";
   head.append(h2, p);
   panel.append(head);
 
@@ -204,7 +204,7 @@ export function renderBuy(panel, account, ctx) {
     plansEl.append(dedicated);
 
     const h3p = document.createElement("h3");
-    h3p.textContent = "Usage credits";
+    h3p.textContent = "Usage Credits";
     packsEl.append(h3p);
     if (!packs.length) {
       const empty = document.createElement("p");

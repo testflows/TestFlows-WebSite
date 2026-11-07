@@ -55,7 +55,7 @@ const SECTION_CHROME = {
   },
   credits: {
     title: "Credits",
-    lead: "Included and usage credits.",
+    lead: "Included Credits and Usage Credits.",
   },
   activity: {
     title: "Activity",
@@ -63,7 +63,7 @@ const SECTION_CHROME = {
   },
   buy: {
     title: "Buy",
-    lead: "Subscribe to a plan or purchase usage credits.",
+    lead: "Subscribe to a plan or buy Usage Credits.",
   },
   billing: {
     title: "Billing",

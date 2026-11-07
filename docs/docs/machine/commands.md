@@ -137,7 +137,7 @@ machine sessions create [-h] [--cpus n] [--mem size] [--storage size] [--class t
 | `--cpus n` | Number of vCPUs (default: 1) |
 | `--mem size` | Memory, MB or with a K/M/G/T suffix (default: the class's memory for each vCPU, as sessions classes lists it) |
 | `--storage size` | The session's storage, GB or with a K/M/G/T suffix (default: the class's storage for the session's size, up to the plan's limit) |
-| `--class type` | Hardware class, as sessions classes lists it (default: the plan's class) |
+| `--class type` | Hardware class, as sessions classes lists it (default: the plan's class, which sessions classes tags) |
 | `--no-wait` | Return without waiting |
 | `--no-use` | Create the session without using it |
 
@@ -153,7 +153,8 @@ machine sessions create work --no-wait  return once accepted
 Refuses, and the way past:
 
 ```
-a class with no capacity now  machine sessions classes
+a class with no capacity now        machine sessions classes
+a class with no machine in service  machine sessions classes
 ```
 
 See also:
@@ -225,6 +226,9 @@ List the hardware classes a session can be created on.
 
 Each class names its CPU architecture. A run starts only in a session of the
 architecture it was recorded on. Use the class name with create `--class`.
+
+A session created without `--class` runs on the plan's default class. The list
+tags that class default.
 
 ```
 machine sessions classes [-h]
@@ -441,9 +445,9 @@ See also:
 
 Show and manage the account. See [Account and billing](account-and-billing.md).
 
-The account holds the plan, the usage credits, the API keys and the signed-in
-devices. The subcommands buy credits or a plan, manage invoices and payment, and
-close the account.
+The account holds the plan, the credits, the API keys and the signed-in devices.
+The subcommands buy credits or a plan, manage invoices and payment, and close
+the account.
 
 ```
 machine account [-h] command ...
@@ -493,7 +497,7 @@ See also:
 
 ### machine account buy-usage
 
-Buy usage credits. See [Account and billing](account-and-billing.md).
+Buy Usage Credits. See [Account and billing](account-and-billing.md).
 
 The command opens checkout for the pack of the named number of credits. A credit
 costs one euro. A credit has no cash value.
@@ -513,7 +517,7 @@ machine account buy-usage [-h] [-y] credits
 Examples:
 
 ```
-machine account buy-usage 10     buy 10 usage credits for €10
+machine account buy-usage 10     buy 10 Usage Credits for €10
 machine account buy-usage 10 -y  without asking
 ```
 
@@ -774,7 +778,7 @@ See also:
 
 Cancel the subscription. See [Account and billing](account-and-billing.md).
 
-The plan stays until renewal, then drops to Free. Usage credits stay. Use
+The plan stays until renewal, then drops to Free. Usage Credits stay. Use
 `--link` to print the URL without opening a browser.
 
 ```
@@ -887,7 +891,7 @@ See also:
 
 ### machine account credits
 
-Show usage credits. See [Account and billing](account-and-billing.md).
+Show the account's credits. See [Account and billing](account-and-billing.md).
 
 ```
 machine account credits [-h]
@@ -907,7 +911,7 @@ See also:
 
 ### machine account activity
 
-Show usage credit activity. See [Account and billing](account-and-billing.md).
+Show credit activity. See [Account and billing](account-and-billing.md).
 
 A session is charged an hour ahead, as Charged rows. When it stops, a Settled
 row gives back the unused part of its last hour. Naming a session ends the
@@ -1306,8 +1310,9 @@ The installer uses the client's own sign-in. A client signed in asks for nothing
 and stays signed in. A client signed out signs in at the terminal for the
 download. It stays signed out after.
 
-Name a version to install that version. An older version installs the same way.
-Use `--list` to see the versions there are.
+The latest is not downloaded again when it is installed already. A version named
+is installed even when it is installed already. An older version installs the
+same way. Use `--list` to see the versions there are.
 
 ```
 machine upgrade [-h] [--list | version]

@@ -18,7 +18,7 @@ export function renderCredits(panel, account) {
   const h2 = document.createElement("h2");
   h2.textContent = "Credits";
   const p = document.createElement("p");
-  p.textContent = "Included and usage credits.";
+  p.textContent = "Included Credits and Usage Credits.";
   head.append(h2, p);
   panel.append(head);
 
