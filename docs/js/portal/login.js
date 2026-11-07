@@ -1,7 +1,7 @@
-import { loginStart, loginVerify, ApiError } from "./api.js?v=9d190d59ed94";
-import { looksLikeEmail } from "./errors.js?v=9d190d59ed94";
-import { getEmail, isSignedIn, setSession } from "./session.js?v=9d190d59ed94";
-import { setStatus, showSpinner } from "./ui.js?v=9d190d59ed94";
+import { loginStart, loginVerify, ApiError } from "./api.js?v=4957902679e8";
+import { looksLikeEmail } from "./errors.js?v=4957902679e8";
+import { getEmail, isSignedIn, setSession } from "./session.js?v=4957902679e8";
+import { setStatus, showSpinner } from "./ui.js?v=4957902679e8";
 
 const ACCOUNT_HREF = "/machine/portal/account/";
 const SIGNUP_HREF = "/machine/portal/signup/";

@@ -201,3 +201,184 @@ hr {
 .download-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.4rem; }
 .download-actions .section-cta { margin: 0; color: inherit; }
 .download-actions .section-cta:not(.section-cta-ghost) { color: var(--tf-ink-on-primary); }
+
+/* Pricing: five plans side by side on a wide screen, then the compute and credits
+   that every plan shares. */
+.pricing-page {
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    background-color: var(--tf-bg);
+    padding: 3.5rem 0 5rem;
+    box-sizing: border-box;
+}
+
+.pricing-page .container { max-width: 84rem; }
+
+.pricing-header { margin-bottom: 2.25rem; max-width: 46rem; }
+
+.pricing-header h1 {
+    color: var(--tf-text-strong);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 4.5vw, 3.1rem);
+    line-height: 1.12;
+    margin: 0 0 0.7rem;
+}
+
+.pricing-header p {
+    font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.pricing-plans {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+}
+
+@media (min-width: 640px) {
+    .pricing-plans { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 960px) {
+    .pricing-plans { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 1280px) {
+    .pricing-plans { grid-template-columns: repeat(5, 1fr); }
+}
+
+.pricing-plan {
+    display: flex;
+    flex-direction: column;
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    padding: 1.5rem 1.35rem;
+    min-width: 0;
+}
+
+.pricing-plan-featured { border-color: var(--tf-accent); position: relative; }
+
+.pricing-badge {
+    position: absolute;
+    top: -0.75rem;
+    left: 1.35rem;
+    margin: 0;
+    padding: 0.1rem 0.65rem;
+    border-radius: var(--tf-radius-pill);
+    background: var(--tf-accent);
+    color: var(--tf-ink-on-primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.pricing-for { color: var(--tf-text-muted); margin: 0 0 0.9rem; min-height: 3em; }
+
+.pricing-plan h2 {
+    color: var(--tf-text-strong);
+    font-weight: 700;
+    font-size: 1.35rem;
+    margin: 0 0 0.3rem;
+}
+
+.pricing-price { margin: 0 0 0.9rem; color: var(--tf-text-muted); }
+
+.pricing-amount {
+    color: var(--tf-text-strong);
+    font-weight: 700;
+    font-size: 2rem;
+    line-height: 1.1;
+}
+
+.pricing-credits {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    margin: 0;
+}
+
+.pricing-hours { color: var(--tf-text-muted); margin: 0 0 1rem; }
+
+.pricing-lead {
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    margin: 0 0 0.35rem;
+}
+
+.pricing-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pricing-features li {
+    position: relative;
+    padding: 0.35rem 0 0.35rem 1.5rem;
+    line-height: 1.4;
+}
+
+.pricing-features li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--tf-accent);
+    font-weight: 700;
+}
+
+.pricing-cta { width: 100%; overflow-wrap: anywhere; margin: 0 0 1.25rem; }
+
+.pricing-section { margin-top: 3rem; max-width: 52rem; }
+
+.pricing-section h2 {
+    color: var(--tf-text-strong);
+    font-weight: 700;
+    font-size: 1.6rem;
+    margin: 0 0 0.8rem;
+}
+
+.pricing-section p { line-height: 1.6; }
+
+.pricing-table-wrap { overflow-x: auto; margin: 0 0 1rem; }
+
+.pricing-table { width: 100%; border-collapse: collapse; }
+
+.pricing-table th,
+.pricing-table td {
+    text-align: left;
+    padding: 0.6rem 0.75rem;
+    border-bottom: 1px solid var(--tf-card-border);
+}
+
+.pricing-table th { color: var(--tf-text-strong); font-weight: 600; }
+
+.pricing-table th:last-child,
+.pricing-table td:last-child { text-align: right; white-space: nowrap; }
+
+.pricing-compare-section { max-width: none; }
+
+.pricing-compare th[scope="row"] { font-weight: 400; color: var(--tf-text); min-width: 10rem; }
+
+.pricing-compare td,
+.pricing-compare thead th { text-align: center; white-space: nowrap; }
+
+.pricing-compare td:last-child,
+.pricing-compare th:last-child { text-align: center; }
+
+.pricing-note,
+.pricing-legal { color: var(--tf-text-muted); }
+
+.pricing-legal { margin-top: 3rem; }
+
+.pricing-faq details {
+    border-bottom: 1px solid var(--tf-card-border);
+    padding: 0.85rem 0;
+}
+
+.pricing-faq summary {
+    cursor: pointer;
+    color: var(--tf-text-strong);
+    font-weight: 600;
+    font-size: 1.08rem;
+}
+
+.pricing-faq details p { margin: 0.6rem 0 0; }

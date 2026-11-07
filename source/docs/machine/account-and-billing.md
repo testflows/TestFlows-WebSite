@@ -35,6 +35,9 @@ pick another class, and it uses ₡0.15 an hour per unit. `standard-ie` uses ₡
 current price of each class. Your plan includes credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.
 
+[Pricing](/machine/pricing/) lists the plans. For dedicated machines, reserved for
+your team alone, contact [sales@testflows.com](mailto:sales@testflows.com).
+
 A running session is charged an hour ahead. When it stops, the unused part
 of its last hour is settled back. In the activity, a Charged row's TIME is the
 hour and a Settled row's is negative, the part given back, so a session's

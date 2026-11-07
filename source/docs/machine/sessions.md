@@ -12,7 +12,7 @@ machine sessions create ci-1 --cpus 2 --mem 4G
 `--cpus` sets the number of vCPUs, `--mem` the memory and `--storage` the
 disk space. Your plan caps each session: 2 vCPUs, 4G of memory and 32G of
 storage on Free, 4 vCPUs, 40G and 128G on Starter and on Free with usage
-credits, and 8 vCPUs, 110G and 256G on Pro. A hardware class can give a
+credits, 6 vCPUs, 64G and 192G on Plus, and 8 vCPUs, 110G and 256G on Pro. A hardware class can give a
 session less than the plan allows, and the smaller of the two applies. `--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
 the classes, with the CPU architecture of each. `standard-ip`, on `intel-1`, is
@@ -100,8 +100,8 @@ machine sessions delete ci-2
 ## Idle sessions stop
 
 A session is idle while it serves no command. Your plan sets its idle time:
-10 minutes on Free, 30 on Starter and on Free with usage credits, and 60 on
-Pro.
+10 minutes on Free, 30 on Starter and on Free with usage credits, 45 on Plus,
+and 60 on Pro.
 `machine account show` shows yours. When a session reaches its idle time, it
 stops, and so do its runs. The runs are kept. Start one again in any session
 with `machine start <run>`.
@@ -114,7 +114,7 @@ machine sessions keep ci-1 30m
 ```
 
 A keep holds the session idle for up to 30 minutes on Free, and an hour on
-Starter, Free with usage credits and Pro. `machine sessions list` shows under
+Starter, Free with usage credits, Plus and Pro. `machine sessions list` shows under
 IDLE how long each session has gone without a command, and
 `machine sessions show` when it stops. `machine sessions list --all` also lists
 the sessions that stopped. One that stopped idle is listed as `stopped idle`,

@@ -1,6 +1,6 @@
 /** Shared subscription tier order — paid tiers, low → high. Free is never a
  * switch target; a higher rank is an upgrade, a lower rank a downgrade. */
-export const TIER_RANK = ["starter", "pro", "enterprise"];
+export const TIER_RANK = ["starter", "plus", "pro", "enterprise"];
 
 /**
  * Rank of a paid tier (0 = lowest), or -1 for Free / unknown.

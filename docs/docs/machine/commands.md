@@ -535,7 +535,7 @@ machine account buy-plan [-h] [-y] plan
 
 | Argument | Does |
 |---|---|
-| `plan` | Plan to subscribe to: starter or pro |
+| `plan` | Plan to subscribe to: starter, plus or pro |
 
 | Option | Does |
 |---|---|

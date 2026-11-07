@@ -1,0 +1,600 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  <title>Pricing | TestFlows</title>
+  <meta name="description" content="Machine plans and prices. Start free, pay for the compute your sessions use, or reserve dedicated machines for your team.">
+  
+  
+  <link rel="canonical" href="https://testflows.com/machine/pricing/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  <meta name="author" content="TestFlows">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+
+
+  <meta property="og:site_name" content="TestFlows">
+  
+  
+  
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pricing">
+  <meta property="og:description" content="Machine plans and prices. Start free, pay for the compute your sessions use, or reserve dedicated machines for your team.">
+  <meta property="og:url" content="https://testflows.com/machine/pricing/">
+  <meta property="og:image" content="https://testflows.com/img/social-share.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pricing">
+  <meta name="twitter:description" content="Machine plans and prices. Start free, pay for the compute your sessions use, or reserve dedicated machines for your team.">
+  <meta name="twitter:image" content="https://testflows.com/img/social-share.png">
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794092222758" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794092222758" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794092222758" media="screen" type="text/css">
+  
+  <!--[if lt IE 9]>
+  <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.9/es5-shim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.5.7/es5-sham.min.js"></script>
+  <![endif]-->
+<!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/">Framework</a>
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/" aria-current="page">Machine</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/">Docs</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog">Blog</a>
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            <script>
+            (function () {
+                var a = document.getElementById("navbar-signin");
+                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
+                a.textContent = "Account";
+                a.setAttribute("href", "/machine/portal/account/");
+            })();
+            </script>
+            
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <main class="content" id="main" tabindex="-1">
+      
+
+<section class="pricing-page">
+<div class="container">
+
+<header class="pricing-header">
+<h1>Pricing</h1>
+<p>Every plan includes credits each month. Sessions use them by the hour, and you buy extra Usage Credits on demand.</p>
+</header>
+
+<div class="pricing-plans">
+
+<article class="pricing-plan">
+<h2>Free</h2>
+<p class="pricing-for">Try Machine on your own programs.</p>
+<p class="pricing-price"><span class="pricing-amount">€0</span></p>
+<a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get started</a>
+<p class="pricing-credits">₡2 included each month</p>
+<p class="pricing-hours">About 13 vCPU-hours</p>
+<p class="pricing-lead">Every feature of Machine:</p>
+<ul class="pricing-features">
+<li>Record a run, and replay it exactly</li>
+<li>Checkpoint, fork and rewind at any point</li>
+<li>Fault injection: disk, network, clock, containers and system calls</li>
+<li>A debugger for the programs in the machine</li>
+<li>The <code>machine</code> client and the Python SDK</li>
+<li>Sessions of up to 2 vCPUs, 4G memory and 32G disk</li>
+<li>3 sessions at once</li>
+</ul>
+</article>
+
+<article class="pricing-plan">
+<h2>Starter</h2>
+<p class="pricing-for">For one developer's everyday testing.</p>
+<p class="pricing-price"><span class="pricing-amount">€10</span> a month</p>
+<a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get Starter</a>
+<p class="pricing-credits">₡25 included each month</p>
+<p class="pricing-hours">About 166 vCPU-hours</p>
+<p class="pricing-lead">Everything in Free, plus:</p>
+<ul class="pricing-features">
+<li>Over 12 times the credits of Free</li>
+<li>Sessions of up to 4 vCPUs, 40G memory and 128G disk</li>
+<li>10 sessions at once</li>
+<li>50GB of storage for runs and disks</li>
+<li>Idle sessions run 30 minutes before they stop</li>
+</ul>
+</article>
+
+<article class="pricing-plan pricing-plan-featured">
+<p class="pricing-badge">Recommended</p>
+<h2>Plus</h2>
+<p class="pricing-for">For larger sessions, and more of them.</p>
+<p class="pricing-price"><span class="pricing-amount">€25</span> a month</p>
+<a class="btn banner-cta pricing-cta" href="/machine/portal/signup/">Get Plus</a>
+<p class="pricing-credits">₡65 included each month</p>
+<p class="pricing-hours">About 433 vCPU-hours</p>
+<p class="pricing-lead">Everything in Starter, plus:</p>
+<ul class="pricing-features">
+<li>Over 2.5 times the credits of Starter</li>
+<li>Sessions of up to 6 vCPUs, 64G memory and 192G disk</li>
+<li>25 sessions at once</li>
+<li>100GB of storage for runs and disks</li>
+<li>Idle sessions run 45 minutes before they stop</li>
+</ul>
+</article>
+
+<article class="pricing-plan">
+<h2>Pro</h2>
+<p class="pricing-for">For long recordings and heavy test suites.</p>
+<p class="pricing-price"><span class="pricing-amount">€50</span> a month</p>
+<a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get Pro</a>
+<p class="pricing-credits">₡150 included each month</p>
+<p class="pricing-hours">About 1,000 vCPU-hours</p>
+<p class="pricing-lead">Everything in Plus, plus:</p>
+<ul class="pricing-features">
+<li>Over 2 times the credits of Plus</li>
+<li>Sessions of up to 8 vCPUs, 110G memory and 256G disk</li>
+<li>50 sessions at once</li>
+<li>200GB of storage for runs and disks</li>
+<li>Idle sessions run 60 minutes before they stop</li>
+</ul>
+</article>
+
+<article class="pricing-plan">
+<h2>Dedicated</h2>
+<p class="pricing-for">Machines reserved for your team alone.</p>
+<p class="pricing-price"><span class="pricing-amount">Contact us</span></p>
+<a class="btn banner-cta banner-cta-ghost pricing-cta" href="mailto:sales@testflows.com">Contact sales</a>
+<p>Contact <a href="mailto:sales@testflows.com">sales@testflows.com</a>.</p>
+</article>
+
+</div>
+
+<section class="pricing-section pricing-compare-section">
+<h2>Compare plans</h2>
+<div class="pricing-table-wrap">
+<table class="pricing-table pricing-compare">
+<thead>
+<tr><th></th><th>Free</th><th>Starter</th><th>Plus</th><th>Pro</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">Price</th><td>€0</td><td>€10 a month</td><td>€25 a month</td><td>€50 a month</td></tr>
+<tr><th scope="row">Credits included each month</th><td>₡2</td><td>₡25</td><td>₡65</td><td>₡150</td></tr>
+<tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 13</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
+<tr><th scope="row">Extra Usage Credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
+<tr><th scope="row">vCPUs a session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
+<tr><th scope="row">Memory a session</th><td>4G</td><td>40G</td><td>64G</td><td>110G</td></tr>
+<tr><th scope="row">Disk a session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
+<tr><th scope="row">Sessions at once</th><td>3</td><td>10</td><td>25</td><td>50</td></tr>
+<tr><th scope="row">Storage for runs and disks</th><td>10GB</td><td>50GB</td><td>100GB</td><td>200GB</td></tr>
+<tr><th scope="row">Disks</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
+<tr><th scope="row">Largest disk</th><td>10GB</td><td>20GB</td><td>30GB</td><td>50GB</td></tr>
+<tr><th scope="row">Idle session stops after</th><td>10 minutes</td><td>30 minutes</td><td>45 minutes</td><td>60 minutes</td></tr>
+<tr><th scope="row">Record, replay, fork, faults, debugger</th><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+</tbody>
+</table>
+</div>
+<p class="pricing-note">A Free account that buys Usage Credits gets Starter's session sizes.</p>
+</section>
+
+<section class="pricing-section">
+<h2>Compute</h2>
+<p>A session is charged by the hour for the units it reserves. A unit is 1 vCPU, 2G of memory and 16G of disk. A session that asks for more memory or disk than its vCPUs come with is charged for the larger number of units.</p>
+<div class="pricing-table-wrap">
+<table class="pricing-table">
+<thead>
+<tr><th>Class</th><th>Description</th><th>₡ an hour for each unit</th></tr>
+</thead>
+<tbody>
+<tr><td><code>standard-ip</code></td><td>Standard performance, the default</td><td>₡0.15</td></tr>
+<tr><td><code>standard-ie</code></td><td>Reduced performance</td><td>₡0.12</td></tr>
+</tbody>
+</table>
+</div>
+<p>A class costs the same on every plan. <code>machine sessions classes</code> lists the classes and their current prices.</p>
+</section>
+
+<section class="pricing-section pricing-faq">
+<h2>Questions</h2>
+
+<details>
+<summary>What is a credit?</summary>
+<p>Credits pay for sessions. Machine writes an amount of credits with the sign ₡, so ₡0.15 is 0.15 credits. A credit has no cash value.</p>
+</details>
+
+<details>
+<summary>How is a session charged?</summary>
+<p>A running session is charged an hour ahead, for the units it reserves at its class's price. When it stops, the unused part of its last hour is given back. <code>machine account activity</code> lists every charge.</p>
+</details>
+
+<details>
+<summary>What happens to credits I do not use?</summary>
+<p>The credits a plan includes renew at the start of each period, and the ones left over expire. Extra Usage Credits do not expire.</p>
+</details>
+
+<details>
+<summary>How do I buy extra Usage Credits?</summary>
+<p>Extra Usage Credits are bought on top of any plan at €1 a credit, in packs of ₡5, ₡10, ₡25 and ₡50. Buy them on the account page or with <code>machine account buy-usage</code>.</p>
+</details>
+
+<details>
+<summary>Which plan is right for me?</summary>
+<p>Free shows what Machine does on your own programs. Starter fits one developer's everyday testing. Plus fits larger sessions and more of them. Pro fits long recordings and heavy test suites. For machines reserved for your team, contact sales@testflows.com.</p>
+</details>
+
+<details>
+<summary>What happens when I cancel?</summary>
+<p>The plan stays until it renews, then the account moves to Free. Your extra Usage Credits stay.</p>
+</details>
+
+</section>
+
+<p class="pricing-legal">The <a href="/machine/legal/usage-credit/">usage credit terms</a> say how credits are granted and used. <a href="/docs/machine/#account-and-billing">Account and billing</a> covers the commands that buy and manage them.</p>
+
+</div>
+</section>
+
+
+
+    </main>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1794092222758"></script>
+<script src="/js/machine-hero-type.js?v=1794092222758"></script>
+<script src="/js/download-platforms.js?v=1794092222758"></script>
+<script src="/js/anchor-case.js?v=1794092222758"></script>
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

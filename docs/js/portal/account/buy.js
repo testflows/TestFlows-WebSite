@@ -7,10 +7,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=9d190d59ed94";
-import { setStatus, showSpinner } from "../ui.js?v=9d190d59ed94";
-import { credits, eur, titleCase } from "./format.js?v=9d190d59ed94";
-import { tierRank } from "./plans.js?v=9d190d59ed94";
+} from "../api.js?v=4957902679e8";
+import { setStatus, showSpinner } from "../ui.js?v=4957902679e8";
+import { credits, eur, titleCase } from "./format.js?v=4957902679e8";
+import { tierRank } from "./plans.js?v=4957902679e8";
 
 /**
  * @param {string|undefined} url
@@ -104,9 +104,12 @@ export function renderBuy(panel, account, ctx) {
     packsEl.replaceChildren();
     plansEl.replaceChildren();
     const packs = Array.isArray(catalog.packs) ? catalog.packs : [];
-    const subs = Array.isArray(catalog.subscriptions)
-      ? catalog.subscriptions
-      : [];
+    // Cheapest first, as a price list reads, whatever order the catalog sends.
+    const subs = (
+      Array.isArray(catalog.subscriptions) ? catalog.subscriptions : []
+    )
+      .slice()
+      .sort((a, b) => tierRank(String(a.tier)) - tierRank(String(b.tier)));
     const unitHour = Number(catalog.standard_unit_hour_micros) || 0;
     const terms = String(catalog.usage_credit_terms || "");
 
@@ -191,6 +194,14 @@ export function renderBuy(panel, account, ctx) {
       }
       plansEl.append(list);
     }
+    // Dedicated machines are sold by contract, not checkout.
+    const dedicated = document.createElement("p");
+    dedicated.className = "portal-muted";
+    const sales = document.createElement("a");
+    sales.href = "mailto:sales@testflows.com";
+    sales.textContent = "sales@testflows.com";
+    dedicated.append("Dedicated machines for a team: contact ", sales, ".");
+    plansEl.append(dedicated);
 
     const h3p = document.createElement("h3");
     h3p.textContent = "Usage credits";

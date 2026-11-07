@@ -18,6 +18,7 @@ image: images/machine-hero.jpg
     <div class="banner-actions">
         <a class="btn banner-cta" href="/machine/portal/signup/">Create account</a>
         <a class="btn banner-cta banner-cta-ghost" href="/machine/download/">Download client</a>
+        <a class="btn banner-cta banner-cta-ghost" href="/machine/pricing/">Pricing</a>
         <a class="btn banner-cta banner-cta-ghost" href="/docs/machine/">Docs</a>
     </div>
 </div>
