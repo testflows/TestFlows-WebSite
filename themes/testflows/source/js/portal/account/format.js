@@ -27,9 +27,8 @@ export function eur(micros, dp = 2) {
   return amount(micros, dp, "€");
 }
 
-/** Credits, and every amount in them: `₡0.10 credits`, `₡1 credit`. A credit
- * has no cash value, so an amount always ends with the word; the CLI's
- * format.credits. `noun` replaces it where the kind of credits is named,
+/** Credits, and every amount in them, the sign alone: `₡0.10`, `₡5`; the
+ * CLI's format.credits. `noun` names the kind of credits bought,
  * `₡10 Usage Credits`. Money, `eur`, is only what is paid: a plan's price,
  * what credits cost, an invoice.
  * @param {number} micros
@@ -38,30 +37,20 @@ export function eur(micros, dp = 2) {
  * @returns {string}
  */
 export function credits(micros, dp = 2, noun) {
-  const word = noun ?? (Number(micros) === 1_000_000 ? "credit" : "credits");
-  return `${amount(micros, dp, CREDITS)} ${word}`;
+  const value = amount(micros, dp, CREDITS);
+  return noun === undefined ? value : `${value} ${noun}`;
 }
 
-/**
+/** A signed credit change: `-₡8.73`, `+₡20`, or `₡0`.
  * @param {number} micros
  * @param {number} [dp]
  * @returns {string}
  */
-/** Credits as the sign alone, `₡0.150`: a cell of a table whose amounts are
- * all credits, where the word on each would widen the column and say nothing;
- * the CLI's format.credits_amount.
- * @param {number} micros
- * @param {number} [dp]
- * @returns {string}
- */
-export function creditsAmount(micros, dp = 2) {
-  return amount(micros, dp, CREDITS);
-}
 export function creditsSigned(micros, dp = 2) {
   const n = Number(micros) || 0;
-  if (n < 0) return `-${creditsAmount(-n, dp)}`;
-  if (n > 0) return `+${creditsAmount(n, dp)}`;
-  return creditsAmount(0, dp);
+  if (n < 0) return `-${credits(-n, dp)}`;
+  if (n > 0) return `+${credits(n, dp)}`;
+  return credits(0, dp);
 }
 
 /** The sign of credits, U+20A1, the CLI's glyphs.ICON_CREDITS. An amount
