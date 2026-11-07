@@ -358,10 +358,17 @@ hr {
 
 .pricing-compare-section { max-width: none; }
 
+/* Equal plan columns, whatever a cell holds; the long one wraps. */
+.pricing-compare { table-layout: fixed; min-width: 40rem; }
+
+.pricing-compare thead th:first-child { width: 28%; }
+
 .pricing-compare th[scope="row"] { font-weight: 400; color: var(--tf-text); min-width: 10rem; }
 
 .pricing-compare td,
-.pricing-compare thead th { text-align: center; white-space: nowrap; }
+.pricing-compare thead th { text-align: center; }
+
+.pricing-compare thead th { white-space: nowrap; }
 
 .pricing-compare td:last-child,
 .pricing-compare th:last-child { text-align: center; }
