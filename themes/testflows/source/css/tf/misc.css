@@ -246,6 +246,8 @@ hr {
 
 @media (min-width: 1280px) {
     .pricing-plans { grid-template-columns: repeat(5, 1fr); }
+    /* Three lines, so every card's price and button line up. */
+    .pricing-plan .pricing-for { min-height: 4.5em; }
 }
 
 .pricing-plan {

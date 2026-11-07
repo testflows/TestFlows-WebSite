@@ -71,7 +71,7 @@ permalink: machine/pricing/index.html
 
 <article class="pricing-plan">
 <h2>Pro</h2>
-<p class="pricing-for">For long recordings and heavy test suites.</p>
+<p class="pricing-for">For long recordings, heavy test suites and heavy exploration.</p>
 <p class="pricing-price"><span class="pricing-amount">€50</span> a month</p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get Pro</a>
 <p class="pricing-credits">₡150 credits included each month</p>
@@ -165,7 +165,7 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>Which plan is right for me?</summary>
-<p>Free shows what Machine does on your own programs. Starter fits one developer's everyday testing. Plus fits larger sessions and more of them. Pro fits long recordings and heavy test suites. For machines reserved for your team, contact sales@testflows.com.</p>
+<p>Free shows what Machine does on your own programs. Starter fits one developer's everyday testing. Plus fits larger sessions and more of them. Pro fits long recordings, heavy test suites and heavy exploration. For machines reserved for your team, contact sales@testflows.com.</p>
 </details>
 
 <details>
