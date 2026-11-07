@@ -31,6 +31,7 @@ permalink: machine/pricing/index.html
 <li>The <code>machine</code> client and the Python SDK</li>
 <li>Sessions of up to 2 vCPUs, 4G memory and 32G disk</li>
 <li>3 sessions at once, 4 vCPUs between them</li>
+<li>Buy usage credits to get Starter's session sizes</li>
 </ul>
 </article>
 
@@ -117,11 +118,11 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">Disks</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
 <tr><th scope="row">Largest disk</th><td>10GB</td><td>20GB</td><td>30GB</td><td>50GB</td></tr>
 <tr><th scope="row">Idle session stops after</th><td>10 minutes</td><td>30 minutes</td><td>45 minutes</td><td>60 minutes</td></tr>
+<tr><th scope="row">Session sizes after buying usage credits</th><td>Starter's</td><td>—</td><td>—</td><td>—</td></tr>
 <tr><th scope="row">Record, replay, fork, faults, debugger</th><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
 </tbody>
 </table>
 </div>
-<p class="pricing-note">A Free account that buys usage credits gets Starter's session sizes.</p>
 </section>
 
 <section class="pricing-section">
