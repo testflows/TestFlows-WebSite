@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794088425577" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794088425577" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794088349076" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794088425577" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -942,9 +942,10 @@ storage on Free, 4 vCPUs, 40G and 128G on Starter and on Free with usage
 credits, and 8 vCPUs, 110G and 256G on Pro. A hardware class can give a
 session less than the plan allows, and the smaller of the two applies. <code>--class</code> picks the hardware class, and the default comes from your
 plan. <a href="#machine-sessions-classes"><code>machine sessions classes</code></a> lists
-the classes, with the CPU architecture of each. A run starts only in a session
-of the architecture it was recorded on.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine sessions classes</span><br><span class="line">machine sessions create arm-1 --class &lt;name&gt;</span><br></pre></td></tr></table></figure>
+the classes, with the CPU architecture of each. <code>standard-ip</code>, on <code>intel-1</code>, is
+the class to prefer. <code>standard-ie</code>, on <code>intel-2</code>, costs less. A run starts only
+in a session of the architecture it was recorded on.</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine sessions classes</span><br><span class="line">machine sessions create arm-1 --class standard-ie</span><br></pre></td></tr></table></figure>
 
 <p>The name is optional. Leave it off and Machine makes one up. Machine waits
 until the session is running and tells you when it is. Add <code>--no-wait</code> to
@@ -1326,7 +1327,7 @@ default, and <a href="#machine-describe"><code>machine describe</code></a> shows
 </thead>
 <tbody><tr>
 <td><code>--instr-margin n</code></td>
-<td>how many instructions short of a stop placed by an instruction count the CPU’s counter interrupts; the default is the host’s, 50,000 on AMD and 3,630 on Intel, which <code>describe</code> shows as <code>host&#39;s</code></td>
+<td>how many instructions short of a stop placed by an instruction count the CPU’s counter interrupts; the default is the host’s, 50,000 on <code>amd-1</code>, the <code>standard</code> class, and 3,630 on Intel, which <code>describe</code> shows as <code>host&#39;s</code></td>
 </tr>
 <tr>
 <td><code>--dispatch-bound d</code></td>
@@ -2342,8 +2343,8 @@ A <code>start</code>, a <code>start --at</code>, a rewind and a <code>fork --fro
 the larger of the two as well.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine replay app/try-1 --limit-margin 20000</span><br><span class="line">machine replay app/try-1 --instr-margin 100000</span><br></pre></td></tr></table></figure>
 
-<p>A replay that passes a recorded stop diverges and says by how much. On an AMD
-host, a replay given <code>--instr-margin 5</code>, far below the CPU’s skid, answers:</p>
+<p>A replay that passes a recorded stop diverges and says by how much. On <code>amd-1</code>,
+the architecture of the <code>standard</code> class, a replay given <code>--instr-margin 5</code>, far below the CPU’s skid, answers:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">✗ Divergence at entry 804. The replay passed the recorded stop by 3,370 instructions, with its margin 5.</span><br><span class="line">  Rewind to the entry before it machine rewind trq/ex to #803</span><br><span class="line">  Then replay with a margin past the skid machine replay trq/ex --instr-margin 50000</span><br></pre></td></tr></table></figure>
 
 <p>The suggested margin is twice the overshoot and the margin together, and
@@ -17188,10 +17189,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794088349076"></script>
-<script src="/js/machine-hero-type.js?v=1794088349076"></script>
-<script src="/js/download-platforms.js?v=1794088349076"></script>
-<script src="/js/anchor-case.js?v=1794088349076"></script>
+<script src="/js/index-code-type.js?v=1794088425578"></script>
+<script src="/js/machine-hero-type.js?v=1794088425578"></script>
+<script src="/js/download-platforms.js?v=1794088425578"></script>
+<script src="/js/anchor-case.js?v=1794088425578"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

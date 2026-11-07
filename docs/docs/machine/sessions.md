@@ -15,12 +15,13 @@ storage on Free, 4 vCPUs, 40G and 128G on Starter and on Free with usage
 credits, and 8 vCPUs, 110G and 256G on Pro. A hardware class can give a
 session less than the plan allows, and the smaller of the two applies. `--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
-the classes, with the CPU architecture of each. A run starts only in a session
-of the architecture it was recorded on.
+the classes, with the CPU architecture of each. `standard-ip`, on `intel-1`, is
+the class to prefer. `standard-ie`, on `intel-2`, costs less. A run starts only
+in a session of the architecture it was recorded on.
 
 ```bash
 machine sessions classes
-machine sessions create arm-1 --class <name>
+machine sessions create arm-1 --class standard-ie
 ```
 
 The name is optional. Leave it off and Machine makes one up. Machine waits

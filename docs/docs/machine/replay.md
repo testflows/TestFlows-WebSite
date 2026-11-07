@@ -59,8 +59,8 @@ machine replay app/try-1 --limit-margin 20000
 machine replay app/try-1 --instr-margin 100000
 ```
 
-A replay that passes a recorded stop diverges and says by how much. On an AMD
-host, a replay given `--instr-margin 5`, far below the CPU's skid, answers:
+A replay that passes a recorded stop diverges and says by how much. On `amd-1`,
+the architecture of the `standard` class, a replay given `--instr-margin 5`, far below the CPU's skid, answers:
 
 ```
 ✗ Divergence at entry 804. The replay passed the recorded stop by 3,370 instructions, with its margin 5.

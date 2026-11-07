@@ -342,7 +342,7 @@ default, and [`machine describe`](commands.md#machine-describe) shows them as
 
 | Option | What it does |
 |---|---|
-| `--instr-margin n` | how many instructions short of a stop placed by an instruction count the CPU's counter interrupts; the default is the host's, 50,000 on AMD and 3,630 on Intel, which `describe` shows as `host's` |
+| `--instr-margin n` | how many instructions short of a stop placed by an instruction count the CPU's counter interrupts; the default is the host's, 50,000 on `amd-1`, the `standard` class, and 3,630 on Intel, which `describe` shows as `host's` |
 | `--dispatch-bound d` | how much host time a fast dispatch runs before it stops, 1s by default; it takes a duration such as `500ms` or `2s` |
 | `--fast-backstop n` | how many instructions a fast dispatch runs with no other stop, 100,000,000 by default |
 | `--irq-wait n` | how many conditional branches a dispatch runs while an interrupt waits for the guest to take it, 200 by default |
