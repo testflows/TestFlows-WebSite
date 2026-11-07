@@ -28,9 +28,11 @@ Most of what the account page on the website does, the client does too.
 `--link` to print the address instead.
 
 Sessions use credits. Machine writes an amount of credits with the sign `₡`,
-so `₡0.15` is 0.15 credits. The price is per unit and hour, and
+so `₡0.15` is 0.15 credits. The price is per vCPU-hour, and
 depends on the hardware class. A session is created on `standard-ip` unless you
-pick another class, and it uses ₡0.15 an hour per unit. `standard-ie` uses ₡0.12.
+pick another class, and it uses ₡0.15 a vCPU-hour. `standard-ie` uses ₡0.12.
+Each vCPU comes with 2G of memory and 16G of disk. A session that asks for more
+is charged for the vCPUs that would bring it.
 [`machine sessions classes`](commands.md#machine-sessions-classes) lists the
 current price of each class. Your plan includes plan credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.

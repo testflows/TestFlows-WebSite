@@ -30,7 +30,7 @@ permalink: machine/pricing/index.html
 <li>A debugger for the programs in the machine</li>
 <li>The <code>machine</code> client and the Python SDK</li>
 <li>Sessions of up to 2 vCPUs, 4G memory and 32G disk</li>
-<li>3 sessions at once</li>
+<li>3 sessions at once, 4 vCPUs between them</li>
 </ul>
 </article>
 
@@ -45,7 +45,7 @@ permalink: machine/pricing/index.html
 <ul class="pricing-features">
 <li>Over 8 times the credits of Free</li>
 <li>Sessions of up to 4 vCPUs, 8G memory and 128G disk</li>
-<li>5 sessions at once</li>
+<li>5 sessions at once, 8 vCPUs between them</li>
 <li>50GB of storage for runs and disks</li>
 <li>Idle sessions run 30 minutes before they stop</li>
 </ul>
@@ -63,7 +63,7 @@ permalink: machine/pricing/index.html
 <ul class="pricing-features">
 <li>Over 2.5 times the credits of Starter</li>
 <li>Sessions of up to 6 vCPUs, 12G memory and 192G disk</li>
-<li>10 sessions at once</li>
+<li>10 sessions at once, 12 vCPUs between them</li>
 <li>100GB of storage for runs and disks</li>
 <li>Idle sessions run 45 minutes before they stop</li>
 </ul>
@@ -80,7 +80,7 @@ permalink: machine/pricing/index.html
 <ul class="pricing-features">
 <li>Over 2 times the credits of Plus</li>
 <li>Sessions of up to 8 vCPUs, 16G memory and 256G disk</li>
-<li>25 sessions at once</li>
+<li>20 sessions at once, 24 vCPUs between them</li>
 <li>200GB of storage for runs and disks</li>
 <li>Idle sessions run 60 minutes before they stop</li>
 </ul>
@@ -111,7 +111,8 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
 <tr><th scope="row">Max memory per session</th><td>4G</td><td>8G</td><td>12G</td><td>16G</td></tr>
 <tr><th scope="row">Max disk per session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
-<tr><th scope="row">Sessions at once</th><td>3</td><td>5</td><td>10</td><td>25</td></tr>
+<tr><th scope="row">Sessions at once</th><td>3</td><td>5</td><td>10</td><td>20</td></tr>
+<tr><th scope="row">Max vCPUs running at once</th><td>4</td><td>8</td><td>12</td><td>24</td></tr>
 <tr><th scope="row">Storage for runs and disks</th><td>10GB</td><td>50GB</td><td>100GB</td><td>200GB</td></tr>
 <tr><th scope="row">Disks</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
 <tr><th scope="row">Largest disk</th><td>10GB</td><td>20GB</td><td>30GB</td><td>50GB</td></tr>
@@ -125,11 +126,11 @@ permalink: machine/pricing/index.html
 
 <section class="pricing-section">
 <h2>Compute</h2>
-<p>A session is charged by the hour for the units it reserves. A unit is 1 vCPU, 2G of memory and 16G of disk. A session that asks for more memory or disk than its vCPUs come with is charged for the larger number of units.</p>
+<p>A session is charged by the vCPU-hour. Each vCPU comes with 2G of memory and 16G of disk. A session that asks for more memory or disk than its vCPUs come with is charged for the vCPUs that would bring it: a session of 2 vCPUs and 8G of memory is charged as 4 vCPUs.</p>
 <div class="pricing-table-wrap">
 <table class="pricing-table">
 <thead>
-<tr><th>Class</th><th>Description</th><th>₡ an hour for each unit</th></tr>
+<tr><th>Class</th><th>Description</th><th>₡ a vCPU-hour</th></tr>
 </thead>
 <tbody>
 <tr><td><code>standard-ip</code></td><td>Standard performance, the default</td><td>₡0.15</td></tr>
@@ -150,7 +151,7 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>How is a session charged?</summary>
-<p>A running session is charged an hour ahead, for the units it reserves at its class's price. When it stops, the unused part of its last hour is given back. <code>machine account activity</code> lists every charge.</p>
+<p>A running session is charged an hour ahead, for its vCPUs at its class's price. When it stops, the unused part of its last hour is given back. <code>machine account activity</code> lists every charge.</p>
 </details>
 
 <details>

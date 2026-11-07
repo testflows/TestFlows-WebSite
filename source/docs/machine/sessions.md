@@ -13,7 +13,10 @@ machine sessions create ci-1 --cpus 2 --mem 4G
 disk space. Your plan caps each session: 2 vCPUs, 4G of memory and 32G of
 storage on Free, 4 vCPUs, 8G and 128G on Starter and on Free with usage
 credits, 6 vCPUs, 12G and 192G on Plus, and 8 vCPUs, 16G and 256G on Pro. A hardware class can give a
-session less than the plan allows, and the smaller of the two applies. `--class` picks the hardware class, and the default comes from your
+session less than the plan allows, and the smaller of the two applies. Your plan
+also limits the vCPUs your sessions hold together: 4 on Free, 8 on Starter and on
+Free with usage credits, 12 on Plus and 24 on Pro. `machine account show` shows
+how many are in use. `--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
 the classes, with the CPU architecture of each. `standard-ip`, on `intel-1`, is
 the class to prefer. `standard-ie`, on `intel-2`, costs less. A run starts only

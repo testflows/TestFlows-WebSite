@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794095033092" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794095033092" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794094297122" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794095033092" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -975,7 +975,10 @@ Pick its size when you create it.</p>
 disk space. Your plan caps each session: 2 vCPUs, 4G of memory and 32G of
 storage on Free, 4 vCPUs, 8G and 128G on Starter and on Free with usage
 credits, 6 vCPUs, 12G and 192G on Plus, and 8 vCPUs, 16G and 256G on Pro. A hardware class can give a
-session less than the plan allows, and the smaller of the two applies. <code>--class</code> picks the hardware class, and the default comes from your
+session less than the plan allows, and the smaller of the two applies. Your plan
+also limits the vCPUs your sessions hold together: 4 on Free, 8 on Starter and on
+Free with usage credits, 12 on Plus and 24 on Pro. <code>machine account show</code> shows
+how many are in use. <code>--class</code> picks the hardware class, and the default comes from your
 plan. <a href="#machine-sessions-classes"><code>machine sessions classes</code></a> lists
 the classes, with the CPU architecture of each. <code>standard-ip</code>, on <code>intel-1</code>, is
 the class to prefer. <code>standard-ie</code>, on <code>intel-2</code>, costs less. A run starts only
@@ -4759,9 +4762,11 @@ synced or not, and is recorded in the run.</p>
 <p><code>payment</code>, <code>portal</code>, <code>cancel</code>, <code>upgrade</code> and <code>downgrade</code> open a browser. Add
 <code>--link</code> to print the address instead.</p>
 <p>Sessions use credits. Machine writes an amount of credits with the sign <code>₡</code>,
-so <code>₡0.15</code> is 0.15 credits. The price is per unit and hour, and
+so <code>₡0.15</code> is 0.15 credits. The price is per vCPU-hour, and
 depends on the hardware class. A session is created on <code>standard-ip</code> unless you
-pick another class, and it uses ₡0.15 an hour per unit. <code>standard-ie</code> uses ₡0.12.
+pick another class, and it uses ₡0.15 a vCPU-hour. <code>standard-ie</code> uses ₡0.12.
+Each vCPU comes with 2G of memory and 16G of disk. A session that asks for more
+is charged for the vCPUs that would bring it.
 <a href="#machine-sessions-classes"><code>machine sessions classes</code></a> lists the
 current price of each class. Your plan includes plan credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.</p>
@@ -17229,10 +17234,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794094297123"></script>
-<script src="/js/machine-hero-type.js?v=1794094297123"></script>
-<script src="/js/download-platforms.js?v=1794094297123"></script>
-<script src="/js/anchor-case.js?v=1794094297123"></script>
+<script src="/js/index-code-type.js?v=1794095033092"></script>
+<script src="/js/machine-hero-type.js?v=1794095033092"></script>
+<script src="/js/download-platforms.js?v=1794095033092"></script>
+<script src="/js/anchor-case.js?v=1794095033092"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
