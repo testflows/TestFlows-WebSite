@@ -10,7 +10,7 @@ permalink: machine/pricing/index.html
 
 <header class="pricing-header">
 <h1>Pricing</h1>
-<p>Every plan includes credits each month. Sessions use them by the hour, and you buy extra Usage Credits on demand.</p>
+<p>Every plan includes credits each month. Sessions use them by the hour, and you buy Usage Credits on demand.</p>
 </header>
 
 <div class="pricing-plans">
@@ -107,7 +107,7 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">Price</th><td>€0</td><td>€10 a month</td><td>€25 a month</td><td>€50 a month</td></tr>
 <tr><th scope="row">Credits included each month</th><td>₡2</td><td>₡25</td><td>₡65</td><td>₡150</td></tr>
 <tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 13</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
-<tr><th scope="row">Extra Usage Credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
+<tr><th scope="row">Usage Credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
 <tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
 <tr><th scope="row">Max memory per session</th><td>4G</td><td>40G</td><td>64G</td><td>110G</td></tr>
 <tr><th scope="row">Max disk per session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
@@ -155,12 +155,12 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>What happens to credits I do not use?</summary>
-<p>The credits a plan includes renew at the start of each period, and the ones left over expire. Extra Usage Credits do not expire.</p>
+<p>The credits a plan includes renew at the start of each period, and the ones left over expire. Usage Credits do not expire.</p>
 </details>
 
 <details>
-<summary>How do I buy extra Usage Credits?</summary>
-<p>Extra Usage Credits are bought on top of any plan at €1 a credit, in packs of ₡5, ₡10, ₡25 and ₡50. Buy them on the account page or with <code>machine account buy-usage</code>.</p>
+<summary>How do I buy Usage Credits?</summary>
+<p>Usage Credits are bought on top of any plan at €1 a credit, in packs of ₡5, ₡10, ₡25 and ₡50. Buy them on the account page or with <code>machine account buy-usage</code>.</p>
 </details>
 
 <details>
@@ -170,7 +170,7 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>What happens when I cancel?</summary>
-<p>The plan stays until it renews, then the account moves to Free. Your extra Usage Credits stay.</p>
+<p>The plan stays until it renews, then the account moves to Free. Your Usage Credits stay.</p>
 </details>
 
 </section>
