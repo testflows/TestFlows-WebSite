@@ -743,3 +743,109 @@ a.header-anchor {
 #main-nav .site-menu .nav-item.active .nav-link {
     color: var(--tf-accent) !important;
 }
+
+/* Submenus: a menu item with `items` in _config.yml. On a wide screen they open
+   below the item on hover or keyboard focus; in the phone menu they are listed
+   under it, indented. The item itself still links to its section. */
+#main-nav .nav-caret {
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-left: 0.4em;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: translateY(-0.2em) rotate(45deg);
+    opacity: 0.7;
+}
+
+#main-nav .site-submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#main-nav .site-submenu-link {
+    display: block;
+    font-family: var(--tf-font);
+    color: var(--tf-text-muted);
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+#main-nav .site-submenu-link:hover,
+#main-nav .site-submenu-link:focus {
+    color: var(--tf-text-strong);
+    text-decoration: none;
+}
+
+@media (min-width: 992px) {
+    #main-nav .site-menu .nav-item.has-submenu {
+        position: relative;
+    }
+
+    #main-nav .site-submenu {
+        position: absolute;
+        top: 100%;
+        left: -0.75rem;
+        z-index: 1070;
+        min-width: 11rem;
+        padding: 0.4rem;
+        background: var(--tf-card-bg);
+        border: 1px solid var(--tf-card-border);
+        border-radius: var(--tf-radius);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(0.25rem);
+        transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+    }
+
+    /* A strip above the panel keeps the hover alive across the gap. */
+    #main-nav .site-submenu::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: -0.6rem;
+        height: 0.6rem;
+    }
+
+    #main-nav .nav-item.has-submenu:hover .site-submenu,
+    #main-nav .nav-item.has-submenu:focus-within .site-submenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    #main-nav .site-submenu-link {
+        font-size: 0.92rem;
+        padding: 0.45rem 0.7rem;
+        border-radius: calc(var(--tf-radius) - 0.1rem);
+        white-space: nowrap;
+    }
+
+    #main-nav .site-submenu-link:hover,
+    #main-nav .site-submenu-link:focus {
+        background: var(--tf-ghost-hover-bg);
+    }
+}
+
+@media (max-width: 991.98px) {
+    #main-nav .site-menu .nav-item.has-submenu {
+        flex-wrap: wrap;
+    }
+
+    #main-nav .nav-caret {
+        display: none;
+    }
+
+    #main-nav .site-submenu {
+        flex: 0 0 100%;
+        padding: 0 0 0.4rem calc(var(--tf-menu-glyph-col) + var(--tf-menu-rule-gap) * 2);
+    }
+
+    #main-nav .site-submenu-link {
+        font-size: 1rem;
+        padding: 0.35rem 0;
+    }
+}

@@ -17,12 +17,31 @@ menu:
   Framework:
     path: /framework/
     icon: fas fa-code
+    items:
+      - title: Overview
+        path: /framework/
+      - title: Docs
+        path: /docs/framework/
   Machine:
     path: /machine/
     icon: fas fa-cube
+    items:
+      - title: Overview
+        path: /machine/
+      - title: Pricing
+        path: /machine/pricing/
+      - title: Download
+        path: /machine/download/
+      - title: Docs
+        path: /docs/machine/
   Docs:
     path: /docs/
     icon: fas fa-book
+    items:
+      - title: Framework
+        path: /docs/framework/
+      - title: Machine
+        path: /docs/machine/
   Blog:
     path: /blog
     icon: fas fa-blog
