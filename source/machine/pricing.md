@@ -20,8 +20,8 @@ permalink: machine/pricing/index.html
 <p class="pricing-for">Try Machine on your own programs.</p>
 <p class="pricing-price"><span class="pricing-amount">€0</span></p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get started</a>
-<p class="pricing-credits">₡2 credits included each month</p>
-<p class="pricing-hours">About 13 vCPU-hours</p>
+<p class="pricing-credits">₡3 credits included each month</p>
+<p class="pricing-hours">About 20 vCPU-hours</p>
 <p class="pricing-lead">Every feature of Machine:</p>
 <ul class="pricing-features">
 <li>Record a run, and replay it exactly</li>
@@ -43,7 +43,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-hours">About 166 vCPU-hours</p>
 <p class="pricing-lead">Everything in Free, plus:</p>
 <ul class="pricing-features">
-<li>Over 12 times the credits of Free</li>
+<li>Over 8 times the credits of Free</li>
 <li>Sessions of up to 4 vCPUs, 8G memory and 128G disk</li>
 <li>5 sessions at once</li>
 <li>50GB of storage for runs and disks</li>
@@ -105,8 +105,8 @@ permalink: machine/pricing/index.html
 </thead>
 <tbody>
 <tr><th scope="row">Price</th><td>€0</td><td>€10 a month</td><td>€25 a month</td><td>€50 a month</td></tr>
-<tr><th scope="row">Credits included each month</th><td>₡2</td><td>₡25</td><td>₡65</td><td>₡150</td></tr>
-<tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 13</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
+<tr><th scope="row">Credits included each month</th><td>₡3</td><td>₡25</td><td>₡65</td><td>₡150</td></tr>
+<tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 20</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
 <tr><th scope="row">Usage credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
 <tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
 <tr><th scope="row">Max memory per session</th><td>4G</td><td>8G</td><td>12G</td><td>16G</td></tr>
