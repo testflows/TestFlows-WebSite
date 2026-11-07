@@ -497,7 +497,7 @@ See also:
 
 ### machine account buy-usage
 
-Buy Usage Credits. See [Account and billing](account-and-billing.md).
+Buy usage credits. See [Account and billing](account-and-billing.md).
 
 The command opens checkout for the pack of the named number of credits. A credit
 costs one euro. A credit has no cash value.
@@ -517,7 +517,7 @@ machine account buy-usage [-h] [-y] credits
 Examples:
 
 ```
-machine account buy-usage 10     buy 10 Usage Credits for €10
+machine account buy-usage 10     buy 10 usage credits for €10
 machine account buy-usage 10 -y  without asking
 ```
 
@@ -778,7 +778,7 @@ See also:
 
 Cancel the subscription. See [Account and billing](account-and-billing.md).
 
-The plan stays until renewal, then drops to Free. Usage Credits stay. Use
+The plan stays until renewal, then drops to Free. Usage credits stay. Use
 `--link` to print the URL without opening a browser.
 
 ```
@@ -922,7 +922,7 @@ The listing shows the newest 25. Use `--limit` for a different page size.
 ```
 machine account activity [-h] [--since date|age] [--until date|age] [--period date]
                          [--type {included,charged,settled,expired,expired-removed,credit-purchase}]
-                         [--credit-type {included,usage}] [--limit n] [--sort field]
+                         [--credit-type {plan,usage}] [--limit n] [--sort field]
                          [--reverse]
                          [session]
 ```
@@ -937,7 +937,7 @@ machine account activity [-h] [--since date|age] [--until date|age] [--period da
 | `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--period date` | Show the plan period that contains this date, such as 2026-10-01 |
 | `--type {included,charged,settled,expired,expired-removed,credit-purchase}` | Filter by activity type |
-| `--credit-type {included,usage}` | Filter by credit type (included or usage) |
+| `--credit-type {plan,usage}` | Filter by credit type (plan or usage) |
 | `--limit n` | Cap to most recent n (default: 25, max 500) |
 | `--sort field` | Sort by sequence or amount |
 | `--reverse` | Reverse sort order |

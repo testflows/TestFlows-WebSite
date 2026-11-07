@@ -8,7 +8,7 @@ permalink: machine/legal/terms-of-service/index.html
 
 # Terms of Service
 
-<p class="legal-updated">Last updated: 26 October 2026</p>
+<p class="legal-updated">Last updated: 7 November 2026</p>
 <p class="legal-updated">Agreement version: 2026-10-26.1</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
@@ -98,12 +98,12 @@ royalty-free license to use it without restriction or attribution.
 
 ## 6. Fees and payments
 
-Prices, plans, Included Credits, and limits are shown in the product catalog and
+Prices, plans, Plan Credits, and limits are shown in the product catalog and
 account UI. We may change prices prospectively. For increases that apply to an
 existing paid subscription, we will give at least thirty (30) days’ notice to
 your account email where practicable.
 
-Prepaid Usage Credits and plan Included Credits are governed by the
+Prepaid Usage Credits and Plan Credits are governed by the
 [Usage Credit Terms](/machine/legal/usage-credit/). Credits are a service allowance only,
 not cash or currency, and have no monetary value.
 

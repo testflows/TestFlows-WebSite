@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794093184300" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794093184300" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794092646316" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794093184300" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1001,7 +1001,7 @@ command, as an AI agent does, loses the <code>export</code> between commands. Th
 or not anything is running in it. Delete sessions you are not using.</p>
 </blockquote>
 <h2 id="idle-sessions-stop"><a href="#idle-sessions-stop" class="headerlink" title="Idle sessions stop"></a>Idle sessions stop</h2><p>A session is idle while it serves no command. Your plan sets its idle time:
-10 minutes on Free, 30 on Starter and on Free with Usage Credits, 45 on Plus,
+10 minutes on Free, 30 on Starter and on Free with usage credits, 45 on Plus,
 and 60 on Pro.
 <code>machine account show</code> shows yours. When a session reaches its idle time, it
 stops, and so do its runs. The runs are kept. Start one again in any session
@@ -1011,7 +1011,7 @@ SDK or the control prompt. To step away and keep the session, keep it:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions keep ci-1 30m</span><br></pre></td></tr></table></figure>
 
 <p>A keep holds the session idle for up to 30 minutes on Free, and an hour on
-Starter, Free with Usage Credits, Plus and Pro. <code>machine sessions list</code> shows under
+Starter, Free with usage credits, Plus and Pro. <code>machine sessions list</code> shows under
 IDLE how long each session has gone without a command, and
 <code>machine sessions show</code> when it stops. <code>machine sessions list --all</code> also lists
 the sessions that stopped. One that stopped idle is listed as <code>stopped idle</code>,
@@ -4676,7 +4676,7 @@ synced or not, and is recorded in the run.</p>
 </tr>
 <tr>
 <td><a href="#machine-account-buy-usage"><code>machine account buy-usage</code></a></td>
-<td>opens checkout for a pack of Usage Credits, as listed by <code>products</code></td>
+<td>opens checkout for a pack of usage credits, as listed by <code>products</code></td>
 </tr>
 <tr>
 <td><a href="#machine-account-buy-plan"><code>machine account buy-plan</code></a></td>
@@ -4688,7 +4688,7 @@ synced or not, and is recorded in the run.</p>
 </tr>
 <tr>
 <td><a href="#machine-account-cancel"><code>machine account cancel</code></a></td>
-<td>cancels the subscription: the plan stays until it renews, then drops to Free, and your Usage Credits stay</td>
+<td>cancels the subscription: the plan stays until it renews, then drops to Free, and your usage credits stay</td>
 </tr>
 <tr>
 <td><a href="#machine-account-invoices"><code>machine account invoices</code></a></td>
@@ -4730,7 +4730,7 @@ so <code>₡0.15</code> is 0.15 credits. The price is per unit and hour, and
 depends on the hardware class. A session is created on <code>standard-ip</code> unless you
 pick another class, and it uses ₡0.15 an hour per unit. <code>standard-ie</code> uses ₡0.12.
 <a href="#machine-sessions-classes"><code>machine sessions classes</code></a> lists the
-current price of each class. Your plan includes credits every month, and you buy Usage Credits
+current price of each class. Your plan includes plan credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.</p>
 <p><a href="/machine/pricing/">Pricing</a> lists the plans. For dedicated machines, reserved for
 your team alone, contact <a href="mailto:sales@testflows.com">sales@testflows.com</a>.</p>
@@ -5289,7 +5289,7 @@ the account.</p>
 <li><a href="#machine-login"><code>machine login</code></a></li>
 <li><a href="#machine-logout"><code>machine logout</code></a></li>
 </ul>
-<h3 id="machine-account-buy-usage"><a href="#machine-account-buy-usage" class="headerlink" title="machine account buy-usage"></a>machine account buy-usage</h3><p>Buy Usage Credits. See <a href="#account-and-billing">Account and billing</a>.</p>
+<h3 id="machine-account-buy-usage"><a href="#machine-account-buy-usage" class="headerlink" title="machine account buy-usage"></a>machine account buy-usage</h3><p>Buy usage credits. See <a href="#account-and-billing">Account and billing</a>.</p>
 <p>The command opens checkout for the pack of the named number of credits. A credit
 costs one euro. A credit has no cash value.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine account buy-usage [-h] [-y] credits</span><br></pre></td></tr></table></figure>
@@ -5319,7 +5319,7 @@ costs one euro. A credit has no cash value.</p>
 </tr>
 </tbody></table>
 <p>Examples:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account buy-usage 10     buy 10 Usage Credits for €10</span><br><span class="line">machine account buy-usage 10 -y  without asking</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine account buy-usage 10     buy 10 usage credits for €10</span><br><span class="line">machine account buy-usage 10 -y  without asking</span><br></pre></td></tr></table></figure>
 
 <p>See also:</p>
 <ul>
@@ -5623,7 +5623,7 @@ opening a browser.</p>
 <li><a href="#machine-account-activity"><code>machine account activity</code></a></li>
 </ul>
 <h3 id="machine-account-cancel"><a href="#machine-account-cancel" class="headerlink" title="machine account cancel"></a>machine account cancel</h3><p>Cancel the subscription. See <a href="#account-and-billing">Account and billing</a>.</p>
-<p>The plan stays until renewal, then drops to Free. Usage Credits stay. Use
+<p>The plan stays until renewal, then drops to Free. Usage credits stay. Use
 <code>--link</code> to print the URL without opening a browser.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine account cancel [-h] [--link]</span><br></pre></td></tr></table></figure>
 
@@ -5735,7 +5735,7 @@ opening a browser.</p>
 row gives back the unused part of its last hour. Naming a session ends the
 listing with what the session used over all of its rows.</p>
 <p>The listing shows the newest 25. Use <code>--limit</code> for a different page size.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine account activity [-h] [--since date|age] [--until date|age] [--period date]</span><br><span class="line">                         [--type &#123;included,charged,settled,expired,expired-removed,credit-purchase&#125;]</span><br><span class="line">                         [--credit-type &#123;included,usage&#125;] [--limit n] [--sort field]</span><br><span class="line">                         [--reverse]</span><br><span class="line">                         [session]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine account activity [-h] [--since date|age] [--until date|age] [--period date]</span><br><span class="line">                         [--type &#123;included,charged,settled,expired,expired-removed,credit-purchase&#125;]</span><br><span class="line">                         [--credit-type &#123;plan,usage&#125;] [--limit n] [--sort field]</span><br><span class="line">                         [--reverse]</span><br><span class="line">                         [session]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -5773,8 +5773,8 @@ listing with what the session used over all of its rows.</p>
 <td>Filter by activity type</td>
 </tr>
 <tr>
-<td><code>--credit-type &#123;included,usage&#125;</code></td>
-<td>Filter by credit type (included or usage)</td>
+<td><code>--credit-type &#123;plan,usage&#125;</code></td>
+<td>Filter by credit type (plan or usage)</td>
 </tr>
 <tr>
 <td><code>--limit n</code></td>
@@ -17196,10 +17196,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794092646316"></script>
-<script src="/js/machine-hero-type.js?v=1794092646316"></script>
-<script src="/js/download-platforms.js?v=1794092646316"></script>
-<script src="/js/anchor-case.js?v=1794092646316"></script>
+<script src="/js/index-code-type.js?v=1794093184300"></script>
+<script src="/js/machine-hero-type.js?v=1794093184300"></script>
+<script src="/js/download-platforms.js?v=1794093184300"></script>
+<script src="/js/anchor-case.js?v=1794093184300"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

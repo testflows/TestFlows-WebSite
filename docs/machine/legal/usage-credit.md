@@ -2,7 +2,7 @@
 
 # Usage Credit Terms
 
-<p class="legal-updated">Last updated: 26 October 2026</p>
+<p class="legal-updated">Last updated: 7 November 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -15,15 +15,15 @@ have the meaning in the Terms of Service.
 **Usage Credits.** After a payment is confirmed, Katteli adds the number of
 Usage Credits stated for the purchased pack to your account.
 
-**Included Credits.** Katteli may add credits through a subscription plan,
+**Plan Credits.** Katteli may add credits through a subscription plan,
 signup offer, or promotion.
 
-Usage Credits and Included Credits are together “**Credits**.”
+Usage Credits and Plan Credits are together “**Credits**.”
 
 ## 2. Conditions
 
 **Service use.** Credits are used only for eligible Services, at the rates in
-Credits then in effect. Included Credits are deducted before Usage Credits.
+Credits then in effect. Plan Credits are deducted before Usage Credits.
 
 **Final purchases.** Credit purchases are final unless a refund is required by
 law or authorized by Katteli or its merchant of record. Partial refunds of
@@ -36,7 +36,7 @@ your account, unused Usage Credits are retained for 90 days and then forfeited.
 Reactivating within that window keeps them, and by reactivating you accept the
 current Agreement. Unused Credits are forfeited on closure if the account is
 closed because you did not accept a changed Agreement or because you breached
-the Agreement. Included Credits end on the date communicated when they are
+the Agreement. Plan Credits end on the date communicated when they are
 granted (typically the end of the plan billing period) and do not roll over
 unless we expressly say so. Closing an account does not extend them beyond
 that date.
@@ -63,7 +63,7 @@ Service and Stripe’s terms and privacy policy for the payment transaction.
 
 ## 3. Plans and periods
 
-Subscription Included Credits and resource entitlements apply only during the
+Subscription Plan Credits and resource entitlements apply only during the
 paid period for which they were granted. Upgrades, downgrades, and cancellations
 follow the Terms of Service and the billing portal flows we provide. A plan
 change does not convert Credits into cash.

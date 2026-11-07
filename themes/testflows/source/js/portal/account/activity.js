@@ -34,7 +34,7 @@ const ACTIVITY_LABEL = {
 };
 
 const ACCOUNT_LABEL = {
-  plan_credit: "Included",
+  plan_credit: "Plan",
   usage_credit: "Usage",
 };
 

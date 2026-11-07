@@ -1,4 +1,4 @@
-import { compactDatetime, credits } from "./format.js?v=d9a2c1eacc6d";
+import { compactDatetime, credits } from "./format.js?v=49e8a8ff6f78";
 
 /**
  * @param {HTMLElement} panel
@@ -18,7 +18,7 @@ export function renderCredits(panel, account) {
   const h2 = document.createElement("h2");
   h2.textContent = "Credits";
   const p = document.createElement("p");
-  p.textContent = "Included Credits and Usage Credits.";
+  p.textContent = "Plan credits and usage credits.";
   head.append(h2, p);
   panel.append(head);
 
@@ -28,7 +28,7 @@ export function renderCredits(panel, account) {
   const cardIncluded = document.createElement("article");
   cardIncluded.className = "portal-credit-card";
   const h3a = document.createElement("h3");
-  h3a.textContent = "Included";
+  h3a.textContent = "Plan credits";
   const va = document.createElement("p");
   va.className = "portal-credit-balance";
   va.textContent = included;
@@ -42,7 +42,7 @@ export function renderCredits(panel, account) {
   const cardUsage = document.createElement("article");
   cardUsage.className = "portal-credit-card";
   const h3b = document.createElement("h3");
-  h3b.textContent = "Usage";
+  h3b.textContent = "Usage credits";
   const vb = document.createElement("p");
   vb.className = "portal-credit-balance";
   vb.textContent = usage;

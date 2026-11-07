@@ -32,7 +32,7 @@ export function renderBuy(panel, account, ctx) {
   const h2 = document.createElement("h2");
   h2.textContent = "Buy";
   const p = document.createElement("p");
-  p.textContent = "Subscribe to a plan or buy Usage Credits.";
+  p.textContent = "Subscribe to a plan or buy usage credits.";
   head.append(h2, p);
   panel.append(head);
 
@@ -204,7 +204,7 @@ export function renderBuy(panel, account, ctx) {
     plansEl.append(dedicated);
 
     const h3p = document.createElement("h3");
-    h3p.textContent = "Usage Credits";
+    h3p.textContent = "Usage credits";
     packsEl.append(h3p);
     if (!packs.length) {
       const empty = document.createElement("p");

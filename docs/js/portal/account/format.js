@@ -29,7 +29,7 @@ export function eur(micros, dp = 2) {
 
 /** Credits, and every amount in them, the sign alone: `₡0.10`, `₡5`; the
  * CLI's format.credits. `noun` names the kind of credits bought,
- * `₡10 Usage Credits`. Money, `eur`, is only what is paid: a plan's price,
+ * `₡10 usage credits`. Money, `eur`, is only what is paid: a plan's price,
  * what credits cost, an invoice.
  * @param {number} micros
  * @param {number} [dp]

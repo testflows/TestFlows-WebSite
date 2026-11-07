@@ -10,7 +10,7 @@ permalink: machine/pricing/index.html
 
 <header class="pricing-header">
 <h1>Pricing</h1>
-<p>Every plan includes credits each month. Sessions use them by the hour, and you buy Usage Credits on demand.</p>
+<p>Every plan includes plan credits each month. Sessions use them at an hourly price. When you need more than your plan includes, buy usage credits on demand.</p>
 </header>
 
 <div class="pricing-plans">
@@ -20,7 +20,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-for">Try Machine on your own programs.</p>
 <p class="pricing-price"><span class="pricing-amount">€0</span></p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get started</a>
-<p class="pricing-credits">₡2 included each month</p>
+<p class="pricing-credits">₡2 credits included each month</p>
 <p class="pricing-hours">About 13 vCPU-hours</p>
 <p class="pricing-lead">Every feature of Machine:</p>
 <ul class="pricing-features">
@@ -39,7 +39,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-for">For one developer's everyday testing.</p>
 <p class="pricing-price"><span class="pricing-amount">€10</span> a month</p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get Starter</a>
-<p class="pricing-credits">₡25 included each month</p>
+<p class="pricing-credits">₡25 credits included each month</p>
 <p class="pricing-hours">About 166 vCPU-hours</p>
 <p class="pricing-lead">Everything in Free, plus:</p>
 <ul class="pricing-features">
@@ -57,7 +57,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-for">For larger sessions, and more of them.</p>
 <p class="pricing-price"><span class="pricing-amount">€25</span> a month</p>
 <a class="btn banner-cta pricing-cta" href="/machine/portal/signup/">Get Plus</a>
-<p class="pricing-credits">₡65 included each month</p>
+<p class="pricing-credits">₡65 credits included each month</p>
 <p class="pricing-hours">About 433 vCPU-hours</p>
 <p class="pricing-lead">Everything in Starter, plus:</p>
 <ul class="pricing-features">
@@ -74,7 +74,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-for">For long recordings and heavy test suites.</p>
 <p class="pricing-price"><span class="pricing-amount">€50</span> a month</p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get Pro</a>
-<p class="pricing-credits">₡150 included each month</p>
+<p class="pricing-credits">₡150 credits included each month</p>
 <p class="pricing-hours">About 1,000 vCPU-hours</p>
 <p class="pricing-lead">Everything in Plus, plus:</p>
 <ul class="pricing-features">
@@ -107,7 +107,7 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">Price</th><td>€0</td><td>€10 a month</td><td>€25 a month</td><td>€50 a month</td></tr>
 <tr><th scope="row">Credits included each month</th><td>₡2</td><td>₡25</td><td>₡65</td><td>₡150</td></tr>
 <tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 13</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
-<tr><th scope="row">Usage Credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
+<tr><th scope="row">Usage credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
 <tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
 <tr><th scope="row">Max memory per session</th><td>4G</td><td>8G</td><td>12G</td><td>16G</td></tr>
 <tr><th scope="row">Max disk per session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
@@ -120,7 +120,7 @@ permalink: machine/pricing/index.html
 </tbody>
 </table>
 </div>
-<p class="pricing-note">A Free account that buys Usage Credits gets Starter's session sizes.</p>
+<p class="pricing-note">A Free account that buys usage credits gets Starter's session sizes.</p>
 </section>
 
 <section class="pricing-section">
@@ -155,12 +155,12 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>What happens to credits I do not use?</summary>
-<p>The credits a plan includes renew at the start of each period, and the ones left over expire. Usage Credits do not expire.</p>
+<p>Plan credits renew at the start of each period, and the ones left over expire. Usage credits do not expire.</p>
 </details>
 
 <details>
-<summary>How do I buy Usage Credits?</summary>
-<p>Usage Credits are bought on top of any plan at €1 a credit, in packs of ₡5, ₡10, ₡25 and ₡50. Buy them on the account page or with <code>machine account buy-usage</code>.</p>
+<summary>How do I buy usage credits?</summary>
+<p>Usage credits are bought on top of any plan at €1 a credit, in packs of ₡5, ₡10, ₡25 and ₡50. Buy them on the account page or with <code>machine account buy-usage</code>.</p>
 </details>
 
 <details>
@@ -170,7 +170,7 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>What happens when I cancel?</summary>
-<p>The plan stays until it renews, then the account moves to Free. Your Usage Credits stay.</p>
+<p>The plan stays until it renews, then the account moves to Free. Your usage credits stay.</p>
 </details>
 
 </section>

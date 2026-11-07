@@ -100,7 +100,7 @@ machine sessions delete ci-2
 ## Idle sessions stop
 
 A session is idle while it serves no command. Your plan sets its idle time:
-10 minutes on Free, 30 on Starter and on Free with Usage Credits, 45 on Plus,
+10 minutes on Free, 30 on Starter and on Free with usage credits, 45 on Plus,
 and 60 on Pro.
 `machine account show` shows yours. When a session reaches its idle time, it
 stops, and so do its runs. The runs are kept. Start one again in any session
@@ -114,7 +114,7 @@ machine sessions keep ci-1 30m
 ```
 
 A keep holds the session idle for up to 30 minutes on Free, and an hour on
-Starter, Free with Usage Credits, Plus and Pro. `machine sessions list` shows under
+Starter, Free with usage credits, Plus and Pro. `machine sessions list` shows under
 IDLE how long each session has gone without a command, and
 `machine sessions show` when it stops. `machine sessions list --all` also lists
 the sessions that stopped. One that stopped idle is listed as `stopped idle`,

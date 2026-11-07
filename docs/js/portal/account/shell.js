@@ -7,24 +7,24 @@ import {
   getTerms,
   logout,
   refreshSession,
-} from "../api.js?v=d9a2c1eacc6d";
-import { runConfirm } from "./modal.js?v=d9a2c1eacc6d";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=d9a2c1eacc6d";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=d9a2c1eacc6d";
-import { renderOverview } from "./overview.js?v=d9a2c1eacc6d";
-import { renderSessions } from "./sessions.js?v=d9a2c1eacc6d";
-import { renderCredits } from "./credits.js?v=d9a2c1eacc6d";
-import { renderActivity } from "./activity.js?v=d9a2c1eacc6d";
-import { renderBuy } from "./buy.js?v=d9a2c1eacc6d";
-import { renderBilling } from "./billing.js?v=d9a2c1eacc6d";
-import { renderInvoices } from "./invoices.js?v=d9a2c1eacc6d";
-import { renderOrders } from "./orders.js?v=d9a2c1eacc6d";
-import { renderKeys } from "./keys.js?v=d9a2c1eacc6d";
-import { renderDevices } from "./devices.js?v=d9a2c1eacc6d";
-import { renderStorage } from "./storage.js?v=d9a2c1eacc6d";
-import { renderSettings } from "./settings.js?v=d9a2c1eacc6d";
-import { enhanceSelects } from "./select.js?v=d9a2c1eacc6d";
-import { todayDate } from "./format.js?v=d9a2c1eacc6d";
+} from "../api.js?v=49e8a8ff6f78";
+import { runConfirm } from "./modal.js?v=49e8a8ff6f78";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=49e8a8ff6f78";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=49e8a8ff6f78";
+import { renderOverview } from "./overview.js?v=49e8a8ff6f78";
+import { renderSessions } from "./sessions.js?v=49e8a8ff6f78";
+import { renderCredits } from "./credits.js?v=49e8a8ff6f78";
+import { renderActivity } from "./activity.js?v=49e8a8ff6f78";
+import { renderBuy } from "./buy.js?v=49e8a8ff6f78";
+import { renderBilling } from "./billing.js?v=49e8a8ff6f78";
+import { renderInvoices } from "./invoices.js?v=49e8a8ff6f78";
+import { renderOrders } from "./orders.js?v=49e8a8ff6f78";
+import { renderKeys } from "./keys.js?v=49e8a8ff6f78";
+import { renderDevices } from "./devices.js?v=49e8a8ff6f78";
+import { renderStorage } from "./storage.js?v=49e8a8ff6f78";
+import { renderSettings } from "./settings.js?v=49e8a8ff6f78";
+import { enhanceSelects } from "./select.js?v=49e8a8ff6f78";
+import { todayDate } from "./format.js?v=49e8a8ff6f78";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -55,7 +55,7 @@ const SECTION_CHROME = {
   },
   credits: {
     title: "Credits",
-    lead: "Included Credits and Usage Credits.",
+    lead: "Plan credits and usage credits.",
   },
   activity: {
     title: "Activity",
@@ -63,7 +63,7 @@ const SECTION_CHROME = {
   },
   buy: {
     title: "Buy",
-    lead: "Subscribe to a plan or buy Usage Credits.",
+    lead: "Subscribe to a plan or buy usage credits.",
   },
   billing: {
     title: "Billing",
