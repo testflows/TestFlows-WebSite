@@ -108,9 +108,9 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">Credits included each month</th><td>₡2</td><td>₡25</td><td>₡65</td><td>₡150</td></tr>
 <tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 13</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
 <tr><th scope="row">Extra Usage Credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
-<tr><th scope="row">vCPUs a session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
-<tr><th scope="row">Memory a session</th><td>4G</td><td>40G</td><td>64G</td><td>110G</td></tr>
-<tr><th scope="row">Disk a session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
+<tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
+<tr><th scope="row">Max memory per session</th><td>4G</td><td>40G</td><td>64G</td><td>110G</td></tr>
+<tr><th scope="row">Max disk per session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
 <tr><th scope="row">Sessions at once</th><td>3</td><td>10</td><td>25</td><td>50</td></tr>
 <tr><th scope="row">Storage for runs and disks</th><td>10GB</td><td>50GB</td><td>100GB</td><td>200GB</td></tr>
 <tr><th scope="row">Disks</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
