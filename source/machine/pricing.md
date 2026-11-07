@@ -44,8 +44,8 @@ permalink: machine/pricing/index.html
 <p class="pricing-lead">Everything in Free, plus:</p>
 <ul class="pricing-features">
 <li>Over 12 times the credits of Free</li>
-<li>Sessions of up to 4 vCPUs, 40G memory and 128G disk</li>
-<li>10 sessions at once</li>
+<li>Sessions of up to 4 vCPUs, 8G memory and 128G disk</li>
+<li>5 sessions at once</li>
 <li>50GB of storage for runs and disks</li>
 <li>Idle sessions run 30 minutes before they stop</li>
 </ul>
@@ -62,8 +62,8 @@ permalink: machine/pricing/index.html
 <p class="pricing-lead">Everything in Starter, plus:</p>
 <ul class="pricing-features">
 <li>Over 2.5 times the credits of Starter</li>
-<li>Sessions of up to 6 vCPUs, 64G memory and 192G disk</li>
-<li>25 sessions at once</li>
+<li>Sessions of up to 6 vCPUs, 12G memory and 192G disk</li>
+<li>10 sessions at once</li>
 <li>100GB of storage for runs and disks</li>
 <li>Idle sessions run 45 minutes before they stop</li>
 </ul>
@@ -79,8 +79,8 @@ permalink: machine/pricing/index.html
 <p class="pricing-lead">Everything in Plus, plus:</p>
 <ul class="pricing-features">
 <li>Over 2 times the credits of Plus</li>
-<li>Sessions of up to 8 vCPUs, 110G memory and 256G disk</li>
-<li>50 sessions at once</li>
+<li>Sessions of up to 8 vCPUs, 16G memory and 256G disk</li>
+<li>25 sessions at once</li>
 <li>200GB of storage for runs and disks</li>
 <li>Idle sessions run 60 minutes before they stop</li>
 </ul>
@@ -109,9 +109,9 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">vCPU-hours on <code>standard-ip</code></th><td>About 13</td><td>About 166</td><td>About 433</td><td>About 1,000</td></tr>
 <tr><th scope="row">Usage Credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
 <tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
-<tr><th scope="row">Max memory per session</th><td>4G</td><td>40G</td><td>64G</td><td>110G</td></tr>
+<tr><th scope="row">Max memory per session</th><td>4G</td><td>8G</td><td>12G</td><td>16G</td></tr>
 <tr><th scope="row">Max disk per session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
-<tr><th scope="row">Sessions at once</th><td>3</td><td>10</td><td>25</td><td>50</td></tr>
+<tr><th scope="row">Sessions at once</th><td>3</td><td>5</td><td>10</td><td>25</td></tr>
 <tr><th scope="row">Storage for runs and disks</th><td>10GB</td><td>50GB</td><td>100GB</td><td>200GB</td></tr>
 <tr><th scope="row">Disks</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
 <tr><th scope="row">Largest disk</th><td>10GB</td><td>20GB</td><td>30GB</td><td>50GB</td></tr>

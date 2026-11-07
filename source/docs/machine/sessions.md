@@ -11,8 +11,8 @@ machine sessions create ci-1 --cpus 2 --mem 4G
 
 `--cpus` sets the number of vCPUs, `--mem` the memory and `--storage` the
 disk space. Your plan caps each session: 2 vCPUs, 4G of memory and 32G of
-storage on Free, 4 vCPUs, 40G and 128G on Starter and on Free with usage
-credits, 6 vCPUs, 64G and 192G on Plus, and 8 vCPUs, 110G and 256G on Pro. A hardware class can give a
+storage on Free, 4 vCPUs, 8G and 128G on Starter and on Free with usage
+credits, 6 vCPUs, 12G and 192G on Plus, and 8 vCPUs, 16G and 256G on Pro. A hardware class can give a
 session less than the plan allows, and the smaller of the two applies. `--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
 the classes, with the CPU architecture of each. `standard-ip`, on `intel-1`, is

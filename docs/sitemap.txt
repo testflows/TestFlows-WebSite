@@ -1,10 +1,10 @@
+https://testflows.com/docs/machine/index.html
+https://testflows.com/docs/machine.md
 https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/index.html
 https://testflows.com/machine.md
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
-https://testflows.com/docs/machine/index.html
-https://testflows.com/docs/machine.md
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests.md
 https://testflows.com/blog/combinatorial-testing-behavior-model/
