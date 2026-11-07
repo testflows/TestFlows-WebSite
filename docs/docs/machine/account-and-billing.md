@@ -27,10 +27,11 @@ Most of what the account page on the website does, the client does too.
 `payment`, `portal`, `cancel`, `upgrade` and `downgrade` open a browser. Add
 `--link` to print the address instead.
 
-Sessions use credits, shown as `⊜`. The price is per unit and hour, and
+Sessions use credits. Machine writes an amount of credits with the sign `₡`,
+so `₡0.15` is 0.15 credits. The price is per unit and hour, and
 depends on the hardware class. A session is created on `standard-ip` unless you
-pick another class, and it uses ⊜0.15 an hour per unit. `standard` uses ⊜0.10
-and `standard-ie` ⊜0.12.
+pick another class, and it uses ₡0.15 an hour per unit. `standard` uses ₡0.10
+and `standard-ie` ₡0.12.
 [`machine sessions classes`](commands.md#machine-sessions-classes) lists the
 current price of each class. Your plan includes credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.
