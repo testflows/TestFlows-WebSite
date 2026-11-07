@@ -4,7 +4,7 @@
  * parent (hashcash.js `solve`) fans out disjoint subsequences and takes the first
  * stamp, terminating the rest.
  */
-import { solveRange } from "./hashcash.js?v=8383360e0c4a";
+import { solveRange } from "./hashcash.js?v=3db2b42d8ab0";
 
 self.onmessage = (e) => {
   const { value, bits, bucket, rand, start, stride } = e.data;

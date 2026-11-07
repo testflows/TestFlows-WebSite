@@ -27,15 +27,19 @@ export function eur(micros, dp = 2) {
   return amount(micros, dp, "€");
 }
 
-/** Credits, and every amount in them: `⊜0.10`. Not a currency sign, since a
- * credit has no cash value; the CLI's glyphs.ICON_CREDITS. Money, `eur`, is
- * only what is paid: a plan's price, what credits cost, an invoice.
+/** Credits, and every amount in them: `₡0.10 credits`, `₡1 credit`. A credit
+ * has no cash value, so an amount always ends with the word; the CLI's
+ * format.credits. `noun` replaces it where the kind of credits is named,
+ * `₡10 Usage Credits`. Money, `eur`, is only what is paid: a plan's price,
+ * what credits cost, an invoice.
  * @param {number} micros
  * @param {number} [dp]
+ * @param {string} [noun]
  * @returns {string}
  */
-export function credits(micros, dp = 2) {
-  return amount(micros, dp, CREDITS);
+export function credits(micros, dp = 2, noun) {
+  const word = noun ?? (Number(micros) === 1_000_000 ? "credit" : "credits");
+  return `${amount(micros, dp, CREDITS)} ${word}`;
 }
 
 /**
@@ -50,8 +54,10 @@ export function creditsSigned(micros, dp = 2) {
   return credits(0, dp);
 }
 
-/** The symbol of credits. */
-export const CREDITS = "⊜";
+/** The sign of credits, U+20A1, the CLI's glyphs.ICON_CREDITS. An amount
+ * always carries the word after it; a table header, which names a column of
+ * amounts, takes the sign alone: `₡/hour`. */
+export const CREDITS = "₡";
 
 /** `symbol` and the amount: whole units as `5`, otherwise up to `dp`
  * decimals, trailing zeros trimmed but never below 2.
@@ -68,7 +74,7 @@ function amount(micros, dp, symbol) {
     return `${sign}${symbol}${v / 1_000_000}`;
   }
   // An amount too small for `dp` gets the digits it needs, as the CLI's does:
-  // a return of 208 micros read `+⊜0.00`, a row that seemed to move nothing.
+  // a return of 208 micros read `+₡0.00`, a row that seemed to move nothing.
   while (v < 10 ** (6 - dp) && dp < 6) dp += 1;
   let s = (v / 1_000_000).toFixed(dp).replace(/0+$/, "");
   const [intpart, frac = ""] = s.split(".");
