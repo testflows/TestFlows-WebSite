@@ -47,11 +47,21 @@ export function credits(micros, dp = 2, noun) {
  * @param {number} [dp]
  * @returns {string}
  */
+/** Credits as the sign alone, `₡0.150`: a cell of a table whose amounts are
+ * all credits, where the word on each would widen the column and say nothing;
+ * the CLI's format.credits_amount.
+ * @param {number} micros
+ * @param {number} [dp]
+ * @returns {string}
+ */
+export function creditsAmount(micros, dp = 2) {
+  return amount(micros, dp, CREDITS);
+}
 export function creditsSigned(micros, dp = 2) {
   const n = Number(micros) || 0;
-  if (n < 0) return `-${credits(-n, dp)}`;
-  if (n > 0) return `+${credits(n, dp)}`;
-  return credits(0, dp);
+  if (n < 0) return `-${creditsAmount(-n, dp)}`;
+  if (n > 0) return `+${creditsAmount(n, dp)}`;
+  return creditsAmount(0, dp);
 }
 
 /** The sign of credits, U+20A1, the CLI's glyphs.ICON_CREDITS. An amount

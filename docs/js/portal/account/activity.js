@@ -1,16 +1,16 @@
-import { ApiError, getTransactions } from "../api.js?v=3db2b42d8ab0";
-import { setStatus, showSpinner } from "../ui.js?v=3db2b42d8ab0";
+import { ApiError, getTransactions } from "../api.js?v=7858d03edde0";
+import { setStatus, showSpinner } from "../ui.js?v=7858d03edde0";
 import {
   compactDatetime,
   duration,
-  credits,
+  creditsAmount,
   creditsSigned,
   secondsBetween,
   titleCase,
-} from "./format.js?v=3db2b42d8ab0";
-import { enhanceSelects } from "./select.js?v=3db2b42d8ab0";
-import { makePager } from "./pager.js?v=3db2b42d8ab0";
-import { paintEmpty } from "./table.js?v=3db2b42d8ab0";
+} from "./format.js?v=7858d03edde0";
+import { enhanceSelects } from "./select.js?v=7858d03edde0";
+import { makePager } from "./pager.js?v=7858d03edde0";
+import { paintEmpty } from "./table.js?v=7858d03edde0";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
@@ -47,7 +47,7 @@ const ACCOUNT_LABEL = {
  */
 function rate(units, unitHourMicros) {
   if (units == null || unitHourMicros == null) return "—";
-  return `${credits(Number(units) * Number(unitHourMicros), 3)}/h`;
+  return `${creditsAmount(Number(units) * Number(unitHourMicros), 3)}/h`;
 }
 
 /**
@@ -232,7 +232,7 @@ export function renderActivity(panel, ctx) {
         ACCOUNT_LABEL[String(row.account)] ||
           (row.account ? titleCase(String(row.account).replace(/_/g, " ")) : "—"),
         creditsSigned(Number(row.amount_micros) || 0, 3),
-        credits(Number(row.balance_after_micros) || 0, 3),
+        creditsAmount(Number(row.balance_after_micros) || 0, 3),
         rate(row.units, row.unit_hour_micros),
         rowTime(row),
         String(row.session_name || row.session_id || "—"),

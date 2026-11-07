@@ -3,7 +3,7 @@ import { setStatus, showSpinner } from "../ui.js";
 import {
   compactDatetime,
   duration,
-  credits,
+  creditsAmount,
   creditsSigned,
   secondsBetween,
   titleCase,
@@ -47,7 +47,7 @@ const ACCOUNT_LABEL = {
  */
 function rate(units, unitHourMicros) {
   if (units == null || unitHourMicros == null) return "—";
-  return `${credits(Number(units) * Number(unitHourMicros), 3)}/h`;
+  return `${creditsAmount(Number(units) * Number(unitHourMicros), 3)}/h`;
 }
 
 /**
@@ -232,7 +232,7 @@ export function renderActivity(panel, ctx) {
         ACCOUNT_LABEL[String(row.account)] ||
           (row.account ? titleCase(String(row.account).replace(/_/g, " ")) : "—"),
         creditsSigned(Number(row.amount_micros) || 0, 3),
-        credits(Number(row.balance_after_micros) || 0, 3),
+        creditsAmount(Number(row.balance_after_micros) || 0, 3),
         rate(row.units, row.unit_hour_micros),
         rowTime(row),
         String(row.session_name || row.session_id || "—"),

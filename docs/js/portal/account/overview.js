@@ -1,12 +1,12 @@
 import {
-  credits,
+  creditsAmount,
   fillPct,
   humanSize,
   renderFillBar,
   since,
   titleCase,
   until,
-} from "./format.js?v=3db2b42d8ab0";
+} from "./format.js?v=7858d03edde0";
 
 /**
  * @param {HTMLElement} panel
@@ -51,7 +51,7 @@ export function renderOverview(panel, account) {
       rows: [
         {
           label: "Plan",
-          value: credits(Number(account.plan_balance_micros) || 0, 3),
+          value: creditsAmount(Number(account.plan_balance_micros) || 0, 3),
           fill: fillPct(creditUsed, creditTotal),
         },
         {
@@ -60,7 +60,7 @@ export function renderOverview(panel, account) {
         },
         {
           label: "Usage",
-          value: credits(Number(account.usage_credit_balance_micros) || 0, 3),
+          value: creditsAmount(Number(account.usage_credit_balance_micros) || 0, 3),
         },
       ],
     },
@@ -69,7 +69,7 @@ export function renderOverview(panel, account) {
       rows: [
         {
           label: "Usage",
-          value: credits(Number(account.max_usage_credit_micros) || 0, 3),
+          value: creditsAmount(Number(account.max_usage_credit_micros) || 0, 3),
         },
         {
           label: "Sessions",
