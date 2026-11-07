@@ -145,7 +145,7 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>What is a credit?</summary>
-<p>Credits pay for sessions. Machine writes an amount of credits with the sign ₡, so ₡0.15 is 0.15 credits. A credit has no cash value.</p>
+<p>Credits pay for the vCPU-hours your sessions use. One vCPU for one hour costs ₡0.15 on <code>standard-ip</code> and ₡0.12 on <code>standard-ie</code>. Machine writes an amount of credits with the sign ₡, so ₡0.15 is 0.15 credits. A credit has no cash value.</p>
 </details>
 
 <details>
