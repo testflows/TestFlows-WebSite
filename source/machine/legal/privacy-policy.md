@@ -8,7 +8,7 @@ permalink: machine/legal/privacy-policy/index.html
 
 # Privacy Policy
 
-<p class="legal-updated">Last updated: 26 July 2026</p>
+<p class="legal-updated">Last updated: 8 November 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -75,6 +75,12 @@ We are a Canadian company. To operate the Services we may process and store
 information outside your country, including in the European Union and other
 places where we or our providers operate. Where required, we use appropriate
 transfer mechanisms (such as Standard Contractual Clauses).
+
+**Where your data is stored.** Account information, including your email
+address, plan, credits and billing records, is stored in the European Union.
+A session's data, including its runs, checkpoints and disks, is stored in the
+region of the session's hardware class, which the Services show for each
+class. Today every class is in the European Union.
 
 ## 5. Retention
 

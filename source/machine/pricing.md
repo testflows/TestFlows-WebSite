@@ -132,15 +132,33 @@ permalink: machine/pricing/index.html
 <div class="pricing-table-wrap">
 <table class="pricing-table">
 <thead>
-<tr><th>Class</th><th>Description</th><th>₡ a vCPU-hour</th></tr>
+<tr><th>Class</th><th>Region</th><th>Description</th><th>₡ a vCPU-hour</th></tr>
 </thead>
 <tbody>
-<tr><td><code>standard-ip</code></td><td>Standard performance, the default</td><td>₡0.15</td></tr>
-<tr><td><code>standard-ie</code></td><td>Reduced performance</td><td>₡0.12</td></tr>
+<tr><td><code>standard-ip</code></td><td>Europe</td><td>Standard performance, the default</td><td>₡0.15</td></tr>
+<tr><td><code>standard-ie</code></td><td>Europe</td><td>Reduced performance</td><td>₡0.12</td></tr>
 </tbody>
 </table>
 </div>
 <p>A class costs the same on every plan. <code>machine sessions classes</code> lists the classes and their current prices.</p>
+</section>
+
+<section class="pricing-section">
+<h2>Regions</h2>
+<p>Each class runs in one region, and the runs of its sessions are stored there. One account and one balance of credits work in every region.</p>
+<div class="pricing-table-wrap">
+<table class="pricing-table">
+<thead>
+<tr><th>Region</th><th>Availability</th></tr>
+</thead>
+<tbody>
+<tr><td>Europe</td><td>Available</td></tr>
+<tr><td><a href="/machine/na/">North America</a></td><td>Coming soon</td></tr>
+<tr><td><a href="/machine/ap/">Asia-Pacific</a></td><td>Coming soon</td></tr>
+</tbody>
+</table>
+</div>
+<p>For North America or Asia-Pacific, contact <a href="mailto:contact@testflows.com">contact@testflows.com</a>.</p>
 </section>
 
 <section class="pricing-section pricing-faq">

@@ -1,4 +1,8 @@
 https://testflows.com/machine/pricing/index.html
+https://testflows.com/machine/ap/index.html
+https://testflows.com/machine/na/index.html
+https://testflows.com/machine/legal/privacy-policy/index.html
+https://testflows.com/machine/legal/privacy-policy.md
 https://testflows.com/docs/machine/index.html
 https://testflows.com/docs/machine.md
 https://testflows.com/machine/legal/terms-of-service/index.html
@@ -58,8 +62,6 @@ https://testflows.com/docs/index.html
 https://testflows.com/docs.md
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/
 https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1.md
-https://testflows.com/machine/legal/privacy-policy/index.html
-https://testflows.com/machine/legal/privacy-policy.md
 https://testflows.com/legal/privacy-policy/index.html
 https://testflows.com/legal/privacy-policy.md
 https://testflows.com/legal/terms-of-use/index.html
