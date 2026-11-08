@@ -1,8 +1,8 @@
-https://testflows.com/machine/pricing/index.html
-https://testflows.com/machine/legal/privacy-policy/index.html
-https://testflows.com/machine/legal/privacy-policy.md
 https://testflows.com/docs/machine/index.html
 https://testflows.com/docs/machine.md
+https://testflows.com/machine/legal/privacy-policy/index.html
+https://testflows.com/machine/legal/privacy-policy.md
+https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/legal/terms-of-service/index.html
 https://testflows.com/machine/legal/terms-of-service.md
 https://testflows.com/machine/legal/usage-credit/index.html

@@ -76,9 +76,10 @@ information outside your country, including in the European Union and other
 places where we or our providers operate. Where required, we use appropriate
 transfer mechanisms (such as Standard Contractual Clauses).
 
-**Where your data is stored.** Account information, including your email
-address, plan, credits and billing records, is stored in the European Union.
-A session's data, including its runs, checkpoints and disks, is stored in the
+**Where your data is stored.** Our account database, which holds your email
+address, plan, credits and usage records, is in the European Union. Payment
+details, invoices and receipts are held by our payment provider, Stripe. A
+session's data, including its runs, checkpoints and disks, is stored in the
 region of the session's hardware class, which the Services show for each
 class. Today every class is in the European Union.
 

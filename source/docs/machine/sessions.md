@@ -19,7 +19,8 @@ Free with usage credits, 12 on Plus and 24 on Pro. A session counts the vCPUs it
 is charged for: 2 vCPUs with 8G of memory count 4. `machine account show` shows
 how many are in use. `--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
-the classes, with the CPU architecture of each. `standard-ip`, on `intel-1`, is
+the classes, with the region and the CPU architecture of each. A session runs
+in its class's region, and its runs are stored there. `standard-ip`, on `intel-1`, is
 the class to prefer. `standard-ie`, on `intel-2`, costs less. A run starts only
 in a session of the architecture it was recorded on.
 

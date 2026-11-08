@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794102851318" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794102851318" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794102851319" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794102851319" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794102851319" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794102851319" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794102851319" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794102285544" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794102851319" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -981,7 +981,8 @@ Free with usage credits, 12 on Plus and 24 on Pro. A session counts the vCPUs it
 is charged for: 2 vCPUs with 8G of memory count 4. <code>machine account show</code> shows
 how many are in use. <code>--class</code> picks the hardware class, and the default comes from your
 plan. <a href="#machine-sessions-classes"><code>machine sessions classes</code></a> lists
-the classes, with the CPU architecture of each. <code>standard-ip</code>, on <code>intel-1</code>, is
+the classes, with the region and the CPU architecture of each. A session runs
+in its class’s region, and its runs are stored there. <code>standard-ip</code>, on <code>intel-1</code>, is
 the class to prefer. <code>standard-ie</code>, on <code>intel-2</code>, costs less. A run starts only
 in a session of the architecture it was recorded on.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine sessions classes</span><br><span class="line">machine sessions create arm-1 --class standard-ie</span><br></pre></td></tr></table></figure>
@@ -5059,8 +5060,9 @@ not running yet.</p>
 <li><a href="#machine-ping"><code>machine ping</code></a></li>
 </ul>
 <h3 id="machine-sessions-classes"><a href="#machine-sessions-classes" class="headerlink" title="machine sessions classes"></a>machine sessions classes</h3><p>List the hardware classes a session can be created on.</p>
-<p>Each class names its CPU architecture. A run starts only in a session of the
-architecture it was recorded on. Use the class name with create <code>--class</code>.</p>
+<p>Each class names its region and its CPU architecture. A session runs in its
+class’s region, and its runs are stored there. A run starts only in a session of
+the architecture it was recorded on. Use the class name with create <code>--class</code>.</p>
 <p>A session created without <code>--class</code> runs on the plan’s default class. The list
 tags that class default.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions classes [-h]</span><br></pre></td></tr></table></figure>
@@ -5774,7 +5776,7 @@ opening a browser.</p>
 row gives back the unused part of its last hour. Naming a session ends the
 listing with what the session used over all of its rows.</p>
 <p>The listing shows the newest 25. Use <code>--limit</code> for a different page size.</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine account activity [-h] [--since date|age] [--until date|age] [--period date]</span><br><span class="line">                         [--type &#123;granted,purchased,charged,settled,expired,removed&#125;]</span><br><span class="line">                         [--credit-type &#123;plan,usage&#125;] [--limit n] [--sort field]</span><br><span class="line">                         [--reverse]</span><br><span class="line">                         [session]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">machine account activity [-h] [--since date|age] [--until date|age] [--period date]</span><br><span class="line">                         [--type &#123;granted,purchased,charged,settled,expired,removed,adjusted&#125;]</span><br><span class="line">                         [--credit-type &#123;plan,usage&#125;] [--limit n] [--sort field]</span><br><span class="line">                         [--reverse]</span><br><span class="line">                         [session]</span><br></pre></td></tr></table></figure>
 
 <table>
 <thead>
@@ -5808,7 +5810,7 @@ listing with what the session used over all of its rows.</p>
 <td>Show the plan period that contains this date, such as 2026-10-01</td>
 </tr>
 <tr>
-<td><code>--type &#123;granted,purchased,charged,settled,expired,removed&#125;</code></td>
+<td><code>--type &#123;granted,purchased,charged,settled,expired,removed,adjusted&#125;</code></td>
 <td>Filter by activity type</td>
 </tr>
 <tr>
@@ -17235,10 +17237,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794102285545"></script>
-<script src="/js/machine-hero-type.js?v=1794102285545"></script>
-<script src="/js/download-platforms.js?v=1794102285545"></script>
-<script src="/js/anchor-case.js?v=1794102285545"></script>
+<script src="/js/index-code-type.js?v=1794102851320"></script>
+<script src="/js/machine-hero-type.js?v=1794102851320"></script>
+<script src="/js/download-platforms.js?v=1794102851320"></script>
+<script src="/js/anchor-case.js?v=1794102851320"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {
