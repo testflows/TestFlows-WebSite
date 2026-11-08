@@ -1,5 +1,5 @@
-import { ApiError, getTransactions } from "../api.js?v=8a14665c48a2";
-import { setStatus, showSpinner } from "../ui.js?v=8a14665c48a2";
+import { ApiError, getTransactions } from "../api.js?v=64ff919a2a28";
+import { setStatus, showSpinner } from "../ui.js?v=64ff919a2a28";
 import {
   compactDatetime,
   duration,
@@ -7,10 +7,10 @@ import {
   creditsSigned,
   secondsBetween,
   titleCase,
-} from "./format.js?v=8a14665c48a2";
-import { enhanceSelects } from "./select.js?v=8a14665c48a2";
-import { makePager } from "./pager.js?v=8a14665c48a2";
-import { paintEmpty } from "./table.js?v=8a14665c48a2";
+} from "./format.js?v=64ff919a2a28";
+import { enhanceSelects } from "./select.js?v=64ff919a2a28";
+import { makePager } from "./pager.js?v=64ff919a2a28";
+import { paintEmpty } from "./table.js?v=64ff919a2a28";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
@@ -20,6 +20,7 @@ const ACTIVITY_FILTER = {
   settled: "refund",
   expired: "expired",
   removed: "forfeited",
+  adjusted: "adjusted",
 };
 
 const ACTIVITY_LABEL = {
@@ -120,6 +121,7 @@ export function renderActivity(panel, ctx) {
         <option value="settled">Settled</option>
         <option value="expired">Expired</option>
         <option value="removed">Removed</option>
+        <option value="adjusted">Adjusted</option>
       </select>
     </label>
   `;

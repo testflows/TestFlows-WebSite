@@ -20,6 +20,7 @@ const ACTIVITY_FILTER = {
   settled: "refund",
   expired: "expired",
   removed: "forfeited",
+  adjusted: "adjusted",
 };
 
 const ACTIVITY_LABEL = {
@@ -120,6 +121,7 @@ export function renderActivity(panel, ctx) {
         <option value="settled">Settled</option>
         <option value="expired">Expired</option>
         <option value="removed">Removed</option>
+        <option value="adjusted">Adjusted</option>
       </select>
     </label>
   `;
