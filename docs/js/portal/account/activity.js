@@ -1,5 +1,5 @@
-import { ApiError, getTransactions } from "../api.js?v=81f369069bbf";
-import { setStatus, showSpinner } from "../ui.js?v=81f369069bbf";
+import { ApiError, getTransactions } from "../api.js?v=77ffa1a5540b";
+import { setStatus, showSpinner } from "../ui.js?v=77ffa1a5540b";
 import {
   compactDatetime,
   duration,
@@ -7,28 +7,28 @@ import {
   creditsSigned,
   secondsBetween,
   titleCase,
-} from "./format.js?v=81f369069bbf";
-import { enhanceSelects } from "./select.js?v=81f369069bbf";
-import { makePager } from "./pager.js?v=81f369069bbf";
-import { paintEmpty } from "./table.js?v=81f369069bbf";
+} from "./format.js?v=77ffa1a5540b";
+import { enhanceSelects } from "./select.js?v=77ffa1a5540b";
+import { makePager } from "./pager.js?v=77ffa1a5540b";
+import { paintEmpty } from "./table.js?v=77ffa1a5540b";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
-  included: "grant",
+  granted: "grant",
+  paid: "credits-added",
   charged: "purchase",
   settled: "refund",
   expired: "expired",
-  "expired-removed": "forfeited",
-  "credit-purchase": "credits-added",
+  removed: "forfeited",
 };
 
 const ACTIVITY_LABEL = {
-  grant: "Added",
+  grant: "Granted",
   coverage_purchase: "Charged",
   coverage_refund: "Settled",
   expiration: "Expired",
   expiration_clawback: "Removed",
-  usage_credits_added: "Added",
+  usage_credits_added: "Paid",
   operator_usage_adjustment: "Adjusted",
   operator_included_adjustment: "Adjusted",
 };
@@ -114,12 +114,12 @@ export function renderActivity(panel, ctx) {
       <span>Activity</span>
       <select name="activity" class="form-control portal-select">
         <option value="">All</option>
-        <option value="included">Included</option>
+        <option value="granted">Granted</option>
+        <option value="paid">Paid</option>
         <option value="charged">Charged</option>
         <option value="settled">Settled</option>
         <option value="expired">Expired</option>
-        <option value="expired-removed">Expired removed</option>
-        <option value="credit-purchase">Credit purchase</option>
+        <option value="removed">Removed</option>
       </select>
     </label>
   `;
