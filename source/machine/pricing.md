@@ -153,8 +153,8 @@ permalink: machine/pricing/index.html
 </thead>
 <tbody>
 <tr><td>Europe</td><td>Available</td></tr>
-<tr><td><a href="/machine/na/">North America</a></td><td>Coming soon</td></tr>
-<tr><td><a href="/machine/ap/">Asia-Pacific</a></td><td>Coming soon</td></tr>
+<tr><td>North America</td><td>Coming soon</td></tr>
+<tr><td>Asia-Pacific</td><td>Coming soon</td></tr>
 </tbody>
 </table>
 </div>
