@@ -1,8 +1,8 @@
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=a9576b2a6baa";
-import { setStatus, showSpinner } from "../ui.js?v=a9576b2a6baa";
-import { compactDatetime, eur, titleCase } from "./format.js?v=a9576b2a6baa";
-import { makePager } from "./pager.js?v=a9576b2a6baa";
-import { paintEmpty } from "./table.js?v=a9576b2a6baa";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=8a14665c48a2";
+import { setStatus, showSpinner } from "../ui.js?v=8a14665c48a2";
+import { compactDatetime, eur, titleCase } from "./format.js?v=8a14665c48a2";
+import { makePager } from "./pager.js?v=8a14665c48a2";
+import { paintEmpty } from "./table.js?v=8a14665c48a2";
 
 /**
  * @param {HTMLElement} panel

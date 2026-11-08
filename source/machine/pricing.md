@@ -31,6 +31,7 @@ permalink: machine/pricing/index.html
 <li>The <code>machine</code> client and the Python SDK</li>
 <li>Sessions of up to 2 vCPUs, 4G memory and 32G disk</li>
 <li>3 sessions at once, 4 vCPUs between them</li>
+<li>10GB of storage for runs and disk images</li>
 <li>Buy usage credits to get Starter's session sizes, idle time and vCPUs at once</li>
 </ul>
 </article>
@@ -47,7 +48,7 @@ permalink: machine/pricing/index.html
 <li>Over 8 times the credits of Free</li>
 <li>Sessions of up to 4 vCPUs, 8G memory and 128G disk</li>
 <li>5 sessions at once, 8 vCPUs between them</li>
-<li>50GB of storage for runs and disks</li>
+<li>50GB of storage for runs and disk images</li>
 <li>Idle sessions run 30 minutes before they stop</li>
 </ul>
 </article>
@@ -65,7 +66,7 @@ permalink: machine/pricing/index.html
 <li>Over 2.5 times the credits of Starter</li>
 <li>Sessions of up to 6 vCPUs, 12G memory and 192G disk</li>
 <li>10 sessions at once, 12 vCPUs between them</li>
-<li>100GB of storage for runs and disks</li>
+<li>100GB of storage for runs and disk images</li>
 <li>Idle sessions run 45 minutes before they stop</li>
 </ul>
 </article>
@@ -82,7 +83,7 @@ permalink: machine/pricing/index.html
 <li>More than twice the credits of Plus</li>
 <li>Sessions of up to 8 vCPUs, 16G memory and 256G disk</li>
 <li>20 sessions at once, 24 vCPUs between them</li>
-<li>200GB of storage for runs and disks</li>
+<li>200GB of storage for runs and disk images</li>
 <li>Idle sessions run 60 minutes before they stop</li>
 </ul>
 </article>
@@ -111,12 +112,12 @@ permalink: machine/pricing/index.html
 <tr><th scope="row">Usage credits</th><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td><td>€1 a credit</td></tr>
 <tr><th scope="row">Max vCPUs per session</th><td>2</td><td>4</td><td>6</td><td>8</td></tr>
 <tr><th scope="row">Max memory per session</th><td>4G</td><td>8G</td><td>12G</td><td>16G</td></tr>
-<tr><th scope="row">Max disk per session</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
+<tr><th scope="row">Max session disk</th><td>32G</td><td>128G</td><td>192G</td><td>256G</td></tr>
 <tr><th scope="row">Sessions at once</th><td>3</td><td>5</td><td>10</td><td>20</td></tr>
 <tr><th scope="row">Max vCPUs running at once</th><td>4</td><td>8</td><td>12</td><td>24</td></tr>
-<tr><th scope="row">Storage for runs and disks</th><td>10GB</td><td>50GB</td><td>100GB</td><td>200GB</td></tr>
-<tr><th scope="row">Disks</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
-<tr><th scope="row">Largest disk</th><td>10GB</td><td>20GB</td><td>30GB</td><td>50GB</td></tr>
+<tr><th scope="row">Storage for runs and disk images</th><td>10GB</td><td>50GB</td><td>100GB</td><td>200GB</td></tr>
+<tr><th scope="row">Disk images</th><td>50</td><td>100</td><td>200</td><td>500</td></tr>
+<tr><th scope="row">Largest disk image</th><td>10GB</td><td>20GB</td><td>30GB</td><td>50GB</td></tr>
 <tr><th scope="row">Idle session stops after</th><td>10 minutes</td><td>30 minutes</td><td>45 minutes</td><td>60 minutes</td></tr>
 <tr><th scope="row">After buying usage credits</th><td>Starter's session sizes, idle time and vCPUs at once</td><td>—</td><td>—</td><td>—</td></tr>
 <tr><th scope="row">Record, replay, fork, faults, debugger</th><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>

@@ -7,10 +7,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=a9576b2a6baa";
-import { setStatus, showSpinner } from "../ui.js?v=a9576b2a6baa";
-import { credits, eur, titleCase } from "./format.js?v=a9576b2a6baa";
-import { RECOMMENDED_TIER, tierRank } from "./plans.js?v=a9576b2a6baa";
+} from "../api.js?v=8a14665c48a2";
+import { setStatus, showSpinner } from "../ui.js?v=8a14665c48a2";
+import { credits, eur, titleCase } from "./format.js?v=8a14665c48a2";
+import { RECOMMENDED_TIER, tierRank } from "./plans.js?v=8a14665c48a2";
 
 /**
  * @param {string|undefined} url
@@ -108,7 +108,7 @@ export function renderBuy(panel, account, ctx) {
     const lines = [
       `Sessions of up to ${n("max_vcpus")} vCPUs, ${gib(n("max_mem_mb"))} memory and ${gib(n("max_storage_mb"))} disk`,
       `${n("max_sessions")} sessions at once, ${n("max_running_vcpus")} vCPUs between them`,
-      `${Math.round(n("storage_bytes") / 1e9)}GB of storage for runs and disks`,
+      `${Math.round(n("storage_bytes") / 1e9)}GB of storage for runs and disk images`,
       `Idle sessions run ${n("idle_stop_minutes")} minutes before they stop`,
     ];
     const ul = document.createElement("ul");
