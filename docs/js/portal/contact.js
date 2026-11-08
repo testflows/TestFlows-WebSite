@@ -7,7 +7,7 @@
  * to be: the work is what a request costs.
  */
 
-import { contactSend } from "./api.js?v=77ffa1a5540b";
+import { contactSend } from "./api.js?v=a9576b2a6baa";
 
 const MACHINE_TOPICS = ["Machine early access", "Machine product question"];
 

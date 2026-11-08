@@ -1,5 +1,5 @@
-import { ApiError, getTransactions } from "../api.js?v=77ffa1a5540b";
-import { setStatus, showSpinner } from "../ui.js?v=77ffa1a5540b";
+import { ApiError, getTransactions } from "../api.js?v=a9576b2a6baa";
+import { setStatus, showSpinner } from "../ui.js?v=a9576b2a6baa";
 import {
   compactDatetime,
   duration,
@@ -7,15 +7,15 @@ import {
   creditsSigned,
   secondsBetween,
   titleCase,
-} from "./format.js?v=77ffa1a5540b";
-import { enhanceSelects } from "./select.js?v=77ffa1a5540b";
-import { makePager } from "./pager.js?v=77ffa1a5540b";
-import { paintEmpty } from "./table.js?v=77ffa1a5540b";
+} from "./format.js?v=a9576b2a6baa";
+import { enhanceSelects } from "./select.js?v=a9576b2a6baa";
+import { makePager } from "./pager.js?v=a9576b2a6baa";
+import { paintEmpty } from "./table.js?v=a9576b2a6baa";
 
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
   granted: "grant",
-  paid: "credits-added",
+  purchased: "credits-added",
   charged: "purchase",
   settled: "refund",
   expired: "expired",
@@ -28,7 +28,7 @@ const ACTIVITY_LABEL = {
   coverage_refund: "Settled",
   expiration: "Expired",
   expiration_clawback: "Removed",
-  usage_credits_added: "Paid",
+  usage_credits_added: "Purchased",
   operator_usage_adjustment: "Adjusted",
   operator_included_adjustment: "Adjusted",
 };
@@ -115,7 +115,7 @@ export function renderActivity(panel, ctx) {
       <select name="activity" class="form-control portal-select">
         <option value="">All</option>
         <option value="granted">Granted</option>
-        <option value="paid">Paid</option>
+        <option value="purchased">Purchased</option>
         <option value="charged">Charged</option>
         <option value="settled">Settled</option>
         <option value="expired">Expired</option>

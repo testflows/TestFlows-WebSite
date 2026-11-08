@@ -7,24 +7,24 @@ import {
   getTerms,
   logout,
   refreshSession,
-} from "../api.js?v=77ffa1a5540b";
-import { runConfirm } from "./modal.js?v=77ffa1a5540b";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=77ffa1a5540b";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=77ffa1a5540b";
-import { renderOverview } from "./overview.js?v=77ffa1a5540b";
-import { renderSessions } from "./sessions.js?v=77ffa1a5540b";
-import { renderCredits } from "./credits.js?v=77ffa1a5540b";
-import { renderActivity } from "./activity.js?v=77ffa1a5540b";
-import { renderBuy } from "./buy.js?v=77ffa1a5540b";
-import { renderBilling } from "./billing.js?v=77ffa1a5540b";
-import { renderInvoices } from "./invoices.js?v=77ffa1a5540b";
-import { renderOrders } from "./orders.js?v=77ffa1a5540b";
-import { renderKeys } from "./keys.js?v=77ffa1a5540b";
-import { renderDevices } from "./devices.js?v=77ffa1a5540b";
-import { renderStorage } from "./storage.js?v=77ffa1a5540b";
-import { renderSettings } from "./settings.js?v=77ffa1a5540b";
-import { enhanceSelects } from "./select.js?v=77ffa1a5540b";
-import { todayDate } from "./format.js?v=77ffa1a5540b";
+} from "../api.js?v=a9576b2a6baa";
+import { runConfirm } from "./modal.js?v=a9576b2a6baa";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=a9576b2a6baa";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=a9576b2a6baa";
+import { renderOverview } from "./overview.js?v=a9576b2a6baa";
+import { renderSessions } from "./sessions.js?v=a9576b2a6baa";
+import { renderCredits } from "./credits.js?v=a9576b2a6baa";
+import { renderActivity } from "./activity.js?v=a9576b2a6baa";
+import { renderBuy } from "./buy.js?v=a9576b2a6baa";
+import { renderBilling } from "./billing.js?v=a9576b2a6baa";
+import { renderInvoices } from "./invoices.js?v=a9576b2a6baa";
+import { renderOrders } from "./orders.js?v=a9576b2a6baa";
+import { renderKeys } from "./keys.js?v=a9576b2a6baa";
+import { renderDevices } from "./devices.js?v=a9576b2a6baa";
+import { renderStorage } from "./storage.js?v=a9576b2a6baa";
+import { renderSettings } from "./settings.js?v=a9576b2a6baa";
+import { enhanceSelects } from "./select.js?v=a9576b2a6baa";
+import { todayDate } from "./format.js?v=a9576b2a6baa";
 
 const LOGIN_HREF = "/machine/portal/login/";
 

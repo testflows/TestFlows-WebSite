@@ -15,7 +15,7 @@ import { paintEmpty } from "./table.js";
 /** CLI-facing activity filter → API wire value (client/core/transactions.py). */
 const ACTIVITY_FILTER = {
   granted: "grant",
-  paid: "credits-added",
+  purchased: "credits-added",
   charged: "purchase",
   settled: "refund",
   expired: "expired",
@@ -28,7 +28,7 @@ const ACTIVITY_LABEL = {
   coverage_refund: "Settled",
   expiration: "Expired",
   expiration_clawback: "Removed",
-  usage_credits_added: "Paid",
+  usage_credits_added: "Purchased",
   operator_usage_adjustment: "Adjusted",
   operator_included_adjustment: "Adjusted",
 };
@@ -115,7 +115,7 @@ export function renderActivity(panel, ctx) {
       <select name="activity" class="form-control portal-select">
         <option value="">All</option>
         <option value="granted">Granted</option>
-        <option value="paid">Paid</option>
+        <option value="purchased">Purchased</option>
         <option value="charged">Charged</option>
         <option value="settled">Settled</option>
         <option value="expired">Expired</option>
