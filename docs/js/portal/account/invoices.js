@@ -1,8 +1,8 @@
-import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=64ff919a2a28";
-import { setStatus, showSpinner } from "../ui.js?v=64ff919a2a28";
-import { compactDatetime, eur, titleCase } from "./format.js?v=64ff919a2a28";
-import { makePager } from "./pager.js?v=64ff919a2a28";
-import { paintEmpty } from "./table.js?v=64ff919a2a28";
+import { ApiError, downloadBillingInvoice, getBillingInvoices } from "../api.js?v=dc37029f3963";
+import { setStatus, showSpinner } from "../ui.js?v=dc37029f3963";
+import { compactDatetime, eur, titleCase } from "./format.js?v=dc37029f3963";
+import { makePager } from "./pager.js?v=dc37029f3963";
+import { paintEmpty } from "./table.js?v=dc37029f3963";
 
 /**
  * @param {HTMLElement} panel
@@ -94,6 +94,8 @@ export function renderInvoices(panel, ctx) {
     table.innerHTML = `
       <thead>
         <tr>
+          <th class="portal-invoice-mark"><span class="visually-hidden">Paid</span></th>
+          <th>Description</th>
           <th>Date</th>
           <th>Status</th>
           <th>Amount</th>
@@ -108,7 +110,16 @@ export function renderInvoices(panel, ctx) {
       const created = row.created_at || row.created;
       const amount = Number(row.total_micros ?? row.amount_due_micros ?? 0);
       const status = String(row.status || "");
+      // A paid invoice opens its row with a check mark.
+      const mark = document.createElement("td");
+      mark.className = "portal-invoice-mark";
+      if (status === "paid") {
+        mark.textContent = "✓";
+        mark.setAttribute("aria-label", "Paid");
+      }
+      tr.append(mark);
       const cells = [
+        String(row.description || "Invoice"),
         created ? compactDatetime(String(created)) : "—",
         status ? titleCase(status) : "—",
         eur(amount, 2),

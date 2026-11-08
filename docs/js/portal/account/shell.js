@@ -7,24 +7,25 @@ import {
   getTerms,
   logout,
   refreshSession,
-} from "../api.js?v=64ff919a2a28";
-import { runConfirm } from "./modal.js?v=64ff919a2a28";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=64ff919a2a28";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=64ff919a2a28";
-import { renderOverview } from "./overview.js?v=64ff919a2a28";
-import { renderSessions } from "./sessions.js?v=64ff919a2a28";
-import { renderCredits } from "./credits.js?v=64ff919a2a28";
-import { renderActivity } from "./activity.js?v=64ff919a2a28";
-import { renderBuy } from "./buy.js?v=64ff919a2a28";
-import { renderBilling } from "./billing.js?v=64ff919a2a28";
-import { renderInvoices } from "./invoices.js?v=64ff919a2a28";
-import { renderOrders } from "./orders.js?v=64ff919a2a28";
-import { renderKeys } from "./keys.js?v=64ff919a2a28";
-import { renderDevices } from "./devices.js?v=64ff919a2a28";
-import { renderStorage } from "./storage.js?v=64ff919a2a28";
-import { renderSettings } from "./settings.js?v=64ff919a2a28";
-import { enhanceSelects } from "./select.js?v=64ff919a2a28";
-import { todayDate } from "./format.js?v=64ff919a2a28";
+} from "../api.js?v=dc37029f3963";
+import { runConfirm, runPurchase } from "./modal.js?v=dc37029f3963";
+import { confirmPurchase } from "./purchase.js?v=dc37029f3963";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=dc37029f3963";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=dc37029f3963";
+import { renderOverview } from "./overview.js?v=dc37029f3963";
+import { renderSessions } from "./sessions.js?v=dc37029f3963";
+import { renderCredits } from "./credits.js?v=dc37029f3963";
+import { renderActivity } from "./activity.js?v=dc37029f3963";
+import { renderBuy } from "./buy.js?v=dc37029f3963";
+import { renderBilling } from "./billing.js?v=dc37029f3963";
+import { renderInvoices } from "./invoices.js?v=dc37029f3963";
+import { renderOrders } from "./orders.js?v=dc37029f3963";
+import { renderKeys } from "./keys.js?v=dc37029f3963";
+import { renderDevices } from "./devices.js?v=dc37029f3963";
+import { renderStorage } from "./storage.js?v=dc37029f3963";
+import { renderSettings } from "./settings.js?v=dc37029f3963";
+import { enhanceSelects } from "./select.js?v=dc37029f3963";
+import { todayDate } from "./format.js?v=dc37029f3963";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
@@ -379,7 +380,7 @@ export async function bootAccountDashboard() {
   }
   if (!(await termsAccepted())) return;
   await showSection(currentSection(), true);
-  showPurchaseReturn();
+  await showPurchaseReturn();
 }
 
 /** The legal documents a changed Agreement asks to be read. */
@@ -442,10 +443,10 @@ async function signOutNow() {
   window.location.href = LOGIN_HREF;
 }
 
-/** Surface a Stripe return (?purchase=success|cancelled) as a status note, then
- * scrub the param so a reload doesn't repeat it. Boot already reloaded the
- * account fresh; a webhook-driven grant may lag a moment, hence the wording. */
-function showPurchaseReturn() {
+/** Surface a Stripe return (?purchase=success|cancelled), then scrub the param
+ * so a reload doesn't repeat it. A payment opens the purchase modal, which waits
+ * for the webhook to add the credits; the section then loads again to show them. */
+async function showPurchaseReturn() {
   const params = new URLSearchParams(window.location.search);
   const purchase = (params.get("purchase") || "").toLowerCase();
   if (!purchase) return;
@@ -457,12 +458,9 @@ function showPurchaseReturn() {
     window.location.pathname + (qs ? `?${qs}` : "")
   );
   if (purchase === "success") {
-    setStatus(
-      statusEl(),
-      "Payment received. Your credits arrive in a moment.",
-      "ok"
-    );
+    await runPurchase(confirmPurchase);
+    await showSection(currentSection(), true);
   } else if (purchase === "cancelled") {
-    setStatus(statusEl(), "Checkout cancelled — no charge was made.", "info");
+    setStatus(statusEl(), "Checkout cancelled. No charge was made.", "info");
   }
 }

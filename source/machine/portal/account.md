@@ -113,6 +113,22 @@ noindex: true
     </div>
 </div>
 
+<div id="portal-purchase" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-purchase-title" aria-describedby="portal-purchase-detail" tabindex="-1">
+    <div class="portal-modal-backdrop" data-portal-purchase-dismiss></div>
+    <div class="portal-modal-card portal-purchase-card">
+        <div id="portal-purchase-mark" class="portal-purchase-mark" aria-hidden="true">
+            <svg class="portal-purchase-check" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+            <span class="portal-purchase-spinner"></span>
+        </div>
+        <h2 id="portal-purchase-title">Thank you for your payment</h2>
+        <p id="portal-purchase-amount" class="portal-purchase-amount"></p>
+        <p id="portal-purchase-detail" class="portal-muted" aria-live="polite"></p>
+        <div class="portal-actions portal-purchase-actions">
+            <button type="button" class="btn btn-primary" id="portal-purchase-ok">OK</button>
+        </div>
+    </div>
+</div>
+
 <div id="portal-billing-plan" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-billing-plan-title">
     <div class="portal-modal-backdrop" data-portal-billing-plan-dismiss></div>
     <div class="portal-modal-card">

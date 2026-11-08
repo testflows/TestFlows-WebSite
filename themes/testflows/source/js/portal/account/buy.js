@@ -154,7 +154,10 @@ export function renderBuy(panel, account, ctx) {
         const tier = String(sub.tier || "plan");
         const micros = Number(sub.credit_micros) || 0;
         const subscribed = tier.toLowerCase() === currentTier;
-        const recommended = tier.toLowerCase() === RECOMMENDED_TIER;
+        // Recommended guides a first choice. An account on a paid plan has made
+        // it: its own plan is the one marked, and nothing points it elsewhere.
+        const recommended =
+          tierRank(currentTier) < 0 && tier.toLowerCase() === RECOMMENDED_TIER;
         const card = document.createElement("article");
         card.className = [
           "portal-product",
@@ -250,24 +253,35 @@ export function renderBuy(panel, account, ctx) {
       for (const pack of packs) {
         const priceId = String(pack.price_id || "");
         const micros = Number(pack.credit_micros) || 0;
+        // The plan card's shape: the amount large, what it costs, what it runs,
+        // and the button at the foot.
         const card = document.createElement("article");
-        card.className = "portal-product";
-        const title = document.createElement("h4");
-        title.textContent = credits(micros, 3);
-        const meta = document.createElement("p");
-        meta.className = "portal-muted";
+        card.className = "portal-product portal-plan portal-pack";
+        const amount = document.createElement("p");
+        amount.className = "portal-plan-amount";
+        amount.textContent = credits(micros, 0);
+        const price = document.createElement("p");
+        price.className = "portal-product-price";
         // A credit is bought at one euro: the pack's credits are its price.
-        meta.textContent = eur(micros, 2);
-        if (unitHour > 0) {
-          const hours = Math.floor(micros / unitHour);
-          if (hours > 0) meta.textContent += ` · about ${hours} vCPU-hours`;
+        price.textContent = `for ${eur(micros, 0)}`;
+        const lines = [];
+        const hours = unitHour > 0 ? Math.floor(micros / unitHour) : 0;
+        if (hours > 0) lines.push(`About ${hours.toLocaleString("en-US")} vCPU-hours`);
+        lines.push("Never expire");
+        const list = document.createElement("ul");
+        list.className = "portal-product-limits";
+        for (const text of lines) {
+          const li = document.createElement("li");
+          li.textContent = text;
+          list.append(li);
         }
+        const parts = [amount, price, list];
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "btn btn-ghost";
         btn.textContent = "Buy";
         btn.addEventListener("click", () => void startCheckout(priceId, "pack"));
-        card.append(title, meta, btn);
+        card.append(...parts, btn);
         packsList.append(card);
       }
       packsEl.append(packsList);

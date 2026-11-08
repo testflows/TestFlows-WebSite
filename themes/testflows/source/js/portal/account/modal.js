@@ -1,4 +1,4 @@
-/** Shared portal modals — confirm, text prompt, and billing plan picker. */
+/** Shared portal modals — confirm, text prompt, billing plan picker, purchase. */
 
 /**
  * @typedef {{
@@ -455,5 +455,99 @@ export function runPlanPick(opts) {
     });
     root.addEventListener("keydown", onKey);
     (selectedInput || okBtn).focus();
+  });
+}
+
+/**
+ * @typedef {{
+ *   ok: boolean,
+ *   title: string,
+ *   amount?: string,
+ *   detail: string,
+ * }} PurchaseResult
+ */
+
+/**
+ * The purchase modal: thanks and a spinner while `confirm` waits for the payment to land,
+ * then a check mark, the amount bought and what it is. Resolves when the
+ * developer closes it.
+ * @param {() => Promise<PurchaseResult>} confirm
+ * @returns {Promise<void>}
+ */
+export function runPurchase(confirm) {
+  return new Promise((resolve) => {
+    const root = document.getElementById("portal-purchase");
+    const mark = document.getElementById("portal-purchase-mark");
+    const title = document.getElementById("portal-purchase-title");
+    const amount = document.getElementById("portal-purchase-amount");
+    const detail = document.getElementById("portal-purchase-detail");
+    const okBtn = /** @type {HTMLButtonElement|null} */ (
+      document.getElementById("portal-purchase-ok")
+    );
+    if (modalOpen || !root || !mark || !title || !amount || !detail || !okBtn) {
+      resolve();
+      return;
+    }
+    modalOpen = true;
+    const prevFocus =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
+    let settled = false;
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      modalOpen = false;
+      root.hidden = true;
+      root.setAttribute("aria-hidden", "true");
+      okBtn.removeEventListener("click", finish);
+      root.removeEventListener("keydown", onKey);
+      root.querySelectorAll("[data-portal-purchase-dismiss]").forEach((el) => {
+        el.removeEventListener("click", finish);
+      });
+      if (prevFocus && document.contains(prevFocus)) prevFocus.focus();
+      resolve();
+    };
+    const onKey = (ev) => {
+      if (ev.key === "Escape") {
+        ev.preventDefault();
+        finish();
+      } else if (ev.key === "Tab") {
+        trapTab(root, ev);
+      }
+    };
+
+    /** @param {PurchaseResult} result */
+    const show = (result) => {
+      mark.dataset.state = result.ok ? "done" : "info";
+      title.textContent = result.title;
+      amount.textContent = result.amount || "";
+      amount.hidden = !result.amount;
+      detail.textContent = result.detail;
+      okBtn.hidden = false;
+      okBtn.focus();
+    };
+
+    mark.dataset.state = "busy";
+    title.textContent = "Thank you for your payment";
+    amount.hidden = true;
+    detail.textContent = "Adding it to your account.";
+    okBtn.hidden = true;
+    root.hidden = false;
+    root.setAttribute("aria-hidden", "false");
+    okBtn.addEventListener("click", finish);
+    root.querySelectorAll("[data-portal-purchase-dismiss]").forEach((el) => {
+      el.addEventListener("click", finish);
+    });
+    root.addEventListener("keydown", onKey);
+    root.focus();
+    confirm().then(show, () =>
+      show({
+        ok: false,
+        title: "Thank you for your payment",
+        detail: "Your account updates in a few minutes. Refresh to see it.",
+      })
+    );
   });
 }

@@ -61,40 +61,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794163199302" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794163199302" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794102851331" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794163199302" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -275,6 +275,22 @@
     </div>
 </div>
 
+<div id="portal-purchase" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-purchase-title" aria-describedby="portal-purchase-detail" tabindex="-1">
+    <div class="portal-modal-backdrop" data-portal-purchase-dismiss></div>
+    <div class="portal-modal-card portal-purchase-card">
+        <div id="portal-purchase-mark" class="portal-purchase-mark" aria-hidden="true">
+            <svg class="portal-purchase-check" viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M15 27l7 7 15-16"/></svg>
+            <span class="portal-purchase-spinner"></span>
+        </div>
+        <h2 id="portal-purchase-title">Thank you for your payment</h2>
+        <p id="portal-purchase-amount" class="portal-purchase-amount"></p>
+        <p id="portal-purchase-detail" class="portal-muted" aria-live="polite"></p>
+        <div class="portal-actions portal-purchase-actions">
+            <button type="button" class="btn btn-primary" id="portal-purchase-ok">OK</button>
+        </div>
+    </div>
+</div>
+
 <div id="portal-billing-plan" class="portal-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="portal-billing-plan-title">
     <div class="portal-modal-backdrop" data-portal-billing-plan-dismiss></div>
     <div class="portal-modal-card">
@@ -288,7 +304,7 @@
     </div>
 </div>
 
-<script type="module" src="/js/portal/account.js?v=64ff919a2a28"></script>
+<script type="module" src="/js/portal/account.js?v=dc37029f3963"></script>
 
 
 
@@ -298,10 +314,10 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794102851332"></script>
-<script src="/js/machine-hero-type.js?v=1794102851332"></script>
-<script src="/js/download-platforms.js?v=1794102851332"></script>
-<script src="/js/anchor-case.js?v=1794102851332"></script>
+<script src="/js/index-code-type.js?v=1794163199302"></script>
+<script src="/js/machine-hero-type.js?v=1794163199302"></script>
+<script src="/js/download-platforms.js?v=1794163199302"></script>
+<script src="/js/anchor-case.js?v=1794163199302"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

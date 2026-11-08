@@ -8,7 +8,8 @@ import {
   logout,
   refreshSession,
 } from "../api.js";
-import { runConfirm } from "./modal.js";
+import { runConfirm, runPurchase } from "./modal.js";
+import { confirmPurchase } from "./purchase.js";
 import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js";
 import { setRefreshBusy, setStatus, showSpinner } from "../ui.js";
 import { renderOverview } from "./overview.js";
@@ -379,7 +380,7 @@ export async function bootAccountDashboard() {
   }
   if (!(await termsAccepted())) return;
   await showSection(currentSection(), true);
-  showPurchaseReturn();
+  await showPurchaseReturn();
 }
 
 /** The legal documents a changed Agreement asks to be read. */
@@ -442,10 +443,10 @@ async function signOutNow() {
   window.location.href = LOGIN_HREF;
 }
 
-/** Surface a Stripe return (?purchase=success|cancelled) as a status note, then
- * scrub the param so a reload doesn't repeat it. Boot already reloaded the
- * account fresh; a webhook-driven grant may lag a moment, hence the wording. */
-function showPurchaseReturn() {
+/** Surface a Stripe return (?purchase=success|cancelled), then scrub the param
+ * so a reload doesn't repeat it. A payment opens the purchase modal, which waits
+ * for the webhook to add the credits; the section then loads again to show them. */
+async function showPurchaseReturn() {
   const params = new URLSearchParams(window.location.search);
   const purchase = (params.get("purchase") || "").toLowerCase();
   if (!purchase) return;
@@ -457,12 +458,9 @@ function showPurchaseReturn() {
     window.location.pathname + (qs ? `?${qs}` : "")
   );
   if (purchase === "success") {
-    setStatus(
-      statusEl(),
-      "Payment received. Your credits arrive in a moment.",
-      "ok"
-    );
+    await runPurchase(confirmPurchase);
+    await showSection(currentSection(), true);
   } else if (purchase === "cancelled") {
-    setStatus(statusEl(), "Checkout cancelled — no charge was made.", "info");
+    setStatus(statusEl(), "Checkout cancelled. No charge was made.", "info");
   }
 }

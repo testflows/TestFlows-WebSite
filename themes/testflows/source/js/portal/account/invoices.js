@@ -94,6 +94,8 @@ export function renderInvoices(panel, ctx) {
     table.innerHTML = `
       <thead>
         <tr>
+          <th class="portal-invoice-mark"><span class="visually-hidden">Paid</span></th>
+          <th>Description</th>
           <th>Date</th>
           <th>Status</th>
           <th>Amount</th>
@@ -108,7 +110,16 @@ export function renderInvoices(panel, ctx) {
       const created = row.created_at || row.created;
       const amount = Number(row.total_micros ?? row.amount_due_micros ?? 0);
       const status = String(row.status || "");
+      // A paid invoice opens its row with a check mark.
+      const mark = document.createElement("td");
+      mark.className = "portal-invoice-mark";
+      if (status === "paid") {
+        mark.textContent = "✓";
+        mark.setAttribute("aria-label", "Paid");
+      }
+      tr.append(mark);
       const cells = [
+        String(row.description || "Invoice"),
         created ? compactDatetime(String(created)) : "—",
         status ? titleCase(status) : "—",
         eur(amount, 2),
