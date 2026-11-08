@@ -7,10 +7,10 @@ import {
   getBillingOrder,
   getBillingProducts,
   newRequestId,
-} from "../api.js?v=49e8a8ff6f78";
-import { setStatus, showSpinner } from "../ui.js?v=49e8a8ff6f78";
-import { credits, eur, titleCase } from "./format.js?v=49e8a8ff6f78";
-import { tierRank } from "./plans.js?v=49e8a8ff6f78";
+} from "../api.js?v=81f369069bbf";
+import { setStatus, showSpinner } from "../ui.js?v=81f369069bbf";
+import { credits, eur, titleCase } from "./format.js?v=81f369069bbf";
+import { RECOMMENDED_TIER, tierRank } from "./plans.js?v=81f369069bbf";
 
 /**
  * @param {string|undefined} url
@@ -98,6 +98,30 @@ export function renderBuy(panel, account, ctx) {
   };
 
   /**
+   * What a plan allows, in the words of the pricing page's plan cards.
+   * @param {Record<string, unknown>} sub
+   * @returns {HTMLUListElement}
+   */
+  const planLimits = (sub) => {
+    const n = (key) => Number(sub[key]) || 0;
+    const gib = (mb) => `${Math.round(mb / 1024)}G`;
+    const lines = [
+      `Sessions of up to ${n("max_vcpus")} vCPUs, ${gib(n("max_mem_mb"))} memory and ${gib(n("max_storage_mb"))} disk`,
+      `${n("max_sessions")} sessions at once, ${n("max_running_vcpus")} vCPUs between them`,
+      `${Math.round(n("storage_bytes") / 1e9)}GB of storage for runs and disks`,
+      `Idle sessions run ${n("idle_stop_minutes")} minutes before they stop`,
+    ];
+    const ul = document.createElement("ul");
+    ul.className = "portal-product-limits";
+    for (const line of lines) {
+      const li = document.createElement("li");
+      li.textContent = line;
+      ul.append(li);
+    }
+    return ul;
+  };
+
+  /**
    * @param {Record<string, unknown>} catalog
    */
   const paint = (catalog) => {
@@ -108,7 +132,8 @@ export function renderBuy(panel, account, ctx) {
     const subs = (
       Array.isArray(catalog.subscriptions) ? catalog.subscriptions : []
     )
-      .slice()
+      // A plan this page does not know is one added after it was built.
+      .filter((sub) => tierRank(String(sub.tier)) >= 0)
       .sort((a, b) => tierRank(String(a.tier)) - tierRank(String(b.tier)));
     const unitHour = Number(catalog.standard_unit_hour_micros) || 0;
     const terms = String(catalog.usage_credit_terms || "");
@@ -129,39 +154,47 @@ export function renderBuy(panel, account, ctx) {
         const tier = String(sub.tier || "plan");
         const micros = Number(sub.credit_micros) || 0;
         const subscribed = tier.toLowerCase() === currentTier;
+        const recommended = tier.toLowerCase() === RECOMMENDED_TIER;
         const card = document.createElement("article");
-        card.className = subscribed
-          ? "portal-product portal-product--subscribed"
-          : "portal-product";
+        card.className = [
+          "portal-product",
+          "portal-plan",
+          subscribed ? "portal-plan--current" : "",
+          recommended ? "portal-plan--recommended" : "",
+        ]
+          .filter(Boolean)
+          .join(" ");
+        if (subscribed || recommended) {
+          const pill = document.createElement("span");
+          pill.className = "portal-plan-pill";
+          pill.textContent = subscribed ? "Your plan" : "Recommended";
+          card.append(pill);
+        }
         const titleRow = document.createElement("div");
         titleRow.className = "portal-product-title";
         const title = document.createElement("h4");
         title.textContent = titleCase(tier) || "Plan";
         titleRow.append(title);
-        if (subscribed) {
-          const badge = document.createElement("span");
-          badge.className = "portal-product-badge";
-          badge.textContent = "Subscribed";
-          titleRow.append(badge);
-        }
         const amountMicros = Number(sub.amount_micros) || 0;
         const interval = String(sub.interval || "");
         const price = document.createElement("p");
         price.className = "portal-product-price";
-        price.textContent =
-          amountMicros > 0
-            ? interval
-              ? `${eur(amountMicros, 2)} / ${interval}`
-              : eur(amountMicros, 2)
-            : "";
+        const amount = document.createElement("span");
+        amount.className = "portal-plan-amount";
+        amount.textContent = amountMicros > 0 ? eur(amountMicros, 2) : "";
+        price.append(amount, interval ? ` a ${interval}` : "");
         const meta = document.createElement("p");
-        meta.className = "portal-muted";
-        meta.textContent = `${credits(micros, 3)} included / period`;
-        if (amountMicros > 0) {
-          card.append(titleRow, price, meta);
-        } else {
-          card.append(titleRow, meta);
+        meta.className = "portal-product-credits";
+        meta.textContent = `${credits(micros, 3)} credits included each ${interval || "period"}`;
+        const parts = amountMicros > 0 ? [titleRow, price, meta] : [titleRow, meta];
+        if (unitHour > 0) {
+          const hours = document.createElement("p");
+          hours.className = "portal-muted";
+          hours.textContent = `About ${Math.floor(micros / unitHour).toLocaleString("en-US")} vCPU-hours`;
+          parts.push(hours);
         }
+        parts.push(planLimits(sub));
+        card.append(...parts);
         if (!subscribed) {
           // Already on a paid plan → this is an upgrade/downgrade by rank, which
           // goes through the Stripe portal (a fresh Subscribe would 409). No paid
@@ -176,7 +209,7 @@ export function renderBuy(panel, account, ctx) {
               : "";
           const btn = document.createElement("button");
           btn.type = "button";
-          btn.className = "btn btn-ghost";
+          btn.className = recommended ? "btn btn-primary" : "btn btn-ghost";
           btn.textContent =
             flow === "upgrade"
               ? "Upgrade"
@@ -196,7 +229,7 @@ export function renderBuy(panel, account, ctx) {
     }
     // Dedicated machines are sold by contract, not checkout.
     const dedicated = document.createElement("p");
-    dedicated.className = "portal-muted";
+    dedicated.className = "portal-muted portal-plan-dedicated";
     const sales = document.createElement("a");
     sales.href = "mailto:sales@testflows.com";
     sales.textContent = "sales@testflows.com";
@@ -227,7 +260,7 @@ export function renderBuy(panel, account, ctx) {
         meta.textContent = eur(micros, 2);
         if (unitHour > 0) {
           const hours = Math.floor(micros / unitHour);
-          if (hours > 0) meta.textContent += ` · ≈ ${hours} standard unit-hours`;
+          if (hours > 0) meta.textContent += ` · about ${hours} vCPU-hours`;
         }
         const btn = document.createElement("button");
         btn.type = "button";

@@ -79,7 +79,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-hours">About 1,000 vCPU-hours</p>
 <p class="pricing-lead">Everything in Plus, plus:</p>
 <ul class="pricing-features">
-<li>Over 2 times the credits of Plus</li>
+<li>More than twice the credits of Plus</li>
 <li>Sessions of up to 8 vCPUs, 16G memory and 256G disk</li>
 <li>20 sessions at once, 24 vCPUs between them</li>
 <li>200GB of storage for runs and disks</li>
@@ -92,7 +92,7 @@ permalink: machine/pricing/index.html
 <p class="pricing-for">Machines reserved for your team alone.</p>
 <p class="pricing-price"><span class="pricing-amount">Contact us</span></p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="mailto:sales@testflows.com">Contact sales</a>
-<p>Contact <a href="mailto:sales@testflows.com">sales@testflows.com</a>.</p>
+<p>Write to <a href="mailto:sales@testflows.com">sales@testflows.com</a>.</p>
 </article>
 
 </div>
@@ -152,7 +152,7 @@ permalink: machine/pricing/index.html
 
 <details>
 <summary>How is a session charged?</summary>
-<p>A running session is charged an hour ahead, for its vCPUs at its class's price. When it stops, the unused part of its last hour is given back. <code>machine account activity</code> lists every charge.</p>
+<p>A running session is charged an hour ahead. When it stops, the unused part of its last hour is given back. <code>machine account activity</code> lists every charge.</p>
 </details>
 
 <details>
@@ -177,7 +177,7 @@ permalink: machine/pricing/index.html
 
 </section>
 
-<p class="pricing-legal">The <a href="/machine/legal/usage-credit/">usage credit terms</a> say how credits are granted and used. <a href="/docs/machine/#account-and-billing">Account and billing</a> covers the commands that buy and manage them.</p>
+<p class="pricing-legal">The <a href="/machine/legal/usage-credit/">Usage Credit Terms</a> say how credits are granted and used. <a href="/docs/machine/#account-and-billing">Account and billing</a> covers the commands that buy and manage them.</p>
 
 </div>
 </section>

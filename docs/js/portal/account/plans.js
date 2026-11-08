@@ -2,6 +2,9 @@
  * switch target; a higher rank is an upgrade, a lower rank a downgrade. */
 export const TIER_RANK = ["starter", "plus", "pro", "enterprise"];
 
+/** The plan the pricing page recommends, marked on its portal card too. */
+export const RECOMMENDED_TIER = "plus";
+
 /**
  * Rank of a paid tier (0 = lowest), or -1 for Free / unknown.
  * @param {string} tier

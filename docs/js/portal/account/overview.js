@@ -6,7 +6,7 @@ import {
   since,
   titleCase,
   until,
-} from "./format.js?v=49e8a8ff6f78";
+} from "./format.js?v=81f369069bbf";
 
 /**
  * @param {HTMLElement} panel
@@ -76,6 +76,14 @@ export function renderOverview(panel, account) {
           value:
             sessionsTotal > 0 ? String(sessionsTotal) : String(sessionsUsed),
           fill: sessionsTotal > 0 ? fillPct(sessionsUsed, sessionsTotal) : null,
+        },
+        {
+          label: "vCPUs at once",
+          value: String(Number(account.max_running_vcpus) || 0),
+          fill: fillPct(
+            Number(account.vcpus_used) || 0,
+            Number(account.max_running_vcpus) || 0
+          ),
         },
         provisioned
           ? {

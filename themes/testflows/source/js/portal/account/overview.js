@@ -77,6 +77,14 @@ export function renderOverview(panel, account) {
             sessionsTotal > 0 ? String(sessionsTotal) : String(sessionsUsed),
           fill: sessionsTotal > 0 ? fillPct(sessionsUsed, sessionsTotal) : null,
         },
+        {
+          label: "vCPUs at once",
+          value: String(Number(account.max_running_vcpus) || 0),
+          fill: fillPct(
+            Number(account.vcpus_used) || 0,
+            Number(account.max_running_vcpus) || 0
+          ),
+        },
         provisioned
           ? {
               label: "Storage",
