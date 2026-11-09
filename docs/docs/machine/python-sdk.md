@@ -12,8 +12,11 @@ pip3 install testflows.machine
 ```
 
 It needs Python 3.11 or later on Linux x86_64, the same systems as the client. If
-you need another platform, [contact us](/contact.html?topic=machine). pip installs
-the Machine core that the SDK runs on, `testflows.machine.core`, along with it.
+you need another platform, [contact us](/contact.html?topic=machine).
+
+The SDK runs on the Machine core, which is not on PyPI. The client's installer
+installs it with the client, under the [Client EULA](/machine/legal/client-eula/),
+so install the client first, as [Getting started](getting-started.md) shows.
 
 ## Hello Machine
 
@@ -634,5 +637,6 @@ the disk at the end.
 
 ## License
 
-The SDK is licensed under Apache 2.0. The Machine core it runs on,
-`testflows.machine.core`, is not part of it and has its own license.
+The SDK is licensed under Apache 2.0. The Machine core it runs on is not part
+of it: it comes with the client, under the
+[Client EULA](/machine/legal/client-eula/).

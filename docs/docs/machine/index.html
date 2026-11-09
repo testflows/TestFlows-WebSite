@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794264837827" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794264837827" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794163199297" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794264837827" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -16369,8 +16369,10 @@ terminal, you can call it from a program.</p>
 <h2 id="installing"><a href="#installing" class="headerlink" title="Installing"></a>Installing</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install testflows.machine</span><br></pre></td></tr></table></figure>
 
 <p>It needs Python 3.11 or later on Linux x86_64, the same systems as the client. If
-you need another platform, <a href="/contact.html?topic=machine">contact us</a>. pip installs
-the Machine core that the SDK runs on, <code>testflows.machine.core</code>, along with it.</p>
+you need another platform, <a href="/contact.html?topic=machine">contact us</a>.</p>
+<p>The SDK runs on the Machine core, which is not on PyPI. The client’s installer
+installs it with the client, under the <a href="/machine/legal/client-eula/">Client EULA</a>,
+so install the client first, as <a href="#getting-started">Getting started</a> shows.</p>
 <h2 id="hello-machine"><a href="#hello-machine" class="headerlink" title="Hello Machine"></a>Hello Machine</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.machine.v1 <span class="keyword">as</span> machine</span><br><span class="line"></span><br><span class="line">client = machine.Client()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> client.sessions.create(cpus=<span class="number">1</span>) <span class="keyword">as</span> session:</span><br><span class="line">    client.sessions.use(session)</span><br><span class="line">    <span class="keyword">with</span> client.create(disk=<span class="string">&quot;hello&quot;</span>) <span class="keyword">as</span> run:</span><br><span class="line">        run.run(until=<span class="string">&quot;tasks&quot;</span>, timeout=<span class="number">300</span>)</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> run.output(lines=-<span class="number">20</span>):</span><br><span class="line">            <span class="built_in">print</span>(line)</span><br></pre></td></tr></table></figure>
 
 <p>This creates a session, boots a run from the disk <code>hello</code> and prints the last
@@ -17125,8 +17127,9 @@ the disk at the end.</p>
 <td>stops at a catchpoint on <code>open</code>, reads the task’s registers, memory and stack</td>
 </tr>
 </tbody></table>
-<h2 id="license"><a href="#license" class="headerlink" title="License"></a>License</h2><p>The SDK is licensed under Apache 2.0. The Machine core it runs on,
-<code>testflows.machine.core</code>, is not part of it and has its own license.</p>
+<h2 id="license"><a href="#license" class="headerlink" title="License"></a>License</h2><p>The SDK is licensed under Apache 2.0. The Machine core it runs on is not part
+of it: it comes with the client, under the
+<a href="/machine/legal/client-eula/">Client EULA</a>.</p>
 
                 <div class="handbook-divider"></div>
                 <div class="handbook-nav">
@@ -17237,10 +17240,10 @@ the disk at the end.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794163199297"></script>
-<script src="/js/machine-hero-type.js?v=1794163199297"></script>
-<script src="/js/download-platforms.js?v=1794163199297"></script>
-<script src="/js/anchor-case.js?v=1794163199297"></script>
+<script src="/js/index-code-type.js?v=1794264837827"></script>
+<script src="/js/machine-hero-type.js?v=1794264837827"></script>
+<script src="/js/download-platforms.js?v=1794264837827"></script>
+<script src="/js/anchor-case.js?v=1794264837827"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

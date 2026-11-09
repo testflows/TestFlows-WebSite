@@ -22,6 +22,9 @@
 # signature is checked before the checksum is trusted: with gpg where there is one,
 # else with openssl, which every Mac has. The download itself is protected by HTTPS.
 #
+# On Linux x86_64 it also installs the Python SDK core, the one file the SDK runs on,
+# checked the same way, to ~/.testflows/machine/sdk/_testflows_machine_core.abi3.so.
+#
 # On first run the client unpacks itself into ~/.cache/machine/.
 # After an update this script removes the folders older versions unpacked.
 #
@@ -96,6 +99,8 @@ EULA_PAGE="https://testflows.com/machine/legal/client-eula/"
 # Whether a download shows a progress bar: the client's own file does, and the small
 # files around it, its checksum and the version names, are fetched quietly.
 FETCH_PROGRESS=false
+# Whether a download keeps curl's own error to itself, for a file that may be missing.
+FETCH_QUIET=false
 
 # The release signing keys. Every release's checksum files are signed with both: the GPG
 # key for gpg, the RSA key for openssl. Fingerprint 5F3621A5081FF68BFF2581FDB280231700CCCA66.
@@ -232,6 +237,7 @@ fetch_once() {
     FETCH_STATUS="retry"
     if [ "$DOWNLOADER" = "curl" ]; then
         local progress="-sS" code
+        $FETCH_QUIET && progress="-s"
         $FETCH_PROGRESS && [ -t 2 ] && progress="--progress-bar"
         if code="$(curl -fL --proto "$PROTOCOLS" --proto-redir "$PROTOCOLS" --tlsv1.2 \
             --connect-timeout 15 $progress -w '%{http_code}' -o "$2" "$1")"; then
@@ -1398,6 +1404,55 @@ next_in_env() {
     path_line "$dir"
 }
 
+# The Python SDK core: the one file the SDK loads, licensed and published as the client
+# is, built for Linux x86_64 alone. It goes to the client's own folder, where the SDK
+# looks for it, with the release it came from beside it.
+CORE_ASSET="_testflows_machine_core.abi3.so"
+CORE_DIR_NAME=".testflows/machine/sdk"
+
+# install_core RELEASE: put RELEASE's Python SDK core in place, as the client is: downloaded
+# signed in, its checksum and signature checked, then renamed into place. Skipped where
+# it is that release's already, on a system it is not built for, and for a release from
+# before the core shipped. A download that fails leaves the client installed and says so.
+install_core() {
+    local release="$1" dir version
+    [ "$ASSET" = "machine" ] || return 0
+    dir="$HOME/$CORE_DIR_NAME"
+    version="$(cat "$dir/version" 2>/dev/null || true)"
+    if [ "$version" = "$release" ] && [ -s "$dir/$CORE_ASSET" ]; then
+        return 0
+    fi
+    mkdir -p "$dir" || { warn "Could not create $(tilde "$dir"); the Python SDK core was not installed."; return 0; }
+    TMP="$(mktemp "$dir/.core.XXXXXX")" || { warn "Could not write to $(tilde "$dir")."; return 0; }
+    SUMFILE="$TMP.sha256"
+    # Quiet: a release from before the core answers 404, which is said below.
+    FETCH_QUIET=true
+    if ! release_fetch "$release/$CORE_ASSET" "$TMP"; then
+        FETCH_QUIET=false
+        if [ "$FETCH_STATUS" = "final" ]; then
+            say "  ${DIM}Release $release has no Python SDK core.${RESET}"
+        else
+            warn "Could not download the Python SDK core. Run this again to install it."
+        fi
+        rm -f "$TMP" "$SUMFILE"
+        TMP=""
+        SUMFILE=""
+        return 0
+    fi
+    FETCH_QUIET=false
+    if $NO_CHECKSUM; then
+        warn "--no-checksum: the Python SDK core's checksum and signature were not checked."
+    else
+        verify_download "$release/$CORE_ASSET"
+    fi
+    mv -f "$TMP" "$dir/$CORE_ASSET" || die "Could not install $(tilde "$dir/$CORE_ASSET")."
+    printf '%s\n' "$release" > "$dir/version" || warn "Could not write $(tilde "$dir/version")."
+    rm -f "$SUMFILE"
+    TMP=""
+    SUMFILE=""
+    ok "Installed the Python SDK core to $(tilde "$dir/$CORE_ASSET")"
+}
+
 # up_to_date VERSION TARGET: the latest is installed already; say so, and how to
 # install it again.
 up_to_date() {
@@ -1500,6 +1555,7 @@ main() {
     # installed whatever is there, which is how an install is repaired.
     if [ -z "${MACHINE_VERSION:-}" ] && [ "$before" = "$release" ]; then
         up_to_date "$release" "$target"
+        install_core "$release"
         return 0
     fi
 
@@ -1570,6 +1626,7 @@ main() {
     else
         warn "Could not write $(tilde "$dir/machine-env")."
     fi
+    install_core "$release"
 
     if [ "$KIND" = "tree" ]; then
         remove_old_trees "$share" "$release"
