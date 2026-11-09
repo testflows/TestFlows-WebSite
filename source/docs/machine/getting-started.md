@@ -26,8 +26,8 @@ another program named `machine` is already on your `PATH`, as
 `/usr/bin/machine` is on a Mac, `machine` goes to `~/.local/share/machine/bin`
 instead, which is not on your `PATH`, and `~/.local/bin` holds `machine-env`
 alone. If `~/.local/bin` isn't on your `PATH` yet, the installer says so and
-shows the line to add for your shell. On Linux x86_64 the installer also puts
-the SDK Core, which the [Python SDK](python-sdk.md#installing) runs on, in
+shows the line to add for your shell. The installer also puts the SDK Core,
+which the [Python SDK](python-sdk.md#installing) runs on, in
 `~/.testflows/machine/sdk`, checked the same way. Run the same command again
 whenever you want to update.
 

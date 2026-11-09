@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794266271791" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794266271791" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794265303812" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794266271791" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -498,8 +498,8 @@ another program named <code>machine</code> is already on your <code>PATH</code>,
 <code>/usr/bin/machine</code> is on a Mac, <code>machine</code> goes to <code>~/.local/share/machine/bin</code>
 instead, which is not on your <code>PATH</code>, and <code>~/.local/bin</code> holds <code>machine-env</code>
 alone. If <code>~/.local/bin</code> isn’t on your <code>PATH</code> yet, the installer says so and
-shows the line to add for your shell. On Linux x86_64 the installer also puts
-the SDK Core, which the <a href="#installing">Python SDK</a> runs on, in
+shows the line to add for your shell. The installer also puts the SDK Core,
+which the <a href="#installing">Python SDK</a> runs on, in
 <code>~/.testflows/machine/sdk</code>, checked the same way. Run the same command again
 whenever you want to update.</p>
 <p><strong>Supported systems.</strong> The client runs on Linux, x86_64 and arm64, and on Macs
@@ -16376,8 +16376,9 @@ client’s installer installs it with the client, so install the client first:</
 <p>Then install the SDK from <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows.machine/">PyPI</a>:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install testflows.machine</span><br></pre></td></tr></table></figure>
 
-<p>It needs Python 3.11 or later on Linux x86_64, the one system the SDK Core is
-built for. If you need another platform, <a href="/contact.html?topic=machine">contact us</a>.</p>
+<p>It needs Python 3.11 or later, on the systems the client runs on: Linux x86_64
+and arm64, and Macs with Apple Silicon. If you need another platform,
+<a href="/contact.html?topic=machine">contact us</a>.</p>
 <p>Without the SDK Core, <code>import testflows.machine.v1</code> raises <code>ImportError</code> with
 the installer’s command. Running the installer again updates the client and
 the SDK Core together.</p>
@@ -17248,10 +17249,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794265303813"></script>
-<script src="/js/machine-hero-type.js?v=1794265303813"></script>
-<script src="/js/download-platforms.js?v=1794265303813"></script>
-<script src="/js/anchor-case.js?v=1794265303813"></script>
+<script src="/js/index-code-type.js?v=1794266271792"></script>
+<script src="/js/machine-hero-type.js?v=1794266271792"></script>
+<script src="/js/download-platforms.js?v=1794266271792"></script>
+<script src="/js/anchor-case.js?v=1794266271792"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

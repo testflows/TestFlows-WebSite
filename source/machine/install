@@ -22,8 +22,8 @@
 # signature is checked before the checksum is trusted: with gpg where there is one,
 # else with openssl, which every Mac has. The download itself is protected by HTTPS.
 #
-# On Linux x86_64 it also installs the Python SDK core, the one file the SDK runs on,
-# checked the same way, to ~/.testflows/machine/sdk/_testflows_machine_core.abi3.so.
+# It also installs the Python SDK core, the one file the SDK runs on, checked the same
+# way, to ~/.testflows/machine/sdk/_testflows_machine_core.abi3.so.
 #
 # On first run the client unpacks itself into ~/.cache/machine/.
 # After an update this script removes the folders older versions unpacked.
@@ -855,13 +855,16 @@ sha256_of() {
 
 # platform_asset: the file each release publishes for this system, and how it installs:
 # "binary", one self-extracting file, or "tree", a .tar.gz unpacked into its own folder.
-# Sets ASSET, KIND and PLATFORM, its name for messages; fails for a system no release is
-# built for.
+# Sets ASSET, KIND and PLATFORM, its name for messages, and CORE_ASSET, the Python SDK
+# core the release publishes for this system; fails for a system no release is built for.
 platform_asset() {
     case "$(uname -s)-$(uname -m)" in
-        Linux-x86_64 | Linux-amd64)  ASSET="machine";                     KIND="binary"; PLATFORM="Linux x86_64" ;;
-        Linux-aarch64 | Linux-arm64) ASSET="machine-linux-arm64";         KIND="binary"; PLATFORM="Linux arm64" ;;
-        Darwin-arm64)                ASSET="machine-darwin-arm64.tar.gz"; KIND="tree";   PLATFORM="macOS on Apple Silicon" ;;
+        Linux-x86_64 | Linux-amd64)  ASSET="machine";                     KIND="binary"; PLATFORM="Linux x86_64"
+                                     CORE_ASSET="_testflows_machine_core.abi3.so" ;;
+        Linux-aarch64 | Linux-arm64) ASSET="machine-linux-arm64";         KIND="binary"; PLATFORM="Linux arm64"
+                                     CORE_ASSET="_testflows_machine_core-linux-arm64.abi3.so" ;;
+        Darwin-arm64)                ASSET="machine-darwin-arm64.tar.gz"; KIND="tree";   PLATFORM="macOS on Apple Silicon"
+                                     CORE_ASSET="_testflows_machine_core-darwin-arm64.abi3.so" ;;
         *) return 1 ;;
     esac
 }
@@ -1405,21 +1408,21 @@ next_in_env() {
 }
 
 # The Python SDK core: the one file the SDK loads, licensed and published as the client
-# is, built for Linux x86_64 alone. It goes to the client's own folder, where the SDK
-# looks for it, with the release it came from beside it.
-CORE_ASSET="_testflows_machine_core.abi3.so"
+# is, one for each system the client is built for. It is installed under one name on
+# every system, in the client's own folder, where the SDK looks for it, with the release
+# it came from beside it.
+CORE_FILE="_testflows_machine_core.abi3.so"
 CORE_DIR_NAME=".testflows/machine/sdk"
 
 # install_core RELEASE: put RELEASE's Python SDK core in place, as the client is: downloaded
 # signed in, its checksum and signature checked, then renamed into place. Skipped where
-# it is that release's already, on a system it is not built for, and for a release from
-# before the core shipped. A download that fails leaves the client installed and says so.
+# it is that release's already, and for a release from before the core shipped. A
+# download that fails leaves the client installed and says so.
 install_core() {
     local release="$1" dir version
-    [ "$ASSET" = "machine" ] || return 0
     dir="$HOME/$CORE_DIR_NAME"
     version="$(cat "$dir/version" 2>/dev/null || true)"
-    if [ "$version" = "$release" ] && [ -s "$dir/$CORE_ASSET" ]; then
+    if [ "$version" = "$release" ] && [ -s "$dir/$CORE_FILE" ]; then
         return 0
     fi
     mkdir -p "$dir" || { warn "Could not create $(tilde "$dir"); the Python SDK core was not installed."; return 0; }
@@ -1445,12 +1448,12 @@ install_core() {
     else
         verify_download "$release/$CORE_ASSET"
     fi
-    mv -f "$TMP" "$dir/$CORE_ASSET" || die "Could not install $(tilde "$dir/$CORE_ASSET")."
+    mv -f "$TMP" "$dir/$CORE_FILE" || die "Could not install $(tilde "$dir/$CORE_FILE")."
     printf '%s\n' "$release" > "$dir/version" || warn "Could not write $(tilde "$dir/version")."
     rm -f "$SUMFILE"
     TMP=""
     SUMFILE=""
-    ok "Installed the Python SDK core to $(tilde "$dir/$CORE_ASSET")"
+    ok "Installed the Python SDK core to $(tilde "$dir/$CORE_FILE")"
 }
 
 # up_to_date VERSION TARGET: the latest is installed already; say so, and how to

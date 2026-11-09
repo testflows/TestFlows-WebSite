@@ -21,8 +21,9 @@ Then install the SDK from [PyPI](https://pypi.org/project/testflows.machine/):
 pip3 install testflows.machine
 ```
 
-It needs Python 3.11 or later on Linux x86_64, the one system the SDK Core is
-built for. If you need another platform, [contact us](/contact.html?topic=machine).
+It needs Python 3.11 or later, on the systems the client runs on: Linux x86_64
+and arm64, and Macs with Apple Silicon. If you need another platform,
+[contact us](/contact.html?topic=machine).
 
 Without the SDK Core, `import testflows.machine.v1` raises `ImportError` with
 the installer's command. Running the installer again updates the client and
