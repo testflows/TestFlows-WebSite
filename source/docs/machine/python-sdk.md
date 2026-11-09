@@ -7,16 +7,26 @@ terminal, you can call it from a program.
 
 ## Installing
 
+The SDK runs on the SDK Core, a proprietary compiled module licensed under the
+[Client EULA](/machine/legal/client-eula/). The SDK Core is not on PyPI. The
+client's installer installs it with the client, so install the client first:
+
+```bash
+curl https://testflows.com/machine/install -fsS | bash
+```
+
+Then install the SDK from [PyPI](https://pypi.org/project/testflows.machine/):
+
 ```bash
 pip3 install testflows.machine
 ```
 
-It needs Python 3.11 or later on Linux x86_64, the same systems as the client. If
-you need another platform, [contact us](/contact.html?topic=machine).
+It needs Python 3.11 or later on Linux x86_64, the one system the SDK Core is
+built for. If you need another platform, [contact us](/contact.html?topic=machine).
 
-The SDK runs on the Machine core, which is not on PyPI. The client's installer
-installs it with the client, under the [Client EULA](/machine/legal/client-eula/),
-so install the client first, as [Getting started](getting-started.md) shows.
+Without the SDK Core, `import testflows.machine.v1` raises `ImportError` with
+the installer's command. Running the installer again updates the client and
+the SDK Core together.
 
 ## Hello Machine
 
@@ -637,6 +647,6 @@ the disk at the end.
 
 ## License
 
-The SDK is licensed under Apache 2.0. The Machine core it runs on is not part
-of it: it comes with the client, under the
+The SDK is licensed under Apache 2.0. The SDK Core it runs on is proprietary
+and is not part of the SDK. It comes with the client, under the
 [Client EULA](/machine/legal/client-eula/).
