@@ -1399,17 +1399,19 @@
     color: #8a6800;
 }
 
+/* Bold as the banner's emphasis is, and underlined: the line is what
+   tells a link from that emphasis in the banner's one color. */
 .portal-banner a {
     color: inherit;
     font-weight: 700;
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
 }
 
 .portal-banner a:hover,
 .portal-banner a:focus {
     color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
+    text-decoration-thickness: 2px;
 }
 
 .portal-credit-cards {

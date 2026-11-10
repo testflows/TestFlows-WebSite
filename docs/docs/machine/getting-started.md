@@ -106,7 +106,7 @@ machine fork --help
 ```
 
 [`machine --version`](commands.md#options) prints the client's version and its license. Include the
-version when you report a problem.
+version when you [report a problem](getting-started.md#getting-help).
 
 ```bash
 machine --version
@@ -332,3 +332,25 @@ machine sessions delete first --yes
 
 That's the whole loop. You built a disk, created a checkpoint in a run, branched
 from it and ran a program to its end. Everything else in this page is a variation on it.
+
+## Getting help
+
+TestFlows™ Machine is in public beta, and reports from users directly influence
+what gets fixed and built next. Report bugs, request features and ask
+questions in the [TestFlows™ Machine repository](https://github.com/testflows/Machine) on GitHub.
+
+To report a bug, search the [issues](https://github.com/testflows/Machine/issues) first, then
+[open an issue](https://github.com/testflows/Machine/issues/new/choose) with the commands you ran, what you
+expected, what happened, and the output of `machine --version`. To request a
+feature, [open a feature request](https://github.com/testflows/Machine/issues/new/choose) that describes what
+you're trying to do. To ask a question or share an idea, start a discussion in
+[Discussions](https://github.com/testflows/Machine/discussions).
+
+> **{% attention %}** Issues and discussions are public. Never include an API
+> key, a token, a password or other secrets in them.
+
+For questions about your account or billing, email `support@testflows.com`.
+For questions about your personal data, email `privacy@testflows.com`. Report
+abuse to `abuse@testflows.com`. Report security vulnerabilities to
+`security@testflows.com`, or through GitHub's
+[private vulnerability reporting](https://github.com/testflows/Machine/security/advisories/new).

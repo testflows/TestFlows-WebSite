@@ -12,7 +12,7 @@ permalink: machine/portal/signup/index.html
             <h1>Sign up</h1>
             <p>We'll email you an activation link.</p>
         </header>
-        <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows™ Machine is in public beta.</strong> We're improving it quickly with feedback from users like you. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
+        <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows™ Machine is in public beta.</strong> We're improving it quickly with <a href="https://github.com/testflows/Machine">feedback</a> from users like you. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
         <div class="portal-card">
             <div id="portal-signup-status" class="portal-status" hidden></div>
             <form id="portal-signup-form" class="portal-form" novalidate>

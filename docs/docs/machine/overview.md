@@ -25,6 +25,10 @@ You work with Machine through a client called `machine`, or from Python using
 the [SDK](python-sdk.md). To begin, [install the client](getting-started.md#the-client). It is
 one command.
 
+Questions, feature requests and bug reports are welcome in the
+[TestFlows™ Machine repository](https://github.com/testflows/Machine) on GitHub. See
+[Getting help](getting-started.md#getting-help).
+
 ## Concepts
 
 There are seven of them, and the rest builds on them.
