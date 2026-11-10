@@ -41,6 +41,7 @@ fullwidth: true
                                 <optgroup label="Machine">
                                     <option value="Machine early access">Early access</option>
                                     <option value="Machine product question">Product question</option>
+                                    <option value="Machine feedback">Feedback</option>
                                 </optgroup>
                                 <optgroup label="Either">
                                     <option value="Partnership">Partnership</option>

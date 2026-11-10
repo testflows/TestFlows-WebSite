@@ -12,7 +12,7 @@ permalink: machine/portal/signup/index.html
             <h1>Sign up</h1>
             <p>We'll email you an activation link.</p>
         </header>
-        <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows™ Machine is in public beta.</strong> We're improving it quickly with <a href="https://github.com/testflows/Machine">feedback</a> from users like you. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
+        <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows™ Machine is in public beta.</strong> We're improving it quickly with feedback from users like you, shared on <a href="https://github.com/testflows/Machine">GitHub</a> or through our <a href="/contact.html?topic=Machine%20feedback">contact form</a>. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
         <div class="portal-card">
             <div id="portal-signup-status" class="portal-status" hidden></div>
             <form id="portal-signup-form" class="portal-form" novalidate>
@@ -22,7 +22,7 @@ permalink: machine/portal/signup/index.html
                 </div>
                 <div class="portal-field portal-check">
                     <input type="checkbox" id="portal-signup-terms" required>
-                    <label for="portal-signup-terms">I have read and accept the <a href="/machine/legal/terms-of-service/" target="_blank" rel="noopener">Terms of Service</a> and the <a href="/machine/legal/client-eula/" target="_blank" rel="noopener">Client EULA</a>, which licenses the Machine client and the SDK core.</label>
+                    <label for="portal-signup-terms">I have read and accept the <a href="/machine/legal/terms-of-service/" target="_blank" rel="noopener">Terms of Service</a> and the <a href="/machine/legal/client-eula/" target="_blank" rel="noopener">Client EULA</a>, which licenses the Machine client and the SDK Core.</label>
                 </div>
                 <div class="portal-actions">
                     <button type="submit" class="btn btn-primary" id="portal-signup-submit">Send link</button>
