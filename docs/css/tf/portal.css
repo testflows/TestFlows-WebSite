@@ -67,14 +67,55 @@
     gap: 0.6rem;
 }
 
+/* Drawn like the fields around it rather than the browser's grey box: the
+   field's background and border, the accent when checked, and the fields'
+   focus ring. */
 .portal-check input[type="checkbox"] {
     flex: none;
-    margin: 0.2rem 0 0;
+    appearance: none;
+    -webkit-appearance: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0.12rem 0 0;
+    border: 1px solid var(--tf-field-border);
+    border-radius: 0.3rem;
+    background: var(--tf-field-bg) center / 0.8rem no-repeat;
+    cursor: pointer;
+    transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.portal-check input[type="checkbox"]:hover {
+    border-color: var(--tf-accent);
+}
+
+.portal-check input[type="checkbox"]:checked {
+    background-color: var(--tf-accent);
+    border-color: var(--tf-accent);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='%23fff' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+}
+
+/* The agreement links, as the portal's other legal links are. */
+.portal-check label a {
+    color: var(--tf-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.portal-check label a:hover,
+.portal-check label a:focus {
+    color: var(--tf-text-strong);
+}
+
+.portal-check input[type="checkbox"]:focus-visible {
+    outline: none;
+    border-color: var(--tf-accent);
+    box-shadow: 0 0 0 0.15rem rgba(61, 186, 140, 0.2);
 }
 
 .portal-check label {
     margin: 0;
     font-weight: 400;
+    cursor: pointer;
     /* body uses text-wrap:balance, which wraps early for even lines */
     text-wrap: wrap;
 }
