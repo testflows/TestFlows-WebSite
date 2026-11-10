@@ -344,7 +344,8 @@ To report a bug, search the [issues](https://github.com/testflows/Machine/issues
 expected, what happened, and the output of `machine --version`. To request a
 feature, [open a feature request](https://github.com/testflows/Machine/issues/new/choose) that describes what
 you're trying to do. To ask a question or share an idea, start a discussion in
-[Discussions](https://github.com/testflows/Machine/discussions).
+[Discussions](https://github.com/testflows/Machine/discussions). You can also send feedback through the
+[contact form](/contact.html?topic=Machine%20feedback).
 
 > **{% attention %}** Issues and discussions are public. Never include an API
 > key, a token, a password or other secrets in them.

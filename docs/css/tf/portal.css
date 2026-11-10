@@ -59,6 +59,26 @@
     margin: 0 0 0.35rem;
 }
 
+/* A checkbox beside its label, level with the label's first line. A
+   field's label is a block of its own, which put the box on a line alone. */
+.portal-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+.portal-check input[type="checkbox"] {
+    flex: none;
+    margin: 0.2rem 0 0;
+}
+
+.portal-check label {
+    margin: 0;
+    font-weight: 400;
+    /* body uses text-wrap:balance, which wraps early for even lines */
+    text-wrap: wrap;
+}
+
 /* Override Bootstrap's fixed form-control height — it clips our padding
    and drops select/input text to the bottom of the box. */
 .portal-page .form-control,
