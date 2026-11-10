@@ -121,6 +121,8 @@ difference is expected: it shows where their paths parted.
 A replay that diverges is different. Every recording must replay, so a
 divergence is a bug in Machine, not in your program. Keep the run and the
 branch that diverged: the recording is what reproduces it.
+[Open an issue](https://github.com/testflows/Machine/issues/new/choose) with the session, the run, the branch,
+the entry where it diverged and the commands you ran.
 
 ## At the control prompt
 
