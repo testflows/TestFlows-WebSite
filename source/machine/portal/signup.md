@@ -7,12 +7,16 @@ permalink: machine/portal/signup/index.html
 ---
 
 <section class="portal-page">
-    <div class="container portal-page-inner">
+    <div class="container portal-page-inner portal-page-inner--split">
         <header class="portal-page-header">
             <h1>Sign up</h1>
             <p>We'll email you an activation link.</p>
         </header>
+        <div class="portal-split">
+        <aside class="portal-split-aside">
         <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows™ Machine is in public beta.</strong> We're improving it quickly with feedback from users like you, shared on <a href="https://github.com/testflows/Machine">GitHub</a> or through our <a href="/contact.html?topic=Machine%20feedback">contact form</a>. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
+        </aside>
+        <div class="portal-split-main">
         <div class="portal-card">
             <div id="portal-signup-status" class="portal-status" hidden></div>
             <form id="portal-signup-form" class="portal-form" novalidate>
@@ -43,6 +47,8 @@ permalink: machine/portal/signup/index.html
             The <a href="/machine/legal/privacy-policy/">Privacy Policy</a>
             says how your data is handled.
         </p>
+        </div>
+        </div>
     </div>
 </section>
 <script type="module" src="/js/portal/signup.js"></script>

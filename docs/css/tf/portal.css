@@ -20,6 +20,25 @@
     margin: 0 auto;
 }
 
+/* Sign up: the notice beside the form on a wide screen, above it on a
+   narrow one, in the order the page reads. */
+@media (min-width: 768px) {
+    .portal-page-inner--split {
+        max-width: 58rem;
+    }
+
+    .portal-split {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 28rem);
+        gap: 2rem;
+        align-items: start;
+    }
+
+    .portal-split .portal-banner {
+        margin: 0;
+    }
+}
+
 .portal-page-header {
     margin: 0 0 1.75rem;
 }
