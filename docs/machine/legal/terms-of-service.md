@@ -2,8 +2,8 @@
 
 # Terms of Service
 
-<p class="legal-updated">Last updated: 7 November 2026</p>
-<p class="legal-updated">Agreement version: 2026-10-26.1</p>
+<p class="legal-updated">Last updated: 9 November 2026</p>
+<p class="legal-updated">Agreement version: 2026-11-09.1</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -45,6 +45,14 @@ We may modify, suspend, or discontinue features (including Free-tier
 allowances) with reasonable notice when practicable. Preview or beta features
 are provided as-is and may change or end without notice. We do not provide
 legal, financial, or other professional advice; workload outputs are yours.
+
+**Public beta.** The Services, the Client and the SDK Core are in public beta.
+They change often, and we do not guarantee backward compatibility between
+versions. A change may require you to update the Client or the SDK Core with
+the official installer, and a version we no longer support may stop working
+with the Services. Runs, recordings, checkpoints, disk images and other
+Customer Content made with an earlier version may not start, replay or be
+usable with a later one, and you may need to recreate them.
 
 ## 3. Client and SDK Core
 

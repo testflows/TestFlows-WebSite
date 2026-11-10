@@ -3,7 +3,7 @@
 # Client End User License Agreement
 
 <p class="legal-updated">Last updated: 9 November 2026</p>
-<p class="legal-updated">Agreement version: 2026-10-26.1</p>
+<p class="legal-updated">Agreement version: 2026-11-09.1</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
