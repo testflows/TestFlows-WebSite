@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794277311473" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794277311473" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794273622373" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794277311473" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -820,19 +820,19 @@ image, a larger one, or one you build yourself, use <code>--image</code>:</p>
 
 <p>An image that needs more than one service, such as a database server with a
 client, is a <a href="#compose-projects">Compose project</a>.</p>
-<h2 id="compose-projects"><a href="#compose-projects" class="headerlink" title="Compose projects"></a>Compose projects</h2><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples">Machine-Examples</a> has Compose
-environments under <code>compose/</code>. Clone it, pull each image for <code>linux/amd64</code>
+<h2 id="compose-projects"><a href="#compose-projects" class="headerlink" title="Compose projects"></a>Compose projects</h2><p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples">examples</a> have Compose
+environments under <code>compose/</code>. Clone them, pull each image for <code>linux/amd64</code>
 into the local Docker, then build the disk from the project directory.
 <a href="#machine-disks-build"><code>machine disks build</code></a> <code>--compose</code> packs
 those images and the project. The machine runs the project and ends it when a
 service exits on its own, stopping the others, or when the project is taken
 down with <code>docker compose down</code>. A service that Machine stops, kills or crashes
 with <a href="#machine-containers"><code>machine containers</code></a> ends nothing.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/testflows/Machine-Examples.git</span><br><span class="line"><span class="built_in">cd</span> Machine-Examples</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/testflows/Machine.git</span><br><span class="line"><span class="built_in">cd</span> Machine/examples</span><br></pre></td></tr></table></figure>
 
 <p>The same project can be run on this computer first, from its own directory,
 which is how to fix it without waiting for a boot. The build commands below
-are from the repository root.</p>
+are from the <code>examples</code> directory.</p>
 <h3 id="a-two-service-project"><a href="#a-two-service-project" class="headerlink" title="A two-service project"></a>A two-service project</h3><p><code>compose/two-services</code> is a busybox server and a client that fetches a file
 from it by the service name <code>server</code>. Services in a project reach each other
 by name, on the network Compose gives the project.</p>
@@ -1960,7 +1960,7 @@ init, <code>init: true</code> in the Compose file, so it is not the first.</li>
 time, by function and by call stack:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine profile app                            <span class="comment"># a second of everything</span></span><br><span class="line">machine profile app --<span class="keyword">for</span> 5s --container db    <span class="comment"># one container</span></span><br><span class="line">machine profile app --pid 412                  <span class="comment"># one process</span></span><br></pre></td></tr></table></figure>
 
-<p>Here is one second of <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples"><code>memstress</code></a>,
+<p>Here is one second of <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/stress"><code>memstress</code></a>,
 one of the example programs, which maps, touches and unmaps memory from four
 threads:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">463 samples at 250 a second</span><br><span class="line"> SELF  TOTAL  FUNCTION</span><br><span class="line">34.1%  34.1%  kernel_[k]</span><br><span class="line">34.1%  34.1%  sys_munmap_[k]</span><br><span class="line">19.2%  94.4%  worker</span><br><span class="line"> 5.4%   5.4%  sys_madvise_[k]</span><br><span class="line"> 5.2%   5.2%  sys_mmap_[k]</span><br><span class="line"> 1.1%   1.1%  sys_clone3_[k]</span><br></pre></td></tr></table></figure>
@@ -4301,7 +4301,7 @@ kept nowhere is <code>optimized out</code>. A C++ function is named short, such 
 passes them in, and give a global a type with a cast:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 412 <span class="string">&#x27;$rsi&#x27;</span> s                                  <span class="comment"># the second argument, a string</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tgid=7:write=*(long *)&amp;queries&#x27;</span>      <span class="comment"># a global of no type, as a long</span></span><br></pre></td></tr></table></figure>
 
-<p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples/tree/main/debug">debug examples</a>
+<p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/debug">debug examples</a>
 build ClickHouse and PostgreSQL both ways, and show a session of each.</p>
 <h3 id="locations"><a href="#locations" class="headerlink" title="Locations"></a>Locations</h3><p>Every command that takes a location takes one of these. A location names an
 address in the task’s process:</p>
@@ -4505,13 +4505,13 @@ later read. An older image’s GDB may not: GDB 9.2, Ubuntu 20.04’s, does not.
 program. ClickHouse’s 1.7GB of debug information grows to about 3.8GB in GDB,
 so that machine needs <code>--mem 12288</code>; with 4GB the guest’s out-of-memory killer
 ends GDB.</p>
-<p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse">ClickHouse example</a>
+<p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/debug/clickhouse">ClickHouse example</a>
 builds both kinds of image for ClickHouse 26.8: one with the symbol table
 alone, and one with the debug information. Its server prints the commit it was
 built from as it comes up, with a link to that source on GitHub, and the
 example shows how to put a source file where GDB finds it.</p>
 <h3 id="a-batch-of-commands"><a href="#a-batch-of-commands" class="headerlink" title="A batch of commands"></a>A batch of commands</h3><p>Build the example’s disk from its <code>server</code> image, and create a run on it.
-The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse">example’s README</a>
+The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/debug/clickhouse">example’s README</a>
 builds the image:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --image clickhouse-server:26.8.31.2 clickhouse-server</span><br><span class="line">machine create ch --disk clickhouse-server --mem 4096 --cpus 2</span><br></pre></td></tr></table></figure>
 
@@ -17249,10 +17249,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794273622374"></script>
-<script src="/js/machine-hero-type.js?v=1794273622374"></script>
-<script src="/js/download-platforms.js?v=1794273622374"></script>
-<script src="/js/anchor-case.js?v=1794273622374"></script>
+<script src="/js/index-code-type.js?v=1794277311473"></script>
+<script src="/js/machine-hero-type.js?v=1794277311473"></script>
+<script src="/js/download-platforms.js?v=1794277311473"></script>
+<script src="/js/anchor-case.js?v=1794277311473"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

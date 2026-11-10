@@ -61,7 +61,7 @@ machine mem app 412 '$rsi' s                                  # the second argum
 machine run app --until 'tgid=7:write=*(long *)&queries'      # a global of no type, as a long
 ```
 
-The [debug examples](https://github.com/testflows/Machine-Examples/tree/main/debug)
+The [debug examples](https://github.com/testflows/Machine/tree/main/examples/debug)
 build ClickHouse and PostgreSQL both ways, and show a session of each.
 
 ### Locations
@@ -428,7 +428,7 @@ program. ClickHouse's 1.7GB of debug information grows to about 3.8GB in GDB,
 so that machine needs `--mem 12288`; with 4GB the guest's out-of-memory killer
 ends GDB.
 
-The [ClickHouse example](https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse)
+The [ClickHouse example](https://github.com/testflows/Machine/tree/main/examples/debug/clickhouse)
 builds both kinds of image for ClickHouse 26.8: one with the symbol table
 alone, and one with the debug information. Its server prints the commit it was
 built from as it comes up, with a link to that source on GitHub, and the
@@ -437,7 +437,7 @@ example shows how to put a source file where GDB finds it.
 ### A batch of commands
 
 Build the example's disk from its `server` image, and create a run on it.
-The [example's README](https://github.com/testflows/Machine-Examples/tree/main/debug/clickhouse)
+The [example's README](https://github.com/testflows/Machine/tree/main/examples/debug/clickhouse)
 builds the image:
 
 ```bash

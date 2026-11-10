@@ -1212,7 +1212,7 @@ machine profile app --for 5s --container db    # one container
 machine profile app --pid 412                  # one process
 ```
 
-Here is one second of [`memstress`](https://github.com/testflows/Machine-Examples),
+Here is one second of [`memstress`](https://github.com/testflows/Machine/tree/main/examples/stress),
 one of the example programs, which maps, touches and unmaps memory from four
 threads:
 

@@ -207,8 +207,8 @@ client, is a [Compose project](disks.md#compose-projects).
 
 ## Compose projects
 
-[Machine-Examples](https://github.com/testflows/Machine-Examples) has Compose
-environments under `compose/`. Clone it, pull each image for `linux/amd64`
+The [examples](https://github.com/testflows/Machine/tree/main/examples) have Compose
+environments under `compose/`. Clone them, pull each image for `linux/amd64`
 into the local Docker, then build the disk from the project directory.
 [`machine disks build`](commands.md#machine-disks-build) `--compose` packs
 those images and the project. The machine runs the project and ends it when a
@@ -217,13 +217,13 @@ down with `docker compose down`. A service that Machine stops, kills or crashes
 with [`machine containers`](commands.md#machine-containers) ends nothing.
 
 ```bash
-git clone https://github.com/testflows/Machine-Examples.git
-cd Machine-Examples
+git clone https://github.com/testflows/Machine.git
+cd Machine/examples
 ```
 
 The same project can be run on this computer first, from its own directory,
 which is how to fix it without waiting for a boot. The build commands below
-are from the repository root.
+are from the `examples` directory.
 
 ### A two-service project
 
