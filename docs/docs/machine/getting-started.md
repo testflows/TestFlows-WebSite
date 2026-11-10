@@ -351,7 +351,7 @@ you're trying to do. To ask a question or share an idea, start a discussion in
 > key, a token, a password or other secrets in them.
 
 For questions about your account or billing, email `support@testflows.com`.
-For questions about your personal data, email `privacy@testflows.com`. Report
+For privacy-related questions, email `privacy@testflows.com`. Report
 abuse to `abuse@testflows.com`. Report security vulnerabilities to
 `security@testflows.com`, or through GitHub's
 [private vulnerability reporting](https://github.com/testflows/Machine/security/advisories/new).
