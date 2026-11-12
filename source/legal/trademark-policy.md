@@ -10,11 +10,11 @@ permalink: legal/trademark-policy/index.html
 
 <p class="legal-updated">Last updated: 12 November 2026</p>
 
-TestFlows® is a registered trademark of Katteli Inc. in the United States,
-Reg. No. 8,546,865. This policy explains how you may use the TestFlows name
-and the TestFlows logo (together, our “**Marks**”). It applies to the Marks
-whether or not a particular use of them is registered. It applies in
-addition to the license of any software we publish.
+TestFlows® is a registered trademark of Katteli Inc. in the United States.
+This policy explains how you may use the TestFlows name and the TestFlows
+logo (together, our “**Marks**”). It applies to the Marks whether or not a
+particular use of them is registered. It applies in addition to the license
+of any software we publish.
 
 Some of our software is open source. The TestFlows Framework, the TestFlows
 Machine SDKs and the TestFlows Machine examples are licensed under the Apache
