@@ -34,7 +34,7 @@ You may name our products to describe them truthfully. For example:
 
 - “Our integration tests run on TestFlows Machine.”
 - “This plugin works with the TestFlows Framework.”
-- A blog post, book, course, talk or review about TestFlows.
+- A blog post, book, course, talk or review about our products.
 
 Use the name for this, not the logo. Nothing you say may suggest that we made,
 sponsor or approve your product, service or event when we did not.
@@ -63,7 +63,8 @@ name or part of the name of:
 - an organization, account, channel or handle on any service;
 - a domain name.
 
-Section 5 makes one exception, for community groups.
+Two exceptions apply: a fork made to contribute, under Section 3, and a
+community group, under Section 5.
 
 ## 5. Services and communities
 
@@ -92,8 +93,8 @@ Section 5 makes one exception, for community groups.
 ## 7. Our logo
 
 Our logo is used only where we have agreed to it in writing, and only in the
-files we provide. It may be resized, and shown in a single colour where colour
-is not available. It may not otherwise be redrawn, recoloured, cropped,
+files we provide. It may be resized, and shown in a single color where color
+is not available. It may not otherwise be redrawn, recolored, cropped,
 animated or placed inside another logo.
 
 ## 8. Contact
