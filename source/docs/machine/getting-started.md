@@ -1,4 +1,4 @@
-<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Getting started
 
@@ -115,7 +115,7 @@ machine --version
   ---- o o o ----
  |   o       o   |
  | 1 o 10010 o 0 |
- |   o       o   |  TestFlows™ Machine Client YYYYMMDD-HHMM
+ |   o       o   |  TestFlows Machine Client YYYYMMDD-HHMM
   ---  o o oxx --   https://testflows.com
  /           xx   \
 /  ^^^        xx   \
@@ -335,9 +335,9 @@ from it and ran a program to its end. Everything else in this page is a variatio
 
 ## Getting help
 
-TestFlows™ Machine is in public beta, and reports from users directly influence
+TestFlows Machine is in public beta, and reports from users directly influence
 what gets fixed and built next. Report bugs, request features and ask
-questions in the [TestFlows™ Machine repository](https://github.com/testflows/Machine) on GitHub.
+questions in the [TestFlows Machine repository](https://github.com/testflows/Machine) on GitHub.
 
 To report a bug, search the [issues](https://github.com/testflows/Machine/issues) first, then
 [open an issue](https://github.com/testflows/Machine/issues/new/choose) with the commands you ran, what you

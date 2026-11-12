@@ -1,6 +1,6 @@
 ---
 title: "Client EULA"
-description: End User License Agreement for the TestFlows™ Machine client and SDK core.
+description: End User License Agreement for the TestFlows Machine client and SDK core.
 layout: legal
 legal_family: machine
 permalink: machine/legal/client-eula/index.html
@@ -21,10 +21,10 @@ This End User License Agreement (the “**EULA**”) licenses the Machine client
 
 “**Licensed Software**” means all proprietary software Katteli makes available
 for use with the Services, including the client program `machine` (the
-“**Client**”), the compiled core that a TestFlows™ Machine SDK runs on, such as
+“**Client**”), the compiled core that a TestFlows Machine SDK runs on, such as
 the one the Python SDK runs on (each, an “**SDK Core**”), and their components,
 agents and updates, other than open-source components under Section 3. A
-TestFlows™ Machine SDK itself, such as the Python SDK `testflows.machine`, is
+TestFlows Machine SDK itself, such as the Python SDK `testflows.machine`, is
 licensed under its own open-source license and is not Licensed Software.
 
 Katteli and its licensors retain all right, title and interest in the Licensed

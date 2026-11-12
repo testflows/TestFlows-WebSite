@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Install the TestFlows™ Machine client.
+# Install the TestFlows Machine client.
 #
 #   curl https://testflows.com/machine/install -fsS | bash
 #
@@ -261,7 +261,7 @@ fetch_once() {
 
 usage() {
     cat <<'USAGE'
-Install the TestFlows™ Machine client.
+Install the TestFlows Machine client.
 
   curl https://testflows.com/machine/install -fsS | bash
   curl https://testflows.com/machine/install -fsS | bash -s -- --list
@@ -518,7 +518,7 @@ sign_in() {
     fi
     ( : < /dev/tty ) 2>/dev/null || die "Installing the client needs a sign-in, and there is no terminal to ask at." \
         "Install with an API key curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
-    say "To install the client, sign in to your TestFlows™ account or sign up for one."
+    say "To install the client, sign in to your TestFlows account or sign up for one."
     local email new
     while :; do
         ask "Do you have an account? [y/n] "
@@ -1091,7 +1091,7 @@ install_env() {
     tmp="$(mktemp "$dir/.machine-env.XXXXXX")" || return 1
     cat >"$tmp" <<'END_OF_MACHINE_ENV' || { rm -f "$tmp"; return 1; }
 #!/bin/bash
-# machine-env: a shell in which `machine` is TestFlows™ Machine.
+# machine-env: a shell in which `machine` is TestFlows Machine.
 #
 # macOS ships /usr/bin/machine, which prints the CPU architecture, so a plain
 # PATH entry for the client loses to it or shadows it for good. This starts a
@@ -1116,7 +1116,7 @@ usage() {
 Usage: machine-env
        machine-env -- command [argument ...]
 
-Starts a shell in which machine is TestFlows™ Machine, ahead of any other
+Starts a shell in which machine is TestFlows Machine, ahead of any other
 machine on PATH, and prefixes its prompt with $PROMPT_TAG. The shell loads the
 usual configuration first. Tab completes machine's commands and options. Leave
 it with exit.

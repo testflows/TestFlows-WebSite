@@ -14,7 +14,7 @@ permalink: machine/portal/signup/index.html
         </header>
         <div class="portal-split">
         <aside class="portal-split-aside">
-        <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows™ Machine is in public beta.</strong> We're improving it quickly with feedback from users like you, shared on <a href="https://github.com/testflows/Machine">GitHub</a> or through our <a href="/contact.html?topic=Machine%20feedback">contact form</a>. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
+        <p class="portal-banner portal-banner--warn" role="note"><strong>TestFlows Machine is in public beta.</strong> We're improving it quickly with feedback from users like you, shared on <a href="https://github.com/testflows/Machine">GitHub</a> or through our <a href="/contact.html?topic=Machine%20feedback">contact form</a>. Backward compatibility isn't guaranteed yet, and you may need to update the client and the SDK Core often.</p>
         </aside>
         <div class="portal-split-main">
         <div class="portal-card">

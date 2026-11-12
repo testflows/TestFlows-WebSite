@@ -1,4 +1,4 @@
-<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Python SDK
 
@@ -618,7 +618,7 @@ The `error_handling.py` example goes through every exception.
 ## Examples
 
 Small example scripts are in
-[`sdk/python/examples`](https://github.com/testflows/Machine/tree/main/sdk/python/examples) of the TestFlows™
+[`sdk/python/examples`](https://github.com/testflows/Machine/tree/main/sdk/python/examples) of the TestFlows
 Machine repository. Each one creates its own session and
 deletes it at the end. Most run as `python <script> --disk <name>`.
 `disks.py` builds the disk first and takes `--binary` and `--name`.
@@ -651,7 +651,7 @@ the disk at the end.
 ## License
 
 The SDK is licensed under Apache 2.0, and its source is in
-[`sdk/python`](https://github.com/testflows/Machine/tree/main/sdk/python) of the TestFlows™ Machine repository.
+[`sdk/python`](https://github.com/testflows/Machine/tree/main/sdk/python) of the TestFlows Machine repository.
 The SDK Core it runs on is proprietary
 and is not part of the SDK. It comes with the client, under the
 [Client EULA](/machine/legal/client-eula/).

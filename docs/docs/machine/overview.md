@@ -1,8 +1,8 @@
-<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # What is it?
 
-**TestFlows™ Machine** is a deterministic execution environment where you run,
+**TestFlows Machine** is a deterministic execution environment where you run,
 explore, debug and test your software. It is built on our deterministic
 hypervisor, which runs your programs, Docker images and Docker Compose
 environments unchanged.
@@ -26,7 +26,7 @@ the [SDK](python-sdk.md). To begin, [install the client](getting-started.md#the-
 one command.
 
 Questions, feature requests and bug reports are welcome in the
-[TestFlows™ Machine repository](https://github.com/testflows/Machine) on GitHub. See
+[TestFlows Machine repository](https://github.com/testflows/Machine) on GitHub. See
 [Getting help](getting-started.md#getting-help).
 
 ## Concepts

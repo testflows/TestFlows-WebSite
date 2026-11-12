@@ -2,7 +2,7 @@
 
 # Copyright and Content Use
 
-<p class="legal-updated">Last updated: 18 October 2026</p>
+<p class="legal-updated">Last updated: 12 November 2026</p>
 
 © 2026 Katteli Inc. All rights reserved.
 
@@ -33,8 +33,9 @@ it in a way that implies an endorsement or affiliation that does not exist.
 
 ## 4. Trademarks
 
-“**TestFlows™**” and the TestFlows logo are trademarks of Katteli Inc. You may use them only to refer accurately to our
-products, and never in a way that implies sponsorship or endorsement.
+TestFlows® is a registered trademark of Katteli Inc. in the United States.
+The TestFlows name and logo may be used only as the
+[Trademark Policy](/legal/trademark-policy.md) allows.
 
 ## 5. Copyright concerns
 

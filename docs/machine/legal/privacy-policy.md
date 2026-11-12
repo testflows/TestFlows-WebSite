@@ -7,7 +7,7 @@
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
 This Privacy Policy explains how we collect, use, share, and protect personal
-information when you use TestFlows™ Machine websites, APIs, clients, and related
+information when you use TestFlows Machine websites, APIs, clients, and related
 services (the “**Services**”). See also our [Terms of Service](/machine/legal/terms-of-service.md).
 
 This Policy covers account, billing, and control-plane data. It does **not**

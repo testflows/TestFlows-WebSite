@@ -1,6 +1,6 @@
 ---
 title: "Terms of Service"
-description: Terms of Service for the TestFlows™ Machine service.
+description: Terms of Service for the TestFlows Machine service.
 layout: legal
 legal_family: machine
 permalink: machine/legal/terms-of-service/index.html
@@ -28,7 +28,7 @@ your account remains open. It also governs the Client and the SDK Core
 downloaded for your account for so long as any copy remains in your possession
 or control, subject to Section 14.
 
-The “**Services**” are the TestFlows™ Machine service and its websites, APIs
+The “**Services**” are the TestFlows Machine service and its websites, APIs
 and related services.
 
 If you create an account for an organization, the Customer is that
@@ -40,7 +40,7 @@ You confirm that you are receiving the Services for a **business activity** and
 
 ## 2. The Services
 
-TestFlows™ Machine provides a deterministic execution environment for software
+TestFlows Machine provides a deterministic execution environment for software
 testing and related engineering workflows. Subject to the Agreement and payment
 of applicable fees, we grant you a limited, non-exclusive, non-transferable,
 non-sublicensable right to use the Services for your internal business purposes

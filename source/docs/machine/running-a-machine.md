@@ -1,4 +1,4 @@
-<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Running a machine
 
@@ -1100,7 +1100,7 @@ machine run app --until '/output/exec/<id>/stdout~Continuing' --within 10s
 `<id>` is the id `exec start` printed for GDB.
 
 [GDB inside the machine](debugging.md#keeping-gdb-attached) walks
-through a whole session this way, on ClickHouse.
+through a whole session this way, on ClickHouse®.
 
 `machine exec` uses the serial port `ttyS3` for its requests. A program in the
 machine that reads `ttyS3` takes them.
@@ -1582,3 +1582,5 @@ machine offload
 
 [`machine cleanup`](commands.md#machine-cleanup) removes stale runs and other leftovers, and `--force` also
 kills machines that have been orphaned.
+
+ClickHouse is a registered trademark of ClickHouse, Inc. See [clickhouse.com](https://clickhouse.com).

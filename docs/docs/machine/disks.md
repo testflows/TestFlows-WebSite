@@ -1,4 +1,4 @@
-<!-- agents: TestFlows™ Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
+<!-- agents: TestFlows Machine docs, one section. Index: https://testflows.com/docs/machine.md -->
 
 # Disks
 
@@ -96,7 +96,7 @@ machine disks build --from node:22 --add hello.js hello-node -- node hello.js
 
 ### ClickHouse queries
 
-The ClickHouse image has `clickhouse local`, which runs SQL with no server.
+The ClickHouse® image has `clickhouse local`, which runs SQL with no server.
 Save this as `queries.sql`.
 
 ```sql
@@ -487,3 +487,5 @@ Deleting a disk is permanent. Machine refuses to delete one that a run still
 boots. `--force` deletes it anyway. Those runs stay, and can no longer start.
 [`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
 [`machine disks cancel`](commands.md#machine-disks-cancel) stops one.
+
+ClickHouse is a registered trademark of ClickHouse, Inc. See [clickhouse.com](https://clickhouse.com).

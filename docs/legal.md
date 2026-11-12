@@ -3,7 +3,7 @@
 # Legal
 
 Two sets of documents apply, depending on what you use. The open-source
-TestFlows™ Framework is licensed under its own open-source license in the
+TestFlows Framework is licensed under its own open-source license in the
 [project source repository](https://github.com/testflows/testflows).
 
 ## Website
@@ -22,15 +22,19 @@ handbook and blog.
 </li>
 <li>
 <a href="/legal/copyright-and-content-use/">Copyright and Content Use</a>
-<p>Ownership, trademarks, and permitted use of site content.</p>
+<p>Ownership and permitted use of site content.</p>
+</li>
+<li>
+<a href="/legal/trademark-policy/">Trademark Policy</a>
+<p>How you may use the TestFlows name and logo.</p>
 </li>
 </ul>
 
-## TestFlows™ Machine
+## TestFlows Machine
 
 <span id="machine"></span>
 
-These documents govern your use of the TestFlows™ Machine service, its APIs, and
+These documents govern your use of the TestFlows Machine service, its APIs, and
 its clients. The website documents above still apply to the site and its
 documentation.
 
