@@ -39,10 +39,22 @@ You may name our products to describe them truthfully. For example:
 Use the name for this, not the logo. Nothing you say may suggest that we made,
 sponsor or approve your product, service or event when we did not.
 
-## 3. Copies, changes and forks of our open-source code
+## 3. Copies, packages, changes and forks of our open-source code
 
 - **A copy left as we published it** keeps our Marks exactly where they
   appear in it.
+- **A package for distribution.** You may package our open-source software so
+  that others can install it to work with TestFlows Machine, our hosted
+  service. A package made for any other purpose takes a name of its own. The
+  package may be published, for example, in a Linux distribution’s repository
+  or on conda-forge, and named after the software it holds. It may change
+  only what is needed to build, install and run the software on that
+  platform, or apply a security fix we have published. Any other change makes
+  it a changed version. A container image is not a package under this rule.
+  This rule covers repositories that a distribution or its community
+  maintains. It does not cover package indexes where anyone may publish, such
+  as PyPI, npm or Docker Hub; only we publish packages of our software there
+  under our Marks.
 - **A changed version** is your own project. Give it a name of its own that
   does not contain TestFlows, and take our logo out of it, including from its
   source files. You may describe where it came from, for example “derived
@@ -63,8 +75,8 @@ name or part of the name of:
 - an organization, account, channel or handle on any service;
 - a domain name.
 
-Two exceptions apply: a fork made to contribute, under Section 3, and a
-community group, under Section 5.
+Three exceptions apply: a package for distribution and a fork made to
+contribute, under Section 3, and a community group, under Section 5.
 
 ## 5. Services and communities
 
@@ -101,6 +113,8 @@ animated or placed inside another logo.
 
 To ask about a use this policy does not cover, to request our agreement, or
 to tell us about a misuse of our Marks, write to `legal@testflows.com`.
+
+We may update this policy. The date at the top says when it last changed.
 
 Katteli Inc.
 
