@@ -828,7 +828,7 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
 A replay damages the same bytes, so a bug you find this way is found again on
 every replay of the run.
 
-**A worked example: ClickHouse®.** ClickHouse writes each part of a table into a
+**A worked example: ClickHouse.** ClickHouse writes each part of a table into a
 directory it names as it goes, such as `all_12_12_0`, and checks the part's
 checksums when it reads it back. To damage one column file of the next part
 written and see what ClickHouse does:
@@ -992,5 +992,3 @@ their counts. [The SDK's Faults](python-sdk.md#faults) has an example.
 - **A fault matches the system call, whose call it is and the count of calls.**
   It does not look at the arguments, so "openat of /etc/passwd" is not a fault.
   Stop at the call and fail that one instead.
-
-ClickHouse is a registered trademark of ClickHouse, Inc. See [clickhouse.com](https://clickhouse.com).

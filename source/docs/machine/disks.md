@@ -487,5 +487,3 @@ Deleting a disk is permanent. Machine refuses to delete one that a run still
 boots. `--force` deletes it anyway. Those runs stay, and can no longer start.
 [`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
 [`machine disks cancel`](commands.md#machine-disks-cancel) stops one.
-
-ClickHouse is a registered trademark of ClickHouse, Inc. See [clickhouse.com](https://clickhouse.com).

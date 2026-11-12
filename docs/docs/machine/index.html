@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794456860121" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794456860121" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794456515432" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794456860121" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -993,7 +993,6 @@ was stored is reported as damaged, in which case build it again.</p>
 boots. <code>--force</code> deletes it anyway. Those runs stay, and can no longer start.
 <a href="#machine-disks-transfers"><code>machine disks transfers</code></a> shows the transfers in progress, and
 <a href="#machine-disks-cancel"><code>machine disks cancel</code></a> stops one.</p>
-<p>ClickHouse is a registered trademark of ClickHouse, Inc. See <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/">clickhouse.com</a>.</p>
 <h1 id="sessions"><a href="#sessions" class="headerlink" title="Sessions"></a>Sessions</h1><p>Runs live in a session, and you create one with <a href="#machine-sessions-create"><code>machine sessions create</code></a>.
 Pick its size when you create it.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions create ci-1 --cpus 2 --mem 4G</span><br></pre></td></tr></table></figure>
@@ -1912,7 +1911,7 @@ make the pipe in the container and write it from there:</p>
 
 <p><code>&lt;id&gt;</code> is the id <code>exec start</code> printed for GDB.</p>
 <p><a href="#keeping-gdb-attached">GDB inside the machine</a> walks
-through a whole session this way, on ClickHouse®.</p>
+through a whole session this way, on ClickHouse.</p>
 <p><code>machine exec</code> uses the serial port <code>ttyS3</code> for its requests. A program in the
 machine that reads <code>ttyS3</code> takes them.</p>
 <p>From Python, <code>run.exec([&quot;cat&quot;, &quot;/etc/hostname&quot;])</code> runs a program and returns a
@@ -2265,7 +2264,6 @@ durable copy stays, and starting the run brings it back.</p>
 
 <p><a href="#machine-cleanup"><code>machine cleanup</code></a> removes stale runs and other leftovers, and <code>--force</code> also
 kills machines that have been orphaned.</p>
-<p>ClickHouse is a registered trademark of ClickHouse, Inc. See <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/">clickhouse.com</a>.</p>
 <h1 id="checkpoints-and-branches"><a href="#checkpoints-and-branches" class="headerlink" title="Checkpoints and branches"></a>Checkpoints and branches</h1><p>Branching is cheap, because a branch shares its parent’s history instead of
 copying it. That is what makes it practical to try many things from one point.</p>
 <h2 id="checkpoints"><a href="#checkpoints" class="headerlink" title="Checkpoints"></a>Checkpoints</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine checkpoint app booted</span><br><span class="line">machine checkpoints app</span><br></pre></td></tr></table></figure>
@@ -3441,7 +3439,7 @@ writes a service’s volumes had not synced.</li>
 </ul>
 <p>A replay damages the same bytes, so a bug you find this way is found again on
 every replay of the run.</p>
-<p><strong>A worked example: ClickHouse®.</strong> ClickHouse writes each part of a table into a
+<p><strong>A worked example: ClickHouse.</strong> ClickHouse writes each part of a table into a
 directory it names as it goes, such as <code>all_12_12_0</code>, and checks the part’s
 checksums when it reads it back. To damage one column file of the next part
 written and see what ClickHouse does:</p>
@@ -3537,7 +3535,6 @@ fault, as well as the counts.</li>
 It does not look at the arguments, so “openat of &#x2F;etc&#x2F;passwd” is not a fault.
 Stop at the call and fail that one instead.</li>
 </ul>
-<p>ClickHouse is a registered trademark of ClickHouse, Inc. See <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/">clickhouse.com</a>.</p>
 <h2 id="container-faults"><a href="#container-faults" class="headerlink" title="Container faults"></a>Container faults</h2><p>A project run as containers is a small cluster, and each service is a node.
 <a href="#machine-containers"><code>machine containers</code></a> puts a fault on one
 container while the others keep running:</p>
@@ -4331,7 +4328,7 @@ passes them in, and give a global a type with a cast:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine mem app 412 <span class="string">&#x27;$rsi&#x27;</span> s                                  <span class="comment"># the second argument, a string</span></span><br><span class="line">machine run app --<span class="keyword">until</span> <span class="string">&#x27;tgid=7:write=*(long *)&amp;queries&#x27;</span>      <span class="comment"># a global of no type, as a long</span></span><br></pre></td></tr></table></figure>
 
 <p>The <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/debug">debug examples</a>
-build ClickHouse® and PostgreSQL both ways, and show a session of each.</p>
+build ClickHouse and PostgreSQL both ways, and show a session of each.</p>
 <h3 id="locations"><a href="#locations" class="headerlink" title="Locations"></a>Locations</h3><p>Every command that takes a location takes one of these. A location names an
 address in the task’s process:</p>
 <table>
@@ -4678,7 +4675,7 @@ and the next session starts from the same instruction:</p>
 <p>Or fork a branch at it and keep both:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine fork ch --at ^ready --name again</span><br></pre></td></tr></table></figure>
 
-<p>ClickHouse is a registered trademark of ClickHouse, Inc. See <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/">clickhouse.com</a>.</p>
+
 <h1 id="reading-the-disk"><a href="#reading-the-disk" class="headerlink" title="Reading the disk"></a>Reading the disk</h1><p>You can read files from a run’s disk without touching the run.
 <a href="#machine-fs"><code>machine fs</code></a> reads the filesystem on the disk as a
 checkpoint saved it, so it never changes how the machine executes.</p>
@@ -17172,6 +17169,7 @@ the disk at the end.</p>
 The SDK Core it runs on is proprietary
 and is not part of the SDK. It comes with the client, under the
 <a href="/machine/legal/client-eula/">Client EULA</a>.</p>
+<p>ClickHouse is a registered trademark of ClickHouse, Inc. See <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/">clickhouse.com</a>.</p>
 
                 <div class="handbook-divider"></div>
                 <div class="handbook-nav">
@@ -17283,10 +17281,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794456515432"></script>
-<script src="/js/machine-hero-type.js?v=1794456515432"></script>
-<script src="/js/download-platforms.js?v=1794456515432"></script>
-<script src="/js/anchor-case.js?v=1794456515432"></script>
+<script src="/js/index-code-type.js?v=1794456860122"></script>
+<script src="/js/machine-hero-type.js?v=1794456860122"></script>
+<script src="/js/download-platforms.js?v=1794456860122"></script>
+<script src="/js/anchor-case.js?v=1794456860122"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

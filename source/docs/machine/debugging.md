@@ -62,7 +62,7 @@ machine run app --until 'tgid=7:write=*(long *)&queries'      # a global of no t
 ```
 
 The [debug examples](https://github.com/testflows/Machine/tree/main/examples/debug)
-build ClickHouse® and PostgreSQL both ways, and show a session of each.
+build ClickHouse and PostgreSQL both ways, and show a session of each.
 
 ### Locations
 
@@ -760,5 +760,3 @@ Or fork a branch at it and keep both:
 ```bash
 machine fork ch --at ^ready --name again
 ```
-
-ClickHouse is a registered trademark of ClickHouse, Inc. See [clickhouse.com](https://clickhouse.com).

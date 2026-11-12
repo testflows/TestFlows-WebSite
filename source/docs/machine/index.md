@@ -41,3 +41,5 @@ permalink: docs/machine/index.html
 <!-- include: commands.md -->
 
 <!-- include: python-sdk.md -->
+
+ClickHouse is a registered trademark of ClickHouse, Inc. See [clickhouse.com](https://clickhouse.com).

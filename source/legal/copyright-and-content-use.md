@@ -41,7 +41,8 @@ it in a way that implies an endorsement or affiliation that does not exist.
 
 TestFlows® is a registered trademark of Katteli Inc. in the United States.
 The TestFlows name and logo may be used only as the
-[Trademark Policy](/legal/trademark-policy/) allows.
+[Trademark Policy](/legal/trademark-policy/) allows. Other names on the Site may
+be trademarks of their respective owners.
 
 ## 5. Copyright concerns
 

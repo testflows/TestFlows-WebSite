@@ -11,7 +11,7 @@ Install what your person asks for: the open-source Framework, which is a Python 
 ## DONE WHEN
 
 - Framework: `python3 -c "import testflows.core"` succeeds, and the Hello World test in step 2 runs and exits with status `0`.
-- Machine client: `machine --version` prints `TestFlows Machine Client` and a version.
+- Machine client: `machine --version` prints `Machine Client` and a version.
 - Machine account: `machine account show` prints your person's account. Until they have signed in it exits with status `2` and says `Not signed in`. That is expected: finish step 4 with them.
 
 ## TODO
