@@ -4,11 +4,11 @@
 
 <p class="legal-updated">Last updated: 12 November 2026</p>
 
-TestFlows® is a registered trademark of Katteli Inc. in the United States.
-This policy explains how you may use the TestFlows name and the TestFlows
-logo (together, our “**Marks**”). It applies to the Marks whether or not a
-particular use of them is registered. It applies in addition to the license
-of any software we publish.
+TestFlows® is a registered trademark of Katteli Inc. in the United States,
+Reg. No. 8,546,865. This policy explains how you may use the TestFlows name
+and the TestFlows logo (together, our “**Marks**”). It applies to the Marks
+whether or not a particular use of them is registered. It applies in
+addition to the license of any software we publish.
 
 Some of our software is open source. The TestFlows Framework, the TestFlows
 Machine SDKs and the TestFlows Machine examples are licensed under the Apache
@@ -65,10 +65,8 @@ to it. A fork published as a separate project follows Section 3.
 - Write TestFlows exactly, as one word with a capital T and F. Do not
   abbreviate, hyphenate, pluralize or combine it with other words.
 - Use it as an adjective followed by the product, such as “TestFlows® Machine”
-  or “the TestFlows Framework”, not as a noun or a verb.
-- Mark the first or most prominent use on a page or in a document with ®
-  where TestFlows names our hosted services, such as TestFlows® Machine, and
-  with ™ otherwise, such as the TestFlows™ Framework.
+  or “the TestFlows® Framework”, not as a noun or a verb.
+- Mark the first or most prominent use on a page or in a document with ®.
 - Where you use the Marks, include this notice: “TestFlows is a registered
   trademark of Katteli Inc. in the United States.”
 
