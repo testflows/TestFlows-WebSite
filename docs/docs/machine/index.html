@@ -50,40 +50,40 @@
   
   <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794784216080" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794784216080" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794784216081" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794784216081" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794784216081" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794784216081" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794784216081" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794784216081" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794782375317" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794784216081" media="screen" type="text/css">
   
   <!--[if lt IE 9]>
   <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -1085,13 +1085,13 @@ line under the clock shows the time left.</p>
 <p>From Python, <code>client.sessions</code> does the same: <code>create</code>, <code>use</code>, <code>show</code>, <code>keep</code>
 and <code>delete</code>. A session is a context manager, so a <code>with</code> block deletes it at
 the end. <a href="#sessions">The SDK’s Sessions</a> has the calls.</p>
-<h2 id="when-the-service-does-not-answer"><a href="#when-the-service-does-not-answer" class="headerlink" title="When the service does not answer"></a>When the service does not answer</h2><p>A command that cannot reach the service, or that the service answers it
-cannot serve now, ends with a hint to its status page,
+<h2 id="when-the-service-does-not-answer"><a href="#when-the-service-does-not-answer" class="headerlink" title="When the service does not answer"></a>When the service does not answer</h2><p>A command that cannot reach the service, or that the service refuses as
+unavailable, ends with a hint to the status page,
 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.testflows.com/">status.testflows.com</a>. The page shows
-whether the website, the API, sign-in and sessions on each class work
-now, measured from outside the service. It also lists the incidents of
-the last 14 days and any planned maintenance. When the page shows every
-component as operational, check your network connection.</p>
+whether the website, the API, sign-in and sessions on each class work now.
+It also lists open incidents, the incidents of the last 14 days and any
+planned maintenance. If every component is operational, check your
+network. If it works, <a href="https://testflows.com/contact.html">contact support</a>.</p>
 <h1 id="running-a-machine"><a href="#running-a-machine" class="headerlink" title="Running a machine"></a>Running a machine</h1><h2 id="creating-a-run"><a href="#creating-a-run" class="headerlink" title="Creating a run"></a>Creating a run</h2><p><a href="#machine-create"><code>machine create</code></a> creates a run from a disk and starts it. The run’s name goes
 first and is optional. Without one, Machine generates a name.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine create app --disk app --cpus 2 --mem 512</span><br></pre></td></tr></table></figure>
@@ -17289,10 +17289,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794782375318"></script>
-<script src="/js/machine-hero-type.js?v=1794782375318"></script>
-<script src="/js/download-platforms.js?v=1794782375318"></script>
-<script src="/js/anchor-case.js?v=1794782375318"></script>
+<script src="/js/index-code-type.js?v=1794784216081"></script>
+<script src="/js/machine-hero-type.js?v=1794784216081"></script>
+<script src="/js/download-platforms.js?v=1794784216081"></script>
+<script src="/js/anchor-case.js?v=1794784216081"></script>
 <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <script>
 var isInViewport = function (elem) {

@@ -133,10 +133,10 @@ the end. [The SDK's Sessions](python-sdk.md#sessions) has the calls.
 
 ## When the service does not answer
 
-A command that cannot reach the service, or that the service answers it
-cannot serve now, ends with a hint to its status page,
+A command that cannot reach the service, or that the service refuses as
+unavailable, ends with a hint to the status page,
 [status.testflows.com](https://status.testflows.com). The page shows
-whether the website, the API, sign-in and sessions on each class work
-now, measured from outside the service. It also lists the incidents of
-the last 14 days and any planned maintenance. When the page shows every
-component as operational, check your network connection.
+whether the website, the API, sign-in and sessions on each class work now.
+It also lists open incidents, the incidents of the last 14 days and any
+planned maintenance. If every component is operational, check your
+network. If it works, [contact support](https://testflows.com/contact.html).
