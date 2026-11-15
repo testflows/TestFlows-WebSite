@@ -16,6 +16,7 @@
 - [Documentation](https://testflows.com/docs.md): The Framework and Machine docs, and where each is in Markdown.
 - [Blog](https://testflows.com/blog.md): An index of the blog, one Markdown page per article.
 - [Contact](https://testflows.com/contact.md): How to reach us.
+- [Machine status](https://status.testflows.com/index.md): Whether Machine works now, measured from outside the cloud, and its incidents. Its own index is https://status.testflows.com/llms.txt.
 
 ## Machine
 
