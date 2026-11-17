@@ -849,8 +849,8 @@ check_release() {
     version="${path%%/*}"
     name="${path#*/}"
     line="$(tr -d '\r' < "$sumfile" | sed -n 's/^# release //p')"
-    [ -n "$line" ] || die "Release $version was signed without its version, so it was not installed." \
-        "See the versions there are with --list."
+    # No hint: the latest, the one way out, may be this release.
+    [ -n "$line" ] || die "Release $version was signed without its version, so it was not installed."
     # `|| exit 1` everywhere a refusal comes out of $(...): the core's check
     # runs in a condition, where errexit is off, and a die in a command
     # substitution leaves only it.
