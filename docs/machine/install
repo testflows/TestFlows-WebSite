@@ -20,7 +20,13 @@
 # PATH, and ~/.local/bin holds machine-env alone. Putting ~/.local/bin on PATH then
 # hides nothing. The checksum is signed with the release keys below, GPG and RSA, and the
 # signature is checked before the checksum is trusted: with gpg where there is one,
-# else with openssl, which every Mac has. The download itself is protected by HTTPS.
+# else with openssl, which every Mac has. Where there is neither, the install stops
+# unless --no-signature says to go on without the check. The signed checksum file also
+# names the release's version, platform and file, and an install refuses one that names
+# another version than the one it asked for. The download itself is protected by HTTPS.
+#
+# The latest is installed only when it is newer than the installed client. An older one
+# is installed when its version is named with --version.
 #
 # It also installs the Python SDK core, the one file the SDK runs on, checked the same
 # way, to ~/.testflows/machine/sdk/_testflows_machine_core.abi3.so.
@@ -49,11 +55,14 @@
 #                         an API key to install with, in place of signing in at a
 #                         terminal; the client reads the same variable
 #   TESTFLOWS_MACHINE_ACCESS_TOKEN
-#                         the client's own sign-in, which `machine upgrade` hands over
-#                         in place of signing in again; it is never signed out
+#                         the client's own sign-in, which `machine upgrade` of older
+#                         clients hands over in place of signing in again; it is never
+#                         signed out. A current client upgrades itself, runs no
+#                         installer and hands over no sign-in.
 #   TESTFLOWS_MACHINE_API_CA_FILE
 #                         a PEM file of the CAs to trust for the API, as the client
-#                         reads it; `machine upgrade` hands over the client's
+#                         reads it; `machine upgrade` of older clients hands over the
+#                         client's
 #
 # To upgrade an installed client, run `machine upgrade`.
 #
@@ -88,6 +97,7 @@ API_BODY=""
 API_NO_CAS=""
 API_STATUS=""
 SIGNED_IN=""
+RELEASE_URL=""
 ACCOUNT=""
 # The Terms of Service and the Client EULA, which licenses the client: the
 # Markdown of their pages on testflows.com, which the installer shows in full
@@ -270,11 +280,13 @@ Install the TestFlows Machine client.
 Options:
   --list          list the versions there are, newest first, instead of installing
   --version V     install version V, YYYYMMDD-HHMM, instead of the latest; V is
-                  installed even when it is installed already
+                  installed even when it is installed already or is older
   --checksum      print the published SHA-256 checksum instead of installing
   --download      download this system's file, its checksum and their signatures
                   into the current folder instead of installing, to check by hand
-  --no-signature  install without checking the release signature
+  --no-signature  install without checking the release signature or the version it
+                  signs; without it, an install where neither gpg nor openssl is
+                  installed stops
   --no-checksum   install without checking the checksum, or the signature
   -h, --help      show this help
 
@@ -292,8 +304,8 @@ Environment:
                         sign in at; the client reads the same variable. Its account
                         must have accepted the current Agreement.
   TESTFLOWS_MACHINE_ACCESS_TOKEN
-                        the client's own sign-in, which machine upgrade hands over;
-                        the client stays signed in
+                        the client's own sign-in, which machine upgrade of older
+                        clients hands over; the client stays signed in
   TESTFLOWS_MACHINE_API_CA_FILE
                         a PEM file of the CAs to trust for the API, as the client
                         reads it
@@ -657,14 +669,16 @@ sign_out() {
     API_NO_CAS=""
 }
 
-# release_url PATH: where to download a release file from: a
+# release_url PATH: set RELEASE_URL to where to download a release file from: a
 # link the service signs for the account, valid for minutes. Fails with 1 for a file the
 # service has not, 2 when it could not be asked, and 3 when it refused, its words then in
-# API_BODY. Run in $(...), so it returns a code where die would end only the subshell.
+# API_BODY. It runs in this shell, not in $(...), so API_STATUS stays the answer's for
+# api_refusal to name.
 release_url() {
+    RELEASE_URL=""
     api_call GET "/client/releases/$1"
     case "$API_STATUS" in
-        200) json_get "$API_BODY" url ;;
+        200) RELEASE_URL="$(json_get "$API_BODY" url)" || return 1 ;;
         404) return 1 ;;
         401 | 403) return 3 ;;
         *) return 2 ;;
@@ -674,10 +688,10 @@ release_url() {
 # release_fetch PATH DEST: download a release file, as fetch does; FETCH_STATUS is "final"
 # for a file there is not.
 release_fetch() {
-    local url status=0
-    url="$(release_url "$1")" || status=$?
+    local status=0
+    release_url "$1" || status=$?
     case "$status" in
-        0) fetch "$url" "$2"; return ;;
+        0) fetch "$RELEASE_URL" "$2"; return ;;
         1) FETCH_STATUS="final" ;;
         3) die "$(api_refusal)" ;;
         *) FETCH_STATUS="retry" ;;
@@ -769,11 +783,12 @@ NO_CHECKSUM=false
 SIGNED_WITH=""
 CHECKSUM_CHECKED=""
 
-# check_signature SUMFILE URL: check the signature on the checksum file downloaded from
 # check_signature SUMFILE PATH: check the checksum SUMFILE, the release file PATH, with the
-# release keys, before it is trusted. gpg checks PATH.asc; without gpg, openssl checks PATH.sig. A missing or bad signature on an official release stops
-# the install: one that could be removed from the server would protect nothing. Sets
-# SIGNED_WITH to what checked it, or leaves it empty when nothing could.
+# release keys, before it is trusted. gpg checks PATH.asc; without gpg, openssl checks
+# PATH.sig. A missing or bad signature on an official release stops the install: one that
+# could be removed from the server would protect nothing. So does a system with neither
+# gpg nor openssl, unless --no-signature says to go on without the check. Sets SIGNED_WITH
+# to what checked it, or leaves it empty under --no-signature.
 check_signature() {
     local sumfile="$1" path="$2" tool sig home ring key
     SIGNED_WITH=""
@@ -786,8 +801,9 @@ check_signature() {
     elif command -v openssl >/dev/null 2>&1; then
         tool="openssl"; sig="$sumfile.sig"
     else
-        warn "Neither gpg nor openssl is installed, so the release signature was not checked."
-        return 0
+        die "Neither gpg nor openssl is installed, so the release signature can't be checked." \
+            "Install gnupg or openssl and run this again." \
+            "Or install without the check by adding --no-signature."
     fi
     if ! release_fetch "$path.${sig##*.}" "$sig" 2>/dev/null; then
         rm -f "$sig"
@@ -821,16 +837,39 @@ check_signature() {
     SIGNED_WITH="$tool"
 }
 
+# check_release SUMFILE PATH: the signed checksum SUMFILE of the release file PATH names, in
+# its release line, the version PATH is in, this platform, PATH's file and the checksum its
+# first line holds. The line is signed with the checksum, so the signature binds the version:
+# a latest/version or a link that names one release while serving another's signed checksum
+# is refused. A checksum signed without the line, as every release before it was, binds no
+# version and is refused too. Run only once the signature is checked: before, the line is
+# anyone's.
+check_release() {
+    local sumfile="$1" path="$2" version name line want
+    version="${path%%/*}"
+    name="${path#*/}"
+    line="$(tr -d '\r' < "$sumfile" | sed -n 's/^# release //p')"
+    [ -n "$line" ] || die "Release $version was signed without its version, so it was not installed." \
+        "See the versions there are with --list."
+    # `|| exit 1` everywhere a refusal comes out of $(...): the core's check
+    # runs in a condition, where errexit is off, and a die in a command
+    # substitution leaves only it.
+    want="$(checksum_from "$sumfile")" || exit 1
+    [ "$line" = "$version $PLATFORM_ID $name $want" ] \
+        || die "The signed checksum of $path is for ${line% *}, so it was not installed."
+}
+
 # verify_download PATH: check the download TMP against the checksum published as
-# PATH.sha256, once that checksum's signature is checked.
+# PATH.sha256, once that checksum's signature and release line are checked.
 verify_download() {
     local path="$1" want got
     release_fetch "$path.sha256" "$SUMFILE" || die "Could not download the checksum for this release." \
         "The install is stopped rather than trusting a file it can't check."
     check_signature "$SUMFILE" "$path.sha256"
-    want="$(checksum_from "$SUMFILE")"
-    got="$(sha256_of "$TMP")"
-    if [ "$got" != "$want" ]; then
+    [ -z "$SIGNED_WITH" ] || check_release "$SUMFILE" "$path"
+    want="$(checksum_from "$SUMFILE")" || exit 1
+    got="$(sha256_of "$TMP")" || exit 1
+    if [ -z "$want" ] || [ "$got" != "$want" ]; then
         die "The download doesn't match its published checksum, so it was not installed." \
             "expected $want" \
             "got      $got" \
@@ -855,15 +894,19 @@ sha256_of() {
 
 # platform_asset: the file each release publishes for this system, and how it installs:
 # "binary", one self-extracting file, or "tree", a .tar.gz unpacked into its own folder.
-# Sets ASSET, KIND and PLATFORM, its name for messages, and CORE_ASSET, the Python SDK
-# core the release publishes for this system; fails for a system no release is built for.
+# Sets ASSET, KIND and PLATFORM, its name for messages, PLATFORM_ID, its name in a signed
+# release line, and CORE_ASSET, the Python SDK core the release publishes for this system;
+# fails for a system no release is built for.
 platform_asset() {
     case "$(uname -s)-$(uname -m)" in
         Linux-x86_64 | Linux-amd64)  ASSET="machine";                     KIND="binary"; PLATFORM="Linux x86_64"
+                                     PLATFORM_ID="linux-x86_64"
                                      CORE_ASSET="_testflows_machine_core.abi3.so" ;;
         Linux-aarch64 | Linux-arm64) ASSET="machine-linux-arm64";         KIND="binary"; PLATFORM="Linux arm64"
+                                     PLATFORM_ID="linux-arm64"
                                      CORE_ASSET="_testflows_machine_core-linux-arm64.abi3.so" ;;
         Darwin-arm64)                ASSET="machine-darwin-arm64.tar.gz"; KIND="tree";   PLATFORM="macOS on Apple Silicon"
+                                     PLATFORM_ID="darwin-arm64"
                                      CORE_ASSET="_testflows_machine_core-darwin-arm64.abi3.so" ;;
         *) return 1 ;;
     esac
@@ -923,7 +966,8 @@ print_checksum() {
     TMP="$(mktemp)" || die "Could not create a temporary file."
     release_fetch "$1/$ASSET.sha256" "$TMP" || download_failed "$1"
     check_signature "$TMP" "$1/$ASSET.sha256"
-    sum="$(checksum_from "$TMP")"
+    [ -z "$SIGNED_WITH" ] || check_release "$TMP" "$1/$ASSET"
+    sum="$(checksum_from "$TMP")" || exit 1
     printf '%s  %s\n' "$sum" "$ASSET"
 }
 
@@ -1419,7 +1463,7 @@ CORE_DIR_NAME=".testflows/machine/sdk"
 # it is that release's already, and for a release from before the core shipped. A
 # download that fails leaves the client installed and says so.
 install_core() {
-    local release="$1" dir version
+    local release="$1" dir version refusal reason
     dir="$HOME/$CORE_DIR_NAME"
     version="$(cat "$dir/version" 2>/dev/null || true)"
     if [ "$version" = "$release" ] && [ -s "$dir/$CORE_FILE" ]; then
@@ -1445,8 +1489,20 @@ install_core() {
     FETCH_QUIET=false
     if $NO_CHECKSUM; then
         warn "--no-checksum: the Python SDK core's checksum and signature were not checked."
-    else
-        verify_download "$release/$CORE_ASSET"
+    # The client is already in place: a core that fails its check is left
+    # out with a warning, never reported as an install that did not happen.
+    # The subshell keeps verify_download's exit to the core alone. Its
+    # stderr is kept, and the refusal it ends with, written for a stopped
+    # install, is told as the warning's reason; its stdout is shown as is.
+    elif ! { refusal="$( ( verify_download "$release/$CORE_ASSET" ) 2>&1 1>&3 )"; } 3>&1; then
+        rm -f "$TMP" "$SUMFILE"
+        TMP=""
+        SUMFILE=""
+        warn "The Python SDK core was not installed."
+        reason="$(printf '%s\n' "$refusal" | sed -n '/✗/{s/^.*✗[^ ]* //;s/, so it was not installed\.$/./;p;q;}')"
+        [ -z "$reason" ] || say "  $reason" >&2
+        reinstall_hint "$release" >&2
+        return 0
     fi
     mv -f "$TMP" "$dir/$CORE_FILE" || die "Could not install $(tilde "$dir/$CORE_FILE")."
     printf '%s\n' "$release" > "$dir/version" || warn "Could not write $(tilde "$dir/version")."
@@ -1460,6 +1516,12 @@ install_core() {
 # install it again.
 up_to_date() {
     ok "machine $1 is the latest, and is installed at $(tilde "$2")"
+    reinstall_hint "$1"
+}
+
+# reinstall_hint VERSION: the command that installs VERSION again, on its own
+# line: the client's when it signed in, the installer's otherwise.
+reinstall_hint() {
     if [ "$SIGNED_IN" = "client" ]; then
         say "  Reinstall ${BOLD}machine upgrade $1${RESET}"
     else
@@ -1503,7 +1565,7 @@ main() {
     # --checksum runs anywhere, for checking a file by hand; off a supported system it
     # prints the Linux x86_64 file's. --download fetches this system's files.
     if [ "$mode" = "checksum" ]; then
-        platform_asset || { ASSET="machine"; KIND="binary"; PLATFORM="Linux x86_64"; }
+        platform_asset || { ASSET="machine"; KIND="binary"; PLATFORM="Linux x86_64"; PLATFORM_ID="linux-x86_64"; }
     else
         check_platform
     fi
@@ -1560,6 +1622,13 @@ main() {
         up_to_date "$release" "$target"
         install_core "$release"
         return 0
+    fi
+    # A latest older than the installed client is installed only when its version is
+    # named: latest/version moved back would otherwise downgrade every install to a
+    # signed older release.
+    if [ -z "${MACHINE_VERSION:-}" ] && version_valid "$before" && [[ "$release" < "$before" ]]; then
+        die "The latest release, $release, is older than the installed client, $before." \
+            "Install it anyway with --version $release."
     fi
 
     say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
