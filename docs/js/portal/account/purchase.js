@@ -1,8 +1,8 @@
 /** The return from Stripe Checkout: wait for the order the developer just paid,
  * then say what it bought. */
 
-import { getBillingOrders, getBillingProducts } from "../api.js?v=14abd82cd3c7";
-import { credits, titleCase } from "./format.js?v=14abd82cd3c7";
+import { getBillingOrders, getBillingProducts } from "../api.js?v=b294e7e09f77";
+import { credits, titleCase } from "./format.js?v=b294e7e09f77";
 
 /** How often, and for how long, to read the order while its webhook lands. */
 const POLL_MS = 1500;

@@ -33,7 +33,6 @@ const ERROR_COPY = {
   "invalid email": "Enter a valid email address.",
   "email not allowed": "That email isn't allowed.",
   "that's already your email": "That's already your email.",
-  "email already in use": "That email is already in use.",
   "account cannot change email": "Can't change email for this account.",
   "email service busy — try again shortly":
     "Email service busy. Try again shortly.",

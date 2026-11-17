@@ -1,4 +1,4 @@
-import { compactDatetime, credits } from "./format.js?v=14abd82cd3c7";
+import { compactDatetime, credits } from "./format.js?v=b294e7e09f77";
 
 /**
  * @param {HTMLElement} panel

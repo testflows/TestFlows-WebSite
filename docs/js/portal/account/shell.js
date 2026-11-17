@@ -7,25 +7,25 @@ import {
   getTerms,
   logout,
   refreshSession,
-} from "../api.js?v=14abd82cd3c7";
-import { runConfirm, runPurchase } from "./modal.js?v=14abd82cd3c7";
-import { confirmPurchase } from "./purchase.js?v=14abd82cd3c7";
-import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=14abd82cd3c7";
-import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=14abd82cd3c7";
-import { renderOverview } from "./overview.js?v=14abd82cd3c7";
-import { renderSessions } from "./sessions.js?v=14abd82cd3c7";
-import { renderCredits } from "./credits.js?v=14abd82cd3c7";
-import { renderActivity } from "./activity.js?v=14abd82cd3c7";
-import { renderBuy } from "./buy.js?v=14abd82cd3c7";
-import { renderBilling } from "./billing.js?v=14abd82cd3c7";
-import { renderInvoices } from "./invoices.js?v=14abd82cd3c7";
-import { renderOrders } from "./orders.js?v=14abd82cd3c7";
-import { renderKeys } from "./keys.js?v=14abd82cd3c7";
-import { renderDevices } from "./devices.js?v=14abd82cd3c7";
-import { renderStorage } from "./storage.js?v=14abd82cd3c7";
-import { renderSettings } from "./settings.js?v=14abd82cd3c7";
-import { enhanceSelects } from "./select.js?v=14abd82cd3c7";
-import { todayDate } from "./format.js?v=14abd82cd3c7";
+} from "../api.js?v=b294e7e09f77";
+import { runConfirm, runPurchase } from "./modal.js?v=b294e7e09f77";
+import { confirmPurchase } from "./purchase.js?v=b294e7e09f77";
+import { clearSession, getEmail, isSignedIn, refreshDue } from "../session.js?v=b294e7e09f77";
+import { setRefreshBusy, setStatus, showSpinner } from "../ui.js?v=b294e7e09f77";
+import { renderOverview } from "./overview.js?v=b294e7e09f77";
+import { renderSessions } from "./sessions.js?v=b294e7e09f77";
+import { renderCredits } from "./credits.js?v=b294e7e09f77";
+import { renderActivity } from "./activity.js?v=b294e7e09f77";
+import { renderBuy } from "./buy.js?v=b294e7e09f77";
+import { renderBilling } from "./billing.js?v=b294e7e09f77";
+import { renderInvoices } from "./invoices.js?v=b294e7e09f77";
+import { renderOrders } from "./orders.js?v=b294e7e09f77";
+import { renderKeys } from "./keys.js?v=b294e7e09f77";
+import { renderDevices } from "./devices.js?v=b294e7e09f77";
+import { renderStorage } from "./storage.js?v=b294e7e09f77";
+import { renderSettings } from "./settings.js?v=b294e7e09f77";
+import { enhanceSelects } from "./select.js?v=b294e7e09f77";
+import { todayDate } from "./format.js?v=b294e7e09f77";
 
 const LOGIN_HREF = "/machine/portal/login/";
 

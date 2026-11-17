@@ -8,7 +8,7 @@ permalink: machine/legal/privacy-policy/index.html
 
 # Privacy Policy
 
-<p class="legal-updated">Last updated: 16 November 2026</p>
+<p class="legal-updated">Last updated: 17 November 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -96,7 +96,9 @@ unless needed longer for an investigation or legal hold.
 When you delete a run, checkpoint or disk, our storage keeps a copy of its
 data for 30 days, then deletes it permanently. We use these copies only to
 investigate security incidents and abuse and to recover from them. An erasure
-request deletes them at once, with the rest of your account's data.
+request deletes these copies at once, together with the runs, checkpoints and
+disks still stored for your account. The records described in the paragraph
+above are kept as it says.
 
 ## 6. Cookies
 
