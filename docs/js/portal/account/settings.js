@@ -8,11 +8,11 @@ import {
   emailChallenge,
   emailStart,
   getAccount,
-} from "../api.js?v=dc37029f3963";
-import { clearSession } from "../session.js?v=dc37029f3963";
-import { setStatus, showSpinner } from "../ui.js?v=dc37029f3963";
-import { runConfirm } from "./modal.js?v=dc37029f3963";
-import { runStepUp } from "./stepup.js?v=dc37029f3963";
+} from "../api.js?v=9dd7a19968bc";
+import { clearSession } from "../session.js?v=9dd7a19968bc";
+import { setStatus, showSpinner } from "../ui.js?v=9dd7a19968bc";
+import { runConfirm } from "./modal.js?v=9dd7a19968bc";
+import { runStepUp } from "./stepup.js?v=9dd7a19968bc";
 
 /** How often the closing panel resumes teardown while waiting for `ready`. */
 const CLOSE_POLL_MS = 5000;
@@ -97,7 +97,7 @@ export function renderSettings(panel, account, ctx) {
     if (ok) {
       setStatus(
         ctx.statusEl,
-        "Check the new inbox for an activation link to finish the change.",
+        "Check the new inbox for an activation link to finish the change. No link is sent to an address another account uses. No link in a few minutes? Start the change again.",
         "ok"
       );
       form.reset();
