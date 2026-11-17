@@ -97,14 +97,14 @@ When you delete a run, checkpoint or disk, our storage keeps a copy of its
 data for 30 days, then deletes it permanently. We use these copies only to
 investigate security incidents and abuse and to recover from them. An erasure
 request deletes these copies at once, together with the runs, checkpoints and
-disks still stored for your account. The records described in the paragraph
-above are kept as it says.
+disks still stored for your account. An erasure also deletes your sessions,
+API keys, sign-in tokens and sign-in records. The usage and billing records
+described in the paragraph above are kept, de-identified.
 
 ## 6. Cookies
 
 We use essential cookies and local storage for authentication, security, and
-load balancing. Optional analytics on marketing pages, if enabled, are for
-aggregate traffic only. Where required, we ask consent before non-essential
+load balancing. We use no analytics. Where required, we ask consent before non-essential
 cookies. Browser controls may block cookies; blocking essential cookies may
 break login.
 
