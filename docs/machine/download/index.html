@@ -56,40 +56,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1794947457371" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1794947457371" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794932187991" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1794947457371" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -332,6 +332,10 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem</span><br><span class="line">openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine.sha256.sig machine.sha256</span><br></pre></td></tr></table></figure>
 
+<p>The checksum's second line, which the signature covers too, names the release it is for. It must read <code># release</code>, then the version you installed, <code>linux-x86_64</code>, <code>machine</code> and the same checksum as the first line:</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -n 2p machine.sha256</span><br><span class="line">machine --version</span><br></pre></td></tr></table></figure>
+
 <p>Last, check the file against the checksum, and against the client you installed. If a check fails, delete the client and install again.</p>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sha256sum</span> -c machine.sha256</span><br><span class="line">cmp machine <span class="string">&quot;<span class="subst">$(command -v machine)</span>&quot;</span></span><br></pre></td></tr></table></figure>
@@ -428,6 +432,10 @@
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem</span><br><span class="line">openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine-linux-arm64.sha256.sig machine-linux-arm64.sha256</span><br></pre></td></tr></table></figure>
 
+<p>The checksum's second line, which the signature covers too, names the release it is for. It must read <code># release</code>, then the version you installed, <code>linux-arm64</code>, <code>machine-linux-arm64</code> and the same checksum as the first line:</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -n 2p machine-linux-arm64.sha256</span><br><span class="line">machine --version</span><br></pre></td></tr></table></figure>
+
 <p>Last, check the file against the checksum, and against the client you installed. If a check fails, delete the client and install again.</p>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sha256sum</span> -c machine-linux-arm64.sha256</span><br><span class="line">cmp machine-linux-arm64 <span class="string">&quot;<span class="subst">$(command -v machine)</span>&quot;</span></span><br></pre></td></tr></table></figure>
@@ -513,7 +521,7 @@
 
 <div class="download-section">
 <h2>Check the download</h2>
-<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
+<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine-env -- machine --version</code> shows it):</p>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> machine-check &amp;&amp; <span class="built_in">cd</span> machine-check</span><br><span class="line">curl https://testflows.com/machine/install -fsS | MACHINE_VERSION=YYYYMMDD-HHMM bash -s -- --download</span><br></pre></td></tr></table></figure>
 
@@ -526,6 +534,10 @@
 <p>With openssl, a good signature prints <code>Verified OK</code>:</p>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem</span><br><span class="line">openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine-darwin-arm64.tar.gz.sha256.sig machine-darwin-arm64.tar.gz.sha256</span><br></pre></td></tr></table></figure>
+
+<p>The checksum's second line, which the signature covers too, names the release it is for. It must read <code># release</code>, then the version you installed, <code>darwin-arm64</code>, <code>machine-darwin-arm64.tar.gz</code> and the same checksum as the first line:</p>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sed -n 2p machine-darwin-arm64.tar.gz.sha256</span><br><span class="line">machine-env -- machine --version</span><br></pre></td></tr></table></figure>
 
 <p>Last, check the archive against the checksum. If it fails, delete it and install again.</p>
 
@@ -685,10 +697,10 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794932187992"></script>
-<script src="/js/machine-hero-type.js?v=1794932187992"></script>
-<script src="/js/download-platforms.js?v=1794932187992"></script>
-<script src="/js/anchor-case.js?v=1794932187992"></script>
+<script src="/js/index-code-type.js?v=1794947457372"></script>
+<script src="/js/machine-hero-type.js?v=1794947457372"></script>
+<script src="/js/download-platforms.js?v=1794947457372"></script>
+<script src="/js/anchor-case.js?v=1794947457372"></script>
 
 <script>
 var isInViewport = function (elem) {

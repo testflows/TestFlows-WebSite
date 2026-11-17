@@ -101,6 +101,13 @@ curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem
 openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine.sha256.sig machine.sha256
 ```
 
+<p>The checksum's second line, which the signature covers too, names the release it is for. It must read <code># release</code>, then the version you installed, <code>linux-x86_64</code>, <code>machine</code> and the same checksum as the first line:</p>
+
+```bash
+sed -n 2p machine.sha256
+machine --version
+```
+
 <p>Last, check the file against the checksum, and against the client you installed. If a check fails, delete the client and install again.</p>
 
 ```bash
@@ -213,6 +220,13 @@ curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem
 openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine-linux-arm64.sha256.sig machine-linux-arm64.sha256
 ```
 
+<p>The checksum's second line, which the signature covers too, names the release it is for. It must read <code># release</code>, then the version you installed, <code>linux-arm64</code>, <code>machine-linux-arm64</code> and the same checksum as the first line:</p>
+
+```bash
+sed -n 2p machine-linux-arm64.sha256
+machine --version
+```
+
 <p>Last, check the file against the checksum, and against the client you installed. If a check fails, delete the client and install again.</p>
 
 ```bash
@@ -301,7 +315,7 @@ docker pull --platform linux/amd64 myapp:latest
 
 <div class="download-section">
 <h2>Check the download</h2>
-<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine --version</code> shows it):</p>
+<p>The installer already verifies every download. To check by hand, download the files without installing them, with your version in place of <code>YYYYMMDD-HHMM</code> (<code>machine-env -- machine --version</code> shows it):</p>
 
 ```bash
 mkdir machine-check && cd machine-check
@@ -324,6 +338,13 @@ gpg --verify machine-darwin-arm64.tar.gz.sha256.asc machine-darwin-arm64.tar.gz.
 ```bash
 curl -fsSO https://testflows.com/machine/keys/machine-client-rsa.pub.pem
 openssl dgst -sha256 -verify machine-client-rsa.pub.pem -signature machine-darwin-arm64.tar.gz.sha256.sig machine-darwin-arm64.tar.gz.sha256
+```
+
+<p>The checksum's second line, which the signature covers too, names the release it is for. It must read <code># release</code>, then the version you installed, <code>darwin-arm64</code>, <code>machine-darwin-arm64.tar.gz</code> and the same checksum as the first line:</p>
+
+```bash
+sed -n 2p machine-darwin-arm64.tar.gz.sha256
+machine-env -- machine --version
 ```
 
 <p>Last, check the archive against the checksum. If it fails, delete it and install again.</p>

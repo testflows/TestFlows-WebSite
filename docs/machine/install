@@ -755,6 +755,13 @@ $(sed '1!G;h;$!d' "$file")
 EOF
     rm -f "$file"
     [ -n "$latest" ] || die "No versions are published."
+    # The list is the bucket's, which is not signed: a version older than the
+    # installed client is never offered as a command to paste.
+    local installed
+    installed="$(version_of "$(command -v machine 2>/dev/null)" 2>/dev/null || true)"
+    if version_valid "$installed" && ! [[ "$installed" < "$latest" ]]; then
+        return 0
+    fi
     say ""
     say "Install one:"
     if [ "$SIGNED_IN" = "client" ]; then
@@ -1501,7 +1508,13 @@ install_core() {
         warn "The Python SDK core was not installed."
         reason="$(printf '%s\n' "$refusal" | sed -n '/✗/{s/^.*✗[^ ]* //;s/, so it was not installed\.$/./;p;q;}')"
         [ -z "$reason" ] || say "  $reason" >&2
-        reinstall_hint "$release" >&2
+        # A signature or release line refused refuses again: no command to
+        # loop on. A download, a disk or a missing tool may do better.
+        case "$reason" in
+            *"not signed by TestFlows"* | *"signed without its version"* | \
+                "The signed checksum of "* | *"published checksum isn't valid"*) ;;
+            *) reinstall_hint "$release" >&2 ;;
+        esac
         return 0
     fi
     mv -f "$TMP" "$dir/$CORE_FILE" || die "Could not install $(tilde "$dir/$CORE_FILE")."
@@ -1625,10 +1638,10 @@ main() {
     fi
     # A latest older than the installed client is installed only when its version is
     # named: latest/version moved back would otherwise downgrade every install to a
-    # signed older release.
+    # signed older release. No hint names it: whoever moved the latest back
+    # would have the downgrade one paste away.
     if [ -z "${MACHINE_VERSION:-}" ] && version_valid "$before" && [[ "$release" < "$before" ]]; then
-        die "The latest release, $release, is older than the installed client, $before." \
-            "Install it anyway with --version $release."
+        die "The latest release, $release, is older than the installed client, $before, so nothing was installed."
     fi
 
     say "${BOLD}Installing the Machine client${RESET} ${DIM}($release)${RESET}"
