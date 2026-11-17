@@ -1,8 +1,8 @@
-import { ApiError, getDevices, logout, revokeDevice } from "../api.js?v=dc37029f3963";
-import { clearSession } from "../session.js?v=dc37029f3963";
-import { setStatus, showSpinner } from "../ui.js?v=dc37029f3963";
-import { ago } from "./format.js?v=dc37029f3963";
-import { runConfirm } from "./modal.js?v=dc37029f3963";
+import { ApiError, getDevices, logout, revokeDevice } from "../api.js?v=14abd82cd3c7";
+import { clearSession } from "../session.js?v=14abd82cd3c7";
+import { setStatus, showSpinner } from "../ui.js?v=14abd82cd3c7";
+import { ago } from "./format.js?v=14abd82cd3c7";
+import { runConfirm } from "./modal.js?v=14abd82cd3c7";
 
 const LOGIN_HREF = "/machine/portal/login/";
 
