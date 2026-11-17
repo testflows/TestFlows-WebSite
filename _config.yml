@@ -162,3 +162,20 @@ sitemap:
   rel: false
   tags: true
   categories: true
+
+# hexo-math: its injectors would put the KaTeX and MathJax styles, from
+# jsdelivr, on every page. They are off; the theme's head links local copies
+# on the pages that render math (themes/testflows/layout/_partial/head.ejs).
+# The plugin merges this shallowly, so each renderer's options are repeated.
+math:
+  katex:
+    css: false
+    options:
+      throwOnError: false
+  mathjax:
+    css: false
+    options:
+      conversion:
+        display: false
+      tex: {}
+      svg: {}
