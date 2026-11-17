@@ -2,7 +2,7 @@
 
 # Privacy Policy
 
-<p class="legal-updated">Last updated: 8 November 2026</p>
+<p class="legal-updated">Last updated: 16 November 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -86,6 +86,11 @@ requires erasure, we will anonymize the account email and revoke tokens after
 verification, while retaining de-identified usage and billing records as
 permitted. Logs and security data are kept for a limited operational period
 unless needed longer for an investigation or legal hold.
+
+When you delete a run, checkpoint or disk, our storage keeps a copy of its
+data for 30 days, then deletes it permanently. We use these copies only to
+investigate security incidents and abuse and to recover from them. An erasure
+request deletes them at once, with the rest of your account's data.
 
 ## 6. Cookies
 
