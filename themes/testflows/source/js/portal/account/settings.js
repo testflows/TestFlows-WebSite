@@ -97,7 +97,7 @@ export function renderSettings(panel, account, ctx) {
     if (ok) {
       setStatus(
         ctx.statusEl,
-        "Check the new inbox for an activation link to finish the change. No link is sent to an address another account uses. No link in a few minutes? Start the change again.",
+        "Check the new inbox for an activation link to finish the change. No link is sent to an address another account uses. Start the change again when no link comes in 5 minutes.",
         "ok"
       );
       form.reset();
