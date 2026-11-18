@@ -56,40 +56,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795032563484" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795032563484" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1794932187997" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795032563484" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -2883,6 +2883,11 @@ for one call. The stop is at the start of the call, so that same call fails:</p>
 <p>Name several system calls at once and each gets a fault of its own:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine inject app add syscall open,openat,creat EACCES --<span class="keyword">in</span> /usr/bin/app</span><br></pre></td></tr></table></figure>
 
+<p>Which of these a program calls depends on its C library. A glibc program’s
+<code>open()</code> calls <code>openat</code>, while busybox and other static programs call <code>open</code>.
+A fault whose MATCHED count stays at 0 while its program runs names a call the
+program never makes. Name both calls, <code>open,openat</code>, so the fault applies with
+either library.</p>
 <h3 id="which-errors"><a href="#which-errors" class="headerlink" title="Which errors"></a>Which errors</h3><p>Any Linux error goes, by name or by number, whether or not the system call’s
 manual lists it. Give a set and each failing call returns one of them. The
 examples here fail <code>openat</code> of <code>/usr/bin/app</code>, so add them once it runs, after
@@ -17286,10 +17291,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1794932187998"></script>
-<script src="/js/machine-hero-type.js?v=1794932187998"></script>
-<script src="/js/download-platforms.js?v=1794932187998"></script>
-<script src="/js/anchor-case.js?v=1794932187998"></script>
+<script src="/js/index-code-type.js?v=1795032563484"></script>
+<script src="/js/machine-hero-type.js?v=1795032563484"></script>
+<script src="/js/download-platforms.js?v=1795032563484"></script>
+<script src="/js/anchor-case.js?v=1795032563484"></script>
 
 <script>
 var isInViewport = function (elem) {

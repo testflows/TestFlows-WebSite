@@ -147,6 +147,12 @@ Name several system calls at once and each gets a fault of its own:
 machine inject app add syscall open,openat,creat EACCES --in /usr/bin/app
 ```
 
+Which of these a program calls depends on its C library. A glibc program's
+`open()` calls `openat`, while busybox and other static programs call `open`.
+A fault whose MATCHED count stays at 0 while its program runs names a call the
+program never makes. Name both calls, `open,openat`, so the fault applies with
+either library.
+
 ### Which errors
 
 Any Linux error goes, by name or by number, whether or not the system call's
