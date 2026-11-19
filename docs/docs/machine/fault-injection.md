@@ -136,6 +136,7 @@ To fail one particular call, run until the program makes it, then add the fault
 for one call. The stop is at the start of the call, so that same call fails:
 
 ```bash
+machine focus app add tgid=412                     # a syscall predicate needs its task focused
 machine run app --until tgid=412:syscall=write
 machine inject app add syscall write EIO --in tgid=412 --times 1
 machine run app
@@ -360,7 +361,7 @@ variables and function:
 
 ```bash
 machine break app add 412 process_record
-machine run app
+machine run app --iters 0                              # until the breakpoint
 machine mem app 412 'checksum^=0x1'                    # one bit of checksum flipped
 machine mem app 412 'head=0'                           # a pointer set to NULL
 machine mem app 412 '$sp+8=-1' g                       # a word of the stack overwritten
@@ -401,7 +402,7 @@ A program runs out of a resource in two ways, and Machine tests both:
 |---|---|---|---|
 | CPU | `containers throttle db --cpus 0.1` | | none: everything slows |
 | Memory | `containers memory db 64m` | `inject add function malloc --return 0` | SIGKILL, or `malloc` returns NULL |
-| Processes | `containers pids db 50` | `inject add syscall clone EAGAIN` | EAGAIN |
+| Processes | `containers pids db 50` | `inject add syscall fork,vfork,clone EAGAIN` | EAGAIN |
 | Open files | `containers files api 64` | `inject add syscall openat EMFILE` | EMFILE |
 | Ephemeral ports | `containers ports api 40000-40009` | `inject add syscall connect EADDRNOTAVAIL` | EADDRNOTAVAIL |
 | Disk space, inodes | fill a volume of its own | `inject add syscall write ENOSPC` | ENOSPC |
@@ -419,7 +420,7 @@ covers the other resources.
 | Does the system cope with one slow service? | `containers throttle db --cpus 0.1` | [CPU](#cpu) |
 | Does a service that crashes on a limit recover once the limit is lifted? | `containers memory hog 64m`, then `memory hog 0` | [A service that crashes on its limit](#a-service-that-crashes-on-its-limit) |
 | Does a service survive its disk filling up? | a volume of 64MB, filled with `dd` | [A full disk](#a-full-disk) |
-| Does a program report a failed fork, a full disk or no inodes? | `inject add syscall clone EAGAIN`, `write ENOSPC`, `mkdir ENOSPC` | [One failed call](#one-failed-call) |
+| Does a program report a failed fork, a full disk or no inodes? | `inject add syscall fork,vfork,clone EAGAIN`, `write ENOSPC`, `mkdir ENOSPC` | [One failed call](#one-failed-call) |
 
 ### Limits on a container
 
@@ -591,7 +592,7 @@ refuses a container on another container's network, with a hint to set the
 range on the container whose network it is:
 
 ```text
-✗ Not set: sidecar is on the network of compose-db-1.
+✗ Not set: compose-sidecar-1 is on the network of compose-db-1.
   Narrow the ports of compose-db-1 machine containers app ports compose-db-1 40000-40009
 ```
 
@@ -686,7 +687,7 @@ echo all started
 machine put app ./worker.sh /tmp/worker.sh --container db --mode 755
 
 # A failed fork: the script's second
-machine inject app add syscall clone EAGAIN --after 1 --times 1 --in comm=worker.sh
+machine inject app add syscall fork,vfork,clone EAGAIN --after 1 --times 1 --in comm=worker.sh
 machine exec app run --container db -- /tmp/worker.sh
 machine inject app clear
 
@@ -721,7 +722,9 @@ dd: error writing '/tmp/out': No space left on device
 mkdir: can't create directory '/tmp/new': No space left on device
 ```
 
-`fork` in the C library is the `clone` system call. A script run by its own
+`fork` in the C library is a system call that differs by library: glibc
+calls `clone`, and musl, the C library of Alpine images, calls `fork` or
+`vfork`. Name all three and the fault takes either. A script run by its own
 path, `/tmp/worker.sh`, has its file name as its comm, so the fault takes
 that script and no other shell. Running out of inodes gives ENOSPC from the
 call that creates a file or a directory, as running out of space does.
@@ -914,7 +917,7 @@ To look at the program at the moment a fault fires, add a catchpoint for it:
 machine catch app add fault openat
 machine catch app add fault disk
 machine catch app add fault disk-corrupt
-machine run app
+machine run app --iters 0                      # until a catchpoint
 ```
 
 The run stops where the fault fires, before a system call's wait and error, and
@@ -928,7 +931,7 @@ takes the same patterns as a disk fault, and `--op` takes `read` or `write`:
 
 ```bash
 machine catch app add io --file '/var/lib/clickhouse/data/db/t/*/data.bin' --op write
-machine run app
+machine run app --iters 0
 ```
 
 The run stops as the request is sent, before any disk fault decides on it, and
@@ -937,8 +940,8 @@ names the request: `Stopped at catchpoint 1: io write 1058144:1058151, in tid
 
 ```bash
 machine inject app add disk-lost --file '/var/lib/clickhouse/data/db/t/*/data.bin' --times 1 --in all
-machine catch app delete 1
-machine run app
+machine catch app delete 4                     # the io catchpoint, after the three above
+machine run app --iters 0
 ```
 
 Or by its sectors and its task, which name this request and no other:

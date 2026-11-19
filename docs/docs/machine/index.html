@@ -56,40 +56,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795056081210" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795056081210" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795055700674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795056081210" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -917,10 +917,12 @@ logging driver, if the project sets one, is <code>json-file</code>, <code>local<
 <h3 id="volumes-a-crash-cuts"><a href="#volumes-a-crash-cuts" class="headerlink" title="Volumes a crash cuts"></a>Volumes a crash cuts</h3><p><a href="#machine-containers"><code>machine containers crash</code></a> cuts a service’s
 data the way a power cut would. It cuts the volumes the project names in an
 <code>x-machine</code> block, each with the most it may hold:</p>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:16</span></span><br><span class="line">    <span class="attr">volumes:</span> [<span class="string">db-data:/var/lib/postgresql/data</span>]</span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span> &#123;&#125;</span><br><span class="line"><span class="attr">x-machine:</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="attr">db-data:</span> <span class="string">4G</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">services:</span></span><br><span class="line">  <span class="attr">db:</span></span><br><span class="line">    <span class="attr">image:</span> <span class="string">postgres:16</span></span><br><span class="line">    <span class="attr">environment:</span></span><br><span class="line">      <span class="attr">PGDATA:</span> <span class="string">/var/lib/postgresql/data/pgdata</span></span><br><span class="line">    <span class="attr">volumes:</span> [<span class="string">db-data:/var/lib/postgresql/data</span>]</span><br><span class="line"><span class="attr">volumes:</span></span><br><span class="line">  <span class="attr">db-data:</span> &#123;&#125;</span><br><span class="line"><span class="attr">x-machine:</span></span><br><span class="line">  <span class="attr">volumes:</span></span><br><span class="line">    <span class="attr">db-data:</span> <span class="string">4G</span></span><br></pre></td></tr></table></figure>
 
 <p>Each becomes an ext4 filesystem of its own on the disk, which costs only what
-is written to it. The disk is made big enough for every volume to fill, and
+is written to it. Its root holds <code>lost+found</code>, so a program that wants an
+empty directory takes one inside it: postgres refuses a data directory that
+is not empty, hence <code>PGDATA</code> above. The disk is made big enough for every volume to fill, and
 <code>--dry-run</code> shows the room they take:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">size</span><br><span class="line">  used      811MB</span><br><span class="line">  volumes   4096MB</span><br><span class="line">  capacity  6144MB</span><br></pre></td></tr></table></figure>
 
@@ -2878,7 +2880,7 @@ for that long, and delete it:</p>
 
 <p>To fail one particular call, run until the program makes it, then add the fault
 for one call. The stop is at the start of the call, so that same call fails:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine run app --<span class="keyword">until</span> tgid=412:syscall=write</span><br><span class="line">machine inject app add syscall write EIO --<span class="keyword">in</span> tgid=412 --<span class="built_in">times</span> 1</span><br><span class="line">machine run app</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine focus app add tgid=412                     <span class="comment"># a syscall predicate needs its task focused</span></span><br><span class="line">machine run app --<span class="keyword">until</span> tgid=412:syscall=write</span><br><span class="line">machine inject app add syscall write EIO --<span class="keyword">in</span> tgid=412 --<span class="built_in">times</span> 1</span><br><span class="line">machine run app</span><br></pre></td></tr></table></figure>
 
 <p>Name several system calls at once and each gets a fault of its own:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine inject app add syscall open,openat,creat EACCES --<span class="keyword">in</span> /usr/bin/app</span><br></pre></td></tr></table></figure>
@@ -3053,7 +3055,7 @@ stopped, <code>^=</code> flips bits of a value, as C’s <code>^=</code> does, a
 pattern over a span. Stop the program where the data is live first, at a
 breakpoint or a <code>run --until</code>. The names below stand for the program’s own
 variables and function:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">break</span> app add 412 process_record</span><br><span class="line">machine run app</span><br><span class="line">machine mem app 412 <span class="string">&#x27;checksum^=0x1&#x27;</span>                    <span class="comment"># one bit of checksum flipped</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;head=0&#x27;</span>                           <span class="comment"># a pointer set to NULL</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$sp+8=-1&#x27;</span> g                       <span class="comment"># a word of the stack overwritten</span></span><br><span class="line">machine mem app 412 buf --fill 0xde --length 4096      <span class="comment"># a buffer of garbage</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine <span class="built_in">break</span> app add 412 process_record</span><br><span class="line">machine run app --iters 0                              <span class="comment"># until the breakpoint</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;checksum^=0x1&#x27;</span>                    <span class="comment"># one bit of checksum flipped</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;head=0&#x27;</span>                           <span class="comment"># a pointer set to NULL</span></span><br><span class="line">machine mem app 412 <span class="string">&#x27;$sp+8=-1&#x27;</span> g                       <span class="comment"># a word of the stack overwritten</span></span><br><span class="line">machine mem app 412 buf --fill 0xde --length 4096      <span class="comment"># a buffer of garbage</span></span><br></pre></td></tr></table></figure>
 
 <p>The answer names the bits, the address and the value before and after. Here
 <code>optind</code>, a variable of the C library a shell of a container maps, is named
@@ -3099,7 +3101,7 @@ Use it to test one error path, exactly and repeatably.</li>
 <tr>
 <td>Processes</td>
 <td><code>containers pids db 50</code></td>
-<td><code>inject add syscall clone EAGAIN</code></td>
+<td><code>inject add syscall fork,vfork,clone EAGAIN</code></td>
 <td>EAGAIN</td>
 </tr>
 <tr>
@@ -3165,7 +3167,7 @@ covers the other resources.</p>
 </tr>
 <tr>
 <td>Does a program report a failed fork, a full disk or no inodes?</td>
-<td><code>inject add syscall clone EAGAIN</code>, <code>write ENOSPC</code>, <code>mkdir ENOSPC</code></td>
+<td><code>inject add syscall fork,vfork,clone EAGAIN</code>, <code>write ENOSPC</code>, <code>mkdir ENOSPC</code></td>
 <td><a href="#one-failed-call">One failed call</a></td>
 </tr>
 </tbody></table>
@@ -3264,7 +3266,7 @@ range of 3 ports, <code>nc</code> used 2.</li>
 container on the machine’s network, whose range is every process’s. It also
 refuses a container on another container’s network, with a hint to set the
 range on the container whose network it is:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✗ Not set: sidecar is on the network of compose-db-1.</span><br><span class="line">  Narrow the ports of compose-db-1 machine containers app ports compose-db-1 40000-40009</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">✗ Not set: compose-sidecar-1 is on the network of compose-db-1.</span><br><span class="line">  Narrow the ports of compose-db-1 machine containers app ports compose-db-1 40000-40009</span><br></pre></td></tr></table></figure>
 
 <h3 id="a-full-disk"><a href="#a-full-disk" class="headerlink" title="A full disk"></a>A full disk</h3><p>A container’s own files are on the machine’s disk, shared by every
 container, so filling them fills the machine. A volume that is a filesystem
@@ -3329,12 +3331,14 @@ programs are BusyBox’s, in the containers of the
 waits for them, and <code>machine put</code> copies it into <code>db</code>:</p>
 <figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/sh</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> 1 2 3; <span class="keyword">do</span> <span class="built_in">sleep</span> 1 &amp; <span class="keyword">done</span></span><br><span class="line"><span class="built_in">wait</span></span><br><span class="line"><span class="built_in">echo</span> all started</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">machine put app ./worker.sh /tmp/worker.sh --container db --mode 755</span><br><span class="line"></span><br><span class="line"><span class="comment"># A failed fork: the script&#x27;s second</span></span><br><span class="line">machine inject app add syscall <span class="built_in">clone</span> EAGAIN --after 1 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=worker.sh</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- /tmp/worker.sh</span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of descriptors: the third file of 8</span></span><br><span class="line">machine inject app add syscall openat EMFILE --after 14 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">tail</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;cd /tmp; timeout 1 tail -f f1 f2 f3 f4 f5 f6 f7 f8&#x27;</span></span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of local ports</span></span><br><span class="line">machine inject app add syscall connect EADDRNOTAVAIL --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=telnet</span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;sleep 2 | telnet 172.18.0.4 9000&#x27;</span></span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># A full disk: the 11th write</span></span><br><span class="line">machine inject app add syscall write ENOSPC --after 10 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">dd</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=/tmp/out bs=4k count=100</span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of inodes</span></span><br><span class="line">machine inject app add syscall <span class="built_in">mkdir</span> ENOSPC --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">mkdir</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">mkdir</span> /tmp/new</span><br><span class="line">machine inject app clear</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">machine put app ./worker.sh /tmp/worker.sh --container db --mode 755</span><br><span class="line"></span><br><span class="line"><span class="comment"># A failed fork: the script&#x27;s second</span></span><br><span class="line">machine inject app add syscall fork,vfork,<span class="built_in">clone</span> EAGAIN --after 1 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=worker.sh</span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- /tmp/worker.sh</span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of descriptors: the third file of 8</span></span><br><span class="line">machine inject app add syscall openat EMFILE --after 14 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">tail</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;cd /tmp; timeout 1 tail -f f1 f2 f3 f4 f5 f6 f7 f8&#x27;</span></span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of local ports</span></span><br><span class="line">machine inject app add syscall connect EADDRNOTAVAIL --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=telnet</span><br><span class="line">machine <span class="built_in">exec</span> app run --container api -- sh -c <span class="string">&#x27;sleep 2 | telnet 172.18.0.4 9000&#x27;</span></span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># A full disk: the 11th write</span></span><br><span class="line">machine inject app add syscall write ENOSPC --after 10 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">dd</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">dd</span> <span class="keyword">if</span>=/dev/zero of=/tmp/out bs=4k count=100</span><br><span class="line">machine inject app clear</span><br><span class="line"></span><br><span class="line"><span class="comment"># Out of inodes</span></span><br><span class="line">machine inject app add syscall <span class="built_in">mkdir</span> ENOSPC --<span class="keyword">in</span> <span class="built_in">comm</span>=<span class="built_in">mkdir</span></span><br><span class="line">machine <span class="built_in">exec</span> app run --container db -- <span class="built_in">mkdir</span> /tmp/new</span><br><span class="line">machine inject app clear</span><br></pre></td></tr></table></figure>
 
 <p>Each program reported its error:</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/tmp/worker.sh: line 0: can&#x27;t fork: Resource temporarily unavailable</span><br><span class="line">tail: can&#x27;t open &#x27;f3&#x27;: Too many open files</span><br><span class="line">telnet: can&#x27;t connect to remote host (172.18.0.4): Cannot assign requested address</span><br><span class="line">dd: error writing &#x27;/tmp/out&#x27;: No space left on device</span><br><span class="line">mkdir: can&#x27;t create directory &#x27;/tmp/new&#x27;: No space left on device</span><br></pre></td></tr></table></figure>
 
-<p><code>fork</code> in the C library is the <code>clone</code> system call. A script run by its own
+<p><code>fork</code> in the C library is a system call that differs by library: glibc
+calls <code>clone</code>, and musl, the C library of Alpine images, calls <code>fork</code> or
+<code>vfork</code>. Name all three and the fault takes either. A script run by its own
 path, <code>/tmp/worker.sh</code>, has its file name as its comm, so the fault takes
 that script and no other shell. Running out of inodes gives ENOSPC from the
 call that creates a file or a directory, as running out of space does.</p>
@@ -3489,18 +3493,18 @@ working. Each window has a fixed length. To try outages of other
 lengths, fork branches from one checkpoint and give each its own <code>--on</code> and
 <code>--off</code>.</p>
 <h2 id="stopping-at-a-fault"><a href="#stopping-at-a-fault" class="headerlink" title="Stopping at a fault"></a>Stopping at a fault</h2><p>To look at the program at the moment a fault fires, add a catchpoint for it:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine catch app add fault openat</span><br><span class="line">machine catch app add fault disk</span><br><span class="line">machine catch app add fault disk-corrupt</span><br><span class="line">machine run app</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine catch app add fault openat</span><br><span class="line">machine catch app add fault disk</span><br><span class="line">machine catch app add fault disk-corrupt</span><br><span class="line">machine run app --iters 0                      <span class="comment"># until a catchpoint</span></span><br></pre></td></tr></table></figure>
 
 <p>The run stops where the fault fires, before a system call’s wait and error, and
 says which: <code>Stopped at catchpoint 1: fault openat EACCES, in tid 229</code>, or
 <code>fault disk, in tid 77</code>. See <a href="#debugging">Debugging</a> for catchpoints.</p>
 <h3 id="stopping-at-a-file’s-i-o"><a href="#stopping-at-a-file’s-i-o" class="headerlink" title="Stopping at a file’s I&#x2F;O"></a>Stopping at a file’s I&#x2F;O</h3><p>An <code>io</code> catchpoint stops the run at a disk request, with no fault. <code>--file</code>
 takes the same patterns as a disk fault, and <code>--op</code> takes <code>read</code> or <code>write</code>:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine catch app add io --file <span class="string">&#x27;/var/lib/clickhouse/data/db/t/*/data.bin&#x27;</span> --op write</span><br><span class="line">machine run app</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine catch app add io --file <span class="string">&#x27;/var/lib/clickhouse/data/db/t/*/data.bin&#x27;</span> --op write</span><br><span class="line">machine run app --iters 0</span><br></pre></td></tr></table></figure>
 
 <p>The run stops as the request is sent, before any disk fault decides on it, and
 names the request: <code>Stopped at catchpoint 1: io write 1058144:1058151, in tid 266</code>. A fault added there decides on that same request. Name it by its file:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine inject app add disk-lost --file <span class="string">&#x27;/var/lib/clickhouse/data/db/t/*/data.bin&#x27;</span> --<span class="built_in">times</span> 1 --<span class="keyword">in</span> all</span><br><span class="line">machine catch app delete 1</span><br><span class="line">machine run app</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine inject app add disk-lost --file <span class="string">&#x27;/var/lib/clickhouse/data/db/t/*/data.bin&#x27;</span> --<span class="built_in">times</span> 1 --<span class="keyword">in</span> all</span><br><span class="line">machine catch app delete 4                     <span class="comment"># the io catchpoint, after the three above</span></span><br><span class="line">machine run app --iters 0</span><br></pre></td></tr></table></figure>
 
 <p>Or by its sectors and its task, which name this request and no other:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine inject app add disk-corrupt --sectors 1058144:1058151 --<span class="built_in">times</span> 1 --<span class="keyword">in</span> tid=266</span><br></pre></td></tr></table></figure>
@@ -3647,7 +3651,7 @@ it would cut that container too.</p>
 there, and crash a branch of it. The branch loses what the database had not
 synced yet; the query tells you whether it had already told a client the data
 was safe:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine catch app add syscall fsync fdatasync --<span class="keyword">in</span> <span class="built_in">comm</span>=postgres   <span class="comment"># where it syncs</span></span><br><span class="line">machine run app                                                    <span class="comment"># stops at the next sync</span></span><br><span class="line">machine fork app --name <span class="built_in">cut</span>                                        <span class="comment"># the run keeps its place</span></span><br><span class="line">machine catch app/cut delete 1                                     <span class="comment"># the branch has its parent&#x27;s</span></span><br><span class="line">machine containers app/cut crash db --restart 0</span><br><span class="line">machine <span class="built_in">exec</span> app/cut run --container db -- psql -U postgres -c <span class="string">&#x27;select count(*) from t&#x27;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">machine catch app add syscall fsync fdatasync --<span class="keyword">in</span> <span class="built_in">comm</span>=postgres   <span class="comment"># where it syncs</span></span><br><span class="line">machine run app --iters 0                                          <span class="comment"># stops at the next sync</span></span><br><span class="line">machine fork app --name <span class="built_in">cut</span>                                        <span class="comment"># the run keeps its place</span></span><br><span class="line">machine catch app/cut delete 1                                     <span class="comment"># the branch has its parent&#x27;s</span></span><br><span class="line">machine containers app/cut crash db --restart 0</span><br><span class="line">machine <span class="built_in">exec</span> app/cut run --container db -- psql -U postgres -c <span class="string">&#x27;select count(*) from t&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p>The run is deterministic, so the branch crashes at exactly that sync every
 time. Run on to the next sync and fork again to cut at another point.</p>
@@ -4048,8 +4052,9 @@ commands:</p>
 <p>For example, with api pinging db every 250 milliseconds, the 3 replies sent
 before the hold arrive, none arrives in 3 seconds of hold, and all 20 arrive
 after the release. A container on another’s network, the machine’s or none has no
-link of its own and is left out, and so is a process outside every
-container. The listing names a container whose link could not be held.</p>
+link of its own, so a hold does not reach it; the listing shows its row with
+dashes. Nor does a hold reach a process outside every container. The listing
+names a container whose link could not be held.</p>
 <h3 id="resetting-connections"><a href="#resetting-connections" class="headerlink" title="Resetting connections"></a>Resetting connections</h3><p><code>reset</code> aborts TCP connections. The container’s side of each connection is
 aborted, and the peer receives a TCP reset, as from a middlebox that dropped
 the connection or a server that restarted. What a program sees depends on
@@ -17291,10 +17296,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795055700675"></script>
-<script src="/js/machine-hero-type.js?v=1795055700675"></script>
-<script src="/js/download-platforms.js?v=1795055700675"></script>
-<script src="/js/anchor-case.js?v=1795055700675"></script>
+<script src="/js/index-code-type.js?v=1795056081211"></script>
+<script src="/js/machine-hero-type.js?v=1795056081211"></script>
+<script src="/js/download-platforms.js?v=1795056081211"></script>
+<script src="/js/anchor-case.js?v=1795056081211"></script>
 
 <script>
 var isInViewport = function (elem) {

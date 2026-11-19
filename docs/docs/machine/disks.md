@@ -351,6 +351,8 @@ data the way a power cut would. It cuts the volumes the project names in an
 services:
   db:
     image: postgres:16
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes: [db-data:/var/lib/postgresql/data]
 volumes:
   db-data: {}
@@ -360,7 +362,9 @@ x-machine:
 ```
 
 Each becomes an ext4 filesystem of its own on the disk, which costs only what
-is written to it. The disk is made big enough for every volume to fill, and
+is written to it. Its root holds `lost+found`, so a program that wants an
+empty directory takes one inside it: postgres refuses a data directory that
+is not empty, hence `PGDATA` above. The disk is made big enough for every volume to fill, and
 `--dry-run` shows the room they take:
 
 ```text

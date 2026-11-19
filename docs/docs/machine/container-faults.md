@@ -124,7 +124,7 @@ was safe:
 
 ```bash
 machine catch app add syscall fsync fdatasync --in comm=postgres   # where it syncs
-machine run app                                                    # stops at the next sync
+machine run app --iters 0                                          # stops at the next sync
 machine fork app --name cut                                        # the run keeps its place
 machine catch app/cut delete 1                                     # the branch has its parent's
 machine containers app/cut crash db --restart 0

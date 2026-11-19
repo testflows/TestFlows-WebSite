@@ -213,8 +213,9 @@ machine net app release
 For example, with api pinging db every 250 milliseconds, the 3 replies sent
 before the hold arrive, none arrives in 3 seconds of hold, and all 20 arrive
 after the release. A container on another's network, the machine's or none has no
-link of its own and is left out, and so is a process outside every
-container. The listing names a container whose link could not be held.
+link of its own, so a hold does not reach it; the listing shows its row with
+dashes. Nor does a hold reach a process outside every container. The listing
+names a container whose link could not be held.
 
 ### Resetting connections
 
