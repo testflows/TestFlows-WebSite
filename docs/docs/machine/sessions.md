@@ -26,7 +26,7 @@ in a session of the architecture it was recorded on.
 
 ```bash
 machine sessions classes
-machine sessions create arm-1 --class standard-ie
+machine sessions create ci-1 --class standard-ie
 ```
 
 The name is optional. Leave it off and Machine makes one up. Machine waits
