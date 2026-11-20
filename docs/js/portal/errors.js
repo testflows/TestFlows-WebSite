@@ -31,6 +31,8 @@ const ERROR_COPY = {
   account_suspended:
     "Account suspended for review. Write to support@testflows.com.",
   contact_unavailable: "The message was not sent. Try again shortly.",
+  email_disposable:
+    "Disposable email addresses can't sign up. Use your work email or an address from an established email provider.",
   "missing bearer token": "Not signed in.",
   "invalid email": "Enter a valid email address.",
   "email not allowed": "That email isn't allowed.",

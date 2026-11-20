@@ -22,7 +22,8 @@ permalink: machine/portal/signup/index.html
             <form id="portal-signup-form" class="portal-form" novalidate>
                 <div class="portal-field">
                     <label for="portal-signup-email">Your account email</label>
-                    <input type="email" class="form-control" id="portal-signup-email" required autocomplete="email" placeholder="you@company.com">
+                    <input type="email" class="form-control" id="portal-signup-email" required autocomplete="email" placeholder="you@company.com" aria-describedby="portal-signup-email-hint">
+                    <p class="portal-hint" id="portal-signup-email-hint">Use your work email or an address from an established email provider.</p>
                 </div>
                 <div class="portal-field portal-check">
                     <input type="checkbox" id="portal-signup-terms" required>

@@ -1,3 +1,4 @@
+https://testflows.com/machine/portal/signup/index.html
 https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/download/index.html
 https://testflows.com/machine/download.md
@@ -9,7 +10,6 @@ https://testflows.com/legal/copyright-and-content-use/index.html
 https://testflows.com/legal/copyright-and-content-use.md
 https://testflows.com/docs/machine/index.html
 https://testflows.com/docs/machine.md
-https://testflows.com/machine/portal/signup/index.html
 https://testflows.com/machine/legal/acceptable-use/index.html
 https://testflows.com/machine/legal/acceptable-use.md
 https://testflows.com/machine/legal/client-eula/index.html
