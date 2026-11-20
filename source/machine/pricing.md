@@ -142,7 +142,7 @@ permalink: machine/pricing/index.html
 </table>
 </div>
 <p>A class costs the same on every plan. <code>machine sessions classes</code> lists the classes and their current prices.</p>
-<p>Before you run software that handles sensitive data, such as production credentials or customer data, write to <a href="mailto:sales@testflows.com">sales@testflows.com</a>. We make <code>dedicated-ip</code> available to you, or reserve Dedicated machines for your team.</p>
+<p>Before you run software that needs stronger isolation, write to <a href="mailto:sales@testflows.com">sales@testflows.com</a>. We make <code>dedicated-ip</code> available to you, or reserve Dedicated machines for your team.</p>
 </section>
 
 <section class="pricing-section">
