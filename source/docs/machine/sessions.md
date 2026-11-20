@@ -22,9 +22,7 @@ plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
 the classes, with the region and the CPU architecture of each. A session runs
 in its class's region, and its runs are stored there. `standard-ip` is the
 class to prefer. `standard-ie` costs less. A run starts only in a session of
-the architecture it was recorded on: runs move between `standard-ip` and
-`dedicated-ip`, and a run recorded on `standard-ie` starts only on
-`standard-ie`.
+the architecture it was recorded on.
 
 `dedicated-ip` runs each vCPU on a core of its own. It is available on
 request. Before you run software that handles sensitive data,
