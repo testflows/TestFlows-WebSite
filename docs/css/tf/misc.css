@@ -356,6 +356,10 @@ hr {
 .pricing-table th:last-child,
 .pricing-table td:last-child { text-align: right; white-space: nowrap; }
 
+/* A row shown greyed out, such as a class sold on request. */
+.pricing-table tr.pricing-muted td,
+.pricing-table tr.pricing-muted td code { color: var(--tf-text-muted); }
+
 .pricing-compare-section { max-width: none; }
 
 /* Equal plan columns, whatever a cell holds; the long one wraps. */

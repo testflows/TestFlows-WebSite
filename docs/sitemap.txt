@@ -1,3 +1,6 @@
+https://testflows.com/machine/pricing/index.html
+https://testflows.com/machine/download/index.html
+https://testflows.com/machine/download.md
 https://testflows.com/machine/legal/privacy-policy/index.html
 https://testflows.com/machine/legal/privacy-policy.md
 https://testflows.com/legal/trademark-policy/index.html
@@ -19,11 +22,8 @@ https://testflows.com/legal/index.html
 https://testflows.com/legal.md
 https://testflows.com/contact.html
 https://testflows.com/contact.md
-https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/index.html
 https://testflows.com/machine.md
-https://testflows.com/machine/download/index.html
-https://testflows.com/machine/download.md
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests.md
 https://testflows.com/blog/combinatorial-testing-behavior-model/

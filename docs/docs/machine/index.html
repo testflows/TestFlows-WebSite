@@ -56,40 +56,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795139766259" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795139766259" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795056081210" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795139766259" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -1007,9 +1007,16 @@ is charged for: 2 vCPUs with 8G of memory count 4. <code>machine account show</c
 how many are in use. <code>--class</code> picks the hardware class, and the default comes from your
 plan. <a href="#machine-sessions-classes"><code>machine sessions classes</code></a> lists
 the classes, with the region and the CPU architecture of each. A session runs
-in its class’s region, and its runs are stored there. <code>standard-ip</code>, on <code>intel-1</code>, is
-the class to prefer. <code>standard-ie</code>, on <code>intel-2</code>, costs less. A run starts only
-in a session of the architecture it was recorded on.</p>
+in its class’s region, and its runs are stored there. <code>standard-ip</code> is the
+class to prefer. <code>standard-ie</code> costs less. A run starts only in a session of
+the architecture it was recorded on: runs move between <code>standard-ip</code> and
+<code>dedicated-ip</code>, and a run recorded on <code>standard-ie</code> starts only on
+<code>standard-ie</code>.</p>
+<p><code>dedicated-ip</code> runs each vCPU on a core of its own. It is available on
+request. Before you run software that handles sensitive data,
+such as production credentials or customer data, write to
+<a href="mailto:sales@testflows.com">sales@testflows.com</a> to have <code>dedicated-ip</code> made
+available to you, or Dedicated machines reserved for your team.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine sessions classes</span><br><span class="line">machine sessions create ci-1 --class standard-ie</span><br></pre></td></tr></table></figure>
 
 <p>The name is optional. Leave it off and Machine makes one up. Machine waits
@@ -17296,10 +17303,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795056081211"></script>
-<script src="/js/machine-hero-type.js?v=1795056081211"></script>
-<script src="/js/download-platforms.js?v=1795056081211"></script>
-<script src="/js/anchor-case.js?v=1795056081211"></script>
+<script src="/js/index-code-type.js?v=1795139766259"></script>
+<script src="/js/machine-hero-type.js?v=1795139766259"></script>
+<script src="/js/download-platforms.js?v=1795139766259"></script>
+<script src="/js/anchor-case.js?v=1795139766259"></script>
 
 <script>
 var isInViewport = function (elem) {
