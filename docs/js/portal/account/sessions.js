@@ -1,7 +1,7 @@
-import { ApiError, getSessions } from "../api.js?v=b294e7e09f77";
-import { setStatus, showSpinner } from "../ui.js?v=b294e7e09f77";
-import { CREDITS, credits, elapsed, secondsBetween, titleCase } from "./format.js?v=b294e7e09f77";
-import { paintEmpty } from "./table.js?v=b294e7e09f77";
+import { ApiError, getSessions } from "../api.js?v=c0fd7310d7d1";
+import { setStatus, showSpinner } from "../ui.js?v=c0fd7310d7d1";
+import { CREDITS, credits, elapsed, secondsBetween, titleCase } from "./format.js?v=c0fd7310d7d1";
+import { paintEmpty } from "./table.js?v=c0fd7310d7d1";
 
 /** @type {Record<string, string>} */
 const STATE_TONE = {

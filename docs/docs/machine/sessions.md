@@ -24,10 +24,10 @@ in its class's region, and its runs are stored there. `standard-ip` is the
 class to prefer. `standard-ie` costs less. A run starts only in a session of
 the architecture it was recorded on.
 
-`dedicated-ip` runs each vCPU on a core of its own. It is available on
-request. Before you run software that needs stronger isolation, write to [sales@testflows.com](mailto:sales@testflows.com) to have
-`dedicated-ip` made available to you, or Dedicated machines reserved for your
-team.
+`dedicated-ip` runs each vCPU on a core of its own, from the Starter plan up.
+For software that needs stronger isolation, use `dedicated-ip`, or write to
+[sales@testflows.com](mailto:sales@testflows.com) to have Dedicated machines
+reserved for your team.
 
 ```bash
 machine sessions classes

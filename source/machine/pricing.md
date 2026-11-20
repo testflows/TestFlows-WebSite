@@ -137,12 +137,12 @@ permalink: machine/pricing/index.html
 <tbody>
 <tr><td><code>standard-ip</code></td><td>Europe</td><td>Standard performance, the default</td><td>₡0.15</td></tr>
 <tr><td><code>standard-ie</code></td><td>Europe</td><td>Reduced performance</td><td>₡0.12</td></tr>
-<tr class="pricing-muted"><td><code>dedicated-ip</code></td><td>Europe</td><td>Better performance on dedicated cores, on request</td><td>₡0.25</td></tr>
+<tr><td><code>dedicated-ip</code></td><td>Europe</td><td>Better performance on dedicated cores, from Starter</td><td>₡0.25</td></tr>
 </tbody>
 </table>
 </div>
 <p>A class costs the same on every plan. <code>machine sessions classes</code> lists the classes and their current prices.</p>
-<p>Before you run software that needs stronger isolation, write to <a href="mailto:sales@testflows.com">sales@testflows.com</a>. We make <code>dedicated-ip</code> available to you, or reserve Dedicated machines for your team.</p>
+<p>For software that needs stronger isolation, use <code>dedicated-ip</code>, or write to <a href="mailto:sales@testflows.com">sales@testflows.com</a> to have Dedicated machines reserved for your team.</p>
 </section>
 
 <section class="pricing-section">

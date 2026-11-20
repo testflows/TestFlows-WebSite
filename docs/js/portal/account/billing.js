@@ -1,8 +1,8 @@
-import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=b294e7e09f77";
-import { setStatus, showSpinner } from "../ui.js?v=b294e7e09f77";
-import { titleCase, until } from "./format.js?v=b294e7e09f77";
-import { runConfirm, runPlanPick } from "./modal.js?v=b294e7e09f77";
-import { TIER_RANK, tierRank } from "./plans.js?v=b294e7e09f77";
+import { ApiError, billingPortal, getBillingProducts } from "../api.js?v=c0fd7310d7d1";
+import { setStatus, showSpinner } from "../ui.js?v=c0fd7310d7d1";
+import { titleCase, until } from "./format.js?v=c0fd7310d7d1";
+import { runConfirm, runPlanPick } from "./modal.js?v=c0fd7310d7d1";
+import { TIER_RANK, tierRank } from "./plans.js?v=c0fd7310d7d1";
 
 /**
  * @param {HTMLElement} host
