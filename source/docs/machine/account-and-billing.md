@@ -24,15 +24,16 @@ Most of what the account page on the website does, the client does too.
 | [`machine account email`](commands.md#machine-account-email) | changes your email address |
 | [`machine account close`](commands.md#machine-account-close) | closes the account, in two steps (`--cancel` stops it) |
 
-`payment`, `portal`, `cancel`, `upgrade` and `downgrade` open a browser. Add
+`payment`, `portal`, `cancel`, `upgrade-plan` and `downgrade-plan` open a browser. Add
 `--link` to print the address instead.
 
 Sessions use credits. Machine writes an amount of credits with the sign `₡`,
 so `₡0.15` is 0.15 credits. The price is per vCPU-hour, and
 depends on the hardware class. A session is created on `standard-ip` unless you
 pick another class, and it uses ₡0.15 a vCPU-hour. `standard-ie` uses ₡0.12.
-Each vCPU comes with 2G of memory and 16G of disk. A session that asks for more
-is charged for the vCPUs that would bring it.
+Each vCPU comes with 2G of memory and 16G of disk. A session that asks for
+more memory or disk than that is charged for as many vCPUs as would come with
+it.
 [`machine sessions classes`](commands.md#machine-sessions-classes) lists the
 current price of each class. Your plan includes plan credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.
@@ -41,9 +42,10 @@ at €1 a credit. A credit has no cash value.
 your team alone, contact [sales@testflows.com](mailto:sales@testflows.com).
 
 A running session is charged an hour ahead. When it stops, the unused part
-of its last hour is settled back. In the activity, a Charged row's TIME is the
-hour and a Settled row's is negative, the part given back, so a session's
-rows add up to the time it ran, as their CHANGE adds up to what it used.
+of its last hour is given back. In the activity, a Charged row's TIME is the
+hour, and a Settled row's TIME is negative: the part given back. A session's
+rows therefore add up to the time it ran, and their CHANGE adds up to the
+credits it used.
 [`machine account activity`](commands.md#machine-account-activity) `<session>`
 lists a session's charges and what they add up to. How credits are granted and used
 is in the [usage credit terms](/machine/legal/usage-credit/).
@@ -58,7 +60,7 @@ prune.
 storage back and reports what it could not read, showing its progress as it
 goes. It writes nothing.
 
-Your plan's storage quota counts TOTAL: what your runs and disks hold, and the
+Your plan's storage quota counts the TOTAL that `machine storage show` reports: what your runs and disks hold, and the
 space deleted ones have not given back yet. [`machine account show`](commands.md#machine-account-show) shows the
 same figure. Deleting a run or a disk moves its space to PRUNABLE, which still
 counts until you prune. The figures are from the last measurement, and

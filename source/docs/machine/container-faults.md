@@ -55,9 +55,14 @@ the same image. The files it wrote outside its volumes are gone, and its
 volumes are kept. Use it to find state a service keeps in its own files when it
 should keep it in a volume.
 
+Right after a container starts, Machine does not know its name yet, so a
+command that names it by its service or its name is refused for that moment.
+Name it by the id that `machine containers app` shows, or let the machine run
+for a second first with `machine run app --within 1s`.
+
 A limit holds when the container starts again, as a limit in its Compose file
-would: a service the out-of-memory killer stops comes back to the same limit.
-Every start has the limit before the container's program runs. Use
+would: a container that `--restart` brings back has the same limit, set before
+the container's program runs. Use
 `throttle db --cpus 0` to set back the container's own limit, its Compose
 file's or none, or `--for 30s` to restore the previous
 limit after 30 seconds of machine time, on whichever start of the container
@@ -71,18 +76,25 @@ memory, and its out-of-memory killer kill a process of the container when it
 cannot. A process killed that way exits 137, by SIGKILL:
 
 ```bash
-machine containers app memory db 32m
-machine exec app run --container db -- sh -c 'x=$(head -c 64000000 /dev/zero | tr "\0" a)'
+machine containers app memory api 32m
+machine exec app run --container api -- sh -c 'x=$(head -c 64000000 /dev/zero | tr "\0" a)'
 echo $?                                          # 137: killed by its out-of-memory killer
-machine containers app memory db 0
+machine containers app memory api 0
 ```
 
+The out-of-memory killer stops the process that uses the most memory. Here
+that is the shell the example started. If it were the container's main
+program, such as a database server, the container would exit. When a service
+exits on its own and its restart policy does not start it again, the whole
+project ends.
+
 `memory` takes `--for`, and its limit holds through restarts, as
-`throttle`'s does. `machine containers app` lists each container's limits in its
-LIMITS column, `cpus 0.1 memory 64MB` or `-` for none. A disk built before
-container limits is refused, with a hint to build it again.
-An out-of-memory kill is part of the run: a replay kills the same process at
-the same point.
+`throttle`'s does. An out-of-memory kill is part of the run, so a replay kills
+the same process at the same point.
+
+`machine containers app` lists each container's limits in its LIMITS column,
+`cpus 0.1 memory 64MB` or `-` for none. A limit on a disk built before
+container limits is refused, with a hint to build the disk again.
 
 Each fault is recorded with the run, so a replay faults the same container at
 the same point. Put one where the run is stopped, at a breakpoint, a catchpoint
@@ -94,7 +106,8 @@ or a `run --until`, to fault a service at the moment that matters.
 running and writes it out later. `crash` is a power cut of the service's node.
 Its volumes keep what was synced and lose the writes still in memory. When the
 service starts again, each volume replays its journal and the service runs its
-own recovery. That finds a commit acknowledged before its data was synced, a
+own recovery. A crash test finds the bugs that recovery exposes: a commit
+acknowledged before its data was synced, a
 `rename` whose directory was never synced, and a log record that survived while
 the data it describes did not.
 
@@ -125,14 +138,15 @@ was safe:
 ```bash
 machine catch app add syscall fsync fdatasync --in comm=postgres   # where it syncs
 machine run app --iters 0                                          # stops at the next sync
-machine fork app --name cut                                        # the run keeps its place
-machine catch app/cut delete 1                                     # the branch has its parent's
-machine containers app/cut crash db --restart 0
-machine exec app/cut run --container db -- psql -U postgres -c 'select count(*) from t'
+machine fork app --name crash                                      # the run keeps its place
+machine catch app/crash delete 1                                   # the branch has its parent's
+machine containers app/crash crash db --restart 0
+machine run app/crash --within 5s                                  # the database recovers
+machine exec app/crash run --container db -- psql -U postgres -c 'select count(*) from t'
 ```
 
 The run is deterministic, so the branch crashes at exactly that sync every
-time. Run on to the next sync and fork again to cut at another point.
+time. To crash at another point, run on to the next sync and fork again.
 
 From Python, `run.containers.crash("db", restart="0")` and the other verbs
 take the same options as keywords. [The SDK's Container faults](python-sdk.md#container-faults)

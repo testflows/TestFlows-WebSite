@@ -85,24 +85,42 @@ See also:
 
 List sessions. See [Sessions](sessions.md).
 
-The current session is tagged. A session that stopped shows how it stopped. Use
-`--all` to list the stopped sessions of the account as well.
+The command lists the running sessions of the account. The current session is
+tagged.
+
+A session that ended is listed once while this computer is still connected to
+it, with how it ended. The command then clears that connection.
+
+Use `--all` to list the sessions that ended as well, and `--state`, `--since`
+and `--until` to choose among them. The account keeps how each session ended.
 
 ```
-machine sessions list [-h] [-w] [-a]
+machine sessions list [-h] [-w] [-a] [--state [^]state] [--since date|age]
+                      [--until date|age] [--sort field] [--reverse] [--limit n]
+                      [--offset n]
 ```
 
 | Option | Does |
 |---|---|
 | `-w, --watch` | Watch for changes |
-| `-a, --all` | List stopped sessions as well, the newest 50 |
+| `-a, --all` | List the sessions that ended as well |
+| `--state [^]state` | Filter by state: provisioning, running, stopping, stopped, failed (repeat = OR; ^ excludes) |
+| `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
+| `--sort field` | Sort field: created, stopped, name, cpus, memory (default: created) |
+| `--reverse` | Reverse sort order |
+| `--limit n` | Show at most n sessions (default: 25) |
+| `--offset n` | Skip the first n sessions |
 
 Examples:
 
 ```
-machine sessions list        list sessions
-machine sessions list --all  with the stopped ones, and how each stopped
-machine sessions list -w     watch the list
+machine sessions list                   list sessions
+machine sessions list --all             with those that ended, and how
+machine sessions list --state failed    the sessions that failed
+machine sessions list --all --since 7d  created in the last 7 days
+machine sessions list --state ^stopped  every state but stopped
+machine sessions list -w                watch the list
 ```
 
 See also:
@@ -251,7 +269,8 @@ See also:
 
 Delete a session. See [Sessions](sessions.md).
 
-The first operand names the session. Use -a to delete every session.
+The operands name the sessions. Use -a to delete every session. Use `--state` to
+delete the sessions in a state.
 
 The command stops the machines of the session and syncs their runs to shared
 storage. The runs start again in another session. A session already gone counts
@@ -261,24 +280,27 @@ The command waits until a named session is gone. Use `--no-wait` to return once
 the request is accepted.
 
 ```
-machine sessions delete [-h] [-a] [-y] [--no-wait] [session]
+machine sessions delete [-h] [-a] [--state [^]state] [-y] [--no-wait] [session ...]
 ```
 
 | Argument | Does |
 |---|---|
-| `[session]` | Session name, id, or prefix (default: the only one) |
+| `[session ...]` | Session names, ids, or prefixes (default: the only one) |
 
 | Option | Does |
 |---|---|
 | `-a, --all` | Delete every session |
+| `--state [^]state` | Delete the sessions in a state (repeat = OR; ^ excludes) |
 | `-y, --yes` | Skip the confirmation prompt |
 | `--no-wait` | Return without waiting |
 
 Examples:
 
 ```
-machine sessions delete work -y  stop and delete work
-machine sessions delete -a -y    delete every session
+machine sessions delete work -y            stop and delete work
+machine sessions delete a b -y             delete a and b
+machine sessions delete --state failed -y  delete the failed sessions
+machine sessions delete -a -y              delete every session
 ```
 
 See also:
@@ -342,6 +364,48 @@ See also:
 - [`machine sessions list`](#machine-sessions-list)
 - [`machine sessions show`](#machine-sessions-show)
 - [`machine account show`](#machine-account-show)
+
+### machine sessions migrate
+
+Move a session to a new session with its runs.
+
+The command creates a session of the same class and size. It stops each running
+machine, which checkpoints it, and starts it in the new session at that
+checkpoint. The new session takes the session's name, and the old one is
+deleted.
+
+A machine starts in the new session in the state it stopped in. The command
+compares the machine's state hashes before the stop and after the start. A run
+that differs is not moved back, and both sessions are kept.
+
+A command running on a machine ends, as stop ends it. The command asks first. A
+failure moves every machine back to the session and deletes the new one.
+
+```
+machine sessions migrate [-h] [-y] [session]
+```
+
+| Argument | Does |
+|---|---|
+| `[session]` | Session name, id, or prefix (default: the only one) |
+
+| Option | Does |
+|---|---|
+| `-y, --yes` | Skip the confirmation prompt |
+
+Examples:
+
+```
+machine sessions migrate work     move work to a new session
+machine sessions migrate work -y  without asking first
+```
+
+See also:
+
+- [`machine sessions list`](#machine-sessions-list)
+- [`machine sessions show`](#machine-sessions-show)
+- [`machine stop`](#machine-stop)
+- [`machine start`](#machine-start)
 
 ### machine sessions connect
 
@@ -408,6 +472,35 @@ See also:
 
 - [`machine sessions connect`](#machine-sessions-connect)
 - [`machine sessions use`](#machine-sessions-use)
+
+## machine notices
+
+Show the notices in effect now.
+
+A notice says what will happen and when, and the command that acts on it. A
+session given a maintenance notice must move to another host by its deadline, or
+it stops. A client older than the latest release is out of date. A client may
+also be given a date after which it stops working.
+
+The command asks the service now. Other commands show a session's notice every
+10 minutes. In the last 10 minutes before its deadline, every command shows it.
+They show the client's notice once a day.
+
+```
+machine notices [-h]
+```
+
+Examples:
+
+```
+machine notices          what will happen to my sessions and client
+machine -o json notices  the same, for a script
+```
+
+See also:
+
+- [`machine sessions migrate`](#machine-sessions-migrate)
+- [`machine upgrade`](#machine-upgrade)
 
 ## machine ping
 
@@ -1302,18 +1395,21 @@ See also:
 
 Install the latest client. See [Download](/machine/download/).
 
-The command runs the installer at https://testflows.com/machine/install. The
-installer downloads the release and checks its signed checksum. It puts the
-client where it puts every install. It removes the files older versions
-unpacked.
+The command downloads the release for this system. It checks the signed checksum
+with the release key built into the client. The signature names the version, the
+platform and the file. The download then replaces the installed client by a
+rename.
 
-The installer uses the client's own sign-in. A client signed in asks for nothing
-and stays signed in. A client signed out signs in at the terminal for the
-download. It stays signed out after.
+The command also installs the release's Python SDK core. It removes the files
+older versions unpacked. It runs no downloaded script.
 
-The latest is not downloaded again when it is installed already. A version named
-is installed even when it is installed already. An older version installs the
-same way. Use `--list` to see the versions there are.
+The download uses the client's own sign-in, or the API key in
+TESTFLOWS_MACHINE_API_KEY. The sign-in goes to the service alone.
+
+The latest is not downloaded again when it is installed already. A latest older
+than this client is installed only when its version is named. A version named is
+installed even when it is installed already. Use `--list` to see the versions
+there are.
 
 ```
 machine upgrade [-h] [--list | version]
@@ -3205,7 +3301,7 @@ machine. Use `--entries` to select the commands issued at given run entries. Use
 -n to select commands by number.
 
 ```
-machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|log [run]
+machine control [-h] [--entries range] [--wide] [--plain] [-n range] [-c cmd] run|log [run]
 ```
 
 | Argument | Does |
@@ -3216,7 +3312,8 @@ machine control [-h] [--entries range] [--wide] [-n range] [-c cmd] run|log [run
 | Option | Does |
 |---|---|
 | `--entries range` | With log: commands at one entry, or an inclusive range |
-| `--wide` | With log: show the entries, vCPU, opcode and size of each command |
+| `--wide` | With log: show the entries, vCPU, opcode and size of each command (default on a terminal) |
+| `--plain` | With log: show the commands alone (default into a pipe or a file) |
 | `-n, --lines range` | With log: commands: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
 | `-c, --command cmd` | Slash command to run without opening the prompt, such as "/f@100" |
 
@@ -3238,6 +3335,7 @@ machine control run1 -c /exec                   the processes of run1
 machine control run1 -c '/fs ls / at ^cp1'      the disk's files at cp1
 machine control run1 -c '/f;/d'                 run, then dump
 machine control log run1                        the commands issued to run1
+machine control log run1 --plain                the commands alone
 ```
 
 See also:
@@ -3481,7 +3579,7 @@ machine play [-h] [-n range] [--include type [type ...]] [--exclude type [type .
 | Option | Does |
 |---|---|
 | `-n, --entries range` | Entries: N for one, A:B for A through B, A: from A on, :B up to B, : for all, -N or -N: for the last N, and -A:-B counted from the end |
-| `--include type [type ...]` | Play only these event types: run, irq, exception, random, device_in, block_done, input, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid, rng_seed |
+| `--include type [type ...]` | Play only these event types: run, irq, exception, random, device_in, block_done, exit_shutdown, system_shutdown, system_reset, checkpoint, cpuid, rng_seed |
 | `--exclude type [type ...]` | Leave these event types out |
 
 Examples:

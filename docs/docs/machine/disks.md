@@ -36,7 +36,12 @@ machine disks build --image myapp:latest app
 machine disks build --compose ./deploy stack
 ```
 
-The name defaults to whatever the source is called. Use `--entrypoint` to
+The name defaults to whatever the source is called. Keep the name of a disk
+built with `--binary` or `--from` in lowercase. With client 20261120-0351 and
+earlier, a capital letter builds a disk whose program fails to start, and the
+console says `repository name must be lowercase`.
+
+Use `--entrypoint` to
 choose the executable the service runs. The service's own arguments go after
 a `--`. This one runs `data-race` with the
 argument `3`:
@@ -65,7 +70,7 @@ uploaded.
 An image you built yourself, or one from a private registry, goes in with
 `--image` from your local Docker.
 
-A complex application, several services together, is a [Compose project](disks.md#compose-projects).
+An application of several services is a [Compose project](disks.md#compose-projects).
 
 ### Python program
 
@@ -79,7 +84,7 @@ print("hello, world")
 machine disks build --from python:3.12-slim --add hello.py hello-py -- python hello.py
 ```
 
-It runs in a machine with the default 256MB of memory, and takes about ten
+It runs in a machine with the default 256MB of memory, and takes about five
 seconds from power-on to the program's exit.
 
 ### Node.js program
@@ -114,15 +119,17 @@ The machine's console shows the result, and the machine ends when the queries
 do.
 
 ```
-app-1  | ada	55
-app-1  | grace	45
-app-1 exited with code 0
+app | ada	55
+app | grace	45
+=== app exited by itself: code 0 ===
 ```
 
 ### PostgreSQL queries
 
 The PostgreSQL image starts a server, and it needs a password before it will.
-`--env` sets a variable in the service's environment. The image runs every
+`--env` sets a variable in the service's environment. The disk holds each
+`--env` value as written, and a value is not changed on the way: a `$` in it
+arrives as a `$`. The image runs every
 `.sql` file in `/docker-entrypoint-initdb.d` when the server first starts, so
 add the queries there. Save them as `queries.sql`.
 
@@ -138,24 +145,23 @@ machine disks build --from postgres:17 --env POSTGRES_PASSWORD=secret \
 ```
 
 ```
-app-1  | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/queries.sql
-app-1  | CREATE TABLE
-app-1  | INSERT 0 3
-app-1  |  customer | total
-app-1  | ----------+-------
-app-1  |  ada      |    55
-app-1  |  grace    |    45
-app-1  | (2 rows)
-app-1  | 2026-03-01 00:00:50.435 UTC [1] LOG:  database system is ready to accept connections
+app | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/queries.sql
+app | CREATE TABLE
+app | INSERT 0 3
+app |  customer | total
+app | ----------+-------
+app |  ada      |    55
+app |  grace    |    45
+app | (2 rows)
+app | 2026-03-01 00:00:50.435 UTC [1] LOG:  database system is ready to accept connections
 ```
 
 The server keeps running after the queries, so this machine does not end by
 itself. To run queries and have the machine end, use the
-[PostgreSQL project](disks.md#postgresql-project). The disk holds each `--env`
-value as written, and a value is not changed on the way: a `$` in it arrives
-as a `$`.
+[PostgreSQL project](disks.md#postgresql-project).
 
-Both ran in a machine with 1024MB of memory. A server that other services
+The ClickHouse and PostgreSQL examples both ran in a machine with 1024MB of
+memory. A server that other services
 connect to is a [Compose project](disks.md#compose-projects).
 
 ### Where added files go
@@ -163,7 +169,7 @@ connect to is a [Compose project](disks.md#compose-projects).
 `--add` puts a file or a directory in the image, as one more layer on top of
 the public one. You can repeat it.
 
-| You write | It lands at |
+| You write | Path in the image |
 |---|---|
 | `--add hello.py` | the image's working directory, as `hello.py` |
 | `--add conf` | the working directory, as the directory `conf` |
@@ -177,11 +183,14 @@ directory the path goes into, and any other destination is what the path
 becomes. A Dockerfile `ADD` of a directory copies its contents; the last row is
 how you write that here.
 
-A script that was executable still is. `--add` works with `--binary` too, for
+`--add` keeps a file's executable bit, so a script that was executable on your
+computer is executable in the image. `--add` works with `--binary` too, for
 a program that reads a file beside it.
 
-`--add` takes files, directories and links. A device, a FIFO or a socket in
-the directory is refused. Every added file belongs to root in the image, so
+`--add` takes files, directories and links. When you name a link, the image
+holds what the link points to, and a link inside an added directory stays a
+link. A device, a FIFO or a socket in the directory is refused. Every added file belongs to
+root in the image, so
 the set-user-id and set-group-id bits are not kept: a bit that meant "run as
 this file's owner" on your computer would mean "run as root" there. An image
 that needs one is built with Docker and named with `--image`.
@@ -194,7 +203,7 @@ change your disk. You can name a digest yourself, as `python@sha256:…` or the
 The disk's size defaults to what the image needs plus a gigabyte. Use
 `--dry-run` to see the numbers, and `--size` for more room.
 
-`--from` takes public images of up to 5GB as they download. For a private
+`--from` takes public images of up to 5GB, measured as downloaded. For a private
 image, a larger one, or one you build yourself, use `--image`:
 
 ```bash
@@ -214,7 +223,8 @@ into the local Docker, then build the disk from the project directory.
 those images and the project. The machine runs the project and ends it when a
 service exits on its own, stopping the others, or when the project is taken
 down with `docker compose down`. A service that Machine stops, kills or crashes
-with [`machine containers`](commands.md#machine-containers) ends nothing.
+with [`machine containers`](commands.md#machine-containers) does not end the
+project.
 
 ```bash
 git clone https://github.com/testflows/Machine.git
@@ -222,7 +232,7 @@ cd Machine/examples
 ```
 
 The same project can be run on this computer first, from its own directory,
-which is how to fix it without waiting for a boot. The build commands below
+so you can fix it without waiting for a machine to boot. The build commands below
 are from the `examples` directory.
 
 ### A two-service project
@@ -256,8 +266,8 @@ waits until the server is healthy, prints its result, and exits, which ends
 the project.
 
 The server takes time to start before it accepts a query, so the project uses a healthcheck rather than a sleep. `config.xml` in the
-project replaces the image's config. It listens on IPv4 only, because the
-machine's kernel has no IPv6, and it caps the background pools, because the
+project replaces the image's config. It makes the server listen on IPv4 only,
+because the machine's kernel has no IPv6, and it caps the background pools, because the
 image's defaults hang startup in a small machine. `CLICKHOUSE_SKIP_USER_SETUP`
 stops the entrypoint from restricting the `default` user to loopback, which
 would refuse the client.
@@ -290,26 +300,28 @@ machine disks build --compose compose/postgres pg
 ```
 
 ```
-client-1    | CREATE TABLE
-client-1    | INSERT 0 3
-client-1    |  customer | total
-client-1    | ----------+-------
-client-1    |  ada      |    55
-client-1    |  grace    |    45
-client-1    | (2 rows)
-client-1 exited with code 0
+client | CREATE TABLE
+client | INSERT 0 3
+client |  customer | total
+client | ----------+-------
+client |  ada      |    55
+client |  grace    |    45
+client | (2 rows)
+client |
+=== client exited by itself: code 0 ===
 ```
 
 ### Carrying images
 
-A service can start containers of its own, through the machine's Docker. The
-images it starts are named by no service this project runs, and a machine
-reaches no registry, so an image that is not named here is not on the disk.
+A service can start containers of its own, through the machine's Docker. No
+service of the project names the images those containers use, and a machine
+reaches no registry, so an image the project does not name is not on the disk.
 
-`scale: 0` names an image and starts nothing. The build packs every image the
-project names, including these, and Compose starts none of them.
-`compose/clickhouse-regression` carries the images its suite starts this way.
-Another image, such as ZooKeeper or MinIO, is another service.
+A service with `scale: 0` names an image and starts no container. The build
+packs every image the project names, these included, and Compose starts none
+of them. `compose/clickhouse-regression` carries the images its suite starts
+this way. Each further image, such as ZooKeeper or MinIO, needs a service of
+its own.
 
 ```yaml
 services:
@@ -379,10 +391,10 @@ rounded up to a whole GB.
 
 A volume in `x-machine` is a plain Compose volume: no `driver_opts`, not
 `external`. A project names 8 at most. A volume two services mount can't be
-crashed while both run. Such a volume has a journal, which is what recovers it
-after a crash, and an `fsync` on it takes about four times as long as on a
-volume the block doesn't name. Name only the volumes whose crashes you want to
-test.
+crashed while both run. Each volume in `x-machine` has a journal, which is what
+recovers it after a crash, so an `fsync` on it takes about four times as long
+as on a volume the block doesn't name. Name only the volumes whose crashes you
+want to test.
 
 ## Building disks on an ARM machine
 
@@ -420,14 +432,14 @@ image twice: the tar, and what it unpacks to. Use it when a service runs
 `docker save` or `docker push` on one of the disk's own images from inside the
 machine. Starting containers does not need it.
 
-Layers compressed with zstd are not read; save the image with gzip or
-uncompressed layers.
+Machine does not read layers compressed with zstd, so save the image with gzip
+or uncompressed layers.
 
 ## Disk size
 
 By default Machine measures what the disk holds and adds a gigabyte, rounded
-up to a whole GB. Use `--size` to set the size you want. Not sure how big it
-will be? `--dry-run` reports what the disk would hold without building it.
+up to a whole GB. Use `--size` to set the size you want, and `--dry-run` to see
+what the disk would hold without building it.
 
 ```bash
 machine disks build --dry-run --from python:3.12-slim --add hello.py hello -- python hello.py
@@ -464,7 +476,7 @@ after deduplication and compression.
 
 ```bash
 NAME   ID            SIZE   DATA   STATE  CREATED  LABELS
-hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago   —
+hello  4d13d6d911ee  2.1GB  148MB  ready  1h ago
 ```
 
 Disks share what they have in common: every disk carries the same platform,
@@ -474,7 +486,7 @@ take together. [`machine storage`](commands.md#machine-storage-show) has that fi
 counts. A disk that shows `—` for DATA gets a figure from
 [`machine disks verify`](commands.md#machine-disks-verify).
 
-If you ever doubt the copy of a disk in your account's storage, check it:
+To check the copy of a disk in your account's storage:
 
 ```bash
 machine disks verify app
@@ -488,6 +500,12 @@ takes about as long as reading the disk, and a disk that does not read as it
 was stored is reported as damaged, in which case build it again.
 
 Deleting a disk is permanent. Machine refuses to delete one that a run still
-boots. `--force` deletes it anyway. Those runs stay, and can no longer start.
+boots. `--force` deletes it anyway; the runs that boot it remain, but they can
+no longer start.
+
 [`machine disks transfers`](commands.md#machine-disks-transfers) shows the transfers in progress, and
-[`machine disks cancel`](commands.md#machine-disks-cancel) stops one.
+[`machine disks cancel`](commands.md#machine-disks-cancel) stops one. An
+account can have at most 2 transfers in progress at a time, counting the
+uploads and downloads of every disk. A build you start while 2 are running is
+refused with `Too many transfers in progress (max 2)`, so start it again once
+one of them ends.

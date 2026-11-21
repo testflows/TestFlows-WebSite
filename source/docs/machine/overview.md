@@ -50,10 +50,11 @@ an entry. Entry #42 is always the same point in that run.
 run has checkpoint 1, taken at its first entry, and you can add your own and
 name them.
 
-**Branch.** A run that starts from another run at some point. It shares history
-with its parent up to that point and has its own after that. You create one
-with [`machine fork`](commands.md#machine-fork) or [`machine go`](commands.md#machine-go). Runs that grow out of one another form a
-tree.
+**Branch.** A run that starts from another run at some point, its fork point.
+It shares history with its parent up to the fork point and has its own after
+it. You create one with [`machine fork`](commands.md#machine-fork) or [`machine go`](commands.md#machine-go). A run and its
+branches form a tree. The ancestors of a branch, from the root of its tree
+down, are its lineage.
 
 **Mark.** A second name for a branch, given after the fact. The generated name
 says where a branch started. A mark says what it turned out to be,
@@ -70,15 +71,23 @@ name one in several ways.
 | `#42` | entry 42 |
 | `1.5s` | a time on the machine's clock |
 | `-10ms` | ten milliseconds of machine time back from where the run is now |
+| `-10` | ten entries back from where the run is now |
 | `now` | where the run is now |
-| `parent` | the point this run branched from |
-| `root` | the start of the tree |
-| `%crashed` | the branch with the `crashed` mark |
+| `parent` | this run's fork point |
+| `parent 2` | the fork point of this run's parent |
+| `root` | the point where this run's lineage leaves the root of its tree |
+| `%crashed` | the point where this run's lineage leaves the branch marked `crashed` |
 | `console~login` | where the console first printed a match of `login` |
+| `console:120` | where the console printed its line 120 |
+
+Every point is on the lineage of the run it is given for. A mark therefore
+names a point only when the marked branch is an ancestor of that run. A machine
+time such as `1.5s` or `-10ms` names the first entry at the last machine time
+at or before the one you asked for.
 
 The same points work everywhere a point is taken: `--at` on `fork`, `detach`
 and `go`, `rewind ... to`, and `replay --to`. `--from` takes them too, except
-`now` and a mark. A bare word is
+`now`. A bare word is
 read as a checkpoint's name first, then as a time, then as an entry, so write
 `^name` or `#42` when you mean one of them for sure.
 
@@ -87,6 +96,4 @@ A branch can only start from a checkpoint.
 take any of these points. If the one you name isn't a checkpoint, they start
 the branch at the nearest checkpoint before it and replay the rest of the way
 for you. `fork --no-start` refuses such a point, because it leaves no machine
-to replay on, and so does `detach`. A machine
-time such as `1.5s` or `-10ms` names the first entry at the last machine time
-at or before the one you asked for.
+to replay on, and so does `detach`.

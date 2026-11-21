@@ -89,8 +89,9 @@ the next is refused until one is reset or removed.
 
 ### Drift and slew
 
-A clock that runs fast or slow is the fault a jump cannot fake: nodes do not
-jump apart, they wander apart until an assumption breaks. `drift` makes one
+A clock that runs fast or slow is a fault a jump cannot reproduce: the nodes'
+dates move apart gradually rather than in one step, until an assumption about
+skew breaks. `drift` makes one
 container's date gain or lose time at a rate of machine time:
 
 ```bash
@@ -113,14 +114,15 @@ machine clock app jump +4s --for 2m --container db               # off and back,
 machine clock app jump +4s --for 2m --slew 30s --container db    # drifts off and back, 30s each
 ```
 
-A slew runs until it arrives. A later change to the same container, a drift
-included, stops it where it has got to, so set a drift before you start a
-slew. A slew moves the date at most half a second for each second of machine
+A slew runs until the date reaches its new value. A later change to the same
+container, a drift included, stops the slew at the offset it has reached, so
+set a drift before you start a slew. A slew moves the date at most half a second for each second of machine
 time, so `jump +4s --slew 8s` is the fastest slew of 4 seconds. Machine
 refuses a shorter one:
 
 ```text
 ✗ A slew of +4s takes 8s at the least.
+  Slew it over 8s machine clock app jump +4s --slew 8s --container db
 ```
 
 The guest's date has no drift. To make the whole machine's time run fast or
@@ -128,7 +130,7 @@ slow, use the [clock rate](steering-programs.md#clock-rate).
 
 ### Jitter
 
-An NTP-disciplined fleet is never exactly in sync: each host's offset wobbles
+An NTP-disciplined fleet is never exactly in sync: each host's offset varies
 within a bound. `jitter` sets the date to a value drawn around it each period:
 
 ```bash
@@ -221,6 +223,7 @@ machine clock app
 
 ```text
 date:    2026-03-01T00:00:40.556767815Z
+offset:  +0.000356s from machine time
 jitter:  -5ms:5ms every 1s, seed 1, at +0.000356s after 1 draw
 refused: clock set 1970-01-01T00:00:01Z: the date, the guest's or a container's, would leave the range the kernel takes: from 1970 plus the time since the guest booted, to 2232-04-18T23:47:16Z
 ```
@@ -280,8 +283,9 @@ machine clock app jump +1d --container redis
 
 #### How much skew the system tolerates
 
-Fork the same checkpoint into branches, one skew each, and run each to the same point. Every branch starts
-from the identical machine, so the skew is the only difference:
+Fork one branch for each skew at the same checkpoint, and run each branch to
+the same point. Every branch starts from the identical machine, so the skew is
+the only difference:
 
 ```bash
 machine checkpoint app steady
@@ -300,14 +304,13 @@ run where the check is done, jump, and go on:
 
 ```bash
 machine containers app                       # auth is 3f2a91c0d4e7
-machine break app add 412 check_expiry
 machine run app --until 'tid=412:at=check_expiry'
 machine clock app jump +1h --container 3f2a91c0d4e7
 machine run app --within 30s
 ```
 
-The jump finds the container by its id without running the machine, so it
-lands while the run is stopped at `check_expiry`.
+The jump finds the container by its id without running the machine, so the
+run is still stopped at `check_expiry` when it takes the jump.
 
 #### A step back reorders events
 

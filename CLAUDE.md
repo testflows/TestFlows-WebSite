@@ -40,6 +40,52 @@ Write as an experienced engineer explaining the system to another engineer.
   never invented.
 - **A number carries its context:** what was measured, against what.
 
+### Sentences that flow
+
+- **Simple, natural sentences that keep the flow.** Each sentence follows from
+  the one before it. A paragraph reads as one explanation, not as a list of
+  facts with the punctuation of prose. Not "The file is under `drop`, so a run
+  stores it only when it keeps that output. This run was created with ...:"
+  but "A run does not store files under `/output/drop` unless it is told to
+  keep them, so this run was created with ...:".
+- **Name things with the exact technical term.** A run's ancestors are its
+  lineage; the point a branch starts from is its fork point; the run a tree
+  starts from is its root. Never a metaphor or a casual stand-in: not "the
+  run grew out of the branch", "this run's line", "served from it", but "the
+  branch is an ancestor of the run", "the run's lineage", "a call that does
+  not read received data".
+- **Define a term once, where it first appears,** and use it the same way
+  after. The overview defines run, entry, checkpoint, branch, fork point,
+  lineage and mark; other pages use those words without redefining them.
+- **No telegraphic fragments.** A table cell may be a fragment; prose may not.
+  Not "Steps add up." in a paragraph, but "Two jumps add up: `+5s` and then
+  `-2s` leave the date 3 seconds ahead."
+
+## Updating a page
+
+- **Fix the paragraph, not the sentence.** When a fact on a page is wrong,
+  rewrite the paragraph that holds it so the correction reads as part of it.
+  Never append a terse sentence that contradicts or patches the one before.
+  After an edit, re-read the whole paragraph, and the one before and after it.
+- **Check every example against the released client,** `machine` on `PATH`,
+  not the client built from source. Copy output samples from a real terminal:
+  without one the client prints differently (hints, progress lines). Run the
+  command under a pseudo-terminal, `script -qfc "<command>" /dev/null`, and
+  keep only the lines that stay on screen. Leave out the `Elapsed:` and
+  `Showing ...` footers.
+- **A sample is one run.** When you replace one output sample in a sequence,
+  keep its ids, entry numbers and times consistent with the samples around it.
+  Do not change ids, hashes or timings that only differ because they vary
+  between runs.
+- **A console pattern must not match boot messages.** `console~ready` matches
+  `already` in a kernel line and stops during boot. Match a service's line by
+  its prefix: `console~app \| ready`.
+- **Document the product as released.** A fix in the client's source that has
+  not shipped does not change the page yet. When the page must warn about a
+  bug, name the client version it applies to.
+- **Agents' edits are drafts.** An agent that verifies a page may fix facts,
+  but its prose is reviewed against this file before it is kept.
+
 ## Changes
 
 - Change only the pages and sections asked for. A broad pass over the site is

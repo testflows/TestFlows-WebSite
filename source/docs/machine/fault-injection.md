@@ -14,9 +14,9 @@ way. There are four kinds of fault, each with its own command:
 | `machine net` | the links between containers: slow, lossy, out of order, rate limited, or cut | [Network faults](network-faults.md) |
 
 
-`machine inject` makes things fail inside the machine. A fault goes into a
-subsystem: a program's system calls, or one of the kernel's own places where
-things can fail, such as the disk or memory allocation, or the disk itself. You
+Each `machine inject` fault goes into a subsystem: a program's system calls or
+functions, a place in the kernel where work can fail, such as a disk request or
+a memory allocation, or the data on the disk itself. You
 find out what your program does when `openat` says `EACCES`, `write` says
 `ENOSPC`, the disk returns an I/O error, the kernel runs out of memory, or the
 disk quietly returns the wrong bytes, at the call you choose or by chance.
@@ -43,8 +43,9 @@ the machine, and a replay fails exactly the same calls.
 
 ## System call faults
 
-A syscall fault names a system call and the errors it may return, and the
-program's calls of it return one of them without running.
+A syscall fault names a system call and the errors it may return. The
+program's calls to that system call then return one of those errors without
+running.
 
 ```bash
 machine inject app add syscall connect ECONNREFUSED --in /usr/bin/app
@@ -74,13 +75,13 @@ the faults and their counts, and a branch has its parent's.
   starting another program, such as a server's workers. It starts with the
   program, so you can add it before the program runs. Use the path
   [`machine tasks app`](commands.md#machine-tasks) shows as EXE: a symlink
-  counts as the file it points to, so busybox's `/bin/cat` is `/bin/busybox`.
+  counts as the file it points to, so BusyBox's `/bin/cat` is `/bin/busybox`.
   A program that loads shared libraries opens and reads them after it starts,
   so add a fault on `openat`, `read` or `stat` once it is up, or it fails the
   loading instead.
 * **A task's name:** `--in comm=cat`. The kernel names a task after the file
   the command named, up to 15 bytes. That picks out one tool of a
-  multi-call binary such as busybox, and a script, whose program is its
+  multi-call binary such as BusyBox, and a script, whose program is its
   interpreter but whose name is its own. The interpreter's first open is of
   the script itself, so `--after 1` lets it read the script and fails what
   the script opens:
@@ -90,9 +91,9 @@ the faults and their counts, and a branch has its parent's.
   machine exec app run -- /tmp/s.sh
   ```
 
-  That is busybox's shell, which calls `open`. A glibc shell calls `openat`
-  and opens its shared libraries first: count them in `--after`, or add the
-  fault once the script runs.
+  The script runs in the machine's own BusyBox shell, which calls `open`. A
+  glibc shell calls `openat` and opens its shared libraries first: count them
+  in `--after`, or add the fault once the script runs.
 * **One process:** `--in tgid=412`, its pid. Add it once the program is running.
   Before then, that process is still being set up to run it.
 * **One thread:** `--in tid=41`.
@@ -149,7 +150,8 @@ machine inject app add syscall open,openat,creat EACCES --in /usr/bin/app
 ```
 
 Which of these a program calls depends on its C library. A glibc program's
-`open()` calls `openat`, while busybox and other static programs call `open`.
+`open()` calls `openat`, while a musl program, such as BusyBox on Alpine,
+calls `open`.
 A fault whose MATCHED count stays at 0 while its program runs names a call the
 program never makes. Name both calls, `open,openat`, so the fault applies with
 either library.
@@ -234,12 +236,14 @@ on its first allocation, while `seq` and `tail` in the same container run as
 before. With `--prob 0.05`, four runs of `sort` match 60 calls and fail 4. The
 seed decides which calls fail, so a replay fails the same calls.
 
+Three details affect what a function fault does:
+
 - **errno is not set.** The C library keeps errno in each thread's own memory,
   so a caller that checks the return sees the failure, and one that reads
   errno reads what was there before.
 - **The function's first instruction.** The kernel puts a breakpoint there, in
-  the tasks `--in` names alone, and a fire returns to the caller before the
-  function sets up its frame. Each call traps into the kernel, which costs
+  the tasks `--in` names alone, and when the fault fires, the call returns to
+  the caller before the function sets up its frame. Each call traps into the kernel, which costs
   time in a function called often.
 - **The task `--at` names.** It must be a task inside the container, not
   the `docker exec` that started it: `machine tasks app` shows each task's
@@ -293,16 +297,25 @@ machine inject app add syscall brk ENOMEM --in /usr/bin/app
 ```
 
 A refused `brk` returns the break unchanged, as the kernel's own refusal does,
-and the C library moves to `mmap`: with every `brk` of `sort` failing, all 12,
-it sorted 100,000 lines and exited 0. That is the test of a program that
+and the C library moves to `mmap`: with every `brk` of `sort` failing, it
+sorted 100,000 lines and exited 0. That is the test of a program that
 assumes its heap is contiguous.
 
 A program's first `mmap` calls are its dynamic loader's, mapping its
-libraries, and a fault on those stops the program before it runs: `sort`
-failed with `error while loading shared libraries: libc.so.6: failed to map
-segment from shared object` with `mmap` failing after its 13th call. A program
-with a small heap makes no `mmap` of its own, so `function malloc` is the
-fault that reaches its allocations.
+libraries, and a fault on those stops the program before it runs. In a
+service `deb` built from `debian:bookworm-slim`, `sort` makes 8 `mmap` calls in all, and with
+`--after 5` it failed with `error while loading shared libraries: libc.so.6:
+failed to map segment from shared object`:
+
+```bash
+machine inject app add syscall mmap ENOMEM --in comm=sort --after 5
+machine exec app run --container deb -- sort /etc/hostname
+```
+
+The count of the loader's calls depends on the program and its libraries, so
+add the fault with `--prob 0` first and read MATCHED to count them. A program
+with a small heap makes no `mmap` calls of its own, so for that program
+`function malloc` is the fault that reaches its allocations.
 
 ### The kernel's own allocations
 
@@ -319,18 +332,18 @@ memory. Past the limit the guest kernel reclaims memory, and its
 out-of-memory killer kills a process of the container when it cannot:
 
 ```bash
-machine containers app memory db 32m
-machine exec app run --container db -- sh -c 'x=$(head -c 64000000 /dev/zero | tr "\0" a)'
+machine containers app memory api 32m
+machine exec app run --container api -- sh -c 'x=$(head -c 64000000 /dev/zero | tr "\0" a)'
 ```
 
 ```text
 ⚠ Exit status 137: killed by SIGKILL, as Docker reports a signal
 ```
 
-`--soft` sets the limit past which the kernel reclaims and slows the
-container's processes, and kills none of them, as memory pressure does. What
-the kernel can reclaim decides what the program sees, and the machine has no
-swap:
+`--soft` sets a limit past which the kernel reclaims memory and slows the
+container's processes without killing any of them, as memory pressure does.
+The machine has no swap, so what the program sees depends on what the kernel
+can reclaim:
 
 - **Files the program reads** are cached in memory the kernel can drop and
   read again. Past a soft limit the program keeps running, slower. For
@@ -353,9 +366,9 @@ such as `memory 64MB soft 48MB`.
 
 ### Wrong data
 
-[`machine mem`](debugging.md) writes a program's memory with the machine
-stopped, `^=` flips bits of a value, as C's `^=` does, and `--fill` writes a
-pattern over a span. Stop the program where the data is live first, at a
+[`machine mem`](debugging.md) writes a program's memory while the machine is
+stopped. `^=` flips bits of a value, as it does in C, and `--fill` writes a
+pattern over a span of memory. Stop the program where the data is live first, at a
 breakpoint or a `run --until`. The names below stand for the program's own
 variables and function:
 
@@ -368,9 +381,10 @@ machine mem app 412 '$sp+8=-1' g                       # a word of the stack ove
 machine mem app 412 buf --fill 0xde --length 4096      # a buffer of garbage
 ```
 
-The answer names the bits, the address and the value before and after. Here
-`optind`, a variable of the C library a shell of a container maps, is named
-by its file, as `machine symbols` lists it, since the shell has one too:
+The answer names the bits, the address and the value before and after. In the
+next example the target is `optind`, a variable of the C library that a
+container's shell maps. The shell has its own `optind` too, so the write names
+the library's variable by its file, as `machine symbols` lists it:
 
 ```bash
 machine mem app 628 '/lib/libc.so.6:optind^=0x1'
@@ -383,7 +397,8 @@ machine mem app 628 '$sp-64' --fill AB --length 5
 ```
 
 Each write is recorded with the run, so a replay corrupts the same value at
-the same point, and a fork from before it runs the program unharmed.
+the same point, and a branch forked at a point before the write runs the
+program unharmed.
 
 ## Resource exhaustion
 
@@ -407,10 +422,10 @@ A program runs out of a resource in two ways, and Machine tests both:
 | Ephemeral ports | `containers ports api 40000-40009` | `inject add syscall connect EADDRNOTAVAIL` | EADDRNOTAVAIL |
 | Disk space, inodes | fill a volume of its own | `inject add syscall write ENOSPC` | ENOSPC |
 
-A fault that fails one call also takes `--in`, the program it fails, as
-[One failed call](#one-failed-call) shows. [Memory faults](#memory-faults)
-covers memory. The rest of this section
-covers the other resources.
+A fault that fails one call also takes `--in`, which names the program whose
+call fails, as [One failed call](#one-failed-call) shows. Memory is covered in
+[Memory faults](#memory-faults), and the rest of this section covers the other
+resources.
 
 | You want to know | Command | Example |
 |---|---|---|
@@ -424,12 +439,12 @@ covers the other resources.
 
 ### Limits on a container
 
-`machine containers` sets each limit on one container. The limit holds when
-the container starts again, until it is lifted, so a service that crashes on
-the limit and restarts meets it again. Every start has the limit before the
-container's program runs its first instruction. A limit set on a stopped
-container applies when it starts. A container that Compose recreates starts
-without it. Use `--for 30s` to set the previous limit back after 30 seconds
+`machine containers` sets each limit on one container. The limit holds across
+restarts until it is lifted, so a service that crashes on the limit and
+restarts meets it again. Each start applies the limit before the container's
+program runs its first instruction, and a limit set on a stopped container
+applies when the container starts. A container that Compose recreates is a
+new container and starts without the limit. Use `--for 30s` to set the previous limit back after 30 seconds
 of machine time, on whichever start of the container runs then. A disk built
 before the guest kept container limits is refused, with a hint to build the
 disk again.
@@ -454,7 +469,7 @@ db       compose-db-1    8ef3a4936249  running  clockprobe:test  172.18.0.4  vet
 nest     compose-nest-1  6830a8b2a2fc  running  clockprobe:test  172.18.0.2  vetha032499  -
 ```
 
-The other limits, and lifting one:
+The other limits are set the same way, and a limit of 0 sets each one back:
 
 ```bash
 machine containers app pids db 20                # 20 processes and threads
@@ -491,13 +506,14 @@ machine run app --within 40s
 ```
 
 The out-of-memory killer takes it each time it grows, 3 times in 40 seconds
-of machine time, and the console says each time:
+of machine time, and the console reports each exit:
 
 ```text
 === hog exited by itself: code 137. Its restart policy starts it again ===
 ```
 
-`memory hog 0` while it restarts lets it grow, and it prints `grew`. A
+Lifting the limit with `memory hog 0` while `hog` restarts lets it grow, and
+it prints `grew`. A
 service with no `restart:` policy that exits by itself ends the run, with
 its code.
 
@@ -547,8 +563,9 @@ tail: can't open 'f35': Too many open files
 
 A later `machine exec --container api -- sh -c 'ulimit -n'` prints 1024,
 because a process `docker exec` starts does not take the limit set on the
-processes already running. It takes the container's own limit. `files api 0` sets
-that own limit back, both its soft and its hard number.
+processes already running. It takes the container's own limit. `files api 0`
+sets the running processes back to the container's own limit, both its soft
+and its hard number.
 
 ### Ephemeral ports
 
@@ -722,7 +739,7 @@ dd: error writing '/tmp/out': No space left on device
 mkdir: can't create directory '/tmp/new': No space left on device
 ```
 
-`fork` in the C library is a system call that differs by library: glibc
+The C library's `fork()` makes a different system call in each library: glibc
 calls `clone`, and musl, the C library of Alpine images, calls `fork` or
 `vfork`. Name all three and the fault takes either. A script run by its own
 path, `/tmp/worker.sh`, has its file name as its comm, so the fault takes
@@ -774,8 +791,8 @@ Five things decide whether you see the failure:
   first request.
 - **`disk-timeout` hangs.** The request is lost, and the task waiting for it
   stays stuck until the machine stops. This is a hung device: no timeout fires
-  and no reset follows. That is the point: you find out what
-  else in the program notices. Name your program in `--in`: with `--in all`
+  and no reset follows. Use it to see which other parts of the program notice
+  the hang. Name your program in `--in`: with `--in all`
   the lost request may be the kernel's own, and whatever waits on that disk
   hangs with it.
 
@@ -790,9 +807,9 @@ failures. The request succeeds, and the damage is found later, or never.
 |---|---|
 | Does the database notice a bad block when it reads its data files? | `disk-corrupt --file '/var/lib/db/*/data.bin' --in all` |
 | Does the program trust bytes it read without a checksum? | `disk-corrupt --op read --file /srv/app/state.json --in all` |
-| Does recovery handle a log record only half written? | `disk-torn --file /var/lib/db/wal --times 1` |
-| Does it notice a committed write that never arrived? | `disk-lost --file /var/lib/db/wal --after 10 --times 1` |
-| Does the filesystem survive damage to its own metadata? | `disk-corrupt --sectors LO:HI`, the sectors of its inode table or journal |
+| Does recovery handle a log record only half written? | `disk-torn --file /var/lib/db/wal --times 1 --in all` |
+| Does it notice a committed write that never arrived? | `disk-lost --file /var/lib/db/wal --after 10 --times 1 --in all` |
+| Does the filesystem survive damage to its own metadata? | `disk-corrupt --sectors LO:HI --in all`, the sectors of its inode table or journal |
 
 ```bash
 machine inject app add disk-corrupt --file '/var/lib/db/*/data.bin' --op write --bytes 8 --times 1 --in all
@@ -826,8 +843,8 @@ machine inject app add disk-corrupt --op read --prob 0.01 --in /usr/bin/app
   `dumpe2fs` and `debugfs` for ext4, in blocks of its partition. With 4 KiB
   blocks, block N starts at sector 8 × N plus the partition's first sector,
   which `/sys/class/block/vda1/start` holds, or 0 for a filesystem on the
-  whole disk. Or stop at a write with
-  `catch add io`, below, and read its sectors off the stop.
+  whole disk. Alternatively, stop at a write with `catch add io`, described
+  below, and read its sectors from the stop message.
 - **`disk-lost` is one write, not a crash.** The lost write reports success,
   and the writes after it still land. A power cut loses every write since the
   last flush, and the disk faults do not model one. For that, use
@@ -839,32 +856,66 @@ every replay of the run.
 
 **A worked example: ClickHouse.** ClickHouse writes each part of a table into a
 directory it names as it goes, such as `all_12_12_0`, and checks the part's
-checksums when it reads it back. To damage one column file of the next part
-written and see what ClickHouse does:
+checksums when it reads it back. Here ClickHouse runs in the service `app`, as
+a disk built with `--from clickhouse/clickhouse-server` runs it, and `db.t` is a
+MergeTree table. `clickhouse-client` is in the container, so it runs with
+`--container app`. `sync` and `drop_caches` act on the whole machine and run
+without it.
+
+The file a fault names is the path the program opens. A table of an `Atomic`
+database, the default, is a link: `data/db/t` points into
+`/var/lib/clickhouse/store`, where ClickHouse writes each part. To damage one
+column file of the next part written and see what ClickHouse does:
 
 ```bash
-machine inject app add disk-corrupt --file '/var/lib/clickhouse/data/db/t/*/data.bin' \
+machine inject app add disk-corrupt --file '/var/lib/clickhouse/store/**/data.bin' \
     --op write --bytes 8 --times 1 --in all
-machine exec app run -- clickhouse-client -q "INSERT INTO db.t SELECT number FROM numbers(1000000)"
+machine exec app run --container app -- clickhouse-client -q "INSERT INTO db.t SELECT number FROM numbers(1000000)"
 machine exec app run -- sync
 machine exec app run -- sh -c 'echo 3 > /proc/sys/vm/drop_caches'
-machine exec app run -- clickhouse-client -q "CHECK TABLE db.t"
+machine exec app run --container app -- clickhouse-client -q "CHECK TABLE db.t"
+```
+
+`CHECK TABLE` prints `0`: a part failed its checksum. With
+`SETTINGS check_query_single_value_result = 0` it names the part:
+
+```text
+all_2_2_0	0	Code: 40. DB::Exception: Checksum mismatch for file data.bin in data part all_2_2_0 (ca04d56da06c3776cca5507fb30255db vs 0bfa9b09000d6890888463cf7622b8a7). (CHECKSUM_DOESNT_MATCH) (version 24.8.14.39 (official build))
 ```
 
 To damage one part you have already seen, find its name first on a branch, and
-keep your run where it is:
+keep your run where it is. In this run the table already holds three parts,
+so the branch's insert writes the fourth:
 
 ```bash
 machine fork app --name peek
-machine exec app/peek run -- clickhouse-client -q "INSERT INTO db.t SELECT number FROM numbers(1000000)"
-machine exec app/peek run -- sync
-machine checkpoint app/peek
-machine fs ls app/peek /var/lib/clickhouse/data/db/t --at now
+machine exec app/peek run --container app -- clickhouse-client -q "INSERT INTO db.t SELECT number FROM numbers(1000000)"
+machine exec app/peek run --container app -- sh -c 'readlink -f /var/lib/clickhouse/data/db/t; ls /var/lib/clickhouse/data/db/t'
 ```
 
-Then add the fault on `app` with the exact path. The run is deterministic, so it
-writes the same part. An insert's part name holds; a merge's can change, because
-any fault changes how the machine runs a little. A pattern covers both.
+```text
+/var/lib/clickhouse/store/1a4/1a4d2927-2bb1-4690-a797-0350ac2bc365
+all_1_1_0
+all_2_2_0
+all_3_3_0
+all_4_4_0
+detached
+format_version.txt
+```
+
+ClickHouse writes a new part into a directory named `tmp_insert_` followed by
+the part's name, then renames the directory. The fault names the directory
+ClickHouse writes into, in the table's directory under `store`:
+
+```bash
+machine inject app add disk-corrupt --op write --bytes 8 --times 1 --in all \
+    --file /var/lib/clickhouse/store/1a4/1a4d2927-2bb1-4690-a797-0350ac2bc365/tmp_insert_all_4_4_0/data.bin
+```
+
+The run is deterministic, so your run writes the same part as the branch did.
+The name of an insert's part stays the same, but a merge's part name can
+change, because any fault slightly changes how the machine runs. A pattern
+covers both cases.
 
 ## Faults that cycle
 
@@ -883,10 +934,10 @@ The first fails the data file's disk requests for 2 seconds in every 7. The
 cycle starts when the fault is added, active first, on the machine's own
 clock, so a slow host changes nothing and a replay crosses every edge at the
 same instruction. The machine's clock is not the date the guest reads, so a
-`machine clock` change does not move a window. While a fault rests it matches
-no call and counts none, so
-`--after` and `--times` count only the calls in its active windows. Both
-options are needed, each a whole number of milliseconds from 1ms to a day.
+`machine clock` change does not move a window. While a fault is off, it
+matches no call and counts none, so `--after` and `--times` count only the
+calls in its active windows. A cycling fault needs both `--on` and `--off`,
+each a whole number of milliseconds from 1ms to a day.
 
 The listing says which window each fault is in and how long it has left.
 After the second command it reads:
@@ -930,7 +981,7 @@ An `io` catchpoint stops the run at a disk request, with no fault. `--file`
 takes the same patterns as a disk fault, and `--op` takes `read` or `write`:
 
 ```bash
-machine catch app add io --file '/var/lib/clickhouse/data/db/t/*/data.bin' --op write
+machine catch app add io --file '/var/lib/clickhouse/store/**/data.bin' --op write
 machine run app --iters 0
 ```
 
@@ -939,7 +990,7 @@ names the request: `Stopped at catchpoint 1: io write 1058144:1058151, in tid
 266`. A fault added there decides on that same request. Name it by its file:
 
 ```bash
-machine inject app add disk-lost --file '/var/lib/clickhouse/data/db/t/*/data.bin' --times 1 --in all
+machine inject app add disk-lost --file '/var/lib/clickhouse/store/**/data.bin' --times 1 --in all
 machine catch app delete 4                     # the io catchpoint, after the three above
 machine run app --iters 0
 ```
@@ -961,8 +1012,8 @@ machine inject app delete 2       # by its number in the list
 machine inject app clear
 ```
 
-At the [control prompt](running-a-machine.md#interactive-mode) it is `/inject`,
-with the same words, and `/tasks exist` checks first:
+At the [control prompt](running-a-machine.md#interactive-mode) the command is
+`/inject`, with the same words, and `/tasks exist` checks first:
 
 ```
 /tasks exist /usr/bin/app
@@ -998,6 +1049,6 @@ their counts. [The SDK's Faults](python-sdk.md#faults) has an example.
   met a call, so nothing was tested. Whether the program failed is a question
   for the program: check its output, its exit status or its data after the
   fault, as well as the counts.
-- **A fault matches the system call, whose call it is and the count of calls.**
+- **A fault matches the system call, the task that makes it and the count of calls.**
   It does not look at the arguments, so "openat of /etc/passwd" is not a fault.
   Stop at the call and fail that one instead.

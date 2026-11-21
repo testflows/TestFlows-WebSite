@@ -2,7 +2,7 @@
 
 # Sessions
 
-Runs live in a session, and you create one with [`machine sessions create`](commands.md#machine-sessions-create).
+Runs execute in a session, and you create one with [`machine sessions create`](commands.md#machine-sessions-create).
 Pick its size when you create it.
 
 ```bash
@@ -17,15 +17,17 @@ session less than the plan allows, and the smaller of the two applies. Your plan
 also limits the vCPUs your sessions hold together: 4 on Free, 8 on Starter and on
 Free with usage credits, 12 on Plus and 24 on Pro. A session counts the vCPUs it
 is charged for: 2 vCPUs with 8G of memory count 4. `machine account show` shows
-how many are in use. `--class` picks the hardware class, and the default comes from your
+how many are in use.
+
+`--class` picks the hardware class, and the default comes from your
 plan. [`machine sessions classes`](commands.md#machine-sessions-classes) lists
 the classes, with the region and the CPU architecture of each. A session runs
-in its class's region, and its runs are stored there. `standard-ip` is the
-class to prefer. `standard-ie` costs less. A run starts only in a session of
-the architecture it was recorded on.
+in its class's region, and its runs are stored there. Prefer `standard-ip`;
+`standard-ie` costs less. A run starts only in a session with the same CPU
+architecture as the session it was recorded in.
 
-`dedicated-ip` runs each vCPU on a core of its own, from the Starter plan up.
-For software that needs stronger isolation, use `dedicated-ip`, or write to
+`dedicated-ip` runs each vCPU on a core of its own. It is available from the
+Starter plan up, and on Free with usage credits. For software that needs stronger isolation, use `dedicated-ip`, or write to
 [sales@testflows.com](mailto:sales@testflows.com) to have Dedicated machines
 reserved for your team.
 
@@ -34,7 +36,7 @@ machine sessions classes
 machine sessions create ci-1 --class standard-ie
 ```
 
-The name is optional. Leave it off and Machine makes one up. Machine waits
+The name is optional. If you leave it off, Machine generates one. Machine waits
 until the session is running and tells you when it is. Add `--no-wait` to
 return once the request is accepted.
 
@@ -46,8 +48,8 @@ Your first session also sets up your account's storage, so it takes longer to
 create, and Machine shows this as a step of its own. To set the storage up
 before that, run [`machine account provision`](commands.md#machine-account-provision).
 
-A machine takes its memory plus 128MB of the session's memory, and 256MB of a
-session is not available to machines. A machine with the default 256MB needs
+Each machine takes its own memory plus 128MB from the session's memory, and
+256MB of every session is not available to machines. A machine with the default 256MB needs
 384MB, and one created
 with `--mem 2048` needs 2176MB, so a 4G session holds one and an 8G session
 holds three. A machine holds its memory until you stop it, whether or not its
@@ -57,13 +59,15 @@ A branch you switch onto with [`machine go`](commands.md#machine-go) uses the ma
 already running, so it needs no more memory. A branch you start with
 [`machine fork`](commands.md#machine-fork) is another machine and needs its own.
 
-[`machine runs --size`](commands.md#machine-runs) adds two columns for what a run takes of the
+[`machine runs --size`](commands.md#machine-runs) adds three columns for what a run takes of the
 session's resources. RAM is the session memory its machine holds right now. It
 can be above the machine's own MEMORY. DATA is what the run holds on the
-session's disk. A run
-with no machine shows `—` for RAM.
+session's disk. STORAGE is the state of that data, such as `in use` or
+`not synced`. A run
+with no machine shows `—` for RAM. A run in another session shows `—` for
+RAM and DATA.
 
-The MEM column of [`machine sessions list`](commands.md#machine-sessions-list) shows the memory taken over the
+The MEM column of [`machine sessions list`](commands.md#machine-sessions-list) shows the memory in use out of the
 session's memory, for example `4.5G/8G` with two machines of 2048MB. A new
 machine starts when what it needs fits in the rest, and is refused when it
 does not.
@@ -75,8 +79,8 @@ machine sessions use ci-1
 ```
 
 [`machine sessions use`](commands.md#machine-sessions-use) applies to the terminal you ran it in.
-If you only have one session, it needs no name at all.
-After that, every command that needs a machine goes to `ci-1`. You can
+After that, every command in that terminal that needs a machine goes to
+`ci-1`. If you have only one session, you can leave out its name. You can
 send one command somewhere else with `-s`, for example
 `machine -s ci-2 runs`. `-s` goes before the command.
 
@@ -91,9 +95,9 @@ machine create --disk hello
 
 The variable names the session. [`machine sessions use`](commands.md#machine-sessions-use) connects this
 computer to it, and is needed once. A tool that starts a new shell for each
-command, as an AI agent does, loses the `export` between commands. There, put
+command, as an AI agent does, loses the `export` between commands. In that case, put
 `-s ci-1` on each command. Commands that need no session, such as
-`machine disks list`, ignore it.
+`machine disks list`, ignore the variable.
 
 You manage the rest of your sessions like this:
 
@@ -117,16 +121,18 @@ stops, and so do its runs. The runs are kept. Start one again in any session
 with `machine start <run>`.
 
 Every command sent to the session resets the idle time, from any terminal, the
-SDK or the control prompt. To step away and keep the session, keep it:
+SDK or the control prompt. To step away without the session stopping, keep
+it with `machine sessions keep`:
 
 ```bash
 machine sessions keep ci-1 30m
 ```
 
-A keep holds the session idle for up to 30 minutes on Free, and an hour on
-Starter, Free with usage credits, Plus and Pro. `machine sessions list` shows under
-IDLE how long each session has gone without a command, and
-`machine sessions show` when it stops. `machine sessions list --all` also lists
+A keep lets the session stay idle without stopping for up to 30 minutes on
+Free, and up to an hour on Starter, Free with usage credits, Plus and Pro.
+
+`machine sessions list` shows under IDLE how long each session has gone
+without a command, and `machine sessions show` shows when the session stops. `machine sessions list --all` also lists
 the sessions that stopped. One that stopped idle is listed as `stopped idle`,
 with the idle time it reached under IDLE.
 In the control prompt, `/keep 30m` keeps the session you are driving, and the
@@ -144,4 +150,4 @@ unavailable, ends with a hint to the status page,
 whether the website, the API, sign-in and sessions on each class work now.
 It also lists open incidents, the incidents of the last 14 days and any
 planned maintenance. If every component is operational, check your
-network. If it works, [contact support](https://testflows.com/contact.html).
+network. If your network works, [contact support](https://testflows.com/contact.html).

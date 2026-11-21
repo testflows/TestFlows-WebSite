@@ -56,6 +56,18 @@ That form runs one command in that environment and starts no shell, for scripts 
 
 On Linux, if another command on your system is also named `machine`, use `machine-env`. `which machine` shows which one you get.
 
+### Tab completion
+
+In `machine-env`, Tab completes commands, options and the names of your runs. On Linux, to have it in every shell, add the line for your shell to its startup file. The installer prints the one for yours when it finishes.
+
+On macOS, and wherever another `machine` comes first on your `PATH`, add nothing to a startup file. Outside `machine-env`, `machine` is the other program there, and the line would run it. Use `machine-env`, which loads completion itself.
+
+```bash
+eval "$(machine completion bash)"     # ~/.bashrc
+eval "$(machine completion zsh)"      # ~/.zshrc
+machine completion fish | source      # ~/.config/fish/config.fish
+```
+
 ### Windows
 
 The client runs inside WSL. If you do not have WSL yet, install it from PowerShell, then restart:
@@ -94,7 +106,7 @@ curl https://testflows.com/machine/install -fsS | bash
 
 ## Then
 
-The installer signs out when it is done. Sign the client in with `machine login`. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
+When you signed in at the terminal, the installer signs out when it is done, so sign the client in with `machine login`. An install with an API key leaves the key as it is, and the client uses it from `TESTFLOWS_MACHINE_API_KEY`. The docs walk through your first run: https://testflows.com/docs/machine/getting-started.md
 
 ## Check the download
 
@@ -142,9 +154,21 @@ To read the installer before you run it, pipe it to `less` instead of `bash`.
 
 Every release's checksum is signed with two keys: a GPG key, https://testflows.com/machine/keys/machine-client-gpg.asc, whose fingerprint is at https://testflows.com/machine/keys/machine-client-gpg.fingerprint, and an RSA key for openssl, https://testflows.com/machine/keys/machine-client-rsa.pub.pem. If the keys change, this page and the installer carry the new ones. A check that fails with an old key should pass once you download again.
 
+## Upgrade
+
+An installed client upgrades itself. `machine upgrade` downloads the release with the client's own sign-in and checks its signed checksum, so it asks for nothing, and the client stays signed in. It runs no downloaded script. `machine upgrade --list` shows the versions there are, and `machine upgrade YYYYMMDD-HHMM` installs one of them:
+
+```bash
+machine upgrade
+machine upgrade --list
+machine upgrade YYYYMMDD-HHMM
+```
+
+A client older than 20261106-1345 has no `machine upgrade`. It upgrades with the install command above.
+
 ## A specific version
 
-The installer gets the latest release. `--list` shows the versions there are, newest first, and `--version` installs one of them:
+The installer gets the latest release. `--list` shows the versions there are, newest first, and `--version` installs one of them, with that version's SDK core. Both sign in first, as an install does:
 
 ```bash
 curl https://testflows.com/machine/install -fsS | bash -s -- --list

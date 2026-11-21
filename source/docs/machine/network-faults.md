@@ -8,12 +8,14 @@ off from one peer while it still reaches the others, a connection reset in
 the middle of a transaction. [`machine net`](commands.md#machine-net) puts
 those faults on the links between the containers of a run.
 
-Each container has one link: everything it sends. A fault on the whole link
-acts on every packet the container sends. A match narrows a fault to some of
-those packets: the ones to one peer, of one protocol, of one port, or the
-TCP SYNs that open a connection. Each match has faults, a seed and counts of
-its own. Every `net` command runs the machine until the guest has made the
-change, so the run moves forward.
+Each container has one link, which carries everything the container sends. A
+fault on the whole link acts on every packet the container sends. A match
+narrows a fault to some of those packets: the ones to one peer, of one
+protocol, of one port, or the TCP SYNs that open a connection. Each match has
+faults, a seed and counts of its own.
+
+Every `net` command runs the machine until the guest has made the change, so
+the run moves forward.
 
 ```bash
 machine net app                                        # each link and its faults
@@ -93,10 +95,14 @@ wait 100ms. A ping from `nest` to `db` still takes 0.04ms.
 Packets a match takes get only the match's faults, not the whole link's:
 after `loss db 10%` and then `delay db 100ms --to api`, what `db` sends to
 `api` is delayed and none of it is lost. A packet two matches take gets the
-faults of the one listed first. Each verb changes the fault it names and
-keeps the others, so `delay` and then `loss` give a link that is slow and
-lossy. A value of 0, or 0%, takes that fault away. A jitter also reorders
-packets, since each one leaves at its own time.
+faults of the one listed first.
+
+Each verb changes the fault it names and keeps the others, so `delay` and then
+`loss` give a link that is slow and lossy. A value of 0, or 0%, takes that
+fault away. A jitter also reorders
+packets, since each one leaves at its own time. `reorder` works by sending
+some packets ahead of delayed ones, so it needs a delay on the same link or
+match and is refused without one.
 
 ### Matching packets: protocol, port and SYN
 
@@ -138,7 +144,7 @@ With `--for 10s`, both directions come back together after 10 seconds of
 machine time.
 
 A link that keeps failing and recovering is a loop of partitions, each
-followed by a stretch of the run:
+followed by a `machine run`:
 
 ```bash
 for i in 1 2 3 4 5; do
@@ -168,8 +174,8 @@ it, about 208KB by `net.core.wmem_default`. Once that buffer is full, the
 socket's sends fail, or for TCP block, before the link's queue is reached,
 so one socket cannot fill a hold by itself. For example, when api sends db
 1200 pings of 1400 bytes during a hold of db, db receives all 1200 and its
-link holds 117 replies. The other 1084 replies fail in db's kernel and count
-as `OutErrors` in its `/proc/net/snmp`. With pings of 56 bytes, 321 replies
+link holds 58 replies. The other 1142 replies fail in db's kernel and count
+as `OutErrors` in its `/proc/net/snmp`. With pings of 56 bytes, 159 replies
 are held.
 
 Without a container, `hold` holds every link at the instruction the
@@ -184,10 +190,10 @@ machine net app release                                # everything held leaves 
 
 The hold is part of the recording, so a replay holds at the same point, and
 a checkpoint taken during a hold keeps it. Run the machine to an exact point
-first, and the hold lands there:
+first, and the hold starts at that point:
 
 ```bash
-machine run app --until 'console~ready'                # stop where the cluster is ready
+machine run app --until 'console~cluster ready'        # stop where the cluster is ready
 machine net app hold                                   # hold every link at that point
 machine net app loss db 100% --to api                  # change the faults while nothing moves
 machine net app release                                # traffic resumes under the new faults
@@ -212,21 +218,27 @@ machine net app release
 
 For example, with api pinging db every 250 milliseconds, the 3 replies sent
 before the hold arrive, none arrives in 3 seconds of hold, and all 20 arrive
-after the release. A container on another's network, the machine's or none has no
-link of its own, so a hold does not reach it; the listing shows its row with
-dashes. Nor does a hold reach a process outside every container. The listing
-names a container whose link could not be held.
+after the release.
+
+A container on the machine's network, or on no network,
+has no link of its own, so a hold does not reach it, and the listing shows its
+row with dashes. A container that shares another container's network sends
+on that container's link, so holding that link holds its packets too. A hold
+also does not reach what a process outside every container sends. If a
+container's link could not be held, the listing names it.
 
 ### Resetting connections
 
 `reset` aborts TCP connections. The container's side of each connection is
 aborted, and the peer receives a TCP reset, as from a middlebox that dropped
 the connection or a server that restarted. What a program sees depends on
-the call it makes. On the aborted side, the first call after the data it
-already received fails with `ECONNABORTED`; after that a read returns end of
-file and a write fails with `EPIPE`. On the peer, the first call fails with
-`ECONNRESET`, and the same follows.
-Unlike a partition, nothing waits for a timeout:
+the call it makes. On the aborted side, data already received can still be
+read. The first call that does not read received data fails with
+`ECONNABORTED`: a write, or a read after all received data is read. After
+that, a write fails with `EPIPE`, and a read returns the remaining received
+data, then end of file. On the peer, the first call fails with
+`ECONNRESET`, and later calls behave the same way. Unlike a partition, a reset
+makes nothing wait for a timeout:
 
 ```bash
 machine net app reset api --to db                       # api's connections to db
@@ -280,10 +292,6 @@ again begins with an empty table, as a host that restarts does.
 
 ### The decision log
 
-Run the machine for 10 milliseconds before reading a log just after a run
-stops: the last millisecond's lines reach the run when the machine runs
-again.
-
 `--log` writes each decision a fault makes to a log: which packet it took,
 and whether it dropped it, delayed it, duplicated it, corrupted it or sent it
 ahead. It answers which exact packet a fault dropped, which the counts and a
@@ -298,11 +306,11 @@ machine net app loss db 30% --to nest --seed 7 --no-log  # the same fault, no lo
 The guest kernel writes one line per decision, where the fault decides, to
 `/output/drop/.machine/net/<container>.log`. The `.machine` folder holds the
 files the machine itself writes, apart from a program's own, and it is under
-`drop`, so a run stores the log only when it keeps that output. A run that
-keeps it from the start is read at any time:
+`drop`, so a run stores the log only when it keeps that output. When a run
+keeps that output from its creation, its log can be read at any time:
 
 ```bash
-machine create app --disk app.img --keep-output /output/drop/.machine/net
+machine create app --disk app --keep-output /output/drop/.machine/net
 machine net app loss db 30% --to nest --seed 7 --log
 machine exec app run --container nest -- ping -c 20 -i 0.05 db
 machine run app --within 10ms                          # the last batch of lines reaches the run
@@ -313,8 +321,8 @@ machine output app --source /output/drop/.machine/net/compose-db-1.log --plain -
 prints every line. The guest kernel writes the lines in batches, at most 1
 millisecond of machine time after the first line of a batch. Lines decided
 in the last millisecond before the machine stops reach the run when the
-machine runs again, and a checkpoint keeps them: run the machine for a
-moment, as `machine run app --within 10ms`, before reading the last
+machine runs again, and a checkpoint keeps them. Run the machine for 10
+milliseconds, with `machine run app --within 10ms`, before reading the last
 packets' lines.
 
 A run that does not keep the log still makes it, and replay brings it back.
@@ -349,7 +357,9 @@ The decisions are `pass`, `drop`, `delay` with the time the fault drew,
 and `corrupt` beside the first word. `drop limit` is a packet dropped
 because the fault's queue already held 1000 delayed packets, and `drop hold`
 one dropped because a hold already held 1000 full-size packets; `DROPPED`
-counts both. Every packet the link carries has its line and its number,
+counts both.
+
+Every packet the link carries has its line and its number,
 and a packet a hold drops has a second line, `drop hold`, under the number
 of its first. A duplicated packet has two lines: the
 original says `duplicate`, and the copy, logged first, says `copy`. A delay
@@ -368,8 +378,8 @@ decision is a packet as the kernel hands the link, whatever its size. A
 on average, against 0.47 seconds under the same fault without the log,
 because its packets are large. Small packets cost the same each, so a stream of them
 spends far more of its time on the log; 10,000 packets cost about 0.32
-seconds. Log the stretch being examined, not a whole run. A decision is a
-packet's, never a program message's: see the limits below on TCP units and
+seconds. Log the stretch being examined, not a whole run. A fault decides per
+packet, never per program message: see the limits below on TCP units and
 retransmission.
 
 ### Seeds, replay and --for
@@ -408,7 +418,7 @@ still leaves at its time.
 it took. They count from when the match, or the whole link, first got a
 fault, and a later change to it keeps counting. `SENT` is the packets it
 passed on, a duplicate counting once more. `DROPPED` is the packets it lost,
-by `loss`, or past what a `hold` has room for. `QUEUED` is the packets it
+by `loss`, or past what a `hold` or a delay has room for. `QUEUED` is the packets it
 holds now, delayed or held: neither sent nor dropped yet. After 50 pings
 from api to db with `loss db 30% --to api --seed 9`, the row of that match:
 
@@ -423,8 +433,9 @@ the release. The counts are what the fault processed, packet by packet, not
 a measure of its probability: over many packets 30% loss drops close to 30%
 of them, and over a few the count can be anything. A container that docker
 starts again counts from 0, and so does one a network is disconnected from.
-The counts are packets as the fault decides them, the unit of the log's
-lines: a large TCP write that reaches the fault as one packet is one.
+The counts are of packets as the fault decides them, the same unit as the
+log's lines, so a large TCP write that reaches the fault as one packet counts
+once.
 
 The counts are packets on the link, not sends by a program. A TCP write can
 wait in the socket's buffer, and the kernel retransmits without a system
@@ -447,10 +458,10 @@ machine containers app
 ```
 
 ```text
-SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK
-api      compose-api-1   2aaef0f5d567  running  clockprobe:test  172.18.0.4  veth60a586c
-db       compose-db-1    41b6ae3b5fb0  running  clockprobe:test  172.18.0.2  veth45c3e2e
-nest     compose-nest-1  3da165f7aa0f  running  clockprobe:test  172.18.0.3  veth80fa747
+SERVICE  CONTAINER       ID            STATE    IMAGE            ADDRESS     LINK         LIMITS
+api      compose-api-1   2aaef0f5d567  running  clockprobe:test  172.18.0.4  veth60a586c  -
+db       compose-db-1    41b6ae3b5fb0  running  clockprobe:test  172.18.0.2  veth45c3e2e  -
+nest     compose-nest-1  3da165f7aa0f  running  clockprobe:test  172.18.0.3  veth80fa747  -
 ```
 
 To capture one container's packets, capture on its `LINK`:
@@ -497,6 +508,12 @@ arrives from the sender's link, `P`, and as it leaves toward the receiver's,
 `Out`. The file records each packet's interface by an index that means
 nothing on this computer, so filter by address rather than by interface.
 
+A replay writes the same capture, byte for byte, with loss, delay and clock
+jumps in effect. The timestamps are the machine's date: `clock jump` of the
+whole guest moves them, and a container's offset does not. A link between
+containers carries TCP segments larger than its MTU, since the kernel
+segments them only where a real interface needs it.
+
 #### Finding the address and the link by hand
 
 `machine containers` reads both from the machine; they can be read by hand
@@ -513,12 +530,6 @@ the number of the machine's interface at the other end:
 machine exec app run --container db -- cat /sys/class/net/eth0/iflink    # 6
 machine exec app run -- ip -o link | grep '^6:'                          # 6: veth45c3e2e@if5: ...
 ```
-
-A replay writes the same capture, byte for byte, with loss, delay and clock
-jumps in effect. The timestamps are the machine's date: `clock jump` of the
-whole guest moves them, and a container's offset does not. A link between
-containers carries TCP segments larger than its MTU, since the kernel
-segments them only where a real interface needs it.
 
 ### What a network fault misses
 

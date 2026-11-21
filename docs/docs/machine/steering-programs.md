@@ -2,11 +2,12 @@
 
 # Steering programs
 
-By default the machine schedules itself. Sometimes that isn't what
-you want. A bug that needs one thread to run past another will not show up
-if the scheduler never picks that order. Machine lets you pick it.
+By default the guest kernel's scheduler decides which thread runs when. A bug
+that needs one thread to run past another will not show up if the scheduler
+never picks that order, so Machine lets you pick it.
 
-Everything here is recorded, so a replay repeats it exactly.
+Every command on this page is recorded in the run, so a replay repeats it
+exactly.
 
 ## Looking at tasks
 
@@ -21,8 +22,8 @@ system calls and interrupt vectors.
 
 ## Focus
 
-Machine matches a program by its absolute path in the machine. Tell it which
-programs to watch and steer.
+[`machine focus`](commands.md#machine-focus-add) tells Machine which programs
+to watch and steer. It matches a program by its absolute path in the machine:
 
 ```bash
 machine focus app add /app
@@ -37,13 +38,16 @@ that name; focus takes every thread of their processes.
 
 A program that renames itself after it starts, with `prctl(PR_SET_NAME)` or
 `/proc/self/comm`, is focused by its new name at its next fork, exec or exit,
-not at the rename. Until then `--until comm=worker:on` waits. Focus the program
-by its path to steer it from the start. `focus remove` and `focus clear` take them off again.
+not at the rename, and until then `--until comm=worker:on` keeps waiting. To
+steer such a program from the start, focus it by its path.
 
 ```bash
 machine focus app add comm=cat
 machine run app --until comm=cat:exit
 ```
+
+`focus remove` stops steering one program, named as it was added, and
+`focus clear` stops steering them all.
 
 Whatever you focus by, the conditions below and a plan's `when` name it the
 same way: `/app:exit`, `cgroup=/path:on`, `comm=cat:kernel`.
@@ -62,7 +66,8 @@ conditions take the form `program:what`, where `what` is one of:
 | `off` | the thread is not on a CPU at all |
 
 A run can also stop where a thread reaches a location, or after it writes or
-touches bytes. These need no focus. They name a tid or a tgid:
+touches bytes. These conditions need no focus, because they name a tid or a
+tgid:
 
 ```bash
 machine run app --until 'tid=56:at=parse'          # until tid 56 reaches parse
@@ -70,8 +75,8 @@ machine run app --until 'tid=56:write=counter'     # until tid 56 writes counter
 machine run app --until 'tgid=12:access=buf[0]'    # until any task of tgid 12 reads or writes buf[0]
 ```
 
-Each takes one of the run's 3 hardware breakpoints and watchpoints, for that
-run alone. [Debugging](debugging.md#running-to-a-place) says what they take and
+Each condition takes one of the run's 3 hardware breakpoints and watchpoints,
+for that `machine run` alone. [Debugging](debugging.md#running-to-a-place) says what they take and
 what the run says when it stops.
 
 ## Holding threads
@@ -102,9 +107,10 @@ thread goes when it wakes, so a thread already queued on another vCPU stays
 there until then. `none` keeps a thread from running at all, until you pin it
 somewhere again.
 
-Two more things you can ask of `tasks`. [`machine tasks app exits`](commands.md#machine-tasks-exits) lists the
+`tasks` has two more lists. [`machine tasks app exits`](commands.md#machine-tasks-exits) lists the
 tasks that have left and how each one ended, and [`machine tasks app cgroups`](commands.md#machine-tasks-cgroups)
-groups them by cgroup. `--focused` shows only the tasks you are steering.
+groups them by cgroup. `machine tasks app --focused` shows only the tasks you
+are steering.
 
 From Python, the same verbs are `run.tasks.hold(56)`, `run.tasks.release(56)`,
 `run.tasks.yield_(56)`, `run.tasks.slice(56, "10us")` and
@@ -126,9 +132,10 @@ Machine tries the clauses in order and the last match wins, so a later
 clause overrides an earlier one. `else` covers whatever nothing matched.
 
 Each `when` names a state of a program (`/test:on` is the program running its
-own code, and `/test:kernel` is the program running in the kernel). After that come the
-things to choose for each stretch of execution it covers, such as the mode, how
-many conditional branches to run, or what to do with the scheduler. [`machine plan`](commands.md#machine-plan)
+own code, and `/test:kernel` is the program running in the kernel). After the
+condition come the choices the clause makes for each dispatch it covers, such
+as the mode, how many conditional branches to run, or what to do with the
+scheduler. [`machine plan`](commands.md#machine-plan)
 `--help` lists all of them.
 
 ```bash
@@ -216,7 +223,7 @@ vector, or INIT and SIPI.
 owes or holds, then the vectors [`machine irq`](commands.md#machine-irq)
 injects. An owed interrupt was raised by a device or a timer and is injected
 at the next dispatch. A held one waits for the time the draw gave it. The
-state hash `irq_pending` is of the held ones, and
+state hash `irq_pending` covers the held interrupts, and
 [`machine state`](commands.md#machine-state) shows how many are held.
 
 ```bash
@@ -238,8 +245,8 @@ without running anything.
 machine vtime app add 5s
 ```
 
-There is no way back. The machine's clock only goes forward, so to return to an
-earlier time, branch there with [`machine go app 1.5s`](commands.md#machine-go).
+Neither command moves the clock back, because the machine's clock only goes
+forward. To return to an earlier time, branch there with [`machine go app 1.5s`](commands.md#machine-go).
 
 ### Starting date
 
@@ -260,8 +267,8 @@ The run keeps its starting date, and every branch of it has the same one.
 
 The machine's clock moves with the work the guest does: 10 nanoseconds for
 each conditional branch a vCPU retires, unless the run was created with
-`--vtime-rate`. A higher rate makes the same work take longer in the guest's
-eyes, which brings timeouts closer, and a lower one makes it faster. The rate
+`--vtime-rate`. A higher rate makes the same work take more machine time,
+which brings timeouts closer, and a lower one makes it take less. The rate
 is a number or a fraction:
 
 ```bash

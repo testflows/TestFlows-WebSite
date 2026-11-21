@@ -10,15 +10,15 @@ from inside: install it on the disk, attach it with `gdb -p`, and use it as on
 any Linux host.
 
 Both are recorded. A replay repeats every step, every write and every stop,
-and a checkpoint taken before a session lets you run it again from the same
-state.
+and a checkpoint taken before you start debugging lets you debug again from
+the same state.
 
 ## The machine's debugger
 
 Each command takes the run and a task by its tid, which
 [`machine tasks`](commands.md#machine-tasks) lists. A task's tgid is its
-process. The commands work while the machine is stopped, between runs, on a
-task that is on a vCPU or off one.
+process. The commands work while the machine is stopped, between two
+`machine run` commands, on a task that is on a vCPU or off one.
 
 Symbols, types and source lines come from the program files on the machine's
 disk: the program's symbol table, and its debug information when it has some.
@@ -32,8 +32,8 @@ What the debugger shows depends on what the program's files on the disk hold:
 | The symbol table alone | Function names in a backtrace, a stop at a function by its name, registers, memory, and a global at its symbol's address |
 | Debug information too | Source lines, a stop at `FILE:LINE`, line steps, arguments in a backtrace, `print` and `locals` by name, and a watch of a variable by its name |
 
-Frame 1 of the same stop, in `pg_parse_query`, of PostgreSQL as it ships and
-with its debug package:
+Here is frame 1 of the same stop in `pg_parse_query`, first in PostgreSQL as
+it ships, then with its debug package installed:
 
 ```text
 1  0x56365898a1af  ??
@@ -41,16 +41,18 @@ with its debug package:
 ```
 
 A program built with `-g` has its debug information in itself. A
-distribution ships it apart, in a package such as `-dbg`, `-dbgsym` or
+distribution ships it separately, in a package such as `-dbg`, `-dbgsym` or
 `debuginfo`, which puts a debug file under `/usr/lib/debug`. Install the
 package of the program's exact build in the image the disk is built from:
 the debugger takes a debug file only when its build id is the program's, and
 finds it in any layer of a container's image.
 
-A server is built optimized, as it ships. Its arguments and locals are where
+A server ships built with optimization. Its arguments and locals are where
 the compiler kept them at each instruction: on the stack, in registers, or in
-pieces of both, as clang keeps a C++ `std::string_view` in two registers. One
-kept nowhere is `optimized out`. A C++ function is named short, such as
+pieces of both, as clang keeps a C++ `std::string_view` in two registers. A
+variable the compiler kept nowhere shows as `optimized out`.
+
+The debugger names a C++ function by its short name, such as
 `DB::executeQuery`. `machine --signatures` names it by its whole signature.
 
 Without debug information, read the arguments from the registers the ABI
@@ -62,12 +64,13 @@ machine run app --until 'tgid=7:write=*(long *)&queries'      # a global of no t
 ```
 
 The [debug examples](https://github.com/testflows/Machine/tree/main/examples/debug)
-build ClickHouse and PostgreSQL both ways, and show a session of each.
+build ClickHouse and PostgreSQL with and without debug information, and debug
+each build.
 
 ### Locations
 
-Every command that takes a location takes one of these. A location names an
-address in the task's process:
+A location names an address in the task's process. Every command that takes
+a location accepts any of these forms:
 
 | Location | What it names |
 |---|---|
@@ -80,8 +83,8 @@ address in the task's process:
 | `main+4`, `$rsp-8` | any of these, moved by `+N` or `-N` |
 
 When the program has debug information, a breakpoint at a function by its name
-is placed past its prologue. Without it, the
-breakpoint is at the function's first instruction.
+is placed past its prologue. Without it, the breakpoint is at the function's
+first instruction.
 
 ### Registers and memory
 
@@ -109,12 +112,14 @@ machine mem app 412 buf --fill 0xde --length 4096   # a pattern written over a s
 ```
 
 A write is part of the run, and a replay makes it again. A page the tgid has
-not written yet is shared, and is refused for a write. A name two files of the program define is
-refused with each file to name, `/lib/libc.so.6:optind`, by its path in the
-container as `machine symbols` lists it. `^=` flips the bits a
-mask sets, at the variable's width or a unit's, such as
-`machine mem app 412 '$sp^=0x1' b`; it reads, flips and writes with the
-machine stopped, and says the value before and after.
+not written yet is still shared, so a write to it is refused. When two files
+of the program define the same name, that name is refused, and the message
+lists each file to qualify it with, such as `/lib/libc.so.6:optind`, by its
+path in the container as `machine symbols` lists it.
+
+`^=` flips the bits a mask sets, at the variable's width or at a unit's, such
+as `machine mem app 412 '$sp^=0x1' b`. It reads, flips and writes the value
+with the machine stopped, and prints the value before and after.
 
 ### The stack, symbols and variables
 
@@ -186,12 +191,11 @@ catchpoint needs `--in tgid=N`.
 
 `--in comm=NAME` stops at the events of the tasks with that name, the same
 tasks [`machine tasks app exist comm=NAME`](fault-injection.md#which-calls-fail)
-lists. That catches one tool of a busybox, or a script, before you know its
-ids. An `exec` catchpoint sees the new program's name. An `exit` catchpoint
+lists. This catches a busybox applet, or a script, before its ids are known. An `exec` catchpoint sees the new program's name. An `exit` catchpoint
 sees the name of the process's main thread, which ends last, so a worker
 thread named `cat` inside a differently named process does not stop it. A
-`syscall` catchpoint with `--in comm=NAME` makes the machine report every task's calls
-while it is set, which costs time on a busy machine.
+`syscall` catchpoint with `--in comm=NAME` makes the machine report every
+task's calls while it is set, which costs time on a busy machine.
 
 Each stop has a number, and the same verbs change any kind:
 
@@ -207,10 +211,11 @@ machine break app hits               # the hits the run log keeps
 machine break app save stops.sh      # the commands that add each again
 ```
 
-`machine break`, `watch` and `catch` each list their own kind.
+With no verb, `machine break`, `machine watch` and `machine catch` each list
+the stops of their own kind.
 
 A run that reaches a stop ends there and says which. The run log keeps the
-stops: a branch has the ones its parent had where it was forked, and a replay
+stops: a branch has the ones its parent had at its fork point, and a replay
 applies the adds and deletes. The stops are armed while the run records, and
 not while it replays.
 
@@ -226,11 +231,11 @@ machine run app --until 'tgid=7:access=buf[0]'    # until any task of tgid 7 rea
 
 `tid=N:at=LOC` and `tgid=N:at=LOC` take any location. `write=LOC` and
 `access=LOC` take a variable or an expression, watched at its size of 1, 2, 4
-or 8 bytes. A write the kernel makes into the program counts, as `read` makes
-into its buffer. The address is resolved when the run starts, and the stop
+or 8 bytes. A write the kernel makes into the program's memory counts too,
+such as the data the `read` system call copies into its buffer. The address is resolved when the run starts, and the stop
 lasts for that run alone.
 
-The run says the tid it stopped in and where that task stands. A watch also
+The run says the tid it stopped in and that task's location. A watch also
 says the value the access left in the bytes:
 
 ```
@@ -268,9 +273,9 @@ the run, and a replay makes it again.
 Every command here has a slash command at the
 [control prompt](running-a-machine.md#interactive-mode), with the run left
 out: `/regs 412`, `/mem 412 '$pc' 4i`, `/step 412 --line`, `/break add 412
-main`, `/run until 'tid=412:at=main'`. The prompt also has `/display`, an
-expression printed after each run and step, and `/skip`, what a line step of
-the session steps out of:
+main`, `/run until 'tid=412:at=main'`. The prompt also has `/display`, which
+prints an expression after each run and step, and `/skip`, which names a
+function or file that every line step at the prompt steps out of:
 
 ```
 /display 412 counter          # printed after every /step and /run
@@ -291,8 +296,8 @@ stops.
 ## How many stops a run holds
 
 A run holds 64 breakpoints. The machine puts each one into the tgid's own copy
-of its code as an `int3` instruction. Another process that maps the same library does not stop, and
-other threads of the tgid stop at it too. A read of the task's memory, with
+of its code as an `int3` instruction. Every thread of the tgid stops at it,
+but another process that maps the same library does not. A read of the task's memory, with
 `mem` or the instruction a step shows, shows the program's byte, not the
 `int3`. A write over that byte is refused while the breakpoint is there.
 
@@ -313,17 +318,21 @@ When the 3 are taken, the next is refused. A `machine watch add` refused while
 GDB holds some says how many:
 
 ```text
-No room: a run holds 3 hardware breakpoints and watchpoints. The debugger in the guest holds 1.
+✗ No room: a run holds 3 hardware breakpoints and watchpoints. The debugger in the guest holds 2.
+  Delete watchpoint 1 machine watch app delete 1
+  Or list them machine watch app
 ```
 
-A step of one instruction takes none, from a breakpoint's hit too. The one
-exception is a task that returns into a signal handler. The step stops where
-the handler returns and takes a debug register for that stop.
+A step of one instruction takes no debug register, even a step from a
+breakpoint's hit. The one exception is a task that returns into a signal
+handler: the step stops where the handler returns, and takes a debug register
+for that stop.
 
 ### A breakpoint in a library every process maps
 
 A breakpoint at `malloc` stops one process, though every process of the
-machine calls libc's `malloc`. The others run on, and pay nothing for it:
+machine calls libc's `malloc`. The other processes keep running, and the
+breakpoint does not slow them:
 
 ```text
 $ machine break app add 218 malloc
@@ -371,8 +380,8 @@ $ machine run app
 ✔ Stopped at breakpoint 1: worker_tick+7, bpprobe.c:20, in tid 302
 ```
 
-A child the process forks, or vforks, is another tgid and runs on, though it
-shares the parent's copy of the code until it writes.
+A child process that the process forks or vforks is another tgid and does
+not stop, though it shares the parent's copy of the code until it writes.
 
 ### When to use --hardware
 
@@ -389,19 +398,18 @@ cases an `int3` in the program cannot cover:
     Put it in a debug register machine break app add 251 '*0x7f35d1580000' --hardware
   ```
 
-- Code the program reads. The program sees the `int3`, so a checksum of its
-  own code changes, for example. A hardware
-  breakpoint changes no byte.
+- Code the program reads as data. The program sees the `int3`, so a checksum
+  of its own code changes, for example. A hardware breakpoint changes no byte.
 - An instruction the kernel does not let a breakpoint sit on, such as
   `syscall`. The listing says `not placed: the kernel refused the instruction`.
 
 A hardware breakpoint lists as `hw breakpoint` and takes one of the 3 debug
 registers.
 
-A GDB `hbreak` or `watch` refused for the same reason makes GDB say
-`Couldn't write debug register: No space left on device` at the `continue`
-that inserts it. An x86 computer has 4, so a GDB session that uses all 4 there
-gets 3 in the machine.
+When the 3 debug registers are taken, a GDB `hbreak` or `watch` is refused
+too, and GDB says `Couldn't write debug register: No space left on device` at
+the `continue` that inserts it. An x86 processor has 4 debug registers, so a
+GDB session that uses all 4 on a host gets only 3 in the machine.
 
 ## GDB inside the machine
 
@@ -431,21 +439,21 @@ ends GDB.
 The [ClickHouse example](https://github.com/testflows/Machine/tree/main/examples/debug/clickhouse)
 builds both kinds of image for ClickHouse 26.8: one with the symbol table
 alone, and one with the debug information. Its server prints the commit it was
-built from as it comes up, with a link to that source on GitHub, and the
+built from as it starts, with a link to that source on GitHub, and the
 example shows how to put a source file where GDB finds it.
 
 ### A batch of commands
 
-Build the example's disk from its `server` image, and create a run on it.
 The [example's README](https://github.com/testflows/Machine/tree/main/examples/debug/clickhouse)
-builds the image:
+builds the example's `server` image. Build a disk from that image, and create
+a run on the disk:
 
 ```bash
 machine disks build --image clickhouse-server:26.8.31.2 clickhouse-server
 machine create ch --disk clickhouse-server --mem 4096 --cpus 2
 ```
 
-Run the machine to the point you want to debug, and keep a checkpoint there.
+Run the machine to the point you want to debug, and take a checkpoint there.
 Then run GDB with [`machine exec`](commands.md#machine-exec). Here the
 example's server prints `clickhouse: ready` once it answers queries:
 
@@ -472,7 +480,8 @@ Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(s
 `exec run` runs the machine until GDB exits, and prints what GDB printed.
 `-batch` makes GDB exit after its commands, and an attached process is
 detached as GDB exits. A file of commands works the same way, with `-x FILE`.
-`-c` gives the line to the container's shell, which finds the process id.
+`-c` gives the line to the container's shell, which expands
+`$(pidof clickhouse-server)` to the server's process id.
 
 ClickHouse signals its own threads with `SIGUSR1` and `SIGUSR2`. Without the
 `handle` line, `continue` stops at the first of those signals instead of at
@@ -511,8 +520,8 @@ machine exec ch start --container app --user clickhouse -c 'gdb -q -p $(pidof cl
 ```
 
 ```text
-✔ Sent 3615877d to ch (whvR8O5Y1otCgBTbNi3rc)
-  Read the process machine exec ch proc 3615877d
+✔ Sent 95916p2 to ch (whvR8O5Y1otCgBTbNi3rc)
+  Read the process machine exec ch proc 95916p2
 ```
 
 The `sleep` holds the pipe open. Without it, GDB reads the end of its input
@@ -526,8 +535,8 @@ printed, by the id `exec start` gave:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "handle SIGUSR1 SIGUSR2 nostop noprint" "echo step-1\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-1' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-1' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -548,10 +557,11 @@ The `handle` line keeps `continue` from stopping at ClickHouse's own signals,
 as in the batch session. This first step waits for GDB to read the program's
 symbols, 10 seconds here. The others take a second or two.
 
-A few things keep the steps right:
+Four rules keep the steps reliable:
 
-- Each step has a marker of its own. `run --until` ends on text the run
-  prints from its start, so `step-1` printed before never ends a later run.
+- Each step has a marker of its own. `run --until` matches only text printed
+  after that command starts, so the `step-1` printed earlier never ends a
+  later run.
 - Use `exec start`, not `exec run`, to write to the pipe. `exec run` runs the
   machine until the `printf` exits, and GDB may print the marker during it.
   The `run --until` after it then waits for a marker that is already there.
@@ -569,8 +579,8 @@ uses no debug register:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "break DB::executeQuery" "info breakpoints" "echo step-2\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-2' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-2' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -589,8 +599,8 @@ the marker follows the hit:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" c "echo step-3\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-3' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-3' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -602,7 +612,7 @@ Thread 9 "TCPHandler" hit Breakpoint 1, 0x000000001d386340 in DB::executeQuery(s
 ```
 
 Every later `continue` works the same way. Each hit prints a new
-`hit Breakpoint` line, so `--until '/output/exec/3615877d/stdout~hit Breakpoint'`
+`hit Breakpoint` line, so `--until '/output/exec/95916p2/stdout~hit Breakpoint'`
 stops at the next hit too.
 
 **Read the query.** `executeQuery` returns its result by value, so `rdi`
@@ -611,8 +621,8 @@ and a length:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "info registers rsi rdx" "x/s \$rsi" "echo step-4\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-4' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-4' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -626,8 +636,8 @@ rdx            0x28                40
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "x/4i \$pc" stepi "nexti 3" "echo step-5\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-5' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-5' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -644,8 +654,8 @@ machine exec ch proc 3615877d stdout
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "bt 3" finish "echo step-6\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-6' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-6' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -664,8 +674,8 @@ and stops where the next query returns:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "delete 1" "hbreak *0x1ed12ec3" c "echo step-7\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-7' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-7' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -676,15 +686,15 @@ Thread 9 "TCPHandler" hit Breakpoint 2, 0x000000001ed12ec3 in DB::TCPHandler::ru
 (gdb) step-7
 ```
 
-`delete` prints nothing, so its prompt stands alone at the start.
+`delete` prints nothing, so the output starts with two prompts.
 
 **A hardware watchpoint.** It takes another debug register, and stops after
 the next call writes its return address below the stack pointer:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" "watch -l *(long *)(\$rsp - 8)" c "echo step-8\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-8' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-8' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -706,8 +716,8 @@ not a terminal:
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" delete "catch syscall sendto" c "info registers rdi rdx" "x/16xb \$rsi" "echo step-9\n" > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/stdout~step-9' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/stdout~step-9' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text
@@ -730,8 +740,8 @@ That is the query's result going back to the client, 34 bytes on socket 58.
 
 ```bash
 machine exec ch start --container app --user clickhouse -c 'printf "%s\n" delete detach quit > /tmp/gdb.in'
-machine run ch --until '/output/exec/3615877d/status~^exited' --within 60s
-machine exec ch proc 3615877d stdout
+machine run ch --until '/output/exec/95916p2/status~^exited' --within 60s
+machine exec ch proc 95916p2 stdout
 ```
 
 ```text

@@ -406,7 +406,7 @@ wsl --install
 
 <div class="download-section">
 <h2>Upgrade</h2>
-<p>An installed client upgrades itself. <code>machine upgrade</code> runs the installer with the client's own sign-in, so it asks for nothing, and the client stays signed in. <code>machine upgrade --list</code> shows the versions there are, and <code>machine upgrade YYYYMMDD-HHMM</code> installs one of them:</p>
+<p>An installed client upgrades itself. <code>machine upgrade</code> downloads the release with the client's own sign-in and checks its signed checksum, so it asks for nothing, and the client stays signed in. It runs no downloaded script. <code>machine upgrade --list</code> shows the versions there are, and <code>machine upgrade YYYYMMDD-HHMM</code> installs one of them:</p>
 
 ```bash
 machine upgrade
@@ -419,7 +419,7 @@ machine upgrade YYYYMMDD-HHMM
 
 <div class="download-section">
 <h2>A specific version</h2>
-<p>The installer gets the latest release. <code>--list</code> shows the versions there are, newest first, and <code>--version</code> installs one of them:</p>
+<p>The installer gets the latest release. <code>--list</code> shows the versions there are, newest first, and <code>--version</code> installs one of them, with that version's SDK core. Both sign in first, as an install does:</p>
 
 ```bash
 curl https://testflows.com/machine/install -fsS | bash -s -- --list

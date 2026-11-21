@@ -11,10 +11,11 @@ command:
 curl https://testflows.com/machine/install -fsS | bash
 ```
 
-The client is given to a TestFlows account, so the installer first signs you
-in, or creates your account, at the terminal: you give your email and the code
-sent to it. An account that has not accepted the current Terms of Service and
-Client EULA is shown both and accepts them before anything is downloaded. The
+The client is available only with a TestFlows account, so the installer first
+signs you in, or creates your account, at the terminal: you give your email and
+the code sent to it. If your account has not accepted the current Terms of
+Service and Client EULA, the installer shows both and asks you to accept them
+before anything is downloaded. The
 installer signs out when it ends, so sign in with `machine login` afterwards.
 Without a terminal, as in CI, the installer takes an API key from
 `TESTFLOWS_MACHINE_API_KEY` instead, from an account that has accepted them.
@@ -25,8 +26,10 @@ SHA-256 checksum published next to it, and puts `machine` and `machine-env` in
 another program named `machine` is already on your `PATH`, as
 `/usr/bin/machine` is on a Mac, `machine` goes to `~/.local/share/machine/bin`
 instead, which is not on your `PATH`, and `~/.local/bin` holds `machine-env`
-alone. If `~/.local/bin` isn't on your `PATH` yet, the installer says so and
-shows the line to add for your shell. The installer also puts the SDK Core,
+alone. If `~/.local/bin` isn't on your `PATH` yet and your shell is bash or
+zsh, the installer offers to add it to `~/.bashrc` or `~/.zshrc`. Otherwise,
+or if you decline, it shows you the line to add yourself.
+The installer also puts the SDK Core,
 which the [Python SDK](python-sdk.md#installing) runs on, in
 `~/.testflows/machine/sdk`, checked the same way. Run the same command again
 whenever you want to update.
@@ -66,8 +69,8 @@ names the file. The Python SDK reads the same variable.
 prints the processor type, so typing `machine` may not run the client. Putting
 the client first on your `PATH` would hide the system command for every other
 program. `machine-env`, which the installer writes on every system, starts a
-shell in which `machine` is the client and changes nothing else. Its prompt
-starts with `(machine)`, your usual shell setup is loaded, and `exit` leaves. It
+shell in which `machine` is the client and changes nothing else. The shell
+loads your usual setup, and its prompt starts with `(machine)`. `machine-env`
 supports zsh and bash.
 
 ```bash
@@ -78,14 +81,13 @@ $ machine-env
 $
 ```
 
-The `(machine)` at the start of the prompt says you are in it: there `machine` is this client. `exit` leaves it, back to the shell you were in. To run one command there without starting a shell:
+While the prompt starts with `(machine)`, `machine` is the client. `exit` returns you to the shell you were in. To run one command in this environment without starting a shell:
 
 ```bash
 machine-env -- machine --version
 ```
 
-That form runs one command in that environment and starts no shell, which
-suits scripts and CI. To see which `machine` you get, run `which machine`:
+This form suits scripts and CI. To see which `machine` you get, run `which machine`:
 `/usr/bin/machine` is the system's, and the client is
 `~/.local/share/machine/bin/machine` on a Mac or `~/.local/bin/machine` on
 Linux. If
@@ -142,8 +144,8 @@ eval "$(machine completion zsh)"      # ~/.zshrc
 machine completion fish | source      # ~/.config/fish/config.fish
 ```
 
-The client answers each Tab itself, from its own commands, so a newer client
-needs no newer line.
+The client computes each completion itself from its own commands, so the line
+does not change when you update the client.
 
 To try it in one terminal first, run the same line there instead. Tab
 completes in that shell until it exits, and no other shell changes.
@@ -206,28 +208,32 @@ machine disks build --from python:3.12-slim --add hello.py hello -- python hello
 ```bash
 ➤ Packing hello (1 service)
 ➤ Hashing hello.pack
-➤ Waiting for the upload to start…
+➤ Waiting for the upload to start  2s
 ➤ Uploading 20.5kB → hello
-➤ Building the disk…
+➤ Building the disk  900ms
+➤ Pulling the images  6s
+➤ Writing the images  5s
+➤ Hashing the disk  7s
+➤ Storing the disk  21s
 ✔ Built hello
   Boot machine create --disk hello
 ```
 
 Only your file is uploaded. The build pulls the image itself and writes it
-onto the disk, which takes about two minutes for an image of this size. You
+onto the disk, which takes about a minute for an image of this size. You
 build a disk once and create as many runs from it as you like.
 
 A program you compile, an image of your own, or several services together
 build the same way from other sources. See [Disks](disks.md).
 
-Create a run from the disk. The machine waits for your commands. With
-`--no-daemon` it would boot and run to the end by itself.
+Create a run from the disk. By default, the machine then waits for your
+commands. With `--no-daemon`, it would boot and run to the end by itself.
 
 ```bash
 machine create hello-run --disk hello
 ```
 ```bash
-✔ Started hello-run (whUxdR33Zad9Qxc0ASfig)
+✔ Started hello-run (wiceT2fDBSIct7ewdeiAb)
 ```
 
 Now the run is waiting. It only moves when you drive it, and [`machine run`](commands.md#machine-run) is how
@@ -237,25 +243,25 @@ you drive it. The `--until tasks` part means "keep going until Linux is up."
 machine run hello-run --until tasks
 ```
 ```bash
-iterations: 15646  run ic: 271676660  vtime: +0.692741050s
+iterations: 15647  run ic: 276752606  vtime: +0.785224370s  checkpoints: 1
 
-VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH          RIP                 RCX       ITER
-0     HYPERCALL  15791  271676660  192153  271676660  0x785930775efa707  0xffffffff81f9eeda  43778048  15645
+VCPU  EXIT       ID     RUN IC     RCB     TOTAL IC   REGS HASH           RIP                 RCX       ITER
+0     HYPERCALL  15790  276752606  310967  276752606  0x149d66b90aed56a7  0xffffffff81fb3074  43778048  15646
 ```
 
-Read the last five lines the machine printed. `--plain` prints the lines
-alone. Without it, a terminal also shows the entries, the source and the
-number of each line.
+Read the last five lines the machine printed. `--plain` prints only the
+lines. Without it, a terminal also shows the entry, the source and the number
+of each line.
 
 ```bash
 machine output hello-run -n -5 --plain
 ```
 ```bash
-futex hash table entries: 256 (order: 2, 16384 bytes, linear)
 NET: Registered PF_NETLINK/PF_ROUTE protocol family
 thermal_sys: Registered thermal governor 'step_wise'
 thermal_sys: Registered thermal governor 'user_space'
 cpuidle: using governor ladder
+cpuidle: using governor menu
 ```
 
 To see the full console log, use `-n :`. Ranges use the same colon as a Python slice. Lines are numbered from 1 and both ends count, so `-n 1:` is the first line through the last.
@@ -269,7 +275,8 @@ start a branch from there.
 machine checkpoint hello-run booted
 ```
 ```bash
-✔ Created checkpoint booted at entry 15792
+  Checkpointing: writing state 100%  130ms
+✔ Created checkpoint booted at entry 15790
   Make it durable machine sync hello-run
 ```
 
@@ -281,19 +288,24 @@ Stopping the machine publishes it too.
 machine fork hello-run --at ^booted --name try-1
 ```
 ```bash
-✔ Forked hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH)
+  Branching  170ms
+  Branching  1s
+  Branching  2s
+  Branching  3s
+✔ Forked hello-run/try-1 (wiceUDYg8Ot26kHsV1LAE)
+  From checkpoint 15790 of hello-run, nothing replayed
 ```
 
-The branch starts exactly where `booted` was taken. Notice its full name,
-`hello-run/try-1`. A branch is named after the run its tree starts from, a
-slash, and the name you gave it. Look at the tree.
+The branch starts exactly where `booted` was taken. Its full name,
+`hello-run/try-1`, is the name of the root of its tree, a slash, and the name
+you gave it. Look at the tree.
 
 ```bash
 machine branches hello-run
 ```
 ```bash
-● hello-run (whUxdR33Zad9Qxc0ASfig) [0, ∞)  ← this run
-╰─ @15792 0.692741050s+1 → ● hello-run/try-1 (whUxfLYSFJMDHzKaiBOvH) [15793, ∞)
+● hello-run (wiceT2fDBSIct7ewdeiAb) [0, ∞)  ← this run
+╰─ @15790 0.785224370s → ● hello-run/try-1 (wiceUDYg8Ot26kHsV1LAE) [15791, ∞)
 ```
 
 Linux is up on the branch and your program has not started yet. Drive the
@@ -303,20 +315,22 @@ branch until the machine shuts down, which it does when the program exits.
 machine run hello-run/try-1 --until halted
 ```
 ```bash
-iterations: 17148  run ic: 2095789032  checkpoints: 1
+iterations: 9168  run ic: 2810612750  vtime: +4.606870296s  checkpoints: 1
 
 VCPU  EXIT                ID     RUN IC      RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER
-0     IO (EXIT_SHUTDOWN)  40050  2095789032  39   2367459400  0x62064a27645eaf14  0xffffffff8103f4fc  0    17147
+0     IO (EXIT_SHUTDOWN)  31283  2810612750  39   3087365356  0x6d5c6eda235eaf14  0xffffffff8103f4fc  0    9167
 ```
 
-The program's own lines start with `app-1`. Find them in the branch's console.
+Your program runs as a service named `app`, so each line it prints starts
+with `app |`. When it exits, the machine says so on a line of its own. Find
+these lines in the branch's console.
 
 ```bash
-machine output hello-run/try-1 -n : | grep app-1
+machine output hello-run/try-1 -n : | grep 'app '
 ```
 ```bash
-app-1  | hello, world
-app-1 exited with code 0
+app | hello, world
+=== app exited by itself: code 0 ===
 ```
 
 The parent `hello-run` is still at `booted`, with the program yet to run. You
@@ -330,8 +344,9 @@ machine delete hello-run --recursive --stop --yes
 machine sessions delete first --yes
 ```
 
-That's the whole loop. You built a disk, created a checkpoint in a run, branched
-from it and ran a program to its end. Everything else in this page is a variation on it.
+That is the whole workflow. You built a disk, created a checkpoint in a run,
+forked a branch from it and ran a program to its end. Everything else in these
+docs is a variation on it.
 
 ## Getting help
 

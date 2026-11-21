@@ -48,6 +48,7 @@ This creates a session, boots a run from the disk `hello` and prints the last
 twenty lines of its console. A run waits for commands, so it moves only when
 you call `run.run(...)`; pass `daemon=False` to have it run to the end by
 itself.
+
 Leaving a `with` block deletes what it created, whether the block ends normally
 or with an error. That is how you make sure a session never outlives your
 program.
@@ -75,7 +76,8 @@ The SDK signs in with an API key from `TESTFLOWS_MACHINE_API_KEY` if it is set.
 If it isn't, it uses the login that [`machine login`](commands.md#machine-login) stored, which it shares
 with the client.
 
-A program can sign in on its own too. The one-time code arrives by email.
+A program can also sign in by itself with a one-time code, which arrives by
+email:
 
 ```python
 machine.login.start("me@example.com")
@@ -150,7 +152,7 @@ branch = run.fork(at="^booted", name="retry")
 branch.replay()
 ```
 
-And the calls you will reach for most often:
+These are the calls used most often:
 
 | Call | Does |
 |---|---|
@@ -209,9 +211,9 @@ Every call returns a record with named fields, such as a `RunInfo` from
 `describe()` or a list of `TaskInfo` from `tasks()`. Call `as_json()` on one to get
 a plain dict.
 
-`run.run(...)` and `run.plan(...)` return a `RunResult`, which says how far the
-drive went. An iteration has no fixed length, so `iterations` alone does not
-tell you:
+`run.run(...)` and `run.plan(...)` drive the run, and return a `RunResult`
+that says how far the drive went. An iteration has no fixed length, so
+`iterations` alone does not say how far:
 
 | Field | Is |
 |---|---|
@@ -235,17 +237,18 @@ including a machine time: `run.run(until="vtime=+10ms")`.
 
 ### Bounding a drive
 
-`within` bounds a drive by the machine's clock, as `--within` does. With
-`until`, the one that happens first ends the drive, and `reached` says which. The machine checks the bound itself, so a slow host never ends the drive
-early:
+`within` bounds a drive by the machine's clock, as `--within` does. When
+`until` is given too, whichever comes first ends the drive, and `reached` says
+which. The machine checks the bound itself, so a slow host never ends the
+drive early:
 
 ```python
-done = run.run(until="console~ready", within="30s")
+done = run.run(until=r"console~app \| ready", within="30s")
 if not done.reached:
     print("not ready after 30s of machine time")
 ```
 
-`timeout` is different: it is how many seconds of your time the call waits,
+`timeout` is different: it is how many seconds of real time the call waits,
 and it raises `Timeout` when they run out. To wait for a run that something
 else drives, such as another program or a run stopping in the background, use
 `run.wait`:
@@ -261,16 +264,17 @@ run.wait(for_="stopped", timeout=60)
 
 ### Scheduling from Python
 
-Every option of `machine run` is a keyword. The draws described in
-[Schedules](running-a-machine.md#schedules) look like this, on a run whose
-program was focused with `run.focus.add("/app")` before `booted`, so that its
-branches have the focus too:
+Every option of `machine run` is a keyword. The draws that
+[Schedules](running-a-machine.md#schedules) describes look like this in
+Python. The run's program was focused with `run.focus.add("/app")` before the
+checkpoint `booted` was taken, so every branch forked at `booted` has the
+focus too:
 
 ```python
 for seed in range(10):
     branch = run.fork(at="^booted", name=f"seed-{seed}")
     done = branch.run(until="/app:exit", within="60s", mode="step,fast",
-                      step="1:200", task_sched="keep:hold:yield", seed=seed)
+                      step="1:200", task_sched="keep,hold,yield", seed=seed)
 ```
 
 The `explore_seeds.py` example keeps the branches that fail and marks them.
@@ -291,11 +295,14 @@ run.inject.clear()
 ```
 
 A C library opens a file with `open` or `openat`, depending on the library,
-so the fault takes both. glibc's `open()` makes no `open` call, so the add
-issues a `UserWarning` that names `openat`; the fault on `open` is added all
-the same. `matched` counts the calls the fault saw and `fired` the ones it
-failed. A disk fault takes the file and the operation. The kernel's flusher
-sends an ordinary write, so the example syncs it, and the request is dd's own:
+so the fault names both. glibc's `open()` makes no `open` system call, so
+`add` issues a `UserWarning` that names `openat`, and adds the fault on `open`
+all the same. In the listing, `matched` counts the calls the fault saw and
+`fired` counts the ones it failed.
+
+A disk fault takes the file and the operation. An ordinary buffered write
+reaches the disk from the kernel's flusher, not from the program, so the
+example writes with `conv=fsync` and the request is dd's own:
 
 ```python
 run.inject.add("disk", in_="comm=dd", file="/var/data.bin", op="write")
@@ -307,7 +314,7 @@ The `fault_injection.py` example runs both and prints what the program saw.
 `on` and `off` make a fault [cycle](fault-injection.md#faults-that-cycle):
 `run.inject.add("disk", in_="all", on="2s", off="5s")` fails every disk
 request for 2 seconds in every 7 of machine time. Each `Fault` says where it
-is: `active`, and `left_ns`, the time left in that window.
+is in its cycle: `active`, and `left_ns`, the time left in that window.
 
 ## Container faults
 
@@ -327,23 +334,26 @@ run.run(within="5s")
 print(run.exec("ls /data", container="app").stdout)   # kept is there, lost is not
 ```
 
-`stop`, `kill`, `start`, `pause`, `resume`, `throttle`, `memory`, `pids`, `ports`
-and `files` work the same way.
-`stop` and `kill` take `restart=` as `crash` does, `stop` takes `grace=`,
-`fresh=True` starts a new container instead of the old one, `pause` and
-`throttle` take `for_=`, `throttle` takes `cpus=`, and `memory("db", "64m",
-for_="30s")` limits a container's memory. `pids("db", 20)`,
-`ports("api", 40000, 40009)` and `files("api", 64)` run a container out of
-processes, local ports or open files, and each takes `for_=` too.
+`stop`, `kill`, `start`, `pause`, `resume`, `throttle`, `memory`, `pids`,
+`ports` and `files` work the same way. `stop` and `kill` take `restart=` as
+`crash` does, and `stop` also takes `grace=`. `fresh=True` starts a new
+container instead of the old one. `pause` and `throttle` take `for_=`, and
+`throttle` takes `cpus=`.
+
+`memory("db", "64m", for_="30s")` limits a container's memory.
+`pids("db", 20)`, `ports("api", 40000, 40009)` and `files("api", 64)` run a
+container out of processes, local ports or open files, and each takes `for_=`
+too.
+
 `run.containers()` lists the containers with the service, name, state and
-limits of each. The `container_crash.py` example builds a
-project, crashes one service and reads its volume after the restart.
+limits of each. The `container_crash.py` example builds a project, crashes one
+service and reads its volume after the restart.
 
 ## Clock faults
 
 `run.clock` changes the guest's date or one container's, as
 [Clock faults](clock-faults.md) describes. Each method returns the date as it
-stands, with the change waiting for the run to execute:
+is now, with the change pending until the run next executes:
 
 ```python
 run.clock.jump("+59m50s")
@@ -359,10 +369,10 @@ run.clock.reset()
 
 `run.clock(container="db")` reads one container. `ClockInfo.containers` lists
 each container off the guest's date with its `offset`, `drift`, `slew` and
-`jitter`, and `ClockInfo.jitter` and `ClockInfo.leap` are the guest's.
+`jitter`. `ClockInfo.jitter` and `ClockInfo.leap` are the guest's own.
 
 The guest kernel takes a change when the run executes, so read the clock after
-that run to see whether it was refused. `ClockInfo.refused` names each change
+the next run to see whether the change was refused. `ClockInfo.refused` names each change
 of the last batch the guest refused, with its errno and the reason:
 
 ```python
@@ -372,8 +382,8 @@ for refused in run.clock().refused:
     print(refused.command, refused.error, refused.reason)
 ```
 
-To find how much skew a system tolerates, fork one checkpoint into branches,
-one skew each:
+To find how much skew a system tolerates, fork one branch at a checkpoint for
+each skew:
 
 ```python
 for skew_ms in (50, 100, 200, 400, 800):
@@ -387,7 +397,8 @@ for skew_ms in (50, 100, 200, 400, 800):
 
 `run.net` puts faults on the links between a run's containers, as
 [Network faults](network-faults.md) describes. A fault acts on every packet a
-container sends, or on those a match takes. A match is any of `to`, a peer;
+container sends, or only on the packets a match selects. A match combines any
+of these keywords: `to`, a peer;
 `proto`, `tcp`, `udp`, `icmp` or `arp`; `port`, a source or destination
 port; and `syn=True`, the TCP SYNs that open a connection:
 
@@ -408,14 +419,18 @@ run.net.heal()
 return a `LinkChange`, the link before and after; `partition` returns one
 for each link it cuts, and `heal` and `release` return the links as they
 were before. `duplicate`, `corrupt` and `reorder` take a share as `loss` does,
-and `rate` takes bits a second, such as `"1mbit"`. A `Link` gives its delay
+and `rate` takes bits a second, such as `"1mbit"`.
+
+A `Link` gives its delay
 and jitter in nanoseconds and its shares in parts per billion, and what the
 fault did since it was set: `sent`, `dropped`, and `queued`, the packets it
 holds now. A replay delays and drops the same packets.
 
 `log=True` on a fault writes each of its decisions to the container's file
 under `/output/drop/.machine/net`, and `log=False` stops it, as `--log` and
-`--no-log` do:
+`--no-log` do. A run does not store files under `/output/drop` unless it is
+told to keep them, so this run was created with
+`client.create("app", disk="app", keep_output="/output/drop/.machine/net")`:
 
 ```python
 run.net.loss("db", "30%", to="nest", seed=7, log=True)
@@ -424,10 +439,11 @@ for line in run.output(source="/output/drop/.machine/net/compose-db-1.log"):
     print(line)
 ```
 
-`hold` keeps a link's packets until `release`, or for `for_`, and they then
-leave together. With no name, `hold` holds every link where the machine
-stopped, until `release` with no name. `reset` aborts TCP connections and
-returns how many:
+`hold` keeps a link's packets until `release`, or for the duration `for_`
+gives, and the held packets then leave together. With no container name,
+`hold` holds every link at the point where the machine stopped, until a
+`release` with no name. `reset` aborts TCP connections and returns how many it
+aborted:
 
 ```python
 run.net.hold("node1", for_="10s")         # node1's messages arrive late, in a burst
@@ -473,8 +489,9 @@ run.breakpoints.catch("io", file="/var/lib/db/*/data.bin", op="write")
 
 ## Debugging a task
 
-`run.task(tid)` is a task to debug while the machine is stopped, by its tid,
-as [Debugging](debugging.md) describes for the command line:
+`run.task(tid)` returns the task with that tid, to debug while the machine is
+stopped. [Debugging](debugging.md) describes the same debugger on the command
+line:
 
 ```python
 task = run.task(412)
@@ -511,6 +528,7 @@ point names.
 
 ```python
 booted = run.checkpoint("booted")
+run.run(within="50ms")
 branch = run.fork(at=booted.place.point + "10ms")
 here = branch.now()
 run.place(here.point)    # the same time, on the parent
@@ -536,7 +554,7 @@ for line in run.output(follow=True, timeout=60):
 
 ## Choosing entries
 
-Anything that reads entries takes the same few spellings.
+Every call that reads entries accepts the same forms:
 
 | You write | Means |
 |---|---|
@@ -561,8 +579,8 @@ the last 20, `"-10:-2"` the tenth line from the end through the second, and
 ## Cleaning up
 
 A session costs from the moment you create it, and a run keeps its log and
-checkpoints until you delete it. Both can be used as context managers, as
-in the first example, and deleting a run takes its branches with it.
+checkpoints until you delete it. Both are context managers, as in the first
+example. Deleting a run also deletes its branches.
 
 If you want to keep a run that found something, don't wrap it in a `with`
 block. Nothing is deleted until you call `delete()`.
@@ -583,6 +601,7 @@ went wrong.
 | `NotRunning` | it exists, but it is not running |
 | `Conflict` | the request does not fit the thing's current state |
 | `NoCapacity` | no host of the session's class has room for it now; the same request can succeed later, or a smaller session or another class may fit |
+| `ClassUnavailable` | no machine of the session's class is in service; a create on it succeeds once one is, and another class may be available now |
 | `Diverged` | `play()` could not follow the recording; `replay()` returns a divergence in its result instead |
 | `Timeout` | a wait ran out of time; the work goes on in the service |
 | `ServiceUnavailable` | the service could not be reached |
@@ -608,12 +627,14 @@ except machine.NoCapacity:
     session = client.sessions.create("ci-1", cpus=4)
 
 try:
-    run.run(until="console~ready", within="60s")
+    run.run(until=r"console~app \| ready", within="60s")
 except machine.NotRunning:
     run.start()
 ```
 
-The `error_handling.py` example goes through every exception.
+The `error_handling.py` example raises `NotFound`, `Forbidden`,
+`InvalidArgument`, `NotRunning`, `Conflict` and `Timeout`, and recovers from
+the last three.
 
 ## Examples
 
@@ -643,7 +664,7 @@ the disk at the end.
 | `resume_elsewhere.py` | stops a run in one session and starts it in another |
 | `preload_and_offload.py` | preloads a disk onto the session, then drops the session's copy |
 | `ci_job.py` | a CI job with an API key, a session per job and an exit code |
-| `error_handling.py` | every error and how to recover from it |
+| `error_handling.py` | the errors a program usually handles, and how to recover from them |
 | `fault_injection.py` | fails a program's opens with a syscall fault and its synced write with a disk fault, and prints what the program saw and the fault counts |
 | `container_crash.py` | builds a Compose project with an `x-machine` volume, crashes one service, and reads what the volume kept; takes `--name` for the disk it builds |
 | `debug_task.py` | stops at a catchpoint on `open`, reads the task's registers, memory and stack |

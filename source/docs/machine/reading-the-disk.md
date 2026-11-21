@@ -14,8 +14,9 @@ machine fs cp -r app /results ./results --at ^done
 
 Every read names its checkpoint with `--at`, as a point: `^booted` for a
 checkpoint by name, or `'#4200'` for the checkpoint at an entry. There is no
-default. This is not a view of the running machine. A listing that did not
-say how old it is would look like one.
+default, because `machine fs` does not show the running machine, and a
+listing that did not say which checkpoint it came from would look as if it
+did.
 
 ```bash
 machine fs ls app /tmp
@@ -43,8 +44,9 @@ machine checkpoint app
 machine fs cat app /var/log/app.log --at now
 ```
 
-`now` is the checkpoint the run stands at. It names one until the machine runs
-again; after that, name the checkpoint itself.
+`now` names the checkpoint at the run's current point. It names that
+checkpoint only until the machine runs again; after that, name the checkpoint
+itself.
 
 A run created with `--fs-sync` writes every change of a file to the disk as it
 is made, and one created with `--fs-dirsync` does so for every change of a
@@ -52,8 +54,8 @@ directory. Both are options of [`machine create`](commands.md#machine-create)
 and are off by default.
 
 To read the files of the machine as it runs, execute a command in it:
-[`machine exec app run -- ls /tmp`](commands.md#machine-exec). That reads now,
-synced or not, and is recorded in the run.
+[`machine exec app run -- ls /tmp`](commands.md#machine-exec). The command reads
+the files as they are now, synced or not, and the run records it.
 
 At the [control prompt](running-a-machine.md#interactive-mode) the command is
 `/fs`, and the point follows the word `at`:
@@ -65,4 +67,4 @@ At the [control prompt](running-a-machine.md#interactive-mode) the command is
 
 From Python, `run.fs.ls("/var/log", at="^done")` lists a directory,
 `run.fs.cat("/var/log/app.log", at="^done")` returns a file's bytes, and
-`run.fs.cp("/var/log", "./logs", at="^done", recursive=True)` copies it out.
+`run.fs.cp("/var/log", "./logs", at="^done", recursive=True)` copies the directory out.

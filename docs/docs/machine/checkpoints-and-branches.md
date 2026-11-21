@@ -20,8 +20,8 @@ A name uses letters, digits, `.`, `-` and `_`, and starts with a letter or
 digit. It can't be a number, because numbers name the checkpoints taken without
 one, and it can't read as a time, like `10ms`, because a time names a point too.
 
-Machine also takes its own, at the interval `create` sets, named after the entry they were taken at
-(like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.
+Machine also takes checkpoints of its own, at the interval `create` sets, and
+names them after the entry they were taken at (like `10000`), so [`machine checkpoints app`](commands.md#machine-checkpoints) lists yours next to those.
 
 The DURABLE column says whether a checkpoint is in your account's storage or
 only in the session. A new checkpoint shows `no` until the run is published,
@@ -53,7 +53,7 @@ machine fork app --at ^booted --name try-1  # and give it a name
 ```
 
 Give a branch a name with `--name`. If you don't, it is named after the
-entry it landed on. Add `--no-start` to create the branch without starting it.
+entry it was forked at. Add `--no-start` to create the branch without starting it.
 
 A branch's full name is the name of the run its tree starts from, a slash, and
 the name you gave it. So [`machine fork app --name try-1`](commands.md#machine-fork) makes `app/try-1`,
@@ -70,7 +70,8 @@ From Python, `run.fork(at="^booted", name="try-1")` returns the branch as a
 
 [`machine fork`](commands.md#machine-fork) gives the new branch a machine of its own and leaves you where
 you were. `go`, `switch` and `rewind` work in place instead: they change the
-machine you are on. `detach` is the odd one out, and is explained below.
+machine you are on. `detach` does neither and is described at the end of this
+section.
 
 | Command | Does |
 |---|---|
@@ -94,8 +95,8 @@ and no longer running. [`machine start app`](commands.md#machine-start) brings i
 you how many entries it had to replay to get there. The machine you switched is
 now the new branch, so talk to it by that name: `app/g1`.
 
-A `switch` needs a branch that isn't running somewhere else. Pointing it at a
-branch that is gets refused:
+A `switch` needs a branch that isn't running somewhere else. Machine refuses a
+switch onto a branch that is running:
 
 ```text
 ✗ Already running: app/try-1.
@@ -104,20 +105,19 @@ branch that is gets refused:
   Or drive it where it is machine control app/try-1
 ```
 
-Creating the branch with `--no-start` avoids this.
+A branch created with `fork --no-start` is not running, so a `switch` onto it
+is not refused this way. The target of a `switch` is a branch name, a mark
+(`%crashed`), `parent` or `root`.
 
-`rewind` changes the run itself, not a copy of it. Use it when you want to
-record again from an earlier point. The run keeps its name. Machine refuses to rewind
-past a branch that starts after that point, since that branch depends on entries
+`rewind` changes the run itself, not a copy of it. Use it to record again from
+an earlier point; the run keeps its name. Machine refuses to rewind past the
+fork point of one of the run's branches, since that branch depends on entries
 that would no longer exist.
-
-`switch` takes a branch name, a mark (`%crashed`), `parent` or `root`.
 
 `detach` is for leaving a tree behind. A branch normally shares its ancestors'
 data, which is what keeps it cheap. `detach` copies everything into a new root
 that owns all of its data and belongs to no tree but its own. That is much
-slower than a fork, so only reach for it when you want to get rid of the
-original.
+slower than a fork, so use it only when you want to delete the original.
 
 If you only want a branch to have its own copy of the data, run
 [`machine fork --rebase`](commands.md#machine-fork), which is quicker. Add `--lean` and the branch keeps no

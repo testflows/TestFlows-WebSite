@@ -82,11 +82,13 @@ sees every one, so its kernel spreads threads across them.
 
 Build a disk from Ubuntu 26.04 whose container runs `sleep infinity`, so it
 stays up and waits for your commands. Then
-create a run with four vCPUs and ask the guest what it has:
+create a run with four vCPUs, run it for 15 seconds of machine time so that
+its container is up, and ask the guest what it has:
 
 ```bash
 machine disks build --from ubuntu:26.04 ubuntu-26.04 --entrypoint /bin/sleep -- infinity
 machine create app4 --disk ubuntu-26.04 --cpus 4
+machine run app4 --within 15s
 machine exec app4 run --container app -- nproc
 machine exec app4 run --container app -- grep -E '^processor|^model name' /proc/cpuinfo
 ```
@@ -153,20 +155,27 @@ it, and the same `--until` can stop at the next of several lines alike.
 or during it:
 
 ```bash
-machine run app --until 'console~ready'    # runs until the next ready line
-machine wait --for 'console~ready' app     # true if one was printed already
+machine run app --until 'console~app \| ready'    # runs until app next prints ready
+machine wait --for 'console~app \| ready' app     # true if it printed one already
 ```
+
+The pattern is a regular expression, and it is matched against everything the
+console prints, including the kernel's boot messages. A bare `ready` matches
+the word `already` in one of those messages, so the run would stop during
+boot. Each line a service prints starts with the service's name and `|`, so
+`app \| ready` matches only what `app` prints.
 
 A source name with a `~` in it is quoted inside the pattern, as in
 `'"/output/keep/app/app.log~"~ERROR'`.
 
 `--iters` limits how many iterations a drive may spend, and the global
-`--timeout` limits how long you are willing to wait. Whichever hits first wins.
+`--timeout` limits how long you are willing to wait. The run stops at
+whichever limit it reaches first.
 
 An iteration has no fixed length. It is one dispatch of a vCPU, and it ends
 where the guest next exits to the machine: after five instructions or after a
-million. So no count is right in advance, and nobody can know how long a
-program will run. Stop on a condition, and use `--iters` or a `vtime`
+million. Because of that, no iteration count can be chosen in advance to match
+how long a program runs. Stop on a condition, and use `--iters` or a `vtime`
 condition as a limit. Every run ends by saying how far it went:
 
 ```
@@ -175,7 +184,7 @@ iterations: 2000  run ic: 238893097  vtime: +0.383620410s
 
 `vtime` is how far the machine's clock moved. A `vtime` condition is checked
 between iterations, so the run stops at the end of the iteration that reaches
-the time, a little late. A run that went too far is not lost:
+the time, slightly after it. A run that went too far is not lost:
 [`machine rewind`](commands.md#machine-rewind) and [`machine go`](commands.md#machine-go) take it back to an earlier
 point.
 
@@ -190,11 +199,10 @@ machine run app --until 'console~done' --within 30s    # the first of the two
 
 Alone, it is the same run as `--until vtime=+10s`. With another `--until` it is
 a bound on it: if the clock gets there first, the run ends with exit status 3
-and says `Machine time ran out`. The machine checks the bound itself, so a slow
-host does not end the run sooner, which the global `--timeout` in seconds would.
-
-The clock moves as the programs in the machine work and while the machine is
-idle.
+and says `Machine time ran out`. The bound is measured on the machine's clock,
+which moves as the programs in the machine work and while the machine is idle.
+A slow host therefore does not end the run sooner, as the global `--timeout`,
+which counts seconds on the host, would.
 
 Now and then the host interrupts an entry while it is being recorded. Machine
 records that entry again, and you see nothing except a short pause. `--retry`
@@ -231,7 +239,7 @@ record the same way every time.
 ### What a task does
 
 Drawing the length of a stretch varies where threads are interrupted. To vary
-what the guest's scheduler does with them, draw a mark for the task on the vCPU
+what the guest's scheduler does with them, draw what the task on the vCPU does
 at each dispatch:
 
 ```bash
@@ -242,7 +250,7 @@ machine run app --task-int none,preempt --when /usr/bin/app:on --seed 4 --iters 
 
 `--task-sched` draws among `keep`, `hold`, `yield`, `drain` and `drain-all`:
 `hold` takes the task off the run queue, `yield` puts it behind its peers,
-`drain` undoes the oldest of those marks, `drain-all` undoes every one, and
+`drain` undoes the oldest `hold` or `yield`, `drain-all` undoes every one, and
 `keep` changes nothing. `--task-slice` draws how long the task runs before the
 scheduler decides again, from a span such as `10us:600us`, and `default` puts
 the kernel's own back. `--task-int` draws whether to preempt it. Each takes a
@@ -255,15 +263,15 @@ program needs the program focused first, as the second example does with
 things at different moments, write a [plan](steering-programs.md#plans), where
 each clause has its own `when`.
 
-Combine that with branches. Fork several from one checkpoint, give each its
-own seed, and keep the ones that crash. The `explore_seeds.py` example in the
+These draws combine with branches: fork several branches from one checkpoint,
+give each its own seed, and keep the ones that crash. The `explore_seeds.py` example in the
 [SDK](python-sdk.md) does exactly that.
 
 To hold an interrupt a drawn time before it is delivered, see
 [Holding interrupts](steering-programs.md#holding-interrupts).
 
-A run takes checkpoints for you too. `--auto-checkpoints N` takes one every N
-entries, and 0 turns them off.
+A run can also take checkpoints automatically while it is driven.
+`--auto-checkpoints N` takes one every N entries, and 0 turns them off.
 
 ### Cancelling a drive
 
@@ -292,13 +300,19 @@ well. At the
 ## Recording that repeats
 
 A [replay](replay.md) always repeats a recording exactly. Recording the same
-run a second time is different: by default two recordings of one run, from the
-same disk and the same seeds, start out the same and then drift apart a little.
+run a second time is different. Two recordings of a run that is not
+repeatable, from the same disk and the same seeds, start out the same and
+then differ a little.
 
-When you need the second recording to match the first, create the run with
-`--repeatable`. Every recording of it then records the same entries, whether the
-run has one vCPU or several, and a branch you fork from one of its checkpoints
-records exactly what its parent recorded after that checkpoint.
+When you need the second recording to match the first, the run must be
+repeatable. Every recording of a repeatable run records the same entries,
+whether the run has one vCPU or several, and a branch you fork from one of
+its checkpoints records exactly what its parent recorded after that
+checkpoint. On the `standard-ip` and `dedicated-ip` classes a run is
+repeatable by default. On other classes, create it with `--repeatable`.
+`--no-repeatable` turns it off, and
+[`machine describe`](commands.md#machine-describe) shows `Repeatable: true`
+for a repeatable run.
 
 ```bash
 machine create app --disk app --repeatable --cpus 2
@@ -309,20 +323,22 @@ machine fork app --at ^booted --name again       # records the same entries agai
 machine fork app --at ^booted --no-repeatable    # a branch that records as usual
 ```
 
-Repeatable recording is slower, and how much slower depends on the program.
-For example, booting PostgreSQL 17 on one vCPU takes 1 minute 10 seconds to
-record with `--repeatable` and 14 seconds without it. Loading its test data
-with `pgbench -i`, which computes with hardly a pause, takes 1 minute 20
-seconds against 4 seconds. A program that spends its time waiting on the disk, the
-network or a timer pays much less. Replaying a repeatable run is as fast as
-replaying any other.
+Repeatable recording is slower. How much slower depends on the program and
+on the session's class. On `standard-ip`, where it is the default, booting
+Ubuntu 26.04 and running a program with eight threads to its end takes 23.5
+seconds to record with `--repeatable` and 21.6 seconds without it. Booting
+PostgreSQL 17 on one vCPU takes 24 seconds with it and 22 seconds without
+it, and loading its test data with `pgbench -i` takes 2.2 seconds and 1.9
+seconds. On `standard-ie`, where it is off by default, the same boot takes 34
+seconds and 32 seconds, and `pgbench -i` takes 3.0 seconds and 2.8 seconds.
+Replaying a repeatable run is as fast as replaying any other.
 
 `--timer-slack` is how late a timer may be while a program runs code that
 takes no exit. The default is 20ms, and it applies to every fast run. A timer
 that comes due in code that exits to the machine is delivered at that exit. `0` keeps
 every timer on time, and recording is slowest that way. The slack takes `ns`,
-`us`, `ms` or `s`, as in `--timer-slack 1s`. A drive can draw the
-slack for that drive:
+`us`, `ms` or `s`, as in `--timer-slack 1s`. A drive can also draw its own
+slack from a range, for that drive only:
 
 ```bash
 machine run app --timer-slack 0:20ms
@@ -331,8 +347,8 @@ machine run app --timer-slack 0:20ms
 `--limit-margin` is how many conditional branches short of an exact stop the
 CPU's counter interrupts. The default is the host's, and
 [`machine describe`](commands.md#machine-describe) shows that default as
-`host's`. A smaller margin records faster. One too small misses stops, and a
-later recording may not repeat.
+`host's`. A smaller margin records faster, but a margin that is too small
+misses stops, and a later recording may not repeat.
 [`machine replay --limit-margin`](commands.md#machine-replay) sets it for that
 replay.
 
@@ -342,7 +358,7 @@ default, and [`machine describe`](commands.md#machine-describe) shows them as
 
 | Option | What it does |
 |---|---|
-| `--instr-margin n` | how many instructions short of a stop placed by an instruction count the CPU's counter interrupts; the default is the host's, 50,000 on `amd-1`, the `standard` class, and 3,630 on Intel, which `describe` shows as `host's` |
+| `--instr-margin n` | how many instructions short of a stop placed by an instruction count the CPU's counter interrupts; the default is the host's, 3,630 on Intel and 50,000 on AMD, which `describe` shows as `host's` |
 | `--dispatch-bound d` | how much host time a fast dispatch runs before it stops, 1s by default; it takes a duration such as `500ms` or `2s` |
 | `--fast-backstop n` | how many instructions a fast dispatch runs with no other stop, 100,000,000 by default |
 | `--irq-wait n` | how many conditional branches a dispatch runs while an interrupt waits for the guest to take it, 200 by default |
@@ -394,13 +410,13 @@ progress, so they keep the run repeatable. See
 
 What you send a run is part of what a recording repeats. Commands given with
 [`machine exec`](commands.md#machine-exec), `put` and `get` in the same order
-at the same points name their processes alike in every recording, such as
-`40787p1`: the entry the run stood at, and the command's place among those
-sent there.
+at the same points give their processes the same ids in every recording. An
+id such as `40787p1` is the entry the run was at when the command was sent,
+followed by the command's place among the commands sent at that entry.
 
 ## Time compression
 
-Idle time takes almost no time.
+Time the guest spends idle costs almost no time on the host.
 
 When every vCPU is halted and waiting for a timer, the machine doesn't sit
 through the wait. It moves its clock straight to the earliest timer the guest
@@ -414,16 +430,17 @@ from [Multiple vCPUs](running-a-machine.md#multiple-vcpus):
 
 ```bash
 machine create app --disk ubuntu-26.04
+machine run app --within 15s
 time machine exec app run --container app -- sh -c 'date; sleep 600; date'
 ```
 ```
-Sun Mar  1 00:00:05 UTC 2026
-Sun Mar  1 00:10:05 UTC 2026
+Sun Mar  1 00:00:14 UTC 2026
+Sun Mar  1 00:10:14 UTC 2026
 
-real	0m2.802s
+real	0m3.171s
 ```
 
-Ten minutes went by in the guest, and 2.8 seconds went by for you.
+Ten minutes went by in the guest, and 3.2 seconds went by for you.
 
 ### Every vCPU idle
 
@@ -435,10 +452,10 @@ still has work finishes it first. Here is the same sleep on the four-vCPU run:
 time machine exec app4 run --container app -- sh -c 'date; sleep 600; date'
 ```
 ```
-Sun Mar  1 00:00:07 UTC 2026
-Sun Mar  1 00:10:07 UTC 2026
+Sun Mar  1 00:00:12 UTC 2026
+Sun Mar  1 00:10:12 UTC 2026
 
-real	0m7.166s
+real	0m7.829s
 ```
 
 ### On replay
@@ -471,7 +488,7 @@ for them, and that time is never skipped.
 
 `--no-idle-skip` keeps the clock moving at its own rate while every vCPU is
 idle, instead of jumping to the next timer. Use it to see what a program does
-while it waits in real time, at the cost of the speed:
+while it waits in real time, at the cost of speed:
 
 ```bash
 machine run app --no-idle-skip --within 10s
@@ -484,10 +501,10 @@ returns when a condition holds.
 
 ```bash
 machine wait --for stopped app
-machine wait --for 'console~ready' app
+machine wait --for 'console~app \| ready' app
 ```
 ```bash
-✔ Reached stopped: app (whUxfLYSFJMDHzKaiBOvH) 2.1s
+✔ Reached stopped: app (whUxfLYSFJMDHzKaiBOvH)  2.1s
 ```
 
 It exits with 0 when the condition is true, 2 on an error and 3 on a timeout,
@@ -500,15 +517,15 @@ At the [control prompt](#interactive-mode) the two are `/run until` and
 `/wait for`, and `/run` takes `within` too:
 
 ```
-/run until 'console~ready' within 30s
-/wait for 'console~ready'
+/run until 'console~app \| ready' within 30s
+/wait for 'console~app \| ready'
 ```
 
 `/wait for` answers at once, because nothing drives the machine while the
 prompt waits. `timeout 5` makes it wait 5 seconds, for a run another terminal
 drives.
 
-From Python, `run.run(until="console~ready", within="30s")` drives until a
+From Python, `run.run(until=r"console~app \| ready", within="30s")` drives until a
 condition, and `run.wait(for_="stopped", timeout=60)` waits for one without
 driving. [Bounding a drive](python-sdk.md#bounding-a-drive) shows both.
 
@@ -522,7 +539,7 @@ driving. [Bounding a drive](python-sdk.md#bounding-a-drive) shows both.
 | [`machine now app`](commands.md#machine-now) | the last entry it recorded, and the time on the machine's clock |
 | [`machine output app`](commands.md#machine-output) | what the machine printed (`-f` follows, `-n -20` shows the last 20 lines, `--source` reads another source than the console) |
 | [`machine entries app`](commands.md#machine-entries) | the entries in its log |
-| [`machine ops`](commands.md#machine-ops) | operations on runs and how each ended, newest first: checkpoint, branch, switch, rewind, start and delete; one you interrupted with Ctrl-C is still listed |
+| [`machine ops`](commands.md#machine-ops) | operations on runs and how each ended, newest first: checkpoint, branch, fork, switch, rewind, start, replay, delete and each `run --until`; one you interrupted with Ctrl-C is still listed |
 | [`machine debug log app`](commands.md#machine-debug-log) | the debug output of a run ([`machine debug err`](commands.md#machine-debug-err) shows its error and crash log) |
 | [`machine dump app`](commands.md#machine-dump) | the machine's registers, code and other state (`--show` picks the sections, `--entry` reads an earlier one); its hash section is what the newest entry recorded |
 | [`machine hash app`](commands.md#machine-hash) | the hashes of the machine as it stands, to compare with another stopped at the same point; see [Comparing two machines](replay.md#comparing-two-machines) |
@@ -564,10 +581,10 @@ Each match is a row with the columns `ENTRY`, `TIME`, `SOURCE`, `LINE:COL` and
 `TIME` is that entry's time, a point such as `1.194000000s+2`. `TEXT` is the
 whole line, with the match in bold.
 
-A match has to cover at least one character, because it is the entry that
-printed it that you get back. A pattern that can match nothing at all, such as
-`6*`, is refused, in a search and in a `console~REGEX` condition or point alike;
-`6+` is the one to write.
+A match has to cover at least one character, because the search returns the
+entry that printed the match's first byte. A pattern that can match an empty
+string, such as `6*`, is refused, in a search and in a `console~REGEX`
+condition or point alike. Write `6+` instead.
 
 The search runs where the console is kept, so a large console is not downloaded.
 `-f` keeps going with what the machine prints next, and `--max 1` stops at the
@@ -587,8 +604,8 @@ machine go app 'console~Linux version'
 
 `console:N` is a line by its number, as `machine output -n` numbers it: the
 point where the console finished printing line N. Any source takes it, such as
-`ttyS1:20`. A line counts from 1, so the point names the same place each time
-it is read:
+`ttyS1:20`. Lines are numbered from 1, and the point names the same place each
+time it is read:
 
 ```bash
 machine go app console:120
@@ -710,8 +727,8 @@ my-app --events "$MACHINE_OUTPUT_DIR/events.jsonl"
 
 The file is stored with the run as it is written, each write with its entry.
 Its name as a source is its path: `/output/keep`, the name of the service,
-and the path the service wrote. A disk built from a binary or one image has
-one service, `app`.
+and the path the service wrote. A disk built from a binary or from one image
+has one service, named `app`, so its files are under `/output/keep/app`.
 
 ```bash
 machine output app sources
@@ -798,8 +815,8 @@ keeps more still reproduces the recording.
 
 ## Sending input
 
-A program that reads what a person types can be typed to.
-[`machine send`](commands.md#machine-send) writes input to a device of the run:
+A program that reads what a person types can be given that input from outside
+the machine. [`machine send`](commands.md#machine-send) writes input to a device of the run:
 
 ```bash
 machine send app ls                      # type ls and Enter on the console
@@ -886,7 +903,7 @@ the entries it started and ended at:
 ```text
 ID       PID  STATE     ENTRIES      COMMAND
 23035p1  138  exited 0  23084:23090  ls
-23090p1  139  exited 0  23220:23226  echo foo > /tmp/foo.txt
+23090p1  139  exited 0  23220:23226  sh -c echo foo > /tmp/foo.txt
 ```
 
 A process's id is the entry it was sent at and its number. `proc` shows one
@@ -925,19 +942,22 @@ machine exec app start --container app -- ./worker
 
 `--net` runs a program of the machine on a container's network instead: the
 program comes from the machine's disk, so it needs nothing in the container's
-image, and it sees the container's interfaces and addresses. A capture of db's
-packets with the machine's tcpdump, in [Network faults](network-faults.md):
+image, and it sees the container's interfaces and addresses. This example from
+[Network faults](network-faults.md) captures the packets of `db` with the
+machine's tcpdump:
 
 ```bash
 machine exec app start --net db -- tcpdump --immediate-mode -U -i eth0 -w /.machine/output/keep/db.pcap
 ```
 
 [`machine containers`](commands.md#machine-containers) lists the containers
-with the columns `SERVICE`, `CONTAINER`, `ID`, `STATE`, `IMAGE`, `ADDRESS`
-and `LINK`: each container's address on each of its networks, and the
-machine's interface at the other end of its link, which a capture names in
-[Network faults](network-faults.md). The service, the container name and the
-id are what `--container` takes:
+with the columns `SERVICE`, `CONTAINER`, `ID`, `STATE`, `IMAGE`, `ADDRESS`,
+`LINK` and `LIMITS`. `ADDRESS` is the container's address on each of its
+networks. `LINK` is the machine's interface at the other end of the
+container's link, which a capture names in
+[Network faults](network-faults.md). `LIMITS` shows the limits set with
+[Container faults](container-faults.md). The service, the container name and
+the id are what `--container` takes:
 
 ```bash
 machine containers app
@@ -1082,9 +1102,10 @@ machine exec app proc 40787p1 stdout                       # what gdb printed
 A `--device` that begins with `/` is the path of a file in the machine, and
 [`machine send`](commands.md#machine-send) puts the bytes at its end. A process
 in the machine writes them, and `send` prints its id: `machine exec app proc`
-with that id says whether they were written. One send to a path is one
-request of at most 4096 bytes. A send too large for it is refused, and the
-message gives the most bytes that fit.
+with that id says whether they were written. One send to a path carries at
+most 2,042 bytes minus the length of the path, and a little less when the
+process id is long. A larger send is refused, and the message gives the most
+bytes that fit.
 
 `machine send` writes the machine's own files. For a program in a container,
 make the pipe in the container and write it from there:
@@ -1102,8 +1123,8 @@ machine run app --until '/output/exec/<id>/stdout~Continuing' --within 10s
 [GDB inside the machine](debugging.md#keeping-gdb-attached) walks
 through a whole session this way, on ClickHouse.
 
-`machine exec` uses the serial port `ttyS3` for its requests. A program in the
-machine that reads `ttyS3` takes them.
+`machine exec` sends its requests on the serial port `ttyS3`, so a program in
+the machine that reads `ttyS3` takes those requests away from `machine exec`.
 
 From Python, `run.exec(["cat", "/etc/hostname"])` runs a program and returns a
 `Process` with `exit_code`, `stdout` and `stderr`. A string is a shell line,
@@ -1129,7 +1150,7 @@ machine put app ./d.bin /data/d.bin --owner 1000:1000       # with an owner
 machine put app - /tmp/in < data.bin                        # standard input
 ```
 
-- A file of any size is put.
+- `put` copies a file of any size.
 - The directories on the way to the path are made, and a file already there is
   replaced.
 - The file has its name only once all of it is written, so a program never
@@ -1149,7 +1170,7 @@ them, so you pick one. The container must be running. A path is resolved inside
 the container, as a program there would resolve it.
 
 [`machine send --device <path>`](commands.md#machine-send) is for a line into a
-pipe, one request of at most 4096 bytes. `put` is for a file.
+pipe, up to 2,042 bytes minus the length of the path. `put` is for a file.
 
 [`machine get`](commands.md#machine-get) copies a file the other way, from the
 machine or from a container to your machine:
@@ -1168,8 +1189,8 @@ program is writing can change on the way.
 At the [control prompt](#interactive-mode) the commands are `/put` and `/get`,
 with the same operands and options: `/put ./app.conf /etc/app.conf`.
 
-A machine whose disk was built before `put` used this path still takes a file,
-far slower. Rebuild the disk to get the speed.
+`put` into a machine whose disk an older client built still works, but far
+more slowly. Rebuild the disk to get the speed.
 
 From Python, `run.put("./app.conf", "/etc/app.conf")` puts a file in, and
 `source` can be bytes. `run.get("/var/log/app.log", "./app.log")` gets one out,
@@ -1236,7 +1257,7 @@ A name that ends in `_[k]` is time in the kernel. `sys_munmap_[k]` is the
 the page faults of touching fresh memory.
 
 - `--flame` draws a flame graph in the terminal.
-- `--folded` prints every stack with its count, one a line. That text is what
+- `--folded` prints every stack with its count, one per line. That text is what
   flame graph tools read, so you can save it and draw it with the tool you
   like, or hand it to an agent:
 
@@ -1314,8 +1335,8 @@ in capitals in the help is a type: `/h RANGE` says how to write a range, and
 `/h POINT` a point.
 
 Above the prompt, a line shows where the run is: its time, its entry, the vCPU,
-the RIP, what the entry is, such as `IO_OUT`, and its state hash. Back at an
-entry, the same hash means the same state.
+the RIP, what the entry is, such as `IO_OUT`, and its state hash. When you
+come back to an entry, the same hash means the machine is in the same state.
 
 ```text
 ⌖ vtime=4.648247180s  entry=32103  vcpu=0  rip=0xffffffff8104880d  IO_OUT  hash=0x91c170d2d6da8e05
@@ -1337,11 +1358,11 @@ machine create app --disk ubuntu-26.04
 machine control app
 ```
 
-At the prompt, it boots the machine until Docker attaches to its container,
+At the prompt, the session below boots the machine until Docker starts its container,
 keeps that point as a checkpoint, and removes a file:
 
 ```text
-/f until console~Attaching within 60s
+/f until console~Started within 60s
 iterations: 24957  run ic: 1525715866  vtime: +3.730915228s  checkpoints: 1
 
 VCPU  EXIT  ID     RUN IC   RCB  TOTAL IC    REGS HASH           RIP                 RCX  ITER
@@ -1361,7 +1382,7 @@ cat: can't open '/etc/hostname': No such file or directory
 ✗ Exited 1.
 ```
 
-`/f` runs the machine until `Attaching` appears on the console, or for 60
+`/f` runs the machine until `Started` appears on the console, or for 60
 seconds of the machine's own time at most. Here it takes 3.7 seconds of the
 machine's time, and the table shows where each vCPU stopped. To see the
 machine as it was before the file was removed, fork a branch at `booted` and
@@ -1412,7 +1433,7 @@ The prompt edits a line the way your shell does.
 |---|---|
 | Tab | completes a command, and after `/h` a command or a type |
 | Up, Down | walk the commands typed at this prompt, the last 500; they are not saved when it closes |
-| Ctrl+C | cancels the run, checkpoint or hash in progress, and keeps the prompt; a run stops at the end of its dispatch, and a second Ctrl+C stops it at once |
+| Ctrl+C | cancels the run, checkpoint or hash in progress, and keeps the prompt; a run stops at the end of its dispatch, and a second Ctrl+C stops it at once; with nothing in progress, Ctrl+C leaves the prompt |
 | Ctrl+D, `/q` | leaves the prompt; the run carries on as it was |
 | `;` | runs the next command after this one, and stops at the first that fails: `/s;/d` |
 | `;+` | runs the next command whatever this one did: `/replay;+/diff` |
@@ -1430,7 +1451,7 @@ runs fast and `/s` steps. A suffix picks the vCPU and the number of dispatches:
 `=N` drives vCPU N alone, and `@N` runs N dispatches.
 
 ```text
-/f until console~ready within 30s
+/f until 'console~app \| ready' within 30s
 /s@20
 /f=1@10
 /run@50 mode fast,step seed 3
@@ -1447,7 +1468,7 @@ mode, then what the focused tasks do and how long each runs, as
 
 A command that reads a run takes `:RUN` to read another one without switching
 to it: `/describe:app/exact`, `/checkpoints:app/try-1`, `/entries:app -20`,
-`/lineage:parent`, `/d:app/try-1 regs`. Where you stand stays the same.
+`/lineage:parent`. The prompt stays on the branch you are on.
 
 ### Words that differ from the command line
 
@@ -1498,14 +1519,16 @@ machine delete app
 
 `pause` freezes a running machine and `resume` lets it carry on. `stop` shuts a
 run down and keeps everything it recorded. `kill` asks the machine to stop and
-save as `stop` does, and ends it if it does not stop. The next `start` replays
-a tip that was not saved. In
-a session, both wait until what the run recorded is saved to your storage,
-and show how far the save has got. `start` brings it
-back at the end of its log. If the run had gone past its last checkpoint
-when it stopped, Machine replays the recorded tail from that checkpoint and
-tells you how many entries it replayed. Add `--no-recover` to make it
-refuse instead.
+save as `stop` does, and ends it if it does not stop. In a session, `stop` and
+`kill` both wait until what the run recorded is saved to your storage, and
+show how far the save has got.
+
+`start` brings a run back at the end of its log. `stop`, and a `kill` that
+the machine obeys, save a checkpoint at the tip first. A machine that ended
+before it could save, because `kill` had to end it or its process died, left
+recorded entries past its last checkpoint. `start` replays those entries from
+that checkpoint to the tip and tells you how many it replayed. Add
+`--no-recover` to make it refuse instead.
 
 `start` can also take a run back to an earlier point. `--at` replays from an
 earlier checkpoint, and `--read-only` opens a checkpoint without running it
@@ -1540,8 +1563,8 @@ remembers a CPU, so each `start` and `fork` picks the least-loaded one unless
 you name it.
 
 What a run records is fixed when you create it: `--side-dump`, `--side-trace`,
-`--mem-hash`, `--disk-hash` and `--repeatable`. A `start` keeps it. A branch is
-where it changes: `fork`, `detach` and `go` take each of them, and
+`--mem-hash`, `--disk-hash` and `--repeatable`. `start` keeps these settings,
+and only a new branch can change them: `fork`, `detach` and `go` take each of them, and
 `--no-mem-hash`, `--no-disk-hash` or `--no-repeatable` to turn one off, and a
 branch given none records what its parent records. [Replay](replay.md) says what the two hashes add.
 
@@ -1551,7 +1574,9 @@ remove a run that has branches, unless you add `--recursive`. And since
 
 `delete` waits until the run is gone, which takes a while for a run with many
 checkpoints. Add `--no-wait` and it returns as soon as the delete is accepted,
-after stopping the machine if you asked it to. The delete carries on either
+after stopping the machine if you asked it to. `--no-wait` works only when you
+delete a single run, so a delete with both `--recursive` and `--no-wait` is
+refused. The delete carries on either
 way, and [`machine ops`](commands.md#machine-ops) shows how it went.
 
 A delete that was interrupted, by a lost connection or a stopped service,
