@@ -7,9 +7,9 @@
  * to be: the work is what a request costs.
  */
 
-import { contactSend } from "./api.js?v=0ba1376a01b1";
+import { contactSend } from "./api.js?v=30a30ecf6934";
 
-const MACHINE_TOPICS = ["Machine early access", "Machine product question"];
+const MACHINE_TOPICS = ["Machine product question", "Machine feedback"];
 
 function markField(el, ok) {
   if (!el) return;
@@ -62,7 +62,7 @@ function prefillTopic(form) {
   const subject = form.querySelector("#subject");
   let wanted = new URLSearchParams(window.location.search).get("topic");
   if (!subject || !wanted) return;
-  if (wanted === "machine") wanted = "Machine early access";
+  if (wanted === "machine") wanted = "Machine product question";
   const option = Array.prototype.find.call(subject.options, (o) => o.value === wanted);
   if (option) subject.value = option.value;
 }

@@ -9,7 +9,7 @@ fullwidth: true
     <div class="container contact-page-inner">
         <header class="contact-page-header">
             <h1>Talk to our team</h1>
-            <p>Questions about Framework or Machine, early access, support, or partnerships.</p>
+            <p>Questions about Framework or Machine, support, or partnerships.</p>
             <div class="contact-visual-links">
                 <a class="contact-visual-link" href="mailto:contact@testflows.com">
                     <span class="fas fa-envelope" aria-hidden="true"></span>
@@ -47,7 +47,6 @@ fullwidth: true
                                     <option value="Framework support">Framework support</option>
                                 </optgroup>
                                 <optgroup label="Machine">
-                                    <option value="Machine early access">Early access</option>
                                     <option value="Machine product question">Product question</option>
                                     <option value="Machine feedback">Feedback</option>
                                 </optgroup>

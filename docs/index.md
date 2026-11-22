@@ -47,4 +47,4 @@ Articles on test programs, steps, combinatorial coverage, behavior models and mo
 
 ## Contact
 
-Questions, support, early access or partnerships: https://testflows.com/contact.md. Code is on GitHub: https://github.com/testflows
+Questions, support or partnerships: https://testflows.com/contact.md. Code is on GitHub: https://github.com/testflows
