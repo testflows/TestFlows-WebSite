@@ -72,7 +72,7 @@ divergence at entry 30274 vcpu=0
   actual:   exit=INSTR_LIMIT rip=0x401807 rcx=0x419564 rcb=3001 ic=10000013 hash=0xd50455744cd692e8
   diverged: rip, hash
 ✗ Divergence at entry 30274. The replay passed the recorded stop by 13 instructions, with its margin 5.
-  Rewind to the entry before it machine rewind app/try-1 to #30273
+  Rewind to the entry before it machine rewind app/try-1 to '#30273'
   Then replay with a margin past the skid machine replay app/try-1 --instr-margin 3630
 ```
 

@@ -3737,7 +3737,7 @@ machine fork [-h] [--at point [point ...]] [--from point [point ...]] [--name na
 | Option | Does |
 |---|---|
 | `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
-| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n], root, or %mark. The new run starts at the checkpoint at or before it |
 | `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -3854,7 +3854,7 @@ machine go [options] <run> <point>
 
 | Option | Does |
 |---|---|
-| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n], root, or %mark. The new run starts at the checkpoint at or before it |
 | `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--rebase` | Copy the ancestors' data into the new branch instead of sharing it |
 | `--depth n` | With `--rebase`, how many root-side ancestors to keep (default 1: the root) |
@@ -4050,7 +4050,7 @@ machine detach [-h] [--at point [point ...]] [--from point [point ...]] [--name 
 | Option | Does |
 |---|---|
 | `--at point [point ...]` | Point the new run is at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, now, parent [n], root, or %mark |
-| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it |
+| `--from point [point ...]` | Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n], root, or %mark. The new run starts at the checkpoint at or before it |
 | `--name name` | Name for the new run (default: a name made from where it starts) |
 | `--no-start` | Create the new run without starting it |
 | `--side-dump, --no-side-dump` | Record a per-entry debug dump, whatever the run it comes from records |
@@ -4872,7 +4872,7 @@ machine output run search [-h] [-f] [--max n] [--from point [point ...]]
 |---|---|
 | `-f, --follow` | Go on with new output (like tail -f) |
 | `--max n` | Stop after n matches |
-| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root (default: the start of the output) |
+| `--from point [point ...]` | Point the search begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n], root, or %mark (default: the start of the output) |
 | `--to point [point ...]` | Point the search ends at, as `--from` takes one (default: the end of the output) |
 | `--source name` | Source to read: console, all, ttyS0 to ttyS3, hvc0, debugcon, or the path of an output file or directory under /output (default: console) |
 
@@ -5095,7 +5095,7 @@ machine ops [-h] [--op-id id] [--state [^]state] [--type [^]type] [--since date|
 |---|---|
 | `--op-id id` | Show one operation, by its id (ignores `--state` and `--type`) |
 | `--state [^]state` | Filter by state: running, unfinished, done, failed (default: all; repeat = OR; ^ excludes) |
-| `--type [^]type` | Filter by type: checkpoint, branch, switch, rewind, start, delete (default: all; repeat = OR; ^ excludes) |
+| `--type [^]type` | Filter by type: checkpoint, branch, switch, rewind, start, delete, go, fork, rewind-to, switch-start, stop-all, delete-all, replay, run-until (default: all; repeat = OR; ^ excludes) |
 | `--since date\|age` | Since a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--until date\|age` | Until a date such as 2026-06-01, or an age such as 7d, 24h or 30m |
 | `--limit n` | Show at most n operations (default: 25) |
@@ -6295,9 +6295,10 @@ machine containers run1 kill db --restart 5s  db dies, back in 5s
 Prints:
 
 ```
-text   SERVICE CONTAINER ID STATE IMAGE ADDRESS LINK
-STATE  running, exited, created, paused
-json   name service project state status image id
+text    SERVICE CONTAINER ID STATE IMAGE ADDRESS LINK LIMITS
+STATE   running, exited, created, paused
+LIMITS  the cpus, memory, pids, ports and files limits set on it
+json    name service project state status image id
 ```
 
 Refuses, and the way past:
@@ -7740,7 +7741,7 @@ machine profile [-h] [--for duration | --from point [point ...]] [--to point [po
 | Option | Does |
 |---|---|
 | `--for duration` | Machine time to run and sample for, such as 500ms (default: 1s) |
-| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n] or root. The stretch is replayed on a branch |
+| `--from point [point ...]` | Point a recorded stretch begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console\~regex, console:N where line N was printed, parent [n], root, or %mark. The stretch is replayed on a branch |
 | `--to point [point ...]` | Point the recorded stretch ends at, as `--from` takes one (default: the run's last entry) |
 | `--pid pid` | Process to show, by its pid in the machine or in the container (default: every process) |
 | `--container name` | Container to show, by its id, its name or its Compose service (default: the machine itself) |
@@ -8109,10 +8110,10 @@ kernel's flusher threads submit buffered writes later, so `--in` all or a
 kworker comm matches those. A request the kernel splits counts once for each
 part.
 
-A buffered read is a readahead request, then one more read of the page when the
-readahead fails. With `--times` 1 the kernel's second read succeeds and the
-program reads the file. Use `--times` 2 or no limit to return EIO to the
-program. An O_DIRECT read fails on its first request.
+A buffered read is a readahead request, then more reads of the pages when the
+readahead fails. A `--times` below the number of those reads lets the program
+read the file. Leave out `--times` to return EIO to the program. An O_DIRECT
+read fails on its first request.
 
 A disk fault matches a request by its operation, its sectors and its file. Use
 `--file` to name the file whose data the request carries. Buffered writes reach

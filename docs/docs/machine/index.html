@@ -56,40 +56,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795308630543" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795308630544" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795268906619" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795308630544" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -745,10 +745,11 @@ libraries, so a dynamically linked program cannot run. <code>--from</code> names
 image, and the build pulls it for you.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine disks build --image myapp:latest app</span><br><span class="line">machine disks build --compose ./deploy stack</span><br></pre></td></tr></table></figure>
 
-<p>The name defaults to whatever the source is called. Keep the name of a disk
-built with <code>--binary</code> or <code>--from</code> in lowercase. With client 20261120-0351 and
-earlier, a capital letter builds a disk whose program fails to start, and the
-console says <code>repository name must be lowercase</code>.</p>
+<p>The name defaults to whatever the source is called. With client
+20261120-0351 and earlier, a disk built with <code>--binary</code> or <code>--from</code> whose name
+has a capital letter fails to start its program, and the console says
+<code>repository name must be lowercase</code>. Upgrade the client, or name the disk in
+lowercase.</p>
 <p>Use <code>--entrypoint</code> to
 choose the executable the service runs. The service’s own arguments go after
 a <code>--</code>. This one runs <code>data-race</code> with the
@@ -2413,7 +2414,7 @@ you how many entries it had to replay to get there. The machine you switched is
 now the new branch, so talk to it by that name: <code>app/g1</code>.</p>
 <p>A <code>switch</code> needs a branch that isn’t running somewhere else. Machine refuses a
 switch onto a branch that is running:</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">✗ Already running: app/try-1.</span><br><span class="line">  Stop it first machine stop app/try-1</span><br><span class="line">  Then switch machine switch app app/try-1</span><br><span class="line">  Or drive it where it is machine control app/try-1</span><br></pre></td></tr></table></figure>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">✗ Already running: app/try-1.</span><br><span class="line">  Stop that branch first machine stop app/try-1</span><br><span class="line">  Then switch machine switch app app/try-1</span><br><span class="line">  Or drive it where it is machine control app/try-1</span><br></pre></td></tr></table></figure>
 
 <p>A branch created with <code>fork --no-start</code> is not running, so a <code>switch</code> onto it
 is not refused this way. The target of a <code>switch</code> is a branch name, a mark
@@ -2486,7 +2487,7 @@ the larger of the two as well.</p>
 
 <p>A replay that passes a recorded stop diverges and says by how much. On <code>intel-1</code>,
 the architecture of the <code>standard-ip</code> class, a replay given <code>--instr-margin 5</code>, far below the CPU’s skid, answers:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">divergence at entry 30274 vcpu=0</span><br><span class="line">  expected: exit=INSTR_LIMIT rip=0x401800 rcx=0x419564 rcb=3001 ic=10000000 hash=0xd239c0c13ad9ba61</span><br><span class="line">  actual:   exit=INSTR_LIMIT rip=0x401807 rcx=0x419564 rcb=3001 ic=10000013 hash=0xd50455744cd692e8</span><br><span class="line">  diverged: rip, hash</span><br><span class="line">✗ Divergence at entry 30274. The replay passed the recorded stop by 13 instructions, with its margin 5.</span><br><span class="line">  Rewind to the entry before it machine rewind app/try-1 to #30273</span><br><span class="line">  Then replay with a margin past the skid machine replay app/try-1 --instr-margin 3630</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">divergence at entry 30274 vcpu=0</span><br><span class="line">  expected: exit=INSTR_LIMIT rip=0x401800 rcx=0x419564 rcb=3001 ic=10000000 hash=0xd239c0c13ad9ba61</span><br><span class="line">  actual:   exit=INSTR_LIMIT rip=0x401807 rcx=0x419564 rcb=3001 ic=10000013 hash=0xd50455744cd692e8</span><br><span class="line">  diverged: rip, hash</span><br><span class="line">✗ Divergence at entry 30274. The replay passed the recorded stop by 13 instructions, with its margin 5.</span><br><span class="line">  Rewind to the entry before it machine rewind app/try-1 to &#x27;#30273&#x27;</span><br><span class="line">  Then replay with a margin past the skid machine replay app/try-1 --instr-margin 3630</span><br></pre></td></tr></table></figure>
 
 <p>The suggested margin is twice the overshoot and the margin together, and
 never less than the host CPU’s margin. Here twice the overshoot and the
@@ -9029,7 +9030,7 @@ once the request is accepted.</p>
 </tr>
 <tr>
 <td><code>--from point [point ...]</code></td>
-<td>Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it</td>
+<td>Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n], root, or %mark. The new run starts at the checkpoint at or before it</td>
 </tr>
 <tr>
 <td><code>--name name</code></td>
@@ -9209,7 +9210,7 @@ where the run would have the names of another run.</p>
 </thead>
 <tbody><tr>
 <td><code>--from point [point ...]</code></td>
-<td>Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it</td>
+<td>Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n], root, or %mark. The new run starts at the checkpoint at or before it</td>
 </tr>
 <tr>
 <td><code>--name name</code></td>
@@ -9446,7 +9447,7 @@ where the run would have the names of another run.</p>
 </tr>
 <tr>
 <td><code>--from point [point ...]</code></td>
-<td>Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n] or root. The new run starts at the checkpoint at or before it</td>
+<td>Earlier point to replay the new run from: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n], root, or %mark. The new run starts at the checkpoint at or before it</td>
 </tr>
 <tr>
 <td><code>--name name</code></td>
@@ -10330,7 +10331,7 @@ other commands that take a point.</p>
 </tr>
 <tr>
 <td><code>--from point [point ...]</code></td>
-<td>Point the search begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n] or root (default: the start of the output)</td>
+<td>Point the search begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n], root, or %mark (default: the start of the output)</td>
 </tr>
 <tr>
 <td><code>--to point [point ...]</code></td>
@@ -10556,7 +10557,7 @@ rewind.</p>
 </tr>
 <tr>
 <td><code>--type [^]type</code></td>
-<td>Filter by type: checkpoint, branch, switch, rewind, start, delete (default: all; repeat &#x3D; OR; ^ excludes)</td>
+<td>Filter by type: checkpoint, branch, switch, rewind, start, delete, go, fork, rewind-to, switch-start, stop-all, delete-all, replay, run-until (default: all; repeat &#x3D; OR; ^ excludes)</td>
 </tr>
 <tr>
 <td><code>--since date|age</code></td>
@@ -11692,7 +11693,7 @@ replay acts at the same point.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">machine containers run1                       the containers of run1</span><br><span class="line">machine -o json containers run1               every field of each</span><br><span class="line">machine containers run1 kill db --restart 5s  db dies, back in 5s</span><br></pre></td></tr></table></figure>
 
 <p>Prints:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">text   SERVICE CONTAINER ID STATE IMAGE ADDRESS LINK</span><br><span class="line">STATE  running, exited, created, paused</span><br><span class="line">json   name service project state status image id</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">text    SERVICE CONTAINER ID STATE IMAGE ADDRESS LINK LIMITS</span><br><span class="line">STATE   running, exited, created, paused</span><br><span class="line">LIMITS  the cpus, memory, pids, ports and files limits set on it</span><br><span class="line">json    name service project state status image id</span><br></pre></td></tr></table></figure>
 
 <p>Refuses, and the way past:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a machine that is replaying  machine fork run1 --name try2</span><br></pre></td></tr></table></figure>
@@ -13330,7 +13331,7 @@ written to the disk. The run records that program like any other.</p>
 </tr>
 <tr>
 <td><code>--from point [point ...]</code></td>
-<td>Point a recorded stretch begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n] or root. The stretch is replayed on a branch</td>
+<td>Point a recorded stretch begins at: ^checkpoint, #entry, -N for N entries back, a time such as 10ms or -10ms, console~regex, console:N where line N was printed, parent [n], root, or %mark. The stretch is replayed on a branch</td>
 </tr>
 <tr>
 <td><code>--to point [point ...]</code></td>
@@ -13717,10 +13718,10 @@ submits its reads, its O_DIRECT writes and the writes its fsync forces. The
 kernel’s flusher threads submit buffered writes later, so <code>--in</code> all or a
 kworker comm matches those. A request the kernel splits counts once for each
 part.</p>
-<p>A buffered read is a readahead request, then one more read of the page when the
-readahead fails. With <code>--times</code> 1 the kernel’s second read succeeds and the
-program reads the file. Use <code>--times</code> 2 or no limit to return EIO to the
-program. An O_DIRECT read fails on its first request.</p>
+<p>A buffered read is a readahead request, then more reads of the pages when the
+readahead fails. A <code>--times</code> below the number of those reads lets the program
+read the file. Leave out <code>--times</code> to return EIO to the program. An O_DIRECT
+read fails on its first request.</p>
 <p>A disk fault matches a request by its operation, its sectors and its file. Use
 <code>--file</code> to name the file whose data the request carries. Buffered writes reach
 the disk from the kernel’s flusher, so use <code>--in</code> all with <code>--file</code>.</p>
@@ -17564,10 +17565,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795268906620"></script>
-<script src="/js/machine-hero-type.js?v=1795268906620"></script>
-<script src="/js/download-platforms.js?v=1795268906620"></script>
-<script src="/js/anchor-case.js?v=1795268906620"></script>
+<script src="/js/index-code-type.js?v=1795308630544"></script>
+<script src="/js/machine-hero-type.js?v=1795308630544"></script>
+<script src="/js/download-platforms.js?v=1795308630544"></script>
+<script src="/js/anchor-case.js?v=1795308630544"></script>
 
 <script>
 var isInViewport = function (elem) {

@@ -36,10 +36,11 @@ machine disks build --image myapp:latest app
 machine disks build --compose ./deploy stack
 ```
 
-The name defaults to whatever the source is called. Keep the name of a disk
-built with `--binary` or `--from` in lowercase. With client 20261120-0351 and
-earlier, a capital letter builds a disk whose program fails to start, and the
-console says `repository name must be lowercase`.
+The name defaults to whatever the source is called. With client
+20261120-0351 and earlier, a disk built with `--binary` or `--from` whose name
+has a capital letter fails to start its program, and the console says
+`repository name must be lowercase`. Upgrade the client, or name the disk in
+lowercase.
 
 Use `--entrypoint` to
 choose the executable the service runs. The service's own arguments go after

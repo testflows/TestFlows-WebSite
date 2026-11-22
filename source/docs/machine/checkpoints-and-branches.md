@@ -100,7 +100,7 @@ switch onto a branch that is running:
 
 ```text
 ✗ Already running: app/try-1.
-  Stop it first machine stop app/try-1
+  Stop that branch first machine stop app/try-1
   Then switch machine switch app app/try-1
   Or drive it where it is machine control app/try-1
 ```
