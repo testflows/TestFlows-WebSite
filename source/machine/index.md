@@ -54,7 +54,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
                 <h3>AI agents test your fixes</h3>
                 <p>Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you.</p>
                 </div>
-                <a class="machine-why-more" href="/docs/machine/#python-sdk">Python SDK</a>
+                <a class="machine-why-more" href="https://github.com/testflows/Machine/tree/main/skills/testflows-machine">The skill for coding agents</a>
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">

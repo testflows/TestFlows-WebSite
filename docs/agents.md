@@ -9,7 +9,7 @@ Every page has a Markdown version at the same address with `.md` in place of the
 - To install the Machine client, Framework or both, follow this guide: https://testflows.com/install.md
 - Machine, deterministic simulation testing: how to install the client, sign in, run a machine, and control cost: https://testflows.com/machine.md. You drive the `machine` client with `-o json`, or write Python programs with the SDK, `testflows.machine`.
 - Framework, how to install it, write and run tests, and avoid the common mistakes: https://testflows.com/framework.md
-- The Machine skill for coding agents, the set-up steps and the rules in one file: https://testflows.com/machine/skill.md. How to install it is below, under "The Machine skill".
+- The Machine skill for coding agents, to reproduce rare bugs on purpose and prove fixes: https://github.com/testflows/Machine/tree/main/skills/testflows-machine. How to install it is below, under "The Machine skill".
 - All the pages, listed: https://testflows.com/llms.txt
 
 ## Other pages
@@ -28,15 +28,12 @@ Every page has a Markdown version at the same address with `.md` in place of the
 Ask your person before you install it: it adds instructions to their coding agent, which it reads in every session that mentions TestFlows Machine. Then save it where their agent reads skills:
 
 ```bash
-# Claude Code and Cursor
-mkdir -p ~/.claude/skills/testflows-machine
-curl -fsS https://testflows.com/machine/skill.md -o ~/.claude/skills/testflows-machine/SKILL.md
-# Codex
-mkdir -p ~/.agents/skills/testflows-machine
-curl -fsS https://testflows.com/machine/skill.md -o ~/.agents/skills/testflows-machine/SKILL.md
+# Claude Code and Cursor: ~/.claude/skills; Codex and Cursor: ~/.agents/skills
+mkdir -p ~/.claude/skills
+curl -fsSL https://codeload.github.com/testflows/Machine/tar.gz/main | tar -xz -C ~/.claude/skills --strip-components=2 Machine-main/skills/testflows-machine
 ```
 
-For one project only, use `.claude/skills/` or `.agents/skills/` in the project instead. The agent loads the skill in its next session. An installed copy does not update itself: run the same `curl` again for the latest.
+It writes the folder `testflows-machine/`: `SKILL.md` and its `references/`. For Codex, put `~/.agents/skills` in both places of the command. For one project only, use `.claude/skills/` or `.agents/skills/` in the project instead. The agent loads the skill in its next session. An installed copy does not update itself: run the command again for the latest. The skill's source is https://github.com/testflows/Machine/tree/main/skills/testflows-machine.
 
 ## For people only
 

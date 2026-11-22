@@ -2,6 +2,24 @@
 
 # Getting started
 
+## With a coding agent
+
+The Machine skill teaches a coding agent, such as Claude Code, Codex or
+Cursor, to work with Machine: install the client, sign it in with you,
+reproduce bugs and prove fixes. Install it for Claude Code and Cursor:
+
+```bash
+mkdir -p ~/.claude/skills
+curl -fsSL https://codeload.github.com/testflows/Machine/tar.gz/main | tar -xz -C ~/.claude/skills --strip-components=2 Machine-main/skills/testflows-machine
+```
+
+For Codex, use `~/.agents/skills` in both places. Run the command again to
+update the skill. Its source is in the
+[TestFlows Machine repository](https://github.com/testflows/Machine/tree/main/skills/testflows-machine).
+Then ask your agent what TestFlows Machine can do for your project.
+
+To set up the client yourself, read on.
+
 ## The client
 
 You work with Machine through a client called `machine`. Install it with one

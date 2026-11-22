@@ -6,7 +6,7 @@
 
 - [Install](https://testflows.com/install.md): Install the Machine client and Framework step by step, and what your person has to do for the Machine account.
 - [Guide for AI agents](https://testflows.com/agents.md): How the website is laid out and where to look.
-- [Machine skill](https://testflows.com/machine/skill.md): The skill for coding agents: setting up and signing in the Machine client with the person's help, the rules, and the docs. How to install it, after asking your person: https://testflows.com/agents.md
+- [Machine skill](https://github.com/testflows/Machine/tree/main/skills/testflows-machine): The skill for coding agents: reproducing rare bugs on purpose and proving fixes with Machine, from setting up and signing in with the person's help to forcing races, injecting faults and fuzzing. How to install it, after asking your person: https://testflows.com/agents.md
 
 ## Pages
 

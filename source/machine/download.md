@@ -15,6 +15,18 @@ keywords: deterministic simulation testing, DST, machine client, download, Linux
 <p>The Machine client is a self-contained program called <code>machine</code>. You and your AI coding agents use it to work in TestFlows Machine, the deterministic simulation testing environment.</p>
 <p class="download-required">You need an account to download the client, and must accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a> and the <a href="/machine/legal/client-eula/">Client EULA</a> that licenses it. The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
 </header>
+<div class="download-section">
+<h2>With your coding agent</h2>
+<p>Install the Machine skill, and your coding agent, such as Claude Code, Codex or Cursor, installs the client and signs it in with you. It asks you for your email address and the code it sends.</p>
+
+```bash
+mkdir -p ~/.claude/skills
+curl -fsSL https://codeload.github.com/testflows/Machine/tar.gz/main | tar -xz -C ~/.claude/skills --strip-components=2 Machine-main/skills/testflows-machine
+```
+
+<p>For Codex, use <code>~/.agents/skills</code> in both places. Then ask your agent what TestFlows Machine can do for your project. To install the client yourself, pick your system below.</p>
+</div>
+
 <p>Pick your system.</p>
 <ul class="nav nav-tabs platform-tabs" role="tablist" aria-label="Your system">
 <li class="nav-item"><a class="nav-link active" id="tab-linux-x86_64" data-toggle="tab" href="#platform-linux-x86_64" role="tab" aria-controls="platform-linux-x86_64" aria-selected="true"><i class="fab fa-linux" aria-hidden="true"></i> Linux (x64)</a></li>
