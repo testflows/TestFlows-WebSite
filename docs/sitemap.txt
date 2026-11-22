@@ -1,3 +1,6 @@
+https://testflows.com/docs/machine/index.html
+https://testflows.com/docs/machine.md
+https://testflows.com/machine/portal/signup/accept/index.html
 https://testflows.com/contact.html
 https://testflows.com/contact.md
 https://testflows.com/docs/index.html
@@ -7,8 +10,6 @@ https://testflows.com/machine/download.md
 https://testflows.com/machine/index.html
 https://testflows.com/machine.md
 https://testflows.com/machine/pricing/index.html
-https://testflows.com/docs/machine/index.html
-https://testflows.com/docs/machine.md
 https://testflows.com/index.html
 https://testflows.com/index.md
 https://testflows.com/machine/portal/signup/index.html
@@ -127,3 +128,4 @@ https://testflows.com/docs/machine/scripting.md
 https://testflows.com/docs/machine/sessions.md
 https://testflows.com/docs/machine/steering-programs.md
 https://testflows.com/install.md
+https://testflows.com/machine/skill.md

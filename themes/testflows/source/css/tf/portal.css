@@ -2294,3 +2294,10 @@
     color: var(--tf-accent);
     font-weight: 700;
 }
+
+/* A sign-in code the person reads out or types to an agent: large, spaced. */
+.portal-secret-value--code {
+    font-size: 1.6rem;
+    letter-spacing: 0.25em;
+    padding: 0.5rem 0.75rem;
+}

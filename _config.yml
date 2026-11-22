@@ -78,6 +78,8 @@ skip_render:
   - 'agents.md'
   # Install guide for AI agents, served as plain Markdown
   - 'install.md'
+  # The agent skill, a copy of testflows/Machine skills/testflows-machine/SKILL.md
+  - 'machine/skill.md'
 
 # Writing
 new_post_name: :title.md # File name of new posts

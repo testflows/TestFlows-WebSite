@@ -99,6 +99,20 @@ API_STATUS=""
 SIGNED_IN=""
 RELEASE_URL=""
 ACCOUNT=""
+# --email, --code and --signup: sign up or sign in without a terminal, as a coding
+# agent or a script runs the installer. The person reads the code from the email,
+# or from the sign-up page, and gives it to whatever runs the installer. No run
+# waits for the person: each returns once its email is sent.
+EMAIL_OPT=""
+CODE_OPT=""
+SIGNUP=false
+# Where a person accepts a changed Agreement without a terminal: the account page
+# asks for it at sign-in.
+ACCEPT_PAGE="https://testflows.com/machine/portal/account/"
+# user@host, as the client names itself at sign-in: the account's list of devices
+# shows it, and the service lets a sign-in that names a host, never a browser's,
+# create the client's first API key without a confirmation code.
+CLIENT_ORIGIN="$(id -un 2>/dev/null || printf user)@$(hostname 2>/dev/null || printf host)"
 # The Terms of Service and the Client EULA, which licenses the client: the
 # Markdown of their pages on testflows.com, which the installer shows in full
 # before they are accepted. Both carry the Agreement version as their date.
@@ -288,12 +302,22 @@ Options:
                   signs; without it, an install where neither gpg nor openssl is
                   installed stops
   --no-checksum   install without checking the checksum, or the signature
+  --email ADDR    without a terminal, as a coding agent runs it: email a sign-in
+                  code to ADDR and return
+  --signup        with --email: email a sign-up link instead and return; its page
+                  shows the Terms to accept, then a sign-in code
+  --code CODE     with --email: sign in with the emailed code, install, and save an
+                  API key for the client
   -h, --help      show this help
 
 The client is given to a TestFlows account. The installer signs in, or creates an
 account, with an email and a code sent to it. The Client EULA licenses the client.
 An account accepts the current Agreement, which the installer shows in full, before
 anything is downloaded: https://testflows.com/machine/legal/client-eula/
+
+Without a terminal, the person accepts the Agreement in the browser: on the
+sign-up page, or on the account page when it changed. Each run with --email
+returns at once; the run with --code installs.
 
 Environment:
   MACHINE_INSTALL_DIR   where to put machine-env, and machine when no other program
@@ -456,6 +480,7 @@ api_call() {
     : > "$API_BODY"
     args=(-sS -X "$method" --proto "$PROTOCOLS" --tlsv1.2 --connect-timeout 15
         -A "machine-install" -H "Accept: application/json" -H @"$API_HEADERS"
+        -H "X-Tf-Hostname: $CLIENT_ORIGIN"
         -o "$API_BODY" -w '%{http_code}')
     [ -z "$API_POW" ] || args+=(-H "X-Tf-Pow: $API_POW")
     [ -z "$body" ] || args+=(-H "Content-Type: application/json" --data-binary "$body")
@@ -505,10 +530,9 @@ asked_yes() {
     return 1
 }
 
-# sign_in: an account, by an API key in TESTFLOWS_MACHINE_API_KEY, or by a person at the terminal
-# signing in or signing up. Every release file is given to an account alone, so each copy
-# of the client handed out names one.
-sign_in() {
+# api_open: the files a request to the service reads and writes: its headers, which
+# hold a token and are the user's alone, and its answer.
+api_open() {
     API_HEADERS="$(mktemp)" || die "Could not create a temporary file."
     API_BODY="$(mktemp)" || die "Could not create a temporary file."
     chmod 600 "$API_HEADERS"
@@ -516,6 +540,51 @@ sign_in() {
         [ -r "$TESTFLOWS_MACHINE_API_CA_FILE" ] || die "TESTFLOWS_MACHINE_API_CA_FILE names no file to read: $TESTFLOWS_MACHINE_API_CA_FILE"
         API_NO_CAS="$(mktemp -d)" || die "Could not create a temporary directory."
     fi
+}
+
+# email_code: --email alone sends the sign-in code and returns. The next run gives it
+# with --code, so an agent never waits for the person.
+email_code() {
+    api_open
+    api_pow POST /login/start "$(json_object email "$EMAIL_OPT")"
+    [ "$API_STATUS" = "204" ] || die "No code was sent. $(api_refusal)"
+    ok "Emailed a sign-in code to $EMAIL_OPT"
+    say "  Install with it  ${BOLD}curl https://testflows.com/machine/install -fsS | bash -s -- --email $EMAIL_OPT --code <code>${RESET}"
+    say "  No email? There may be no account yet. Sign up  ${BOLD}curl https://testflows.com/machine/install -fsS | bash -s -- --email $EMAIL_OPT --signup${RESET}"
+}
+
+# email_signup_link: --signup sends a sign-up link and returns. Its page shows the
+# Terms for the person to accept, then a sign-in code for --code.
+email_signup_link() {
+    api_open
+    api_pow POST /signup/start "$(json_object email "$EMAIL_OPT")"
+    [ "$API_STATUS" = "204" ] || die "No link was sent. $(api_refusal)"
+    ok "Emailed a sign-up link to $EMAIL_OPT"
+    say "  Its page shows the Terms of Service to accept, then a sign-in code."
+    say "  Install with it  ${BOLD}curl https://testflows.com/machine/install -fsS | bash -s -- --email $EMAIL_OPT --code <code>${RESET}"
+}
+
+# sign_in_given_code: the code given with --code signs in, with no terminal to ask at.
+sign_in_given_code() {
+    local token
+    api_pow POST /login/verify "$(json_object email "$EMAIL_OPT" code "$CODE_OPT")"
+    if [ "$API_STATUS" = "200" ] && token="$(json_get "$API_BODY" access_token)"; then
+        printf 'Authorization: Bearer %s\n' "$token" > "$API_HEADERS"
+        SIGNED_IN="access"
+        ACCOUNT="$EMAIL_OPT"
+        ok "Signed in as $EMAIL_OPT"
+        return 0
+    fi
+    [ "$API_STATUS" = "400" ] || die "Not signed in. $(api_refusal)"
+    die "Wrong or expired code. A code works only from the network that asked for it." \
+        "Get a new code  curl https://testflows.com/machine/install -fsS | bash -s -- --email $EMAIL_OPT"
+}
+
+# sign_in: an account, by an API key in TESTFLOWS_MACHINE_API_KEY, or by a person at the terminal
+# signing in or signing up. Every release file is given to an account alone, so each copy
+# of the client handed out names one.
+sign_in() {
+    api_open
     if [ -n "${TESTFLOWS_MACHINE_API_KEY:-}" ]; then
         printf 'Authorization: Bearer %s\n' "$TESTFLOWS_MACHINE_API_KEY" > "$API_HEADERS"
         SIGNED_IN="api"
@@ -528,8 +597,13 @@ sign_in() {
         SIGNED_IN="client"
         return 0
     fi
+    if [ -n "$CODE_OPT" ]; then
+        sign_in_given_code
+        return 0
+    fi
     ( : < /dev/tty ) 2>/dev/null || die "Installing the client needs a sign-in, and there is no terminal to ask at." \
-        "Install with an API key curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
+        "Email a sign-in code  curl https://testflows.com/machine/install -fsS | bash -s -- --email <address>" \
+        "Or install with an API key  curl https://testflows.com/machine/install -fsS | TESTFLOWS_MACHINE_API_KEY=<key> bash"
     say "To install the client, sign in to your TestFlows account or sign up for one."
     local email new
     while :; do
@@ -651,6 +725,13 @@ accept_terms() {
         die "The Agreement of $version is to be accepted, and there is no terminal to show it at." \
             "Upgrade at a terminal machine upgrade"
     fi
+    # A sign-in with --code has no terminal either: the person accepts it in the
+    # browser, where signing in to the account page asks for it.
+    if ! ( : < /dev/tty ) 2>/dev/null; then
+        die "The Agreement of $version is to be accepted, and there is no terminal to show it at." \
+            "Accept it in the browser  $ACCEPT_PAGE" \
+            "Then run this again with a new code"
+    fi
     read_agreement "$version"
     api_call POST /terms/accept "$(json_object version "$version")"
     [ "$API_STATUS" = "204" ] || die "The Agreement was not accepted. $(api_refusal)"
@@ -706,6 +787,37 @@ signed_in_for() {
     choose_helper
     sign_in
     accept_terms
+}
+
+# save_client_key TARGET: after a sign-in with --code, an API key for the client just
+# installed, saved by the client itself. It reads the key on standard input, so the
+# key is on no command line and in no output. A sign-in this recent needs no
+# confirmation code to create a key. The installer's own sign-in ends as it exits,
+# and the client signs in with the key until the person deletes it.
+save_client_key() {
+    local target="$1" key key_id name
+    [ "$SIGNED_IN" = "access" ] && [ -n "$CODE_OPT" ] || return 0
+    # A client that signs in with its saved key already keeps it: another run
+    # with a code makes no second key.
+    if "$target" -o json account whoami < /dev/null 2>/dev/null | grep -q '"credential": *"saved_key"'; then
+        ok "The client signs in with its saved API key already"
+        return 0
+    fi
+    name="machine on $(hostname 2>/dev/null || printf 'this computer')"
+    api_pow POST /tokens "$(json_object name "$name")"
+    if [ "$API_STATUS" != "201" ] || ! key="$(json_get "$API_BODY" token)"; then
+        warn "No API key was saved for the client. $(api_refusal)"
+        say "  Sign the client in  machine login --email $EMAIL_OPT"
+        return 0
+    fi
+    key_id="$(json_get "$API_BODY" id || printf '?')"
+    if printf '%s\n' "$key" | "$target" account api-keys save > /dev/null 2>&1; then
+        ok "Saved the API key $name for the client"
+    else
+        # The key works and nothing holds it: say which, so it is deleted.
+        warn "The client did not save the API key $name (id $key_id). Delete it in the portal."
+        say "  Sign the client in  machine login --email $EMAIL_OPT"
+    fi
 }
 
 # on_exit: remove what the install wrote on the way, and sign out.
@@ -1559,12 +1671,42 @@ main() {
             --download) mode="download" ;;
             --no-signature) NO_SIGNATURE=true ;;
             --no-checksum) NO_CHECKSUM=true; NO_SIGNATURE=true ;;
+            --email)
+                [ $# -gt 0 ] || die "--email needs an address."
+                EMAIL_OPT="$1"
+                shift
+                ;;
+            --email=*) EMAIL_OPT="${arg#--email=}" ;;
+            --code)
+                [ $# -gt 0 ] || die "--code needs the emailed code."
+                CODE_OPT="$1"
+                shift
+                ;;
+            --code=*) CODE_OPT="${arg#--code=}" ;;
+            --signup) SIGNUP=true ;;
             -h | --help) usage; exit 0 ;;
             *) die "Unknown option: $arg" "Run it with --help to see what it accepts." ;;
         esac
     done
+    if [ -z "$EMAIL_OPT" ] && { [ -n "$CODE_OPT" ] || $SIGNUP; }; then
+        die "Email address required." "Give it with --email <address>"
+    fi
+    if $SIGNUP && [ -n "$CODE_OPT" ]; then
+        die "--signup sends a link, and --code signs in with what its page shows." \
+            "Run them one after the other"
+    fi
 
     trap on_exit EXIT
+
+    # Sending a code or a sign-up link is all such a run does: the next run gives the
+    # code with --code. Nothing here waits for the person.
+    if $SIGNUP || { [ -n "$EMAIL_OPT" ] && [ -z "$CODE_OPT" ]; }; then
+        choose_downloader
+        [ "$DOWNLOADER" = "curl" ] || die "Signing in needs curl." "Install curl and run this again."
+        choose_helper
+        if $SIGNUP; then email_signup_link; else email_code; fi
+        return 0
+    fi
 
     # A list is the same on every system, so it is answered before the platform check.
     if [ "$mode" = "list" ]; then
@@ -1634,6 +1776,7 @@ main() {
     if [ -z "${MACHINE_VERSION:-}" ] && [ "$before" = "$release" ]; then
         up_to_date "$release" "$target"
         install_core "$release"
+        save_client_key "$target"
         return 0
     fi
     # A latest older than the installed client is installed only when its version is
@@ -1712,6 +1855,7 @@ main() {
         warn "Could not write $(tilde "$dir/machine-env")."
     fi
     install_core "$release"
+    save_client_key "$target"
 
     if [ "$KIND" = "tree" ]; then
         remove_old_trees "$share" "$release"
@@ -1744,8 +1888,14 @@ main() {
             say ""
             say "    rm $(tilde "$found")"
         fi
-        # An upgrade's client is signed in and knows its commands already.
-        if [ "$SIGNED_IN" != "client" ]; then
+        # An upgrade's client is signed in and knows its commands already, and so is
+        # a client given its key here.
+        if [ -n "$CODE_OPT" ]; then
+            say ""
+            say "Next:"
+            say "  machine account whoami   check the account and the credential"
+            say "  machine --help           see every command"
+        elif [ "$SIGNED_IN" != "client" ]; then
             say ""
             say "Next:"
             say "  machine login         sign in (or  machine account signup  to create an account)"

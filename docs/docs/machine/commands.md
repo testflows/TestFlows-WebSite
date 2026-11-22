@@ -24,26 +24,37 @@ takes further commands, those follow it, so each one has a heading.
 
 Sign in. See [Signing up](getting-started.md#signing-up).
 
-A sign-in code is emailed. Use the account signup command if there is no account
-yet.
+A sign-in code is emailed. At a terminal the command asks for the address and
+the code. Use the account signup command if there is no account yet.
 
-Or set TESTFLOWS_MACHINE_API_KEY instead.
+With `--email` the command emails the code and returns, so a coding agent or a
+script never waits. Run it again with `--email` and `--code` to sign in.
+
+Or set TESTFLOWS_MACHINE_API_KEY instead. An API key saved with account api-keys
+create `--save` signs in when there is no login.
 
 ```
-machine login [-h]
+machine login [-h] [--email address] [--code code]
 ```
+
+| Option | Does |
+|---|---|
+| `--email address` | The account's email address, instead of asking for it |
+| `--code code` | The emailed sign-in code, instead of asking for it |
 
 Examples:
 
 ```
-machine login  sign in
+machine login                                       sign in at a terminal
+machine login --email me@example.com                email a code
+machine login --email me@example.com --code 482913  sign in with it
 ```
 
 See also:
 
-- [`machine account`](#machine-account)
+- [`machine account whoami`](#machine-account-whoami)
+- [`machine account api-keys create`](#machine-account-api-keys-create)
 - [`machine logout`](#machine-logout)
-- [`machine sessions`](#machine-sessions)
 
 ## machine sessions
 
@@ -1208,10 +1219,18 @@ See also:
 
 Create an API key.
 
-The secret is shown once. A sign-in code is required.
+The secret is shown once. Use `--save` to save it for this client instead. The
+client then signs in with it when there is no login and
+TESTFLOWS_MACHINE_API_KEY is not set.
+
+Within 10 minutes of a sign-in no confirmation code is needed. Later a code is
+emailed, and at a terminal the command asks for it.
+
+With `--save`, or without a terminal, the command emails the code and returns.
+Run it again with `--code`.
 
 ```
-machine account api-keys create [-h] [--expiry days|never] name
+machine account api-keys create [-h] [--expiry days|never] [--save] [--code code] name
 ```
 
 | Argument | Does |
@@ -1221,18 +1240,49 @@ machine account api-keys create [-h] [--expiry days|never] name
 | Option | Does |
 |---|---|
 | `--expiry days\|never` | Expire after N days (e.g. 30), or "never" (default: never) |
+| `--save` | Save the key for this client instead of printing it |
+| `--code code` | The emailed confirmation code, instead of asking for it |
 
 Examples:
 
 ```
 machine account api-keys create ci              create the key ci
 machine account api-keys create ci --expiry 30  expire in 30 days
+machine account api-keys create ai --save       keep it here
 ```
 
 See also:
 
 - [`machine account api-keys list`](#machine-account-api-keys-list)
+- [`machine account whoami`](#machine-account-whoami)
 - [`machine account api-keys update`](#machine-account-api-keys-update)
+
+### machine account api-keys save
+
+Save an API key for this client.
+
+The command reads the key from standard input, and at a terminal asks for it
+without showing it. The service checks the key and names its account.
+
+The client signs in with the saved key when there is no login and
+TESTFLOWS_MACHINE_API_KEY is not set.
+
+```
+machine account api-keys save [-h]
+```
+
+Examples:
+
+```
+machine account api-keys save          asked for, not shown
+machine -o json account api-keys save  the same, for a script
+```
+
+See also:
+
+- [`machine account api-keys create`](#machine-account-api-keys-create)
+- [`machine account whoami`](#machine-account-whoami)
+- [`machine login`](#machine-login)
 
 ### machine account api-keys delete
 
@@ -1317,20 +1367,56 @@ The command shows the Terms of Service and the Client EULA in full and asks for
 their acceptance. The account is made accepting them. A link is emailed to
 finish signing up.
 
+With `--email` the command emails the link and returns, so a coding agent never
+waits. The link's page shows the Terms for acceptance and then a sign-in code.
+Give the code to login `--code`.
+
 ```
-machine account signup [-h]
+machine account signup [-h] [--email address]
 ```
+
+| Option | Does |
+|---|---|
+| `--email address` | The email address of the account, instead of asking for it |
 
 Examples:
 
 ```
-machine account signup  create an account
+machine account signup                         sign up at a terminal
+machine account signup --email me@example.com  email a link
 ```
 
 See also:
 
 - [`machine login`](#machine-login)
-- [`machine account provision`](#machine-account-provision)
+- [`machine account whoami`](#machine-account-whoami)
+- [`machine account show`](#machine-account-show)
+
+### machine account whoami
+
+Show the account and credential this client uses.
+
+The credential is TESTFLOWS_MACHINE_API_KEY when it is set, else the login, else
+the API key saved for this client. The command checks it with the service.
+
+Without a credential that works the command fails with exit code 2. It changes
+nothing.
+
+```
+machine account whoami [-h]
+```
+
+Examples:
+
+```
+machine account whoami          the account and credential
+machine -o json account whoami  the same, for a script
+```
+
+See also:
+
+- [`machine login`](#machine-login)
+- [`machine account api-keys create`](#machine-account-api-keys-create)
 - [`machine account show`](#machine-account-show)
 
 ### machine account close

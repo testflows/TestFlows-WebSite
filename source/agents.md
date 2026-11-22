@@ -9,6 +9,7 @@ Every page has a Markdown version at the same address with `.md` in place of the
 - To install the Machine client, Framework or both, follow this guide: https://testflows.com/install.md
 - Machine, deterministic simulation testing: how to install the client, sign in, run a machine, and control cost: https://testflows.com/machine.md. You drive the `machine` client with `-o json`, or write Python programs with the SDK, `testflows.machine`.
 - Framework, how to install it, write and run tests, and avoid the common mistakes: https://testflows.com/framework.md
+- The Machine skill for coding agents, the set-up steps and the rules in one file: https://testflows.com/machine/skill.md. Save it as `testflows-machine/SKILL.md` in `~/.claude/skills/` for Claude Code and Cursor, or in `~/.agents/skills/` for Codex.
 - All the pages, listed: https://testflows.com/llms.txt
 
 ## Other pages
@@ -24,4 +25,4 @@ Every page has a Markdown version at the same address with `.md` in place of the
 
 ## For people only
 
-The sign-up, sign-in and account pages, under `/machine/portal/`, are for people and have no Markdown version. Give your person the link instead of filling them in. `machine login` must be run by your person, locally.
+The sign-up, sign-in and account pages, under `/machine/portal/`, are for people and have no Markdown version. Give your person the link instead of filling them in. To sign the Machine client in, ask your person for their email address and run `machine login --email <address>`, or `machine account signup --email <address>` for a new account; they tell you the code that is emailed or shown, and you run `machine login --email <address> --code <code>`. The steps are at https://testflows.com/machine.md. Your person accepts the Terms of Service themselves; never accept them for your person.

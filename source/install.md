@@ -6,20 +6,20 @@ Install TestFlows Framework, the TestFlows Machine client, or both, on this comp
 
 ## OBJECTIVE
 
-Install what your person asks for: the open-source Framework, which is a Python library, the Machine client, which is a command called `machine`, or both. The Machine client also needs an account, which only your person can create and sign in to.
+Install what your person asks for: the open-source Framework, which is a Python library, the Machine client, which is a command called `machine`, or both. The Machine client also needs an account. You sign it in with your person's help: they read a code from an email or a page and tell it to you.
 
 ## DONE WHEN
 
 - Framework: `python3 -c "import testflows.core"` succeeds, and the Hello World test in step 2 runs and exits with status `0`.
 - Machine client: `machine --version` prints `Machine Client` and a version.
-- Machine account: `machine account show` prints your person's account. Until they have signed in it exits with status `2` and says `Not signed in`. That is expected: finish step 4 with them.
+- Machine account: `machine account whoami` prints your person's account and the API key saved for the client.
 
 ## TODO
 
 - [ ] Step 1: ask your person which to install.
 - [ ] Step 2: Framework: check Python, install it, run the Hello World test.
-- [ ] Step 3: Machine client: check the system, run the installer, check the version.
-- [ ] Step 4: Machine account: your person signs up and signs in, or gives you an API key, and account storage is set up.
+- [ ] Step 3: Machine client: check the system, ask for the account, install with the emailed code.
+- [ ] Step 4: Machine account: check it.
 - [ ] Step 5: tell your person what is installed and what is left.
 
 ## Step 1: choose
@@ -70,11 +70,24 @@ uname -sm
 
 The client runs on `Linux x86_64`, `Linux aarch64` and `Darwin arm64`, which is a Mac with Apple Silicon. It does not run on an Intel Mac or natively on Windows; on Windows, use WSL and treat it as Linux. On any other system, stop and tell your person.
 
-It needs the OpenSSH client, `ssh`, which macOS and most Linux systems have. If `ssh` is missing, install it first, for example `sudo apt install openssh-client` on Debian and Ubuntu. Install the client. It never asks for root:
+It needs the OpenSSH client, `ssh`, which macOS and most Linux systems have. If `ssh` is missing, install it first, for example `sudo apt install openssh-client` on Debian and Ubuntu.
+
+The installer signs in before it downloads: the client is given to an account. Ask your person: "Do you have a TestFlows Machine account? What is your email address?" Signing up is free. No command waits for your person: each one that sends an email returns at once, and the next one takes the code.
 
 ```bash
-curl https://testflows.com/machine/install -fsS | bash
+# Has an account: emails a sign-in code
+curl https://testflows.com/machine/install -fsS | bash -s -- --email <address>
+# Needs one: emails a sign-up link; its page shows the Terms to accept, then a code
+curl https://testflows.com/machine/install -fsS | bash -s -- --email <address> --signup
 ```
+
+Ask your person for the code from the email or the page. Then install. The installer never asks for root, installs the client, and saves an API key for it, so the client stays signed in:
+
+```bash
+curl https://testflows.com/machine/install -fsS | bash -s -- --email <address> --code <code>
+```
+
+A code works once, for 10 minutes, from this computer's network. If the installer refuses it, send a new one. Your person accepts the Terms of Service on the sign-up page; never accept them for your person. If the installer says the Agreement changed, your person accepts it at https://testflows.com/machine/portal/account/ and you install with a new code.
 
 If it says that `~/.local/bin` is not on your `PATH`, add it for this session, and give your person the line the installer printed for their shell profile:
 
@@ -94,19 +107,13 @@ On a Mac this can run the system's own `/usr/bin/machine` instead, which prints 
 machine-env -- machine --version
 ```
 
-## Step 4: the Machine account, which needs your person
-
-You cannot do this step for your person. Do not buy credits or create or delete API keys unless they ask you to. Never print an API key or commit one.
-
-1. They create an account, which is free, at https://testflows.com/machine/portal/signup/
-2. They sign in, in one of two ways:
-   - **On this computer:** they run `machine login` themselves and type the one-time code that is emailed to them. They stay signed in until `machine logout`.
-   - **With an API key,** for a sandbox or CI where they cannot sign in: they run `machine account api-keys create <name> --expiry 30`, which needs a sign-in code, copy the secret, which is shown once, and put it in the environment variable `TESTFLOWS_MACHINE_API_KEY` for you.
-3. Check it:
+## Step 4: check the Machine account
 
 ```bash
-machine account show
+machine account whoami
 ```
+
+It names your person's account and the API key saved for the client. Do not buy credits or create or delete other API keys unless your person asks you to. Never print an API key or commit one.
 
 ## Step 5: report
 

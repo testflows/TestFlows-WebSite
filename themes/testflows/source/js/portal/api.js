@@ -258,6 +258,27 @@ export async function signupStart(email, termsVersion, onPow) {
 }
 
 /**
+ * Accept the Agreement of `termsVersion` for a sign-up link a client without a
+ * terminal asked for: the account is created, and the answer carries the
+ * sign-in code the person gives that client, or null when none was issued.
+ * @param {string} magic @param {string} termsVersion
+ * @returns {Promise<{email: string, code: string|null}>}
+ */
+export async function signupAccept(magic, termsVersion) {
+  const resp = await request("POST", "/signup/accept", {
+    magic,
+    terms_version: termsVersion,
+  });
+  if (resp.status === 200 && resp.data) {
+    return {
+      email: String(resp.data.email),
+      code: resp.data.code == null ? null : String(resp.data.code),
+    };
+  }
+  fail(resp, "Could not create the account.");
+}
+
+/**
  * Send one message from the contact form. No account: the proof-of-work is
  * what the request costs.
  * @param {{ email: string, topic: string, company: string, message: string, trap: string }} fields

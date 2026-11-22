@@ -13,9 +13,9 @@
  * fail() → friendlyApiError so the portal never shows raw API codes.
  */
 
-import { solve, currentBucket } from "./hashcash.js?v=30a30ecf6934";
-import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=30a30ecf6934";
-import { setSession, clearSession } from "./session.js?v=30a30ecf6934";
+import { solve, currentBucket } from "./hashcash.js?v=3ad7ff56b862";
+import { friendlyApiError, friendlyNetworkError } from "./errors.js?v=3ad7ff56b862";
+import { setSession, clearSession } from "./session.js?v=3ad7ff56b862";
 
 const MAX_POW_ROUNDS = 5;
 
@@ -255,6 +255,27 @@ export async function signupStart(email, termsVersion, onPow) {
     return;
   }
   fail(resp, "Could not start sign-up.");
+}
+
+/**
+ * Accept the Agreement of `termsVersion` for a sign-up link a client without a
+ * terminal asked for: the account is created, and the answer carries the
+ * sign-in code the person gives that client, or null when none was issued.
+ * @param {string} magic @param {string} termsVersion
+ * @returns {Promise<{email: string, code: string|null}>}
+ */
+export async function signupAccept(magic, termsVersion) {
+  const resp = await request("POST", "/signup/accept", {
+    magic,
+    terms_version: termsVersion,
+  });
+  if (resp.status === 200 && resp.data) {
+    return {
+      email: String(resp.data.email),
+      code: resp.data.code == null ? null : String(resp.data.code),
+    };
+  }
+  fail(resp, "Could not create the account.");
 }
 
 /**

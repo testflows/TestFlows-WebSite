@@ -170,6 +170,26 @@ put it in the `TESTFLOWS_MACHINE_API_KEY` environment variable.
 machine account api-keys create ci --expiry 90
 ```
 
+A coding agent signs the client in with your help, because its shell has no
+terminal to type a code at. It asks for your email address and runs
+`machine login --email you@example.com`, or
+`machine account signup --email you@example.com` if you have no account yet.
+You tell it the code from the email, or from the page the sign-up link opens,
+where you also accept the Terms of Service. The agent then signs in with the
+code and saves an API key for the client, so the client stays signed in after
+the login ends:
+
+```bash
+machine login --email you@example.com --code 482913
+machine account api-keys create laptop --save
+```
+
+The client uses `TESTFLOWS_MACHINE_API_KEY` when it is set, then the login,
+then the saved key. [`machine account whoami`](commands.md#machine-account-whoami)
+says which account and which of them the client uses. Signing out with
+`machine logout` leaves the saved key, and deleting the key with
+`machine account api-keys delete` removes it from the client.
+
 When you create your first session, Machine sets up your account's storage
 first, so that session takes longer to create. To do that step on its own
 beforehand, run [`machine account provision`](commands.md#machine-account-provision).

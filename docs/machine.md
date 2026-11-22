@@ -23,18 +23,45 @@ Let your AI coding agent test your code and its bug fixes, or do it yourself. Ev
 
 ## Rules for agents
 
-- A person needs a Machine account, and you cannot sign up for them. They create one themselves at https://testflows.com/machine/portal/signup/, and signing up is free.
-- Ask before you use credits, pay, or change the account: creating sessions uses credits, buying credits is a payment, and creating or deleting API keys changes the account.
-- Never print an API key or commit one.
+- You sign the client in with your person's help: they read a code from an email or a page and tell it to you. They accept the Terms of Service themselves, on the page the sign-up email opens. Never accept them for your person.
+- Ask before you use credits, pay, or change the account: creating sessions uses credits, and buying credits is a payment. The API key the steps below save is part of signing in; ask before creating or deleting any other key.
+- Never print an API key or commit one. The client saves its key and never shows it.
 
-## Install and sign in
+## Set up
 
-```bash
-curl https://testflows.com/machine/install -fsS | bash
-machine account show
-```
+No command waits for your person: each one that sends an email returns at once, and the next one takes the code. A code works once, for 10 minutes, from this computer's network. When one is refused, send a new one.
 
-It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. A person signs in once: `machine login` on the same computer, which they must run themselves, locally, or an API key in `TESTFLOWS_MACHINE_API_KEY` for a sandbox or CI, made with `machine account api-keys create <name> --expiry 30`. If you get `Not signed in`, ask the person.
+1. **The client.** Run `machine --version`. If it prints a version, go to step 2. If `machine` is missing, ask your person: "Do you have a TestFlows Machine account? What is your email address?" Then install with the installer, which takes the same steps as `machine login`:
+
+   ```bash
+   # Has an account: emails a sign-in code
+   curl https://testflows.com/machine/install -fsS | bash -s -- --email <address>
+   # Needs one: emails a sign-up link; its page shows the Terms to accept, then a code
+   curl https://testflows.com/machine/install -fsS | bash -s -- --email <address> --signup
+   # With the code: installs the client and saves an API key for it
+   curl https://testflows.com/machine/install -fsS | bash -s -- --email <address> --code <code>
+   ```
+
+   The client runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. Then go to step 2.
+
+2. **The key.** Run `machine -o json account whoami`. If it answers, run `machine upgrade` to install a newer client when there is one, and start working. If it fails with exit code `2`, go to step 3.
+
+3. **Sign in.** Ask your person whether they have an account and its email address.
+
+   ```bash
+   # Has an account: emails a sign-in code
+   machine login --email <address>
+   # Needs one: emails a sign-up link; its page shows the Terms to accept, then a code
+   machine account signup --email <address>
+   # With the code from the email or the page
+   machine login --email <address> --code <code>
+   # Save an API key, so the client stays signed in after the login ends
+   machine account api-keys create <name> --save
+   ```
+
+   Name the key for this computer, such as its hostname. If the key command says it emailed a confirmation code, ask for it and run `machine account api-keys create <name> --save --code <code>`.
+
+The client signs in with `TESTFLOWS_MACHINE_API_KEY` when it is set, then the login, then the saved key. If a refusal says the Agreement changed, your person accepts it at https://testflows.com/machine/portal/account/.
 
 ## How agents use Machine
 
@@ -51,7 +78,6 @@ Put `-o json` (parseable output), `-q` and `--timeout 300` before the command. A
 
 ## Mistakes to avoid
 
-- Create runs with `--daemon`, or they run to the end by themselves and your commands fail with `Machine not in control mode`.
 - A branch's full name is `parent/name`. `machine fork app --name try-1` makes `app/try-1`, and that is the name every other command takes.
 - `fork` makes a branch in its own machine. `go` makes one and moves the machine you are on onto it.
 - Disks hold x86_64 programs, even on an ARM computer.

@@ -74,7 +74,9 @@ lists them, and the client's `--help` says what each call takes.
 
 The SDK signs in with an API key from `TESTFLOWS_MACHINE_API_KEY` if it is set.
 If it isn't, it uses the login that [`machine login`](commands.md#machine-login) stored, which it shares
-with the client.
+with the client. Without a login, it uses the API key saved for the client with
+`machine account api-keys create --save`, which a coding agent saves when it
+signs the client in.
 
 A program can also sign in by itself with a one-time code, which arrives by
 email:
