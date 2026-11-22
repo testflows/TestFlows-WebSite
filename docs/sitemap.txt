@@ -1,3 +1,5 @@
+https://testflows.com/index.html
+https://testflows.com/index.md
 https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/
 https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md
 https://testflows.com/machine/index.html
@@ -12,8 +14,6 @@ https://testflows.com/machine/portal/signup/accept/index.html
 https://testflows.com/contact.html
 https://testflows.com/contact.md
 https://testflows.com/machine/pricing/index.html
-https://testflows.com/index.html
-https://testflows.com/index.md
 https://testflows.com/machine/portal/signup/index.html
 https://testflows.com/machine/legal/privacy-policy/index.html
 https://testflows.com/machine/legal/privacy-policy.md
