@@ -882,3 +882,75 @@ a.header-anchor {
         padding: 0.35rem 0;
     }
 }
+
+/* Announcement bar above the navigation: one line of news, the whole bar a link.
+   The navigation is fixed to the top, so the bar is fixed above it and both
+   move the page down by its height. One line on every screen keeps that
+   height exact. */
+:root {
+    --tf-announce-height: 2.4rem;
+}
+.site-announcement {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--tf-announce-height);
+    z-index: 1041;
+    background: var(--tf-cta);
+}
+.site-announcement-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.9rem;
+    height: 100%;
+    padding: 0 1rem;
+    color: var(--tf-ink-on-cta);
+    font-size: 0.95rem;
+    white-space: nowrap;
+    text-decoration: none;
+}
+.site-announcement-link:hover,
+.site-announcement-link:focus {
+    color: var(--tf-ink-on-cta);
+    text-decoration: none;
+}
+.site-announcement-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.site-announcement-cta {
+    flex: 0 0 auto;
+    font-weight: 700;
+}
+.site-announcement-link:hover .site-announcement-cta,
+.site-announcement-link:focus .site-announcement-cta {
+    text-decoration: underline;
+}
+body.has-announcement #main-nav.fixed-top {
+    top: var(--tf-announce-height);
+}
+body.has-announcement .content {
+    padding-top: calc(var(--tf-nav-height) + var(--tf-announce-height));
+}
+body.has-announcement .content:has(.banner) {
+    padding-top: var(--tf-announce-height);
+}
+html:has(> body.has-announcement) {
+    scroll-padding-top: calc(var(--tf-nav-height) + var(--tf-announce-height) + 1rem);
+}
+/* Sticky panels that sit just below the navigation sit below the bar too. */
+@media (min-width: 992px) {
+    body.has-announcement #sidebar {
+        top: calc(var(--tf-nav-height) + var(--tf-announce-height));
+        max-height: calc(100vh - var(--tf-nav-height) - var(--tf-announce-height));
+    }
+    body.has-announcement .post-toc-inner {
+        top: calc(6rem + var(--tf-announce-height));
+    }
+}
+body.has-announcement .legal-rail {
+    top: calc(var(--tf-nav-height, 4rem) + var(--tf-announce-height) + 1.25rem);
+}

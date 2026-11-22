@@ -2,8 +2,15 @@
 <!DOCTYPE HTML>
 <html lang="en">
 <%- partial('_partial/head') %>
-<body>
+<%
+/* The announcement bar: on every page but the portal's, where people sign in and pay, so the header stays the same from page to page. */
+var tAnnounce = config.announcement;
+var showAnnouncement = !page.portal_nav && tAnnounce && tAnnounce.text &&
+  !String(page.path).startsWith('machine/portal/');
+%>
+<body<% if (showAnnouncement) { %> class="has-announcement"<% } %>>
   <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  <% if (showAnnouncement) { %><%- partial('_partial/announcement', {announcement: tAnnounce}) %><% } %>
   <% if (page.portal_nav) { %>
   <%- partial('_partial/navigation_portal') %>
   <% } else { %>

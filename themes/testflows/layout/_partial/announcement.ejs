@@ -1,0 +1,6 @@
+<div class="site-announcement" role="region" aria-label="Announcement">
+  <a class="site-announcement-link" href="<%- url_for(announcement.url) %>">
+    <span class="site-announcement-text"><%= announcement.text %></span>
+    <% if (announcement.link_text) { %><span class="site-announcement-cta"><%= announcement.link_text %> <span aria-hidden="true">&rarr;</span></span><% } %>
+  </a>
+</div>

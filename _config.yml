@@ -12,6 +12,13 @@ timezone:
 social_share: "img/social-share.png"
 image: "img/logo.png"
 
+# Announcement bar above the navigation on every page but the portal's.
+# Remove the block, or leave text empty, to hide it.
+announcement:
+  text: "Launching TestFlows Machine: self-serve deterministic simulation testing environment"
+  link_text: "Read the post"
+  url: /blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/
+
 # Header
 menu:
   Machine:
