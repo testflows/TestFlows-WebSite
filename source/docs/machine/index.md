@@ -2,8 +2,10 @@
 layout: handbook
 p: /docs/machine
 title: Machine
-description: Documentation for Machine.
+seo_title: "Machine Docs: Deterministic Simulation Testing | TestFlows"
+description: Docs for TestFlows Machine, the deterministic simulation testing environment for developers and AI coding agents. Install, first run, replay, faults.
 permalink: docs/machine/index.html
+keywords: deterministic simulation testing, DST, documentation, fault injection, record and replay, Python SDK, AI coding agents
 ---
 
 <!-- include: overview.md -->

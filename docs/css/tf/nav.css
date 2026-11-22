@@ -718,26 +718,59 @@ a.header-anchor {
     white-space: nowrap;
 }
 
-#main-nav .navbar-signin-btn {
+#main-nav .navbar-signin-btn,
+#main-nav .navbar-signup-btn {
     display: inline-flex;
     align-items: center;
     margin-left: 0.5rem;
     padding: 0.4rem 1rem;
     border-radius: var(--tf-radius-pill);
-    background: var(--tf-primary);
-    color: var(--tf-ink-on-primary) !important;
     font-family: var(--tf-font);
     font-weight: 600;
     font-size: 0.875rem;
     line-height: 1.2;
+    white-space: nowrap;
     text-decoration: none !important;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.15s ease, background 0.15s ease;
+}
+
+/* Sign in is outlined, so the green Create free account is the one action. */
+#main-nav .navbar-signin-btn {
+    background: transparent;
+    border: 1px solid var(--tf-ghost-border);
+    color: var(--tf-text-strong) !important;
 }
 
 #main-nav .navbar-signin-btn:hover,
 #main-nav .navbar-signin-btn:focus {
+    background: var(--tf-ghost-hover-bg);
+    color: var(--tf-text-strong) !important;
+}
+
+#main-nav .navbar-signup-btn {
+    background: var(--tf-cta);
+    border: 1px solid var(--tf-cta);
+    color: var(--tf-ink-on-cta) !important;
+}
+
+#main-nav .navbar-signup-btn:hover,
+#main-nav .navbar-signup-btn:focus {
     opacity: 0.88;
-    color: var(--tf-ink-on-primary) !important;
+    color: var(--tf-ink-on-cta) !important;
+}
+
+/* A phone has room for the short label alone, on the logo's row. */
+#main-nav .navbar-signup-short { display: none; }
+
+@media (max-width: 479.98px) {
+    #main-nav .navbar-signup-long { display: none; }
+    #main-nav .navbar-signup-short { display: inline; }
+
+    #main-nav .navbar-signin-btn,
+    #main-nav .navbar-signup-btn {
+        margin-left: 0.35rem;
+        padding: 0.35rem 0.75rem;
+    }
 }
 
 #main-nav .site-menu .nav-item.active .nav-link {

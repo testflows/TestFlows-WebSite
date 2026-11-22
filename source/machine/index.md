@@ -1,11 +1,13 @@
 ---
 title: Machine
-description: Run your programs deterministically. Record, replay, and branch your runs.
+seo_title: "TestFlows Machine: Deterministic Simulation Testing, Free to Start"
+description: A deterministic simulation testing environment for developers and AI coding agents. Record, replay, branch and inject faults into your programs. Start free.
 date: 2026-08-03 00:00:00
 layout: index
 fullwidth: true
 permalink: machine/index.html
 image: images/machine-hero.jpg
+keywords: deterministic simulation testing, DST, AI coding agents, fault injection, data races, fuzzing, retroactive logging, time travel debugging, time compression, record and replay, deterministic replay
 ---
 
 <div class="container-fluid p-0">
@@ -13,10 +15,10 @@ image: images/machine-hero.jpg
 <div class="container banner-inner">
 
 <div class="banner-text machine-banner-text">
-    <h1>Run your programs deterministically</h1>
-    <p>Record, replay, and branch your runs. Create account to get started.</p>
+    <h1>Deterministic simulation testing for developers and <span class="banner-accent">AI coding agents</span></h1>
+    <p>Test and explore your programs in a deterministic machine for free. Get started in 5 minutes.</p>
     <div class="banner-actions">
-        <a class="btn banner-cta" href="/machine/portal/signup/">Create account</a>
+        <a class="btn banner-cta cta-free" href="/machine/portal/signup/">Start for free</a>
         <a class="btn banner-cta banner-cta-ghost" href="/machine/download/">Download client</a>
         <a class="btn banner-cta banner-cta-ghost" href="/machine/pricing/">Pricing</a>
         <a class="btn banner-cta banner-cta-ghost" href="/docs/machine/">Docs</a>
@@ -35,27 +37,80 @@ image: images/machine-hero.jpg
 </div>
 </div>
 
-<p class="machine-banner-close">Make every run repeatable for testing and more.</p>
+<p class="machine-banner-close">Simulate, fuzz and explore your software yourself or with AI coding agents.</p>
 
 </div>
 </div>
 </div>
 
-<section class="machine-why">
+<section class="machine-why" id="capabilities">
     <div class="container">
-        <h2 class="index-block-title">Record. Replay. Branch.</h2>
+        <h2 class="index-block-title">Fine-grained control over execution</h2>
+        <p class="machine-why-lead">Let your AI coding agent test your code and its bug fixes, or do it yourself. Every run is deterministic, so every failure you find replays exactly.</p>
         <div class="machine-why-list">
             <div class="machine-why-item">
-                <h3>Record</h3>
-                <p>Capture a full run with every non-deterministic input pinned down.</p>
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/automaton.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>AI agents test your fixes</h3>
+                <p>Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#python-sdk">Python SDK</a>
             </div>
             <div class="machine-why-item">
-                <h3>Replay</h3>
-                <p>Run it again instruction-by-instruction. Identical state, identical outcome.</p>
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/bolt.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Precise fault injection</h3>
+                <p>Fail a system call, a disk request, a packet or a container at the exact call you choose, or at random from a seed.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#fault-injection">Fault injection</a>
             </div>
             <div class="machine-why-item">
-                <h3>Branch</h3>
-                <p>Fork from any point. Try alternatives without losing the original timeline.</p>
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/race.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Forced data races</h3>
+                <p>Hold, yield and pin threads to force the interleaving that triggers a race. Then watch the same race on every replay.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#holding-threads">Holding threads</a>
+            </div>
+            <div class="machine-why-item">
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/dice.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Custom fuzzers</h3>
+                <p>Draw schedules, faults and timing from a seed in Python, or schedules from a plan file with no code, and stress the code paths you choose.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#plans">Plans</a>
+            </div>
+            <div class="machine-why-item">
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/log.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Retroactive logging</h3>
+                <p>Log everything, store nothing. Replay the stretch you care about and get its logs after the fact.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#dropped-output">Dropped output</a>
+            </div>
+            <div class="machine-why-item">
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/rewind.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Time travel</h3>
+                <p>Rewind to any checkpoint, step back to the instruction before a bug, or branch from any point. The original run stays as it was.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#going-back">Going back</a>
+            </div>
+            <div class="machine-why-item">
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/fast.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Time compression</h3>
+                <p>Idle time is skipped. Ten minutes of sleep in the machine pass in about three seconds, so timeouts and retries cost seconds.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#time-compression">Time compression</a>
+            </div>
+            <div class="machine-why-item">
+                <div class="machine-why-body">
+                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/bug.webp" alt="" width="320" height="320" loading="lazy">
+                <h3>Debugging at any point</h3>
+                <p>Inspect registers, memory and the stack, set breakpoints and watchpoints, or run GDB inside the machine, at any point of any run.</p>
+                </div>
+                <a class="machine-why-more" href="/docs/machine/#debugging">Debugging</a>
             </div>
         </div>
     </div>

@@ -757,9 +757,11 @@ machine output app bytes --source /output/keep/app/core.bin > core.bin
 
 ### Dropped output
 
-Debug logs can be gigabytes, and a run that stores them is slow to copy and to
-read. A service writes those under a second directory, and what is written
-there is not stored:
+Dropped output is how Machine does retroactive logging: a program writes
+detailed logs while it runs, the run stores none of them, and you get the logs
+of any stretch after the fact by replaying it. Debug logs can be gigabytes,
+and a run that stores them is slow to copy and to read. A service writes those
+under a second directory, and what is written there is not stored:
 
 ```bash
 # inside the service

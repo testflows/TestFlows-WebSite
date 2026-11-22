@@ -95,15 +95,22 @@ function navSection(item) {
             </a>
             <% if (navPath.indexOf('/machine/portal/login/') !== 0) { %>
             <a class="navbar-signin-btn" id="navbar-signin" href="<%- url_for('machine/portal/login/') %>">Sign in</a>
+            <% } %>
+            <% if (navPath.indexOf('/machine/portal/signup/') !== 0) { %>
+            <a class="navbar-signup-btn" id="navbar-signup" href="<%- url_for('machine/portal/signup/') %>"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            <% } %>
             <script>
             (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
                 var a = document.getElementById("navbar-signin");
-                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
-                a.textContent = "Account";
-                a.setAttribute("href", "<%- url_for('machine/portal/account/') %>");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "<%- url_for('machine/portal/account/') %>");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
             })();
             </script>
-            <% } %>
         </div>
     </div>
 </nav>

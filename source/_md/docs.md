@@ -12,7 +12,7 @@ Learn how to write and run test programs that check your software. Open-source.
 
 ## Machine
 
-Learn how to run your programs deterministically, test programs included.
+Learn deterministic simulation testing: run, replay, branch and inject faults into your programs, manually or with AI coding agents.
 
 - The docs, by part: https://testflows.com/docs/machine.md
 

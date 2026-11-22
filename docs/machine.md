@@ -2,17 +2,24 @@
 
 # Machine
 
-> Run your programs deterministically. Record, replay and branch your runs.
+> Deterministic simulation testing for developers and AI coding agents. Test and explore your programs in a deterministic machine for free. Get started in 5 minutes.
 
-TestFlows Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+TestFlows Machine is a deterministic simulation testing environment for developers and AI coding agents, provided as a self-serve cloud service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
-Make every run repeatable for testing and more.
+Simulate, fuzz and explore your software yourself or with AI coding agents.
 
-## Record. Replay. Branch.
+## Fine-grained control over execution
 
-- **Record.** Capture a full run with every non-deterministic input pinned down.
-- **Replay.** Run it again instruction by instruction, with identical state and an identical outcome.
-- **Branch.** Fork from any point and try alternatives without losing the original timeline.
+Let your AI coding agent test your code and its bug fixes, or do it yourself. Every run is deterministic, so every failure you find replays exactly.
+
+- **AI agents test your fixes.** Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you. https://testflows.com/docs/machine/python-sdk.md
+- **Precise fault injection.** Fail a system call, a disk request, a packet or a container at the exact call you choose, or at random from a seed. https://testflows.com/docs/machine/fault-injection.md
+- **Forced data races.** Hold, yield and pin threads to force the interleaving that triggers a race. Then watch the same race on every replay. https://testflows.com/docs/machine/steering-programs.md
+- **Custom fuzzers.** Draw schedules, faults and timing from a seed in Python, or schedules from a plan file with no code, and stress the code paths you choose. https://testflows.com/docs/machine/steering-programs.md
+- **Retroactive logging.** Log everything, store nothing. Replay the stretch you care about and get its logs after the fact. https://testflows.com/docs/machine/running-a-machine.md
+- **Time travel.** Rewind to any checkpoint, step back to the instruction before a bug, or branch from any point. The original run stays as it was. https://testflows.com/docs/machine/checkpoints-and-branches.md
+- **Time compression.** Idle time is skipped. Ten minutes of sleep in the machine pass in about three seconds, so timeouts and retries cost seconds. https://testflows.com/docs/machine/running-a-machine.md
+- **Debugging at any point.** Inspect registers, memory and the stack, set breakpoints and watchpoints, or run GDB inside the machine, at any point of any run. https://testflows.com/docs/machine/debugging.md
 
 ## Rules for agents
 
@@ -28,6 +35,15 @@ machine account show
 ```
 
 It runs on Linux (x86_64 and arm64) and on Macs with Apple Silicon. A person signs in once: `machine login` on the same computer, which they must run themselves, locally, or an API key in `TESTFLOWS_MACHINE_API_KEY` for a sandbox or CI, made with `machine account api-keys create <name> --expiry 30`. If you get `Not signed in`, ask the person.
+
+## How agents use Machine
+
+An agent works with Machine in one of two ways:
+
+- **Drive the `machine` client.** Run its commands and read their answers with `-o json`. Each answer is one JSON document: `{"result": ..., "elapsed_ms": ...}` on success, and `{"error": ..., "code": ..., "hints": [...]}` on standard error on failure. This suits exploring a bug step by step: run, fork, inject a fault, read the output, go back.
+- **Write a Python program with the SDK.** Install it with `pip3 install testflows.machine` after the client, then `import testflows.machine.v1 as machine`. This suits a test or a fuzzer that repeats: a loop over seeds, schedules or faults, with its own checks. https://testflows.com/docs/machine/python-sdk.md
+
+Both use the same account, sessions and runs. A run that a program keeps, outside a `with` block, can be examined with the client afterwards.
 
 ## In scripts
 

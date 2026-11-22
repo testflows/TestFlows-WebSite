@@ -17,8 +17,11 @@
   </script>
   
   
+  
   <title>Making Your Tests Better or How to Break Your Tests Into Steps | Blog</title>
   <meta name="description" content="An article about how tests can be broken up into steps using TestFlows.">
+  
+  <meta name="keywords" content="deterministic simulation testing, DST, AI coding agents, fault injection, fuzzing, record and replay, test framework">
   
   
   <link rel="canonical" href="https://testflows.com/blog/how-to-break-your-tests-into-steps/">
@@ -48,6 +51,8 @@
 
   
   
+  
+  
   <link href="https://testflows.com/img/favicon.ico" rel="icon">
   
   
@@ -58,40 +63,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795314282905" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795314282905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795308630574" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795314282905" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -137,20 +142,6 @@
                     
                     
                         <li class="nav-item has-submenu">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
-                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
-                            
-                            <ul class="site-submenu">
-                                
-                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
-                                
-                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
-                                
-                            </ul>
-                            
-                        </li>
-                    
-                        <li class="nav-item has-submenu">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
                             <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
                             
@@ -169,14 +160,28 @@
                         </li>
                     
                         <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
                             <a class="nav-link" href="/docs/" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
                             
                             <ul class="site-submenu">
                                 
-                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
-                                
                                 <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
                                 
                             </ul>
                             
@@ -222,15 +227,22 @@
             </a>
             
             <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
             <script>
             (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
                 var a = document.getElementById("navbar-signin");
-                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
-                a.textContent = "Account";
-                a.setAttribute("href", "/machine/portal/account/");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
             })();
             </script>
-            
         </div>
     </div>
 </nav>
@@ -771,10 +783,10 @@ is literally a step in the right direction.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795308630575"></script>
-<script src="/js/machine-hero-type.js?v=1795308630575"></script>
-<script src="/js/download-platforms.js?v=1795308630575"></script>
-<script src="/js/anchor-case.js?v=1795308630575"></script>
+<script src="/js/index-code-type.js?v=1795314282906"></script>
+<script src="/js/machine-hero-type.js?v=1795314282906"></script>
+<script src="/js/download-platforms.js?v=1795314282906"></script>
+<script src="/js/anchor-case.js?v=1795314282906"></script>
 
 <script>
 var isInViewport = function (elem) {

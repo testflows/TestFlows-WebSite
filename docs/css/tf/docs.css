@@ -120,13 +120,13 @@
 .docs-card ul { margin-top: 0.5rem; }
 
 .docs-card .docs-card-actions > a { margin: 0; }
-.docs-card > p:not(.docs-card-eyebrow) { max-width: none; width: 100%; }
+.docs-card-body > p:not(.docs-card-eyebrow) { max-width: none; width: 100%; }
 
 /* Hub cards are descriptions plus actions — no link lists */
-.docs-card > p:not(.docs-card-eyebrow) { margin-bottom: 1.75rem; }
+.docs-card-body > p:not(.docs-card-eyebrow) { margin-bottom: 1.75rem; }
 
 /* The site balances text for headings; card descriptions should just fill the card. */
-.docs-card > p:not(.docs-card-eyebrow) { text-wrap: pretty; }
+.docs-card-body > p:not(.docs-card-eyebrow) { text-wrap: pretty; }
 
 /* The whole card is one link: the title's link covers the card (stretched link). */
 .docs-card { position: relative; cursor: pointer; }
@@ -134,46 +134,6 @@
 .docs-card h2 a:focus-visible { outline: none; }
 .docs-card:has(h2 a:focus-visible) { border-color: var(--tf-accent); }
 .docs-card-actions { position: relative; z-index: 1; }
-
-/* Pixel-art card icons (same 1-bit look as the 404 ostrich) */
-.docs-card-art {
-    position: absolute;
-    top: 1.6rem;
-    right: 1.75rem;
-    height: auto;
-    pointer-events: none;
-}
-
-.docs-card-art .px-ink { fill: rgba(var(--tf-fg-rgb), 0.85); }
-.docs-card-art .px-dim { fill: rgba(var(--tf-fg-rgb), 0.3); }
-.docs-card-art .px-acc { fill: var(--tf-accent); }
-.docs-card-art .px-cur { fill: var(--tf-accent); animation: px-blink 1.1s steps(1, end) infinite; }
-.docs-card-art .px-led { fill: var(--tf-accent); animation: px-blink 1.6s steps(1, end) infinite; }
-
-@keyframes px-blink { 50% { opacity: 0; } }
-
-@media (prefers-reduced-motion: reduce) {
-    .docs-card-art .px-cur,
-    .docs-card-art .px-led { animation: none; }
-}
-
-@media (max-width: 575.98px) {
-    .docs-card-art { width: 70px; right: 1.25rem; top: 1.25rem; }
-}
-
-/* Small icons: a whole 2px per art pixel at every size, so edges stay crisp. */
-.docs-card-art { top: 1.4rem; right: 1.5rem; }
-.docs-card-art--term { width: 44px; }
-.docs-card-art--chip { width: 36px; }
-
-@media (min-width: 576px) {
-    /* Keep descriptions clear of the icon in the card corner. */
-    .docs-card > p:not(.docs-card-eyebrow) { padding-right: 4rem; }
-}
-
-@media (max-width: 575.98px) {
-    .docs-card-art { top: 1.3rem; right: 1.25rem; }
-}
 
 /* Impressionist backdrop behind the cards (the same painting as the Machine hero) */
 .docs-stage {
@@ -183,7 +143,7 @@
     overflow: hidden;
     background-color: var(--tf-bg-deep);
     background-image:
-        linear-gradient(color-mix(in srgb, var(--tf-bg) 38%, transparent), color-mix(in srgb, var(--tf-bg) 38%, transparent)),
+        linear-gradient(color-mix(in srgb, var(--tf-bg) 62%, transparent), color-mix(in srgb, var(--tf-bg) 62%, transparent)),
         url("/images/machine-hero.jpg");
     background-size: cover;
     background-position: center 40%;
@@ -213,13 +173,41 @@
 }
 
 .docs-stage .docs-card h2 { font-size: 2.1rem; margin-bottom: 0.9rem; }
-.docs-stage .docs-card > p:not(.docs-card-eyebrow) { font-size: 1.15rem; line-height: 1.5; }
-.docs-stage .docs-card-art { top: 2rem; right: 2.25rem; }
+.docs-stage .docs-card-body > p:not(.docs-card-eyebrow) { font-size: 1.15rem; line-height: 1.5; }
 
 @media (max-width: 575.98px) {
     .docs-stage { padding: 0.6rem; }
     .docs-stage .docs-card { padding: 1.75rem 1.5rem; min-height: 0; }
     .docs-stage .docs-card h2 { font-size: 1.8rem; }
-    .docs-stage .docs-card > p:not(.docs-card-eyebrow) { font-size: 1.05rem; }
-    .docs-stage .docs-card-art { top: 1.5rem; right: 1.4rem; }
+    .docs-stage .docs-card-body > p:not(.docs-card-eyebrow) { font-size: 1.05rem; }
+}
+
+/* The product's painted icon, right of its eyebrow and title. */
+.docs-card-painting {
+    grid-area: icon;
+    width: 6.3rem;
+    height: 6.3rem;
+    margin: -0.75rem -0.5rem 0 0;
+}
+
+/* The eyebrow and title share the top rows with the icon on the right; the
+   description runs below at full width, never around the icon. The block
+   grows, so the actions stay at the bottom of the card. */
+.docs-card-body {
+    flex: 1;
+    display: grid;
+    /* A fixed column for the icon, so the title keeps the same distance from
+       the artwork. */
+    grid-template-columns: 1fr 6.3rem;
+    grid-template-areas: "eyebrow icon" "title icon" "text text";
+    column-gap: 1.5rem;
+    align-content: start;
+}
+.docs-card-body .docs-card-eyebrow { grid-area: eyebrow; align-self: end; }
+.docs-card-body h2 { grid-area: title; align-self: start; }
+.docs-card-body > p:not(.docs-card-eyebrow) { grid-area: text; }
+
+@media (max-width: 575.98px) {
+    .docs-card-painting { width: 5rem; height: 5rem; }
+    .docs-card-body { grid-template-columns: 1fr 5rem; column-gap: 1rem; }
 }

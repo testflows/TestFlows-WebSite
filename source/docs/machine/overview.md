@@ -2,10 +2,11 @@
 
 # What is it?
 
-**TestFlows Machine** is a deterministic execution environment where you run,
-explore, debug and test your software. It is built on our deterministic
-hypervisor, which runs your programs, Docker images and Docker Compose
-environments unchanged.
+**TestFlows Machine** is a deterministic simulation testing environment for
+developers and AI coding agents. You run, explore, debug and test your
+software in it, yourself or with an AI coding agent. It is built on our
+deterministic hypervisor, which runs your programs, Docker images and Docker
+Compose environments unchanged.
 
 Nothing in the machine is left to chance. It controls time, interrupts, random
 numbers and input from devices, and it records all of them while your program
@@ -18,12 +19,14 @@ That gives you three things to work with:
 * **Replay.** Play the log back and the run repeats itself. If it failed once, it fails every time.
 * **Branch.** Stop at any point, branch from it, and try something else. The original run stays as it was.
 
-If you have ever chased a test that fails one run in fifty, you know why this
-is handy. Record the failing run once, then replay it as often as you need.
+A test that fails one run in fifty fails every time it is replayed. Record
+the failing run once, then replay it as often as you need.
 
 You work with Machine through a client called `machine`, or from Python using
-the [SDK](python-sdk.md). To begin, [install the client](getting-started.md#the-client). It is
-one command.
+the [SDK](python-sdk.md). An AI coding agent uses the same client and SDK, and
+the [guide for AI agents](/agents.md) shows it where to start. To begin,
+[install the client](getting-started.md#the-client). It is one command, and
+the Free plan needs no payment details.
 
 Questions, feature requests and bug reports are welcome in the
 [TestFlows Machine repository](https://github.com/testflows/Machine) on GitHub. See

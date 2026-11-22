@@ -37,6 +37,9 @@
     --tf-text-strong: #e6ebe7;
     --tf-text-muted: rgba(var(--tf-fg-rgb), 0.6);
     --tf-ink-on-primary: #101412;
+    /* The free-start call to action: one green button per view */
+    --tf-cta: #3dd6a0;
+    --tf-ink-on-cta: #0b1410;
 
     --tf-card-border: rgba(var(--tf-fg-rgb), 0.1);
     --tf-card-border-hover: rgba(var(--tf-fg-rgb), 0.22);
@@ -89,6 +92,8 @@
     --tf-text-strong: #1a211d;
     --tf-text-muted: rgba(var(--tf-fg-rgb), 0.6);
     --tf-ink-on-primary: #f3f5f2;
+    --tf-cta: #17855f;
+    --tf-ink-on-cta: #ffffff;
 
     --tf-card-border: rgba(var(--tf-fg-rgb), 0.1);
     --tf-card-border-hover: rgba(var(--tf-fg-rgb), 0.18);

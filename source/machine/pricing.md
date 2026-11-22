@@ -1,8 +1,10 @@
 ---
 title: Pricing
-description: Machine plans and prices. Start free, pay for the compute your sessions use, or reserve dedicated machines for your team.
+seo_title: "Pricing: Deterministic Simulation Testing, Free to Start | TestFlows Machine"
+description: TestFlows Machine plans and prices. Start deterministic simulation testing free, pay for the compute your sessions use, or reserve dedicated machines.
 fullwidth: true
 permalink: machine/pricing/index.html
+keywords: deterministic simulation testing, DST, pricing, free plan, AI coding agents
 ---
 
 <section class="pricing-page">
@@ -10,7 +12,7 @@ permalink: machine/pricing/index.html
 
 <header class="pricing-header">
 <h1>Pricing</h1>
-<p>Every plan includes plan credits each month. Sessions use them at an hourly price. When you need more than your plan includes, buy usage credits on demand.</p>
+<p>Start deterministic simulation testing for free, yourself or with AI coding agents. Every plan includes plan credits each month. Sessions use them at an hourly price. When you need more than your plan includes, buy usage credits on demand.</p>
 </header>
 
 <div class="pricing-plans">
@@ -19,7 +21,7 @@ permalink: machine/pricing/index.html
 <h2>Free</h2>
 <p class="pricing-for">Try Machine on your own programs.</p>
 <p class="pricing-price"><span class="pricing-amount">€0</span></p>
-<a class="btn banner-cta banner-cta-ghost pricing-cta" href="/machine/portal/signup/">Get started</a>
+<a class="btn banner-cta cta-free pricing-cta" href="/machine/portal/signup/">Start for free</a>
 <p class="pricing-credits">₡3 credits included each month</p>
 <p class="pricing-hours">About 20 vCPU-hours</p>
 <p class="pricing-lead">Every feature of Machine:</p>

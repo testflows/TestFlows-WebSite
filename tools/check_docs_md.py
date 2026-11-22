@@ -39,8 +39,9 @@ SITE = "https://testflows.com"
 # The standard descriptions. Every file agents start from says them in these words, so an
 # agent reads the same thing wherever it starts. Change one here and in each file.
 MACHINE = (
-    "TestFlows Machine is a deterministic execution machine in the cloud, provided as a "
-    "self-serve service: you can sign up for free, and paid plans are available. "
+    "TestFlows Machine is a deterministic simulation testing environment for developers and AI "
+    "coding agents, provided as a self-serve cloud service: you can sign up for free, and paid "
+    "plans are available. "
     "It runs software built "
     "for Linux x86_64 and controls time, interrupts, random numbers and device input, so every "
     "run can be recorded, replayed exactly, and branched from any point to explore other outcomes."

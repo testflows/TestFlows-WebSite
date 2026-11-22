@@ -17,8 +17,11 @@
   </script>
   
   
-  <title>Docs | TestFlows</title>
-  <meta name="description" content="Documentation for Framework and Machine.">
+  
+  <title>Docs: Deterministic Simulation Testing and Test Programs | TestFlows</title>
+  <meta name="description" content="Documentation for TestFlows Machine, the deterministic simulation testing environment for developers and AI coding agents, and TestFlows Framework.">
+  
+  <meta name="keywords" content="deterministic simulation testing, DST, documentation, Python test framework, fault injection">
   
   
   <link rel="canonical" href="https://testflows.com/docs/">
@@ -36,14 +39,16 @@
   
   
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Docs">
-  <meta property="og:description" content="Documentation for Framework and Machine.">
+  <meta property="og:title" content="Docs: Deterministic Simulation Testing and Test Programs | TestFlows">
+  <meta property="og:description" content="Documentation for TestFlows Machine, the deterministic simulation testing environment for developers and AI coding agents, and TestFlows Framework.">
   <meta property="og:url" content="https://testflows.com/docs/">
   <meta property="og:image" content="https://testflows.com/img/social-share.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Docs">
-  <meta name="twitter:description" content="Documentation for Framework and Machine.">
+  <meta name="twitter:title" content="Docs: Deterministic Simulation Testing and Test Programs | TestFlows">
+  <meta name="twitter:description" content="Documentation for TestFlows Machine, the deterministic simulation testing environment for developers and AI coding agents, and TestFlows Framework.">
   <meta name="twitter:image" content="https://testflows.com/img/social-share.png">
+  
+  
   
   
   <link href="https://testflows.com/img/favicon.ico" rel="icon">
@@ -56,40 +61,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795314282848" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795314282848" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795308630528" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795314282848" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -135,20 +140,6 @@
                     
                     
                         <li class="nav-item has-submenu">
-                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
-                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
-                            
-                            <ul class="site-submenu">
-                                
-                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
-                                
-                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
-                                
-                            </ul>
-                            
-                        </li>
-                    
-                        <li class="nav-item has-submenu">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
                             <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
                             
@@ -166,15 +157,29 @@
                             
                         </li>
                     
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
                         <li class="nav-item active has-submenu">
                             <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
                             <a class="nav-link" href="/docs/" aria-current="page" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
                             
                             <ul class="site-submenu">
                                 
-                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
-                                
                                 <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
                                 
                             </ul>
                             
@@ -220,15 +225,22 @@
             </a>
             
             <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
             <script>
             (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
                 var a = document.getElementById("navbar-signin");
-                if (!a || document.cookie.indexOf("tf_machine_email=") < 0) return;
-                a.textContent = "Account";
-                a.setAttribute("href", "/machine/portal/account/");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
             })();
             </script>
-            
         </div>
     </div>
 </nav>
@@ -251,19 +263,23 @@
 <div class="docs-stage">
 <div class="docs-grid">
 <article class="docs-card">
-<svg class="docs-card-art docs-card-art--term" viewBox="0 0 22 17" width="110" height="85" aria-hidden="true" focusable="false" shape-rendering="crispEdges"><rect class="px-ink" x="0" y="0" width="22" height="1"/><rect class="px-ink" x="0" y="1" width="1" height="1"/><rect class="px-dim" x="2" y="1" width="1" height="1"/><rect class="px-dim" x="4" y="1" width="1" height="1"/><rect class="px-dim" x="6" y="1" width="1" height="1"/><rect class="px-ink" x="21" y="1" width="1" height="1"/><rect class="px-ink" x="0" y="2" width="22" height="1"/><rect class="px-ink" x="0" y="3" width="1" height="1"/><rect class="px-ink" x="21" y="3" width="1" height="1"/><rect class="px-ink" x="0" y="4" width="1" height="1"/><rect class="px-acc" x="4" y="4" width="1" height="1"/><rect class="px-ink" x="21" y="4" width="1" height="1"/><rect class="px-ink" x="0" y="5" width="1" height="1"/><rect class="px-acc" x="2" y="5" width="1" height="1"/><rect class="px-acc" x="4" y="5" width="1" height="1"/><rect class="px-dim" x="7" y="5" width="9" height="1"/><rect class="px-ink" x="21" y="5" width="1" height="1"/><rect class="px-ink" x="0" y="6" width="1" height="1"/><rect class="px-acc" x="3" y="6" width="1" height="1"/><rect class="px-ink" x="21" y="6" width="1" height="1"/><rect class="px-ink" x="0" y="7" width="1" height="1"/><rect class="px-ink" x="21" y="7" width="1" height="1"/><rect class="px-ink" x="0" y="8" width="1" height="1"/><rect class="px-acc" x="4" y="8" width="1" height="1"/><rect class="px-ink" x="21" y="8" width="1" height="1"/><rect class="px-ink" x="0" y="9" width="1" height="1"/><rect class="px-acc" x="2" y="9" width="1" height="1"/><rect class="px-acc" x="4" y="9" width="1" height="1"/><rect class="px-dim" x="7" y="9" width="6" height="1"/><rect class="px-ink" x="21" y="9" width="1" height="1"/><rect class="px-ink" x="0" y="10" width="1" height="1"/><rect class="px-acc" x="3" y="10" width="1" height="1"/><rect class="px-ink" x="21" y="10" width="1" height="1"/><rect class="px-ink" x="0" y="11" width="1" height="1"/><rect class="px-ink" x="21" y="11" width="1" height="1"/><rect class="px-ink" x="0" y="12" width="1" height="1"/><rect class="px-acc" x="2" y="12" width="1" height="1"/><rect class="px-cur" x="7" y="12" width="2" height="1"/><rect class="px-ink" x="21" y="12" width="1" height="1"/><rect class="px-ink" x="0" y="13" width="1" height="1"/><rect class="px-acc" x="3" y="13" width="1" height="1"/><rect class="px-cur" x="7" y="13" width="2" height="1"/><rect class="px-ink" x="21" y="13" width="1" height="1"/><rect class="px-ink" x="0" y="14" width="1" height="1"/><rect class="px-acc" x="2" y="14" width="1" height="1"/><rect class="px-cur" x="7" y="14" width="2" height="1"/><rect class="px-ink" x="21" y="14" width="1" height="1"/><rect class="px-ink" x="0" y="15" width="1" height="1"/><rect class="px-ink" x="21" y="15" width="1" height="1"/><rect class="px-ink" x="0" y="16" width="22" height="1"/></svg>
+<div class="docs-card-body">
+<img class="painted-icon docs-card-painting" src="/images/docs/framework.webp" alt="" width="320" height="320" loading="lazy">
 <p class="docs-card-eyebrow">Open-source</p>
 <h2><a href="/docs/framework/">Framework</a></h2>
 <p>Learn how to write and run test programs that check your software.</p>
+</div>
 <div class="docs-card-actions">
 <a class="section-cta" href="/docs/framework/">Read handbook</a>
 </div>
 </article>
 <article class="docs-card">
-<svg class="docs-card-art docs-card-art--chip" viewBox="0 0 18 18" width="90" height="90" aria-hidden="true" focusable="false" shape-rendering="crispEdges"><rect class="px-dim" x="5" y="0" width="1" height="1"/><rect class="px-dim" x="8" y="0" width="1" height="1"/><rect class="px-dim" x="11" y="0" width="1" height="1"/><rect class="px-dim" x="5" y="1" width="1" height="1"/><rect class="px-dim" x="8" y="1" width="1" height="1"/><rect class="px-dim" x="11" y="1" width="1" height="1"/><rect class="px-dim" x="5" y="2" width="1" height="1"/><rect class="px-dim" x="8" y="2" width="1" height="1"/><rect class="px-dim" x="11" y="2" width="1" height="1"/><rect class="px-ink" x="3" y="3" width="12" height="1"/><rect class="px-ink" x="3" y="4" width="1" height="1"/><rect class="px-ink" x="14" y="4" width="1" height="1"/><rect class="px-dim" x="0" y="5" width="3" height="1"/><rect class="px-ink" x="3" y="5" width="1" height="1"/><rect class="px-ink" x="14" y="5" width="1" height="1"/><rect class="px-dim" x="15" y="5" width="3" height="1"/><rect class="px-ink" x="3" y="6" width="1" height="1"/><rect class="px-dim" x="6" y="6" width="6" height="1"/><rect class="px-ink" x="14" y="6" width="1" height="1"/><rect class="px-ink" x="3" y="7" width="1" height="1"/><rect class="px-dim" x="6" y="7" width="1" height="1"/><rect class="px-dim" x="11" y="7" width="1" height="1"/><rect class="px-ink" x="14" y="7" width="1" height="1"/><rect class="px-dim" x="0" y="8" width="3" height="1"/><rect class="px-ink" x="3" y="8" width="1" height="1"/><rect class="px-dim" x="6" y="8" width="1" height="1"/><rect class="px-led" x="8" y="8" width="2" height="1"/><rect class="px-dim" x="11" y="8" width="1" height="1"/><rect class="px-ink" x="14" y="8" width="1" height="1"/><rect class="px-dim" x="15" y="8" width="3" height="1"/><rect class="px-ink" x="3" y="9" width="1" height="1"/><rect class="px-dim" x="6" y="9" width="1" height="1"/><rect class="px-led" x="8" y="9" width="2" height="1"/><rect class="px-dim" x="11" y="9" width="1" height="1"/><rect class="px-ink" x="14" y="9" width="1" height="1"/><rect class="px-ink" x="3" y="10" width="1" height="1"/><rect class="px-dim" x="6" y="10" width="1" height="1"/><rect class="px-dim" x="11" y="10" width="1" height="1"/><rect class="px-ink" x="14" y="10" width="1" height="1"/><rect class="px-dim" x="0" y="11" width="3" height="1"/><rect class="px-ink" x="3" y="11" width="1" height="1"/><rect class="px-dim" x="6" y="11" width="6" height="1"/><rect class="px-ink" x="14" y="11" width="1" height="1"/><rect class="px-dim" x="15" y="11" width="3" height="1"/><rect class="px-ink" x="3" y="12" width="1" height="1"/><rect class="px-ink" x="14" y="12" width="1" height="1"/><rect class="px-ink" x="3" y="13" width="1" height="1"/><rect class="px-ink" x="14" y="13" width="1" height="1"/><rect class="px-ink" x="3" y="14" width="12" height="1"/><rect class="px-dim" x="5" y="15" width="1" height="1"/><rect class="px-dim" x="8" y="15" width="1" height="1"/><rect class="px-dim" x="11" y="15" width="1" height="1"/><rect class="px-dim" x="5" y="16" width="1" height="1"/><rect class="px-dim" x="8" y="16" width="1" height="1"/><rect class="px-dim" x="11" y="16" width="1" height="1"/><rect class="px-dim" x="5" y="17" width="1" height="1"/><rect class="px-dim" x="8" y="17" width="1" height="1"/><rect class="px-dim" x="11" y="17" width="1" height="1"/></svg>
+<div class="docs-card-body">
+<img class="painted-icon docs-card-painting" src="/images/docs/machine.webp" alt="" width="320" height="320" loading="lazy">
 <p class="docs-card-eyebrow">Deterministic</p>
 <h2><a href="/docs/machine/">Machine</a></h2>
-<p>Learn how to run your programs deterministically, test programs included.</p>
+<p>Learn deterministic simulation testing: run, replay, branch and inject faults into your programs, manually or with AI coding agents.</p>
+</div>
 <div class="docs-card-actions">
 <a class="section-cta" href="/docs/machine/">Read docs</a>
 </div>
@@ -343,10 +359,10 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795308630529"></script>
-<script src="/js/machine-hero-type.js?v=1795308630529"></script>
-<script src="/js/download-platforms.js?v=1795308630529"></script>
-<script src="/js/anchor-case.js?v=1795308630529"></script>
+<script src="/js/index-code-type.js?v=1795314282848"></script>
+<script src="/js/machine-hero-type.js?v=1795314282848"></script>
+<script src="/js/download-platforms.js?v=1795314282848"></script>
+<script src="/js/anchor-case.js?v=1795314282848"></script>
 
 <script>
 var isInViewport = function (elem) {

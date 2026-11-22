@@ -4,9 +4,19 @@
 
 .home-banner .banner-text { padding-bottom: 0.5rem; }
 
-.home-banner .banner-text h1 { font-size: clamp(2.1rem, 5vw, 3.6rem); }
+.home-banner .banner-text h1 {
+    font-size: clamp(1.9rem, 4.2vw, 3.1rem);
+    max-width: 22em;
+}
 
-.home-banner .banner-text > p { max-width: 44rem; }
+.home-banner .banner-text > p {
+    max-width: 56rem;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    text-wrap: wrap;
+}
+
+/* The words of a headline the launch is about, in the free-start green. */
+.banner-accent { color: var(--tf-cta); }
 
 .home-products {
     position: relative;
@@ -30,6 +40,17 @@
 }
 
 .home-product:hover { border-color: var(--tf-card-border-hover); }
+
+/* The main product, Machine: outlined and lit in the free-start green. */
+.home-product-main,
+.home-product-main:hover {
+    border: 2px solid var(--tf-cta);
+    box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--tf-cta) 25%, transparent),
+        0 0 36px color-mix(in srgb, var(--tf-cta) 22%, transparent);
+}
+
+.home-product-main .home-product-eyebrow { color: var(--tf-cta); }
 
 /* The card goes to its product. The buttons sit above the stretched title link. */
 .home-product-actions a { position: relative; z-index: 1; }

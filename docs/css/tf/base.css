@@ -195,6 +195,21 @@ footer,
     box-shadow: none;
 }
 
+/* The free-start action, green: "Create free account", "Start for free". */
+.section-cta.cta-free,
+.banner-cta.cta-free {
+    background-color: var(--tf-cta);
+    border-color: var(--tf-cta);
+    color: var(--tf-ink-on-cta) !important;
+}
+
+.section-cta.cta-free:hover,
+.section-cta.cta-free:focus,
+.banner-cta.cta-free:hover,
+.banner-cta.cta-free:focus {
+    color: var(--tf-ink-on-cta) !important;
+}
+
 .section-cta-ghost {
     background: transparent;
     color: var(--tf-text-strong) !important;
@@ -214,4 +229,14 @@ footer,
     margin-left: 0;
     font-size: 1.15rem;
     padding: 0.95rem 1.75rem;
+}
+
+/* A painted icon: an object painted in the style of the site's backdrop, cut
+   out on a transparent square, so it sits on a light or a dark card alike.
+   Shown whole: never cropped or faded. */
+.painted-icon {
+    display: block;
+    width: 5.5rem;
+    height: 5.5rem;
+    object-fit: contain;
 }

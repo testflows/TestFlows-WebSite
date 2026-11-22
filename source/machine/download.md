@@ -1,8 +1,10 @@
 ---
 title: Download
-description: Download the Machine client for Linux and macOS.
+seo_title: "Download the Machine Client: Deterministic Simulation Testing | TestFlows"
+description: Download the TestFlows Machine client for Linux and macOS and start deterministic simulation testing for free, yourself or with AI coding agents.
 fullwidth: true
 permalink: machine/download/index.html
+keywords: deterministic simulation testing, DST, machine client, download, Linux, macOS, AI coding agents
 ---
 
 <section class="download-page">
@@ -10,7 +12,7 @@ permalink: machine/download/index.html
 
 <header class="download-header">
 <h1>Download client</h1>
-<p>The Machine client is a self-contained program called <code>machine</code>.</p>
+<p>The Machine client is a self-contained program called <code>machine</code>. You and your AI coding agents use it to work in TestFlows Machine, the deterministic simulation testing environment.</p>
 <p class="download-required">You need an account to download the client, and must accept the <a href="/machine/legal/terms-of-service/">Terms of Service</a> and the <a href="/machine/legal/client-eula/">Client EULA</a> that licenses it. The installer signs you in, or signs you up, with a code sent to your email, before it downloads anything.</p>
 </header>
 <p>Pick your system.</p>

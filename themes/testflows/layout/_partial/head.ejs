@@ -37,8 +37,11 @@
   else if (tPath.indexOf('legal/') === 0 && tPath !== 'legal/index.html') tArea = 'Legal';
   else if (page.post) tArea = 'Blog';
   %>
-  <title><% if (tPath === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | <%- tArea || 'TestFlows' %><% } %></title>
+  <%# seo_title: a page's title in search results and shares, when it says more than its heading. %>
+  <title><% if (page.seo_title) { %><%- page.seo_title %><% } else if (tPath === 'index.html') { %>TestFlows<% } else { %><%- page.title || config.title %> | <%- tArea || 'TestFlows' %><% } %></title>
   <meta name="description" content="<%- page.description || config.description %>">
+  <% var tKeywords = page.keywords || config.keywords; %>
+  <% if (tKeywords) { %><meta name="keywords" content="<%= tKeywords %>"><% } %>
   <%# The address a page answers to, for search engines. Not for the 404 page or pages that are nothing until you sign in. %>
   <% var tCanon = full_url_for(tPath.replace(/index\.html$/, '')); %>
   <% if (tPath !== '404.html' && !page.noindex) { %><link rel="canonical" href="<%- tCanon %>"><% } %>
@@ -52,7 +55,7 @@
   <%- partial('_partial/post_meta') %>
   <% } else { %>
   <%# How a page looks when it is shared. A post says it in post_meta, with its own image. %>
-  <% var tShare = tPath === 'index.html' ? 'TestFlows' : (page.title || config.title); var tShareDesc = page.description || config.description; var tShareImg = full_url_for(page.image || config.social_share); %>
+  <% var tShare = page.seo_title || (tPath === 'index.html' ? 'TestFlows' : (page.title || config.title)); var tShareDesc = page.description || config.description; var tShareImg = full_url_for(page.image || config.social_share); %>
   <meta property="og:type" content="website">
   <meta property="og:title" content="<%= tShare %>">
   <meta property="og:description" content="<%= tShareDesc %>">
@@ -62,6 +65,27 @@
   <meta name="twitter:title" content="<%= tShare %>">
   <meta name="twitter:description" content="<%= tShareDesc %>">
   <meta name="twitter:image" content="<%- tShareImg %>">
+  <% } %>
+  <%# Structured data: who TestFlows is, and that Machine is a free-to-start developer product. %>
+  <% if (tPath === 'index.html') { %>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@graph": [
+    {"@type": "Organization", "name": "TestFlows", "url": "https://testflows.com/", "logo": "<%- full_url_for(config.image) %>", "sameAs": ["https://github.com/testflows"]},
+    {"@type": "WebSite", "name": "TestFlows", "url": "https://testflows.com/", "description": "<%= page.description || config.description %>"}
+  ]}
+  </script>
+  <% } else if (tPath === 'machine/index.html') { %>
+  <script type="application/ld+json">
+  {"@context": "https://schema.org", "@type": "SoftwareApplication",
+   "name": "TestFlows Machine",
+   "description": "<%= page.description %>",
+   "url": "https://testflows.com/machine/",
+   "applicationCategory": "DeveloperApplication",
+   "keywords": "<%= page.keywords %>",
+   "operatingSystem": "Linux, macOS",
+   "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR", "description": "Free plan"},
+   "publisher": {"@type": "Organization", "name": "TestFlows", "url": "https://testflows.com/"}}
+  </script>
   <% } %>
   <% if (theme.favicon){ %>
   <link href="<%- full_url_for(theme.favicon) %>" rel="icon">

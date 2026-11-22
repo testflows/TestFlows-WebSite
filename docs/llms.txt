@@ -1,19 +1,19 @@
 # TestFlows
 
-> TestFlows makes tools for testing software. TestFlows Framework is an open-source Python library for writing test programs. You write tests and define the test flow explicitly as Python code, with everything treated as a test, for functional, integration, acceptance and unit testing. It produces test reports and ties tests to requirements for coverage. TestFlows Machine is a deterministic execution machine in the cloud, provided as a self-serve service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+> TestFlows makes tools for testing software. TestFlows Machine is a deterministic simulation testing environment for developers and AI coding agents, provided as a self-serve cloud service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes. TestFlows Framework is an open-source Python library for writing test programs. You write tests and define the test flow explicitly as Python code, with everything treated as a test, for functional, integration, acceptance and unit testing. It produces test reports and ties tests to requirements for coverage.
 
 ## Instructions
 
-- [Install](https://testflows.com/install.md): Install Framework and the Machine client step by step, and what your person has to do for the Machine account.
+- [Install](https://testflows.com/install.md): Install the Machine client and Framework step by step, and what your person has to do for the Machine account.
 - [Guide for AI agents](https://testflows.com/agents.md): How the website is laid out and where to look.
 
 ## Pages
 
 - [Home](https://testflows.com/index.md): The two products and where to start.
+- [Machine](https://testflows.com/machine.md): What Machine is: deterministic simulation testing with fault injection, forced data races, custom fuzzers, retroactive logging, time travel and debugging.
 - [Framework](https://testflows.com/framework.md): What the Framework is, what sets it apart, and a first test.
-- [Machine](https://testflows.com/machine.md): What Machine is: record, replay and branch your runs.
 - [Download the client](https://testflows.com/machine/download.md): Install the `machine` client, supported systems and how to check the download.
-- [Documentation](https://testflows.com/docs.md): The Framework and Machine docs, and where each is in Markdown.
+- [Documentation](https://testflows.com/docs.md): The Machine and Framework docs, and where each is in Markdown.
 - [Blog](https://testflows.com/blog.md): An index of the blog, one Markdown page per article.
 - [Contact](https://testflows.com/contact.md): How to reach us.
 - [Machine status](https://status.testflows.com/index.md): Whether Machine works now, measured from outside the cloud, and its incidents. Its own index is https://status.testflows.com/llms.txt.
