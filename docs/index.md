@@ -2,7 +2,7 @@
 
 # TestFlows
 
-> Self-Service Deterministic Simulation Testing Environment. For developers and AI coding agents. Take control of your code execution. Simulate, fuzz and explore software behavior.
+> Self-Serve Deterministic Simulation Testing Environment. For developers and AI coding agents. Take control of your code execution. Simulate, fuzz and explore software behavior.
 
 TestFlows makes tools for testing software.
 

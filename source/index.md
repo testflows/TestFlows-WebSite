@@ -1,8 +1,8 @@
 ---
 layout: index
 fullwidth: true
-seo_title: "Self-Service Deterministic Simulation Testing | TestFlows"
-description: Self-service deterministic simulation testing environment for developers and AI coding agents. Simulate, fuzz and explore software. Start free in 5 minutes.
+seo_title: "Deterministic Simulation Testing for Everyone | TestFlows"
+description: Self-serve deterministic simulation testing environment for developers and AI coding agents. Simulate, fuzz and explore software. Start free in 5 minutes.
 keywords: deterministic simulation testing, DST, deterministic testing, AI coding agents, fault injection, fuzzing, data races, record and replay, time travel debugging, test framework
 ---
 
@@ -10,7 +10,7 @@ keywords: deterministic simulation testing, DST, deterministic testing, AI codin
 <div class="banner home-banner">
 <div class="container banner-inner">
 <div class="banner-text">
-<h1><span class="banner-accent">Self-Service</span> Deterministic Simulation Testing Environment.</h1>
+<h1><span class="banner-accent">Self-Serve</span> Deterministic Simulation Testing Environment.</h1>
 <p>For developers and <a href="/agents.md" title="Guide for AI agents">AI coding agents</a>.<br>Take control of your code execution. Simulate, fuzz and explore software behavior.</p>
 </div>
 </div>
@@ -40,6 +40,7 @@ keywords: deterministic simulation testing, DST, deterministic testing, AI codin
 <div class="home-product-actions">
 <a class="section-cta cta-free" href="/machine/portal/signup/">Start for free</a>
 <a class="section-cta section-cta-ghost" href="/machine/">Explore Machine</a>
+<a class="section-cta section-cta-ghost" href="/machine/pricing/">Pricing</a>
 </div>
 </article>
 </div>
