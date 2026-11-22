@@ -50,8 +50,8 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
         <div class="machine-why-list">
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="2.5"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9.5" cy="12.5" r="1.1"/><circle cx="14.5" cy="12.5" r="1.1"/><path d="M9.5 16h5"/><path d="M5 12.5H3.5M20.5 12.5H19"/></svg></span>
-                <h3>AI agents test your fixes</h3>
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m7.75 15.5 2.75-7 2.75 7"/><path d="M8.75 13h3.5"/><path d="M16.25 8.5v7"/></svg></span>
+                <h3>AI agents test your code</h3>
                 <p>Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you.</p>
                 </div>
                 <a class="machine-why-more" href="https://github.com/testflows/Machine/tree/main/skills/testflows-machine">The skill for coding agents</a>

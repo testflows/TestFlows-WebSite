@@ -12,7 +12,7 @@ Simulate, fuzz and explore your software yourself or with AI coding agents.
 
 Let your AI coding agent test your code and its bug fixes, or do it yourself. Every run is deterministic, so every failure you find replays exactly.
 
-- **AI agents test your fixes.** Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you. https://testflows.com/docs/machine/python-sdk.md
+- **AI agents test your code.** Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you. https://testflows.com/docs/machine/python-sdk.md
 - **Precise fault injection.** Fail a system call, a disk request, a packet or a container at the exact call you choose, or at random from a seed. https://testflows.com/docs/machine/fault-injection.md
 - **Forced data races.** Hold, yield and pin threads to force the interleaving that triggers a race. Then watch the same race on every replay. https://testflows.com/docs/machine/steering-programs.md
 - **Custom fuzzers.** Draw schedules, faults and timing from a seed in Python, or schedules from a plan file with no code, and stress the code paths you choose. https://testflows.com/docs/machine/steering-programs.md
