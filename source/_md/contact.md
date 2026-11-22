@@ -4,6 +4,8 @@
 
 > Questions about Framework or Machine, early access, support, or partnerships.
 
+- Machine bugs: open an issue in the public repository, https://github.com/testflows/Machine/issues
+- Machine questions and ideas: https://github.com/testflows/Machine/discussions
 - Email: contact@testflows.com
 - GitHub: https://github.com/testflows
 - The contact form: https://testflows.com/contact.html. It asks for your email, a topic, your company and how we can help. The topics are General question, Framework support, Early access, Product question, Partnership, Licensing or pricing, and Something else.

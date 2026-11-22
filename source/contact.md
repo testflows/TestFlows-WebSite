@@ -21,6 +21,14 @@ fullwidth: true
                 </a>
             </div>
         </header>
+        <aside class="contact-community">
+            <p class="contact-community-title"><span class="fab fa-github" aria-hidden="true"></span> Machine on GitHub</p>
+            <p>Report a bug or ask the community in the public <a href="https://github.com/testflows/Machine">testflows/Machine</a> repository.</p>
+            <div class="contact-community-actions">
+                <a class="section-cta cta-free" href="https://github.com/testflows/Machine/issues">Report an issue</a>
+                <a class="section-cta section-cta-ghost" href="https://github.com/testflows/Machine/discussions">Join discussions</a>
+            </div>
+        </aside>
         <div class="contact-form-col">
             <form class="needs-validation contact-us" novalidate>
                 <div class="form-fields">

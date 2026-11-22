@@ -52,6 +52,62 @@
     text-align: left;
 }
 
+/* Machine's public repository: bugs go to its issues, questions to its
+   discussions. Outlined in the free-start green: a right column beside the
+   heading and the form on wide screens, under the heading on narrow ones. */
+.contact-community {
+    max-width: 40rem;
+    margin: 0 0 2rem;
+    padding: 1.1rem 1.25rem 1.25rem;
+    border: 1px solid var(--tf-cta);
+    border-radius: var(--tf-radius);
+    background: color-mix(in srgb, var(--tf-cta) 7%, var(--tf-card-bg));
+    text-align: left;
+}
+
+.contact-community p {
+    margin: 0 0 0.85rem;
+    color: var(--tf-text-muted);
+}
+
+.contact-community .contact-community-title {
+    margin-bottom: 0.35rem;
+    color: var(--tf-text-strong);
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.contact-community a:not(.section-cta) { color: var(--tf-accent); font-weight: 600; }
+
+.contact-community-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.contact-community-actions .section-cta { margin: 0; }
+
+@media (min-width: 992px) {
+    .contact-page-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 40rem) minmax(18rem, 24rem);
+        grid-template-areas: "header aside" "form aside";
+        justify-content: space-between;
+        column-gap: 4rem;
+    }
+
+    .contact-page-header { grid-area: header; }
+    .contact-form-col { grid-area: form; }
+
+    .contact-community {
+        grid-area: aside;
+        align-self: start;
+        /* Level with the heading's first line. */
+        margin: 0.6rem 0 0;
+        padding: 1.5rem;
+    }
+}
+
 .contact-visual-links {
     display: flex;
     flex-direction: column;
