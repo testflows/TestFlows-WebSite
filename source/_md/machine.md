@@ -63,6 +63,21 @@ No command waits for your person: each one that sends an email returns at once, 
 
 The client signs in with `TESTFLOWS_MACHINE_API_KEY` when it is set, then the login, then the saved key. If a refusal says the Agreement changed, your person accepts it at https://testflows.com/machine/portal/account/.
 
+## The skill
+
+The Machine skill holds the set-up steps and the rules above in one file, https://testflows.com/machine/skill.md, so your agent has them in every session. Ask your person before you install it: it adds instructions to their coding agent, which it reads in every session that mentions TestFlows Machine. Then save it where their agent reads skills:
+
+```bash
+# Claude Code and Cursor
+mkdir -p ~/.claude/skills/testflows-machine
+curl -fsS https://testflows.com/machine/skill.md -o ~/.claude/skills/testflows-machine/SKILL.md
+# Codex
+mkdir -p ~/.agents/skills/testflows-machine
+curl -fsS https://testflows.com/machine/skill.md -o ~/.agents/skills/testflows-machine/SKILL.md
+```
+
+For one project only, use `.claude/skills/` or `.agents/skills/` in the project instead. The agent loads the skill in its next session. An installed copy does not update itself: run the same `curl` again for the latest.
+
 ## How agents use Machine
 
 An agent works with Machine in one of two ways:

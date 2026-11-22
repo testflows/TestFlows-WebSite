@@ -9,7 +9,7 @@ Every page has a Markdown version at the same address with `.md` in place of the
 - To install the Machine client, Framework or both, follow this guide: https://testflows.com/install.md
 - Machine, deterministic simulation testing: how to install the client, sign in, run a machine, and control cost: https://testflows.com/machine.md. You drive the `machine` client with `-o json`, or write Python programs with the SDK, `testflows.machine`.
 - Framework, how to install it, write and run tests, and avoid the common mistakes: https://testflows.com/framework.md
-- The Machine skill for coding agents, the set-up steps and the rules in one file: https://testflows.com/machine/skill.md. Save it as `testflows-machine/SKILL.md` in `~/.claude/skills/` for Claude Code and Cursor, or in `~/.agents/skills/` for Codex.
+- The Machine skill for coding agents, the set-up steps and the rules in one file: https://testflows.com/machine/skill.md. How to install it is below, under "The Machine skill".
 - All the pages, listed: https://testflows.com/llms.txt
 
 ## Other pages
@@ -22,6 +22,21 @@ Every page has a Markdown version at the same address with `.md` in place of the
 - Blog: https://testflows.com/blog.md
 - Contact: https://testflows.com/contact.md
 - Legal: https://testflows.com/legal.md
+
+## The Machine skill
+
+Ask your person before you install it: it adds instructions to their coding agent, which it reads in every session that mentions TestFlows Machine. Then save it where their agent reads skills:
+
+```bash
+# Claude Code and Cursor
+mkdir -p ~/.claude/skills/testflows-machine
+curl -fsS https://testflows.com/machine/skill.md -o ~/.claude/skills/testflows-machine/SKILL.md
+# Codex
+mkdir -p ~/.agents/skills/testflows-machine
+curl -fsS https://testflows.com/machine/skill.md -o ~/.agents/skills/testflows-machine/SKILL.md
+```
+
+For one project only, use `.claude/skills/` or `.agents/skills/` in the project instead. The agent loads the skill in its next session. An installed copy does not update itself: run the same `curl` again for the latest.
 
 ## For people only
 

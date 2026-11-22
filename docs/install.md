@@ -19,7 +19,7 @@ Install what your person asks for: the open-source Framework, which is a Python 
 - [ ] Step 1: ask your person which to install.
 - [ ] Step 2: Framework: check Python, install it, run the Hello World test.
 - [ ] Step 3: Machine client: check the system, ask for the account, install with the emailed code.
-- [ ] Step 4: Machine account: check it.
+- [ ] Step 4: Machine account: check it, and offer the Machine skill.
 - [ ] Step 5: tell your person what is installed and what is left.
 
 ## Step 1: choose
@@ -114,6 +114,19 @@ machine account whoami
 ```
 
 It names your person's account and the API key saved for the client. Do not buy credits or create or delete other API keys unless your person asks you to. Never print an API key or commit one.
+
+Optional: offer your person the Machine skill, which keeps these steps and the rules in their coding agent. Ask your person before you install it: it adds instructions to their coding agent, which it reads in every session that mentions TestFlows Machine. Then save it where their agent reads skills:
+
+```bash
+# Claude Code and Cursor
+mkdir -p ~/.claude/skills/testflows-machine
+curl -fsS https://testflows.com/machine/skill.md -o ~/.claude/skills/testflows-machine/SKILL.md
+# Codex
+mkdir -p ~/.agents/skills/testflows-machine
+curl -fsS https://testflows.com/machine/skill.md -o ~/.agents/skills/testflows-machine/SKILL.md
+```
+
+For one project only, use `.claude/skills/` or `.agents/skills/` in the project instead. The agent loads the skill in its next session. An installed copy does not update itself: run the same `curl` again for the latest.
 
 ## Step 5: report
 
