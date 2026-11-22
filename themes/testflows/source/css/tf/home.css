@@ -41,13 +41,11 @@
 
 .home-product:hover { border-color: var(--tf-card-border-hover); }
 
-/* The main product, Machine: outlined and lit in the free-start green. */
+/* The main product, Machine: outlined in the free-start green, a clean line with no glow. */
 .home-product-main,
 .home-product-main:hover {
-    border: 2px solid var(--tf-cta);
-    box-shadow:
-        0 0 0 1px color-mix(in srgb, var(--tf-cta) 25%, transparent),
-        0 0 36px color-mix(in srgb, var(--tf-cta) 22%, transparent);
+    border: 1px solid var(--tf-cta);
+    box-shadow: none;
 }
 
 .home-product-main .home-product-eyebrow { color: var(--tf-cta); }
@@ -276,3 +274,271 @@
     background: var(--tf-card-bg);
     border-top: 1px solid var(--tf-card-border);
 }
+
+/* ==========================================================================
+   Home sections between the products and the blog: the problem, the steps
+   from a failure to a verified fix, a first run, and the open repositories.
+   ========================================================================== */
+.home-section {
+    color: var(--tf-text);
+    font-family: var(--tf-font);
+    padding: 3.5rem 0;
+    border-top: 1px solid var(--tf-card-border);
+}
+.home-section-title {
+    color: var(--tf-text-strong);
+    font-size: clamp(1.7rem, 3.2vw, 2.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-wrap: balance;
+    margin: 0 auto 1rem;
+    max-width: 24ch;
+}
+.home-section-title-left {
+    text-align: left;
+    margin-left: 0;
+    max-width: none;
+}
+.home-section-lead {
+    color: var(--tf-text-muted);
+    font-size: 1.08rem;
+    line-height: 1.6;
+    text-align: center;
+    text-wrap: pretty;
+    margin: 0 auto 2rem;
+    max-width: 68ch;
+}
+.home-section-lead-left {
+    text-align: left;
+    margin-left: 0;
+}
+
+/* Text beside a figure; the agents section puts the figure first. */
+.home-split {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: 3rem;
+    align-items: center;
+}
+.home-split-reverse {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+}
+@media (max-width: 991.98px) {
+    .home-split,
+    .home-split-reverse { grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+    .home-split-reverse .home-figure { order: 2; }
+}
+.home-split-text .home-step-more { display: inline-block; margin-top: 0.25rem; }
+
+/* A figure in a card: the race, the state space, the stack. */
+.home-figure {
+    margin: 0;
+    padding: 1.5rem 1.25rem 1.1rem;
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+}
+.home-figure-wide {
+    max-width: 52rem;
+    margin: 0 auto;
+}
+.home-figure-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    font-family: inherit;
+}
+.home-figure figcaption {
+    margin-top: 0.75rem;
+    color: var(--tf-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.45;
+    text-align: center;
+    text-wrap: pretty;
+}
+
+/* From a failure to a verified fix: five numbered cards. */
+.home-step-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+@media (max-width: 1199.98px) {
+    .home-step-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 767.98px) {
+    .home-step-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.home-step {
+    display: flex;
+    flex-direction: column;
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    padding: 1.25rem 1.25rem 1.1rem;
+    transition: border-color 0.15s ease;
+}
+.home-step:hover { border-color: var(--tf-card-border-hover); }
+.home-step-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.6rem;
+}
+.home-step-icon,
+.home-open-icon {
+    display: block;
+    color: var(--tf-cta);
+}
+.home-step-icon { width: 2rem; height: 2rem; }
+.home-open-icon { width: 2.6rem; height: 2.6rem; margin-bottom: 0.9rem; }
+.home-step-icon svg,
+.home-open-icon svg { display: block; width: 100%; height: 100%; }
+.home-step-num {
+    color: var(--tf-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85rem;
+    margin: 0;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--tf-cta);
+    width: 2.4rem;
+}
+.home-step h3 {
+    color: var(--tf-text-strong);
+    font-size: 1.08rem;
+    font-weight: 700;
+    margin: 0.4rem 0 0.6rem;
+}
+.home-step p:not(.home-step-num) {
+    color: var(--tf-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-wrap: pretty;
+    flex: 1;
+    margin: 0 0 1rem;
+}
+.home-step-more,
+.home-step-more:hover {
+    color: var(--tf-accent);
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+.home-step-more:hover { text-decoration: underline; }
+
+/* A first run: text beside a code panel with tabs. */
+.home-start-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 2.5rem;
+    align-items: center;
+}
+@media (max-width: 991.98px) {
+    .home-start-inner { grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
+}
+.home-start-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+.home-start-actions > a { margin: 0; }
+.home-tabs {
+    min-width: 0;
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    overflow: hidden;
+}
+.home-tabs-bar {
+    display: flex;
+    gap: 0.25rem;
+    padding: 0.5rem 0.6rem 0;
+    border-bottom: 1px solid var(--tf-card-border);
+}
+.home-tab {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--tf-text-muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.75rem 0.55rem;
+    cursor: pointer;
+}
+.home-tab[aria-selected="true"] {
+    color: var(--tf-text-strong);
+    border-bottom-color: var(--tf-cta);
+}
+.home-tab:focus-visible { outline: 2px solid var(--tf-cta); outline-offset: -2px; }
+/* Every tab's panel has the same height, so switching tabs does not move the page. */
+.home-tab-panel {
+    min-height: 15rem;
+    padding: 1rem 1.15rem 1.1rem;
+    overflow-x: auto;
+}
+.home-tab-panel figure.highlight {
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+.home-tab-panel figure.highlight pre,
+.home-tab-panel figure.highlight .code pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-size: 0.88rem;
+    line-height: 1.65;
+    white-space: pre;
+}
+
+/* Built in the open: two repository cards. */
+.home-open-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+}
+@media (max-width: 767.98px) {
+    .home-open-grid { grid-template-columns: minmax(0, 1fr); }
+}
+.home-open-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border);
+    border-radius: var(--tf-radius);
+    padding: 1.75rem;
+}
+.home-open-card h3 {
+    color: var(--tf-text-strong);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin: 0 0 0.6rem;
+}
+.home-open-card > p:not(.home-product-eyebrow) {
+    color: var(--tf-text-muted);
+    line-height: 1.55;
+    margin: 0 0 1rem;
+}
+.home-open-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.25rem;
+}
+.home-open-links a,
+.home-open-links a:hover {
+    color: var(--tf-accent);
+    font-weight: 600;
+    text-decoration: none;
+}
+.home-open-links a:hover { text-decoration: underline; }
+.home-open-card .section-cta { margin-top: auto; }
