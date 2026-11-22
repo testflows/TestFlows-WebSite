@@ -17,7 +17,7 @@ keywords: deterministic simulation testing, DST, documentation, Python test fram
 <div class="docs-grid">
 <article class="docs-card">
 <div class="docs-card-body">
-<img class="painted-icon docs-card-painting" src="/images/docs/framework.webp" alt="" width="320" height="320" loading="lazy">
+<span class="line-icon docs-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
 <p class="docs-card-eyebrow">Open-source</p>
 <h2><a href="/docs/framework/">Framework</a></h2>
 <p>Learn how to write and run test programs that check your software.</p>
@@ -28,7 +28,7 @@ keywords: deterministic simulation testing, DST, documentation, Python test fram
 </article>
 <article class="docs-card">
 <div class="docs-card-body">
-<img class="painted-icon docs-card-painting" src="/images/docs/machine.webp" alt="" width="320" height="320" loading="lazy">
+<span class="line-icon docs-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
 <p class="docs-card-eyebrow">Deterministic</p>
 <h2><a href="/docs/machine/">Machine</a></h2>
 <p>Learn deterministic simulation testing: run, replay, branch and inject faults into your programs, manually or with AI coding agents.</p>

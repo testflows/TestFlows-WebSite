@@ -231,12 +231,13 @@ footer,
     padding: 0.95rem 1.75rem;
 }
 
-/* A painted icon: an object painted in the style of the site's backdrop, cut
-   out on a transparent square, so it sits on a light or a dark card alike.
-   Shown whole: never cropped or faded. */
-.painted-icon {
+
+/* A card's icon: an inline SVG in the menu glyphs' style, a 24-unit grid
+   with a thin round stroke, drawn in the accent color of either theme. */
+.line-icon {
     display: block;
-    width: 5.5rem;
-    height: 5.5rem;
-    object-fit: contain;
+    justify-self: end;
+    align-self: start;
+    color: var(--tf-cta);
 }
+.line-icon svg { display: block; width: 100%; height: 100%; }

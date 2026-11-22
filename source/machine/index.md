@@ -50,7 +50,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
         <div class="machine-why-list">
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/automaton.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="8" width="14" height="11" rx="2.5"/><path d="M12 8V5"/><circle cx="12" cy="4" r="1"/><circle cx="9.5" cy="12.5" r="1.1"/><circle cx="14.5" cy="12.5" r="1.1"/><path d="M9.5 16h5"/><path d="M5 12.5H3.5M20.5 12.5H19"/></svg></span>
                 <h3>AI agents test your fixes</h3>
                 <p>Your AI coding agent runs your code and its fixes in the machine. Every failure it finds replays exactly, for it and for you.</p>
                 </div>
@@ -58,7 +58,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/bolt.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2.5 5.5 13.5H11l-1 8 7.5-11H12l1-8z"/></svg></span>
                 <h3>Precise fault injection</h3>
                 <p>Fail a system call, a disk request, a packet or a container at the exact call you choose, or at random from a seed.</p>
                 </div>
@@ -66,7 +66,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/race.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6c6 0 10 12 16 12"/><path d="M4 18c6 0 10-12 16-12"/><path d="m17.5 3.5 2.5 2.5-2.5 2.5"/><path d="m17.5 15.5 2.5 2.5-2.5 2.5"/></svg></span>
                 <h3>Forced data races</h3>
                 <p>Hold, yield and pin threads to force the interleaving that triggers a race. Then watch the same race on every replay.</p>
                 </div>
@@ -74,7 +74,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/dice.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="8.5" cy="8.5" r="1.1"/><circle cx="15.5" cy="8.5" r="1.1"/><circle cx="12" cy="12" r="1.1"/><circle cx="8.5" cy="15.5" r="1.1"/><circle cx="15.5" cy="15.5" r="1.1"/></svg></span>
                 <h3>Custom fuzzers</h3>
                 <p>Draw schedules, faults and timing from a seed in Python, or schedules from a plan file with no code, and stress the code paths you choose.</p>
                 </div>
@@ -82,7 +82,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/log.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21H5V3h9l4 4v3"/><path d="M14 3v4h4"/><path d="M8 9h5M8 12.5h4M8 16h2"/><path d="M13.5 17a4 4 0 1 0 1.17-2.83"/><path d="M14.5 12.2v2.1h2.1"/></svg></span>
                 <h3>Retroactive logging</h3>
                 <p>Log everything, store nothing. Replay the stretch you care about and get its logs after the fact.</p>
                 </div>
@@ -90,7 +90,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/rewind.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12a8.5 8.5 0 1 0 2.5-6"/><path d="M3.5 3.5V8H8"/><path d="M12 7.5V12l3 2"/></svg></span>
                 <h3>Time travel</h3>
                 <p>Rewind to any checkpoint, step back to the instruction before a bug, or branch from any point. The original run stays as it was.</p>
                 </div>
@@ -98,7 +98,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/fast.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 6.5v11l7.5-5.5-7.5-5.5z"/><path d="M12 6.5v11l7.5-5.5L12 6.5z"/><path d="M21 6v12"/></svg></span>
                 <h3>Time compression</h3>
                 <p>Idle time is skipped. Ten minutes of sleep in the machine pass in about three seconds, so timeouts and retries cost seconds.</p>
                 </div>
@@ -106,7 +106,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
             </div>
             <div class="machine-why-item">
                 <div class="machine-why-body">
-                <img class="painted-icon machine-why-art" src="/images/machine/capabilities/bug.webp" alt="" width="320" height="320" loading="lazy">
+                <span class="line-icon machine-why-art" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"><rect x="7.5" y="8" width="9" height="12" rx="4.5"/><path d="M9.5 8a2.5 2.5 0 0 1 5 0"/><path d="M12 12v8"/><path d="M7.5 12H4M16.5 12H20M7.5 16.5l-3 1.5M16.5 16.5l3 1.5M8 9.5 5.5 7.5M16 9.5l2.5-2"/></svg></span>
                 <h3>Debugging at any point</h3>
                 <p>Inspect registers, memory and the stack, set breakpoints and watchpoints, or run GDB inside the machine, at any point of any run.</p>
                 </div>

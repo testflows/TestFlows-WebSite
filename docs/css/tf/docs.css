@@ -182,12 +182,12 @@
     .docs-stage .docs-card-body > p:not(.docs-card-eyebrow) { font-size: 1.05rem; }
 }
 
-/* The product's painted icon, right of its eyebrow and title. */
-.docs-card-painting {
+/* The product's line icon, right of its eyebrow and title. */
+.docs-card-icon {
     grid-area: icon;
-    width: 6.3rem;
-    height: 6.3rem;
-    margin: -0.75rem -0.5rem 0 0;
+    width: 3rem;
+    height: 3rem;
+    margin: 0.15rem 0 0;
 }
 
 /* The eyebrow and title share the top rows with the icon on the right; the
@@ -197,7 +197,7 @@
     flex: 1;
     display: grid;
     /* A fixed column for the icon, so the title keeps the same distance from
-       the artwork. */
+       the icon. */
     grid-template-columns: 1fr 6.3rem;
     grid-template-areas: "eyebrow icon" "title icon" "text text";
     column-gap: 1.5rem;
@@ -208,6 +208,5 @@
 .docs-card-body > p:not(.docs-card-eyebrow) { grid-area: text; }
 
 @media (max-width: 575.98px) {
-    .docs-card-painting { width: 5rem; height: 5rem; }
     .docs-card-body { grid-template-columns: 1fr 5rem; column-gap: 1rem; }
 }
