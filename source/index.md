@@ -49,7 +49,7 @@ keywords: deterministic simulation testing, DST, deterministic testing, AI codin
 <article class="home-product">
 <p class="home-product-eyebrow">Open-source</p>
 <h2><a class="stretched-link" href="/framework/">Framework</a></h2>
-<p class="home-product-lead">Python library for writing test programs.<br>Using everything is code approach.</p>
+<p class="home-product-lead">Python library for writing test programs.<br>Using the everything-is-code approach.</p>
 <div class="index-start home-demo">
 <div class="index-start-steps">
 <div class="index-start-step index-code-animate">

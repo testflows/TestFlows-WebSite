@@ -1,5 +1,5 @@
 ---
 layout: blog
 title: Blog
-description: TestFlows blog about its features and topics related to software testing and enterprise quality assurance
+description: The TestFlows blog. Deep dives on deterministic simulation testing, test programs, combinatorial coverage, behavior models, and shipping quality software.
 ---

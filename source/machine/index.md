@@ -43,6 +43,59 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
 </div>
 </div>
 
+<section class="home-section home-problem">
+<div class="container home-split">
+<div class="home-split-text">
+<h2 class="home-section-title home-section-title-left">Stop hoping the bug happens again.</h2>
+<p class="home-section-lead home-section-lead-left">Race conditions, timing issues, and network failures show up once in a while, and almost never when you are looking for them. Machine runs your real, unmodified Linux x86_64 software, from a single binary to a Docker Compose project, in a machine that controls time, interrupts, random numbers and the thread schedule. Every run can be replayed exactly and branched from any point.</p>
+<p class="home-section-lead home-section-lead-left">So instead of running a test thousands of times, you name the race and make it happen.</p>
+<a class="home-step-more" href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/#what-this-looks-like">See a missed wakeup forced and fixed <span aria-hidden="true">&rarr;</span></a>
+</div>
+<figure class="home-figure">
+<svg viewBox="0 0 760 560" role="img" aria-labelledby="mw-title mw-desc" class="home-figure-svg">
+<title id="mw-title">The missed wakeup in missed-wakeup.c</title>
+<desc id="mw-desc">The waiter checks done under the lock, sees 0, and drops the lock at line 75. While Machine holds it before line 76, the signaler takes the lock, sets done to 1, signals and unlocks. The signal wakes nobody. The waiter then retakes the lock, waits at line 86, and times out after 50 ms with done already 1.</desc>
+<style>
+.mw-box{fill:var(--tf-card-bg);stroke:currentColor;stroke-opacity:.35;stroke-width:1.2}
+.mw-life{stroke:currentColor;stroke-opacity:.35;stroke-width:1.5}
+.mw-arrow{stroke:currentColor;stroke-width:1.6;fill:none}
+.mw-head{fill:currentColor}
+.mw-t{fill:currentColor;font-size:14px}
+.mw-h{fill:currentColor;font-size:16px;font-weight:700}
+.mw-n{fill:currentColor;fill-opacity:.6;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mw-win{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.5;stroke-dasharray:6 4}
+.mw-wt{fill:var(--tf-cta);font-size:13px;font-weight:700}
+.mw-bad{stroke:#e0533d;stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.mw-badt{fill:#e0533d;font-size:14px;font-weight:700}
+.mw-res{fill:#e0533d;fill-opacity:.1;stroke:#e0533d;stroke-width:1.5}
+</style>
+<defs><marker id="mw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mw-head"/></marker></defs>
+<rect class="mw-box" x="60" y="16" width="160" height="44" rx="8"/><text class="mw-h" x="140" y="44" text-anchor="middle">Waiter</text>
+<rect class="mw-box" x="260" y="16" width="240" height="44" rx="8"/><text class="mw-h" x="380" y="44" text-anchor="middle">Shared state (mutex, done)</text>
+<rect class="mw-box" x="540" y="16" width="160" height="44" rx="8"/><text class="mw-h" x="620" y="44" text-anchor="middle">Signaler</text>
+<line class="mw-life" x1="140" y1="60" x2="140" y2="182"/><line class="mw-life" x1="140" y1="360" x2="140" y2="490"/><line class="mw-life" x1="380" y1="60" x2="380" y2="490"/><line class="mw-life" x1="620" y1="60" x2="620" y2="490"/>
+<line class="mw-arrow" x1="140" y1="95" x2="372" y2="95" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="87" text-anchor="middle">lock</text><text class="mw-n" x="40" y="99">67</text>
+<line class="mw-arrow" x1="380" y1="130" x2="148" y2="130" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="122" text-anchor="middle">sees done == 0</text><text class="mw-n" x="40" y="134">69</text>
+<line class="mw-arrow" x1="140" y1="165" x2="372" y2="165" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="157" text-anchor="middle">unlock</text><text class="mw-n" x="40" y="169">75</text>
+<rect class="mw-win" x="56" y="182" width="168" height="178" rx="6"/>
+<text class="mw-wt" x="140" y="262" text-anchor="middle">Machine holds waiter</text>
+<text class="mw-wt" x="140" y="280" text-anchor="middle">after unlock,</text>
+<text class="mw-wt" x="140" y="298" text-anchor="middle">before relock</text>
+<line class="mw-arrow" x1="620" y1="205" x2="388" y2="205" marker-end="url(#mw-ah)"/><text class="mw-t" x="502" y="197" text-anchor="middle">lock</text><text class="mw-n" x="700" y="209">106</text>
+<line class="mw-arrow" x1="620" y1="240" x2="388" y2="240" marker-end="url(#mw-ah)"/><text class="mw-t" x="502" y="232" text-anchor="middle">done = 1</text><text class="mw-n" x="700" y="244">107</text>
+<line class="mw-bad" x1="620" y1="285" x2="240" y2="285"/><text class="mw-badt" x="420" y="277" text-anchor="middle">signal wakes nobody</text><text class="mw-badt" x="232" y="290" text-anchor="middle">✕</text><text class="mw-n" x="700" y="289">108</text>
+<line class="mw-arrow" x1="620" y1="330" x2="388" y2="330" marker-end="url(#mw-ah)"/><text class="mw-t" x="502" y="322" text-anchor="middle">unlock</text><text class="mw-n" x="700" y="334">109</text>
+<line class="mw-arrow" x1="140" y1="385" x2="372" y2="385" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="377" text-anchor="middle">lock</text><text class="mw-n" x="40" y="389">76</text>
+<line class="mw-arrow" x1="140" y1="420" x2="372" y2="420" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="412" text-anchor="middle">pthread_cond_timedwait()</text><text class="mw-n" x="40" y="424">86</text>
+<line class="mw-bad" x1="140" y1="428" x2="140" y2="478"/><text class="mw-t" x="152" y="458">50 ms, nobody signals</text>
+<rect class="mw-res" x="60" y="496" width="640" height="48" rx="8"/>
+<text class="mw-badt" x="380" y="525" text-anchor="middle">ETIMEDOUT with done == 1: FAILURE: missed wakeup</text>
+</svg>
+<figcaption>Machine holds the waiter between unlocking and relocking the mutex. The signal is lost, and the waiter times out, on the first try.</figcaption>
+</figure>
+</div>
+</section>
+
 <section class="machine-why" id="capabilities">
     <div class="container">
         <h2 class="index-block-title">Fine-grained control over execution</h2>
@@ -115,3 +168,42 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
         </div>
     </div>
 </section>
+
+<section class="home-section home-agents">
+<div class="container home-split home-split-reverse">
+<figure class="home-figure">
+<svg viewBox="30 0 760 290" role="img" aria-labelledby="ms-title ms-desc" class="home-figure-svg">
+<title id="ms-title">Exploring the state space together</title>
+<desc id="ms-desc">A mesh of the states a program can reach, running left to right from a single start, each state leading to the neighbouring states of the next step. Your agent's path, highlighted, ends where it found a failure. From a shared point along it, your own branch takes a different path, a passing run.</desc>
+<style>
+.ms-e{stroke:currentColor;stroke-opacity:.18;stroke-width:1.2}
+.ms-n{fill:currentColor;fill-opacity:.28}
+.ms-path{fill:none;stroke:var(--tf-cta);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.ms-pn{fill:var(--tf-cta)}
+.ms-fork{fill:none;stroke:currentColor;stroke-opacity:.7;stroke-width:2.2;stroke-dasharray:7 5;stroke-linejoin:round}
+.ms-fn{fill:currentColor;fill-opacity:.7}
+.ms-cp{fill:none;stroke:var(--tf-cta);stroke-width:2}
+.ms-l{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}
+.ms-bad{fill:#e0533d}
+.ms-badt{fill:#e0533d;font-size:14px;font-weight:700}
+.ms-ok{fill:none;stroke:currentColor;stroke-opacity:.8;stroke-width:2.2}
+.ms-okt{fill:currentColor;fill-opacity:.8;font-size:14px;font-weight:700}
+.ms-who{fill:var(--tf-cta);font-size:14px;font-weight:700}
+.ms-whoy{fill:currentColor;fill-opacity:.8;font-size:14px;font-weight:700}
+</style>
+<line class="ms-e" x1="60" y1="150" x2="160" y2="50"/><line class="ms-e" x1="60" y1="150" x2="160" y2="100"/><line class="ms-e" x1="60" y1="150" x2="160" y2="200"/><line class="ms-e" x1="60" y1="150" x2="160" y2="250"/><line class="ms-e" x1="160" y1="50" x2="260" y2="50"/><line class="ms-e" x1="160" y1="50" x2="260" y2="100"/><line class="ms-e" x1="160" y1="100" x2="260" y2="50"/><line class="ms-e" x1="160" y1="100" x2="260" y2="100"/><line class="ms-e" x1="160" y1="100" x2="260" y2="150"/><line class="ms-e" x1="160" y1="150" x2="260" y2="150"/><line class="ms-e" x1="160" y1="150" x2="260" y2="200"/><line class="ms-e" x1="160" y1="200" x2="260" y2="150"/><line class="ms-e" x1="160" y1="200" x2="260" y2="200"/><line class="ms-e" x1="160" y1="200" x2="260" y2="250"/><line class="ms-e" x1="160" y1="250" x2="260" y2="200"/><line class="ms-e" x1="160" y1="250" x2="260" y2="250"/><line class="ms-e" x1="260" y1="50" x2="360" y2="50"/><line class="ms-e" x1="260" y1="50" x2="360" y2="100"/><line class="ms-e" x1="260" y1="100" x2="360" y2="50"/><line class="ms-e" x1="260" y1="100" x2="360" y2="100"/><line class="ms-e" x1="260" y1="150" x2="360" y2="100"/><line class="ms-e" x1="260" y1="150" x2="360" y2="150"/><line class="ms-e" x1="260" y1="150" x2="360" y2="200"/><line class="ms-e" x1="260" y1="200" x2="360" y2="150"/><line class="ms-e" x1="260" y1="200" x2="360" y2="200"/><line class="ms-e" x1="260" y1="200" x2="360" y2="250"/><line class="ms-e" x1="260" y1="250" x2="360" y2="200"/><line class="ms-e" x1="260" y1="250" x2="360" y2="250"/><line class="ms-e" x1="360" y1="50" x2="460" y2="50"/><line class="ms-e" x1="360" y1="50" x2="460" y2="100"/><line class="ms-e" x1="360" y1="100" x2="460" y2="50"/><line class="ms-e" x1="360" y1="100" x2="460" y2="100"/><line class="ms-e" x1="360" y1="100" x2="460" y2="150"/><line class="ms-e" x1="360" y1="150" x2="460" y2="150"/><line class="ms-e" x1="360" y1="200" x2="460" y2="150"/><line class="ms-e" x1="360" y1="200" x2="460" y2="200"/><line class="ms-e" x1="360" y1="200" x2="460" y2="250"/><line class="ms-e" x1="360" y1="250" x2="460" y2="200"/><line class="ms-e" x1="360" y1="250" x2="460" y2="250"/><line class="ms-e" x1="460" y1="50" x2="560" y2="50"/><line class="ms-e" x1="460" y1="50" x2="560" y2="100"/><line class="ms-e" x1="460" y1="100" x2="560" y2="50"/><line class="ms-e" x1="460" y1="100" x2="560" y2="150"/><line class="ms-e" x1="460" y1="150" x2="560" y2="100"/><line class="ms-e" x1="460" y1="150" x2="560" y2="150"/><line class="ms-e" x1="460" y1="150" x2="560" y2="200"/><line class="ms-e" x1="460" y1="200" x2="560" y2="150"/><line class="ms-e" x1="460" y1="200" x2="560" y2="250"/><line class="ms-e" x1="460" y1="250" x2="560" y2="200"/><line class="ms-e" x1="460" y1="250" x2="560" y2="250"/><line class="ms-e" x1="560" y1="50" x2="660" y2="50"/><line class="ms-e" x1="560" y1="50" x2="660" y2="100"/><line class="ms-e" x1="560" y1="100" x2="660" y2="100"/><line class="ms-e" x1="560" y1="100" x2="660" y2="150"/><line class="ms-e" x1="560" y1="150" x2="660" y2="100"/><line class="ms-e" x1="560" y1="150" x2="660" y2="150"/><line class="ms-e" x1="560" y1="150" x2="660" y2="200"/><line class="ms-e" x1="560" y1="200" x2="660" y2="150"/><line class="ms-e" x1="560" y1="200" x2="660" y2="200"/><line class="ms-e" x1="560" y1="250" x2="660" y2="200"/><line class="ms-e" x1="560" y1="250" x2="660" y2="250"/><circle class="ms-n" cx="60" cy="150" r="5"/><circle class="ms-n" cx="160" cy="50" r="5"/><circle class="ms-n" cx="160" cy="100" r="5"/><circle class="ms-n" cx="160" cy="150" r="5"/><circle class="ms-n" cx="160" cy="200" r="5"/><circle class="ms-n" cx="160" cy="250" r="5"/><circle class="ms-n" cx="260" cy="50" r="5"/><circle class="ms-n" cx="260" cy="100" r="5"/><circle class="ms-n" cx="260" cy="150" r="5"/><circle class="ms-n" cx="260" cy="200" r="5"/><circle class="ms-n" cx="260" cy="250" r="5"/><circle class="ms-n" cx="360" cy="50" r="5"/><circle class="ms-n" cx="360" cy="100" r="5"/><circle class="ms-n" cx="360" cy="150" r="5"/><circle class="ms-n" cx="360" cy="200" r="5"/><circle class="ms-n" cx="360" cy="250" r="5"/><circle class="ms-n" cx="460" cy="50" r="5"/><circle class="ms-n" cx="460" cy="100" r="5"/><circle class="ms-n" cx="460" cy="150" r="5"/><circle class="ms-n" cx="460" cy="200" r="5"/><circle class="ms-n" cx="460" cy="250" r="5"/><circle class="ms-n" cx="560" cy="50" r="5"/><circle class="ms-n" cx="560" cy="100" r="5"/><circle class="ms-n" cx="560" cy="150" r="5"/><circle class="ms-n" cx="560" cy="200" r="5"/><circle class="ms-n" cx="560" cy="250" r="5"/><circle class="ms-n" cx="660" cy="50" r="5"/><circle class="ms-n" cx="660" cy="100" r="5"/><circle class="ms-n" cx="660" cy="150" r="5"/><circle class="ms-n" cx="660" cy="200" r="5"/><circle class="ms-n" cx="660" cy="250" r="5"/><polyline class="ms-fork" points="360,150 460,100 560,100 660,50"/><polyline class="ms-path" points="60,150 160,150 260,100 360,150 460,200 560,200 660,250"/><circle class="ms-pn" cx="60" cy="150" r="6"/><circle class="ms-pn" cx="160" cy="150" r="6"/><circle class="ms-pn" cx="260" cy="100" r="6"/><circle class="ms-pn" cx="360" cy="150" r="6"/><circle class="ms-pn" cx="460" cy="200" r="6"/><circle class="ms-pn" cx="560" cy="200" r="6"/><circle class="ms-fn" cx="460" cy="100" r="6"/><circle class="ms-fn" cx="560" cy="100" r="6"/><circle class="ms-cp" cx="360" cy="150" r="10"/><text class="ms-l" x="360" y="180" text-anchor="middle">shared point</text><circle class="ms-bad" cx="660" cy="250" r="9"/><text class="ms-badt" x="678" y="255">failure found</text><circle class="ms-ok" cx="660" cy="50" r="9"/><text class="ms-okt" x="678" y="55">passing run</text><text class="ms-who" x="520" y="236" text-anchor="middle">your agent</text><text class="ms-whoy" x="420" y="112" text-anchor="middle">you</text><text class="ms-l" x="60" y="178" text-anchor="middle">start</text>
+</svg>
+<figcaption>Every run is one path through the state space of your software. You and your agent explore it together.</figcaption>
+</figure>
+<div class="home-split-text">
+<h2 class="home-section-title home-section-title-left">Built for AI agents. Controlled by you.</h2>
+<p class="home-section-lead home-section-lead-left">Agents do the heavy lifting, while you stay in the loop and can see every step they take, repeat it, and take over at any point. Your agent drives Machine through the same <code>machine</code> client that you use, and the Python SDK gives both of you full programmatic control.</p>
+<p class="home-section-lead home-section-lead-left">Install the Machine skill, ask your agent what Machine can do for your project, and it sets things up with you.</p>
+<div class="home-start-actions">
+<a class="section-cta" href="https://github.com/testflows/Machine/tree/main/skills/testflows-machine">Get the Machine skill</a>
+<a class="section-cta section-cta-ghost" href="/agents.md">Guide for AI agents</a>
+</div>
+</div>
+</div>
+</section>
+

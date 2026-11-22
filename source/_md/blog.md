@@ -2,7 +2,7 @@
 
 # TestFlows blog
 
-> Articles about test programs, steps, combinatorial coverage, behavior models and more, from the TestFlows team. Each page below is one article, in Markdown. They are about software testing and the open-source TestFlows Framework.
+> Articles about deterministic simulation testing, test programs, steps, combinatorial coverage, behavior models and more, from the TestFlows team. Each page below is one article, in Markdown. They are about software testing and the open-source TestFlows Framework.
 
 In the articles, `{% testflows %}` stands for TestFlows, `{% katex %}` and `{% endkatex %}` wrap LaTeX math, `{% html %}` and `{% endhtml %}` wrap HTML, and `{% blockquote %}` and `{% endblockquote %}` wrap a quotation.
 

@@ -1,9 +1,11 @@
+https://testflows.com/machine/index.html
+https://testflows.com/machine.md
+https://testflows.com/blog/index.html
+https://testflows.com/blog.md
 https://testflows.com/index.html
 https://testflows.com/index.md
 https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/
 https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md
-https://testflows.com/machine/index.html
-https://testflows.com/machine.md
 https://testflows.com/docs/index.html
 https://testflows.com/docs.md
 https://testflows.com/machine/download/index.html
@@ -78,8 +80,6 @@ https://testflows.com/blog/how-to-break-your-tests-into-steps/
 https://testflows.com/blog/how-to-break-your-tests-into-steps.md
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd.md
-https://testflows.com/blog/index.html
-https://testflows.com/blog.md
 https://testflows.com/
 https://testflows.com/agents.md
 https://testflows.com/docs/framework/async-and-parallel-tests.md
