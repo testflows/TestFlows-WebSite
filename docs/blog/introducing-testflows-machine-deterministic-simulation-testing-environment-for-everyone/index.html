@@ -1,0 +1,1064 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  
+  <title>Introducing TestFlows Machine: Deterministic Simulation Testing</title>
+  <meta name="description" content="Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
+  
+  <meta name="keywords" content="deterministic simulation testing, DST, AI coding agents, deterministic hypervisor, fault injection, data races, record and replay, time travel debugging, retroactive logging, Python SDK">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  <meta name="author" content="Vitaliy Zakaznikov">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md">
+
+
+  <meta property="og:site_name" content="TestFlows">
+  
+  
+<meta name="publish_date" property="og:publish_date" content="2026-11-22T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-22T00:00:00-0000" />
+<meta property="og:title" content="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+<meta property="og:description" content="Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
+<meta property="og:url" content="https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+<meta property="og:image" content="https://testflows.com/images/introducing-testflows-machine.png">
+
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+<meta name="twitter:description" content="Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
+<meta name="twitter:image" content="https://testflows.com/images/introducing-testflows-machine.png">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone","description":"Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.","image":"https://testflows.com/images/introducing-testflows-machine.png","datePublished":"2026-11-22T00:00:00-05:00","dateModified":"2026-11-22T16:11:52-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/"}</script>
+
+  
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/fonts.css?v=1" type="text/css">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795381945027" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795381945027" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795381945027" media="screen" type="text/css">
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/machine/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/pricing/">Pricing</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/download/">Download</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
+                            
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                            
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
+            <script>
+            (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
+                var a = document.getElementById("navbar-signin");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
+            })();
+            </script>
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <main class="content" id="main" tabindex="-1">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2026-11-22T00:00:00-0000"><span class="authored-date text-nowrap">Nov 22, 2026</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-image col-lg-6 m-auto">
+            <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+            <span class="post-image-credit"></span>
+        </div>
+        
+    </div>
+    
+    <div class="blog post-body row">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#our-vision"><span class="toc-text">Our vision</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#agent-first-but-for-the-human-in-the-loop"><span class="toc-text">Agent first, but for the human in the loop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#name-the-bug-verify-the-fix"><span class="toc-text">Name the bug, verify the fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#beyond-the-deterministic-hypervisor"><span class="toc-text">Beyond the deterministic hypervisor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-started"><span class="toc-text">Get started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-this-looks-like"><span class="toc-text">What this looks like</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
+            <p>A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents has been a long time coming, and today we’re introducing <a href="/machine/">TestFlows Machine</a> to make that vision a reality. Because for many teams, deterministic simulation testing has changed how some of the most reliable software systems are built and tested. It gives you control over software execution, lets you inject failures, and makes runs reproducible, enabling you to investigate bugs that might otherwise take days to reproduce, or never show up again at all. However, getting there has usually meant walking a steep path that starts with building a custom system yourself, specific to your project, or diving into the development of a deterministic hypervisor for a more generic approach. That takes specialized knowledge, infrastructure, and a significant investment, and most teams would rather spend that time and tokens on their own software. And our vision is different.<span id="more"></span></p>
+<h2 id="our-vision"><a href="#our-vision" class="headerlink" title="Our vision"></a>Our vision</h2><p>We all see that software development is changing quickly, and AI coding agents now write, test, and debug most, if not all, of the software today. They can investigate a bug, propose a fix, and run the tests, but they still run into the same problem developers do, which is that software doesn’t always fail the same way twice. Race conditions, timing issues, and network failures don’t become easier to reproduce just because an agent is doing the debugging.</p>
+<p><strong>Our vision is to make deterministic simulation testing a natural part of the modern AI-driven development cycle.</strong> An agent should be able to reproduce a failure, step back through the execution, attach a debugger at the exact point where things went wrong, and try a fix against the same conditions. It should be able to inject faults precisely, compress execution time, and read logs after the fact with retroactive logging, without waiting for fuzzers. And you should be able to do all of that yourself, without having to build or maintain a deterministic hypervisor, or break your engineering budget to get access to systems that already provide this capability.</p>
+<p>With TestFlows Machine, you can start doing that today.</p>
+<h2 id="agent-first-but-for-the-human-in-the-loop"><a href="#agent-first-but-for-the-human-in-the-loop" class="headerlink" title="Agent first, but for the human in the loop"></a>Agent first, but for the human in the loop</h2><p>DST gives you an enormous amount of control over execution, including which vCPU and thread runs and when (yes, we do support multiple vCPUs, <code>cat /proc/cpuinfo</code> after you get started), which system call fails, what time the machine sees, and where a run branches. That control is the whole point, but it is also what makes the technique hard to adopt, as few developers have the time to learn a new execution model, its vocabulary, and a long list of commands before they see their first result. Many engineers struggle to even remember all the GDB commands, and that is without adding time travel, branches, and support for more debugging commands that you can run from the outside without disturbing the system state.</p>
+<p>AI coding agents don’t have that problem. They can read the code, the docs, and the command reference in seconds and drive Machine with precision, which is why we built Machine to be AI agent first. You install the Machine skill, ask your agent what Machine can do for your project, and it sets things up with you, signs in with a code from your email, and gets to work.</p>
+<p>But agent first doesn’t mean we want to deliver an AI-driven black box. We want agents to do the heavy lifting, while developers stay in the loop and can see every step they take, repeat it, and take over at any point. That’s why the agent drives Machine through the same <code>machine</code> CLI client that a developer uses, and full programmatic control is available to both you and your agent through the <a href="/docs/machine/#python-sdk">Python SDK</a>, which also lets you write your own custom fuzzers.</p>
+<figure class="post-figure">
+<svg viewBox="30 0 760 290" role="img" aria-labelledby="ms-title ms-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="ms-title">Exploring the state space together</title>
+<desc id="ms-desc">A mesh of the states a program can reach, running left to right from a single start, each state leading to the neighbouring states of the next step. Your agent's path, highlighted, ends where it found a failure. From a shared point along it, your own branch takes a different path, a passing run.</desc>
+<style>
+.ms-e{stroke:currentColor;stroke-opacity:.18;stroke-width:1.2}
+.ms-n{fill:currentColor;fill-opacity:.28}
+.ms-path{fill:none;stroke:var(--tf-cta);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.ms-pn{fill:var(--tf-cta)}
+.ms-fork{fill:none;stroke:currentColor;stroke-opacity:.7;stroke-width:2.2;stroke-dasharray:7 5;stroke-linejoin:round}
+.ms-fn{fill:currentColor;fill-opacity:.7}
+.ms-cp{fill:none;stroke:var(--tf-cta);stroke-width:2}
+.ms-l{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}
+.ms-bad{fill:#e0533d}
+.ms-badt{fill:#e0533d;font-size:14px;font-weight:700}
+.ms-ok{fill:none;stroke:currentColor;stroke-opacity:.8;stroke-width:2.2}
+.ms-okt{fill:currentColor;fill-opacity:.8;font-size:14px;font-weight:700}
+.ms-who{fill:var(--tf-cta);font-size:14px;font-weight:700}
+.ms-whoy{fill:currentColor;fill-opacity:.8;font-size:14px;font-weight:700}
+</style>
+<line class="ms-e" x1="60" y1="150" x2="160" y2="50"/><line class="ms-e" x1="60" y1="150" x2="160" y2="100"/><line class="ms-e" x1="60" y1="150" x2="160" y2="200"/><line class="ms-e" x1="60" y1="150" x2="160" y2="250"/><line class="ms-e" x1="160" y1="50" x2="260" y2="50"/><line class="ms-e" x1="160" y1="50" x2="260" y2="100"/><line class="ms-e" x1="160" y1="100" x2="260" y2="50"/><line class="ms-e" x1="160" y1="100" x2="260" y2="100"/><line class="ms-e" x1="160" y1="100" x2="260" y2="150"/><line class="ms-e" x1="160" y1="150" x2="260" y2="150"/><line class="ms-e" x1="160" y1="150" x2="260" y2="200"/><line class="ms-e" x1="160" y1="200" x2="260" y2="150"/><line class="ms-e" x1="160" y1="200" x2="260" y2="200"/><line class="ms-e" x1="160" y1="200" x2="260" y2="250"/><line class="ms-e" x1="160" y1="250" x2="260" y2="200"/><line class="ms-e" x1="160" y1="250" x2="260" y2="250"/><line class="ms-e" x1="260" y1="50" x2="360" y2="50"/><line class="ms-e" x1="260" y1="50" x2="360" y2="100"/><line class="ms-e" x1="260" y1="100" x2="360" y2="50"/><line class="ms-e" x1="260" y1="100" x2="360" y2="100"/><line class="ms-e" x1="260" y1="150" x2="360" y2="100"/><line class="ms-e" x1="260" y1="150" x2="360" y2="150"/><line class="ms-e" x1="260" y1="150" x2="360" y2="200"/><line class="ms-e" x1="260" y1="200" x2="360" y2="150"/><line class="ms-e" x1="260" y1="200" x2="360" y2="200"/><line class="ms-e" x1="260" y1="200" x2="360" y2="250"/><line class="ms-e" x1="260" y1="250" x2="360" y2="200"/><line class="ms-e" x1="260" y1="250" x2="360" y2="250"/><line class="ms-e" x1="360" y1="50" x2="460" y2="50"/><line class="ms-e" x1="360" y1="50" x2="460" y2="100"/><line class="ms-e" x1="360" y1="100" x2="460" y2="50"/><line class="ms-e" x1="360" y1="100" x2="460" y2="100"/><line class="ms-e" x1="360" y1="100" x2="460" y2="150"/><line class="ms-e" x1="360" y1="150" x2="460" y2="150"/><line class="ms-e" x1="360" y1="200" x2="460" y2="150"/><line class="ms-e" x1="360" y1="200" x2="460" y2="200"/><line class="ms-e" x1="360" y1="200" x2="460" y2="250"/><line class="ms-e" x1="360" y1="250" x2="460" y2="200"/><line class="ms-e" x1="360" y1="250" x2="460" y2="250"/><line class="ms-e" x1="460" y1="50" x2="560" y2="50"/><line class="ms-e" x1="460" y1="50" x2="560" y2="100"/><line class="ms-e" x1="460" y1="100" x2="560" y2="50"/><line class="ms-e" x1="460" y1="100" x2="560" y2="150"/><line class="ms-e" x1="460" y1="150" x2="560" y2="100"/><line class="ms-e" x1="460" y1="150" x2="560" y2="150"/><line class="ms-e" x1="460" y1="150" x2="560" y2="200"/><line class="ms-e" x1="460" y1="200" x2="560" y2="150"/><line class="ms-e" x1="460" y1="200" x2="560" y2="250"/><line class="ms-e" x1="460" y1="250" x2="560" y2="200"/><line class="ms-e" x1="460" y1="250" x2="560" y2="250"/><line class="ms-e" x1="560" y1="50" x2="660" y2="50"/><line class="ms-e" x1="560" y1="50" x2="660" y2="100"/><line class="ms-e" x1="560" y1="100" x2="660" y2="100"/><line class="ms-e" x1="560" y1="100" x2="660" y2="150"/><line class="ms-e" x1="560" y1="150" x2="660" y2="100"/><line class="ms-e" x1="560" y1="150" x2="660" y2="150"/><line class="ms-e" x1="560" y1="150" x2="660" y2="200"/><line class="ms-e" x1="560" y1="200" x2="660" y2="150"/><line class="ms-e" x1="560" y1="200" x2="660" y2="200"/><line class="ms-e" x1="560" y1="250" x2="660" y2="200"/><line class="ms-e" x1="560" y1="250" x2="660" y2="250"/><circle class="ms-n" cx="60" cy="150" r="5"/><circle class="ms-n" cx="160" cy="50" r="5"/><circle class="ms-n" cx="160" cy="100" r="5"/><circle class="ms-n" cx="160" cy="150" r="5"/><circle class="ms-n" cx="160" cy="200" r="5"/><circle class="ms-n" cx="160" cy="250" r="5"/><circle class="ms-n" cx="260" cy="50" r="5"/><circle class="ms-n" cx="260" cy="100" r="5"/><circle class="ms-n" cx="260" cy="150" r="5"/><circle class="ms-n" cx="260" cy="200" r="5"/><circle class="ms-n" cx="260" cy="250" r="5"/><circle class="ms-n" cx="360" cy="50" r="5"/><circle class="ms-n" cx="360" cy="100" r="5"/><circle class="ms-n" cx="360" cy="150" r="5"/><circle class="ms-n" cx="360" cy="200" r="5"/><circle class="ms-n" cx="360" cy="250" r="5"/><circle class="ms-n" cx="460" cy="50" r="5"/><circle class="ms-n" cx="460" cy="100" r="5"/><circle class="ms-n" cx="460" cy="150" r="5"/><circle class="ms-n" cx="460" cy="200" r="5"/><circle class="ms-n" cx="460" cy="250" r="5"/><circle class="ms-n" cx="560" cy="50" r="5"/><circle class="ms-n" cx="560" cy="100" r="5"/><circle class="ms-n" cx="560" cy="150" r="5"/><circle class="ms-n" cx="560" cy="200" r="5"/><circle class="ms-n" cx="560" cy="250" r="5"/><circle class="ms-n" cx="660" cy="50" r="5"/><circle class="ms-n" cx="660" cy="100" r="5"/><circle class="ms-n" cx="660" cy="150" r="5"/><circle class="ms-n" cx="660" cy="200" r="5"/><circle class="ms-n" cx="660" cy="250" r="5"/><polyline class="ms-fork" points="360,150 460,100 560,100 660,50"/><polyline class="ms-path" points="60,150 160,150 260,100 360,150 460,200 560,200 660,250"/><circle class="ms-pn" cx="60" cy="150" r="6"/><circle class="ms-pn" cx="160" cy="150" r="6"/><circle class="ms-pn" cx="260" cy="100" r="6"/><circle class="ms-pn" cx="360" cy="150" r="6"/><circle class="ms-pn" cx="460" cy="200" r="6"/><circle class="ms-pn" cx="560" cy="200" r="6"/><circle class="ms-fn" cx="460" cy="100" r="6"/><circle class="ms-fn" cx="560" cy="100" r="6"/><circle class="ms-cp" cx="360" cy="150" r="10"/><text class="ms-l" x="360" y="180" text-anchor="middle">shared point</text><circle class="ms-bad" cx="660" cy="250" r="9"/><text class="ms-badt" x="678" y="255">failure found</text><circle class="ms-ok" cx="660" cy="50" r="9"/><text class="ms-okt" x="678" y="55">passing run</text><text class="ms-who" x="520" y="236" text-anchor="middle">your agent</text><text class="ms-whoy" x="420" y="112" text-anchor="middle">you</text><text class="ms-l" x="60" y="178" text-anchor="middle">start</text>
+</svg>
+<figcaption>Every run is one path through the state space of your software. You and your agent explore it together: fork from any point, take a different path, and replay any of them exactly.</figcaption>
+</figure>
+
+<h2 id="name-the-bug-verify-the-fix"><a href="#name-the-bug-verify-the-fix" class="headerlink" title="Name the bug, verify the fix"></a>Name the bug, verify the fix</h2><p>We believe the most valuable thing you can give an agent is fine-grained control over execution and fast feedback on its fixes. An agent that suspects a race shouldn’t have to start hours of fuzzing and hope for the best, as it can hold one thread at the exact line, run the other one through, and see the failure in seconds. It can then apply its fix, run the same interleaving again, and know that the fix holds, which turns a guess into a verified fix.</p>
+<p>Fuzzing still matters once the bugs you can name are fixed and you need to search for the ones you can’t. Machine supports that today with plans and seeds, and with the Python SDK.</p>
+<p>We walk through exactly what this looks like on a real example at the end of this post.</p>
+<h2 id="beyond-the-deterministic-hypervisor"><a href="#beyond-the-deterministic-hypervisor" class="headerlink" title="Beyond the deterministic hypervisor"></a>Beyond the deterministic hypervisor</h2><p>We stand on the shoulders of prior art, and deterministic simulation testing is gaining momentum. We’re excited to see new deterministic hypervisor projects appearing in research and open source. We think that’s great, as more people working on deterministic execution means more innovation and more attention to a technology that has been out of reach for too long.</p>
+<p>However, a deterministic hypervisor is only the foundation, and building a complete deterministic simulation testing system is a much bigger undertaking. You need to manage recordings, checkpoints, and branches, control execution, inject faults, debug failures, explore different schedules, and make all of that work together reliably, and then make it accessible through tools that developers and AI agents can actually use. The goal was never just to build a hypervisor but to make deterministic simulation testing practical for everyone, and that also takes the infrastructure to run it, as deterministic execution needs machines prepared for it. That’s why, with Machine, we run that infrastructure for you as a cloud service, where you create a session sized to your work when you need it, and you only pay while your sessions run.</p>
+<figure class="post-figure">
+<svg viewBox="0 0 760 525" role="img" aria-labelledby="st-title st-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="st-title">What a deterministic simulation testing system takes</title>
+<desc id="st-desc">A stack of layers. At the top, you and your AI coding agent. Below, the machine CLI, the Python SDK and the Agent skill; execution control, fault injection, debugging and schedules; recordings, checkpoints, branches and replay; your software and its containers; then the foundation of three layers, Linux in the machine, the deterministic hypervisor and host Linux; and at the bottom, cloud infrastructure with sessions on demand. A bracket marks every layer below you and your agent as TestFlows Machine, with your software shown as yours.</desc>
+<style>
+.st-you{fill:none;stroke:currentColor;stroke-opacity:.45;stroke-width:1.4;stroke-dasharray:6 4}
+.st-m{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.5}
+.st-f{fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-opacity:.45;stroke-width:1.4}
+.st-t{fill:currentColor;font-size:15px;font-weight:600}
+.st-tyou{fill:currentColor;font-size:15px;font-weight:600;fill-opacity:.8}
+.st-tf{fill:currentColor;font-size:15px;font-weight:600;fill-opacity:.75}
+.st-br{fill:none;stroke:var(--tf-cta);stroke-width:1.6}
+.st-brt{fill:var(--tf-cta);font-size:15px;font-weight:700}
+.st-fbr{fill:none;stroke:currentColor;stroke-opacity:.55;stroke-width:1.4}
+.st-fbt{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}
+</style>
+<rect class="st-you" x="64" y="20" width="540" height="46" rx="8"/><text class="st-tyou" x="334.0" y="49" text-anchor="middle">You and your AI coding agent</text><rect class="st-m" x="64" y="75" width="540" height="46" rx="8"/><text class="st-t" x="334.0" y="104" text-anchor="middle">machine CLI · Python SDK · Agent skill</text><rect class="st-m" x="64" y="130" width="540" height="46" rx="8"/><text class="st-t" x="334.0" y="159" text-anchor="middle">Execution control · Fault injection · Debugging · Schedules</text><rect class="st-m" x="64" y="185" width="540" height="46" rx="8"/><text class="st-t" x="334.0" y="214" text-anchor="middle">Recordings · Checkpoints · Branches · Replay</text><rect class="st-you" x="64" y="240" width="540" height="46" rx="8"/><text class="st-tyou" x="334.0" y="269" text-anchor="middle">Your software and its containers</text><rect class="st-f" x="64" y="295" width="540" height="46" rx="8"/><text class="st-tf" x="334.0" y="324" text-anchor="middle">Linux in the machine</text><rect class="st-f" x="64" y="350" width="540" height="46" rx="8"/><text class="st-tf" x="334.0" y="379" text-anchor="middle">Deterministic hypervisor</text><rect class="st-f" x="64" y="405" width="540" height="46" rx="8"/><text class="st-tf" x="334.0" y="434" text-anchor="middle">Host Linux</text><rect class="st-m" x="64" y="460" width="540" height="46" rx="8"/><text class="st-t" x="334.0" y="489" text-anchor="middle">Cloud infrastructure · Sessions on demand</text>
+<path class="st-br" d="M620,75 q10,0 10,10 V282.5 l8,8 l-8,8 V496 q0,10 -10,10"/><text class="st-brt" x="656" y="295.5">TestFlows</text><text class="st-brt" x="656" y="313.5">Machine</text>
+<path class="st-fbr" d="M52,295 q-10,0 -10,10 V365.0 l-8,8 l8,8 V441 q0,10 10,10"/><text class="st-fbt" x="26" y="373.0" text-anchor="middle" transform="rotate(-90 26 373.0)">DST foundation</text>
+</svg>
+<figcaption>The deterministic hypervisor, with the Linux it runs on and the Linux it runs, is only the foundation. Machine provides the whole system around it and runs it for you.</figcaption>
+</figure>
+
+<h2 id="get-started"><a href="#get-started" class="headerlink" title="Get started"></a>Get started</h2><p>We hope you are as excited about the future as we are. You can <a href="/machine/portal/signup/">create a free account</a> and have your first run in <a href="/docs/machine/#getting-started">about five minutes</a>, either on your own or together with your AI coding agent. Then head over to our public <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine">testflows&#x2F;Machine</a> repository on GitHub, where you’ll find the examples, the Python SDK, and the Machine skill for coding agents, and when you need more than the free plan gives you, take a look at our <a href="/machine/pricing/">pricing</a>.</p>
+<p>We’d love to hear what you find, so come and share it with us in the repository’s <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/discussions">Discussions</a>.</p>
+<h2 id="what-this-looks-like"><a href="#what-this-looks-like" class="headerlink" title="What this looks like"></a>What this looks like</h2><p>To show what this looks like, take <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/starvation/missed-wakeup.c">missed-wakeup.c</a>, one of the examples in our public repository. Here are the waiter and the signaler of this simple C program, with their line numbers:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">67</span>	pthread_mutex_lock(&amp;mutex);</span><br><span class="line"> <span class="number">68</span>	waiter_ready = <span class="number">1</span>;</span><br><span class="line"> <span class="number">69</span>	<span class="keyword">if</span> (!done) &#123;</span><br><span class="line"> <span class="number">75</span>		pthread_mutex_unlock(&amp;mutex);</span><br><span class="line"> <span class="number">76</span>		pthread_mutex_lock(&amp;mutex);</span><br><span class="line"> 	...</span><br><span class="line"> <span class="number">86</span>		rc = pthread_cond_timedwait(&amp;cond, &amp;mutex, &amp;ts);</span><br><span class="line"> <span class="number">87</span>		<span class="keyword">if</span> (rc == ETIMEDOUT &amp;&amp; done) &#123;        <span class="comment">/* the missed wakeup */</span></span><br><span class="line"></span><br><span class="line"><span class="number">106</span>	pthread_mutex_lock(&amp;mutex);               <span class="comment">/* signaler */</span></span><br><span class="line"><span class="number">107</span>	done = <span class="number">1</span>;</span><br><span class="line"><span class="number">108</span>	pthread_cond_signal(&amp;cond);</span><br><span class="line"><span class="number">109</span>	pthread_mutex_unlock(&amp;mutex);</span><br></pre></td></tr></table></figure>
+
+<p>The race window is between lines 75 and 76, where the waiter has already seen <code>done == 0</code> and dropped the lock. If the signaler runs lines 106 to 109 right then, the signal arrives before the wait on line 86 is armed, wakes nobody, and the waiter sleeps out its whole 50 ms timeout with <code>done</code> already set. On real hardware, that window is only a few instructions wide, so the failure shows up once in a while and, you can bet, almost never when you are looking for it.</p>
+<figure class="post-figure">
+<svg viewBox="0 0 760 560" role="img" aria-labelledby="mw-title mw-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="mw-title">The missed wakeup in missed-wakeup.c</title>
+<desc id="mw-desc">The waiter checks done under the lock, sees 0, and drops the lock at line 75. While Machine holds it before line 76, the signaler takes the lock, sets done to 1, signals and unlocks. The signal wakes nobody. The waiter then retakes the lock, waits at line 86, and times out after 50 ms with done already 1.</desc>
+<style>
+.mw-box{fill:var(--tf-card-bg);stroke:currentColor;stroke-opacity:.35;stroke-width:1.2}
+.mw-life{stroke:currentColor;stroke-opacity:.35;stroke-width:1.5}
+.mw-arrow{stroke:currentColor;stroke-width:1.6;fill:none}
+.mw-head{fill:currentColor}
+.mw-t{fill:currentColor;font-size:14px}
+.mw-h{fill:currentColor;font-size:16px;font-weight:700}
+.mw-n{fill:currentColor;fill-opacity:.6;font-size:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.mw-win{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.5;stroke-dasharray:6 4}
+.mw-wt{fill:var(--tf-cta);font-size:13px;font-weight:700}
+.mw-bad{stroke:#e0533d;stroke-width:1.6;fill:none;stroke-dasharray:5 4}
+.mw-badt{fill:#e0533d;font-size:14px;font-weight:700}
+.mw-res{fill:#e0533d;fill-opacity:.1;stroke:#e0533d;stroke-width:1.5}
+</style>
+<defs><marker id="mw-ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" class="mw-head"/></marker></defs>
+<rect class="mw-box" x="60" y="16" width="160" height="44" rx="8"/><text class="mw-h" x="140" y="44" text-anchor="middle">Waiter</text>
+<rect class="mw-box" x="260" y="16" width="240" height="44" rx="8"/><text class="mw-h" x="380" y="44" text-anchor="middle">Shared state (mutex, done)</text>
+<rect class="mw-box" x="540" y="16" width="160" height="44" rx="8"/><text class="mw-h" x="620" y="44" text-anchor="middle">Signaler</text>
+<line class="mw-life" x1="140" y1="60" x2="140" y2="182"/><line class="mw-life" x1="140" y1="360" x2="140" y2="490"/><line class="mw-life" x1="380" y1="60" x2="380" y2="490"/><line class="mw-life" x1="620" y1="60" x2="620" y2="490"/>
+<line class="mw-arrow" x1="140" y1="95" x2="372" y2="95" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="87" text-anchor="middle">lock</text><text class="mw-n" x="40" y="99">67</text>
+<line class="mw-arrow" x1="380" y1="130" x2="148" y2="130" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="122" text-anchor="middle">sees done == 0</text><text class="mw-n" x="40" y="134">69</text>
+<line class="mw-arrow" x1="140" y1="165" x2="372" y2="165" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="157" text-anchor="middle">unlock</text><text class="mw-n" x="40" y="169">75</text>
+<rect class="mw-win" x="56" y="182" width="168" height="178" rx="6"/>
+<text class="mw-wt" x="140" y="262" text-anchor="middle">Machine holds waiter</text>
+<text class="mw-wt" x="140" y="280" text-anchor="middle">after unlock,</text>
+<text class="mw-wt" x="140" y="298" text-anchor="middle">before relock</text>
+<line class="mw-arrow" x1="620" y1="205" x2="388" y2="205" marker-end="url(#mw-ah)"/><text class="mw-t" x="502" y="197" text-anchor="middle">lock</text><text class="mw-n" x="700" y="209">106</text>
+<line class="mw-arrow" x1="620" y1="240" x2="388" y2="240" marker-end="url(#mw-ah)"/><text class="mw-t" x="502" y="232" text-anchor="middle">done = 1</text><text class="mw-n" x="700" y="244">107</text>
+<line class="mw-bad" x1="620" y1="285" x2="240" y2="285"/><text class="mw-badt" x="420" y="277" text-anchor="middle">signal wakes nobody</text><text class="mw-badt" x="232" y="290" text-anchor="middle">✕</text><text class="mw-n" x="700" y="289">108</text>
+<line class="mw-arrow" x1="620" y1="330" x2="388" y2="330" marker-end="url(#mw-ah)"/><text class="mw-t" x="502" y="322" text-anchor="middle">unlock</text><text class="mw-n" x="700" y="334">109</text>
+<line class="mw-arrow" x1="140" y1="385" x2="372" y2="385" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="377" text-anchor="middle">lock</text><text class="mw-n" x="40" y="389">76</text>
+<line class="mw-arrow" x1="140" y1="420" x2="372" y2="420" marker-end="url(#mw-ah)"/><text class="mw-t" x="258" y="412" text-anchor="middle">pthread_cond_timedwait()</text><text class="mw-n" x="40" y="424">86</text>
+<line class="mw-bad" x1="140" y1="428" x2="140" y2="478"/><text class="mw-t" x="152" y="458">50 ms, nobody signals</text>
+<rect class="mw-res" x="60" y="496" width="640" height="48" rx="8"/>
+<text class="mw-badt" x="380" y="525" text-anchor="middle">ETIMEDOUT with done == 1: FAILURE: missed wakeup</text>
+</svg>
+<figcaption>Machine holds the waiter between unlocking and relocking the mutex, allowing the signaler to send its signal before the waiter begins waiting. The signal is lost, and the waiter times out.</figcaption>
+</figure>
+
+<p>Instead of running the program thousands of times, an agent reads the code and names that window as the suspect.</p>
+<p>First, it creates a session with two vCPUs, so that both threads can run at once:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions create --cpus 2</span><br></pre></td></tr></table></figure>
+
+<p>Then it builds the program with debug information and makes a disk from it that runs a single trial:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -O0 -g -static -pthread -o missed-wakeup missed-wakeup.c</span><br><span class="line">machine disks build --binary ./missed-wakeup mw -- 1</span><br></pre></td></tr></table></figure>
+
+<p>Next, it creates a run from the disk, focuses the program so that its threads can be steered, and runs the machine until the program has started:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine create mw --disk mw --cpus 2</span><br><span class="line">machine focus mw add <span class="built_in">comm</span>=missed-wakeup</span><br><span class="line">machine run mw --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">exec</span></span><br><span class="line">machine run mw --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">sched</span></span><br></pre></td></tr></table></figure>
+
+<p>Now, it sets a breakpoint on line 76 and runs until the waiter stops there. The process and thread IDs shown below are from our run and will differ in yours:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ machine break mw add 254 missed-wakeup.c:76</span><br><span class="line">✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 254</span><br><span class="line">$ machine run mw --iters 0</span><br><span class="line">✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 273</span><br></pre></td></tr></table></figure>
+
+<p>With the waiter in the race window, it holds it there, removes the breakpoint, and runs the signaler until it has sent its signal:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ machine tasks mw hold 273</span><br><span class="line">✔ Marked 273 to hold</span><br><span class="line">$ machine break mw delete 1</span><br><span class="line">✔ Deleted breakpoint 1</span><br><span class="line">$ machine run mw --until &#x27;tid=274:at=missed-wakeup.c:109&#x27;</span><br><span class="line">✔ Reached signaler+139, missed-wakeup.c:109, in tid 274</span><br></pre></td></tr></table></figure>
+
+<p>Finally, it releases the waiter and lets the program finish:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ machine tasks mw release 273</span><br><span class="line">✔ Marked 273 to release</span><br><span class="line">$ machine run mw --until &#x27;console~(FAILURE: missed|SUCCESS:)&#x27;</span><br><span class="line">$ machine output mw -n : | grep -E &#x27;FAILURE:|SUCCESS:&#x27;</span><br><span class="line">app | FAILURE: missed wakeup (trial 0)</span><br></pre></td></tr></table></figure>
+
+<p>The bug shows up on the first try. The agent then applies its fix, which rechecks <code>done</code> in a loop around the wait:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-		rc = pthread_cond_timedwait(&amp;cond, &amp;mutex, &amp;ts);</span></span><br><span class="line"><span class="addition">+		rc = 0;</span></span><br><span class="line"><span class="addition">+		while (!done &amp;&amp; rc != ETIMEDOUT)</span></span><br><span class="line"><span class="addition">+			rc = pthread_cond_timedwait(&amp;cond, &amp;mutex, &amp;ts);</span></span><br></pre></td></tr></table></figure>
+
+<p>To verify the fix, it builds the fixed program into a disk of its own, <code>mwfix</code>, and creates a run from it the same way:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gcc -O0 -g -static -pthread -o missed-wakeup missed-wakeup.c</span><br><span class="line">machine disks build --binary ./missed-wakeup mwfix -- 1</span><br><span class="line">machine create mwfix --disk mwfix --cpus 2</span><br><span class="line">machine focus mwfix add <span class="built_in">comm</span>=missed-wakeup</span><br><span class="line">machine run mwfix --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">exec</span></span><br><span class="line">machine run mwfix --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">sched</span></span><br></pre></td></tr></table></figure>
+
+<p>Now, it stops the waiter on the same line and holds it there:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ machine break mwfix add 256 missed-wakeup.c:76</span><br><span class="line">✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 256</span><br><span class="line">$ machine run mwfix --iters 0</span><br><span class="line">✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 278</span><br><span class="line">$ machine tasks mwfix hold 278</span><br><span class="line">✔ Marked 278 to hold</span><br><span class="line">$ machine break mwfix delete 1</span><br><span class="line">✔ Deleted breakpoint 1</span><br></pre></td></tr></table></figure>
+
+<p>Then it runs the signaler past its signal, which is now on line 111 because the fix added two lines, and releases the waiter:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ machine run mwfix --until &#x27;tid=279:at=missed-wakeup.c:111&#x27;</span><br><span class="line">✔ Reached signaler+139, missed-wakeup.c:111, in tid 279</span><br><span class="line">$ machine tasks mwfix release 278</span><br><span class="line">✔ Marked 278 to release</span><br><span class="line">$ machine run mwfix --until &#x27;console~(FAILURE: missed|SUCCESS:)&#x27;</span><br><span class="line">$ machine output mwfix -n : | grep -E &#x27;FAILURE:|SUCCESS:&#x27;</span><br><span class="line">app | SUCCESS: every wait saw the signal</span><br></pre></td></tr></table></figure>
+
+<p>The same interleaving that broke the original now passes, and both runs are recorded, so you can replay either one, step through it, and see for yourself.</p>
+
+        </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h2[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In Part 1, we built an autonomous system that beat all four levels of Super Mario Bros. without any ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </main>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.testflows.com/">Status</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+                <li><a href="/legal/trademark-policy/">Trademark</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1795381945027"></script>
+<script src="/js/machine-hero-type.js?v=1795381945027"></script>
+<script src="/js/download-platforms.js?v=1795381945027"></script>
+<script src="/js/anchor-case.js?v=1795381945027"></script>
+
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

@@ -44,10 +44,14 @@
 <meta property="og:description" content="Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown.">
 <meta property="og:url" content="https://testflows.com/blog/working-with-requirements-just-like-with-code/">
 <meta property="og:image" content="https://testflows.com/images/requirements-as-code.png">
-<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Working With Requirements Just Like With Code">
 <meta name="twitter:description" content="Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown.">
 <meta name="twitter:image" content="https://testflows.com/images/requirements-as-code.png">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Working With Requirements Just Like With Code","description":"Article about how TestFlows enables working with requirements just like with code using software requirements specifications written in Markdown.","image":"https://testflows.com/images/requirements-as-code.png","datePublished":"2023-09-25T00:00:00-04:00","dateModified":"2026-10-01T16:21:54-04:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/working-with-requirements-just-like-with-code/"}</script>
 
   
   
@@ -66,40 +70,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795381945047" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795381945047" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795363447584" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795381945047" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -280,13 +284,23 @@
                 </div>
             </div>
         </div>
+        
         <div class="post-image col-lg-6 m-auto">
             <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" alt="Working With Requirements Just Like With Code">
             <span class="post-image-credit"></span>
         </div>
+        
     </div>
+    
     <div class="blog post-body row">
-        <div class="col-12">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#relationship-between-requirements-and-testers"><span class="toc-text">Relationship between requirements and testers</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#defining-a-requirement-more-precisely"><span class="toc-text">Defining a requirement more precisely</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#looking-closer-at-the-definitions"><span class="toc-text">Looking closer at the definitions</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#requirements-for-a-requirement"><span class="toc-text">Requirements for a requirement</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#why-work-with-requirements"><span class="toc-text">Why work with requirements?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#working-with-requirements"><span class="toc-text">Working with requirements</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#writing-software-requirements-specification-documents"><span class="toc-text">Writing software requirements specification documents</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#example-google-calculator"><span class="toc-text">Example - Google Calculator</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#converting-requirements-in-markdown-to-python-objects"><span class="toc-text">Converting requirements in Markdown to Python objects</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
             <p>“Requirements are the starting point of any design”, this is a quote from the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.youtube.com/watch?v=3afHlAwBudM">presentation given by Nicholas D. Kefalas</a>, who is a senior technical officer at Sikorsky Aircraft&#x2F;Lockheed Martin. In this article, we’ll explore how you can work with requirements just like with code and look at a simple example of specifying <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/TestFlows-Core/blob/master/tests/examples/calculator/requirements/requirements.md">requirements for a Google Calculator web application</a>. While most people
 will agree with the quote above, somehow it is not applied or scarcely applied to the commercial software development process.
 We are developing too fast, and it seems like there is no time to think about the functionality that we are developing,
@@ -692,6 +706,60 @@ to the speed of software development, they are actually required to get it right
 <blockquote><p>“Quality is satisfying requirements and requirement is a description of a behavior.”</p>
 </blockquote>
         </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h1[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="col-12 divider"></div>
         <div class="post-footer"></div>
 
@@ -702,6 +770,18 @@ to the speed of software development, they are actually required to get it right
                     
                         <div class="carousel-item active">
                             <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
@@ -715,6 +795,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
@@ -726,12 +812,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
@@ -745,6 +825,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
@@ -756,12 +842,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
@@ -775,6 +855,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
@@ -786,12 +872,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
@@ -805,6 +885,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
@@ -816,12 +902,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
@@ -835,6 +915,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
@@ -846,12 +932,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
@@ -865,6 +945,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
@@ -876,12 +962,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
@@ -895,6 +975,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
@@ -906,12 +992,6 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
@@ -925,6 +1005,12 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
@@ -937,12 +1023,6 @@ to the speed of software development, they are actually required to get it right
                                     </a>
                                 </div>
                                 
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
-                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
@@ -954,6 +1034,12 @@ to the speed of software development, they are actually required to get it right
                                         </div>
                                     </a>
                                 </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
@@ -1094,10 +1180,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795363447585"></script>
-<script src="/js/machine-hero-type.js?v=1795363447585"></script>
-<script src="/js/download-platforms.js?v=1795363447585"></script>
-<script src="/js/anchor-case.js?v=1795363447585"></script>
+<script src="/js/index-code-type.js?v=1795381945047"></script>
+<script src="/js/machine-hero-type.js?v=1795381945047"></script>
+<script src="/js/download-platforms.js?v=1795381945047"></script>
+<script src="/js/anchor-case.js?v=1795381945047"></script>
 
 <script>
 var isInViewport = function (elem) {

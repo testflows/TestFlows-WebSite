@@ -21,14 +21,86 @@
                 </div>
             </div>
         </div>
+        <% if (page.image) { %>
         <div class="post-image col-lg-6 m-auto">
             <img src="<%- config.root %><%- page.image %>" alt="<%= page.title %>">
             <span class="post-image-credit"><%- page.image.credit %></span>
         </div>
+        <% } %>
     </div>
+    <%
+    /* A post with three sections or more gets a contents panel beside it; `toc: false` in its front matter turns it off.
+       Older posts mark their sections with h1, newer ones with h2: the panel lists the top level the post uses. */
+    var h1Count = (page.content.match(/<h1[\s>]/g) || []).length;
+    var h2Count = (page.content.match(/<h2[\s>]/g) || []).length;
+    var sectionLevel = h1Count >= 3 ? 1 : 2;
+    var sectionCount = sectionLevel === 1 ? h1Count : h2Count;
+    var showToc = page.toc !== false && sectionCount >= 3;
+    %>
     <div class="blog post-body row">
-        <div class="col-12">
+        <% if (showToc) { %>
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <%- toc(page.content, { list_number: false, min_depth: sectionLevel, max_depth: sectionLevel }) %>
+            </div>
+        </nav>
+        <% } %>
+        <div class="post-content <%= showToc ? 'col-lg-9' : 'col-12' %>">
             <%- page.content %>
+        </div>
+        <% if (showToc) { %>
+        <script>
+        var postSectionSelector = ".post-content h<%= sectionLevel %>[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        <% } %>
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
         </div>
         <div class="col-12 divider"></div>
         <div class="post-footer"></div>

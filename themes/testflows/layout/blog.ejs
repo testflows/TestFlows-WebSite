@@ -9,7 +9,7 @@
             <article class="blog-card">
                 <div class="blog-card-copy">
                     <h2 class="blog-card-title">
-                        <a href="<%- item.permalink %>"><%- item.title %></a>
+                        <a href="<%- url_for(item.path) %>"><%- item.title %></a>
                     </h2>
                     <div class="blog-card-excerpt">
                         <%- item.excerpt %>
@@ -18,11 +18,11 @@
                         <span class="blog-card-author"><%- item.author %></span>
                         <time datetime="<%= date(item.date, 'YYYY-MM-DD') %>"><%= date(item.date, 'MMMM D, YYYY') %></time>
                     </div>
-                    <a class="blog-card-more" href="<%- item.permalink %>">Read more <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                    <a class="blog-card-more" href="<%- url_for(item.path) %>">Read more <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
                 </div>
                 <% if (item.image) { %>
                 <div class="blog-card-media">
-                    <a href="<%- item.permalink %>" tabindex="-1" aria-hidden="true">
+                    <a href="<%- url_for(item.path) %>" tabindex="-1" aria-hidden="true">
                         <img src="<%- url_for(item.image) %>" alt="">
                     </a>
                 </div>

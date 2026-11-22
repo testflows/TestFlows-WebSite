@@ -44,10 +44,14 @@
 <meta property="og:description" content="An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques.">
 <meta property="og:url" content="https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/">
 <meta property="og:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png">
-<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
 <meta name="twitter:description" content="An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques.">
 <meta name="twitter:image" content="https://testflows.com/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Testing Super Mario Using a Behavior Model Autonomously (Part 2)","description":"An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques.","image":"https://testflows.com/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png","datePublished":"2025-10-10T00:00:00-04:00","dateModified":"2026-10-27T07:51:51-04:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/"}</script>
 
   
   
@@ -63,40 +67,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795381945029" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795381945029" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795363447567" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795381945029" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -277,13 +281,23 @@
                 </div>
             </div>
         </div>
+        
         <div class="post-image col-lg-6 m-auto">
             <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
             <span class="post-image-credit"></span>
         </div>
+        
     </div>
+    
     <div class="blog post-body row">
-        <div class="col-12">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#plugging-the-behavior-model"><span class="toc-text">Plugging the Behavior Model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#running-autonomous-exploration-with-the-model"><span class="toc-text">Running autonomous exploration with the model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bidirectional-testing"><span class="toc-text">Bidirectional testing</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#deciding-if-model-or-game-has-a-bug"><span class="toc-text">Deciding if model or game has a bug</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#deterministic-execution"><span class="toc-text">Deterministic execution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#updating-the-model"><span class="toc-text">Updating the model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#expanding-game%E2%80%99s-observability"><span class="toc-text">Expanding game’s observability</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#finding-and-fixing-more-bugs-in-the-model"><span class="toc-text">Finding and fixing more bugs in the model</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#finding-and-fixing-bugs-in-the-game"><span class="toc-text">Finding and fixing bugs in the game</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
             <p>In <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/">Part 1</a>, we built an autonomous system that beat all four levels of <em>Super Mario Bros.</em> without any human guidance. We treated the exploration as a mutation-based Genetic Algorithm, and it worked: the system discovered winning paths by exploring, replaying, and mutating input sequences. It found shortcuts, navigated complex enemy patterns, and even uncovered unexpected behaviors like <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/#finding-a-path-to-complete-level-4">the Level 4 collision bug</a>. However, the exploration only validated one dimension of correctness: <em>Mario’s progress</em>. Our fitness function measured how far Mario advanced (x-position, level completion, and time), but the exploration couldn’t tell us whether the game actually behaved correctly. Did Mario’s velocity follow expected constraints? Were jumps causally justified? Did falling only occur when Mario lacked ground support? We had no way to know. This shows that autonomous testing by itself is not enough. To address this problem, we need a way to actually check state correctness. What we need is to plug in a behavior model!<span id="more"></span></p>
 <h2 id="plugging-the-behavior-model"><a href="#plugging-the-behavior-model" class="headerlink" title="Plugging the Behavior Model"></a>Plugging the Behavior Model</h2><p>We already had a behavior model from our earlier series (<a href="/blog/testing-super-mario-using-a-behavior-model-part1/">Part 1</a> and <a href="/blog/testing-super-mario-using-a-behavior-model-part2/">Part 2</a>)—a model with <strong>causal</strong>, <strong>safety</strong>, and <strong>liveness</strong> properties that enforce game correctness frame-by-frame. The original model is available in the v2.0 branch:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> --branch v2.0 --single-branch https://github.com/testflows/Examples.git &amp;&amp; <span class="built_in">cd</span> Examples/SuperMario</span><br></pre></td></tr></table></figure>
@@ -392,6 +406,60 @@
 <p>Overall, autonomous exploration is excellent at traversing vast state spaces while behavior models ensure correctness throughout. Together, they find not just winning paths, but correctness bugs hiding in edge cases that most likely only your customers would find in production.</p>
 
         </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h2[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="col-12 divider"></div>
         <div class="post-footer"></div>
 
@@ -402,6 +470,18 @@
                     
                         <div class="carousel-item active">
                             <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
@@ -415,6 +495,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
@@ -426,12 +512,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
@@ -445,6 +525,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
@@ -456,12 +542,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
@@ -475,6 +555,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
@@ -486,12 +572,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
@@ -505,6 +585,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
@@ -516,12 +602,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
@@ -535,6 +615,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
@@ -546,12 +632,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
@@ -565,6 +645,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
@@ -576,12 +662,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
@@ -595,6 +675,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
@@ -606,12 +692,6 @@
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
@@ -625,6 +705,12 @@
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
@@ -637,12 +723,6 @@
                                     </a>
                                 </div>
                                 
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
-                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
@@ -654,6 +734,12 @@
                                         </div>
                                     </a>
                                 </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
@@ -794,10 +880,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795363447568"></script>
-<script src="/js/machine-hero-type.js?v=1795363447568"></script>
-<script src="/js/download-platforms.js?v=1795363447568"></script>
-<script src="/js/anchor-case.js?v=1795363447568"></script>
+<script src="/js/index-code-type.js?v=1795381945030"></script>
+<script src="/js/machine-hero-type.js?v=1795381945030"></script>
+<script src="/js/download-platforms.js?v=1795381945030"></script>
+<script src="/js/anchor-case.js?v=1795381945030"></script>
 
 <script>
 var isInViewport = function (elem) {

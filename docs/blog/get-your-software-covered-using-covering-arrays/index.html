@@ -44,10 +44,14 @@
 <meta property="og:description" content="Article about how TestFlows enables using covering arrays as part of combinatorial testing.">
 <meta property="og:url" content="https://testflows.com/blog/get-your-software-covered-using-covering-arrays/">
 <meta property="og:image" content="https://testflows.com/images/covering-arrays.png">
-<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Get Your Software Covered Using Covering Arrays">
 <meta name="twitter:description" content="Article about how TestFlows enables using covering arrays as part of combinatorial testing.">
 <meta name="twitter:image" content="https://testflows.com/images/covering-arrays.png">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Get Your Software Covered Using Covering Arrays","description":"Article about how TestFlows enables using covering arrays as part of combinatorial testing.","image":"https://testflows.com/images/covering-arrays.png","datePublished":"2023-10-02T00:00:00-04:00","dateModified":"2026-10-27T07:51:51-04:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/get-your-software-covered-using-covering-arrays/"}</script>
 
   
   
@@ -66,40 +70,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795381945046" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795381945046" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795363447583" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795381945046" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -280,13 +284,23 @@
                 </div>
             </div>
         </div>
+        
         <div class="post-image col-lg-6 m-auto">
             <img loading="lazy" decoding="async" src="/images/covering-arrays.png" alt="Get Your Software Covered Using Covering Arrays">
             <span class="post-image-credit"></span>
         </div>
+        
     </div>
+    
     <div class="blog post-body row">
-        <div class="col-12">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#checking-the-covering-array"><span class="toc-text">Checking the Covering Array</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#dumping-the-covering-array"><span class="toc-text">Dumping the Covering Array</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#wrapping-up"><span class="toc-text">Wrapping Up</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
             <p>For software systems with any non-trivial number of parameters, exhaustively testing all possible combinations of parameter values is not feasible.
 For example, if we have <code>10</code> parameters (<code>k = 10</code>) that each have <code>10</code> possible values (<code>v = 10</code>), the
 number of all possibilities is <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>v</mi><mi>k</mi></msup><mo>=</mo><msup><mn>10</mn><mn>10</mn></msup><mo>=</mo><msub><mn>10</mn><mrow><mi>b</mi><mi>i</mi><mi>l</mi><mi>l</mi><mi>i</mi><mi>o</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">v^k=10^{10} = {10}_{billion}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8491em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0359em;">v</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8491em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.0315em;">k</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">10</span></span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7944em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord"><span class="mord">10</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">bi</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mord mathnormal mtight" style="margin-right:0.0197em;">l</span><span class="mord mathnormal mtight">i</span><span class="mord mathnormal mtight">o</span><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, thus requiring 10 billion tests for complete coverage. <span id="more"></span></p>
@@ -362,6 +376,60 @@ section in the <a href="https://testflows.com/docs/framework/">Handbook</a>. Unt
 happy combinatorial testing using covering arrays!</p>
 
         </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h1[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="col-12 divider"></div>
         <div class="post-footer"></div>
 
@@ -372,6 +440,18 @@ happy combinatorial testing using covering arrays!</p>
                     
                         <div class="carousel-item active">
                             <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
@@ -385,6 +465,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
@@ -396,12 +482,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
@@ -415,6 +495,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
@@ -426,12 +512,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
@@ -445,6 +525,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
@@ -456,12 +542,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
@@ -475,6 +555,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
@@ -486,12 +572,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
@@ -505,6 +585,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
@@ -516,12 +602,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
@@ -535,6 +615,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
@@ -546,12 +632,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
@@ -565,6 +645,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
@@ -576,12 +662,6 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
@@ -595,6 +675,12 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
@@ -607,12 +693,6 @@ happy combinatorial testing using covering arrays!</p>
                                     </a>
                                 </div>
                                 
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
-                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
@@ -624,6 +704,12 @@ happy combinatorial testing using covering arrays!</p>
                                         </div>
                                     </a>
                                 </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
@@ -764,10 +850,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795363447584"></script>
-<script src="/js/machine-hero-type.js?v=1795363447584"></script>
-<script src="/js/download-platforms.js?v=1795363447584"></script>
-<script src="/js/anchor-case.js?v=1795363447584"></script>
+<script src="/js/index-code-type.js?v=1795381945046"></script>
+<script src="/js/machine-hero-type.js?v=1795381945046"></script>
+<script src="/js/download-platforms.js?v=1795381945046"></script>
+<script src="/js/anchor-case.js?v=1795381945046"></script>
 
 <script>
 var isInViewport = function (elem) {

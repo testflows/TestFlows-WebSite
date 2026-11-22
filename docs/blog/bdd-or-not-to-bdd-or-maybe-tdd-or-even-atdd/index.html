@@ -44,10 +44,14 @@
 <meta property="og:description" content="Article discussing how the choice of a software development process affects quality assurance team.">
 <meta property="og:url" content="https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/">
 <meta property="og:image" content="https://testflows.com/images/bdd-or-not-to-bdd.png">
-<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
 <meta name="twitter:description" content="Article discussing how the choice of a software development process affects quality assurance team.">
 <meta name="twitter:image" content="https://testflows.com/images/bdd-or-not-to-bdd.png">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?","description":"Article discussing how the choice of a software development process affects quality assurance team.","image":"https://testflows.com/images/bdd-or-not-to-bdd.png","datePublished":"2023-10-03T00:00:00-04:00","dateModified":"2026-10-01T16:21:54-04:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/"}</script>
 
   
   
@@ -63,40 +67,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795381945045" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795381945045" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795363447582" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795381945045" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -277,13 +281,23 @@
                 </div>
             </div>
         </div>
+        
         <div class="post-image col-lg-6 m-auto">
             <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
             <span class="post-image-credit"></span>
         </div>
+        
     </div>
+    
     <div class="blog post-body row">
-        <div class="col-12">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#what-is-the-difference-between-bdd-tdd-and-atdd"><span class="toc-text">What is the difference between BDD, TDD, and ATDD?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#how-does-it-affect-your-qa-team"><span class="toc-text">How does it affect your QA team?</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#so-should-your-team-use-bdd"><span class="toc-text">So should your team use BDD?</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
             <p>How do software development processes such as behavior-driven development (BDD), test-driven development (TDD), or even acceptance-test-driven development (ATDD) affect quality assurance team? To answer this question, we need to first note that all these terms end with “development” and not with “quality assurance”. But could we define behavior-driven quality assurance (BDQA), test-driven quality assurance (TDQA), or even acceptance-test-driven quality assurance (ATDQA)? If so, what would be the difference between them? Well, it would depend on the definitions of a behavior, a test, and an acceptance test.<span id="more"></span></p>
 <p>A few days ago, I came across a thread on Reddit titled <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.reddit.com/r/QualityAssurance/comments/16pis7x/how_is_bdd_used_in_your_team/?utm_campaign=Software+Testing+Weekly&utm_medium=web&utm_source=Software_Testing_Weekly_188">How is BDD used in your team?</a> that mentioned BDD, TDD, and ATDD in the discussion. While quite a few people had negative comments regarding the BDD approach, I asked myself a single question. How can developers and testers make better decisions, and could there be less controversy around these different software development processes and how a quality assurance team participates in them?</p>
 <p>Unfortunately, I concluded that most developers and testers lack precise definitions of the key concepts
@@ -333,6 +347,60 @@ Indeed, if behavior is an infinite sequence of states, we do have a challenging 
 This is definitely better than not having product behavior clearly defined. It also supports explicit and clear test procedures. However, one needs to decouple BDD as a concept from its implementations that are tied to Gherkin, but this is a topic for another article.</p>
 
         </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h1[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="col-12 divider"></div>
         <div class="post-footer"></div>
 
@@ -343,6 +411,18 @@ This is definitely better than not having product behavior clearly defined. It a
                     
                         <div class="carousel-item active">
                             <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
@@ -356,6 +436,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
@@ -367,12 +453,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
@@ -386,6 +466,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
@@ -397,12 +483,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
@@ -416,6 +496,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
@@ -427,12 +513,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
@@ -446,6 +526,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
@@ -457,12 +543,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
@@ -476,6 +556,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
@@ -487,12 +573,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
@@ -506,6 +586,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
@@ -517,12 +603,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
@@ -536,6 +616,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
@@ -547,12 +633,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
@@ -566,6 +646,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
@@ -578,12 +664,6 @@ This is definitely better than not having product behavior clearly defined. It a
                                     </a>
                                 </div>
                                 
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
-                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
@@ -595,6 +675,12 @@ This is definitely better than not having product behavior clearly defined. It a
                                         </div>
                                     </a>
                                 </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
@@ -735,10 +821,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795363447583"></script>
-<script src="/js/machine-hero-type.js?v=1795363447583"></script>
-<script src="/js/download-platforms.js?v=1795363447583"></script>
-<script src="/js/anchor-case.js?v=1795363447583"></script>
+<script src="/js/index-code-type.js?v=1795381945045"></script>
+<script src="/js/machine-hero-type.js?v=1795381945045"></script>
+<script src="/js/download-platforms.js?v=1795381945045"></script>
+<script src="/js/anchor-case.js?v=1795381945045"></script>
 
 <script>
 var isInViewport = function (elem) {

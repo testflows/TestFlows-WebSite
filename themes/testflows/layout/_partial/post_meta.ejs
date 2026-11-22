@@ -6,7 +6,22 @@
 <meta property="og:description" content="<%= pDesc %>">
 <meta property="og:url" content="<%- full_url_for(String(page.path).replace(/index\.html$/, '')) %>">
 <meta property="og:image" content="<%- pImage %>">
-<meta name="twitter:card" content="summary_large_image">
+<%# Post covers are square: a summary card shows them whole, where a large card crops them to 2:1. %>
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="<%= page.title %>">
 <meta name="twitter:description" content="<%= pDesc %>">
 <meta name="twitter:image" content="<%- pImage %>">
+<%# Structured data: the post as an article, for search engines. %>
+<% var pLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": page.title,
+  "description": pDesc,
+  "image": pImage,
+  "datePublished": date(page.date, 'YYYY-MM-DDTHH:mm:ssZ'),
+  "dateModified": date((page.updated && page.updated > page.date) ? page.updated : page.date, 'YYYY-MM-DDTHH:mm:ssZ'),
+  "author": {"@type": "Person", "name": page.author || "TestFlows"},
+  "publisher": {"@type": "Organization", "name": "TestFlows", "url": "https://testflows.com/", "logo": {"@type": "ImageObject", "url": full_url_for(config.image)}},
+  "mainEntityOfPage": full_url_for(String(page.path).replace(/index\.html$/, ''))
+}; %>
+<script type="application/ld+json"><%- JSON.stringify(pLd).replace(/</g, '\\u003c') %></script>

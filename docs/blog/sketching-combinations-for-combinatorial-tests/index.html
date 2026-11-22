@@ -44,10 +44,14 @@
 <meta property="og:description" content="Sketching combinations for combinatorial tests using TestFlows.">
 <meta property="og:url" content="https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/">
 <meta property="og:image" content="https://testflows.com/images/sketching-combinations.png">
-<meta name="twitter:card" content="summary_large_image">
+
+<meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Sketching Combinations For Combinatorial Tests">
 <meta name="twitter:description" content="Sketching combinations for combinatorial tests using TestFlows.">
 <meta name="twitter:image" content="https://testflows.com/images/sketching-combinations.png">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Sketching Combinations For Combinatorial Tests","description":"Sketching combinations for combinatorial tests using TestFlows.","image":"https://testflows.com/images/sketching-combinations.png","datePublished":"2023-10-13T00:00:00-04:00","dateModified":"2026-10-27T07:55:44-04:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/"}</script>
 
   
   
@@ -66,40 +70,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795381945043" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795381945043" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795363447580" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795381945043" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -280,13 +284,23 @@
                 </div>
             </div>
         </div>
+        
         <div class="post-image col-lg-6 m-auto">
             <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" alt="Sketching Combinations For Combinatorial Tests">
             <span class="post-image-credit"></span>
         </div>
+        
     </div>
+    
     <div class="blog post-body row">
-        <div class="col-12">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#the-addition-function"><span class="toc-text">The addition function</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#typical-check"><span class="toc-text">Typical check</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#basic-test"><span class="toc-text">Basic test</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#more-advanced-test"><span class="toc-text">More advanced test</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#combinatorial-sketches-to-the-rescue"><span class="toc-text">Combinatorial sketches to the rescue!</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#let%E2%80%99s-sketch-it-out"><span class="toc-text">Let’s sketch it out</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#wrapping-up"><span class="toc-text">Wrapping up</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
             <p>Writing combinatorial tests usually requires that the author of the test plans for combinatorial testing upfront.
 This requires that all the combination variables and their values are identified and combined with the code
 that creates possible combinations and loops through each one of them. However, it would be nice to simplify the process and
@@ -391,6 +405,60 @@ to get a glimpse of how <span><img loading="lazy" decoding="async" alt="TestFlow
 combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin. You will have fun!</p>
 
         </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h1[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
         <div class="col-12 divider"></div>
         <div class="post-footer"></div>
 
@@ -401,6 +469,18 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                     
                         <div class="carousel-item active">
                             <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
@@ -414,6 +494,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
@@ -425,12 +511,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
@@ -444,6 +524,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
@@ -455,12 +541,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
@@ -474,6 +554,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
@@ -485,12 +571,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
@@ -504,6 +584,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
@@ -515,12 +601,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
@@ -534,6 +614,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
@@ -545,12 +631,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
@@ -564,6 +644,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
@@ -575,12 +661,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
@@ -594,6 +674,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
@@ -605,12 +691,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
-                                
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
@@ -624,6 +704,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
@@ -636,12 +722,6 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                     </a>
                                 </div>
                                 
-                            </div>
-                        </div>
-                    
-                        <div class="carousel-item ">
-                            <div class="row">
-                                
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
                                         <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
@@ -653,6 +733,12 @@ combinatorial <a href="/docs/framework/#using-sketches">Sketch</a>es for a spin.
                                         </div>
                                     </a>
                                 </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
                                 
                                 <div class="col-md-6 d-flex">
                                     <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
@@ -793,10 +879,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795363447581"></script>
-<script src="/js/machine-hero-type.js?v=1795363447581"></script>
-<script src="/js/download-platforms.js?v=1795363447581"></script>
-<script src="/js/anchor-case.js?v=1795363447581"></script>
+<script src="/js/index-code-type.js?v=1795381945043"></script>
+<script src="/js/machine-hero-type.js?v=1795381945043"></script>
+<script src="/js/download-platforms.js?v=1795381945043"></script>
+<script src="/js/anchor-case.js?v=1795381945043"></script>
 
 <script>
 var isInViewport = function (elem) {
