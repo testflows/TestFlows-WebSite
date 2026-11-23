@@ -7,9 +7,9 @@ date: 2026-11-22
 author: Vitaliy Zakaznikov
 keywords: deterministic simulation testing, DST, AI coding agents, deterministic hypervisor, fault injection, data races, record and replay, time travel debugging, retroactive logging, Python SDK
 image: images/introducing-testflows-machine.png
-social_image: images/introducing-testflows-machine-share.png
-social_image_width: 2400
-social_image_height: 1254
+social_image: images/introducing-testflows-machine-linkedin.png
+social_image_width: 1200
+social_image_height: 627
 icon: fas fa-glasses pt-5 pb-5
 ---
 
