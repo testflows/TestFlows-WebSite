@@ -134,7 +134,11 @@ hexo.extend.filter.register('before_post_render', function (data) {
         .replace(/^(\[[^\]\n]+\]:[ \t]+)([\w-]+\.md)(#\S*)?[ \t]*$/, toDefinition);
     }).join('\n');
   };
-  data.content = data.content.replace(INCLUDE, (match, name) => rewrite(name, files.get(name)));
+  // Each included file is one <section class="handbook-part">, so the page can skip laying out
+  // the parts off screen (content-visibility in content.css): the Machine docs are 18 parts and
+  // about 40,000 elements in one page. The blank lines keep the file's text Markdown.
+  data.content = data.content.replace(INCLUDE, (match, name) =>
+    `<section class="handbook-part">\n\n${rewrite(name, files.get(name))}\n\n</section>`);
   return data;
 }, 1);  // priority 1: before Hexo's own filters, which turn fenced code into highlighted blocks
 

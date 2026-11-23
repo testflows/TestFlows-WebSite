@@ -61,40 +61,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795467100997" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795458169334" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795458169335" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795458169335" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795467100997" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795458169335" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795467100997" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -403,7 +403,9 @@
             })();
             </script>
             <div class="col-lg-8 handbook-article">
-                <h1 id="what-is-it"><a href="#what-is-it" class="headerlink" title="What is it?"></a>What is it?</h1><p><strong>TestFlows Machine</strong> is a deterministic simulation testing environment for
+                <section class="handbook-part">
+
+<h1 id="what-is-it"><a href="#what-is-it" class="headerlink" title="What is it?"></a>What is it?</h1><p><strong>TestFlows Machine</strong> is a deterministic simulation testing environment for
 developers and AI coding agents. You run, explore, debug and test your
 software in it, yourself or with an AI coding agent. It is built on our
 deterministic hypervisor, which runs your programs, Docker images and Docker
@@ -522,6 +524,10 @@ take any of these points. If the one you name isn’t a checkpoint, they start
 the branch at the nearest checkpoint before it and replay the rest of the way
 for you. <code>fork --no-start</code> refuses such a point, because it leaves no machine
 to replay on, and so does <code>detach</code>.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="getting-started"><a href="#getting-started" class="headerlink" title="Getting started"></a>Getting started</h1><h2 id="with-a-coding-agent"><a href="#with-a-coding-agent" class="headerlink" title="With a coding agent"></a>With a coding agent</h2><p>The Machine skill teaches a coding agent, such as Claude Code, Codex or
 Cursor, to work with Machine: install the client, sign it in with you,
 reproduce bugs and prove fixes. Install it for Claude Code and Cursor:</p>
@@ -752,6 +758,10 @@ For privacy-related questions, email <code>privacy@testflows.com</code>. Report
 abuse to <code>abuse@testflows.com</code>. Report security vulnerabilities to
 <code>security@testflows.com</code>, or through GitHub’s
 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/security/advisories/new">private vulnerability reporting</a>.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="disks"><a href="#disks" class="headerlink" title="Disks"></a>Disks</h1><p>A disk is what a machine boots, and <a href="#machine-disks-build"><code>machine disks build</code></a> makes one. You give
 it exactly one source.</p>
 <table>
@@ -1078,6 +1088,10 @@ account can have at most 2 transfers in progress at a time, counting the
 uploads and downloads of every disk. A build you start while 2 are running is
 refused with <code>Too many transfers in progress (max 2)</code>, so start it again once
 one of them ends.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="sessions"><a href="#sessions" class="headerlink" title="Sessions"></a>Sessions</h1><p>Runs execute in a session, and you create one with <a href="#machine-sessions-create"><code>machine sessions create</code></a>.
 Pick its size when you create it.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine sessions create ci-1 --cpus 2 --mem 4G</span><br></pre></td></tr></table></figure>
@@ -1185,6 +1199,10 @@ whether the website, the API, sign-in and sessions on each class work now.
 It also lists open incidents, the incidents of the last 14 days and any
 planned maintenance. If every component is operational, check your
 network. If your network works, <a href="https://testflows.com/contact.html">contact support</a>.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="running-a-machine"><a href="#running-a-machine" class="headerlink" title="Running a machine"></a>Running a machine</h1><h2 id="creating-a-run"><a href="#creating-a-run" class="headerlink" title="Creating a run"></a>Creating a run</h2><p><a href="#machine-create"><code>machine create</code></a> creates a run from a disk and starts it. The run’s name goes
 first and is optional. Without one, Machine generates a name.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine create app --disk app --cpus 2 --mem 512</span><br></pre></td></tr></table></figure>
@@ -2388,6 +2406,10 @@ durable copy stays, and starting the run brings it back.</p>
 
 <p><a href="#machine-cleanup"><code>machine cleanup</code></a> removes stale runs and other leftovers, and <code>--force</code> also
 kills machines that have been orphaned.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="checkpoints-and-branches"><a href="#checkpoints-and-branches" class="headerlink" title="Checkpoints and branches"></a>Checkpoints and branches</h1><p>Branching is cheap, because a branch shares its parent’s history instead of
 copying it. That is what makes it practical to try many things from one point.</p>
 <h2 id="checkpoints"><a href="#checkpoints" class="headerlink" title="Checkpoints"></a>Checkpoints</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">machine checkpoint app booted</span><br><span class="line">machine checkpoints app</span><br></pre></td></tr></table></figure>
@@ -2495,6 +2517,10 @@ written with a percent sign.</p>
 
 <p>From Python, <code>run.marks.add(&quot;crashed&quot;)</code> marks the branch, <code>run.marks.remove(&quot;crashed&quot;)</code>
 takes the mark off, and <code>client.marks.list()</code> lists every mark.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="replay"><a href="#replay" class="headerlink" title="Replay"></a>Replay</h1><p>Replay is what makes a recording useful. A branch can play back what its
 parent recorded, and Machine checks at each entry that it gets the same result.</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine replay app/try-1</span><br></pre></td></tr></table></figure>
@@ -2621,6 +2647,10 @@ that entry, with the exit handled, and it hashes memory and the disk whether or 
 run does at each entry.</p>
 <p>A replay compares the hashes the recording stored at each entry. <code>hash</code> is
 for two machines you have in front of you.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="steering-programs"><a href="#steering-programs" class="headerlink" title="Steering programs"></a>Steering programs</h1><p>By default the guest kernel’s scheduler decides which thread runs when. A bug
 that needs one thread to run past another will not show up if the scheduler
 never picks that order, so Machine lets you pick it.</p>
@@ -2857,6 +2887,10 @@ pushes the clock forward.</p>
 <p><a href="#fault-injection">Fault injection</a> makes things fail: system calls, the
 kernel and the disk, a service’s container, and the date the guest and its
 containers read.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="fault-injection"><a href="#fault-injection" class="headerlink" title="Fault injection"></a>Fault injection</h1><p>Machine makes things fail inside the machine, at the point you choose or by
 chance, and records each fault with the run, so a replay fails exactly the same
 way. There are four kinds of fault, each with its own command:</p>
@@ -3713,6 +3747,10 @@ fault, as well as the counts.</li>
 It does not look at the arguments, so “openat of &#x2F;etc&#x2F;passwd” is not a fault.
 Stop at the call and fail that one instead.</li>
 </ul>
+</section>
+
+<section class="handbook-part">
+
 <h2 id="container-faults"><a href="#container-faults" class="headerlink" title="Container faults"></a>Container faults</h2><p>A project run as containers is a small cluster, and each service is a node.
 <a href="#machine-containers"><code>machine containers</code></a> puts a fault on one
 container while the others keep running:</p>
@@ -3833,6 +3871,10 @@ time. To crash at another point, run on to the next sync and fork again.</p>
 <p>From Python, <code>run.containers.crash(&quot;db&quot;, restart=&quot;0&quot;)</code> and the other verbs
 take the same options as keywords. <a href="#container-faults">The SDK’s Container faults</a>
 has an example.</p>
+</section>
+
+<section class="handbook-part">
+
 <h2 id="clock-faults"><a href="#clock-faults" class="headerlink" title="Clock faults"></a>Clock faults</h2><p>Software reads two kinds of time. Elapsed time, <code>CLOCK_MONOTONIC</code> and the TSC,
 is the machine’s own, and <a href="#machine-time">Machine time</a>
 controls it. The date, <code>CLOCK_REALTIME</code>, is what <code>date</code>, <code>time()</code> and
@@ -4038,6 +4080,10 @@ program can re-arm.</li>
 calls <code>settimeofday</code> sets the guest’s date, as it would set a host’s; its
 own offset stays.</li>
 </ul>
+</section>
+
+<section class="handbook-part">
+
 <h2 id="network-faults"><a href="#network-faults" class="headerlink" title="Network faults"></a>Network faults</h2><p>A distributed system fails at its links: one that is slow, one that loses
 packets, one that stalls and then delivers everything at once, a node cut
 off from one peer while it still reaches the others, a connection reset in
@@ -4475,6 +4521,10 @@ as many segments as it holds, and TCP sends the whole unit again. The
 log’s <code>len</code> shows each unit’s size.</p>
 </li>
 </ul>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="debugging"><a href="#debugging" class="headerlink" title="Debugging"></a>Debugging</h1><p>There are two ways to debug a program in a machine. The machine’s own
 debugger works from outside the guest: <code>machine regs</code>, <code>mem</code>, <code>step</code>, <code>break</code>
 and the rest read and change a task while the machine is stopped, and they
@@ -4881,6 +4931,10 @@ and the next session starts from the same instruction:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine fork ch --at ^ready --name again</span><br></pre></td></tr></table></figure>
 
 
+</section>
+
+<section class="handbook-part">
+
 <h1 id="reading-the-disk"><a href="#reading-the-disk" class="headerlink" title="Reading the disk"></a>Reading the disk</h1><p>You can read files from a run’s disk without touching the run.
 <a href="#machine-fs"><code>machine fs</code></a> reads the filesystem on the disk as a
 checkpoint saved it, so it never changes how the machine executes.</p>
@@ -4919,6 +4973,10 @@ the files as they are now, synced or not, and the run records it.</p>
 <p>From Python, <code>run.fs.ls(&quot;/var/log&quot;, at=&quot;^done&quot;)</code> lists a directory,
 <code>run.fs.cat(&quot;/var/log/app.log&quot;, at=&quot;^done&quot;)</code> returns a file’s bytes, and
 <code>run.fs.cp(&quot;/var/log&quot;, &quot;./logs&quot;, at=&quot;^done&quot;, recursive=True)</code> copies the directory out.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="account-and-billing"><a href="#account-and-billing" class="headerlink" title="Account and billing"></a>Account and billing</h1><p>Most of what the account page on the website does, the client does too.</p>
 <table>
 <thead>
@@ -5036,6 +5094,10 @@ counts until you prune. The figures are from the last measurement, and
 <code>machine detach</code> and <code>machine disks build</code> are refused.
 A machine that is already running keeps recording and saving. To get under
 the quota, delete runs or disks, stop your sessions, and prune.</p>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="scripting"><a href="#scripting" class="headerlink" title="Scripting"></a>Scripting</h1><p>Everything the client does can be done from a script.</p>
 <ul>
 <li><code>-o json</code> prints machine-readable output. <code>-o raw</code> prints text without formatting values. Put the flag before the command, like <code>machine -o json runs</code>.</li>
@@ -5046,6 +5108,10 @@ the quota, delete runs or disks, stop your sessions, and prune.</p>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine -q --<span class="built_in">timeout</span> 300 run app --<span class="keyword">until</span> tasks || <span class="built_in">echo</span> <span class="string">&quot;boot did not finish&quot;</span></span><br></pre></td></tr></table></figure>
 
+
+</section>
+
+<section class="handbook-part">
 
 <h1 id="commands"><a href="#commands" class="headerlink" title="Commands"></a>Commands</h1><p><code>machine --help</code> lists these commands, in this order. The options apply to every
 command. Add <code>--help</code> after a command to list its own options. Where a command
@@ -16792,6 +16858,10 @@ ignore count lasts. A count of 0 stops at the next.</p>
 <li><a href="#machine-catch"><code>machine catch</code></a></li>
 <li><a href="#machine-break-ignore"><code>machine break ignore</code></a></li>
 </ul>
+</section>
+
+<section class="handbook-part">
+
 <h1 id="python-sdk"><a href="#python-sdk" class="headerlink" title="Python SDK"></a>Python SDK</h1><p>The SDK does what the client does, from Python. If you can type it in a
 terminal, you can call it from a program.</p>
 <h2 id="installing"><a href="#installing" class="headerlink" title="Installing"></a>Installing</h2><p>The SDK runs on the SDK Core, a proprietary compiled module licensed under the
@@ -17590,6 +17660,8 @@ the disk at the end.</p>
 The SDK Core it runs on is proprietary
 and is not part of the SDK. It comes with the client, under the
 <a href="/machine/legal/client-eula/">Client EULA</a>.</p>
+</section>
+
 <p>ClickHouse is a registered trademark of ClickHouse, Inc. See <a target="_blank" rel="noopener external nofollow noreferrer" href="https://clickhouse.com/">clickhouse.com</a>.</p>
 
                 <div class="handbook-divider"></div>
@@ -17703,10 +17775,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795458169335"></script>
-<script src="/js/machine-hero-type.js?v=1795458169335"></script>
-<script src="/js/download-platforms.js?v=1795458169335"></script>
-<script src="/js/anchor-case.js?v=1795458169335"></script>
+<script src="/js/index-code-type.js?v=1795467100997"></script>
+<script src="/js/machine-hero-type.js?v=1795467100997"></script>
+<script src="/js/download-platforms.js?v=1795467100997"></script>
+<script src="/js/anchor-case.js?v=1795467100997"></script>
 
 <script>
 var isInViewport = function (elem) {

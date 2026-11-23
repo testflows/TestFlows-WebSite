@@ -763,3 +763,13 @@ figure.highlight .term-mark {
    figure and keeps none. */
 main.content figure.highlight { margin-bottom: 1rem; }
 main.content :not(figure) > table { margin-bottom: 1rem; }
+
+/* A docs page is its parts, each a <section class="handbook-part"> (scripts/include-markdown.js).
+   The browser lays out and paints a part only when it nears the screen, so the Machine docs,
+   about 40,000 elements, open as fast as a short page. Find in page and links to a heading
+   still reach a part that is skipped. The height stands in for a part not laid out yet, and
+   auto keeps each part's real height once it has been. */
+.handbook-part {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 2400px;
+}
