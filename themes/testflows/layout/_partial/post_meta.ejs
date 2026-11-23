@@ -1,4 +1,4 @@
-<% var pImage = full_url_for(page.image || config.social_share); var pDesc = page.description || config.description; %>
+<% /* social_image: a full-size copy for share previews, which need 1200px; image stays the list's thumbnail. */ var pImage = full_url_for(page.social_image || page.image || config.social_share); var pDesc = page.description || config.description; %>
 <meta name="publish_date" property="og:publish_date" content="<%- date(page.date, 'YYYY-MM-DDTHH:mm:ss-0000') %>">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="<%- date(page.date, 'YYYY-MM-DDTHH:mm:ss-0000') %>" />

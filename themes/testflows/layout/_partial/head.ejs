@@ -55,7 +55,7 @@
   <%- partial('_partial/post_meta') %>
   <% } else { %>
   <%# How a page looks when it is shared. A post says it in post_meta, with its own image. %>
-  <% var tShare = page.seo_title || (tPath === 'index.html' ? 'TestFlows' : (page.title || config.title)); var tShareDesc = page.description || config.description; var tShareImg = full_url_for(page.image || config.social_share); %>
+  <% var tShare = page.seo_title || (tPath === 'index.html' ? 'TestFlows' : (page.title || config.title)); var tShareDesc = page.description || config.description; var tShareImg = full_url_for(page.social_image || page.image || config.social_share); %>
   <meta property="og:type" content="website">
   <meta property="og:title" content="<%= tShare %>">
   <meta property="og:description" content="<%= tShareDesc %>">
