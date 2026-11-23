@@ -6,8 +6,14 @@
 <meta property="og:description" content="<%= pDesc %>">
 <meta property="og:url" content="<%- full_url_for(String(page.path).replace(/index\.html$/, '')) %>">
 <meta property="og:image" content="<%- pImage %>">
-<%# Post covers are square: a summary card shows them whole, where a large card crops them to 2:1. %>
-<meta name="twitter:card" content="summary">
+<%# A share image states its size, so a preview lays out its card without fetching the image first. %>
+<% if (page.social_image && page.social_image_width && page.social_image_height) { %>
+<meta property="og:image:width" content="<%= page.social_image_width %>">
+<meta property="og:image:height" content="<%= page.social_image_height %>">
+<% } %>
+<%# Post covers are square: a summary card shows them whole, where a large card crops them to 2:1. A
+    social_image is landscape, made for the large card. %>
+<meta name="twitter:card" content="<%= page.social_image ? 'summary_large_image' : 'summary' %>">
 <meta name="twitter:title" content="<%= page.title %>">
 <meta name="twitter:description" content="<%= pDesc %>">
 <meta name="twitter:image" content="<%- pImage %>">
