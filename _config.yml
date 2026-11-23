@@ -15,9 +15,9 @@ image: "img/logo.png"
 # Announcement bar above the navigation on every page but the portal's.
 # Remove the block, or leave text empty, to hide it.
 announcement:
-  text: "Launching TestFlows Machine: self-serve deterministic simulation testing environment"
+  text: "Launching TestFlows Machine: self-service deterministic simulation testing environment"
   link_text: "Read the post"
-  url: /blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/
+  url: /blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/
 
 # Header
 menu:

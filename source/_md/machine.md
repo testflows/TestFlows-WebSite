@@ -4,7 +4,7 @@
 
 > Deterministic simulation testing for developers and AI coding agents. Test and explore your programs in a deterministic machine for free. Get started in 5 minutes.
 
-TestFlows Machine is a deterministic simulation testing environment for developers and AI coding agents, provided as a self-serve cloud service: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
+TestFlows Machine is a deterministic simulation testing environment for developers and AI coding agents, provided as a self-service cloud platform: you can sign up for free, and paid plans are available. It runs software built for Linux x86_64 and controls time, interrupts, random numbers and device input, so every run can be recorded, replayed exactly, and branched from any point to explore other outcomes.
 
 Simulate, fuzz and explore your software yourself or with AI coding agents.
 

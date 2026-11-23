@@ -64,6 +64,42 @@
     color: var(--tf-accent);
 }
 
+/* A table of results that has to stand out: framed in the accent, a solid
+   accent header, numbers right-aligned in even columns, and the last row a
+   total in bold accent. Separate borders, so the frame can be rounded. */
+.styled-table.results table {
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 0;
+    font-size: 1em;
+    font-variant-numeric: tabular-nums;
+    border: 2px solid var(--tf-accent);
+    border-radius: var(--tf-radius);
+    overflow: hidden;
+    box-shadow: 0 0.5rem 1.5rem rgba(var(--tf-fg-rgb), 0.08);
+}
+.styled-table.results thead tr {
+    background-color: var(--tf-accent);
+    color: var(--tf-ink-on-cta);
+}
+.styled-table.results th {
+    text-align: left;
+    font-weight: 700;
+}
+.styled-table.results th:not(:first-child),
+.styled-table.results td:not(:first-child) {
+    text-align: right;
+}
+.styled-table.results tbody td {
+    border-bottom: 1px solid var(--tf-card-border);
+}
+.styled-table.results tbody tr:last-child td {
+    border-top: 2px solid var(--tf-accent);
+    border-bottom: 0;
+    font-weight: 700;
+    color: var(--tf-accent);
+}
+
 hr {
     padding-top: 2em;
     padding-bottom: 2em;

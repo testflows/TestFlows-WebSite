@@ -49,7 +49,7 @@ keywords: deterministic simulation testing, DST, AI coding agents, fault injecti
 <h2 class="home-section-title home-section-title-left">Stop hoping the bug happens again.</h2>
 <p class="home-section-lead home-section-lead-left">Race conditions, timing issues, and network failures show up once in a while, and almost never when you are looking for them. Machine runs your real, unmodified Linux x86_64 software, from a single binary to a Docker Compose project, in a machine that controls time, interrupts, random numbers and the thread schedule. Every run can be replayed exactly and branched from any point.</p>
 <p class="home-section-lead home-section-lead-left">So instead of running a test thousands of times, you name the race and make it happen.</p>
-<a class="home-step-more" href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/#what-this-looks-like">See a missed wakeup forced and fixed <span aria-hidden="true">&rarr;</span></a>
+<a class="home-step-more" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/#what-this-looks-like">See a missed wakeup forced and fixed <span aria-hidden="true">&rarr;</span></a>
 </div>
 <figure class="home-figure">
 <svg viewBox="0 0 760 560" role="img" aria-labelledby="mw-title mw-desc" class="home-figure-svg">

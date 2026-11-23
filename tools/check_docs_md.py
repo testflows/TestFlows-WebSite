@@ -40,7 +40,7 @@ SITE = "https://testflows.com"
 # agent reads the same thing wherever it starts. Change one here and in each file.
 MACHINE = (
     "TestFlows Machine is a deterministic simulation testing environment for developers and AI "
-    "coding agents, provided as a self-serve cloud service: you can sign up for free, and paid "
+    "coding agents, provided as a self-service cloud platform: you can sign up for free, and paid "
     "plans are available. "
     "It runs software built "
     "for Linux x86_64 and controls time, interrupts, random numbers and device input, so every "
@@ -328,7 +328,7 @@ def check_built(p, order, extra_pairs):
 
 # Pages that have no Markdown version: listings, redirects and the portal's app pages.
 NO_TWIN = ("404.html", "archives/", "tags/", "categories/", "handbook/", "machine/contact/", "machine/legal/index.html",
-           "machine/portal/", "blog/page/", "page/")
+           "machine/portal/", "machine/pricing/", "blog/page/", "page/")
 
 
 def check_private_beta():
@@ -344,8 +344,9 @@ def check_private_beta():
     return [f"{f} says 'private beta'; only source/machine/portal/signup.md should" for f in sorted(set(found))]
 
 
-# Pages for people, to act on: the sign-up and account pages and the contact form. They have no Markdown version.
-PEOPLE_ONLY = ("/machine/portal/", "/contact.html")
+# Pages for people, to act on: the sign-up and account pages, the plans to choose from and the contact form. They
+# have no Markdown version.
+PEOPLE_ONLY = ("/machine/portal/", "/machine/pricing/", "/contact.html")
 
 
 def check_markdown_links():

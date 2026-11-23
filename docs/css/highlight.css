@@ -15,9 +15,9 @@
     --hl-gutter-border: rgba(230, 235, 231, 0.12);
     --hl-caption: rgba(230, 235, 231, 0.65);
 
-    --hl-comment: #7eb896;
+    --hl-comment: #8b949e;
     --hl-keyword: #c4a6e8;
-    --hl-string: #6fd9a8;
+    --hl-string: #a3d4b4;
     --hl-number: #e8a06a;
     --hl-function: #8ec8ff;
     --hl-class: #b5d47a;
@@ -28,15 +28,15 @@
 }
 
 [data-theme="light"] {
-    --hl-bg: #eef1ee;
+    --hl-bg: #ffffff;
     --hl-fg: #1a211d;
     --hl-gutter: rgba(26, 33, 29, 0.35);
     --hl-gutter-border: rgba(26, 33, 29, 0.1);
     --hl-caption: rgba(26, 33, 29, 0.65);
 
-    --hl-comment: #1a7a58;
+    --hl-comment: #6a737d;
     --hl-keyword: #6b4c9a;
-    --hl-string: #0f7a52;
+    --hl-string: #2d7d55;
     --hl-number: #c45e12;
     --hl-function: #2b6cb0;
     --hl-class: #5a7a00;
@@ -174,8 +174,14 @@ pre .section {
     color: var(--hl-section);
 }
 
+/* Comments step back, grey and italic, so the code itself carries the
+   colour. */
 pre .comment,
-pre .template_comment,
+pre .template_comment {
+    color: var(--hl-comment);
+    font-style: italic;
+}
+
 pre .diff .header,
 pre .doctype,
 pre .pi,

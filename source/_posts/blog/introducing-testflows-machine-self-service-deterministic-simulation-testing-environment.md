@@ -1,8 +1,8 @@
 ---
 post: true
-title: "Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone"
+title: "Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment"
 seo_title: "Introducing TestFlows Machine: Deterministic Simulation Testing"
-description: Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.
+description: Introducing TestFlows Machine, a self-service deterministic simulation testing environment for developers and AI coding agents, with a free plan.
 date: 2026-11-22
 author: Vitaliy Zakaznikov
 keywords: deterministic simulation testing, DST, AI coding agents, deterministic hypervisor, fault injection, data races, record and replay, time travel debugging, retroactive logging, Python SDK
@@ -10,7 +10,7 @@ image: images/introducing-testflows-machine.png
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents has been a long time coming, and today we're introducing [TestFlows Machine](/machine/) to make that vision a reality. Because for many teams, deterministic simulation testing has changed how some of the most reliable software systems are built and tested. It gives you control over software execution, lets you inject failures, and makes runs reproducible, enabling you to investigate bugs that might otherwise take days to reproduce, or never show up again at all. However, getting there has usually meant walking a steep path that starts with building a custom system yourself, specific to your project, or diving into the development of a deterministic hypervisor for a more generic approach. That takes specialized knowledge, infrastructure, and a significant investment, and most teams would rather spend that time and tokens on their own software. And our vision is different.<!-- more -->
+A self-service deterministic simulation testing (DST) environment for developers and AI coding agents has been a long time coming, and today we're introducing [TestFlows Machine](/machine/) to make that vision a reality. Because for many teams, deterministic simulation testing has changed how some of the most reliable software systems are built and tested. It gives you control over software execution, lets you inject failures, and makes runs reproducible, enabling you to investigate bugs that might otherwise take days to reproduce, or never show up again at all. However, getting there has usually meant walking a steep path that starts with building a custom system yourself, specific to your project, or diving into the development of a deterministic hypervisor for a more generic approach. That takes specialized knowledge, infrastructure, and a significant investment, and most teams would rather spend that time and tokens on their own software. And our vision is different.<!-- more -->
 
 ## Our vision
 
@@ -22,7 +22,7 @@ With TestFlows Machine, you can start doing that today.
 
 ## Agent first, but for the human in the loop
 
-DST gives you an enormous amount of control over execution, including which vCPU and thread runs and when (yes, we do support multiple vCPUs, `cat /proc/cpuinfo` after you get started), which system call fails, what time the machine sees, and where a run branches. That control is the whole point, but it is also what makes the technique hard to adopt, as few developers have the time to learn a new execution model, its vocabulary, and a long list of commands before they see their first result. Many engineers struggle to even remember all the GDB commands, and that is without adding time travel, branches, and support for more debugging commands that you can run from the outside without disturbing the system state.
+DST gives you an enormous amount of control over execution, including which vCPU and thread runs and when (yes, we do support multiple vCPUs, as the example at the end will show), which system call fails, what time the machine sees, and where a run branches. That control is the whole point, but it is also what makes the technique hard to adopt, as few developers have the time to learn a new execution model, its vocabulary, and a long list of commands before they see their first result. Many engineers struggle to even remember all the GDB commands, and that is without adding time travel, branches, and support for more debugging commands that you can run from the outside without disturbing the system state.
 
 AI coding agents don't have that problem. They can read the code, the docs, and the command reference in seconds and drive Machine with precision, which is why we built Machine to be AI agent first. You install the Machine skill, ask your agent what Machine can do for your project, and it sets things up with you, signs in with a code from your email, and gets to work.
 
@@ -92,7 +92,7 @@ However, a deterministic hypervisor is only the foundation, and building a compl
 
 ## Get started
 
-We hope you are as excited about the future as we are. You can [create a free account](/machine/portal/signup/) and have your first run in [about five minutes](/docs/machine/#getting-started), either on your own or together with your AI coding agent. Then head over to our public [testflows/Machine](https://github.com/testflows/Machine) repository on GitHub, where you'll find the examples, the Python SDK, and the Machine skill for coding agents, and when you need more than the free plan gives you, take a look at our [pricing](/machine/pricing/).
+We hope you are as excited about the future as we are. You can [create a free account](/machine/portal/signup/) and have your first run in [about five minutes](/docs/machine/#getting-started), either on your own or together with your AI coding agent. Then head over to our public [testflows/Machine](https://github.com/testflows/Machine) repository on GitHub, where you'll find the examples, the Python SDK, and the Machine skill for coding agents, and when you need more than the free plan gives you, take a look at our [pricing](/machine/pricing/). Sessions run in our Europe region today, and North America and Asia-Pacific are coming soon.
 
 We'd love to hear what you find, so come and share it with us in the repository's [Discussions](https://github.com/testflows/Machine/discussions).
 
@@ -176,6 +176,26 @@ gcc -O0 -g -static -pthread -o missed-wakeup missed-wakeup.c
 machine disks build --binary ./missed-wakeup mw -- 1
 ```
 
+Inside, the machine has two CPUs of its own, and if we were to read `/proc/cpuinfo` in it, we would see the following:
+
+```
+$ machine exec mw run -- grep -E '^(processor|model name|cpu MHz|siblings|core id|cpu cores)' /proc/cpuinfo
+processor	: 0
+model name	: TestFlows Machine v1
+cpu MHz		: 999.933
+siblings	: 2
+core id		: 0
+cpu cores	: 2
+processor	: 1
+model name	: TestFlows Machine v1
+cpu MHz		: 999.933
+siblings	: 2
+core id		: 1
+cpu cores	: 2
+```
+
+The 999.933 MHz is the machine's clock, a steady 1 GHz that keeps its time deterministic. It does not mean the machine runs at 1 GHz: where it can, the program runs at the full speed of the actual CPU underneath.
+
 Next, it creates a run from the disk, focuses the program so that its threads can be steered, and runs the machine until the program has started:
 
 ```bash
@@ -185,31 +205,39 @@ machine run mw --until comm=missed-wakeup:exec
 machine run mw --until comm=missed-wakeup:sched
 ```
 
-Now, it sets a breakpoint on line 76 and runs until the waiter stops there. The process and thread IDs shown below are from our run and will differ in yours:
+Then it lists the program's threads to learn the ID of its main thread. The process and thread IDs shown below are from our run and will differ in yours:
 
 ```
-$ machine break mw add 254 missed-wakeup.c:76
-✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 254
+$ machine tasks mw --focused
+    TID     TGID      PID  COMM           CPU  NEXT    KIND    FOCUS  HOLD  YIELD  PIN  SLICE  EXE
+    257      257           missed-wakeup               user    ✔
+```
+
+Now, it sets a breakpoint on line 76 in the program, using the ID of its main thread, and runs until a thread stops there. The thread that stops is the waiter:
+
+```
+$ machine break mw add 257 missed-wakeup.c:76
+✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 257
 $ machine run mw --iters 0
-✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 273
+✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 277
 ```
 
-With the waiter in the race window, it holds it there, removes the breakpoint, and runs the signaler until it has sent its signal:
+With the waiter in the race window, it holds it there, removes the breakpoint, and runs the signaler until it has sent its signal. The signaler is the only thread that reaches line 109:
 
 ```
-$ machine tasks mw hold 273
-✔ Marked 273 to hold
+$ machine tasks mw hold 277
+✔ Marked 277 to hold
 $ machine break mw delete 1
 ✔ Deleted breakpoint 1
-$ machine run mw --until 'tid=274:at=missed-wakeup.c:109'
-✔ Reached signaler+139, missed-wakeup.c:109, in tid 274
+$ machine run mw --until 'tgid=257:at=missed-wakeup.c:109'
+✔ Reached signaler+139, missed-wakeup.c:109, in tid 278
 ```
 
 Finally, it releases the waiter and lets the program finish:
 
 ```
-$ machine tasks mw release 273
-✔ Marked 273 to release
+$ machine tasks mw release 277
+✔ Marked 277 to release
 $ machine run mw --until 'console~(FAILURE: missed|SUCCESS:)'
 $ machine output mw -n : | grep -E 'FAILURE:|SUCCESS:'
 app | FAILURE: missed wakeup (trial 0)
@@ -233,17 +261,18 @@ machine create mwfix --disk mwfix --cpus 2
 machine focus mwfix add comm=missed-wakeup
 machine run mwfix --until comm=missed-wakeup:exec
 machine run mwfix --until comm=missed-wakeup:sched
+machine tasks mwfix --focused
 ```
 
 Now, it stops the waiter on the same line and holds it there:
 
 ```
-$ machine break mwfix add 256 missed-wakeup.c:76
-✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 256
+$ machine break mwfix add 259 missed-wakeup.c:76
+✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 259
 $ machine run mwfix --iters 0
-✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 278
-$ machine tasks mwfix hold 278
-✔ Marked 278 to hold
+✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 279
+$ machine tasks mwfix hold 279
+✔ Marked 279 to hold
 $ machine break mwfix delete 1
 ✔ Deleted breakpoint 1
 ```
@@ -251,13 +280,69 @@ $ machine break mwfix delete 1
 Then it runs the signaler past its signal, which is now on line 111 because the fix added two lines, and releases the waiter:
 
 ```
-$ machine run mwfix --until 'tid=279:at=missed-wakeup.c:111'
-✔ Reached signaler+139, missed-wakeup.c:111, in tid 279
-$ machine tasks mwfix release 278
-✔ Marked 278 to release
+$ machine run mwfix --until 'tgid=259:at=missed-wakeup.c:111'
+✔ Reached signaler+139, missed-wakeup.c:111, in tid 280
+$ machine tasks mwfix release 279
+✔ Marked 279 to release
 $ machine run mwfix --until 'console~(FAILURE: missed|SUCCESS:)'
 $ machine output mwfix -n : | grep -E 'FAILURE:|SUCCESS:'
 app | SUCCESS: every wait saw the signal
 ```
 
 The same interleaving that broke the original now passes, and both runs are recorded, so you can replay either one, step through it, and see for yourself.
+
+You can also run these steps as a Python program with the SDK. Here is the core of [missed_wakeup.py](https://github.com/testflows/Machine/blob/main/sdk/python/examples/missed_wakeup.py):
+
+```python
+import testflows.machine.v1 as machine
+
+client = machine.Client()
+
+with client.sessions.create(cpus=2) as session:
+    client.sessions.use(session)
+    disk = client.disks.build("mw", binary="./missed-wakeup", command=["1"])
+    with client.create("mw", disk=disk.name, cpus=2) as run:
+        run.focus.add("comm=missed-wakeup")
+        run.run(until="comm=missed-wakeup:exec")
+        run.run(until="comm=missed-wakeup:sched")
+        main = run.tasks(focused=True)[0].tid
+
+        # Stop the waiter in its window and hold it there.
+        stop = run.task(main).breakpoint("missed-wakeup.c:76")
+        waiter = run.run(iters=0).hits[0].hit_tid
+        run.tasks.hold(waiter)
+        run.breakpoints.delete(stop.number)
+
+        # The signaler alone reaches the signal line: run it past its signal.
+        run.run(until=f"tgid={main}:at=missed-wakeup.c:109", within="60s")
+        run.tasks.release(waiter)
+
+        run.run(until="console~(FAILURE: missed|SUCCESS:)")
+        print(next(line for line in run.output() if "FAILURE:" in line or "SUCCESS:" in line))
+    client.disks.delete(disk)
+```
+
+```
+$ python3 missed_wakeup.py ./missed-wakeup
+app | FAILURE: missed wakeup (trial 0)
+```
+
+Here is how long each step of the first run took, in the machine's time and in real time. These numbers are from a single run and are only for reference, to give you an idea; yours will vary:
+
+{% html div class="styled-table results" %}
+
+| Step | Machine time | Real time |
+|---|---|---|
+| Boot Linux and start the program | 4.52 s | 7.0 s |
+| Stop the waiter on line 76 | 0.018 s | 2.7 s |
+| Run the signaler past its signal | 0.002 s | 3.2 s |
+| Release the waiter and finish | 0.56 s | 2.4 s |
+| The whole run, every command | 5.10 s | 21 s |
+
+{% endhtml %}
+
+In 5.10 seconds of machine time, which took about 21 seconds of real time, the machine executed 2.94 billion instructions, every one of them deterministically. Two runs of the fixed program's disk boot to the program in exactly the same 4.776033982 seconds of machine time and the same 2,747,697,931 instructions.
+
+## Conclusion
+
+It's been a lot of hard work, and we're excited to finally be launching TestFlows Machine so that everyone can try it out. More technical articles that go deeper are coming, and we look forward to sharing more of our Machine with you.

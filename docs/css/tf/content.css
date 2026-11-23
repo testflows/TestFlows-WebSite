@@ -612,6 +612,73 @@ blockquote::-webkit-scrollbar {
     display: none;
 }
 
+/* A post's code block reads as a window: a header naming what the block
+   holds, on an accent rule across the block. The label comes from the
+   language class Hexo puts on the figure, so no post needs markup for it. */
+/* Code at the size of the text around it, with room between lines: in a
+   post the code is the content, not a footnote to it. */
+.post-body figure.highlight {
+    padding: 3.6rem 1.4rem 1.2rem;
+    font-size: 0.95em;
+    line-height: 1.7;
+}
+.post-body figure.highlight table,
+.post-body figure.highlight pre {
+    font-size: 1em;
+    line-height: inherit;
+}
+/* 30 lines at this line height before the block scrolls. */
+.post-body figure.highlight table {
+    max-height: calc(30 * 1.7em);
+}.post-body figure.highlight::before,
+.post-body figure.highlight::after {
+    position: absolute;
+    top: 0;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    font-family: var(--tf-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+}
+.post-body figure.highlight::before {
+    content: "terminal";
+    left: 0;
+    padding: 0 1.1rem;
+    font-size: 0.85rem;
+    color: var(--tf-text-strong);
+    z-index: 1;
+}
+.post-body figure.highlight::after {
+    content: "";
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid color-mix(in srgb, var(--tf-accent) 50%, transparent);
+}
+.post-body figure.highlight.python::before { content: "python"; }
+.post-body figure.highlight.c::before { content: "c"; }
+.post-body figure.highlight.diff::before { content: "diff"; }
+.post-body figure.highlight.yaml::before { content: "yaml"; }
+.post-body figure.highlight.json::before { content: "json"; }
+
+/* A terminal session's prompts and check marks, marked by
+   scripts/terminal-blocks.js, in the accent. */
+figure.highlight .term-mark {
+    color: var(--tf-accent);
+    font-weight: 700;
+}
+/* The light theme's accent is a forest green that reads near black on a
+   white block; the marks keep the brand green, deepened enough for white. */
+[data-theme="light"] figure.highlight .term-mark {
+    color: #24a374;
+}
+
+/* Line numbers number code. In a terminal block they would number commands
+   and output lines, which means nothing. */
+.post-body figure.highlight.bash .gutter,
+.post-body figure.highlight.plaintext .gutter,
+.post-body figure.highlight.shell .gutter,
+.post-body figure.highlight.console .gutter {
+    display: none;
+}
+
 
 /* Contents: collapsible major sections. The chevron is the control: it expands or collapses, the title jumps. */
 .handbook .toc > .toc-level-1 {

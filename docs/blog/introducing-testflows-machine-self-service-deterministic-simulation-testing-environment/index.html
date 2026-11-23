@@ -19,19 +19,19 @@
   
   
   <title>Introducing TestFlows Machine: Deterministic Simulation Testing</title>
-  <meta name="description" content="Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
+  <meta name="description" content="Introducing TestFlows Machine, a self-service deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
   
   <meta name="keywords" content="deterministic simulation testing, DST, AI coding agents, deterministic hypervisor, fault injection, data races, record and replay, time travel debugging, retroactive logging, Python SDK">
   
   
-  <link rel="canonical" href="https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+  <link rel="canonical" href="https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   
   <meta name="author" content="Vitaliy Zakaznikov">
 
   <link rel="describedby" href="https://testflows.com/llms.txt">
-  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment.md">
 
 
   <meta property="og:site_name" content="TestFlows">
@@ -40,18 +40,18 @@
 <meta name="publish_date" property="og:publish_date" content="2026-11-22T00:00:00-0000">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-11-22T00:00:00-0000" />
-<meta property="og:title" content="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
-<meta property="og:description" content="Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
-<meta property="og:url" content="https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+<meta property="og:title" content="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
+<meta property="og:description" content="Introducing TestFlows Machine, a self-service deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
+<meta property="og:url" content="https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
 <meta property="og:image" content="https://testflows.com/images/introducing-testflows-machine.png">
 
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
-<meta name="twitter:description" content="Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
+<meta name="twitter:title" content="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
+<meta name="twitter:description" content="Introducing TestFlows Machine, a self-service deterministic simulation testing environment for developers and AI coding agents, with a free plan.">
 <meta name="twitter:image" content="https://testflows.com/images/introducing-testflows-machine.png">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone","description":"Introducing TestFlows Machine, a self-serve deterministic simulation testing environment for developers and AI coding agents, with a free plan.","image":"https://testflows.com/images/introducing-testflows-machine.png","datePublished":"2026-11-22T00:00:00-05:00","dateModified":"2026-11-22T16:11:52-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment","description":"Introducing TestFlows Machine, a self-service deterministic simulation testing environment for developers and AI coding agents, with a free plan.","image":"https://testflows.com/images/introducing-testflows-machine.png","datePublished":"2026-11-22T00:00:00-05:00","dateModified":"2026-11-23T11:00:20-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/"}</script>
 
   
   
@@ -67,40 +67,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795385858139" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795449628193" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795385858139" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795385858139" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795449628193" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795385858140" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795449628193" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -108,8 +108,8 @@
 <body class="has-announcement">
   <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
   <div class="site-announcement" role="region" aria-label="Announcement">
-  <a class="site-announcement-link" href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
-    <span class="site-announcement-text">Launching TestFlows Machine: self-serve deterministic simulation testing environment</span>
+  <a class="site-announcement-link" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
+    <span class="site-announcement-text">Launching TestFlows Machine: self-service deterministic simulation testing environment</span>
     <span class="site-announcement-cta">Read the post <span aria-hidden="true">&rarr;</span></span>
   </a>
 </div>
@@ -261,7 +261,7 @@
 
   
   
-  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
 
 
   <div class="container-fluid p-0">
@@ -269,7 +269,7 @@
       <div class="container" style="padding-bottom: 2em !important">
     <div class="post-header row">
         <div class="post-summary col-lg-6 mt-auto mb-auto">
-            <h1 style="font-weight: bold;">Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone</h1>
+            <h1 style="font-weight: bold;">Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment</h1>
             <div class="post-metadata">
                 <div class="post-author">
                     <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
@@ -277,13 +277,13 @@
                 </div>
                 <div class="post-share btn-group" role="group" aria-label="share">
                     <span class="caption">Share It</span>
-                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
                         <i class="fab fa-2x fa-twitter"></i>
                     </a>
-                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
                         <i class="fab fa-2x fa-facebook"></i>
                     </a>
-                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
                         <i class="fab fa-2x fa-linkedin"></i>
                     </a>
                 </div>
@@ -291,7 +291,7 @@
         </div>
         
         <div class="post-image col-lg-6 m-auto">
-            <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" alt="Introducing TestFlows Machine: Deterministic Simulation Testing for Everyone">
+            <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" alt="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
             <span class="post-image-credit"></span>
         </div>
         
@@ -301,16 +301,16 @@
         
         <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
             <div class="post-toc-inner">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#our-vision"><span class="toc-text">Our vision</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#agent-first-but-for-the-human-in-the-loop"><span class="toc-text">Agent first, but for the human in the loop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#name-the-bug-verify-the-fix"><span class="toc-text">Name the bug, verify the fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#beyond-the-deterministic-hypervisor"><span class="toc-text">Beyond the deterministic hypervisor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-started"><span class="toc-text">Get started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-this-looks-like"><span class="toc-text">What this looks like</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#our-vision"><span class="toc-text">Our vision</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#agent-first-but-for-the-human-in-the-loop"><span class="toc-text">Agent first, but for the human in the loop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#name-the-bug-verify-the-fix"><span class="toc-text">Name the bug, verify the fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#beyond-the-deterministic-hypervisor"><span class="toc-text">Beyond the deterministic hypervisor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#get-started"><span class="toc-text">Get started</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-this-looks-like"><span class="toc-text">What this looks like</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
             </div>
         </nav>
         
         <div class="post-content col-lg-9">
-            <p>A self-serve deterministic simulation testing (DST) environment for developers and AI coding agents has been a long time coming, and today we’re introducing <a href="/machine/">TestFlows Machine</a> to make that vision a reality. Because for many teams, deterministic simulation testing has changed how some of the most reliable software systems are built and tested. It gives you control over software execution, lets you inject failures, and makes runs reproducible, enabling you to investigate bugs that might otherwise take days to reproduce, or never show up again at all. However, getting there has usually meant walking a steep path that starts with building a custom system yourself, specific to your project, or diving into the development of a deterministic hypervisor for a more generic approach. That takes specialized knowledge, infrastructure, and a significant investment, and most teams would rather spend that time and tokens on their own software. And our vision is different.<span id="more"></span></p>
+            <p>A self-service deterministic simulation testing (DST) environment for developers and AI coding agents has been a long time coming, and today we’re introducing <a href="/machine/">TestFlows Machine</a> to make that vision a reality. Because for many teams, deterministic simulation testing has changed how some of the most reliable software systems are built and tested. It gives you control over software execution, lets you inject failures, and makes runs reproducible, enabling you to investigate bugs that might otherwise take days to reproduce, or never show up again at all. However, getting there has usually meant walking a steep path that starts with building a custom system yourself, specific to your project, or diving into the development of a deterministic hypervisor for a more generic approach. That takes specialized knowledge, infrastructure, and a significant investment, and most teams would rather spend that time and tokens on their own software. And our vision is different.<span id="more"></span></p>
 <h2 id="our-vision"><a href="#our-vision" class="headerlink" title="Our vision"></a>Our vision</h2><p>We all see that software development is changing quickly, and AI coding agents now write, test, and debug most, if not all, of the software today. They can investigate a bug, propose a fix, and run the tests, but they still run into the same problem developers do, which is that software doesn’t always fail the same way twice. Race conditions, timing issues, and network failures don’t become easier to reproduce just because an agent is doing the debugging.</p>
 <p><strong>Our vision is to make deterministic simulation testing a natural part of the modern AI-driven development cycle.</strong> An agent should be able to reproduce a failure, step back through the execution, attach a debugger at the exact point where things went wrong, and try a fix against the same conditions. It should be able to inject faults precisely, compress execution time, and read logs after the fact with retroactive logging, without waiting for fuzzers. And you should be able to do all of that yourself, without having to build or maintain a deterministic hypervisor, or break your engineering budget to get access to systems that already provide this capability.</p>
 <p>With TestFlows Machine, you can start doing that today.</p>
-<h2 id="agent-first-but-for-the-human-in-the-loop"><a href="#agent-first-but-for-the-human-in-the-loop" class="headerlink" title="Agent first, but for the human in the loop"></a>Agent first, but for the human in the loop</h2><p>DST gives you an enormous amount of control over execution, including which vCPU and thread runs and when (yes, we do support multiple vCPUs, <code>cat /proc/cpuinfo</code> after you get started), which system call fails, what time the machine sees, and where a run branches. That control is the whole point, but it is also what makes the technique hard to adopt, as few developers have the time to learn a new execution model, its vocabulary, and a long list of commands before they see their first result. Many engineers struggle to even remember all the GDB commands, and that is without adding time travel, branches, and support for more debugging commands that you can run from the outside without disturbing the system state.</p>
+<h2 id="agent-first-but-for-the-human-in-the-loop"><a href="#agent-first-but-for-the-human-in-the-loop" class="headerlink" title="Agent first, but for the human in the loop"></a>Agent first, but for the human in the loop</h2><p>DST gives you an enormous amount of control over execution, including which vCPU and thread runs and when (yes, we do support multiple vCPUs, as the example at the end will show), which system call fails, what time the machine sees, and where a run branches. That control is the whole point, but it is also what makes the technique hard to adopt, as few developers have the time to learn a new execution model, its vocabulary, and a long list of commands before they see their first result. Many engineers struggle to even remember all the GDB commands, and that is without adding time travel, branches, and support for more debugging commands that you can run from the outside without disturbing the system state.</p>
 <p>AI coding agents don’t have that problem. They can read the code, the docs, and the command reference in seconds and drive Machine with precision, which is why we built Machine to be AI agent first. You install the Machine skill, ask your agent what Machine can do for your project, and it sets things up with you, signs in with a code from your email, and gets to work.</p>
 <p>But agent first doesn’t mean we want to deliver an AI-driven black box. We want agents to do the heavy lifting, while developers stay in the loop and can see every step they take, repeat it, and take over at any point. That’s why the agent drives Machine through the same <code>machine</code> CLI client that a developer uses, and full programmatic control is available to both you and your agent through the <a href="/docs/machine/#python-sdk">Python SDK</a>, which also lets you write your own custom fuzzers.</p>
 <figure class="post-figure">
@@ -366,7 +366,7 @@
 <figcaption>The deterministic hypervisor, with the Linux it runs on and the Linux it runs, is only the foundation. Machine provides the whole system around it and runs it for you.</figcaption>
 </figure>
 
-<h2 id="get-started"><a href="#get-started" class="headerlink" title="Get started"></a>Get started</h2><p>We hope you are as excited about the future as we are. You can <a href="/machine/portal/signup/">create a free account</a> and have your first run in <a href="/docs/machine/#getting-started">about five minutes</a>, either on your own or together with your AI coding agent. Then head over to our public <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine">testflows&#x2F;Machine</a> repository on GitHub, where you’ll find the examples, the Python SDK, and the Machine skill for coding agents, and when you need more than the free plan gives you, take a look at our <a href="/machine/pricing/">pricing</a>.</p>
+<h2 id="get-started"><a href="#get-started" class="headerlink" title="Get started"></a>Get started</h2><p>We hope you are as excited about the future as we are. You can <a href="/machine/portal/signup/">create a free account</a> and have your first run in <a href="/docs/machine/#getting-started">about five minutes</a>, either on your own or together with your AI coding agent. Then head over to our public <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine">testflows&#x2F;Machine</a> repository on GitHub, where you’ll find the examples, the Python SDK, and the Machine skill for coding agents, and when you need more than the free plan gives you, take a look at our <a href="/machine/pricing/">pricing</a>. Sessions run in our Europe region today, and North America and Asia-Pacific are coming soon.</p>
 <p>We’d love to hear what you find, so come and share it with us in the repository’s <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/discussions">Discussions</a>.</p>
 <h2 id="what-this-looks-like"><a href="#what-this-looks-like" class="headerlink" title="What this looks like"></a>What this looks like</h2><p>To show what this looks like, take <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/starvation/missed-wakeup.c">missed-wakeup.c</a>, one of the examples in our public repository. Here are the waiter and the signaler of this simple C program, with their line numbers:</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">67</span>	pthread_mutex_lock(&amp;mutex);</span><br><span class="line"> <span class="number">68</span>	waiter_ready = <span class="number">1</span>;</span><br><span class="line"> <span class="number">69</span>	<span class="keyword">if</span> (!done) &#123;</span><br><span class="line"> <span class="number">75</span>		pthread_mutex_unlock(&amp;mutex);</span><br><span class="line"> <span class="number">76</span>		pthread_mutex_lock(&amp;mutex);</span><br><span class="line"> 	...</span><br><span class="line"> <span class="number">86</span>		rc = pthread_cond_timedwait(&amp;cond, &amp;mutex, &amp;ts);</span><br><span class="line"> <span class="number">87</span>		<span class="keyword">if</span> (rc == ETIMEDOUT &amp;&amp; done) &#123;        <span class="comment">/* the missed wakeup */</span></span><br><span class="line"></span><br><span class="line"><span class="number">106</span>	pthread_mutex_lock(&amp;mutex);               <span class="comment">/* signaler */</span></span><br><span class="line"><span class="number">107</span>	done = <span class="number">1</span>;</span><br><span class="line"><span class="number">108</span>	pthread_cond_signal(&amp;cond);</span><br><span class="line"><span class="number">109</span>	pthread_mutex_unlock(&amp;mutex);</span><br></pre></td></tr></table></figure>
@@ -422,31 +422,82 @@
 <p>Then it builds the program with debug information and makes a disk from it that runs a single trial:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -O0 -g -static -pthread -o missed-wakeup missed-wakeup.c</span><br><span class="line">machine disks build --binary ./missed-wakeup mw -- 1</span><br></pre></td></tr></table></figure>
 
+<p>Inside, the machine has two CPUs of its own, and if we were to read <code>/proc/cpuinfo</code> in it, we would see the following:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine exec mw run -- grep -E &#x27;^(processor|model name|cpu MHz|siblings|core id|cpu cores)&#x27; /proc/cpuinfo</span><br><span class="line">processor	: 0</span><br><span class="line">model name	: TestFlows Machine v1</span><br><span class="line">cpu MHz		: 999.933</span><br><span class="line">siblings	: 2</span><br><span class="line">core id		: 0</span><br><span class="line">cpu cores	: 2</span><br><span class="line">processor	: 1</span><br><span class="line">model name	: TestFlows Machine v1</span><br><span class="line">cpu MHz		: 999.933</span><br><span class="line">siblings	: 2</span><br><span class="line">core id		: 1</span><br><span class="line">cpu cores	: 2</span><br></pre></td></tr></table></figure>
+
+<p>The 999.933 MHz is the machine’s clock, a steady 1 GHz that keeps its time deterministic. It does not mean the machine runs at 1 GHz: where it can, the program runs at the full speed of the actual CPU underneath.</p>
 <p>Next, it creates a run from the disk, focuses the program so that its threads can be steered, and runs the machine until the program has started:</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">machine create mw --disk mw --cpus 2</span><br><span class="line">machine focus mw add <span class="built_in">comm</span>=missed-wakeup</span><br><span class="line">machine run mw --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">exec</span></span><br><span class="line">machine run mw --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">sched</span></span><br></pre></td></tr></table></figure>
 
-<p>Now, it sets a breakpoint on line 76 and runs until the waiter stops there. The process and thread IDs shown below are from our run and will differ in yours:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ machine break mw add 254 missed-wakeup.c:76</span><br><span class="line">✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 254</span><br><span class="line">$ machine run mw --iters 0</span><br><span class="line">✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 273</span><br></pre></td></tr></table></figure>
+<p>Then it lists the program’s threads to learn the ID of its main thread. The process and thread IDs shown below are from our run and will differ in yours:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine tasks mw --focused</span><br><span class="line">    TID     TGID      PID  COMM           CPU  NEXT    KIND    FOCUS  HOLD  YIELD  PIN  SLICE  EXE</span><br><span class="line">    257      257           missed-wakeup               user    ✔</span><br></pre></td></tr></table></figure>
 
-<p>With the waiter in the race window, it holds it there, removes the breakpoint, and runs the signaler until it has sent its signal:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ machine tasks mw hold 273</span><br><span class="line">✔ Marked 273 to hold</span><br><span class="line">$ machine break mw delete 1</span><br><span class="line">✔ Deleted breakpoint 1</span><br><span class="line">$ machine run mw --until &#x27;tid=274:at=missed-wakeup.c:109&#x27;</span><br><span class="line">✔ Reached signaler+139, missed-wakeup.c:109, in tid 274</span><br></pre></td></tr></table></figure>
+<p>Now, it sets a breakpoint on line 76 in the program, using the ID of its main thread, and runs until a thread stops there. The thread that stops is the waiter:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine break mw add 257 missed-wakeup.c:76</span><br><span class="line"><span class="term-mark">✔</span> Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 257</span><br><span class="line"><span class="term-mark">$</span> machine run mw --iters 0</span><br><span class="line"><span class="term-mark">✔</span> Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 277</span><br></pre></td></tr></table></figure>
+
+<p>With the waiter in the race window, it holds it there, removes the breakpoint, and runs the signaler until it has sent its signal. The signaler is the only thread that reaches line 109:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine tasks mw hold 277</span><br><span class="line"><span class="term-mark">✔</span> Marked 277 to hold</span><br><span class="line"><span class="term-mark">$</span> machine break mw delete 1</span><br><span class="line"><span class="term-mark">✔</span> Deleted breakpoint 1</span><br><span class="line"><span class="term-mark">$</span> machine run mw --until &#x27;tgid=257:at=missed-wakeup.c:109&#x27;</span><br><span class="line"><span class="term-mark">✔</span> Reached signaler+139, missed-wakeup.c:109, in tid 278</span><br></pre></td></tr></table></figure>
 
 <p>Finally, it releases the waiter and lets the program finish:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ machine tasks mw release 273</span><br><span class="line">✔ Marked 273 to release</span><br><span class="line">$ machine run mw --until &#x27;console~(FAILURE: missed|SUCCESS:)&#x27;</span><br><span class="line">$ machine output mw -n : | grep -E &#x27;FAILURE:|SUCCESS:&#x27;</span><br><span class="line">app | FAILURE: missed wakeup (trial 0)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine tasks mw release 277</span><br><span class="line"><span class="term-mark">✔</span> Marked 277 to release</span><br><span class="line"><span class="term-mark">$</span> machine run mw --until &#x27;console~(FAILURE: missed|SUCCESS:)&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine output mw -n : | grep -E &#x27;FAILURE:|SUCCESS:&#x27;</span><br><span class="line">app | FAILURE: missed wakeup (trial 0)</span><br></pre></td></tr></table></figure>
 
 <p>The bug shows up on the first try. The agent then applies its fix, which rechecks <code>done</code> in a loop around the wait:</p>
 <figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-		rc = pthread_cond_timedwait(&amp;cond, &amp;mutex, &amp;ts);</span></span><br><span class="line"><span class="addition">+		rc = 0;</span></span><br><span class="line"><span class="addition">+		while (!done &amp;&amp; rc != ETIMEDOUT)</span></span><br><span class="line"><span class="addition">+			rc = pthread_cond_timedwait(&amp;cond, &amp;mutex, &amp;ts);</span></span><br></pre></td></tr></table></figure>
 
 <p>To verify the fix, it builds the fixed program into a disk of its own, <code>mwfix</code>, and creates a run from it the same way:</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">gcc -O0 -g -static -pthread -o missed-wakeup missed-wakeup.c</span><br><span class="line">machine disks build --binary ./missed-wakeup mwfix -- 1</span><br><span class="line">machine create mwfix --disk mwfix --cpus 2</span><br><span class="line">machine focus mwfix add <span class="built_in">comm</span>=missed-wakeup</span><br><span class="line">machine run mwfix --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">exec</span></span><br><span class="line">machine run mwfix --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">sched</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">gcc -O0 -g -static -pthread -o missed-wakeup missed-wakeup.c</span><br><span class="line">machine disks build --binary ./missed-wakeup mwfix -- 1</span><br><span class="line">machine create mwfix --disk mwfix --cpus 2</span><br><span class="line">machine focus mwfix add <span class="built_in">comm</span>=missed-wakeup</span><br><span class="line">machine run mwfix --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">exec</span></span><br><span class="line">machine run mwfix --<span class="keyword">until</span> <span class="built_in">comm</span>=missed-wakeup:<span class="built_in">sched</span></span><br><span class="line">machine tasks mwfix --focused</span><br></pre></td></tr></table></figure>
 
 <p>Now, it stops the waiter on the same line and holds it there:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ machine break mwfix add 256 missed-wakeup.c:76</span><br><span class="line">✔ Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 256</span><br><span class="line">$ machine run mwfix --iters 0</span><br><span class="line">✔ Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 278</span><br><span class="line">$ machine tasks mwfix hold 278</span><br><span class="line">✔ Marked 278 to hold</span><br><span class="line">$ machine break mwfix delete 1</span><br><span class="line">✔ Deleted breakpoint 1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine break mwfix add 259 missed-wakeup.c:76</span><br><span class="line"><span class="term-mark">✔</span> Breakpoint 1 at waiter+137, missed-wakeup.c:76, in tgid 259</span><br><span class="line"><span class="term-mark">$</span> machine run mwfix --iters 0</span><br><span class="line"><span class="term-mark">✔</span> Stopped at breakpoint 1: waiter+137, missed-wakeup.c:76, in tid 279</span><br><span class="line"><span class="term-mark">$</span> machine tasks mwfix hold 279</span><br><span class="line"><span class="term-mark">✔</span> Marked 279 to hold</span><br><span class="line"><span class="term-mark">$</span> machine break mwfix delete 1</span><br><span class="line"><span class="term-mark">✔</span> Deleted breakpoint 1</span><br></pre></td></tr></table></figure>
 
 <p>Then it runs the signaler past its signal, which is now on line 111 because the fix added two lines, and releases the waiter:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ machine run mwfix --until &#x27;tid=279:at=missed-wakeup.c:111&#x27;</span><br><span class="line">✔ Reached signaler+139, missed-wakeup.c:111, in tid 279</span><br><span class="line">$ machine tasks mwfix release 278</span><br><span class="line">✔ Marked 278 to release</span><br><span class="line">$ machine run mwfix --until &#x27;console~(FAILURE: missed|SUCCESS:)&#x27;</span><br><span class="line">$ machine output mwfix -n : | grep -E &#x27;FAILURE:|SUCCESS:&#x27;</span><br><span class="line">app | SUCCESS: every wait saw the signal</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine run mwfix --until &#x27;tgid=259:at=missed-wakeup.c:111&#x27;</span><br><span class="line"><span class="term-mark">✔</span> Reached signaler+139, missed-wakeup.c:111, in tid 280</span><br><span class="line"><span class="term-mark">$</span> machine tasks mwfix release 279</span><br><span class="line"><span class="term-mark">✔</span> Marked 279 to release</span><br><span class="line"><span class="term-mark">$</span> machine run mwfix --until &#x27;console~(FAILURE: missed|SUCCESS:)&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine output mwfix -n : | grep -E &#x27;FAILURE:|SUCCESS:&#x27;</span><br><span class="line">app | SUCCESS: every wait saw the signal</span><br></pre></td></tr></table></figure>
 
 <p>The same interleaving that broke the original now passes, and both runs are recorded, so you can replay either one, step through it, and see for yourself.</p>
+<p>You can also run these steps as a Python program with the SDK. Here is the core of <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/sdk/python/examples/missed_wakeup.py">missed_wakeup.py</a>:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> testflows.machine.v1 <span class="keyword">as</span> machine</span><br><span class="line"></span><br><span class="line">client = machine.Client()</span><br><span class="line"></span><br><span class="line"><span class="keyword">with</span> client.sessions.create(cpus=<span class="number">2</span>) <span class="keyword">as</span> session:</span><br><span class="line">    client.sessions.use(session)</span><br><span class="line">    disk = client.disks.build(<span class="string">&quot;mw&quot;</span>, binary=<span class="string">&quot;./missed-wakeup&quot;</span>, command=[<span class="string">&quot;1&quot;</span>])</span><br><span class="line">    <span class="keyword">with</span> client.create(<span class="string">&quot;mw&quot;</span>, disk=disk.name, cpus=<span class="number">2</span>) <span class="keyword">as</span> run:</span><br><span class="line">        run.focus.add(<span class="string">&quot;comm=missed-wakeup&quot;</span>)</span><br><span class="line">        run.run(until=<span class="string">&quot;comm=missed-wakeup:exec&quot;</span>)</span><br><span class="line">        run.run(until=<span class="string">&quot;comm=missed-wakeup:sched&quot;</span>)</span><br><span class="line">        main = run.tasks(focused=<span class="literal">True</span>)[<span class="number">0</span>].tid</span><br><span class="line"></span><br><span class="line">        <span class="comment"># Stop the waiter in its window and hold it there.</span></span><br><span class="line">        stop = run.task(main).<span class="built_in">breakpoint</span>(<span class="string">&quot;missed-wakeup.c:76&quot;</span>)</span><br><span class="line">        waiter = run.run(iters=<span class="number">0</span>).hits[<span class="number">0</span>].hit_tid</span><br><span class="line">        run.tasks.hold(waiter)</span><br><span class="line">        run.breakpoints.delete(stop.number)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># The signaler alone reaches the signal line: run it past its signal.</span></span><br><span class="line">        run.run(until=<span class="string">f&quot;tgid=<span class="subst">&#123;main&#125;</span>:at=missed-wakeup.c:109&quot;</span>, within=<span class="string">&quot;60s&quot;</span>)</span><br><span class="line">        run.tasks.release(waiter)</span><br><span class="line"></span><br><span class="line">        run.run(until=<span class="string">&quot;console~(FAILURE: missed|SUCCESS:)&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="built_in">next</span>(line <span class="keyword">for</span> line <span class="keyword">in</span> run.output() <span class="keyword">if</span> <span class="string">&quot;FAILURE:&quot;</span> <span class="keyword">in</span> line <span class="keyword">or</span> <span class="string">&quot;SUCCESS:&quot;</span> <span class="keyword">in</span> line))</span><br><span class="line">    client.disks.delete(disk)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> python3 missed_wakeup.py ./missed-wakeup</span><br><span class="line">app | FAILURE: missed wakeup (trial 0)</span><br></pre></td></tr></table></figure>
+
+<p>Here is how long each step of the first run took, in the machine’s time and in real time. These numbers are from a single run and are only for reference, to give you an idea; yours will vary:</p>
+<div class="styled-table results"><table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Machine time</th>
+<th>Real time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Boot Linux and start the program</td>
+<td>4.52 s</td>
+<td>7.0 s</td>
+</tr>
+<tr>
+<td>Stop the waiter on line 76</td>
+<td>0.018 s</td>
+<td>2.7 s</td>
+</tr>
+<tr>
+<td>Run the signaler past its signal</td>
+<td>0.002 s</td>
+<td>3.2 s</td>
+</tr>
+<tr>
+<td>Release the waiter and finish</td>
+<td>0.56 s</td>
+<td>2.4 s</td>
+</tr>
+<tr>
+<td>The whole run, every command</td>
+<td>5.10 s</td>
+<td>21 s</td>
+</tr>
+</tbody></table>
+</div>
+
+<p>In 5.10 seconds of machine time, which took about 21 seconds of real time, the machine executed 2.94 billion instructions, every one of them deterministically. Two runs of the fixed program’s disk boot to the program in exactly the same 4.776033982 seconds of machine time and the same 2,747,697,931 instructions.</p>
+<h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>It’s been a lot of hard work, and we’re excited to finally be launching TestFlows Machine so that everyone can try it out. More technical articles that go deeper are coming, and we look forward to sharing more of our Machine with you.</p>
 
         </div>
         
@@ -898,7 +949,7 @@ In many cases, writing a good test...
             <h3>AI Agents</h3>
             <ul>
                 
-                <li><a href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone.md" title="This page in Markdown">Markdown</a></li>
+                <li><a href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment.md" title="This page in Markdown">Markdown</a></li>
                 
                 <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
                 <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
@@ -923,10 +974,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795385858140"></script>
-<script src="/js/machine-hero-type.js?v=1795385858140"></script>
-<script src="/js/download-platforms.js?v=1795385858140"></script>
-<script src="/js/anchor-case.js?v=1795385858140"></script>
+<script src="/js/index-code-type.js?v=1795449628194"></script>
+<script src="/js/machine-hero-type.js?v=1795449628194"></script>
+<script src="/js/download-platforms.js?v=1795449628194"></script>
+<script src="/js/anchor-case.js?v=1795449628194"></script>
 
 <script>
 var isInViewport = function (elem) {

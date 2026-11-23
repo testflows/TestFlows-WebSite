@@ -1,8 +1,8 @@
 ---
 layout: index
 fullwidth: true
-seo_title: "Deterministic Simulation Testing for Everyone | TestFlows"
-description: Self-serve deterministic simulation testing environment for developers and AI coding agents. Simulate, fuzz and explore software. Start free in 5 minutes.
+seo_title: "Self-Service Deterministic Simulation Testing | TestFlows"
+description: Self-service deterministic simulation testing environment for developers and AI coding agents. Simulate, fuzz and explore software. Start free in 5 minutes.
 keywords: deterministic simulation testing, DST, deterministic testing, AI coding agents, fault injection, fuzzing, data races, record and replay, time travel debugging, test framework
 ---
 
@@ -10,7 +10,7 @@ keywords: deterministic simulation testing, DST, deterministic testing, AI codin
 <div class="banner home-banner">
 <div class="container banner-inner">
 <div class="banner-text">
-<h1><span class="banner-accent">Self-Serve</span> Deterministic Simulation Testing Environment.</h1>
+<h1><span class="banner-accent">Self-Service</span> Deterministic Simulation Testing Environment.</h1>
 <p>For developers and <a href="/agents.md" title="Guide for AI agents">AI coding agents</a>.<br>Take control of your code execution. Simulate, fuzz and explore software behavior.</p>
 </div>
 </div>
@@ -92,7 +92,7 @@ Total time 2ms
 <h2 class="home-section-title home-section-title-left">Stop hoping the bug happens again.</h2>
 <p class="home-section-lead home-section-lead-left">Race conditions, timing issues, and network failures show up once in a while, and almost never when you are looking for them. Machine runs your real, unmodified Linux x86_64 software, from a single binary to a Docker Compose project, in a machine that controls time, interrupts, random numbers and the thread schedule. Every run can be replayed exactly and branched from any point.</p>
 <p class="home-section-lead home-section-lead-left">So instead of running a test thousands of times, you name the race and make it happen.</p>
-<a class="home-step-more" href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/#what-this-looks-like">See a missed wakeup forced and fixed <span aria-hidden="true">&rarr;</span></a>
+<a class="home-step-more" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/#what-this-looks-like">See a missed wakeup forced and fixed <span aria-hidden="true">&rarr;</span></a>
 </div>
 <figure class="home-figure">
 <svg viewBox="0 0 760 560" role="img" aria-labelledby="mw-title mw-desc" class="home-figure-svg">
@@ -171,7 +171,7 @@ Total time 2ms
 <div class="home-step-head"><p class="home-step-num">05</p><span class="home-step-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="m8.2 12.3 2.6 2.6 5-5.4"/></svg></span></div>
 <h3>Verify the fix</h3>
 <p>Run the same interleaving against your fix. When it passes, you know the fix holds, not just that the failure has not shown up yet.</p>
-<a class="home-step-more" href="/blog/introducing-testflows-machine-deterministic-simulation-testing-environment-for-everyone/#what-this-looks-like">See an example <span aria-hidden="true">&rarr;</span></a>
+<a class="home-step-more" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/#what-this-looks-like">See an example <span aria-hidden="true">&rarr;</span></a>
 </article>
 </div>
 </div>
