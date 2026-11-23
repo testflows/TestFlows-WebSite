@@ -3046,7 +3046,9 @@ of the command runs. It ends at every context switch of a focused task, a task
 the focus command names. It also ends where a task reaches its own code.
 
 Without `--until`, a batch that ends early ends the run. With `--until`, the run
-goes on with the next batch. The response reports how many iterations ran.
+goes on with the next batch. With `--iters 0` and neither `--until` nor
+`--within`, a switch does not end the batch. The response reports how many
+iterations ran.
 
 Every parameter is drawn for one iteration. The mode, the limit, the task marks
 and the interrupt apply to the task on that one vCPU.
@@ -5496,9 +5498,9 @@ See also:
 Take a task off the runqueue.
 See [Holding threads](steering-programs.md#holding-threads).
 
-The scheduler cannot pick a held task. A hold takes effect at the next
-scheduling decision of the vCPU. Holding the last runnable task leaves nothing
-to run. Release it, then use the irq command with preempt to go on.
+The scheduler cannot pick a held task. Every vCPU makes a scheduling decision
+before the run goes on. Holding the last runnable task leaves nothing to run.
+Release it to go on.
 
 ```
 machine tasks run hold [-h] tid
@@ -5525,7 +5527,8 @@ See also:
 Put a task behind its peers.
 See [Holding threads](steering-programs.md#holding-threads).
 
-The task stays runnable. It does nothing when no peer is runnable.
+The task stays runnable. It does nothing when no peer is runnable. A yield takes
+effect at once, as a hold does.
 
 ```
 machine tasks run yield [-h] tid
@@ -5552,8 +5555,7 @@ See also:
 Undo a hold or a yield.
 See [Holding threads](steering-programs.md#holding-threads).
 
-A release takes effect at the next scheduling decision of the vCPU. Use the irq
-command with preempt to force one.
+A release takes effect at once, as a hold does.
 
 ```
 machine tasks run release [-h] tid
@@ -5747,7 +5749,8 @@ See [Focus](steering-programs.md#focus).
 
 The focus list names the programs the machine steers. A run stops at each
 context switch of a focused program, and where the program reaches its own code.
-The tasks subcommands then decide which task runs next.
+A run with `--iters 0` and neither `--until` nor `--within` goes on through
+switches until it stops. The tasks subcommands then decide which task runs next.
 
 A program is named by its absolute path, matched exactly. Write cgroup=`<path>`
 to match the cgroup of a task. Write tgid=`<n>` to name a tgid. The tgid of a

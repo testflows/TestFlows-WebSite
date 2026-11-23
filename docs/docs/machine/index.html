@@ -61,40 +61,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795454974326" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795454974326" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795453612647" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795454974326" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -8364,7 +8364,9 @@ reached.</p>
 of the command runs. It ends at every context switch of a focused task, a task
 the focus command names. It also ends where a task reaches its own code.</p>
 <p>Without <code>--until</code>, a batch that ends early ends the run. With <code>--until</code>, the run
-goes on with the next batch. The response reports how many iterations ran.</p>
+goes on with the next batch. With <code>--iters 0</code> and neither <code>--until</code> nor
+<code>--within</code>, a switch does not end the batch. The response reports how many
+iterations ran.</p>
 <p>Every parameter is drawn for one iteration. The mode, the limit, the task marks
 and the interrupt apply to the task on that one vCPU.</p>
 <p>Without <code>--vcpu</code>, a scheduling cycle dispatches every vCPU. It spends up to one
@@ -10989,9 +10991,9 @@ records nothing.</p>
 </ul>
 <h3 id="machine-tasks-hold"><a href="#machine-tasks-hold" class="headerlink" title="machine tasks hold"></a>machine tasks hold</h3><p>Take a task off the runqueue.
 See <a href="#holding-threads">Holding threads</a>.</p>
-<p>The scheduler cannot pick a held task. A hold takes effect at the next
-scheduling decision of the vCPU. Holding the last runnable task leaves nothing
-to run. Release it, then use the irq command with preempt to go on.</p>
+<p>The scheduler cannot pick a held task. Every vCPU makes a scheduling decision
+before the run goes on. Holding the last runnable task leaves nothing to run.
+Release it to go on.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine tasks run hold [-h] tid</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11017,7 +11019,8 @@ to run. Release it, then use the irq command with preempt to go on.</p>
 </ul>
 <h3 id="machine-tasks-yield"><a href="#machine-tasks-yield" class="headerlink" title="machine tasks yield"></a>machine tasks yield</h3><p>Put a task behind its peers.
 See <a href="#holding-threads">Holding threads</a>.</p>
-<p>The task stays runnable. It does nothing when no peer is runnable.</p>
+<p>The task stays runnable. It does nothing when no peer is runnable. A yield takes
+effect at once, as a hold does.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine tasks run yield [-h] tid</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11043,8 +11046,7 @@ See <a href="#holding-threads">Holding threads</a>.</p>
 </ul>
 <h3 id="machine-tasks-release"><a href="#machine-tasks-release" class="headerlink" title="machine tasks release"></a>machine tasks release</h3><p>Undo a hold or a yield.
 See <a href="#holding-threads">Holding threads</a>.</p>
-<p>A release takes effect at the next scheduling decision of the vCPU. Use the irq
-command with preempt to force one.</p>
+<p>A release takes effect at once, as a hold does.</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">machine tasks run release [-h] tid</span><br></pre></td></tr></table></figure>
 
 <table>
@@ -11236,7 +11238,8 @@ focus entry of the task was armed with focus add <code>&lt;path&gt;</code> +ints
 See <a href="#focus">Focus</a>.</p>
 <p>The focus list names the programs the machine steers. A run stops at each
 context switch of a focused program, and where the program reaches its own code.
-The tasks subcommands then decide which task runs next.</p>
+A run with <code>--iters 0</code> and neither <code>--until</code> nor <code>--within</code> goes on through
+switches until it stops. The tasks subcommands then decide which task runs next.</p>
 <p>A program is named by its absolute path, matched exactly. Write cgroup&#x3D;<code>&lt;path&gt;</code>
 to match the cgroup of a task. Write tgid&#x3D;<code>&lt;n&gt;</code> to name a tgid. The tgid of a
 task is shown by tasks.</p>
@@ -17700,10 +17703,10 @@ and is not part of the SDK. It comes with the client, under the
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795453612648"></script>
-<script src="/js/machine-hero-type.js?v=1795453612648"></script>
-<script src="/js/download-platforms.js?v=1795453612648"></script>
-<script src="/js/anchor-case.js?v=1795453612648"></script>
+<script src="/js/index-code-type.js?v=1795454974326"></script>
+<script src="/js/machine-hero-type.js?v=1795454974326"></script>
+<script src="/js/download-platforms.js?v=1795454974326"></script>
+<script src="/js/anchor-case.js?v=1795454974326"></script>
 
 <script>
 var isInViewport = function (elem) {
