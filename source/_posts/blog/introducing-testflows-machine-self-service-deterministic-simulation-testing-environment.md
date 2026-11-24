@@ -345,8 +345,7 @@ Here is how long each step took, in the machine's time and in real time, measure
 
 {% endhtml %}
 
-In 5.04 seconds of machine time, the machine executed 2.84 billion instructions, every one of them deterministically. After booting, each step took milliseconds of machine time, and most of its 2 to 3 seconds of real time is the round trip to the session. Two runs of the fixed program's disk boot to the program in exactly the same 4.776033982 seconds of machine time and the same 2,747,697,931 instructions.
-
+In 5.04 seconds of machine time, the machine executed 2.84 billion instructions, every one of them deterministically. Creating the run takes the longest, and once it was created, the test itself took 14.4 seconds of real time. After booting, each step took milliseconds of machine time, and most of its 2 to 3 seconds of real time is the round trip to the session.
 ## Conclusion
 
 It's been a lot of hard work, and we're excited to finally be launching TestFlows Machine so that everyone can try it out. More technical articles that go deeper are coming, and we look forward to sharing more of our Machine with you.
