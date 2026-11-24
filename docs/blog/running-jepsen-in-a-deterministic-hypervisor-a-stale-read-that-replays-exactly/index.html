@@ -56,7 +56,7 @@
 <meta name="twitter:image" content="https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly","description":"We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly.","image":"https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-11-24T00:00:00-05:00","dateModified":"2026-11-24T12:47:23-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly","description":"We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly.","image":"https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-11-24T00:00:00-05:00","dateModified":"2026-11-24T12:56:49-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795543052788" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795543052788" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795542630013" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795543052788" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -845,10 +845,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795542630013"></script>
-<script src="/js/machine-hero-type.js?v=1795542630013"></script>
-<script src="/js/download-platforms.js?v=1795542630013"></script>
-<script src="/js/anchor-case.js?v=1795542630013"></script>
+<script src="/js/index-code-type.js?v=1795543052789"></script>
+<script src="/js/machine-hero-type.js?v=1795543052789"></script>
+<script src="/js/download-platforms.js?v=1795543052789"></script>
+<script src="/js/anchor-case.js?v=1795543052789"></script>
 
 <script>
 var isInViewport = function (elem) {
