@@ -330,21 +330,22 @@ $ python3 missed_wakeup.py ./missed-wakeup
 app | FAILURE: missed wakeup (trial 0)
 ```
 
-Here is how long each step of the first run took, in the machine's time and in real time. These numbers are from a single run and are only for reference, to give you an idea; yours will vary:
+Here is how long each step took, in the machine's time and in real time, measured with the Python program above. These numbers are from a single run and are only for reference, to give you an idea; yours will vary:
 
 {% html div class="styled-table results" %}
 
 | Step | Machine time | Real time |
 |---|---|---|
-| Boot Linux and start the program | 4.52 s | 7.0 s |
-| Stop the waiter on line 76 | 0.018 s | 2.7 s |
-| Run the signaler past its signal | 0.002 s | 3.2 s |
-| Release the waiter and finish | 0.56 s | 2.4 s |
-| The whole run, every command | 5.10 s | 21 s |
+| Create the run | | 17.4 s |
+| Boot Linux and start the program | 4.32 s | 7.1 s |
+| Stop the waiter on line 76 | 0.030 s | 2.8 s |
+| Run the signaler past its signal | 0.0006 s | 2.9 s |
+| Release the waiter and finish | 0.69 s | 1.6 s |
+| The whole run | 5.04 s | 31.8 s |
 
 {% endhtml %}
 
-In 5.10 seconds of machine time, which took about 21 seconds of real time, the machine executed 2.94 billion instructions, every one of them deterministically. Two runs of the fixed program's disk boot to the program in exactly the same 4.776033982 seconds of machine time and the same 2,747,697,931 instructions.
+In 5.04 seconds of machine time, the machine executed 2.84 billion instructions, every one of them deterministically. After booting, each step took milliseconds of machine time, and most of its 2 to 3 seconds of real time is the round trip to the session. Two runs of the fixed program's disk boot to the program in exactly the same 4.776033982 seconds of machine time and the same 2,747,697,931 instructions.
 
 ## Conclusion
 
