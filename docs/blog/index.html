@@ -64,40 +64,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795542452361" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795542452361" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795480748485" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795542452361" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -270,6 +270,29 @@
             <p class="blog-lead">Deep dives on deterministic simulation testing, test programs, combinatorial coverage, behavior models, and shipping quality software.</p>
         </header>
         <div class="blog-list">
+
+            <article class="blog-card">
+                <div class="blog-card-copy">
+                    <h2 class="blog-card-title">
+                        <a href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/">Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly</a>
+                    </h2>
+                    <div class="blog-card-excerpt">
+                        <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://jepsen.io/">Jepsen</a> is a well-known framework used for finding bugs in distributed databases, and its approach is simple to describe. A control node drives a cluster over SSH, runs operations against it while a nemesis partitions the network, kills processes or skews clocks, and then a checker decides whether the history it recorded could have happened on a correct system. What Jepsen doesn’t promise is that a failure it finds will happen again, because the cluster runs on real machines with real scheduling and real timing, so the next run takes a different path. We wanted to see what happens when the whole Jepsen setup runs inside a deterministic hypervisor, and whether a failure it catches can be replayed exactly.
+                    </div>
+                    <div class="blog-card-meta">
+                        <span class="blog-card-author">Vitaliy Zakaznikov</span>
+                        <time datetime="2026-11-24">November 24, 2026</time>
+                    </div>
+                    <a class="blog-card-more" href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/">Read more <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                </div>
+                
+                <div class="blog-card-media">
+                    <a href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/" tabindex="-1" aria-hidden="true">
+                        <img loading="lazy" decoding="async" src="/images/running-jepsen-in-a-deterministic-hypervisor.png" alt="">
+                    </a>
+                </div>
+                
+            </article>
 
             <article class="blog-card">
                 <div class="blog-card-copy">
@@ -837,10 +860,10 @@ For tests, on the other hand, readability and maintainability are a must.
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795480748486"></script>
-<script src="/js/machine-hero-type.js?v=1795480748486"></script>
-<script src="/js/download-platforms.js?v=1795480748486"></script>
-<script src="/js/anchor-case.js?v=1795480748486"></script>
+<script src="/js/index-code-type.js?v=1795542452362"></script>
+<script src="/js/machine-hero-type.js?v=1795542452362"></script>
+<script src="/js/download-platforms.js?v=1795542452362"></script>
+<script src="/js/anchor-case.js?v=1795542452362"></script>
 
 <script>
 var isInViewport = function (elem) {
