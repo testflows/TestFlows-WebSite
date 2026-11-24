@@ -8,6 +8,7 @@ In the articles, `{% testflows %}` stands for TestFlows, `{% katex %}` and `{% e
 
 ## Articles, newest first
 
+- [Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly](https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly.md): We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly. (2026-11-24)
 - [Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment](https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment.md): TestFlows Machine, a self-service deterministic simulation testing environment for developers and AI coding agents: the vision, agent first with the human in the loop, and a missed wakeup forced and fixed. (2026-11-22)
 - [Testing Super Mario Using a Behavior Model Autonomously (Part 2)](https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part2.md): An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques. (2025-10-10)
 - [Testing Super Mario Using a Behavior Model Autonomously (Part 1)](https://testflows.com/blog/testing-super-mario-using-a-behavior-model-autonomously-part1.md): An article about autonomous testing of Super Mario using behavior models and evolutionary state space exploration techniques. (2025-10-10)

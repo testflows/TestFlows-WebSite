@@ -56,7 +56,7 @@
 <meta name="twitter:image" content="https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly","description":"We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly.","image":"https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-11-24T00:00:00-05:00","dateModified":"2026-11-24T12:56:49-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly","description":"We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly.","image":"https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-11-24T00:00:00-05:00","dateModified":"2026-11-24T18:30:09-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795564052787" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795564052787" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795543052788" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795564052787" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -313,18 +313,18 @@
         <div class="post-content col-lg-9">
             <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://jepsen.io/">Jepsen</a> is a well-known framework used for finding bugs in distributed databases, and its approach is simple to describe. A control node drives a cluster over SSH, runs operations against it while a nemesis partitions the network, kills processes or skews clocks, and then a checker decides whether the history it recorded could have happened on a correct system. What Jepsen doesn’t promise is that a failure it finds will happen again, because the cluster runs on real machines with real scheduling and real timing, so the next run takes a different path. We wanted to see what happens when the whole Jepsen setup runs inside a deterministic hypervisor, and whether a failure it catches can be replayed exactly.<span id="more"></span></p>
 <h2 id="the-setup"><a href="#the-setup" class="headerlink" title="The setup"></a>The setup</h2><p>Our example is a single Docker Compose project with three etcd nodes and a Jepsen control node, which <a href="/machine/">TestFlows Machine</a> turns into a disk and boots. The test itself is the classic one, the same shape as Jepsen’s own etcd tutorial: a compare-and-set register, clients that read, write and compare-and-set it through etcd’s HTTP gateway, and <code>partition-random-halves</code>, which cuts the nodes into two groups with iptables for 5 seconds out of every 10. At the end, the linearizability checker looks for any order of the operations that a single register could have produced.</p>
-<p>Nothing in Jepsen or etcd is changed for the machine. The machine reaches no network, so etcd and the test with all its dependencies are baked into the images, and the nodes use <code>iptables-legacy</code>, because for now the machine’s kernel has only the legacy tables and not nftables (we’re planning to add it soon). The rest was the usual small things a fresh container is missing, like <code>git</code> and <code>scp</code> on the control node and <code>killall</code> on the nodes, which our coding agent and we found one crash at a time. The whole example is in our public repository at <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd">examples&#x2F;compose&#x2F;jepsen-etcd</a>.</p>
-<h2 id="running-it"><a href="#running-it" class="headerlink" title="Running it"></a>Running it</h2><p>The machine has 2 vCPUs and 4G of memory, so it needs a bigger session. We used 2 vCPUs and 6G of memory. Once the two images are built, as the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd">README</a> shows, we built the disk from the example’s directory, created a run, and ran it until Jepsen printed a verdict:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create jepsen --cpus 2 --mem 6G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen --disk jepsen --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? true,</span><br><span class="line">control |  :valid? true&#125;</span><br><span class="line">control | Everything looks good! ヽ(‘ー`)ノ</span><br></pre></td></tr></table></figure>
+<p>Nothing in Jepsen or etcd is changed for the machine. The machine reaches no network, so etcd and the test with all its dependencies are baked into the images, and the nodes in these runs use <code>iptables-legacy</code>, because at the time the machine’s kernel had only the legacy tables. The kernel now has nftables too, so the updated example uses Debian’s default <code>iptables</code>, which uses nftables, and can still build the nodes with <code>iptables-legacy</code>. Its logs are from new runs with nftables. The rest was the usual small things a fresh container is missing, like <code>git</code> and <code>scp</code> on the control node and <code>killall</code> on the nodes, which our coding agent and we found one crash at a time. The whole example is in our public repository at <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd">examples&#x2F;compose&#x2F;jepsen-etcd</a>.</p>
+<h2 id="running-it"><a href="#running-it" class="headerlink" title="Running it"></a>Running it</h2><p>The machine has 2 vCPUs and 4G of memory, so it needs a bigger session. We used 4 vCPUs and 8G of memory. Once the two images are built, as the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd">README</a> shows, we built the disk from the example’s directory, created a run, and ran it until Jepsen printed a verdict:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create jepsen --cpus 4 --mem 8G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen --disk jepsen --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? true,</span><br><span class="line">control |  :valid? true&#125;</span><br><span class="line">control | Everything looks good! ヽ(‘ー`)ノ</span><br></pre></td></tr></table></figure>
 
-<p>That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and etcd stayed linearizable through all of them, which is what you’d expect from etcd with its default linearizable reads. The full log, with every operation, is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/logs/pass.log">logs&#x2F;pass.log</a>.</p>
+<p>That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and etcd stayed linearizable through all of them, which is what you’d expect from etcd with its default linearizable reads. The full log, with every operation, is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/pass.log">logs&#x2F;pass.log</a>.</p>
 <h2 id="making-it-fail"><a href="#making-it-fail" class="headerlink" title="Making it fail"></a>Making it fail</h2><p>A test that only passes doesn’t show much, so we needed a real bug for Jepsen to catch. etcd has one ready to use if you ask for it: a serializable read is answered by the node from its own copy, without going through the leader, which is faster but means a node that is behind can answer with an old value. The example has a <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/stale-reads.patch">stale-reads.patch</a> that turns those reads on, and with it applied, the run ends very differently:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> git apply stale-reads.patch</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen-stale</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen-stale --disk jepsen-stale --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen-stale --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen-stale -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? false,</span><br><span class="line">control |  :valid? false&#125;</span><br><span class="line">control | Analysis invalid! (ﾉಥ益ಥ）ﾉ ┻━┻</span><br></pre></td></tr></table></figure>
 
 <p>Right after a partition started, a write of 0 completed, and the very next read, invoked 10 ms later, came back with 1, the value the write had just replaced:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">control | INFO [2026-03-01 00:02:11,247] jepsen worker 2 - jepsen.print 2	:ok	:write	0</span><br><span class="line">control | INFO [2026-03-01 00:02:11,257] jepsen worker 1 - jepsen.print 1	:invoke	:read	nil</span><br><span class="line">control | INFO [2026-03-01 00:02:11,276] jepsen worker 1 - jepsen.print 1	:ok	:read	1</span><br></pre></td></tr></table></figure>
 
-<p>No single register can do that, and Jepsen says so. The full log of this run is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/logs/fail.log">logs&#x2F;fail.log</a>.</p>
+<p>No single register can do that, and Jepsen says so. The full log of this run is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/fail.log">logs&#x2F;fail.log</a>.</p>
 <h2 id="replaying-the-failure"><a href="#replaying-the-failure" class="headerlink" title="Replaying the failure"></a>Replaying the failure</h2><p>This is the part we cared about most. On real hardware, you would now have a log of a failure and no way to get the same run back, because the next run partitions at a different moment and the stale read lands somewhere else, if it lands at all. In the machine, the run is recorded, so we forked it at its first checkpoint and replayed it:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork jepsen-stale --at 1 --name jepsen-stale-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked jepsen-stale/jepsen-stale-replay</span><br><span class="line">  From checkpoint 1 of jepsen-stale, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine replay jepsen-stale-replay</span><br><span class="line"><span class="term-mark">✔</span> Replayed 460379 entries to entry 460380. Converged.</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output jepsen-stale -n :) &lt;(machine output jepsen-stale-replay -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
 
@@ -845,10 +845,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795543052789"></script>
-<script src="/js/machine-hero-type.js?v=1795543052789"></script>
-<script src="/js/download-platforms.js?v=1795543052789"></script>
-<script src="/js/anchor-case.js?v=1795543052789"></script>
+<script src="/js/index-code-type.js?v=1795564052788"></script>
+<script src="/js/machine-hero-type.js?v=1795564052788"></script>
+<script src="/js/download-platforms.js?v=1795564052788"></script>
+<script src="/js/anchor-case.js?v=1795564052788"></script>
 
 <script>
 var isInViewport = function (elem) {

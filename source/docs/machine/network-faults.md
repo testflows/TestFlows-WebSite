@@ -531,6 +531,61 @@ machine exec app run --container db -- cat /sys/class/net/eth0/iflink    # 6
 machine exec app run -- ip -o link | grep '^6:'                          # 6: veth45c3e2e@if5: ...
 ```
 
+### Faults from inside a container: iptables and tc
+
+A test that injects its own network faults runs unchanged in a machine. A
+container started with `cap_add: [NET_ADMIN]` can change its own firewall and
+traffic control with `iptables`, `ip6tables` and `tc`, as long as its image
+has those programs:
+
+```yaml
+services:
+  db:
+    image: my-db
+    cap_add: [NET_ADMIN]
+```
+
+The first command makes db drop everything api sends it, and the second
+removes the rule, so api reaches db again:
+
+```bash
+machine exec app run --container db --user root -- iptables -A INPUT -s api -j DROP
+machine exec app run --container db --user root -- iptables -F INPUT
+```
+
+With `-j REJECT` in place of `-j DROP`, api's connections to db are refused
+at once instead of timing out. `iptables` resolves `api` to its address when
+the rule is added, so the rule no longer matches an `api` that is recreated
+at another address.
+
+The machine's kernel has both nftables and the legacy tables, so either kind
+of `iptables` works. Debian's and Ubuntu's `iptables` use nftables by default,
+and an image switched to `iptables-legacy` works as it is. Both kinds have the
+`filter`, `nat`, `mangle` and `raw` tables, for IPv4 and IPv6, with the common
+targets, such as `DROP`, `REJECT`, `MARK` and `MASQUERADE`, and the common
+matches, such as `multiport`, `conntrack`, `limit`, `statistic`, `string` and
+`u32`. `tc` has the `prio`, `tbf`, `netem` and `plug` disciplines and the
+`u32` filter. A run keeps the kernel it was created with, so a run created
+before November 24, 2026 has the legacy tables alone.
+
+A container's rules act on the packets that container sends and receives.
+The machine's bridge between containers does not pass packets through
+`iptables`, so a rule written on the machine itself, outside every container,
+does not filter traffic between containers. A container's rules are part of
+the run like everything else the container does, so a replay applies them at
+the same moments and drops the same packets.
+
+`machine net` puts its faults on the root `tc` discipline of each container's
+link. On one container, use either the container's own `tc` or `machine net`,
+not both. A container's own root discipline, such as
+`tc qdisc add dev eth0 root netem delay 10ms`, replaces the one `machine net`
+put there, so the container's `machine net` faults stop acting while
+`machine net` still lists them.
+
+`machine net` needs no change to the images and no `NET_ADMIN`, and it logs
+every decision it makes. A fault the test makes itself is still the better
+choice when the test already has one.
+
 ### What a network fault misses
 
 - **Traffic inside one container**, over its loopback, has no link to fault.

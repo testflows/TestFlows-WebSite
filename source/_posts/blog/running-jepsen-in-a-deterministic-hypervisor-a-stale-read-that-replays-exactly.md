@@ -19,14 +19,14 @@ icon: fas fa-glasses pt-5 pb-5
 
 Our example is a single Docker Compose project with three etcd nodes and a Jepsen control node, which [TestFlows Machine](/machine/) turns into a disk and boots. The test itself is the classic one, the same shape as Jepsen's own etcd tutorial: a compare-and-set register, clients that read, write and compare-and-set it through etcd's HTTP gateway, and `partition-random-halves`, which cuts the nodes into two groups with iptables for 5 seconds out of every 10. At the end, the linearizability checker looks for any order of the operations that a single register could have produced.
 
-Nothing in Jepsen or etcd is changed for the machine. The machine reaches no network, so etcd and the test with all its dependencies are baked into the images, and the nodes use `iptables-legacy`, because for now the machine's kernel has only the legacy tables and not nftables (we're planning to add it soon). The rest was the usual small things a fresh container is missing, like `git` and `scp` on the control node and `killall` on the nodes, which our coding agent and we found one crash at a time. The whole example is in our public repository at [examples/compose/jepsen-etcd](https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd).
+Nothing in Jepsen or etcd is changed for the machine. The machine reaches no network, so etcd and the test with all its dependencies are baked into the images, and the nodes in these runs use `iptables-legacy`, because at the time the machine's kernel had only the legacy tables. The kernel now has nftables too, so the updated example uses Debian's default `iptables`, which uses nftables, and can still build the nodes with `iptables-legacy`. Its logs are from new runs with nftables. The rest was the usual small things a fresh container is missing, like `git` and `scp` on the control node and `killall` on the nodes, which our coding agent and we found one crash at a time. The whole example is in our public repository at [examples/compose/jepsen-etcd](https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd).
 
 ## Running it
 
-The machine has 2 vCPUs and 4G of memory, so it needs a bigger session. We used 2 vCPUs and 6G of memory. Once the two images are built, as the [README](https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd) shows, we built the disk from the example's directory, created a run, and ran it until Jepsen printed a verdict:
+The machine has 2 vCPUs and 4G of memory, so it needs a bigger session. We used 4 vCPUs and 8G of memory. Once the two images are built, as the [README](https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd) shows, we built the disk from the example's directory, created a run, and ran it until Jepsen printed a verdict:
 
 ```
-$ machine sessions create jepsen --cpus 2 --mem 6G
+$ machine sessions create jepsen --cpus 4 --mem 8G
 $ machine disks build --compose . jepsen
 $ machine create jepsen --disk jepsen --cpus 2 --mem 4096
 $ machine run jepsen --until 'console~(Everything looks good|Analysis invalid|Jepsen broke)' --within 10m
@@ -36,7 +36,7 @@ control |  :valid? true}
 control | Everything looks good! ヽ(‘ー`)ノ
 ```
 
-That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and etcd stayed linearizable through all of them, which is what you'd expect from etcd with its default linearizable reads. The full log, with every operation, is in [logs/pass.log](https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/logs/pass.log).
+That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and etcd stayed linearizable through all of them, which is what you'd expect from etcd with its default linearizable reads. The full log, with every operation, is in [logs/pass.log](https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/pass.log).
 
 ## Making it fail
 
@@ -61,7 +61,7 @@ control | INFO [2026-03-01 00:02:11,257] jepsen worker 1 - jepsen.print 1	:invok
 control | INFO [2026-03-01 00:02:11,276] jepsen worker 1 - jepsen.print 1	:ok	:read	1
 ```
 
-No single register can do that, and Jepsen says so. The full log of this run is in [logs/fail.log](https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/logs/fail.log).
+No single register can do that, and Jepsen says so. The full log of this run is in [logs/fail.log](https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/fail.log).
 
 ## Replaying the failure
 
