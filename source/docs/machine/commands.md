@@ -7458,6 +7458,38 @@ See also:
 - [`machine net heal`](#machine-net-heal)
 - [`machine net`](#machine-net)
 
+### machine net apply
+
+Apply a container's faults to its link again.
+
+A program in a container can take the faults off its link. The command applies
+them again. It applies the machine's hold to the link too. The command leaves
+the faults that still act as they are.
+
+Without a container the command applies the faults of every container. The
+command runs the machine until the faults are applied.
+
+```
+machine net run apply [-h] [container]
+```
+
+| Argument | Does |
+|---|---|
+| `[container]` | Container, by its id, its name or its service's (default: every one) |
+
+Examples:
+
+```
+machine net run1 apply db  db's faults act again
+machine net run1 apply     every container's
+```
+
+See also:
+
+- [`machine net`](#machine-net)
+- [`machine net hold`](#machine-net-hold)
+- [`machine net heal`](#machine-net-heal)
+
 ### machine net reset
 
 Reset the TCP connections of a container.

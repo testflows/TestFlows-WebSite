@@ -579,8 +579,16 @@ the same moments and drops the same packets.
 link. On one container, use either the container's own `tc` or `machine net`,
 not both. A container's own root discipline, such as
 `tc qdisc add dev eth0 root netem delay 10ms`, replaces the one `machine net`
-put there, so the container's `machine net` faults stop acting while
-`machine net` still lists them.
+put there, and the container's `machine net` faults stop acting. The listing
+then warns that they are not in effect, and
+[`machine net app apply db`](commands.md#machine-net-apply) applies them
+again, which also removes the container's own discipline:
+
+```text
+db       compose-db-1   -   -      delay 100ms  -     0     0        0
+⚠ Not in effect on compose-db-1: its link lacks these faults
+  Apply them again machine net app apply compose-db-1
+```
 
 `machine net` needs no change to the images and no `NET_ADMIN`, and it logs
 every decision it makes. A fault the test makes itself is still the better
