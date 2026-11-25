@@ -19,7 +19,13 @@ icon: fas fa-glasses pt-5 pb-5
 
 Our example is a single Docker Compose project with three etcd nodes and a Jepsen control node, which [TestFlows Machine](/machine/) turns into a disk and boots. The test itself is the classic one, the same shape as Jepsen's own etcd tutorial: a compare-and-set register, clients that read, write and compare-and-set it through etcd's HTTP gateway, and `partition-random-halves`, which cuts the nodes into two groups with iptables for 5 seconds out of every 10. At the end, the linearizability checker looks for any order of the operations that a single register could have produced.
 
-Nothing in Jepsen or etcd is changed for the machine. The machine reaches no network, so etcd and the test with all its dependencies are baked into the images, and the nodes in these runs use `iptables-legacy`, because at the time the machine's kernel had only the legacy tables. The kernel now has nftables too, so the updated example uses Debian's default `iptables`, which uses nftables, and can still build the nodes with `iptables-legacy`. Its logs are from new runs with nftables. The rest was the usual small things a fresh container is missing, like `git` and `scp` on the control node and `killall` on the nodes, which our coding agent and we found one crash at a time. The whole example is in our public repository at [examples/compose/jepsen-etcd](https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd).
+Neither Jepsen nor etcd required any changes to run on the machine. Since the machine has no external network access, etcd, the Jepsen test, and all its dependencies are baked into the container images.
+
+At the time of our initial runs, the machine's kernel only supported legacy iptables, so we used `iptables-legacy` on the nodes. The kernel now supports nftables as well, and the updated example uses Debian's default iptables with the nftables backend, while retaining the option to build the nodes with `iptables-legacy`. The logs in this example are from the new runs with nftables.
+
+The rest came down to the usual small things missing from fresh containers, such as `git` and `scp` on the control node and `killall` on the nodes, which we discovered together with our coding agent, one crash at a time.
+
+The complete example is available in our public repository at [examples/compose/jepsen-etcd](https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd).
 
 ## Running it
 
