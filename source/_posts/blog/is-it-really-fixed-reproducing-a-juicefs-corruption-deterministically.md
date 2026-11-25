@@ -1,7 +1,7 @@
 ---
 post: true
-title: "Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix"
-seo_title: "Is It Really Fixed? Reproducing a JuiceFS Corruption Bug"
+title: "Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically"
+seo_title: "Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically"
 description: A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.
 date: 2026-11-25
 author: Vitaliy Zakaznikov

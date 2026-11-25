@@ -1,6 +1,6 @@
 <!-- agents: TestFlows, a blog post. Index: https://testflows.com/llms.txt -->
 
-# Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix
+# Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically
 
 Published 2026-11-25 by Vitaliy Zakaznikov.
 
