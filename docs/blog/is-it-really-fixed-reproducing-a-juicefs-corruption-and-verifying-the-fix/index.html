@@ -1,0 +1,1054 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  
+  <title>Is It Really Fixed? Reproducing a JuiceFS Corruption Bug</title>
+  <meta name="description" content="A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.">
+  
+  <meta name="keywords" content="JuiceFS, data corruption, zstd, deterministic simulation testing, DST, record and replay, deterministic hypervisor, RustFS, TestFlows, AI coding agent">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  <meta name="author" content="Vitaliy Zakaznikov">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix.md">
+
+
+  <meta property="og:site_name" content="TestFlows">
+  
+  
+<meta name="publish_date" property="og:publish_date" content="2026-11-25T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-25T00:00:00-0000" />
+<meta property="og:title" content="Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix">
+<meta property="og:description" content="A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.">
+<meta property="og:url" content="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/">
+<meta property="og:image" content="https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg">
+
+
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1254">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix">
+<meta name="twitter:description" content="A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.">
+<meta name="twitter:image" content="https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix","description":"A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-25T09:55:27-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/"}</script>
+
+  
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/fonts.css?v=1" type="text/css">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795618561464" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795618561464" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795618561464" media="screen" type="text/css">
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body class="has-announcement">
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  <div class="site-announcement" role="region" aria-label="Announcement">
+  <a class="site-announcement-link" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
+    <span class="site-announcement-text">Launching TestFlows Machine: self-service deterministic simulation testing environment</span>
+    <span class="site-announcement-cta">Read the post <span aria-hidden="true">&rarr;</span></span>
+  </a>
+</div>
+
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/machine/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/pricing/">Pricing</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/download/">Download</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
+                            
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                            
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
+            <script>
+            (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
+                var a = document.getElementById("navbar-signin");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
+            })();
+            </script>
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <main class="content" id="main" tabindex="-1">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2026-11-25T00:00:00-0000"><span class="authored-date text-nowrap">Nov 25, 2026</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-image col-lg-6 m-auto">
+            <img loading="lazy" decoding="async" src="/images/is-it-really-fixed-juicefs-corruption.png" alt="Is It Really Fixed? Reproducing a JuiceFS Corruption and Verifying the Fix">
+            <span class="post-image-credit"></span>
+        </div>
+        
+    </div>
+    
+    <div class="blog post-body row">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#what-happened"><span class="toc-text">What happened</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#the-upstream-fix"><span class="toc-text">The upstream fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#the-test"><span class="toc-text">The test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reproducing-it-on-1-3-1"><span class="toc-text">Reproducing it on 1.3.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-the-corruption"><span class="toc-text">Replaying the corruption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#confirming-the-fix-on-1-4-2"><span class="toc-text">Confirming the fix on 1.4.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pushing-on-the-fix"><span class="toc-text">Pushing on the fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#why-should-you-care"><span class="toc-text">Why should you care?</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
+            <p>Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and TestFlows Machine to reproduce the corruption on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<span id="more"></span></p>
+<h2 id="what-happened"><a href="#what-happened" class="headerlink" title="What happened"></a>What happened</h2><p>We used JuiceFS to store our runs and disk images. One day, a ClickHouse server inside a machine refused to start because its own integrity check failed. The uploaded binary was not the binary we had pushed. Its size was right, but some of the bytes in the middle were wrong.</p>
+<p>Chasing it down with our coding agent took a while, and a pattern slowly emerged. The data was compressible, the volume used zstd, and the file had been written in many small appends, the way a slow network transfer writes it. Writing the same bytes in one pass was always clean. Incompressible data was always clean too. Worst of all, the local cache hid the problem. A freshly written file read back fine, and the damage only showed up once its blocks were fetched again from the object store.</p>
+<p>There was no fix to wait for, so we stopped using JuiceFS the same day and had to switch.</p>
+<h2 id="the-upstream-fix"><a href="#the-upstream-fix" class="headerlink" title="The upstream fix"></a>The upstream fix</h2><p>About three weeks later, on September 20, <code>stevapple</code> opened issue <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/juicedata/juicefs/issues/7555">juicefs#7555</a>, titled “zstd decompression writes past the requested output and corrupts neighboring slices in the same read buffer”. Reading it felt like reading our own notes.</p>
+<p>When JuiceFS reads a chunk, it fetches the chunk’s slices concurrently into one shared buffer. The zstd library it uses, however, decompresses up to the capacity of the buffer it is given rather than its length, and it uses the spare room after the output as scratch space for a block’s literals. As a result, decompressing one slice can overwrite the bytes of the slice next to it, and whether that happens depends on which goroutine finishes first. A file written in one pass has a single slice per chunk, with nothing next to it to overwrite, which explains why our bulk writes were always clean. It also means the objects in the object store were correct the whole time. Only the read was wrong.</p>
+<p>The fix, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/juicedata/juicefs/pull/7556">juicefs#7556</a>, was merged the next day and shipped in JuiceFS 1.3.4 and 1.4.2 on October 22. We had been running 1.3.1.</p>
+<p>Every symptom we had written down matched. Still, a matching description is not proof. We wanted to see 1.3.1 fail and 1.4.2 pass for ourselves.</p>
+<h2 id="the-test"><a href="#the-test" class="headerlink" title="The test"></a>The test</h2><p>We asked our coding agent to build the smallest setup that writes data the way our store did and checks it the way we had. The result is a Docker Compose project with three services:</p>
+<ul>
+<li><code>redis</code>, which holds the JuiceFS metadata,</li>
+<li><code>rustfs</code>, a <a target="_blank" rel="noopener external nofollow noreferrer" href="https://rustfs.com/">RustFS</a> server acting as the S3 object store,</li>
+<li><code>jfs</code>, a JuiceFS client built from a release tag, which formats a volume with zstd and runs the test.</li>
+</ul>
+<p>The test writes 64 MiB of compressible data into a file through a single open file descriptor. The writes result in appends of random sizes between 13 KiB and 1 MiB, with a <code>sync</code> after each one, so every chunk of the file ends up made of many slices. It then unmounts the volume and mounts it again, read-only and with an empty cache, so that every block has to be fetched from RustFS and decompressed. Finally, it reads the file back in 4 MiB reads and compares its hash with the original. The test repeats this for several rounds and prints one line per round.</p>
+<p>Two details turned out to matter. First, the data has to be compressible but full of literals, like the data in the issue’s own test. Random data is stored almost as is and never reaches the broken code. Second, the appends have to be irregular. Our first version used 256 KiB appends, which made every slice end exactly on a zstd block boundary, and 1.3.1 came back clean every single time.</p>
+<h2 id="reproducing-it-on-1-3-1"><a href="#reproducing-it-on-1-3-1" class="headerlink" title="Reproducing it on 1.3.1"></a>Reproducing it on 1.3.1</h2><p>Before involving our deterministic machine at all, we ran the test against 1.3.1 on a regular host. One round out of six came back corrupt, while the other five were clean. That is what you would expect from a bug that depends on goroutine timing.</p>
+<p>Running the same project in a machine took one extra step. The machine’s kernel did not have FUSE (now it has it), which a JuiceFS mount needs, so we added it. After that, it was a matter of creating a session, building a disk from the Compose project, and running it until the test printed its verdict:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create jfs --cpus 4 --mem 8G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jfs131</span><br><span class="line"><span class="term-mark">$</span> machine create jfs131 --disk jfs131 --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jfs131 --until &#x27;console~(done: [0-9]+ of|mount of /. failed|jfs-1 exited)&#x27; --within 20m</span><br></pre></td></tr></table></figure>
+
+<p>The run took 103 seconds of machine time. Inside the machine, the corruption showed up even more often than on the host, in four rounds out of five:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output jfs131 -n : | grep -E &quot;round|done&quot;</span><br><span class="line">jfs | jfs | round 1: clean (48 slice rows)</span><br><span class="line">jfs | jfs | round 2: CORRUPT sha 062fafd058ade5ed != 599049e5570df6de, first byte 46428229, 57841 bytes differ (56 slice rows)</span><br><span class="line">jfs | jfs | round 3: CORRUPT sha 44c92a8033f63d3f != 599049e5570df6de, first byte 50112720, 51899 bytes differ (46 slice rows)</span><br><span class="line">jfs | jfs | round 4: CORRUPT sha 31953d6bf4126d97 != 599049e5570df6de, first byte 46130511, 6507 bytes differ (64 slice rows)</span><br><span class="line">jfs | jfs | round 5: CORRUPT sha 57e6c73d3af2f1cd != 599049e5570df6de, first byte 47054881, 57712 bytes differ (57 slice rows)</span><br><span class="line">jfs | jfs | done: 4 of 5 rounds corrupt</span><br></pre></td></tr></table></figure>
+
+<p>Each corrupt round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file got corrupted at byte 46,428,229, and 57,841 of its bytes were affected.</p>
+<h2 id="replaying-the-corruption"><a href="#replaying-the-corruption" class="headerlink" title="Replaying the corruption"></a>Replaying the corruption</h2><p>Timing bugs are the hardest kind to pin down. Run the test again, and it corrupts different bytes, if it corrupts anything at all. In a machine, though, the run is recorded, so instead of running the test again, we forked the run at its first checkpoint and replayed it:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork jfs131 --at 1 --name jfs131-again</span><br><span class="line"><span class="term-mark">✔</span> Forked jfs131/jfs131-again (wiijUfnvMWQgnxkDLjaCQ)</span><br><span class="line">  From checkpoint 1 of jfs131, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine replay jfs131-again</span><br><span class="line">  Replaying segment 1/1 from jfs131 (wiiiaaImnHJiBU1CLifok) to the end</span><br><span class="line"><span class="term-mark">✔</span> Replayed 1962564 entries to entry 1962565. Converged.</span><br></pre></td></tr></table></figure>
+
+<p>All 1,962,564 entries converged, and in our specific run, the replay took about 50 seconds of real time. As one would expect from a deterministic machine, the replayed test reached exactly the same verdict, down to the byte:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output jfs131-again -n : | grep -E &quot;round|done&quot;</span><br><span class="line">jfs | jfs | round 1: clean (48 slice rows)</span><br><span class="line">jfs | jfs | round 2: CORRUPT sha 062fafd058ade5ed != 599049e5570df6de, first byte 46428229, 57841 bytes differ (56 slice rows)</span><br><span class="line">jfs | jfs | round 3: CORRUPT sha 44c92a8033f63d3f != 599049e5570df6de, first byte 50112720, 51899 bytes differ (46 slice rows)</span><br><span class="line">jfs | jfs | round 4: CORRUPT sha 31953d6bf4126d97 != 599049e5570df6de, first byte 46130511, 6507 bytes differ (64 slice rows)</span><br><span class="line">jfs | jfs | round 5: CORRUPT sha 57e6c73d3af2f1cd != 599049e5570df6de, first byte 47054881, 57712 bytes differ (57 slice rows)</span><br><span class="line">jfs | jfs | done: 4 of 5 rounds corrupt</span><br></pre></td></tr></table></figure>
+
+<p>Round 2 went wrong at byte 46,428,229 again, with the same 57,841 bytes changed, and so did every other round. The rest of the output matched too, every line of it:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> diff &lt;(machine output jfs131 -n :) &lt;(machine output jfs131-again -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+
+<p>Matching output is a good sign, but the console only shows what the programs chose to print. So we also compared the state of the machines themselves. <code>machine hash</code> hashes a machine’s memory, its disk, every device and every vCPU. We ran it on the replay, then on the original, both stopped at the same entry:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine hash jfs131-again</span><br><span class="line">Entry 1962565</span><br><span class="line">mem          0xb7439284308266a6</span><br><span class="line">disk         0xd25fd82248763171</span><br><span class="line">...</span><br><span class="line">vCPU 0</span><br><span class="line">  state        0x88896d997d38f4be</span><br><span class="line">  regs_hash    0x6161187886c321be</span><br><span class="line">...</span><br><span class="line"><span class="term-mark">$</span> machine hash jfs131</span><br><span class="line">Entry 1962565</span><br><span class="line">mem          0xb7439284308266a6</span><br><span class="line">disk         0xd25fd82248763171</span><br><span class="line">...</span><br><span class="line">vCPU 0</span><br><span class="line">  state        0x88896d997d38f4be</span><br><span class="line">  regs_hash    0x6161187886c321be</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, bit for bit, with the same corrupted reads in its memory. That means the corruption is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.</p>
+<h2 id="confirming-the-fix-on-1-4-2"><a href="#confirming-the-fix-on-1-4-2" class="headerlink" title="Confirming the fix on 1.4.2"></a>Confirming the fix on 1.4.2</h2><p>With the bug pinned down on 1.3.1, we built 1.4.2 from its release tag and ran the same test. In the machine, all 12 rounds now came back clean, just as they did on the host:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output jfs142 -n : | grep -E &quot;juicefs version|round|done&quot;</span><br><span class="line">jfs | jfs | juicefs version 1.4.2+unknown, volume formatted</span><br><span class="line">jfs | jfs | round 1: clean (59 slice rows)</span><br><span class="line">jfs | jfs | round 2: clean (55 slice rows)</span><br><span class="line">...</span><br><span class="line">jfs | jfs | round 12: clean (59 slice rows)</span><br><span class="line">jfs | jfs | done: 0 of 12 rounds corrupt</span><br></pre></td></tr></table></figure>
+
+<h2 id="pushing-on-the-fix"><a href="#pushing-on-the-fix" class="headerlink" title="Pushing on the fix"></a>Pushing on the fix</h2><p>A clean run only shows that the fix holds on the paths the test happened to take. The old bug depended on which goroutine finished first, so a solid fix has to hold no matter what order things happen in. That is something we can push on in a machine, by injecting faults that shuffle the timing in exactly the place the fix protects.</p>
+<p>We ran both versions up to the moment the volume was formatted and took a checkpoint there. From that checkpoint, we forked one branch per experiment, applied one fault to it, and ran it to the test’s verdict:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork f142 --at formatted --name f142-jitter</span><br><span class="line"><span class="term-mark">$</span> machine net f142-jitter delay jfs 20ms --jitter 15ms --to rustfs</span><br><span class="line"><span class="term-mark">✔</span> Set the link of compose-jfs-1 (jfs) to compose-rustfs-1: delay 20ms jitter 15ms, seed 1882325056</span><br><span class="line"><span class="term-mark">$</span> machine run f142-jitter --until &#x27;console~(done: [0-9]+ of|mount of /. failed)&#x27; --within 40m</span><br></pre></td></tr></table></figure>
+
+<p>We tried six variations, each aimed at a different part of the read path:</p>
+<ul>
+<li><strong>none</strong>, a plain fork as the control,</li>
+<li><strong>jitter</strong>, 20 ms ± 15 ms on the link from the client to RustFS, so slices arrive in a random order,</li>
+<li><strong>loss</strong>, 2% of the packets on that link dropped, so some fetches take much longer than others,</li>
+<li><strong>throttle</strong>, the client limited to 0.3 of a CPU, so its goroutines are starved and overlap,</li>
+<li><strong>memory</strong>, the client limited to 512 MB,</li>
+<li><strong>sched</strong>, interrupts delayed by up to 2 ms and timers by up to 20 ms, which changes how goroutines interleave on the vCPUs.</li>
+</ul>
+<p>On 1.3.1, the faults made the bug easier to hit, not harder. Jitter was the most effective: all five rounds came back corrupt, with 412,456 to 813,387 bytes wrong in each, up to fourteen times the damage of the worst round without faults. The other faults corrupted two or three rounds out of five. On 1.4.2, every experiment came back clean, all 72 rounds of them.</p>
+<h3 id="making-sure-the-faults-were-real"><a href="#making-sure-the-faults-were-real" class="headerlink" title="Making sure the faults were real"></a>Making sure the faults were real</h3><p>A fault that silently fails to apply would make a clean result meaningless, so we wanted to confirm that each one was applied. The obvious way to get it, looking inside the machine while the test runs, has a catch: every look runs commands in the machine, and that changes the very run we are trying to measure.</p>
+<p>Each experiment’s recording has checkpoints of its own, so we forked a branch at one of them, about 47 seconds into the test, and inspected the branch instead. The branch starts from the exact state of the experiment at that exact moment, and whatever we do there never reaches the original recording. For example, here is our jitter experiment on 1.4.2:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork f142-jitter --at 509519 --name f142-jitter-look</span><br><span class="line"><span class="term-mark">✔</span> Forked f142/f142-jitter-look (wiiokgTpG3M3CsA82hzwl)</span><br><span class="line">  From checkpoint 509519 of f142/f142-jitter, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine net f142-jitter-look</span><br><span class="line">SERVICE  CONTAINER      TO                MATCH  FAULTS                  SEED        SENT   DROPPED  QUEUED</span><br><span class="line">jfs      compose-jfs-1  compose-rustfs-1  -      delay 20ms jitter 15ms  1882325056  13170  0        7</span><br></pre></td></tr></table></figure>
+
+<p>We can see that by that point, 13,170 packets had gone through the delay, and seven were still waiting in the queue. The other faults had the following traces:</p>
+<table>
+<thead>
+<tr>
+<th>Fault</th>
+<th>Evidence on 1.4.2, at about 47 seconds</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>loss</td>
+<td>3,349 packets sent, 76 dropped</td>
+</tr>
+<tr>
+<td>throttle</td>
+<td>the client’s cgroup was throttled in 387 of 393 periods, 39 seconds in total</td>
+</tr>
+<tr>
+<td>sched</td>
+<td>an interrupt was being held at that very instant, an IPI to vCPU 1 due in 683 µs</td>
+</tr>
+<tr>
+<td>memory</td>
+<td>the 512 MB limit was set, but the client peaked at 430 MB and never reached it</td>
+</tr>
+</tbody></table>
+<p>Out of all of them, the memory experiment turned out to be the weak one: the limit was there, but it never pushed the client. Every other fault clearly did its job. The same faults gave us the same evidence on both versions: 1.3.1 broke under them, and 1.4.2 did not.</p>
+<p>As a final check, we ran the regression test that came with the fix against both versions. On 1.3.1, it failed with <code>zstd at offset 0: wrote 74712 bytes after the requested output</code>. On 1.4.2, it passed as expected.</p>
+<h2 id="why-should-you-care"><a href="#why-should-you-care" class="headerlink" title="Why should you care?"></a>Why should you care?</h2><p>When an upstream project fixes a bug, the fix lives in their tests and their release notes. However, for a production system, the confidence has to be ours, especially for a bug that once cost us data. The best part is that a test like this one is small enough for most AI coding agents to write quite fast. And when the AI coding agent has access to a deterministic machine, a failure is more than a red line in a log. It becomes a recording you and your AI coding agent can replay exactly. The last property is hard to get and now it is available to everyone.</p>
+<p>The whole test is in our public repository, in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/juicefs">examples&#x2F;compose&#x2F;juicefs</a>, so you can run it yourself against any JuiceFS version.</p>
+<p><a href="/machine/portal/signup/">Sign up</a> for free today and combine the power of your AI with our deterministic machine.</p>
+
+        </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h2[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/running-jepsen-in-a-deterministic-hypervisor.png" class="card-img-top" alt="Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Jepsen is a well-known framework used for finding bugs in distributed databases, and its approach is...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-service deterministic simulation testing (DST) environment for developers and AI coding agent...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In Part 1, we built an autonomous system that beat all four levels of Super Mario Bros. without any ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </main>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.testflows.com/">Status</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+                <li><a href="/legal/trademark-policy/">Trademark</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1795618561465"></script>
+<script src="/js/machine-hero-type.js?v=1795618561465"></script>
+<script src="/js/download-platforms.js?v=1795618561465"></script>
+<script src="/js/anchor-case.js?v=1795618561465"></script>
+
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+
