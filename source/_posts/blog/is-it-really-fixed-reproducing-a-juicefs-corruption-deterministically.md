@@ -127,7 +127,7 @@ vCPU 0
 ...
 ```
 
-All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, bit for bit, with the same corrupted reads in its memory. That means the corruption is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.
+All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, with the same corrupted reads in its memory. That means the corruption is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.
 
 ## Confirming the fix on 1.4.2
 
