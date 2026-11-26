@@ -1,5 +1,9 @@
 <head>
   <meta charset="utf-8">
+  <% if (String(page.path || '').indexOf('machine/portal/') === 0) { %>
+  <%# A portal URL carries sign-in and account parameters: the next page, and the analytics it loads, get the origin alone as the referrer. %>
+  <meta name="referrer" content="origin">
+  <% } %>
   <script>document.documentElement.classList.add("js");</script>
   <script>
   (function () {
