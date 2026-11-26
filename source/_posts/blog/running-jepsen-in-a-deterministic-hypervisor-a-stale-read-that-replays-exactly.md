@@ -46,7 +46,7 @@ That run took 186 seconds of machine time and 188 seconds of real time, with thr
 
 ## Making it fail
 
-A test that only passes doesn't show much, so we needed a real bug for Jepsen to catch. etcd has one ready to use if you ask for it: a serializable read is answered by the node from its own copy, without going through the leader, which is faster but means a node that is behind can answer with an old value. The example has a [stale-reads.patch](https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/stale-reads.patch) that turns those reads on, and with it applied, the run ends very differently:
+A test that only passes doesn't show much, so we needed a way to force a failure for Jepsen to catch. etcd gives us one if we ask for it. A serializable read is answered by the node from its own copy, without going through the leader, which is faster but means a node that is behind can answer with an old value. That is documented etcd behavior, not a defect, and it is not linearizable, so Jepsen should catch it. The example has a [stale-reads.patch](https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/stale-reads.patch) that turns those reads on, and with it applied, the run ends very differently:
 
 ```
 $ git apply stale-reads.patch
@@ -102,4 +102,4 @@ We first thought the difference was the cache, since the original run reads the 
 
 Jepsen does its own fault injection, from inside the nodes, with iptables over SSH. Machine can also inject faults from outside, into the network, the clocks and the disks, with no changes to the nodes at all, and those faults are recorded in the run like everything else. That part is still experimental, and it's what we want to try with Jepsen next.
 
-If you work on a distributed system and have a Jepsen test of your own, we'd love to hear how it does in a machine, and the example is a good place to start. [Sign up](/machine/portal/signup/) and ping us at [contact@testflows.com](mailto:contact@testflows.com), and we'll grant you access to our Starter or Pro plan so you can try it out for yourself. Happy distributed database testing!
+If you work on a distributed system and have a Jepsen test of your own, we'd love to hear how it does in a machine, and the example is a good place to start. [Sign up](/machine/portal/signup/), and for the bigger session it needs, just ping us at [contact@testflows.com](mailto:contact@testflows.com). Happy distributed database testing!
