@@ -2,7 +2,7 @@
 
 # Privacy Policy
 
-<p class="legal-updated">Last updated: 17 November 2026</p>
+<p class="legal-updated">Last updated: 26 November 2026</p>
 
 Katteli Inc. (“**Katteli**,” “**we**,” “**us**,” or “**our**”)
 
@@ -55,7 +55,7 @@ based on legitimate interests where that right applies.
 We share personal information with:
 
 - **Service providers** that help us run the Services (payments, email delivery,
-  hosting, observability), under confidentiality and data-protection terms;
+  hosting, observability, website analytics), under confidentiality and data-protection terms;
 - **Stripe / Link** for checkout, tax, receipts, disputes, and Managed Payments;
 - **Authorities or others** when we believe disclosure is reasonably necessary
   to comply with law, enforce our Agreement, or protect rights and safety;
@@ -95,12 +95,21 @@ disks still stored for your account. An erasure also deletes your sessions,
 API keys, sign-in tokens and sign-in records. The usage and billing records
 described in the paragraph above are kept, de-identified.
 
-## 6. Cookies
+## 6. Cookies and analytics
 
 We use essential cookies and local storage for authentication, security, and
-load balancing. We use no analytics. Where required, we ask consent before non-essential
-cookies. Browser controls may block cookies; blocking essential cookies may
-break login.
+load balancing. Browser controls may block cookies; blocking essential cookies
+may break login.
+
+We use a website analytics provider to understand how our websites are used,
+such as which pages are visited, how visitors arrive, and how quickly pages
+load. It may collect the page address, the referring address, the browser and
+device type, an approximate location derived from the IP address, and
+page-load timings. We do not load analytics on the pages where you sign in or
+manage your account, and we do not use analytics to identify you or for
+advertising. Where analytics uses cookies or similar technologies that are not
+essential, we ask for your consent first where required, and you can withdraw
+it at any time.
 
 ## 7. Security
 

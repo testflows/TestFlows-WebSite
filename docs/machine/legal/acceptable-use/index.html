@@ -3,6 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  
   <script>document.documentElement.classList.add("js");</script>
   <script>
   (function () {
@@ -61,40 +62,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795717217129" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795717217129" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795715219451" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795717217129" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -426,10 +427,38 @@ the Client or the SDK Core to <code>abuse@testflows.com</code>.</p>
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795715219451"></script>
-<script src="/js/machine-hero-type.js?v=1795715219451"></script>
-<script src="/js/download-platforms.js?v=1795715219451"></script>
-<script src="/js/anchor-case.js?v=1795715219451"></script>
+<script src="/js/index-code-type.js?v=1795717217129"></script>
+<script src="/js/machine-hero-type.js?v=1795717217129"></script>
+<script src="/js/download-platforms.js?v=1795717217129"></script>
+<script src="/js/anchor-case.js?v=1795717217129"></script>
+
+
+
+<div class="cookie-notice" id="cookie-notice" role="region" aria-label="Cookie notice" hidden>
+  <p>We use essential cookies for sign-in and security, and cookie-free analytics to see how our pages are used. <a href="/machine/legal/privacy-policy/#6-cookies-and-analytics">Privacy Policy</a></p>
+  <button type="button" class="cookie-notice-ok" id="cookie-notice-ok">OK</button>
+  <button type="button" class="cookie-notice-close" id="cookie-notice-close" aria-label="Close the cookie notice">&times;</button>
+</div>
+<script>
+(function () {
+  var key = "tf-cookie-notice";
+  var notice = document.getElementById("cookie-notice");
+  try {
+    if (localStorage.getItem(key) === "seen") return;
+  } catch (e) {}
+  notice.hidden = false;
+  var dismiss = function () {
+    notice.hidden = true;
+    try {
+      localStorage.setItem(key, "seen");
+    } catch (e) {}
+  };
+  document.getElementById("cookie-notice-ok").addEventListener("click", dismiss);
+  document.getElementById("cookie-notice-close").addEventListener("click", dismiss);
+})();
+</script>
+
+<script defer src="/js/vendor/cloudflare-beacon-2026.10.1.min.js" data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 
 <script>
 var isInViewport = function (elem) {

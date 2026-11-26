@@ -426,3 +426,66 @@ hr {
 }
 
 .pricing-faq details p { margin: 0.6rem 0 0; }
+
+/* Cookie notice: once per browser, at the bottom, above the page */
+.cookie-notice {
+    position: fixed;
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    max-width: 44rem;
+    margin: 0 auto;
+    padding: 0.75rem 1rem;
+    color: var(--tf-text);
+    background: var(--tf-card-bg);
+    border: 1px solid var(--tf-card-border-hover);
+    border-radius: var(--tf-radius);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.25);
+    font-size: 0.95rem;
+}
+
+.cookie-notice[hidden] { display: none; }
+
+.cookie-notice p { margin: 0; flex: 1; }
+
+.cookie-notice a { color: var(--tf-cta); }
+
+.cookie-notice-ok {
+    flex: none;
+    padding: 0.35rem 1.25rem;
+    color: var(--tf-ink-on-cta);
+    background: var(--tf-cta);
+    border: 0;
+    border-radius: var(--tf-radius-pill);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.cookie-notice-close {
+    flex: none;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    color: var(--tf-text-muted);
+    background: none;
+    border: 0;
+    border-radius: var(--tf-radius-pill);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.cookie-notice-close:hover { color: var(--tf-text-strong); background: var(--tf-ghost-hover-bg); }
+
+.cookie-notice-ok:focus-visible,
+.cookie-notice-close:focus-visible { outline: 2px solid var(--tf-text-strong); outline-offset: 2px; }
+
+@media (max-width: 575px) {
+    .cookie-notice { flex-direction: column; align-items: stretch; text-align: center; padding-top: 1.5rem; }
+    .cookie-notice-close { position: absolute; top: 0.25rem; right: 0.25rem; }
+}
