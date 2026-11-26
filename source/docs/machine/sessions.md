@@ -28,8 +28,8 @@ architecture as the session it was recorded in.
 
 `dedicated-ip` runs each vCPU on a core of its own. It is available from the
 Starter plan up, and on Free with usage credits. For software that needs stronger isolation, use `dedicated-ip`, or write to
-[sales@testflows.com](mailto:sales@testflows.com) to have Dedicated machines
-reserved for your team.
+[sales@testflows.com](mailto:sales@testflows.com) to have machines reserved for
+your team, in our cloud or for your infrastructure.
 
 ```bash
 machine sessions classes

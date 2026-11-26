@@ -1,7 +1,7 @@
 ---
 title: Pricing
 seo_title: "Pricing: Deterministic Simulation Testing, Free to Start | TestFlows Machine"
-description: TestFlows Machine plans and prices. Start deterministic simulation testing free, pay for the compute your sessions use, or reserve dedicated machines.
+description: TestFlows Machine plans and prices. Start deterministic simulation testing free, pay for the compute your sessions use, or reserve dedicated machines, in our cloud or for your infrastructure.
 fullwidth: true
 permalink: machine/pricing/index.html
 keywords: deterministic simulation testing, DST, pricing, free plan, AI coding agents
@@ -91,10 +91,14 @@ keywords: deterministic simulation testing, DST, pricing, free plan, AI coding a
 </article>
 
 <article class="pricing-plan">
-<h2>Dedicated</h2>
-<p class="pricing-for">Machines reserved for your team alone.</p>
+<h2>Enterprise</h2>
+<p class="pricing-for">Machines reserved for your team alone, in our cloud or for your infrastructure.</p>
 <p class="pricing-price"><span class="pricing-amount">Contact us</span></p>
 <a class="btn banner-cta banner-cta-ghost pricing-cta" href="mailto:sales@testflows.com">Contact sales</a>
+<ul class="pricing-features">
+<li>Dedicated machines in our cloud</li>
+<li>A deployment for your infrastructure, by arrangement</li>
+</ul>
 <p>Write to <a href="mailto:sales@testflows.com">sales@testflows.com</a>.</p>
 </article>
 
@@ -191,6 +195,11 @@ keywords: deterministic simulation testing, DST, pricing, free plan, AI coding a
 <details>
 <summary>Which plan is right for me?</summary>
 <p>Free shows what Machine does on your own programs. Starter fits one developer's everyday testing. Plus fits larger sessions and more of them. Pro fits long recordings and heavy exploration. For machines reserved for your team, contact sales@testflows.com.</p>
+</details>
+
+<details>
+<summary>Can Machine run in our own infrastructure?</summary>
+<p>For teams whose code or data cannot leave their infrastructure, Enterprise offers a deployment for your infrastructure, by arrangement. Contact <a href="mailto:sales@testflows.com">sales@testflows.com</a> to discuss your requirements.</p>
 </details>
 
 <details>
