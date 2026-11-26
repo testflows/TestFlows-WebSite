@@ -23,7 +23,7 @@ We used JuiceFS to store our runs and disk images. One day, a ClickHouse server 
 
 Chasing it down with our coding agent took a while, and a pattern slowly emerged. The data was compressible, the volume used zstd, and the file had been written in many small appends, the way a slow network transfer writes it. Writing the same bytes in one pass was always clean. Incompressible data was always clean too. Worst of all, the local cache hid the problem. A freshly written file read back fine, and the damage only showed up once its blocks were fetched again from the object store.
 
-We needed to move fast, so we switched our storage the same day and did not even have time to dig further and file an issue.
+We needed to move fast, so we switched our storage the same day and did not even have time to dig for the root cause and file an issue.
 
 ## The upstream fix
 
