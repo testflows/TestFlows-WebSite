@@ -10,7 +10,7 @@ A self-service deterministic simulation testing (DST) environment for developers
 
 We all see that software development is changing quickly, and AI coding agents now write, test, and debug most, if not all, of the software today. They can investigate a bug, propose a fix, and run the tests, but they still run into the same problem developers do, which is that software doesn't always fail the same way twice. Race conditions, timing issues, and network failures don't become easier to reproduce just because an agent is doing the debugging.
 
-**Our vision is to make deterministic simulation testing a natural part of the modern AI-driven development cycle.** An agent should be able to reproduce a failure, step back through the execution, attach a debugger at the exact point where things went wrong, and try a fix against the same conditions. It should be able to inject faults precisely, compress execution time, and read logs after the fact with retroactive logging, without waiting for fuzzers. And you should be able to do all of that yourself, without having to build or maintain a deterministic hypervisor, or break your engineering budget to get access to systems that already provide this capability.
+**Our vision is to make deterministic simulation testing a natural part of the modern AI-driven development cycle.** An agent should be able to reproduce a failure, step back through the execution, attach a debugger at the exact point where things went wrong, and try a fix against the same conditions. It should be able to inject faults precisely, compress execution time, and read logs after the fact with retroactive logging. And you should be able to do all of that yourself, without having to build or maintain a deterministic execution environment.
 
 With TestFlows Machine, you can start doing that today.
 
@@ -49,7 +49,7 @@ But agent first doesn't mean we want to deliver an AI-driven black box. We want 
 
 ## Name the bug, verify the fix
 
-We believe the most valuable thing you can give an agent is fine-grained control over execution and fast feedback on its fixes. An agent that suspects a race shouldn't have to start hours of fuzzing and hope for the best, as it can hold one thread at the exact line, run the other one through, and see the failure in seconds. It can then apply its fix, run the same interleaving again, and know that the fix holds, which turns a guess into a verified fix.
+We believe the most valuable thing you can give an agent is fine-grained control over execution and fast feedback on its fixes. An agent that suspects a race can hold one thread at the exact line, run the other one through, and see the failure in seconds. It can then apply its fix, run the same interleaving again, and know that the fix holds, which turns a guess into a verified fix.
 
 Fuzzing still matters once the bugs you can name are fixed and you need to search for the ones you can't. Machine supports that today with plans and seeds, and with the Python SDK.
 

@@ -18,7 +18,7 @@
   
   
   
-  <title>Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically | TestFlows</title>
+  <title>Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor | TestFlows</title>
   <meta name="description" content="This post has moved.">
   
   <meta name="keywords" content="deterministic simulation testing, DST, AI coding agents, fault injection, fuzzing, record and replay, test framework">
@@ -38,12 +38,12 @@
   
   
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically">
+  <meta property="og:title" content="Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor">
   <meta property="og:description" content="This post has moved.">
   <meta property="og:url" content="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifying-the-fix/">
   <meta property="og:image" content="https://testflows.com/img/social-share.png">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically">
+  <meta name="twitter:title" content="Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor">
   <meta name="twitter:description" content="This post has moved.">
   <meta name="twitter:image" content="https://testflows.com/img/social-share.png">
   
@@ -60,40 +60,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795713206973" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795713206973" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795712382178" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795713206973" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -268,7 +268,7 @@
 
 <section class="docs-page">
 <div class="container">
-<p>This post has moved to <a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically</a>.</p>
+<p>This post has moved to <a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor</a>.</p>
 </div>
 </section>
 
@@ -339,10 +339,10 @@
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795712382178"></script>
-<script src="/js/machine-hero-type.js?v=1795712382178"></script>
-<script src="/js/download-platforms.js?v=1795712382178"></script>
-<script src="/js/anchor-case.js?v=1795712382178"></script>
+<script src="/js/index-code-type.js?v=1795713206973"></script>
+<script src="/js/machine-hero-type.js?v=1795713206973"></script>
+<script src="/js/download-platforms.js?v=1795713206973"></script>
+<script src="/js/anchor-case.js?v=1795713206973"></script>
 
 <script>
 var isInViewport = function (elem) {

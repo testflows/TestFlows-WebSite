@@ -1,10 +1,12 @@
 <!-- agents: TestFlows, a blog post. Index: https://testflows.com/llms.txt -->
 
-# Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically
+# Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor
 
 Published 2026-11-25 by Vitaliy Zakaznikov.
 
 Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine.md) to reproduce the corruption on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
+
+> Note: the bug affects only volumes formatted with zstd compression (`juicefs format --compress zstd`), which is not the default, and files written in many small appends. A volume formatted with the default, no compression, was never affected.
 
 ## What happened
 
