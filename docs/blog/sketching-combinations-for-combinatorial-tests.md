@@ -1,6 +1,6 @@
 <!-- agents: TestFlows, a blog post. Index: https://testflows.com/llms.txt -->
 
-# Sketching Combinations For Combinatorial Tests
+# Sketching Combinations for Combinatorial Tests
 
 Published 2023-10-13 by Vitaliy Zakaznikov.
 

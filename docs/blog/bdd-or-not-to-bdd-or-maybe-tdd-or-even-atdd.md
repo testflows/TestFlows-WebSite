@@ -1,6 +1,6 @@
 <!-- agents: TestFlows, a blog post. Index: https://testflows.com/llms.txt -->
 
-# BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?
+# BDD or Not to BDD, or TDD, or Even ATDD: How Does It Affect Your QA Team?
 
 Published 2023-10-03 by Vitaliy Zakaznikov.
 
