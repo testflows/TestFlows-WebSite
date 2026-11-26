@@ -188,6 +188,8 @@ Out of all of them, the memory experiment turned out to be the weak one: the lim
 
 As a final check, we ran the regression test that came with the fix against both versions. On 1.3.1, it failed with `zstd at offset 0: wrote 74712 bytes after the requested output`. On 1.4.2, it passed as expected.
 
+So, is it really fixed? On everything we quickly threw at it, yes. And now that the issue is fixed, we will be evaluating JuiceFS again for our own storage.
+
 ## Why should you care?
 
 When an upstream project fixes a bug, the fix lives in their tests and their release notes. However, for a production system, the confidence has to be ours, especially for a bug that once made us switch our storage. The best part is that a test like this one is small enough for most AI coding agents to write quite fast. And when the AI coding agent has access to a deterministic machine, a failure is more than a red line in a log. It becomes a recording you and your AI coding agent can replay exactly. The last property is hard to get and now it is available to everyone.
