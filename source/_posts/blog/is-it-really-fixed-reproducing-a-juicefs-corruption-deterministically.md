@@ -13,7 +13,7 @@ social_image_height: 1254
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and TestFlows Machine to reproduce the corruption on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
+Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine/) to reproduce the corruption on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
 
 ## What happened
 
