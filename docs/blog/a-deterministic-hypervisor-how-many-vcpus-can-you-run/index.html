@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795694489003" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795694489003" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795694489003" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -306,12 +306,12 @@
         
         <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
             <div class="post-toc-inner">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#session-cpus-vs-machine-vcpus"><span class="toc-text">Session CPUs vs machine vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#keep-determinism-with-multiple-vcpus"><span class="toc-text">Keep determinism with multiple vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#example-a-machine-with-16-vcpus"><span class="toc-text">Example: A machine with 16 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-16-vcpus"><span class="toc-text">Replaying 16 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#comparing-boot-time-from-1-to-64-vcpus"><span class="toc-text">Comparing boot time from 1 to 64 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#session-cpus-vs-machine-vcpus"><span class="toc-text">Session CPUs vs machine vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#maintaining-determinism-with-multiple-vcpus"><span class="toc-text">Maintaining determinism with multiple vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#example-a-machine-with-16-vcpus"><span class="toc-text">Example: A machine with 16 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-16-vcpus"><span class="toc-text">Replaying 16 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#comparing-boot-time-from-1-to-64-vcpus"><span class="toc-text">Comparing boot time from 1 to 64 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-64-vcpus"><span class="toc-text">Replaying 64 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
             </div>
         </nav>
         
         <div class="post-content col-lg-9">
-            <p>Production software rarely runs on a single CPU. A database sizes its thread pools by the number of CPUs it finds, the Linux kernel keeps per-CPU queues and caches, and locks behave differently when two CPUs contend for them. Software tested on one CPU is tested on a configuration it will probably never run on. That is why we made <a href="/machine/">Machine</a> able to have many vCPUs, so that Linux and the software under test see a multi-CPU server just like the one they run on in production, while keeping every run deterministic. So how many vCPUs can you run? Spoiler: up to 64 in one machine. In this post we show what that looks like and what it costs.<span id="more"></span></p>
+            <p>Production software rarely runs on a single CPU. A database sizes its thread pools by the number of CPUs it finds, the Linux kernel keeps per-CPU queues and caches, and locks behave differently when two CPUs contend for them. Software tested on one CPU is tested on a configuration it will probably never run on. That is why we made <a href="/machine/">TestFlows Machine</a> able to have many vCPUs, so that Linux and the software under test see a multi-CPU server just like the one they run on in production, while keeping every run deterministic. So how many vCPUs can you run? Spoiler: up to 64 in one machine. In this post we show what that looks like and what it costs.<span id="more"></span></p>
 <h2 id="session-cpus-vs-machine-vcpus"><a href="#session-cpus-vs-machine-vcpus" class="headerlink" title="Session CPUs vs machine vCPUs"></a>Session CPUs vs machine vCPUs</h2><p>We’ll start by clarifying one point of possible confusion. What is a session CPU vs a machine CPU? This will be one of the first questions you will ask. This is because before you can run anything you need a session (an allocated compute resource) and a run. To create each, the corresponding commands <a href="/docs/machine/#machine-sessions-create">machine sessions create</a> and <a href="/docs/machine/#machine-create">machine create</a> both take an option called <code>--cpus</code>, but they mean different things.</p>
 <p><code>machine sessions create --cpus N</code> sets how many host CPUs the session reserves. They are shared by every run in the session, and each running machine is placed on one of them. A session’s CPUs therefore decide how many machines can run at the same time and determine the billing price per hour of the session.</p>
 <p><code>machine create --cpus N</code> sets how many vCPUs one machine has, which is to say how many CPUs its Linux sees, and it does not depend on the session’s size. So a session with one CPU can run a machine with anywhere from 1 to 64 vCPUs with the max limit being 64 per machine.</p>
@@ -339,9 +339,9 @@
 <td>64</td>
 </tr>
 </tbody></table>
-<h2 id="keep-determinism-with-multiple-vcpus"><a href="#keep-determinism-with-multiple-vcpus" class="headerlink" title="Keep determinism with multiple vCPUs"></a>Keep determinism with multiple vCPUs</h2><p>On a real server the hardware CPUs run at the same time, and the order in which they reach shared memory changes from one run to the next. That order is exactly what a deterministic hypervisor has to control as it is one source of non-determinism in the hardware. A machine therefore needs its vCPUs serialized, one at a time, in a fixed order: each vCPU runs one dispatch (a stretch of execution at full speed), and then the next vCPU takes its turn. Now because only one vCPU runs at any moment, every read and write of shared memory happens in an order the recording fixes, and an interrupt one vCPU sends to another arrives at a fixed point during the run. This makes the interleaving of the vCPUs repeatable and produces runs that can be replayed exactly.</p>
+<h2 id="maintaining-determinism-with-multiple-vcpus"><a href="#maintaining-determinism-with-multiple-vcpus" class="headerlink" title="Maintaining determinism with multiple vCPUs"></a>Maintaining determinism with multiple vCPUs</h2><p>On a real server the hardware CPUs run at the same time, and the order in which they reach shared memory changes from one run to the next. That order is exactly what a deterministic hypervisor has to control as it is one source of non-determinism in the hardware. Machine therefore serializes the execution of its vCPUs, one at a time, in a fixed order: each vCPU runs one dispatch (a stretch of execution at full speed), and then the next vCPU takes its turn. Now because only one vCPU runs at any moment, every read and write of shared memory happens in an order the recording fixes, and an interrupt one vCPU sends to another arrives at a fixed point during the run. This gives the hypervisor control over the interleaving of the vCPUs and produces runs that can be replayed exactly.</p>
 <p>The vCPUs would run serialized even if each had a host CPU of its own. As a result a machine with more vCPUs takes longer to run in real time, and a bigger session does not make it faster. What a bigger session gives is more machines running at once, such as a recording and its replay or enabling several branches to be explored side by side.</p>
-<p>However, from the inside none of this is visible. Linux just sees every vCPU as a CPU of its own. It schedules threads on all of them, sends interrupts between them and keeps its per-CPU data. Most importantly the software under test sees a much-desired multi-CPU server.</p>
+<p>However, Linux still sees all its vCPUs as separate CPUs. It schedules threads on all of them, sends interrupts between them and keeps its per-CPU data. Most importantly, the software under test sees a multi-CPU server.</p>
 <h2 id="example-a-machine-with-16-vcpus"><a href="#example-a-machine-with-16-vcpus" class="headerlink" title="Example: A machine with 16 vCPUs"></a>Example: A machine with 16 vCPUs</h2><p>To show this in practice, we created a session with a single CPU:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create blog-determinism</span><br><span class="line"><span class="term-mark">$</span> machine sessions</span><br><span class="line">NAME              SESSION           STATE      CPUS  MEM       DISK       CLASS        ARCH     ₡/HOUR  DURATION  IDLE   COST</span><br><span class="line">blog-determinism  30316b373adb4a63  connected  1     1536M/2G  12.3G/16G  standard-ip  intel-1   ₡0.15  56m2s     6s    ₡0.14  (current)</span><br></pre></td></tr></table></figure>
 
@@ -410,7 +410,11 @@
 </tbody></table>
 <p>As we can see the real time grows with the number of vCPUs, from 4.9 seconds for one to 44.5 seconds for 64, because the vCPUs take turns. Machine time grows too but not in step with the count. For example, the machine with 4 vCPUs took 10.36 seconds and the one with 8 took 9.41.</p>
 <p>With a different number of CPUs the kernel does different work and therefore waits on different timers. Also, because the runs were recorded on a class that records repeatable runs by default, an earlier recording of the same disk with 32 vCPUs took exactly 17.410739710 seconds of machine time, the same as the one in the table to the nanosecond.</p>
-<h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Testing real programs benefits when the deterministic hypervisor supports multiple vCPUs. With the machine you can create machines with up to 64 vCPUs in a session of any size. This means that Linux and your software under test see a multi-CPU server. And while you can run with 1 or 64 vCPUs you can expect each run to replay exactly.</p>
+<h2 id="replaying-64-vcpus"><a href="#replaying-64-vcpus" class="headerlink" title="Replaying 64 vCPUs"></a>Replaying 64 vCPUs</h2><p>To check the largest machine too, we replayed the 64-vCPU run from the table the same way:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork cpus-64 --from 1 --name cpus-64-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked cpus-64/cpus-64-replay (wikDAFSjfkQ5bqqLHJFSw)</span><br><span class="line">  From checkpoint 1 of cpus-64, replayed to entry 2633386</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output cpus-64 --source all -n :) &lt;(machine output cpus-64-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+
+<p>In our run, the replay took about 57 seconds of real time. Its output is identical to the original on every source, and <code>machine hash</code> gave the same 715 hashes on both machines at entry 2633386: the memory, the disk, the devices, the held interrupts and the 11 parts of the state of each of the 64 vCPUs.</p>
+<h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Testing real programs benefits when the deterministic hypervisor supports multiple vCPUs. With TestFlows Machine, you can create machines with up to 64 vCPUs in a session of any size. This means that Linux and your software under test see a multi-CPU server. And while you can run with 1 or 64 vCPUs you can expect each run to replay exactly.</p>
 <p>Give it a try. <a href="/machine/portal/signup/">Sign up</a> for free and try it with as many vCPUs as your software expects.</p>
 
         </div>
@@ -948,10 +952,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795656321673"></script>
-<script src="/js/machine-hero-type.js?v=1795656321673"></script>
-<script src="/js/download-platforms.js?v=1795656321673"></script>
-<script src="/js/anchor-case.js?v=1795656321673"></script>
+<script src="/js/index-code-type.js?v=1795694489004"></script>
+<script src="/js/machine-hero-type.js?v=1795694489004"></script>
+<script src="/js/download-platforms.js?v=1795694489004"></script>
+<script src="/js/anchor-case.js?v=1795694489004"></script>
 
 <script>
 var isInViewport = function (elem) {

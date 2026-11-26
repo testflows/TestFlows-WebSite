@@ -4,7 +4,7 @@
 
 Published 2026-11-27 by Vitaliy Zakaznikov.
 
-Production software rarely runs on a single CPU. A database sizes its thread pools by the number of CPUs it finds, the Linux kernel keeps per-CPU queues and caches, and locks behave differently when two CPUs contend for them. Software tested on one CPU is tested on a configuration it will probably never run on. That is why we made [Machine](/machine.md) able to have many vCPUs, so that Linux and the software under test see a multi-CPU server just like the one they run on in production, while keeping every run deterministic. So how many vCPUs can you run? Spoiler: up to 64 in one machine. In this post we show what that looks like and what it costs.<!-- more -->
+Production software rarely runs on a single CPU. A database sizes its thread pools by the number of CPUs it finds, the Linux kernel keeps per-CPU queues and caches, and locks behave differently when two CPUs contend for them. Software tested on one CPU is tested on a configuration it will probably never run on. That is why we made [TestFlows Machine](/machine.md) able to have many vCPUs, so that Linux and the software under test see a multi-CPU server just like the one they run on in production, while keeping every run deterministic. So how many vCPUs can you run? Spoiler: up to 64 in one machine. In this post we show what that looks like and what it costs.<!-- more -->
 
 ## Session CPUs vs machine vCPUs
 
@@ -20,13 +20,13 @@ We'll start by clarifying one point of possible confusion. What is a session CPU
 | Decides | How many machines run at the same time | How many CPUs the machine's Linux sees |
 | Limit | The plan and the session's class | 64 |
 
-## Keep determinism with multiple vCPUs
+## Maintaining determinism with multiple vCPUs
 
-On a real server the hardware CPUs run at the same time, and the order in which they reach shared memory changes from one run to the next. That order is exactly what a deterministic hypervisor has to control as it is one source of non-determinism in the hardware. A machine therefore needs its vCPUs serialized, one at a time, in a fixed order: each vCPU runs one dispatch (a stretch of execution at full speed), and then the next vCPU takes its turn. Now because only one vCPU runs at any moment, every read and write of shared memory happens in an order the recording fixes, and an interrupt one vCPU sends to another arrives at a fixed point during the run. This makes the interleaving of the vCPUs repeatable and produces runs that can be replayed exactly.
+On a real server the hardware CPUs run at the same time, and the order in which they reach shared memory changes from one run to the next. That order is exactly what a deterministic hypervisor has to control as it is one source of non-determinism in the hardware. Machine therefore serializes the execution of its vCPUs, one at a time, in a fixed order: each vCPU runs one dispatch (a stretch of execution at full speed), and then the next vCPU takes its turn. Now because only one vCPU runs at any moment, every read and write of shared memory happens in an order the recording fixes, and an interrupt one vCPU sends to another arrives at a fixed point during the run. This gives the hypervisor control over the interleaving of the vCPUs and produces runs that can be replayed exactly.
 
 The vCPUs would run serialized even if each had a host CPU of its own. As a result a machine with more vCPUs takes longer to run in real time, and a bigger session does not make it faster. What a bigger session gives is more machines running at once, such as a recording and its replay or enabling several branches to be explored side by side.
 
-However, from the inside none of this is visible. Linux just sees every vCPU as a CPU of its own. It schedules threads on all of them, sends interrupts between them and keeps its per-CPU data. Most importantly the software under test sees a much-desired multi-CPU server.
+However, Linux still sees all its vCPUs as separate CPUs. It schedules threads on all of them, sends interrupts between them and keeps its per-CPU data. Most importantly, the software under test sees a multi-CPU server.
 
 ## Example: A machine with 16 vCPUs
 
@@ -109,8 +109,22 @@ As we can see the real time grows with the number of vCPUs, from 4.9 seconds for
 
 With a different number of CPUs the kernel does different work and therefore waits on different timers. Also, because the runs were recorded on a class that records repeatable runs by default, an earlier recording of the same disk with 32 vCPUs took exactly 17.410739710 seconds of machine time, the same as the one in the table to the nanosecond.
 
+## Replaying 64 vCPUs
+
+To check the largest machine too, we replayed the 64-vCPU run from the table the same way:
+
+```
+$ machine fork cpus-64 --from 1 --name cpus-64-replay
+✔ Forked cpus-64/cpus-64-replay (wikDAFSjfkQ5bqqLHJFSw)
+  From checkpoint 1 of cpus-64, replayed to entry 2633386
+$ diff <(machine output cpus-64 --source all -n :) <(machine output cpus-64-replay --source all -n :) && echo identical
+identical
+```
+
+In our run, the replay took about 57 seconds of real time. Its output is identical to the original on every source, and `machine hash` gave the same 715 hashes on both machines at entry 2633386: the memory, the disk, the devices, the held interrupts and the 11 parts of the state of each of the 64 vCPUs.
+
 ## Conclusion
 
-Testing real programs benefits when the deterministic hypervisor supports multiple vCPUs. With the machine you can create machines with up to 64 vCPUs in a session of any size. This means that Linux and your software under test see a multi-CPU server. And while you can run with 1 or 64 vCPUs you can expect each run to replay exactly.
+Testing real programs benefits when the deterministic hypervisor supports multiple vCPUs. With TestFlows Machine, you can create machines with up to 64 vCPUs in a session of any size. This means that Linux and your software under test see a multi-CPU server. And while you can run with 1 or 64 vCPUs you can expect each run to replay exactly.
 
 Give it a try. [Sign up](/machine/portal/signup/) for free and try it with as many vCPUs as your software expects.
