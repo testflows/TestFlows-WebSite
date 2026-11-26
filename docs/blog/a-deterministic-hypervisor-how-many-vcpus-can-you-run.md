@@ -105,13 +105,60 @@ The machines ran one after another in the same one-CPU session, each until it po
 | 32 | 17.41 s | 29.3 s |
 | 64 | 20.10 s | 44.5 s |
 
+<figure class="post-figure">
+<svg viewBox="0 0 760 340" role="img" aria-labelledby="vt-title vt-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="vt-title">Machine time and real time of a boot, from 1 to 64 vCPUs</title>
+<desc id="vt-desc">Grouped bars for 1, 2, 4, 8, 16, 32 and 64 vCPUs. Machine time: 4.92 s, 5.50 s, 10.36 s, 9.41 s, 11.73 s, 17.41 s, 20.10 s. Real time in our runs: 4.9 s, 7.9 s, 12.1 s, 14.8 s, 20.2 s, 29.3 s, 44.5 s.</desc>
+<style>.vt-m{fill:#257de0}.vt-r{fill:#f47230}[data-theme="dark"] .vt-m{fill:#338ced}[data-theme="dark"] .vt-r{fill:#e76624}.vt-g{stroke:currentColor;stroke-opacity:.12;stroke-width:1}.vt-b{stroke:currentColor;stroke-opacity:.45;stroke-width:1}.vt-t{fill:currentColor;fill-opacity:.65;font-size:13px}.vt-l{fill:currentColor;font-size:13px}.vt-v{fill:currentColor;font-size:12px;font-weight:600}.vt-m:hover,.vt-r:hover{opacity:.8}</style>
+<text class="vt-t" x="52" y="294.0" text-anchor="end">0 s</text>
+<line class="vt-g" x1="60" x2="740" y1="244.0" y2="244.0"/>
+<text class="vt-t" x="52" y="248.0" text-anchor="end">10 s</text>
+<line class="vt-g" x1="60" x2="740" y1="198.0" y2="198.0"/>
+<text class="vt-t" x="52" y="202.0" text-anchor="end">20 s</text>
+<line class="vt-g" x1="60" x2="740" y1="152.0" y2="152.0"/>
+<text class="vt-t" x="52" y="156.0" text-anchor="end">30 s</text>
+<line class="vt-g" x1="60" x2="740" y1="106.0" y2="106.0"/>
+<text class="vt-t" x="52" y="110.0" text-anchor="end">40 s</text>
+<line class="vt-g" x1="60" x2="740" y1="60.0" y2="60.0"/>
+<text class="vt-t" x="52" y="64.0" text-anchor="end">50 s</text>
+<line class="vt-b" x1="60" x2="740" y1="290" y2="290"/>
+<path class="vt-m" d="M77.6,290 V271.4 Q77.6,267.4 81.6,267.4 H103.6 Q107.6,267.4 107.6,271.4 V290 Z"><title>1 vCPU: 4.92 s of machine time</title></path>
+<path class="vt-r" d="M109.6,290 V271.5 Q109.6,267.5 113.6,267.5 H135.6 Q139.6,267.5 139.6,271.5 V290 Z"><title>1 vCPU: 4.9 s of real time</title></path>
+<text class="vt-t" x="108.6" y="310" text-anchor="middle">1</text>
+<path class="vt-m" d="M174.7,290 V268.7 Q174.7,264.7 178.7,264.7 H200.7 Q204.7,264.7 204.7,268.7 V290 Z"><title>2 vCPUs: 5.50 s of machine time</title></path>
+<path class="vt-r" d="M206.7,290 V257.7 Q206.7,253.7 210.7,253.7 H232.7 Q236.7,253.7 236.7,257.7 V290 Z"><title>2 vCPUs: 7.9 s of real time</title></path>
+<text class="vt-t" x="205.7" y="310" text-anchor="middle">2</text>
+<path class="vt-m" d="M271.9,290 V246.3 Q271.9,242.3 275.9,242.3 H297.9 Q301.9,242.3 301.9,246.3 V290 Z"><title>4 vCPUs: 10.36 s of machine time</title></path>
+<path class="vt-r" d="M303.9,290 V238.3 Q303.9,234.3 307.9,234.3 H329.9 Q333.9,234.3 333.9,238.3 V290 Z"><title>4 vCPUs: 12.1 s of real time</title></path>
+<text class="vt-t" x="302.9" y="310" text-anchor="middle">4</text>
+<path class="vt-m" d="M369.0,290 V250.7 Q369.0,246.7 373.0,246.7 H395.0 Q399.0,246.7 399.0,250.7 V290 Z"><title>8 vCPUs: 9.41 s of machine time</title></path>
+<path class="vt-r" d="M401.0,290 V225.9 Q401.0,221.9 405.0,221.9 H427.0 Q431.0,221.9 431.0,225.9 V290 Z"><title>8 vCPUs: 14.8 s of real time</title></path>
+<text class="vt-t" x="400.0" y="310" text-anchor="middle">8</text>
+<path class="vt-m" d="M466.1,290 V240.0 Q466.1,236.0 470.1,236.0 H492.1 Q496.1,236.0 496.1,240.0 V290 Z"><title>16 vCPUs: 11.73 s of machine time</title></path>
+<path class="vt-r" d="M498.1,290 V201.1 Q498.1,197.1 502.1,197.1 H524.1 Q528.1,197.1 528.1,201.1 V290 Z"><title>16 vCPUs: 20.2 s of real time</title></path>
+<text class="vt-t" x="497.1" y="310" text-anchor="middle">16</text>
+<path class="vt-m" d="M563.3,290 V213.9 Q563.3,209.9 567.3,209.9 H589.3 Q593.3,209.9 593.3,213.9 V290 Z"><title>32 vCPUs: 17.41 s of machine time</title></path>
+<path class="vt-r" d="M595.3,290 V159.2 Q595.3,155.2 599.3,155.2 H621.3 Q625.3,155.2 625.3,159.2 V290 Z"><title>32 vCPUs: 29.3 s of real time</title></path>
+<text class="vt-t" x="594.3" y="310" text-anchor="middle">32</text>
+<path class="vt-m" d="M660.4,290 V201.5 Q660.4,197.5 664.4,197.5 H686.4 Q690.4,197.5 690.4,201.5 V290 Z"><title>64 vCPUs: 20.10 s of machine time</title></path>
+<path class="vt-r" d="M692.4,290 V89.3 Q692.4,85.3 696.4,85.3 H718.4 Q722.4,85.3 722.4,89.3 V290 Z"><title>64 vCPUs: 44.5 s of real time</title></path>
+<text class="vt-t" x="691.4" y="310" text-anchor="middle">64</text>
+<text class="vt-v" x="675.4" y="191.5" text-anchor="middle">20.1 s</text>
+<text class="vt-v" x="707.4" y="79.3" text-anchor="middle">44.5 s</text>
+<text class="vt-t" x="400.0" y="332" text-anchor="middle">vCPUs</text>
+<rect class="vt-m" x="60" y="18" width="14" height="14" rx="3"/><text class="vt-l" x="80" y="30">Machine time</text>
+<rect class="vt-r" x="200" y="18" width="14" height="14" rx="3"/><text class="vt-l" x="220" y="30">Real time, in our runs</text>
+</svg>
+<figcaption>Real time grows with the number of vCPUs, because they take turns. Machine time grows much less.</figcaption>
+</figure>
+
 As we can see the real time grows with the number of vCPUs, from 4.9 seconds for one to 44.5 seconds for 64, because the vCPUs take turns. Machine time grows too but not in step with the count. For example, the machine with 4 vCPUs took 10.36 seconds and the one with 8 took 9.41.
 
 With a different number of CPUs the kernel does different work and therefore waits on different timers. Also, because the runs were recorded on a class that records repeatable runs by default, an earlier recording of the same disk with 32 vCPUs took exactly 17.410739710 seconds of machine time, the same as the one in the table to the nanosecond.
 
-## Replaying 64 vCPUs
+## Replaying all 64 vCPUs
 
-To check the largest machine too, we replayed the 64-vCPU run from the table the same way:
+Booting with 64 vCPUs costs real time, but, you might still wonder, does it still replay exactly? Earlier we showed that we replayed the machine with 16 vCPUs, so to be sure, here we also replayed the largest machine from the table, the one with 64 vCPUs, the same way:
 
 ```
 $ machine fork cpus-64 --from 1 --name cpus-64-replay
