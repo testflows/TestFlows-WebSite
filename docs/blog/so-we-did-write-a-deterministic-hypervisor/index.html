@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795712382202" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795712382202" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795711295587" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795712382202" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -312,7 +312,7 @@
         
         <div class="post-content col-lg-9">
             <p>Almost two years ago, which in the age of AI is a long time, we set out to achieve what back then seemed to be an unachievable goal: to write our own deterministic hypervisor. Why? Well, maybe because that would make you a cool systems engineer. No, it was because, after working on designing memory chip testing solutions in the semiconductor industry and then on testing real-time operating systems, we knew that anything software can do still has its limits, but this was a clear path to get closer to hardware again. Nonetheless, the challenge was interesting, and the need for an affordable solution was clear.<span id="more"></span></p>
-<p>That’s when <a href="/machine/">TestFlows Machine</a> was born, and now it runs real software, while we keep ironing it out to take on the industry-leading solutions head-on. But once you have a deterministic hypervisor in your hands, what do you do with it? This article is about what you do once a run can be recorded and replayed, and we’ll start with the spoiler: it enables deterministic simulation testing for applications running on x86_64 Linux, in an environment where you and your AI coding agent can go after both the bugs you can name and the ones you can’t.</p>
+<p>That’s when <a href="/machine/">TestFlows Machine</a> was born, and now it runs real software, while we keep ironing it out to provide an alternative to the current industry-leading solutions. But once you have a deterministic hypervisor in your hands, what do you do with it? This article is about what you do once a run can be recorded and replayed, and we’ll start with the spoiler: it enables deterministic simulation testing for applications running on x86_64 Linux, in an environment where you and your AI coding agent can go after both the bugs you can name and the ones you can’t.</p>
 <p>And yes, it is a real machine. Ask its processor for its name with the CPUID instruction, and this is what it answers:</p>
 <figure class="post-figure">
 <img loading="lazy" decoding="async" alt="Processor brand string. Five constants spell TestFlows Machine v1, four characters at a time: Test, Flow, s Ma, chin, e v1." class="img-fluid" src="/images/cpuid-brand-testflows-machine-v1.png" style="display:block; margin:auto; max-width: 640px">
@@ -352,7 +352,7 @@
 <p>And what about the deterministic and the simulation parts? They become intuitive and obvious once the state space model above sinks in. Why? Because deterministic means that the same inputs always lead to the same outputs. In a state space, that means the next state depends only on the current state, and for that to be true of a real program, every input has to become part of the state: time, interrupts, random numbers, input from devices. And once the inputs are part of the state, you control them. Simulation means you can actuate those inputs to drive different conditions. So simulation is a natural ability that comes from controlling the inputs, and controlling the inputs comes from achieving determinism. All this just means that in your deterministic system, you can precisely define the state and explore it to your liking.</p>
 <p>Of course, there are limits. A deterministic system is still just an approximation of the real-world non-deterministic systems where programs run, but using a deterministic hypervisor is as close as we know how to get to that approximation.</p>
 <h2 id="ai-is-the-new-kid-on-the-block"><a href="#ai-is-the-new-kid-on-the-block" class="headerlink" title="AI is the new kid on the block"></a>AI is the new kid on the block</h2><p>AI coding agents now write production code, and they write and execute the tests for it too. In effect, that is another testing and fuzzing technique.</p>
-<p>But we don’t see the modern approach as being just another powerful fuzzer that runs as a black box for hours and hands you a crash at the end. An agent can read the code, suspect a bug, and reason about which state it needs to reach, which is exactly the known type of bug from above. What it needs first and most importantly is an environment where it has precise control over execution. For example, hold a thread at the exact line, inject a fault at the exact moment, fork from any point, and replay any run as many times as it needs. With that, the same agent can test, verify a bug and its fix, and, once the bugs it can name are fixed, go looking for the unknown unknowns by guiding the walk itself, because fuzzing is just another way to walk the state space. And because every step is recorded, you can see what your agent did, replay it, and take over at any point.</p>
+<p>But we don’t see the agent as just another fuzzer. An agent can read the code, suspect a bug, and reason about which state it needs to reach, which is exactly the known type of bug from above. What it needs first and most importantly is an environment where it has precise control over execution. For example, hold a thread at the exact line, inject a fault at the exact moment, fork from any point, and replay any run as many times as it needs. With that, the same agent can test, verify a bug and its fix, and, once the bugs it can name are fixed, go looking for the unknown unknowns by guiding the walk itself, because fuzzing is just another way to walk the state space. And because every step is recorded, you can see what your agent did, replay it, and take over at any point.</p>
 <p>And we believe this capability must be accessible to every developer and to every coding agent. That is why we provide Machine as a self-service product, with a free plan, and you can have your first run in <a href="/machine/">about five minutes</a>. The free plan gives a session up to 2 vCPUs and 4G of memory. When you want to run the bigger examples, such as Jepsen, just ping us at <a href="mailto:contact@testflows.com">contact@testflows.com</a>. To get running, you <a href="/docs/machine/#with-a-coding-agent">install the Machine skill</a> for Claude Code, Codex or Cursor, and your agent drives the very same <code>machine</code> CLI that you can use, so there is no separate tool for the agent and no black box between you. And while smarter ways to guide the state space walk are what we keep working on, you can give the deterministic execution environment to your agent today.</p>
 <p>However, there are limits to know about. A machine runs x86_64 Linux programs, Docker images and Docker Compose projects, in cloud sessions, and sessions run in our Europe region today. A recording replays on a CPU compatible with the one it was recorded on, as we explain in <a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">Is Execution Really Deterministic?</a> And because a machine runs its vCPUs one at a time, the more vCPUs it has, the longer a run takes in real time, as we measured in <a href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">How Many vCPUs Can You Run?</a></p>
 <p>So when we say “you” in the examples below, we mean you and your agent. None of this has to be manual work: the agent can type every command, and you can read and repeat each one of them.</p>
@@ -913,10 +913,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795711295588"></script>
-<script src="/js/machine-hero-type.js?v=1795711295588"></script>
-<script src="/js/download-platforms.js?v=1795711295588"></script>
-<script src="/js/anchor-case.js?v=1795711295588"></script>
+<script src="/js/index-code-type.js?v=1795712382203"></script>
+<script src="/js/machine-hero-type.js?v=1795712382203"></script>
+<script src="/js/download-platforms.js?v=1795712382203"></script>
+<script src="/js/anchor-case.js?v=1795712382203"></script>
 
 <script>
 var isInViewport = function (elem) {

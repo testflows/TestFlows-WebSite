@@ -1,7 +1,7 @@
-https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/
-https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly.md
 https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor/
 https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor.md
+https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/
+https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly.md
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests.md
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/
