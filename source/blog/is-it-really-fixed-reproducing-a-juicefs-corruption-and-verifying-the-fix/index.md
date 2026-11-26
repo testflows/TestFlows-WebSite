@@ -1,5 +1,5 @@
 ---
-title: "Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically"
+title: "Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor"
 description: This post has moved.
 fullwidth: true
 sitemap: false
@@ -13,6 +13,6 @@ permalink: blog/is-it-really-fixed-reproducing-a-juicefs-corruption-and-verifyin
 
 <section class="docs-page">
 <div class="container">
-<p>This post has moved to <a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically</a>.</p>
+<p>This post has moved to <a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor</a>.</p>
 </div>
 </section>
