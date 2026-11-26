@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795694833061" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795694833061" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795694764174" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795694833061" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -410,7 +410,7 @@
 </tbody></table>
 <figure class="post-figure">
 <svg viewBox="0 0 760 340" role="img" aria-labelledby="vt-title vt-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
-<title id="vt-title">Machine time and real time of a boot, from 1 to 64 vCPUs</title>
+<title id="vt-title">Machine time and real time from power-on to power-off, from 1 to 64 vCPUs</title>
 <desc id="vt-desc">Grouped bars for 1, 2, 4, 8, 16, 32 and 64 vCPUs. Machine time: 4.92 s, 5.50 s, 10.36 s, 9.41 s, 11.73 s, 17.41 s, 20.10 s. Real time in our runs: 4.9 s, 7.9 s, 12.1 s, 14.8 s, 20.2 s, 29.3 s, 44.5 s.</desc>
 <style>.vt-m{fill:#257de0}.vt-r{fill:#f47230}[data-theme="dark"] .vt-m{fill:#338ced}[data-theme="dark"] .vt-r{fill:#e76624}.vt-g{stroke:currentColor;stroke-opacity:.12;stroke-width:1}.vt-b{stroke:currentColor;stroke-opacity:.45;stroke-width:1}.vt-t{fill:currentColor;fill-opacity:.65;font-size:13px}.vt-l{fill:currentColor;font-size:13px}.vt-v{fill:currentColor;font-size:12px;font-weight:600}.vt-m:hover,.vt-r:hover{opacity:.8}</style>
 <text class="vt-t" x="52" y="294.0" text-anchor="end">0 s</text>
@@ -452,7 +452,7 @@
 <rect class="vt-m" x="60" y="18" width="14" height="14" rx="3"/><text class="vt-l" x="80" y="30">Machine time</text>
 <rect class="vt-r" x="200" y="18" width="14" height="14" rx="3"/><text class="vt-l" x="220" y="30">Real time, in our runs</text>
 </svg>
-<figcaption>Real time grows with the number of vCPUs, because they take turns. Machine time grows much less.</figcaption>
+<figcaption>The time each machine took from power-on to power-off: booting Linux, starting Docker, running the <code>hello-random</code> container and shutting down. Real time grows with the number of vCPUs, because they take turns. Machine time grows much less.</figcaption>
 </figure>
 
 <p>As we can see the real time grows with the number of vCPUs, from 4.9 seconds for one to 44.5 seconds for 64, because the vCPUs take turns. Machine time grows too but not in step with the count. For example, the machine with 4 vCPUs took 10.36 seconds and the one with 8 took 9.41.</p>
@@ -999,10 +999,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795694764174"></script>
-<script src="/js/machine-hero-type.js?v=1795694764174"></script>
-<script src="/js/download-platforms.js?v=1795694764174"></script>
-<script src="/js/anchor-case.js?v=1795694764174"></script>
+<script src="/js/index-code-type.js?v=1795694833062"></script>
+<script src="/js/machine-hero-type.js?v=1795694833062"></script>
+<script src="/js/download-platforms.js?v=1795694833062"></script>
+<script src="/js/anchor-case.js?v=1795694833062"></script>
 
 <script>
 var isInViewport = function (elem) {
