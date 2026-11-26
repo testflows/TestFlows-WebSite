@@ -1,6 +1,6 @@
 ---
 post: true
-title: BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?
+title: "BDD or Not to BDD, or TDD, or Even ATDD: How Does It Affect Your QA Team?"
 description: Article discussing how the choice of a software development process affects quality assurance team.
 date: 2023-10-03
 author: Vitaliy Zakaznikov
