@@ -56,7 +56,7 @@
 <meta name="twitter:image" content="https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor","description":"We replayed a JuiceFS bug that once returned different bytes than we wrote, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-26T12:37:57-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor","description":"We replayed a JuiceFS bug that once returned different bytes than we wrote, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-26T12:40:06-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795714835427" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795714835427" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795714692810" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795714835427" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -311,13 +311,13 @@
         </nav>
         
         <div class="post-content col-lg-9">
-            <p>Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, a JuiceFS user reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and <a href="/machine/">TestFlows Machine</a> to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<span id="more"></span></p>
+            <p>Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to switch to a different storage solution. A few weeks later, a JuiceFS user reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and <a href="/machine/">TestFlows Machine</a> to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<span id="more"></span></p>
 <blockquote>
 <p>Note: the bug affects only volumes formatted with zstd compression (<code>juicefs format --compress zstd</code>), which is not the default, and files written in many small appends. A volume formatted with the default, no compression, was never affected.</p>
 </blockquote>
 <h2 id="what-happened"><a href="#what-happened" class="headerlink" title="What happened"></a>What happened</h2><p>We used JuiceFS to store our runs and disk images. One day, a ClickHouse server inside a machine refused to start because its own integrity check failed. The uploaded binary was not the binary we had pushed. Its size was right, but some of the bytes in the middle were wrong.</p>
 <p>Chasing it down with our coding agent took a while, and a pattern slowly emerged. The data was compressible, the volume used zstd, and the file had been written in many small appends, the way a slow network transfer writes it. Writing the same bytes in one pass was always clean. Incompressible data was always clean too. Worst of all, the local cache hid the problem. A freshly written file read back fine, and the damage only showed up once its blocks were fetched again from the object store.</p>
-<p>There was no fix to wait for, so we stopped using JuiceFS the same day and had to switch.</p>
+<p>We needed to move fast, so we switched our storage the same day and did not even have time to dig further and file an issue.</p>
 <h2 id="the-upstream-fix"><a href="#the-upstream-fix" class="headerlink" title="The upstream fix"></a>The upstream fix</h2><p>About three weeks later, on September 20, <code>stevapple</code> opened issue <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/juicedata/juicefs/issues/7555">juicefs#7555</a>, titled “zstd decompression writes past the requested output and corrupts neighboring slices in the same read buffer”. Reading it felt like reading our own notes.</p>
 <p>When JuiceFS reads a chunk, it fetches the chunk’s slices concurrently into one shared buffer. The zstd library it uses, however, decompresses up to the capacity of the buffer it is given rather than its length, and it uses the spare room after the output as scratch space for a block’s literals. As a result, decompressing one slice can overwrite the bytes of the slice next to it, and whether that happens depends on which goroutine finishes first. A file written in one pass has a single slice per chunk, with nothing next to it to overwrite, which explains why our bulk writes were always clean. It also means the objects in the object store were correct the whole time. Only the read was wrong.</p>
 <p>The fix, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/juicedata/juicefs/pull/7556">juicefs#7556</a>, was merged the next day and shipped in JuiceFS 1.3.4 and 1.4.2 on October 22. We had been running 1.3.1.</p>
@@ -951,10 +951,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795714692811"></script>
-<script src="/js/machine-hero-type.js?v=1795714692811"></script>
-<script src="/js/download-platforms.js?v=1795714692811"></script>
-<script src="/js/anchor-case.js?v=1795714692811"></script>
+<script src="/js/index-code-type.js?v=1795714835428"></script>
+<script src="/js/machine-hero-type.js?v=1795714835428"></script>
+<script src="/js/download-platforms.js?v=1795714835428"></script>
+<script src="/js/anchor-case.js?v=1795714835428"></script>
 
 <script>
 var isInViewport = function (elem) {

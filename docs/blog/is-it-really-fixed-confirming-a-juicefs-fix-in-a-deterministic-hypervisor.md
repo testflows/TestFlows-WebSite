@@ -4,7 +4,7 @@
 
 Published 2026-11-25 by Vitaliy Zakaznikov.
 
-Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, a JuiceFS user reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine.md) to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
+Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to switch to a different storage solution. A few weeks later, a JuiceFS user reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine.md) to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
 
 > Note: the bug affects only volumes formatted with zstd compression (`juicefs format --compress zstd`), which is not the default, and files written in many small appends. A volume formatted with the default, no compression, was never affected.
 
@@ -14,7 +14,7 @@ We used JuiceFS to store our runs and disk images. One day, a ClickHouse server 
 
 Chasing it down with our coding agent took a while, and a pattern slowly emerged. The data was compressible, the volume used zstd, and the file had been written in many small appends, the way a slow network transfer writes it. Writing the same bytes in one pass was always clean. Incompressible data was always clean too. Worst of all, the local cache hid the problem. A freshly written file read back fine, and the damage only showed up once its blocks were fetched again from the object store.
 
-There was no fix to wait for, so we stopped using JuiceFS the same day and had to switch.
+We needed to move fast, so we switched our storage the same day and did not even have time to dig further and file an issue.
 
 ## The upstream fix
 
