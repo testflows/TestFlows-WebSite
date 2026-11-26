@@ -7,7 +7,8 @@
 <script src="<%- config.root %>js/anchor-case.js?v=<%- Date.now() %>"></script>
 <%# No third-party script loads from another origin: the API trusts this whole origin with a signed-in visitor's cookie, so any page's script can call it as the visitor. The analytics beacon is a reviewed copy served from here, Cloudflare's 2026.10.1, sha384-DSBfgE0somecFTMgit0M4sNXN8O0JQ/LGM3DGGPVvgXIPZvW+H1zSYjc6O83LLBv; it reads no cookies or storage and sends only to cloudflareinsights.com. Replace it only with a version read the same way. It sends the page's full URL, so the portal's pages, whose URLs carry sign-in and account parameters, do not load it. %>
 <%# The cookie notice informs and asks nothing: the site sets essential cookies alone and its analytics set none. A tool that sets non-essential cookies needs a consent prompt in its place, with the tool held until the visitor accepts. %>
-<% var tPolicy = String(page.path || '').indexOf('machine/') === 0 ? 'machine/legal/privacy-policy/#6-cookies-and-analytics' : 'legal/privacy-policy/#5-cookies-and-choices'; %>
+<% if (theme.cookie_notice) { %>
+<% var tPolicy =String(page.path || '').indexOf('machine/') === 0 ? 'machine/legal/privacy-policy/#6-cookies-and-analytics' : 'legal/privacy-policy/#5-cookies-and-choices'; %>
 <div class="cookie-notice" id="cookie-notice" role="region" aria-label="Cookie notice" hidden>
   <p>We use essential cookies for sign-in and security, and cookie-free analytics to see how our pages are used. <a href="<%- config.root %><%- tPolicy %>">Privacy Policy</a></p>
   <button type="button" class="cookie-notice-ok" id="cookie-notice-ok">OK</button>
@@ -31,6 +32,7 @@
   document.getElementById("cookie-notice-close").addEventListener("click", dismiss);
 })();
 </script>
+<% } %>
 <% if (String(page.path || '').indexOf('machine/portal/') !== 0) { %>
 <script defer src="<%- config.root %>js/vendor/cloudflare-beacon-2026.10.1.min.js" data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <% } %>
