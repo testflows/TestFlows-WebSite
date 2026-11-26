@@ -1,7 +1,7 @@
+https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/
+https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor.md
 https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/
 https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment.md
-https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/
-https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically.md
 https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor/
 https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor.md
 https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/

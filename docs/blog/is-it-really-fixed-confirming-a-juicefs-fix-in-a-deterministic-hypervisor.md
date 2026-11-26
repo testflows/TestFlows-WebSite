@@ -4,7 +4,7 @@
 
 Published 2026-11-25 by Vitaliy Zakaznikov.
 
-Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine.md) to reproduce the corruption on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
+Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine.md) to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
 
 > Note: the bug affects only volumes formatted with zstd compression (`juicefs format --compress zstd`), which is not the default, and files written in many small appends. A volume formatted with the default, no compression, was never affected.
 
@@ -65,9 +65,9 @@ jfs | jfs | done: 4 of 5 rounds corrupt
 
 Each corrupt round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file got corrupted at byte 46,428,229, and 57,841 of its bytes were affected.
 
-## Replaying the corruption
+## Replaying the issue
 
-Timing bugs are the hardest kind to pin down. Run the test again, and it corrupts different bytes, if it corrupts anything at all. In a machine, though, the run is recorded, so instead of running the test again, we forked the run at its first checkpoint and replayed it:
+Timing bugs are the hardest kind to pin down. Run the test again, and it changes different bytes, if it changes anything at all. In a machine, though, the run is recorded, so instead of running the test again, we forked the run at its first checkpoint and replayed it:
 
 ```
 $ machine fork jfs131 --at 1 --name jfs131-again

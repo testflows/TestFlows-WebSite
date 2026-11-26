@@ -19,19 +19,19 @@
   
   
   <title>Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor</title>
-  <meta name="description" content="We replayed a JuiceFS bug that once corrupted our data, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.">
+  <meta name="description" content="We replayed a JuiceFS bug that once returned different bytes than we wrote, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.">
   
   <meta name="keywords" content="JuiceFS, data corruption, zstd, deterministic simulation testing, DST, record and replay, deterministic hypervisor, RustFS, TestFlows, AI coding agent">
   
   
-  <link rel="canonical" href="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">
+  <link rel="canonical" href="https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   
   
   <meta name="author" content="Vitaliy Zakaznikov">
 
   <link rel="describedby" href="https://testflows.com/llms.txt">
-  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically.md">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor.md">
 
 
   <meta property="og:site_name" content="TestFlows">
@@ -41,8 +41,8 @@
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-11-25T00:00:00-0000" />
 <meta property="og:title" content="Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor">
-<meta property="og:description" content="We replayed a JuiceFS bug that once corrupted our data, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.">
-<meta property="og:url" content="https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">
+<meta property="og:description" content="We replayed a JuiceFS bug that once returned different bytes than we wrote, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.">
+<meta property="og:url" content="https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/">
 <meta property="og:image" content="https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg">
 
 
@@ -52,11 +52,11 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor">
-<meta name="twitter:description" content="We replayed a JuiceFS bug that once corrupted our data, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.">
+<meta name="twitter:description" content="We replayed a JuiceFS bug that once returned different bytes than we wrote, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.">
 <meta name="twitter:image" content="https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor","description":"We replayed a JuiceFS bug that once corrupted our data, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-26T12:06:33-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor","description":"We replayed a JuiceFS bug that once returned different bytes than we wrote, exactly, in our deterministic hypervisor, and confirmed the upstream fix in 1.4.2 ourselves, with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-26T12:19:15-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795713639561" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795713639561" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795713288305" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795713639561" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -266,7 +266,7 @@
 
   
   
-  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
 
 
   <div class="container-fluid p-0">
@@ -282,13 +282,13 @@
                 </div>
                 <div class="post-share btn-group" role="group" aria-label="share">
                     <span class="caption">Share It</span>
-                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/">
                         <i class="fab fa-2x fa-twitter"></i>
                     </a>
-                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/">
                         <i class="fab fa-2x fa-facebook"></i>
                     </a>
-                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/">
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/">
                         <i class="fab fa-2x fa-linkedin"></i>
                     </a>
                 </div>
@@ -306,12 +306,12 @@
         
         <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
             <div class="post-toc-inner">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#what-happened"><span class="toc-text">What happened</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#the-upstream-fix"><span class="toc-text">The upstream fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#the-test"><span class="toc-text">The test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reproducing-it-on-1-3-1"><span class="toc-text">Reproducing it on 1.3.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-the-corruption"><span class="toc-text">Replaying the corruption</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#confirming-the-fix-on-1-4-2"><span class="toc-text">Confirming the fix on 1.4.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pushing-on-the-fix"><span class="toc-text">Pushing on the fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#why-should-you-care"><span class="toc-text">Why should you care?</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#what-happened"><span class="toc-text">What happened</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#the-upstream-fix"><span class="toc-text">The upstream fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#the-test"><span class="toc-text">The test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#reproducing-it-on-1-3-1"><span class="toc-text">Reproducing it on 1.3.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-the-issue"><span class="toc-text">Replaying the issue</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#confirming-the-fix-on-1-4-2"><span class="toc-text">Confirming the fix on 1.4.2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pushing-on-the-fix"><span class="toc-text">Pushing on the fix</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#why-should-you-care"><span class="toc-text">Why should you care?</span></a></li></ol>
             </div>
         </nav>
         
         <div class="post-content col-lg-9">
-            <p>Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and <a href="/machine/">TestFlows Machine</a> to reproduce the corruption on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<span id="more"></span></p>
+            <p>Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and <a href="/machine/">TestFlows Machine</a> to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<span id="more"></span></p>
 <blockquote>
 <p>Note: the bug affects only volumes formatted with zstd compression (<code>juicefs format --compress zstd</code>), which is not the default, and files written in many small appends. A volume formatted with the default, no compression, was never affected.</p>
 </blockquote>
@@ -338,7 +338,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output jfs131 -n : | grep -E &quot;round|done&quot;</span><br><span class="line">jfs | jfs | round 1: clean (48 slice rows)</span><br><span class="line">jfs | jfs | round 2: CORRUPT sha 062fafd058ade5ed != 599049e5570df6de, first byte 46428229, 57841 bytes differ (56 slice rows)</span><br><span class="line">jfs | jfs | round 3: CORRUPT sha 44c92a8033f63d3f != 599049e5570df6de, first byte 50112720, 51899 bytes differ (46 slice rows)</span><br><span class="line">jfs | jfs | round 4: CORRUPT sha 31953d6bf4126d97 != 599049e5570df6de, first byte 46130511, 6507 bytes differ (64 slice rows)</span><br><span class="line">jfs | jfs | round 5: CORRUPT sha 57e6c73d3af2f1cd != 599049e5570df6de, first byte 47054881, 57712 bytes differ (57 slice rows)</span><br><span class="line">jfs | jfs | done: 4 of 5 rounds corrupt</span><br></pre></td></tr></table></figure>
 
 <p>Each corrupt round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file got corrupted at byte 46,428,229, and 57,841 of its bytes were affected.</p>
-<h2 id="replaying-the-corruption"><a href="#replaying-the-corruption" class="headerlink" title="Replaying the corruption"></a>Replaying the corruption</h2><p>Timing bugs are the hardest kind to pin down. Run the test again, and it corrupts different bytes, if it corrupts anything at all. In a machine, though, the run is recorded, so instead of running the test again, we forked the run at its first checkpoint and replayed it:</p>
+<h2 id="replaying-the-issue"><a href="#replaying-the-issue" class="headerlink" title="Replaying the issue"></a>Replaying the issue</h2><p>Timing bugs are the hardest kind to pin down. Run the test again, and it changes different bytes, if it changes anything at all. In a machine, though, the run is recorded, so instead of running the test again, we forked the run at its first checkpoint and replayed it:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork jfs131 --at 1 --name jfs131-again</span><br><span class="line"><span class="term-mark">✔</span> Forked jfs131/jfs131-again (wiijUfnvMWQgnxkDLjaCQ)</span><br><span class="line">  From checkpoint 1 of jfs131, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine replay jfs131-again</span><br><span class="line">  Replaying segment 1/1 from jfs131 (wiiiaaImnHJiBU1CLifok) to the end</span><br><span class="line"><span class="term-mark">✔</span> Replayed 1962564 entries to entry 1962565. Converged.</span><br></pre></td></tr></table></figure>
 
 <p>All 1,962,564 entries converged, and in our specific run, the replay took about 50 seconds of real time. As one would expect from a deterministic machine, the replayed test reached exactly the same verdict, down to the byte:</p>
@@ -925,7 +925,7 @@ In many cases, writing a good test...
             <h3>AI Agents</h3>
             <ul>
                 
-                <li><a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically.md" title="This page in Markdown">Markdown</a></li>
+                <li><a href="/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor.md" title="This page in Markdown">Markdown</a></li>
                 
                 <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
                 <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
@@ -950,10 +950,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795713288305"></script>
-<script src="/js/machine-hero-type.js?v=1795713288305"></script>
-<script src="/js/download-platforms.js?v=1795713288305"></script>
-<script src="/js/anchor-case.js?v=1795713288305"></script>
+<script src="/js/index-code-type.js?v=1795713639562"></script>
+<script src="/js/machine-hero-type.js?v=1795713639562"></script>
+<script src="/js/download-platforms.js?v=1795713639562"></script>
+<script src="/js/anchor-case.js?v=1795713639562"></script>
 
 <script>
 var isInViewport = function (elem) {
