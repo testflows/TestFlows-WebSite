@@ -42,7 +42,7 @@ control |  :valid? true}
 control | Everything looks good! ヽ(‘ー`)ノ
 ```
 
-That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and etcd stayed linearizable through all of them, which is what you'd expect from etcd with its default linearizable reads. The full log, with every operation, is in [logs/pass.log](https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/pass.log).
+That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and Jepsen found no linearizability violations through any of them, which is what you'd expect from etcd with its default linearizable reads. The full log, with every operation, is in [logs/pass.log](https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/pass.log).
 
 ## Making it fail
 
