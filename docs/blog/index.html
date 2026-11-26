@@ -64,40 +64,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795714692764" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795714692765" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795714253947" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795714692765" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -346,7 +346,7 @@
                         <a href="/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/">Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor</a>
                     </h2>
                     <div class="blog-card-excerpt">
-                        <p>Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and <a href="/machine/">TestFlows Machine</a> to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.
+                        <p>Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, a JuiceFS user reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and <a href="/machine/">TestFlows Machine</a> to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.
                     </div>
                     <div class="blog-card-meta">
                         <span class="blog-card-author">Vitaliy Zakaznikov</span>
@@ -952,10 +952,10 @@ For tests, on the other hand, readability and maintainability are a must.
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795714253948"></script>
-<script src="/js/machine-hero-type.js?v=1795714253948"></script>
-<script src="/js/download-platforms.js?v=1795714253948"></script>
-<script src="/js/anchor-case.js?v=1795714253948"></script>
+<script src="/js/index-code-type.js?v=1795714692766"></script>
+<script src="/js/machine-hero-type.js?v=1795714692766"></script>
+<script src="/js/download-platforms.js?v=1795714692766"></script>
+<script src="/js/anchor-case.js?v=1795714692766"></script>
 
 <script>
 var isInViewport = function (elem) {
