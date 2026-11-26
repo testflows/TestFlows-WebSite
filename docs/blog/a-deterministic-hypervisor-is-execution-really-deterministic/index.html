@@ -19,7 +19,7 @@
   
   
   <title>A Deterministic Hypervisor: Is Execution Really Deterministic?</title>
-  <meta name="description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.">
+  <meta name="description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same state.">
   
   <meta name="keywords" content="deterministic hypervisor, deterministic execution, record and replay, machine state, state hash, CPUID, deterministic simulation testing, DST, TestFlows">
   
@@ -41,7 +41,7 @@
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2026-11-26T00:00:00-0000" />
 <meta property="og:title" content="A Deterministic Hypervisor: Is Execution Really Deterministic?">
-<meta property="og:description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.">
+<meta property="og:description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same state.">
 <meta property="og:url" content="https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">
 <meta property="og:image" content="https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg">
 
@@ -52,11 +52,11 @@
 
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A Deterministic Hypervisor: Is Execution Really Deterministic?">
-<meta name="twitter:description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.">
+<meta name="twitter:description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same state.">
 <meta name="twitter:image" content="https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A Deterministic Hypervisor: Is Execution Really Deterministic?","description":"What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.","image":"https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg","datePublished":"2026-11-26T00:00:00-05:00","dateModified":"2026-11-26T00:00:00-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A Deterministic Hypervisor: Is Execution Really Deterministic?","description":"What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same state.","image":"https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg","datePublished":"2026-11-26T00:00:00-05:00","dateModified":"2026-11-26T07:23:41-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795696097938" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795696097938" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795694833062" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795696097938" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -306,13 +306,13 @@
         
         <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
             <div class="post-toc-inner">
-                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cpu-architecture-dependency"><span class="toc-text">CPU architecture dependency</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-the-state-of-a-machine-is"><span class="toc-text">What the state of a machine is</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#confirming-the-state"><span class="toc-text">Confirming the state</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-small-example"><span class="toc-text">A small example</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-it"><span class="toc-text">Replaying it</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replayable-vs-repeatable"><span class="toc-text">Replayable vs repeatable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#changing-the-inputs"><span class="toc-text">Changing the inputs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#when-a-replay-diverges"><span class="toc-text">When a replay diverges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cpu-compatibility"><span class="toc-text">CPU compatibility</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-the-state-of-a-machine-is"><span class="toc-text">What the state of a machine is</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#confirming-the-state"><span class="toc-text">Confirming the state</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-small-example"><span class="toc-text">A small example</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-it"><span class="toc-text">Replaying it</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replayable-vs-repeatable"><span class="toc-text">Replayable vs repeatable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#changing-the-inputs"><span class="toc-text">Changing the inputs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#when-a-replay-diverges"><span class="toc-text">When a replay diverges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
             </div>
         </nav>
         
         <div class="post-content col-lg-9">
-            <p>When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on the CPU architecture the run was recorded on, and that you don’t have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU architecture, what the state of a machine actually consists of, and how <a href="/machine/">TestFlows Machine</a> confirms that a replay reaches the same state, bit for bit, using a small example that boots Linux and prints 256 random bytes from <code>/dev/random</code>.<span id="more"></span></p>
-<h2 id="cpu-architecture-dependency"><a href="#cpu-architecture-dependency" class="headerlink" title="CPU architecture dependency"></a>CPU architecture dependency</h2><p>A machine runs on a real processor. To make it fast, the hypervisor does not interpret instructions one by one. Instead, the processor executes them directly, and the hypervisor steps in only at the points where the machine needs something from outside, for example, a timer interrupt, a disk request or a read of the clock. Those points, and what came back at each of them, are what a run log records. Everything in between them is the processor’s own work, and that is what makes the recording tied to the processors that do that work exactly the same way.</p>
+            <p>When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on a CPU compatible with the one the run was recorded on, and that you don’t have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU, what the state of a machine actually consists of, and how <a href="/machine/">TestFlows Machine</a> confirms that a replay reaches the same state, using a small example that boots Linux and prints 256 random bytes from <code>/dev/random</code>.<span id="more"></span></p>
+<h2 id="cpu-compatibility"><a href="#cpu-compatibility" class="headerlink" title="CPU compatibility"></a>CPU compatibility</h2><p>A machine runs on a real processor. To make it fast, the hypervisor does not interpret instructions one by one. Instead, the processor executes them directly, and the hypervisor steps in only at the points where the machine needs something from outside, for example, a timer interrupt, a disk request or a read of the clock. Those points, and what came back at each of them, are what a run log records. Everything in between them is the processor’s own work, and that is what makes the recording tied to the processors that do that work exactly the same way.</p>
 <p>We can highlight three main reasons that tie a recording to its CPU.</p>
 <ol>
 <li><p>The first is what the machine is told about the processor. When Linux boots, it asks the CPU who it is using the CPUID instruction which reads back the vendor, the family, the model, the stepping and the list of CPU features. It then patches its own code to match it. For example, it picks the fastest implementation of a routine for the features it finds, and it applies the workarounds for any errata (known misbehaviors or quirks) that apply to that exact model. This means that two different processors run different instructions from the very same disk and the very same start. Even though we hide some of what the processor reports, such as its brand string and the instructions that produce random numbers in hardware, things like the family, model and features stay as the processor reports them, because hiding them would change what the kernel does.</p>
@@ -335,7 +335,60 @@
 <li><strong>Memory</strong>: every byte of RAM.</li>
 <li><strong>The disk</strong>: every block of it.</li>
 </ul>
+<figure class="post-figure">
+<svg viewBox="0 0 760 494" role="img" aria-labelledby="sm-title sm-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="sm-title">The state of a machine</title>
+<desc id="sm-desc">Blocks that make up the state of a machine. Each vCPU: general registers and instruction pointer, segment and control registers, x87, SSE and AVX registers, debug registers, model-specific registers, local interrupt controller and timer, and pending exceptions and interrupts. The interrupt controllers and timers shared by the vCPUs. Every device: the serial ports, the keyboard controller and the other devices. Memory, every byte of RAM. The disk, every block of it.</desc>
+<style>.sm-v{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.5}.sm-vb{fill:none;stroke:var(--tf-cta);stroke-opacity:.6;stroke-width:1.2}.sm-f{fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-opacity:.45;stroke-width:1.4}.sm-c{fill:currentColor;fill-opacity:.05;stroke:currentColor;stroke-opacity:.3;stroke-width:1}.sm-h{fill:currentColor;font-size:15px;font-weight:600}.sm-s{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}.sm-ct{fill:currentColor;fill-opacity:.85;font-size:12.5px}.sm-o{fill:none;stroke:currentColor;stroke-opacity:.55;stroke-width:1.4;stroke-dasharray:6 4}.sm-ot{fill:currentColor;font-size:15px;font-weight:700}</style>
+<rect class="sm-o" x="20" y="8" width="720" height="478" rx="12"/>
+<text class="sm-ot" x="40" y="36">Machine state at time <tspan font-style="italic">T</tspan></text>
+<g transform="translate(0,40)">
+<path class="sm-vb" d="M60,30 V28 Q60,20 68,20 H712 Q720,20 720,28 V168 Q720,176 712,176 H710"/>
+<path class="sm-vb" d="M50,40 V38 Q50,30 58,30 H702 Q710,30 710,38 V178 Q710,186 702,186 H700"/>
+<rect class="sm-v" x="40" y="40" width="660" height="156" rx="8"/>
+<text class="sm-h" x="56" y="64">Each vCPU</text>
+<rect class="sm-c" x="56.0" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="130.8" y="96.0" text-anchor="middle">General registers,</text><text class="sm-ct" x="130.8" y="111.0" text-anchor="middle">instruction pointer</text><rect class="sm-c" x="215.5" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="290.2" y="96.0" text-anchor="middle">Segment and</text><text class="sm-ct" x="290.2" y="111.0" text-anchor="middle">control registers</text><rect class="sm-c" x="375.0" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="449.8" y="96.0" text-anchor="middle">x87, SSE and</text><text class="sm-ct" x="449.8" y="111.0" text-anchor="middle">AVX registers</text><rect class="sm-c" x="534.5" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="609.2" y="103.5" text-anchor="middle">Debug registers</text>
+<rect class="sm-c" x="56.0" y="132" width="202.7" height="46" rx="6"/><text class="sm-ct" x="157.3" y="159.5" text-anchor="middle">Model-specific registers</text><rect class="sm-c" x="268.7" y="132" width="202.7" height="46" rx="6"/><text class="sm-ct" x="370.0" y="152.0" text-anchor="middle">Local interrupt</text><text class="sm-ct" x="370.0" y="167.0" text-anchor="middle">controller and timer</text><rect class="sm-c" x="481.3" y="132" width="202.7" height="46" rx="6"/><text class="sm-ct" x="582.7" y="152.0" text-anchor="middle">Pending exceptions</text><text class="sm-ct" x="582.7" y="167.0" text-anchor="middle">and interrupts</text>
+<rect class="sm-f" x="40" y="206" width="680" height="46" rx="8"/>
+<text class="sm-h" x="380" y="234" text-anchor="middle">Interrupt controllers and timers shared by the vCPUs</text>
+<rect class="sm-f" x="40" y="262" width="680" height="92" rx="8"/>
+<text class="sm-h" x="56" y="286">Every device</text>
+<rect class="sm-c" x="56.0" y="298" width="209.3" height="40" rx="6"/><text class="sm-ct" x="160.7" y="322.5" text-anchor="middle">Serial ports</text><rect class="sm-c" x="275.3" y="298" width="209.3" height="40" rx="6"/><text class="sm-ct" x="380.0" y="322.5" text-anchor="middle">Keyboard controller</text><rect class="sm-c" x="494.7" y="298" width="209.3" height="40" rx="6"/><text class="sm-ct" x="599.3" y="322.5" text-anchor="middle">Other devices</text>
+<rect class="sm-f" x="40" y="364" width="335" height="64" rx="8"/>
+<text class="sm-h" x="207.5" y="391" text-anchor="middle">Memory</text><text class="sm-s" x="207.5" y="412" text-anchor="middle">every byte of RAM</text>
+<rect class="sm-f" x="385" y="364" width="335" height="64" rx="8"/>
+<text class="sm-h" x="552.5" y="391" text-anchor="middle">Disk</text><text class="sm-s" x="552.5" y="412" text-anchor="middle">every block of it</text>
+</g>
+</svg>
+<figcaption>The state of a machine at any point of a run.</figcaption>
+</figure>
+
 <p>If two machines hold the same bits in all of these, they are the same machine state. Nothing else in theory exists that could make them behave differently from that point on.</p>
+<figure class="post-figure">
+<svg viewBox="0 0 760 150" role="img" aria-labelledby="sq-title sq-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="sq-title">A run is a sequence of machine states</title>
+<desc id="sq-desc">A row of machine states joined by arrows: the state at time T0, when the machine powers on, then T1, T2 and so on, up to the final state at time Tn, when the machine halts.</desc>
+<style>.sq-o{fill:none;stroke:currentColor;stroke-opacity:.55;stroke-width:1.4;stroke-dasharray:5 3}.sq-v{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.2}.sq-f{fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-opacity:.45;stroke-width:1}.sq-a{fill:none;stroke:var(--tf-cta);stroke-width:1.8}.sq-ah{fill:var(--tf-cta)}.sq-t{fill:currentColor;font-size:15px;font-weight:700}.sq-s{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}.sq-d{fill:currentColor;fill-opacity:.65;font-size:22px;font-weight:700}</style>
+<rect class="sq-o" x="25" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="35" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="35" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="35" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="35" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="83.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="80.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">0</tspan></text>
+<text class="sq-s" x="80.0" y="140" text-anchor="middle">power-on</text>
+<path class="sq-a" d="M141,56.0 H164"/><path class="sq-ah" d="M171,56.0 l-9,-5 v10 z"/>
+<rect class="sq-o" x="177" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="187" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="187" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="187" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="187" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="235.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="232.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">1</tspan></text>
+<path class="sq-a" d="M293,56.0 H316"/><path class="sq-ah" d="M323,56.0 l-9,-5 v10 z"/>
+<rect class="sq-o" x="329" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="339" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="339" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="339" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="339" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="387.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="384.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">2</tspan></text>
+<path class="sq-a" d="M445,56.0 H468"/><path class="sq-ah" d="M475,56.0 l-9,-5 v10 z"/>
+<text class="sq-d" x="536.0" y="63.0" text-anchor="middle">…</text>
+<path class="sq-a" d="M597,56.0 H620"/><path class="sq-ah" d="M627,56.0 l-9,-5 v10 z"/>
+<rect class="sq-o" x="633" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="643" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="643" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="643" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="643" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="691.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="688.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">n</tspan></text>
+<text class="sq-s" x="688.0" y="140" text-anchor="middle">HALT</text>
+</svg>
+<figcaption>A run is a sequence of machine states, from the state at power-on to the final state, when the machine halts.</figcaption>
+</figure>
+
+<p>And an execution of a run is nothing more than a sequence of these machine states.</p>
 <h2 id="confirming-the-state"><a href="#confirming-the-state" class="headerlink" title="Confirming the state"></a>Confirming the state</h2><p>There are two ways we confirm a replay.</p>
 <ol>
 <li><p>First, while a replay runs, Machine checks every recorded entry. Each entry carries the instruction pointer, the count and a hash of the registers at the point the recording stopped, and the replay has to arrive at all three. Each entry also carries hashes of the rest of the vCPU state, computed in groups, and each of the devices. If any of them differs, the replay reports a divergence at that entry, and the group that differs says where to look.</p>
@@ -348,20 +401,36 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create blog-determinism</span><br><span class="line"><span class="term-mark">$</span> machine disks build --from ubuntu:24.04 --entrypoint /bin/sh hello-random -- -c &#x27;echo &quot;Hello from TestFlows Machine!&quot;; date; head -c 256 /dev/random | od -A x -t x1 -v&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine create hello-random --disk hello-random</span><br><span class="line"><span class="term-mark">$</span> machine run hello-random --until halted --within 5m</span><br></pre></td></tr></table></figure>
 
 <p>The run took 5.213 seconds of machine time and 33,452 entries, from the first line of the kernel to the reboot. Here is the part of its output where the container runs, with the entries that printed each line:</p>
+<div class="scroll-output">
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output hello-random -n 219:240</span><br><span class="line">ENTRIES           SOURCE    LINE      OUTPUT</span><br><span class="line">31660:31661       ttyS0     219        Container compose-app-1  Started</span><br><span class="line">32531:32532       ttyS0     220       app | Hello from TestFlows Machine!</span><br><span class="line">32535:32536       ttyS0     221       app | Sun Mar  1 00:00:03 UTC 2026</span><br><span class="line">32538:32540       ttyS0     222       app | 000000 05 47 34 4b 9f 2d b7 88 20 f1 5d 72 c5 be 6e de</span><br><span class="line">32543:32544       ttyS0     223       app | 000010 cc 63 da cb 21 b0 08 c7 b0 22 af de fa a0 d6 55</span><br><span class="line">32546:32547       ttyS0     224       app | 000020 c5 18 0a 8c 00 10 5f 64 4b e7 ee ea 4d ae dc 69</span><br><span class="line">32549:32550       ttyS0     225       app | 000030 68 f2 4f b3 73 74 c5 5e f3 22 12 7c d4 89 00 7f</span><br><span class="line">32552:32553       ttyS0     226       app | 000040 b2 fc fc 3d fd be 9f b1 8b c2 7e b2 1b be ae 08</span><br><span class="line">32555:32556       ttyS0     227       app | 000050 bc 84 6a 1a c8 9c 88 00 d2 e2 2b ad a9 b6 dc aa</span><br><span class="line">32558:32559       ttyS0     228       app | 000060 48 48 b3 27 ec 6b de b5 8d 08 d4 26 8a c5 2f 33</span><br><span class="line">32561:32562       ttyS0     229       app | 000070 90 59 5d e2 ca c8 d5 d6 32 d5 35 1c bd 82 91 01</span><br><span class="line">32564:32565       ttyS0     230       app | 000080 e6 f5 10 bb 9e 6c 72 5d 04 d4 28 63 35 6e fa 50</span><br><span class="line">32567:32568       ttyS0     231       app | 000090 cf 0f 8b 45 b8 fe c9 ba dc f6 40 93 2c 35 8e 1b</span><br><span class="line">32570:32571       ttyS0     232       app | 0000a0 29 42 dc f2 cb e0 7a 69 e0 86 48 d2 a3 73 dc d2</span><br><span class="line">32573:32574       ttyS0     233       app | 0000b0 98 ed 17 b4 45 db 1c 4f c4 c3 8a b3 33 31 71 7c</span><br><span class="line">32576:32577       ttyS0     234       app | 0000c0 e5 74 13 e3 90 03 7e 36 d2 5e 26 f5 3b 59 8d 6d</span><br><span class="line">32579:32580       ttyS0     235       app | 0000d0 14 28 5e b7 70 df 78 5e 06 c2 85 89 22 8b 09 e4</span><br><span class="line">32582:32583       ttyS0     236       app | 0000e0 27 6b be d0 42 13 9c 2a 60 38 d6 36 23 db f5 41</span><br><span class="line">32585:32587       ttyS0     237       app | 0000f0 b9 bf 5f d1 a1 b4 85 1d 29 0c ed 25 43 56 0b 64</span><br><span class="line">32602:32603       ttyS0     238       app | 000100</span><br><span class="line">32646:32647       ttyS0     239       === app exited by itself: code 0 ===</span><br><span class="line">33011:33012       ttyS0     240        Container compose-app-1  Stopping</span><br></pre></td></tr></table></figure>
 
+</div>
+
 <p>The first lines of the boot look like this:</p>
+<div class="scroll-output">
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">ENTRIES           SOURCE                    LINE      OUTPUT</span><br><span class="line">29:93             ttyS0                     1         early console in extract_kernel</span><br><span class="line">99:169            ttyS0                     2         input_data: 0x0000000001fba2c4</span><br><span class="line">175:243           ttyS0                     3         input_len: 0x000000000056f095</span><br><span class="line">249:311           ttyS0                     4         output: 0x0000000001000000</span><br><span class="line">317:387           ttyS0                     5         output_len: 0x00000000014f405c</span><br><span class="line">393:477           ttyS0                     6         kernel_total_size: 0x0000000001230000</span><br><span class="line">483:555           ttyS0                     7         needed_size: 0x0000000001600000</span><br><span class="line">561:643           ttyS0                     8         trampoline_32bit: 0x0000000000000000</span><br><span class="line">649:651           ttyS0                     9         </span><br><span class="line">653:655           ttyS0                     10        </span><br><span class="line">661:741           ttyS0                     11        KASLR disabled: &#x27;nokaslr&#x27; on cmdline.</span><br><span class="line">743:745           ttyS0                     12        </span><br><span class="line">751:753           ttyS0                     13        </span><br><span class="line">755:905           ttyS0                     14        Decompressing Linux... Parsing ELF... No relocation needed... done.</span><br><span class="line">907:1025          ttyS0                     15        Booting the kernel (entry_offset: 0x0000000000000000).</span><br><span class="line">1042:1474         ttyS0                     16        Linux version 6.11.11-testflows-os-v1.0 (user@user-ubox) (gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #221 SMP PREEMPT_DYNAMIC Wed Nov 25 04:22:14 EST 2026 (TestFlows OS v1.0)</span><br><span class="line">1476:1626         ttyS0                     17        Kernel is locked down from Kernel configuration; see man kernel_lockdown.7</span><br><span class="line">1628:2316         ttyS0                     18        Command line: noapic noacpi pci=conf1 reboot=k panic=1 i8042.direct=1 i8042.dumbkbd=1 i8042.nopnp=1 numa_balancing=disable transparent_hugepage=never zswap.enabled=0 nokaslr lockdown=confidentiality sysctl.kernel.kptr_restrict=2 sysctl.kernel.dmesg_restrict=1 earlyprintk=serial i8042.noaux=1 console=ttyS0 root=/dev/vda rw  reclaim_rng_seed=0</span><br><span class="line">2318:2382         ttyS0                     19        BIOS-provided physical RAM map:</span><br><span class="line">2384:2508         ttyS0                     20        BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable</span><br><span class="line">2510:2638         ttyS0                     21        BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved</span><br><span class="line">2640:2768         ttyS0                     22        BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved</span><br><span class="line">2770:2894         ttyS0                     23        BIOS-e820: [mem 0x0000000000100000-0x000000000fffffff] usable</span><br><span class="line">2896:2990         ttyS0                     24        printk: legacy bootconsole [earlyser0] enabled</span><br><span class="line">3001:3085         ttyS0                     25        ERROR: earlyprintk= earlyser already used</span><br><span class="line">3087:3167         ttyS0                     26        NX (Execute Disable) protection: active</span><br><span class="line">3169:3231         ttyS0                     27        APIC: Static calls initialized</span><br><span class="line">3233:3289         ttyS0                     28        DMI not present or invalid.</span><br><span class="line">3291:3363         ttyS0                     29        tsc: Fast TSC calibration using PIT</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+</div>
 
 <p>The date is March 1, 2026, three seconds after the machine’s clock started, because a machine’s clock starts at its own base time and advances with what the machine executes, not with the clock on the wall. The complete output of the run, all 275 lines of the console from the kernel’s first message to the reboot, together with the container’s own output stream and the entries of every line, can be found in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/hello-random/hello-random.log">hello-random.log</a>.</p>
 <h2 id="replaying-it"><a href="#replaying-it" class="headerlink" title="Replaying it"></a>Replaying it</h2><p>To replay the example, we forked the run at its first checkpoint, which is the very start of the machine, and replayed the branch to the end:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork hello-random --from 1 --name hello-random-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked hello-random/hello-random-replay (wijPOx6dhlRle9NinfZKR)</span><br><span class="line">  From checkpoint 1 of hello-random, replayed to entry 33452</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output hello-random --source all -n :) &lt;(machine output hello-random-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
 
 <p>In our run, the replay took about 8.5 seconds of real time, and it printed every line of every source again, the same 256 bytes among them. Then we compared the machines themselves, both stopped at entry 33452:</p>
+<div class="scroll-output">
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine hash hello-random-replay</span><br><span class="line">Entry 33452</span><br><span class="line">mem          0x50728d55dc839142</span><br><span class="line">disk         0x708517d3cab003a1</span><br><span class="line">irq_pending  0x0000000000000000</span><br><span class="line">serial       0x7e39f245ced1502d</span><br><span class="line">i8042        0xbe1ba65e39053f23</span><br><span class="line">rtc          0xab94ee4e2d08fd65</span><br><span class="line">rng          0xb27153e372867d18</span><br><span class="line">blk          0xea4b22bb247c4205</span><br><span class="line">console      0x0000000000000000</span><br><span class="line">pci          0xa4208d7b6c693b0c</span><br><span class="line">vesa         0x0000000000000000</span><br><span class="line">vCPU 0</span><br><span class="line">  state        0xe69542d8c284d2d9</span><br><span class="line">  regs_hash    0x6ee28a15235e2f14</span><br><span class="line">  regs         0xc82fe05af11c90ff</span><br><span class="line">  events       0x8dc91fb7a6c04b0b</span><br><span class="line">  xsave        0xb416fda2764dc7e8</span><br><span class="line">  debug        0x2f58f9f63a1a7212</span><br><span class="line">  msrs         0x9a0925feeb9b25a3</span><br><span class="line">  lapic        0xd857be67733c02ee</span><br><span class="line">  timers       0xc32e6dc1314620ec</span><br><span class="line">  pic          0xac7265df936c7d37</span><br><span class="line">  ioapic       0x62b04df5c505ff07</span><br></pre></td></tr></table></figure>
 
-<p><code>machine hash hello-random</code> printed the same 22 hashes: memory, the disk, the eight devices, the interrupts held for delivery, and the eleven parts of the vCPU. Each hash stands for the bits listed in the previous section, and <code>machine dump</code> shows the bits themselves. Here are the vCPU’s general registers at the last entry of the original run:</p>
+</div>
+
+<p><code>machine hash hello-random</code> printed the same 22 hashes: memory, the disk, the eight devices, the interrupts held for delivery, and the eleven parts of the vCPU. Each hash stands for the bits listed in the previous section. Strictly speaking, matching hashes are not a mathematical proof that every bit is equal, because two different states could in theory produce the same 64-bit hash. In practice, the chance of that is vanishingly small, and <code>machine dump</code> shows the bits themselves. Here are the vCPU’s general registers at the last entry of the original run:</p>
+<div class="scroll-output">
+
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine dump hello-random --show regs</span><br><span class="line">  Registers:</span><br><span class="line">    rax      0xfffffffe</span><br><span class="line">    rbx      0x0</span><br><span class="line">    rcx      0x0</span><br><span class="line">    rdx      0xc4b8</span><br><span class="line">    rsi      0x0</span><br><span class="line">    rdi      0x136b8e2be</span><br><span class="line">    rsp      0xffffc90000223db0</span><br><span class="line">    rbp      0xa</span><br><span class="line">    r8       0xc1be</span><br><span class="line">    r9       0x0</span><br><span class="line">    r10      0xffffefff</span><br><span class="line">    r11      0xffffffff81c3bce0</span><br><span class="line">    r12      0x0</span><br><span class="line">    r13      0x6b</span><br><span class="line">    r14      0xfffffffe</span><br><span class="line">    r15      0xfee1dead</span><br><span class="line">    rip      0xffffffff8103f4fc</span><br><span class="line">    rflags   0x86</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+</div>
 
 <blockquote>
 <p>Fun fact, the <code>0xfee1dead</code> in <code>r15</code> is the magic number Linux passes to its <code>reboot</code> system call, still in the register as the machine powers off.</p>
@@ -442,7 +511,7 @@
 </tr>
 </tbody></table>
 <h2 id="when-a-replay-diverges"><a href="#when-a-replay-diverges" class="headerlink" title="When a replay diverges"></a>When a replay diverges</h2><p>Of course, our goal is that every recording replays without divergence, every time. A replay that converges on one recording does not prove that the next one will, which is why Machine checks every entry of every replay rather than trusting that it worked.</p>
-<p>But just like the announcements you hear on an airplane, in case of unexpected turbulence, if a replay of yours ever reports a divergence, keep the run and its branches, and ping us at <a href="mailto:support@testflows.com">support@testflows.com</a> with the session, the run, the entry the replay stopped at, and provide the commands that led to it. We will definitely investigate it. In general, a divergence is either a recording that captured a point the replay cannot reach, or something on the host that interfered with the replay, and we want to know about both so that it doesn’t happen again.</p>
+<p>If a replay of yours ever reports a divergence, keep the run and its branches, and ping us at <a href="mailto:support@testflows.com">support@testflows.com</a> with the session, the run, the entry the replay stopped at, and provide the commands that led to it. We will definitely investigate it. In general, a divergence is either a recording that captured a point the replay cannot reach, or something on the host that interfered with the replay, and we want to know about both so that it doesn’t happen again.</p>
 <h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>So, is execution really deterministic? On the CPU it was recorded on, yes, literally. The state of a machine is a sequence of bits, the replay reaches the same bits, and <code>machine hash</code> lets you check it yourself, from memory and disk down to each register group of each vCPU.</p>
 <p>In this post, we used a machine with a single vCPU. Machines with many vCPUs replay the same way, but that is the subject of the next post. So stay tuned and keep testing!</p>
 <p>Don’t forget to try all of this by yourself. <a href="/machine/portal/signup/">Sign up</a> for free and run your own programs deterministically.</p>
@@ -982,10 +1051,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795694833063"></script>
-<script src="/js/machine-hero-type.js?v=1795694833063"></script>
-<script src="/js/download-platforms.js?v=1795694833063"></script>
-<script src="/js/anchor-case.js?v=1795694833063"></script>
+<script src="/js/index-code-type.js?v=1795696097938"></script>
+<script src="/js/machine-hero-type.js?v=1795696097938"></script>
+<script src="/js/download-platforms.js?v=1795696097938"></script>
+<script src="/js/anchor-case.js?v=1795696097938"></script>
 
 <script>
 var isInViewport = function (elem) {

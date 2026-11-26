@@ -64,40 +64,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795696097905" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795696097905" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795694833031" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795696097905" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -300,7 +300,7 @@
                         <a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">A Deterministic Hypervisor: Is Execution Really Deterministic?</a>
                     </h2>
                     <div class="blog-card-excerpt">
-                        <p>When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on the CPU architecture the run was recorded on, and that you don’t have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU architecture, what the state of a machine actually consists of, and how <a href="/machine/">TestFlows Machine</a> confirms that a replay reaches the same state, bit for bit, using a small example that boots Linux and prints 256 random bytes from <code>/dev/random</code>.
+                        <p>When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on a CPU compatible with the one the run was recorded on, and that you don’t have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU, what the state of a machine actually consists of, and how <a href="/machine/">TestFlows Machine</a> confirms that a replay reaches the same state, using a small example that boots Linux and prints 256 random bytes from <code>/dev/random</code>.
                     </div>
                     <div class="blog-card-meta">
                         <span class="blog-card-author">Vitaliy Zakaznikov</span>
@@ -929,10 +929,10 @@ For tests, on the other hand, readability and maintainability are a must.
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795694833032"></script>
-<script src="/js/machine-hero-type.js?v=1795694833032"></script>
-<script src="/js/download-platforms.js?v=1795694833032"></script>
-<script src="/js/anchor-case.js?v=1795694833032"></script>
+<script src="/js/index-code-type.js?v=1795696097906"></script>
+<script src="/js/machine-hero-type.js?v=1795696097906"></script>
+<script src="/js/download-platforms.js?v=1795696097906"></script>
+<script src="/js/anchor-case.js?v=1795696097906"></script>
 
 <script>
 var isInViewport = function (elem) {

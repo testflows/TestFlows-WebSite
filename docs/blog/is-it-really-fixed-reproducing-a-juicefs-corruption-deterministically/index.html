@@ -56,7 +56,7 @@
 <meta name="twitter:image" content="https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically","description":"A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-26T07:01:19-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically","description":"A JuiceFS bug silently corrupted our data. We reproduced it on the version we ran, replayed it exactly in our deterministic hypervisor, and confirmed the upstream fix ourselves with extra fault injection.","image":"https://testflows.com/images/is-it-really-fixed-juicefs-corruption-card.jpg","datePublished":"2026-11-25T00:00:00-05:00","dateModified":"2026-11-26T07:13:18-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795696097939" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795694833063" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795696097939" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795694833064" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795696097939" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -347,7 +347,7 @@
 <p>Matching output is a good sign, but the console only shows what the programs chose to print. So we also compared the state of the machines themselves. <code>machine hash</code> hashes a machine’s memory, its disk, every device and every vCPU. We ran it on the replay, then on the original, both stopped at the same entry:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine hash jfs131-again</span><br><span class="line">Entry 1962565</span><br><span class="line">mem          0xb7439284308266a6</span><br><span class="line">disk         0xd25fd82248763171</span><br><span class="line">...</span><br><span class="line">vCPU 0</span><br><span class="line">  state        0x88896d997d38f4be</span><br><span class="line">  regs_hash    0x6161187886c321be</span><br><span class="line">...</span><br><span class="line"><span class="term-mark">$</span> machine hash jfs131</span><br><span class="line">Entry 1962565</span><br><span class="line">mem          0xb7439284308266a6</span><br><span class="line">disk         0xd25fd82248763171</span><br><span class="line">...</span><br><span class="line">vCPU 0</span><br><span class="line">  state        0x88896d997d38f4be</span><br><span class="line">  regs_hash    0x6161187886c321be</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
 
-<p>All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, bit for bit, with the same corrupted reads in its memory. That means the corruption is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.</p>
+<p>All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, with the same corrupted reads in its memory. That means the corruption is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.</p>
 <h2 id="confirming-the-fix-on-1-4-2"><a href="#confirming-the-fix-on-1-4-2" class="headerlink" title="Confirming the fix on 1.4.2"></a>Confirming the fix on 1.4.2</h2><p>With the bug pinned down on 1.3.1, we built 1.4.2 from its release tag and ran the same test. In the machine, all 12 rounds now came back clean, just as they did on the host:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output jfs142 -n : | grep -E &quot;juicefs version|round|done&quot;</span><br><span class="line">jfs | jfs | juicefs version 1.4.2+unknown, volume formatted</span><br><span class="line">jfs | jfs | round 1: clean (59 slice rows)</span><br><span class="line">jfs | jfs | round 2: clean (55 slice rows)</span><br><span class="line">...</span><br><span class="line">jfs | jfs | round 12: clean (59 slice rows)</span><br><span class="line">jfs | jfs | done: 0 of 12 rounds corrupt</span><br></pre></td></tr></table></figure>
 
@@ -935,10 +935,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795694833064"></script>
-<script src="/js/machine-hero-type.js?v=1795694833064"></script>
-<script src="/js/download-platforms.js?v=1795694833064"></script>
-<script src="/js/anchor-case.js?v=1795694833064"></script>
+<script src="/js/index-code-type.js?v=1795696097939"></script>
+<script src="/js/machine-hero-type.js?v=1795696097939"></script>
+<script src="/js/download-platforms.js?v=1795696097939"></script>
+<script src="/js/anchor-case.js?v=1795696097939"></script>
 
 <script>
 var isInViewport = function (elem) {

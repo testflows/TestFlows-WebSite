@@ -4,9 +4,9 @@
 
 Published 2026-11-26 by Vitaliy Zakaznikov.
 
-When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on the CPU architecture the run was recorded on, and that you don't have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU architecture, what the state of a machine actually consists of, and how [TestFlows Machine](/machine.md) confirms that a replay reaches the same state, bit for bit, using a small example that boots Linux and prints 256 random bytes from `/dev/random`.<!-- more -->
+When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on a CPU compatible with the one the run was recorded on, and that you don't have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU, what the state of a machine actually consists of, and how [TestFlows Machine](/machine.md) confirms that a replay reaches the same state, using a small example that boots Linux and prints 256 random bytes from `/dev/random`.<!-- more -->
 
-## CPU architecture dependency
+## CPU compatibility
 
 A machine runs on a real processor. To make it fast, the hypervisor does not interpret instructions one by one. Instead, the processor executes them directly, and the hypervisor steps in only at the points where the machine needs something from outside, for example, a timer interrupt, a disk request or a read of the clock. Those points, and what came back at each of them, are what a run log records. Everything in between them is the processor's own work, and that is what makes the recording tied to the processors that do that work exactly the same way.
 
@@ -34,7 +34,61 @@ Making runs portable between families would take a fixed, named CPU model presen
 - **Memory**: every byte of RAM.
 - **The disk**: every block of it.
 
+<figure class="post-figure">
+<svg viewBox="0 0 760 494" role="img" aria-labelledby="sm-title sm-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="sm-title">The state of a machine</title>
+<desc id="sm-desc">Blocks that make up the state of a machine. Each vCPU: general registers and instruction pointer, segment and control registers, x87, SSE and AVX registers, debug registers, model-specific registers, local interrupt controller and timer, and pending exceptions and interrupts. The interrupt controllers and timers shared by the vCPUs. Every device: the serial ports, the keyboard controller and the other devices. Memory, every byte of RAM. The disk, every block of it.</desc>
+<style>.sm-v{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.5}.sm-vb{fill:none;stroke:var(--tf-cta);stroke-opacity:.6;stroke-width:1.2}.sm-f{fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-opacity:.45;stroke-width:1.4}.sm-c{fill:currentColor;fill-opacity:.05;stroke:currentColor;stroke-opacity:.3;stroke-width:1}.sm-h{fill:currentColor;font-size:15px;font-weight:600}.sm-s{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}.sm-ct{fill:currentColor;fill-opacity:.85;font-size:12.5px}.sm-o{fill:none;stroke:currentColor;stroke-opacity:.55;stroke-width:1.4;stroke-dasharray:6 4}.sm-ot{fill:currentColor;font-size:15px;font-weight:700}</style>
+<rect class="sm-o" x="20" y="8" width="720" height="478" rx="12"/>
+<text class="sm-ot" x="40" y="36">Machine state at time <tspan font-style="italic">T</tspan></text>
+<g transform="translate(0,40)">
+<path class="sm-vb" d="M60,30 V28 Q60,20 68,20 H712 Q720,20 720,28 V168 Q720,176 712,176 H710"/>
+<path class="sm-vb" d="M50,40 V38 Q50,30 58,30 H702 Q710,30 710,38 V178 Q710,186 702,186 H700"/>
+<rect class="sm-v" x="40" y="40" width="660" height="156" rx="8"/>
+<text class="sm-h" x="56" y="64">Each vCPU</text>
+<rect class="sm-c" x="56.0" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="130.8" y="96.0" text-anchor="middle">General registers,</text><text class="sm-ct" x="130.8" y="111.0" text-anchor="middle">instruction pointer</text><rect class="sm-c" x="215.5" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="290.2" y="96.0" text-anchor="middle">Segment and</text><text class="sm-ct" x="290.2" y="111.0" text-anchor="middle">control registers</text><rect class="sm-c" x="375.0" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="449.8" y="96.0" text-anchor="middle">x87, SSE and</text><text class="sm-ct" x="449.8" y="111.0" text-anchor="middle">AVX registers</text><rect class="sm-c" x="534.5" y="76" width="149.5" height="46" rx="6"/><text class="sm-ct" x="609.2" y="103.5" text-anchor="middle">Debug registers</text>
+<rect class="sm-c" x="56.0" y="132" width="202.7" height="46" rx="6"/><text class="sm-ct" x="157.3" y="159.5" text-anchor="middle">Model-specific registers</text><rect class="sm-c" x="268.7" y="132" width="202.7" height="46" rx="6"/><text class="sm-ct" x="370.0" y="152.0" text-anchor="middle">Local interrupt</text><text class="sm-ct" x="370.0" y="167.0" text-anchor="middle">controller and timer</text><rect class="sm-c" x="481.3" y="132" width="202.7" height="46" rx="6"/><text class="sm-ct" x="582.7" y="152.0" text-anchor="middle">Pending exceptions</text><text class="sm-ct" x="582.7" y="167.0" text-anchor="middle">and interrupts</text>
+<rect class="sm-f" x="40" y="206" width="680" height="46" rx="8"/>
+<text class="sm-h" x="380" y="234" text-anchor="middle">Interrupt controllers and timers shared by the vCPUs</text>
+<rect class="sm-f" x="40" y="262" width="680" height="92" rx="8"/>
+<text class="sm-h" x="56" y="286">Every device</text>
+<rect class="sm-c" x="56.0" y="298" width="209.3" height="40" rx="6"/><text class="sm-ct" x="160.7" y="322.5" text-anchor="middle">Serial ports</text><rect class="sm-c" x="275.3" y="298" width="209.3" height="40" rx="6"/><text class="sm-ct" x="380.0" y="322.5" text-anchor="middle">Keyboard controller</text><rect class="sm-c" x="494.7" y="298" width="209.3" height="40" rx="6"/><text class="sm-ct" x="599.3" y="322.5" text-anchor="middle">Other devices</text>
+<rect class="sm-f" x="40" y="364" width="335" height="64" rx="8"/>
+<text class="sm-h" x="207.5" y="391" text-anchor="middle">Memory</text><text class="sm-s" x="207.5" y="412" text-anchor="middle">every byte of RAM</text>
+<rect class="sm-f" x="385" y="364" width="335" height="64" rx="8"/>
+<text class="sm-h" x="552.5" y="391" text-anchor="middle">Disk</text><text class="sm-s" x="552.5" y="412" text-anchor="middle">every block of it</text>
+</g>
+</svg>
+<figcaption>The state of a machine at any point of a run.</figcaption>
+</figure>
+
 If two machines hold the same bits in all of these, they are the same machine state. Nothing else in theory exists that could make them behave differently from that point on.
+
+<figure class="post-figure">
+<svg viewBox="0 0 760 150" role="img" aria-labelledby="sq-title sq-desc" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;font-family:inherit">
+<title id="sq-title">A run is a sequence of machine states</title>
+<desc id="sq-desc">A row of machine states joined by arrows: the state at time T0, when the machine powers on, then T1, T2 and so on, up to the final state at time Tn, when the machine halts.</desc>
+<style>.sq-o{fill:none;stroke:currentColor;stroke-opacity:.55;stroke-width:1.4;stroke-dasharray:5 3}.sq-v{fill:var(--tf-cta);fill-opacity:.12;stroke:var(--tf-cta);stroke-width:1.2}.sq-f{fill:currentColor;fill-opacity:.06;stroke:currentColor;stroke-opacity:.45;stroke-width:1}.sq-a{fill:none;stroke:var(--tf-cta);stroke-width:1.8}.sq-ah{fill:var(--tf-cta)}.sq-t{fill:currentColor;font-size:15px;font-weight:700}.sq-s{fill:currentColor;fill-opacity:.65;font-size:13px;font-style:italic}.sq-d{fill:currentColor;fill-opacity:.65;font-size:22px;font-weight:700}</style>
+<rect class="sq-o" x="25" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="35" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="35" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="35" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="35" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="83.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="80.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">0</tspan></text>
+<text class="sq-s" x="80.0" y="140" text-anchor="middle">power-on</text>
+<path class="sq-a" d="M141,56.0 H164"/><path class="sq-ah" d="M171,56.0 l-9,-5 v10 z"/>
+<rect class="sq-o" x="177" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="187" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="187" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="187" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="187" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="235.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="232.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">1</tspan></text>
+<path class="sq-a" d="M293,56.0 H316"/><path class="sq-ah" d="M323,56.0 l-9,-5 v10 z"/>
+<rect class="sq-o" x="329" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="339" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="339" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="339" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="339" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="387.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="384.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">2</tspan></text>
+<path class="sq-a" d="M445,56.0 H468"/><path class="sq-ah" d="M475,56.0 l-9,-5 v10 z"/>
+<text class="sq-d" x="536.0" y="63.0" text-anchor="middle">…</text>
+<path class="sq-a" d="M597,56.0 H620"/><path class="sq-ah" d="M627,56.0 l-9,-5 v10 z"/>
+<rect class="sq-o" x="633" y="16" width="110" height="80" rx="8"/><rect class="sq-v" x="643" y="26" width="90" height="22" rx="4"/><rect class="sq-f" x="643" y="53" width="90" height="9" rx="3"/><rect class="sq-f" x="643" y="66" width="90" height="9" rx="3"/><rect class="sq-f" x="643" y="79" width="42.0" height="9" rx="3"/><rect class="sq-f" x="691.0" y="79" width="42.0" height="9" rx="3"/>
+<text class="sq-t" x="688.0" y="120" text-anchor="middle"><tspan font-style="italic">T</tspan><tspan font-size="11" dy="3">n</tspan></text>
+<text class="sq-s" x="688.0" y="140" text-anchor="middle">HALT</text>
+</svg>
+<figcaption>A run is a sequence of machine states, from the state at power-on to the final state, when the machine halts.</figcaption>
+</figure>
+
+And an execution of a run is nothing more than a sequence of these machine states.
 
 ## Confirming the state
 
@@ -58,6 +112,8 @@ $ machine run hello-random --until halted --within 5m
 ```
 
 The run took 5.213 seconds of machine time and 33,452 entries, from the first line of the kernel to the reboot. Here is the part of its output where the container runs, with the entries that printed each line:
+
+<div class="scroll-output">
 
 ```
 $ machine output hello-random -n 219:240
@@ -86,7 +142,11 @@ ENTRIES           SOURCE    LINE      OUTPUT
 33011:33012       ttyS0     240        Container compose-app-1  Stopping
 ```
 
+</div>
+
 The first lines of the boot look like this:
+
+<div class="scroll-output">
 
 ```
 ENTRIES           SOURCE                    LINE      OUTPUT
@@ -122,6 +182,8 @@ ENTRIES           SOURCE                    LINE      OUTPUT
 ...
 ```
 
+</div>
+
 The date is March 1, 2026, three seconds after the machine's clock started, because a machine's clock starts at its own base time and advances with what the machine executes, not with the clock on the wall. The complete output of the run, all 275 lines of the console from the kernel's first message to the reboot, together with the container's own output stream and the entries of every line, can be found in [hello-random.log](https://github.com/testflows/Machine/blob/main/examples/hello-random/hello-random.log).
 
 ## Replaying it
@@ -137,6 +199,8 @@ identical
 ```
 
 In our run, the replay took about 8.5 seconds of real time, and it printed every line of every source again, the same 256 bytes among them. Then we compared the machines themselves, both stopped at entry 33452:
+
+<div class="scroll-output">
 
 ```
 $ machine hash hello-random-replay
@@ -166,7 +230,11 @@ vCPU 0
   ioapic       0x62b04df5c505ff07
 ```
 
-`machine hash hello-random` printed the same 22 hashes: memory, the disk, the eight devices, the interrupts held for delivery, and the eleven parts of the vCPU. Each hash stands for the bits listed in the previous section, and `machine dump` shows the bits themselves. Here are the vCPU's general registers at the last entry of the original run:
+</div>
+
+`machine hash hello-random` printed the same 22 hashes: memory, the disk, the eight devices, the interrupts held for delivery, and the eleven parts of the vCPU. Each hash stands for the bits listed in the previous section. Strictly speaking, matching hashes are not a mathematical proof that every bit is equal, because two different states could in theory produce the same 64-bit hash. In practice, the chance of that is vanishingly small, and `machine dump` shows the bits themselves. Here are the vCPU's general registers at the last entry of the original run:
+
+<div class="scroll-output">
 
 ```
 $ machine dump hello-random --show regs
@@ -191,6 +259,8 @@ $ machine dump hello-random --show regs
     rflags   0x86
   ...
 ```
+
+</div>
 
 > Fun fact, the `0xfee1dead` in `r15` is the magic number Linux passes to its `reboot` system call, still in the register as the machine powers off.
 
@@ -284,7 +354,7 @@ This is because the Linux random number generator mixes the timing of interrupts
 
 Of course, our goal is that every recording replays without divergence, every time. A replay that converges on one recording does not prove that the next one will, which is why Machine checks every entry of every replay rather than trusting that it worked.
 
-But just like the announcements you hear on an airplane, in case of unexpected turbulence, if a replay of yours ever reports a divergence, keep the run and its branches, and ping us at [support@testflows.com](mailto:support@testflows.com) with the session, the run, the entry the replay stopped at, and provide the commands that led to it. We will definitely investigate it. In general, a divergence is either a recording that captured a point the replay cannot reach, or something on the host that interfered with the replay, and we want to know about both so that it doesn't happen again.
+If a replay of yours ever reports a divergence, keep the run and its branches, and ping us at [support@testflows.com](mailto:support@testflows.com) with the session, the run, the entry the replay stopped at, and provide the commands that led to it. We will definitely investigate it. In general, a divergence is either a recording that captured a point the replay cannot reach, or something on the host that interfered with the replay, and we want to know about both so that it doesn't happen again.
 
 ## Conclusion
 
