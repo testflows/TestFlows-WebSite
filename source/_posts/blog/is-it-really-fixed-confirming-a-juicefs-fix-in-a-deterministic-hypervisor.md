@@ -60,7 +60,7 @@ $ machine create jfs131 --disk jfs131 --cpus 2 --mem 4096
 $ machine run jfs131 --until 'console~(done: [0-9]+ of|mount of /. failed|jfs-1 exited)' --within 20m
 ```
 
-The run took 103 seconds of machine time. Inside the machine, the corruption showed up even more often than on the host, in four rounds out of five:
+The run took 103 seconds of machine time. Inside the machine, the wrong reads showed up even more often than on the host, in four rounds out of five:
 
 ```
 $ machine output jfs131 -n : | grep -E "round|done"
@@ -72,7 +72,7 @@ jfs | jfs | round 5: CORRUPT sha 57e6c73d3af2f1cd != 599049e5570df6de, first byt
 jfs | jfs | done: 4 of 5 rounds corrupt
 ```
 
-Each corrupt round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file got corrupted at byte 46,428,229, and 57,841 of its bytes were affected.
+Each round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file read back wrong from byte 46,428,229, and 57,841 of its bytes were affected.
 
 ## Replaying the issue
 
@@ -129,7 +129,7 @@ vCPU 0
 ...
 ```
 
-All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, with the same corrupted reads in its memory. That means the corruption is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.
+All 33 hashes matched: memory, disk, nine devices, and eleven parts of each of the two vCPUs, from their registers to their timers. In other words, the replay did not just print the same lines. It arrived at the very same machine state, with the same wrong reads in its memory. That means the issue is now something we can come back to as often as we like, for example to stop in the read path at the very moment one slice overwrites another.
 
 ## Confirming the fix on 1.4.2
 
@@ -199,7 +199,7 @@ As a final check, we ran the regression test that came with the fix against both
 
 ## Why should you care?
 
-When an upstream project fixes a bug, the fix lives in their tests and their release notes. However, for a production system, the confidence has to be ours, especially for a bug that once cost us data. The best part is that a test like this one is small enough for most AI coding agents to write quite fast. And when the AI coding agent has access to a deterministic machine, a failure is more than a red line in a log. It becomes a recording you and your AI coding agent can replay exactly. The last property is hard to get and now it is available to everyone.
+When an upstream project fixes a bug, the fix lives in their tests and their release notes. However, for a production system, the confidence has to be ours, especially for a bug that once made us switch our storage. The best part is that a test like this one is small enough for most AI coding agents to write quite fast. And when the AI coding agent has access to a deterministic machine, a failure is more than a red line in a log. It becomes a recording you and your AI coding agent can replay exactly. The last property is hard to get and now it is available to everyone.
 
 The whole test is in our public repository, in [examples/compose/juicefs](https://github.com/testflows/Machine/tree/main/examples/compose/juicefs), so you can run it yourself against any JuiceFS version.
 
