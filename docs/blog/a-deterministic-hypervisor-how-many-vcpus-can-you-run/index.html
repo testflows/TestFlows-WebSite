@@ -1,0 +1,1097 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  
+  <title>A Deterministic Hypervisor: How Many vCPUs Can You Run?</title>
+  <meta name="description" content="TestFlows Machine runs machines with up to 64 vCPUs, so the software under test can see a multi-CPU server and still replay exactly. Here is how and what it costs.">
+  
+  <meta name="keywords" content="deterministic hypervisor, multiple vCPUs, SMP, deterministic execution, record and replay, deterministic simulation testing, DST, TestFlows">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  <meta name="author" content="Vitaliy Zakaznikov">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run.md">
+
+
+  <meta property="og:site_name" content="TestFlows">
+  
+  
+<meta name="publish_date" property="og:publish_date" content="2026-11-27T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-27T00:00:00-0000" />
+<meta property="og:title" content="A Deterministic Hypervisor: How Many vCPUs Can You Run?">
+<meta property="og:description" content="TestFlows Machine runs machines with up to 64 vCPUs, so the software under test can see a multi-CPU server and still replay exactly. Here is how and what it costs.">
+<meta property="og:url" content="https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">
+<meta property="og:image" content="https://testflows.com/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run-card.jpg">
+
+
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1254">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A Deterministic Hypervisor: How Many vCPUs Can You Run?">
+<meta name="twitter:description" content="TestFlows Machine runs machines with up to 64 vCPUs, so the software under test can see a multi-CPU server and still replay exactly. Here is how and what it costs.">
+<meta name="twitter:image" content="https://testflows.com/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run-card.jpg">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A Deterministic Hypervisor: How Many vCPUs Can You Run?","description":"TestFlows Machine runs machines with up to 64 vCPUs, so the software under test can see a multi-CPU server and still replay exactly. Here is how and what it costs.","image":"https://testflows.com/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run-card.jpg","datePublished":"2026-11-27T00:00:00-05:00","dateModified":"2026-11-27T00:00:00-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/"}</script>
+
+  
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/fonts.css?v=1" type="text/css">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795656321673" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795656321673" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795656321673" media="screen" type="text/css">
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body class="has-announcement">
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  <div class="site-announcement" role="region" aria-label="Announcement">
+  <a class="site-announcement-link" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
+    <span class="site-announcement-text">Launching TestFlows Machine: self-service deterministic simulation testing environment</span>
+    <span class="site-announcement-cta">Read the post <span aria-hidden="true">&rarr;</span></span>
+  </a>
+</div>
+
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/machine/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/pricing/">Pricing</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/download/">Download</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
+                            
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                            
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
+            <script>
+            (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
+                var a = document.getElementById("navbar-signin");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
+            })();
+            </script>
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <main class="content" id="main" tabindex="-1">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">A Deterministic Hypervisor: How Many vCPUs Can You Run?</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2026-11-27T00:00:00-0000"><span class="authored-date text-nowrap">Nov 27, 2026</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-image col-lg-6 m-auto">
+            <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run.png" alt="A Deterministic Hypervisor: How Many vCPUs Can You Run?">
+            <span class="post-image-credit"></span>
+        </div>
+        
+    </div>
+    
+    <div class="blog post-body row">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#session-cpus-vs-machine-vcpus"><span class="toc-text">Session CPUs vs machine vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#keep-determinism-with-multiple-vcpus"><span class="toc-text">Keep determinism with multiple vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#example-a-machine-with-16-vcpus"><span class="toc-text">Example: A machine with 16 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-16-vcpus"><span class="toc-text">Replaying 16 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#comparing-boot-time-from-1-to-64-vcpus"><span class="toc-text">Comparing boot time from 1 to 64 vCPUs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
+            <p>Production software rarely runs on a single CPU. A database sizes its thread pools by the number of CPUs it finds, the Linux kernel keeps per-CPU queues and caches, and locks behave differently when two CPUs contend for them. Software tested on one CPU is tested on a configuration it will probably never run on. That is why we made <a href="/machine/">Machine</a> able to have many vCPUs, so that Linux and the software under test see a multi-CPU server just like the one they run on in production, while keeping every run deterministic. So how many vCPUs can you run? Spoiler: up to 64 in one machine. In this post we show what that looks like and what it costs.<span id="more"></span></p>
+<h2 id="session-cpus-vs-machine-vcpus"><a href="#session-cpus-vs-machine-vcpus" class="headerlink" title="Session CPUs vs machine vCPUs"></a>Session CPUs vs machine vCPUs</h2><p>We’ll start by clarifying one point of possible confusion. What is a session CPU vs a machine CPU? This will be one of the first questions you will ask. This is because before you can run anything you need a session (an allocated compute resource) and a run. To create each, the corresponding commands <a href="/docs/machine/#machine-sessions-create">machine sessions create</a> and <a href="/docs/machine/#machine-create">machine create</a> both take an option called <code>--cpus</code>, but they mean different things.</p>
+<p><code>machine sessions create --cpus N</code> sets how many host CPUs the session reserves. They are shared by every run in the session, and each running machine is placed on one of them. A session’s CPUs therefore decide how many machines can run at the same time and determine the billing price per hour of the session.</p>
+<p><code>machine create --cpus N</code> sets how many vCPUs one machine has, which is to say how many CPUs its Linux sees, and it does not depend on the session’s size. So a session with one CPU can run a machine with anywhere from 1 to 64 vCPUs with the max limit being 64 per machine.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>machine sessions create --cpus N</code></th>
+<th><code>machine create --cpus N</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Sets</td>
+<td>Host CPUs reserved for the session</td>
+<td>vCPUs of one machine</td>
+</tr>
+<tr>
+<td>Decides</td>
+<td>How many machines run at the same time</td>
+<td>How many CPUs the machine’s Linux sees</td>
+</tr>
+<tr>
+<td>Limit</td>
+<td>The plan and the session’s class</td>
+<td>64</td>
+</tr>
+</tbody></table>
+<h2 id="keep-determinism-with-multiple-vcpus"><a href="#keep-determinism-with-multiple-vcpus" class="headerlink" title="Keep determinism with multiple vCPUs"></a>Keep determinism with multiple vCPUs</h2><p>On a real server the hardware CPUs run at the same time, and the order in which they reach shared memory changes from one run to the next. That order is exactly what a deterministic hypervisor has to control as it is one source of non-determinism in the hardware. A machine therefore needs its vCPUs serialized, one at a time, in a fixed order: each vCPU runs one dispatch (a stretch of execution at full speed), and then the next vCPU takes its turn. Now because only one vCPU runs at any moment, every read and write of shared memory happens in an order the recording fixes, and an interrupt one vCPU sends to another arrives at a fixed point during the run. This makes the interleaving of the vCPUs repeatable and produces runs that can be replayed exactly.</p>
+<p>The vCPUs would run serialized even if each had a host CPU of its own. As a result a machine with more vCPUs takes longer to run in real time, and a bigger session does not make it faster. What a bigger session gives is more machines running at once, such as a recording and its replay or enabling several branches to be explored side by side.</p>
+<p>However, from the inside none of this is visible. Linux just sees every vCPU as a CPU of its own. It schedules threads on all of them, sends interrupts between them and keeps its per-CPU data. Most importantly the software under test sees a much-desired multi-CPU server.</p>
+<h2 id="example-a-machine-with-16-vcpus"><a href="#example-a-machine-with-16-vcpus" class="headerlink" title="Example: A machine with 16 vCPUs"></a>Example: A machine with 16 vCPUs</h2><p>To show this in practice, we created a session with a single CPU:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create blog-determinism</span><br><span class="line"><span class="term-mark">$</span> machine sessions</span><br><span class="line">NAME              SESSION           STATE      CPUS  MEM       DISK       CLASS        ARCH     ₡/HOUR  DURATION  IDLE   COST</span><br><span class="line">blog-determinism  30316b373adb4a63  connected  1     1536M/2G  12.3G/16G  standard-ip  intel-1   ₡0.15  56m2s     6s    ₡0.14  (current)</span><br></pre></td></tr></table></figure>
+
+<p>Then we built a disk from the standard <code>ubuntu:24.04</code> Docker image that just prints how many CPUs the machine has and lists them from <code>/proc/cpuinfo</code> and created a machine with 16 vCPUs to run it as follows:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine disks build --from ubuntu:24.04 --entrypoint /bin/sh hello-cpus -- -c &#x27;echo &quot;Hello from TestFlows Machine!&quot;; echo &quot;CPUs: $(nproc)&quot;; grep -E &quot;^(processor|model name)&quot; /proc/cpuinfo&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine create cpus16 --disk hello-cpus --cpus 16 --mem 512</span><br><span class="line"><span class="term-mark">$</span> machine run cpus16 --until halted --within 10m</span><br></pre></td></tr></table></figure>
+
+<p>The kernel brought up all 16 CPUs while it booted:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">smp: Bringing up secondary CPUs ...</span><br><span class="line">smp: Brought up 1 node, 16 CPUs</span><br><span class="line">smpboot: Total of 16 processors activated (31997.85 BogoMIPS)</span><br></pre></td></tr></table></figure>
+
+<p>And the program in the container found all of them:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output cpus16 --source /output/keep/app/console -n :</span><br><span class="line">ENTRIES           SOURCE                    LINE      OUTPUT</span><br><span class="line">511483            /output/keep/app/console  1         Hello from TestFlows Machine!</span><br><span class="line">511644            /output/keep/app/console  2         CPUs: 16</span><br><span class="line">511764            /output/keep/app/console  3         processor	: 0</span><br><span class="line">511833            /output/keep/app/console  4         model name	: TestFlows Machine v1</span><br><span class="line">511901            /output/keep/app/console  5         processor	: 1</span><br><span class="line">511969            /output/keep/app/console  6         model name	: TestFlows Machine v1</span><br><span class="line">...</span><br><span class="line">514486            /output/keep/app/console  33        processor	: 15</span><br><span class="line">514573            /output/keep/app/console  34        model name	: TestFlows Machine v1</span><br></pre></td></tr></table></figure>
+
+<p>This run took 13.430 seconds of machine time and created 563,130 entries in our run log.</p>
+<h2 id="replaying-16-vcpus"><a href="#replaying-16-vcpus" class="headerlink" title="Replaying 16 vCPUs"></a>Replaying 16 vCPUs</h2><p>To show replay, we forked the run at its first checkpoint and replayed it to its end:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork cpus16 --from 1 --name cpus16-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked cpus16/cpus16-replay (wijSOH2JK0wdeMAikMKoL)</span><br><span class="line">  From checkpoint 1 of cpus16, replayed to entry 563130</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output cpus16 --source all -n :) &lt;(machine output cpus16-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+
+<p>Here the replay took about 17.4 seconds of real time. Its output is identical to the original on every source, and <code>machine hash</code> gave the same 187 hashes on both machines at entry 563130: the memory, the disk, the devices, the held interrupts and all the parts covering the state of each of the 16 vCPUs.</p>
+<h2 id="comparing-boot-time-from-1-to-64-vcpus"><a href="#comparing-boot-time-from-1-to-64-vcpus" class="headerlink" title="Comparing boot time from 1 to 64 vCPUs"></a>Comparing boot time from 1 to 64 vCPUs</h2><p>To demonstrate what adding more vCPUs costs we booted the same disk with 1, 2, 4, 8, 16, 32 and 64 vCPUs and 512 MB of memory. We used the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/hello-random"><code>hello-random</code></a> disk, which prints a greeting and 256 random bytes from <code>/dev/random</code>.</p>
+<blockquote>
+<p>Note: because it was not the same <code>hello-cpus</code> disk, the 16-vCPU data row below differs from the 13.430 seconds above.</p>
+</blockquote>
+<p>The machines ran one after another in the same one-CPU session, each until it powered off. To keep it simple each count was recorded just once. We recorded the machine time, which is the time the machine’s own clock measured, and the real time to show how long <code>machine run</code> took to return to us in our runs.</p>
+<table>
+<thead>
+<tr>
+<th>vCPUs</th>
+<th>Machine time</th>
+<th>Real time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>4.92 s</td>
+<td>4.9 s</td>
+</tr>
+<tr>
+<td>2</td>
+<td>5.50 s</td>
+<td>7.9 s</td>
+</tr>
+<tr>
+<td>4</td>
+<td>10.36 s</td>
+<td>12.1 s</td>
+</tr>
+<tr>
+<td>8</td>
+<td>9.41 s</td>
+<td>14.8 s</td>
+</tr>
+<tr>
+<td>16</td>
+<td>11.73 s</td>
+<td>20.2 s</td>
+</tr>
+<tr>
+<td>32</td>
+<td>17.41 s</td>
+<td>29.3 s</td>
+</tr>
+<tr>
+<td>64</td>
+<td>20.10 s</td>
+<td>44.5 s</td>
+</tr>
+</tbody></table>
+<p>As we can see the real time grows with the number of vCPUs, from 4.9 seconds for one to 44.5 seconds for 64, because the vCPUs take turns. Machine time grows too but not in step with the count. For example, the machine with 4 vCPUs took 10.36 seconds and the one with 8 took 9.41.</p>
+<p>With a different number of CPUs the kernel does different work and therefore waits on different timers. Also, because the runs were recorded on a class that records repeatable runs by default, an earlier recording of the same disk with 32 vCPUs took exactly 17.410739710 seconds of machine time, the same as the one in the table to the nanosecond.</p>
+<h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Testing real programs benefits when the deterministic hypervisor supports multiple vCPUs. With the machine you can create machines with up to 64 vCPUs in a session of any size. This means that Linux and your software under test see a multi-CPU server. And while you can run with 1 or 64 vCPUs you can expect each run to replay exactly.</p>
+<p>Give it a try. <a href="/machine/portal/signup/">Sign up</a> for free and try it with as many vCPUs as your software expects.</p>
+
+        </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h2[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-is-execution-really-deterministic.png" class="card-img-top" alt="A Deterministic Hypervisor: Is Execution Really Deterministic?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">A Deterministic Hypervisor: Is Execution Really Deterministic?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When we tell people that a replay in a deterministic hypervisor is the same run, the first question ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/is-it-really-fixed-juicefs-corruption.png" class="card-img-top" alt="Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/running-jepsen-in-a-deterministic-hypervisor.png" class="card-img-top" alt="Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Jepsen is a well-known framework used for finding bugs in distributed databases, and its approach is...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-service deterministic simulation testing (DST) environment for developers and AI coding agent...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In Part 1, we built an autonomous system that beat all four levels of Super Mario Bros. without any ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </main>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.testflows.com/">Status</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+                <li><a href="/legal/trademark-policy/">Trademark</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1795656321673"></script>
+<script src="/js/machine-hero-type.js?v=1795656321673"></script>
+<script src="/js/download-platforms.js?v=1795656321673"></script>
+<script src="/js/anchor-case.js?v=1795656321673"></script>
+
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+

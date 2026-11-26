@@ -64,40 +64,40 @@
   <link rel="stylesheet" href="/css/math/hexo-math.css?v=1" type="text/css">
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795656321640" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795656321640" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795656321641" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795656321641" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795656321641" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795656321641" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795627679388" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795656321641" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -270,6 +270,52 @@
             <p class="blog-lead">Deep dives on deterministic simulation testing, test programs, combinatorial coverage, behavior models, and shipping quality software.</p>
         </header>
         <div class="blog-list">
+
+            <article class="blog-card">
+                <div class="blog-card-copy">
+                    <h2 class="blog-card-title">
+                        <a href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">A Deterministic Hypervisor: How Many vCPUs Can You Run?</a>
+                    </h2>
+                    <div class="blog-card-excerpt">
+                        <p>Production software rarely runs on a single CPU. A database sizes its thread pools by the number of CPUs it finds, the Linux kernel keeps per-CPU queues and caches, and locks behave differently when two CPUs contend for them. Software tested on one CPU is tested on a configuration it will probably never run on. That is why we made <a href="/machine/">Machine</a> able to have many vCPUs, so that Linux and the software under test see a multi-CPU server just like the one they run on in production, while keeping every run deterministic. So how many vCPUs can you run? Spoiler: up to 64 in one machine. In this post we show what that looks like and what it costs.
+                    </div>
+                    <div class="blog-card-meta">
+                        <span class="blog-card-author">Vitaliy Zakaznikov</span>
+                        <time datetime="2026-11-27">November 27, 2026</time>
+                    </div>
+                    <a class="blog-card-more" href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/">Read more <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                </div>
+                
+                <div class="blog-card-media">
+                    <a href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/" tabindex="-1" aria-hidden="true">
+                        <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run.png" alt="">
+                    </a>
+                </div>
+                
+            </article>
+
+            <article class="blog-card">
+                <div class="blog-card-copy">
+                    <h2 class="blog-card-title">
+                        <a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">A Deterministic Hypervisor: Is Execution Really Deterministic?</a>
+                    </h2>
+                    <div class="blog-card-excerpt">
+                        <p>When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on the CPU architecture the run was recorded on, and that you don’t have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU architecture, what the state of a machine actually consists of, and how <a href="/machine/">TestFlows Machine</a> confirms that a replay reaches the same state, bit for bit, using a small example that boots Linux and prints 256 random bytes from <code>/dev/random</code>.
+                    </div>
+                    <div class="blog-card-meta">
+                        <span class="blog-card-author">Vitaliy Zakaznikov</span>
+                        <time datetime="2026-11-26">November 26, 2026</time>
+                    </div>
+                    <a class="blog-card-more" href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">Read more <span class="fas fa-arrow-right" aria-hidden="true"></span></a>
+                </div>
+                
+                <div class="blog-card-media">
+                    <a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/" tabindex="-1" aria-hidden="true">
+                        <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-is-execution-really-deterministic.png" alt="">
+                    </a>
+                </div>
+                
+            </article>
 
             <article class="blog-card">
                 <div class="blog-card-copy">
@@ -883,10 +929,10 @@ For tests, on the other hand, readability and maintainability are a must.
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795627679390"></script>
-<script src="/js/machine-hero-type.js?v=1795627679390"></script>
-<script src="/js/download-platforms.js?v=1795627679390"></script>
-<script src="/js/anchor-case.js?v=1795627679390"></script>
+<script src="/js/index-code-type.js?v=1795656321641"></script>
+<script src="/js/machine-hero-type.js?v=1795656321641"></script>
+<script src="/js/download-platforms.js?v=1795656321641"></script>
+<script src="/js/anchor-case.js?v=1795656321641"></script>
 
 <script>
 var isInViewport = function (elem) {

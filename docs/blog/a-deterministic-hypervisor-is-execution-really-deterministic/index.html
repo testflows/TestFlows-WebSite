@@ -1,0 +1,1131 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  
+  <title>A Deterministic Hypervisor: Is Execution Really Deterministic?</title>
+  <meta name="description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.">
+  
+  <meta name="keywords" content="deterministic hypervisor, deterministic execution, record and replay, machine state, state hash, CPUID, deterministic simulation testing, DST, TestFlows">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  <meta name="author" content="Vitaliy Zakaznikov">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic.md">
+
+
+  <meta property="og:site_name" content="TestFlows">
+  
+  
+<meta name="publish_date" property="og:publish_date" content="2026-11-26T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-11-26T00:00:00-0000" />
+<meta property="og:title" content="A Deterministic Hypervisor: Is Execution Really Deterministic?">
+<meta property="og:description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.">
+<meta property="og:url" content="https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">
+<meta property="og:image" content="https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg">
+
+
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1254">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="A Deterministic Hypervisor: Is Execution Really Deterministic?">
+<meta name="twitter:description" content="What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.">
+<meta name="twitter:image" content="https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"A Deterministic Hypervisor: Is Execution Really Deterministic?","description":"What a deterministic hypervisor records, why a recording belongs to the CPU it was made on, and how TestFlows Machine confirms that a replay reaches the same machine state, bit for bit.","image":"https://testflows.com/images/a-deterministic-hypervisor-is-execution-really-deterministic-card.jpg","datePublished":"2026-11-26T00:00:00-05:00","dateModified":"2026-11-26T00:00:00-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/"}</script>
+
+  
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/fonts.css?v=1" type="text/css">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795656321674" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795656321674" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795656321674" media="screen" type="text/css">
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body class="has-announcement">
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  <div class="site-announcement" role="region" aria-label="Announcement">
+  <a class="site-announcement-link" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
+    <span class="site-announcement-text">Launching TestFlows Machine: self-service deterministic simulation testing environment</span>
+    <span class="site-announcement-cta">Read the post <span aria-hidden="true">&rarr;</span></span>
+  </a>
+</div>
+
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/machine/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/pricing/">Pricing</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/download/">Download</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
+                            
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                            
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
+            <script>
+            (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
+                var a = document.getElementById("navbar-signin");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
+            })();
+            </script>
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <main class="content" id="main" tabindex="-1">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">A Deterministic Hypervisor: Is Execution Really Deterministic?</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2026-11-26T00:00:00-0000"><span class="authored-date text-nowrap">Nov 26, 2026</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-image col-lg-6 m-auto">
+            <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-is-execution-really-deterministic.png" alt="A Deterministic Hypervisor: Is Execution Really Deterministic?">
+            <span class="post-image-credit"></span>
+        </div>
+        
+    </div>
+    
+    <div class="blog post-body row">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cpu-architecture-dependency"><span class="toc-text">CPU architecture dependency</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-the-state-of-a-machine-is"><span class="toc-text">What the state of a machine is</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#confirming-the-state"><span class="toc-text">Confirming the state</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#a-small-example"><span class="toc-text">A small example</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying-it"><span class="toc-text">Replaying it</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replayable-vs-repeatable"><span class="toc-text">Replayable vs repeatable</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#changing-the-inputs"><span class="toc-text">Changing the inputs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#when-a-replay-diverges"><span class="toc-text">When a replay diverges</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#conclusion"><span class="toc-text">Conclusion</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
+            <p>When we tell people that a replay in a deterministic hypervisor is the same run, the first question is always the same: really? Bit for bit? It is a fair question, because it is a strong promise. The short answer is that execution is deterministic on the CPU architecture the run was recorded on, and that you don’t have to take our word for it, because you can check it yourself. This post explains why a recording belongs to its original CPU architecture, what the state of a machine actually consists of, and how <a href="/machine/">TestFlows Machine</a> confirms that a replay reaches the same state, bit for bit, using a small example that boots Linux and prints 256 random bytes from <code>/dev/random</code>.<span id="more"></span></p>
+<h2 id="cpu-architecture-dependency"><a href="#cpu-architecture-dependency" class="headerlink" title="CPU architecture dependency"></a>CPU architecture dependency</h2><p>A machine runs on a real processor. To make it fast, the hypervisor does not interpret instructions one by one. Instead, the processor executes them directly, and the hypervisor steps in only at the points where the machine needs something from outside, for example, a timer interrupt, a disk request or a read of the clock. Those points, and what came back at each of them, are what a run log records. Everything in between them is the processor’s own work, and that is what makes the recording tied to the processors that do that work exactly the same way.</p>
+<p>We can highlight three main reasons that tie a recording to its CPU.</p>
+<ol>
+<li><p>The first is what the machine is told about the processor. When Linux boots, it asks the CPU who it is using the CPUID instruction which reads back the vendor, the family, the model, the stepping and the list of CPU features. It then patches its own code to match it. For example, it picks the fastest implementation of a routine for the features it finds, and it applies the workarounds for any errata (known misbehaviors or quirks) that apply to that exact model. This means that two different processors run different instructions from the very same disk and the very same start. Even though we hide some of what the processor reports, such as its brand string and the instructions that produce random numbers in hardware, things like the family, model and features stay as the processor reports them, because hiding them would change what the kernel does.</p>
+</li>
+<li><p>The second is how a position in a run is measured. For example, to stop a replay at exactly the point where the recording took an interrupt, Machine needs a count that advances identically every time the same code runs. It uses the processor’s PMC counters for this, together with the instruction pointer and a hash of the registers. How a processor counts, and how far its counter can run past the point it was asked to stop at, is a property of its family. A family that counts differently lands on a different point.</p>
+</li>
+<li><p>The third is the virtualization path itself. For example, AMD and Intel processors provide virtualization through different hardware interfaces, and the hypervisor code that decides where a run can stop therefore differs between them.</p>
+</li>
+</ol>
+<p>For these reasons, every run carries the CPUID table its machine saw, and Machine refuses to start, fork or replay a run in a session whose processor reports a different table. </p>
+<blockquote>
+<p>The refusal says “This session’s CPU differs from the one the run was recorded on.” and suggests starting the run in a session of its class or recording it again.</p>
+</blockquote>
+<p>Making runs portable between families would take a fixed, named CPU model presented to every machine, the way some hypervisors do for live migration with the proof that the counters of the two families agree. But while we can change software, we can’t control hardware, so until then, the cost is small: on new hardware, the program must be run again, and the new recording replays exactly but will not match a run on the old hardware.</p>
+<h2 id="what-the-state-of-a-machine-is"><a href="#what-the-state-of-a-machine-is" class="headerlink" title="What the state of a machine is"></a>What the state of a machine is</h2><p>“The state of a machine” sounds like an abstraction, but it is just bits. At any point of a run, it is a finite, concrete sequence of zeros and ones, and we can precisely name every part of it:</p>
+<ul>
+<li><strong>Each vCPU</strong>: its general registers and instruction pointer, its segment and control registers, the x87, SSE and AVX registers, the debug registers, the model-specific registers, its local interrupt controller and timer, and any exception or interrupt it has pending.</li>
+<li><strong>The interrupt controllers and timers</strong> shared by the vCPUs.</li>
+<li><strong>Every device</strong>: the serial ports, the keyboard controller, and all the others.</li>
+<li><strong>Memory</strong>: every byte of RAM.</li>
+<li><strong>The disk</strong>: every block of it.</li>
+</ul>
+<p>If two machines hold the same bits in all of these, they are the same machine state. Nothing else in theory exists that could make them behave differently from that point on.</p>
+<h2 id="confirming-the-state"><a href="#confirming-the-state" class="headerlink" title="Confirming the state"></a>Confirming the state</h2><p>There are two ways we confirm a replay.</p>
+<ol>
+<li><p>First, while a replay runs, Machine checks every recorded entry. Each entry carries the instruction pointer, the count and a hash of the registers at the point the recording stopped, and the replay has to arrive at all three. Each entry also carries hashes of the rest of the vCPU state, computed in groups, and each of the devices. If any of them differs, the replay reports a divergence at that entry, and the group that differs says where to look.</p>
+</li>
+<li><p>Second, hashing all of memory and the whole disk at every entry is expensive, so it is off by default. Instead, at any point, the <code>machine hash</code> command computes every hash of the machine as it stands, memory and disk included, so two machines stopped at the same entry can be compared in full. For debugging, <code>--mem-hash</code> and <code>--disk-hash</code> on <code>create</code> or <code>fork</code> make a run hash memory and the disk at every entry, so that a replay of it compares them at every entry too and finds the first one where they differ.</p>
+</li>
+</ol>
+<h2 id="a-small-example"><a href="#a-small-example" class="headerlink" title="A small example"></a>A small example</h2><p>Let’s see how Machine boots the kernel, starts Docker, and runs one command using the <code>ubuntu:24.04</code> Docker container. The command prints a greeting and the date, then reads 256 bytes from <code>/dev/random</code> and prints them in hex. Random numbers here are a good test, as on a normal computer you expect every run to print different bytes.</p>
+<p>This is how we built a disk from the image, created a run from it, and ran it until the machine powered off:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create blog-determinism</span><br><span class="line"><span class="term-mark">$</span> machine disks build --from ubuntu:24.04 --entrypoint /bin/sh hello-random -- -c &#x27;echo &quot;Hello from TestFlows Machine!&quot;; date; head -c 256 /dev/random | od -A x -t x1 -v&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine create hello-random --disk hello-random</span><br><span class="line"><span class="term-mark">$</span> machine run hello-random --until halted --within 5m</span><br></pre></td></tr></table></figure>
+
+<p>The run took 5.213 seconds of machine time and 33,452 entries, from the first line of the kernel to the reboot. Here is the part of its output where the container runs, with the entries that printed each line:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output hello-random -n 219:240</span><br><span class="line">ENTRIES           SOURCE    LINE      OUTPUT</span><br><span class="line">31660:31661       ttyS0     219        Container compose-app-1  Started</span><br><span class="line">32531:32532       ttyS0     220       app | Hello from TestFlows Machine!</span><br><span class="line">32535:32536       ttyS0     221       app | Sun Mar  1 00:00:03 UTC 2026</span><br><span class="line">32538:32540       ttyS0     222       app | 000000 05 47 34 4b 9f 2d b7 88 20 f1 5d 72 c5 be 6e de</span><br><span class="line">32543:32544       ttyS0     223       app | 000010 cc 63 da cb 21 b0 08 c7 b0 22 af de fa a0 d6 55</span><br><span class="line">32546:32547       ttyS0     224       app | 000020 c5 18 0a 8c 00 10 5f 64 4b e7 ee ea 4d ae dc 69</span><br><span class="line">32549:32550       ttyS0     225       app | 000030 68 f2 4f b3 73 74 c5 5e f3 22 12 7c d4 89 00 7f</span><br><span class="line">32552:32553       ttyS0     226       app | 000040 b2 fc fc 3d fd be 9f b1 8b c2 7e b2 1b be ae 08</span><br><span class="line">32555:32556       ttyS0     227       app | 000050 bc 84 6a 1a c8 9c 88 00 d2 e2 2b ad a9 b6 dc aa</span><br><span class="line">32558:32559       ttyS0     228       app | 000060 48 48 b3 27 ec 6b de b5 8d 08 d4 26 8a c5 2f 33</span><br><span class="line">32561:32562       ttyS0     229       app | 000070 90 59 5d e2 ca c8 d5 d6 32 d5 35 1c bd 82 91 01</span><br><span class="line">32564:32565       ttyS0     230       app | 000080 e6 f5 10 bb 9e 6c 72 5d 04 d4 28 63 35 6e fa 50</span><br><span class="line">32567:32568       ttyS0     231       app | 000090 cf 0f 8b 45 b8 fe c9 ba dc f6 40 93 2c 35 8e 1b</span><br><span class="line">32570:32571       ttyS0     232       app | 0000a0 29 42 dc f2 cb e0 7a 69 e0 86 48 d2 a3 73 dc d2</span><br><span class="line">32573:32574       ttyS0     233       app | 0000b0 98 ed 17 b4 45 db 1c 4f c4 c3 8a b3 33 31 71 7c</span><br><span class="line">32576:32577       ttyS0     234       app | 0000c0 e5 74 13 e3 90 03 7e 36 d2 5e 26 f5 3b 59 8d 6d</span><br><span class="line">32579:32580       ttyS0     235       app | 0000d0 14 28 5e b7 70 df 78 5e 06 c2 85 89 22 8b 09 e4</span><br><span class="line">32582:32583       ttyS0     236       app | 0000e0 27 6b be d0 42 13 9c 2a 60 38 d6 36 23 db f5 41</span><br><span class="line">32585:32587       ttyS0     237       app | 0000f0 b9 bf 5f d1 a1 b4 85 1d 29 0c ed 25 43 56 0b 64</span><br><span class="line">32602:32603       ttyS0     238       app | 000100</span><br><span class="line">32646:32647       ttyS0     239       === app exited by itself: code 0 ===</span><br><span class="line">33011:33012       ttyS0     240        Container compose-app-1  Stopping</span><br></pre></td></tr></table></figure>
+
+<p>The first lines of the boot look like this:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">ENTRIES           SOURCE                    LINE      OUTPUT</span><br><span class="line">29:93             ttyS0                     1         early console in extract_kernel</span><br><span class="line">99:169            ttyS0                     2         input_data: 0x0000000001fba2c4</span><br><span class="line">175:243           ttyS0                     3         input_len: 0x000000000056f095</span><br><span class="line">249:311           ttyS0                     4         output: 0x0000000001000000</span><br><span class="line">317:387           ttyS0                     5         output_len: 0x00000000014f405c</span><br><span class="line">393:477           ttyS0                     6         kernel_total_size: 0x0000000001230000</span><br><span class="line">483:555           ttyS0                     7         needed_size: 0x0000000001600000</span><br><span class="line">561:643           ttyS0                     8         trampoline_32bit: 0x0000000000000000</span><br><span class="line">649:651           ttyS0                     9         </span><br><span class="line">653:655           ttyS0                     10        </span><br><span class="line">661:741           ttyS0                     11        KASLR disabled: &#x27;nokaslr&#x27; on cmdline.</span><br><span class="line">743:745           ttyS0                     12        </span><br><span class="line">751:753           ttyS0                     13        </span><br><span class="line">755:905           ttyS0                     14        Decompressing Linux... Parsing ELF... No relocation needed... done.</span><br><span class="line">907:1025          ttyS0                     15        Booting the kernel (entry_offset: 0x0000000000000000).</span><br><span class="line">1042:1474         ttyS0                     16        Linux version 6.11.11-testflows-os-v1.0 (user@user-ubox) (gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #221 SMP PREEMPT_DYNAMIC Wed Nov 25 04:22:14 EST 2026 (TestFlows OS v1.0)</span><br><span class="line">1476:1626         ttyS0                     17        Kernel is locked down from Kernel configuration; see man kernel_lockdown.7</span><br><span class="line">1628:2316         ttyS0                     18        Command line: noapic noacpi pci=conf1 reboot=k panic=1 i8042.direct=1 i8042.dumbkbd=1 i8042.nopnp=1 numa_balancing=disable transparent_hugepage=never zswap.enabled=0 nokaslr lockdown=confidentiality sysctl.kernel.kptr_restrict=2 sysctl.kernel.dmesg_restrict=1 earlyprintk=serial i8042.noaux=1 console=ttyS0 root=/dev/vda rw  reclaim_rng_seed=0</span><br><span class="line">2318:2382         ttyS0                     19        BIOS-provided physical RAM map:</span><br><span class="line">2384:2508         ttyS0                     20        BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable</span><br><span class="line">2510:2638         ttyS0                     21        BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved</span><br><span class="line">2640:2768         ttyS0                     22        BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved</span><br><span class="line">2770:2894         ttyS0                     23        BIOS-e820: [mem 0x0000000000100000-0x000000000fffffff] usable</span><br><span class="line">2896:2990         ttyS0                     24        printk: legacy bootconsole [earlyser0] enabled</span><br><span class="line">3001:3085         ttyS0                     25        ERROR: earlyprintk= earlyser already used</span><br><span class="line">3087:3167         ttyS0                     26        NX (Execute Disable) protection: active</span><br><span class="line">3169:3231         ttyS0                     27        APIC: Static calls initialized</span><br><span class="line">3233:3289         ttyS0                     28        DMI not present or invalid.</span><br><span class="line">3291:3363         ttyS0                     29        tsc: Fast TSC calibration using PIT</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>The date is March 1, 2026, three seconds after the machine’s clock started, because a machine’s clock starts at its own base time and advances with what the machine executes, not with the clock on the wall. The complete output of the run, all 275 lines of the console from the kernel’s first message to the reboot, together with the container’s own output stream and the entries of every line, can be found in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/hello-random/hello-random.log">hello-random.log</a>.</p>
+<h2 id="replaying-it"><a href="#replaying-it" class="headerlink" title="Replaying it"></a>Replaying it</h2><p>To replay the example, we forked the run at its first checkpoint, which is the very start of the machine, and replayed the branch to the end:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork hello-random --from 1 --name hello-random-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked hello-random/hello-random-replay (wijPOx6dhlRle9NinfZKR)</span><br><span class="line">  From checkpoint 1 of hello-random, replayed to entry 33452</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output hello-random --source all -n :) &lt;(machine output hello-random-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+
+<p>In our run, the replay took about 8.5 seconds of real time, and it printed every line of every source again, the same 256 bytes among them. Then we compared the machines themselves, both stopped at entry 33452:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine hash hello-random-replay</span><br><span class="line">Entry 33452</span><br><span class="line">mem          0x50728d55dc839142</span><br><span class="line">disk         0x708517d3cab003a1</span><br><span class="line">irq_pending  0x0000000000000000</span><br><span class="line">serial       0x7e39f245ced1502d</span><br><span class="line">i8042        0xbe1ba65e39053f23</span><br><span class="line">rtc          0xab94ee4e2d08fd65</span><br><span class="line">rng          0xb27153e372867d18</span><br><span class="line">blk          0xea4b22bb247c4205</span><br><span class="line">console      0x0000000000000000</span><br><span class="line">pci          0xa4208d7b6c693b0c</span><br><span class="line">vesa         0x0000000000000000</span><br><span class="line">vCPU 0</span><br><span class="line">  state        0xe69542d8c284d2d9</span><br><span class="line">  regs_hash    0x6ee28a15235e2f14</span><br><span class="line">  regs         0xc82fe05af11c90ff</span><br><span class="line">  events       0x8dc91fb7a6c04b0b</span><br><span class="line">  xsave        0xb416fda2764dc7e8</span><br><span class="line">  debug        0x2f58f9f63a1a7212</span><br><span class="line">  msrs         0x9a0925feeb9b25a3</span><br><span class="line">  lapic        0xd857be67733c02ee</span><br><span class="line">  timers       0xc32e6dc1314620ec</span><br><span class="line">  pic          0xac7265df936c7d37</span><br><span class="line">  ioapic       0x62b04df5c505ff07</span><br></pre></td></tr></table></figure>
+
+<p><code>machine hash hello-random</code> printed the same 22 hashes: memory, the disk, the eight devices, the interrupts held for delivery, and the eleven parts of the vCPU. Each hash stands for the bits listed in the previous section, and <code>machine dump</code> shows the bits themselves. Here are the vCPU’s general registers at the last entry of the original run:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine dump hello-random --show regs</span><br><span class="line">  Registers:</span><br><span class="line">    rax      0xfffffffe</span><br><span class="line">    rbx      0x0</span><br><span class="line">    rcx      0x0</span><br><span class="line">    rdx      0xc4b8</span><br><span class="line">    rsi      0x0</span><br><span class="line">    rdi      0x136b8e2be</span><br><span class="line">    rsp      0xffffc90000223db0</span><br><span class="line">    rbp      0xa</span><br><span class="line">    r8       0xc1be</span><br><span class="line">    r9       0x0</span><br><span class="line">    r10      0xffffefff</span><br><span class="line">    r11      0xffffffff81c3bce0</span><br><span class="line">    r12      0x0</span><br><span class="line">    r13      0x6b</span><br><span class="line">    r14      0xfffffffe</span><br><span class="line">    r15      0xfee1dead</span><br><span class="line">    rip      0xffffffff8103f4fc</span><br><span class="line">    rflags   0x86</span><br><span class="line">  ...</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Fun fact, the <code>0xfee1dead</code> in <code>r15</code> is the magic number Linux passes to its <code>reboot</code> system call, still in the register as the machine powers off.</p>
+</blockquote>
+<p>Let’s now look at something that can be confusing.</p>
+<h2 id="replayable-vs-repeatable"><a href="#replayable-vs-repeatable" class="headerlink" title="Replayable vs repeatable"></a>Replayable vs repeatable</h2><p>Replayable and repeatable properties are easy to interpret as meaning the same. However, we say a run is <strong>replayable</strong> when a replay of its recording reproduces it exactly. A run is <strong>repeatable</strong> when recording it again, from the same start with the same commands, produces the same recording.</p>
+<p>Every run in Machine is replayable but not every run is repeatable, and Machine does not need it to be, because a replay never records anything: it follows the recording it was given.</p>
+<p>But in the case of our example run, it is repeatable because its session class records repeatable runs by default, and <code>machine describe</code> indicates this by showing <code>Repeatable: true</code>. To show that it is actually repeatable, we created a second run from the same disk and recorded it from scratch:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine create hello-random-again --disk hello-random</span><br><span class="line"><span class="term-mark">$</span> machine run hello-random-again --until halted --within 5m</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output hello-random --source all -n :) &lt;(machine output hello-random-again --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+
+<p>The new recording also took 5.213108010 seconds of machine time, ended at entry 33452, printed the same 256 bytes and reached the same 22 hashes.</p>
+<p>So why don’t all runs repeat? To see why, you need to know one thing about how a machine executes: it runs in dispatches.</p>
+<p>A dispatch is a stretch of execution on one vCPU that the processor runs at full speed. At the end of each one, the hypervisor takes control back to handle what the machine asked for, record an entry, accept commands and give the next vCPU its turn. A dispatch ends when the machine needs the hypervisor, for example to read the disk, when a timer is due, or when the vCPU has retired its count budget.</p>
+<p>But code that never needs the hypervisor and never advances the count would keep a dispatch running forever. So every dispatch also has a bound in host time, 1 second by default, set with the <code>--dispatch-bound</code> option of <code>create</code>. When it is reached, the hypervisor stops the dispatch wherever it is, and the machine always comes back to answer commands.</p>
+<p>Therefore, some recordings made again can differ from the first one for reasons that have nothing to do with the program:</p>
+<ul>
+<li><strong>A stop placed by host time.</strong> Where the dispatch bound stops a dispatch depends on how fast the host ran during that second.</li>
+<li><strong>Loops that never advance the count.</strong> The counter does not advance in such a loop, so the stop that ends its dispatch is placed by the dispatch bound or hits its stop limit.</li>
+<li><strong>Counter skid.</strong> The processor’s counter interrupts some distance past the point it was asked to stop at, and the distance varies.</li>
+<li><strong>A missed stop.</strong> A repeatable run interrupts before each count stop and steps from there, but it can still miss the stop, for example when the counter skids too far. The stop then lands later, and the recording still replays.</li>
+<li><strong>A user command.</strong> <code>machine cancel</code>, or Ctrl-C, stops the machine wherever it happens to be at that moment.</li>
+<li><strong>A choice drawn without a seed.</strong> A fault or a delay given without <code>--seed</code> draws a seed and shows it. The recording keeps the seed, so a replay follows it, but a new recording draws another one.</li>
+</ul>
+<p>For a repeatable run, <code>machine describe</code> shows how far a new recording would repeat it. The <code>Repeats To: tip</code> message means all of it is repeatable, as is the case for our <code>hello-random</code> example. Otherwise, the line names the first entry that would not repeat and what placed it, such as a host-time stop.</p>
+<p>It is important to note that in every one of these cases, the recording is still replayable. This is because each stop is recorded with its instruction pointer, its count and its register hashes, so a replay arrives at the same stop no matter how the recording got there.</p>
+<h2 id="changing-the-inputs"><a href="#changing-the-inputs" class="headerlink" title="Changing the inputs"></a>Changing the inputs</h2><p>Another factor is inputs. A replay reproduces a run because it gives the machine the same inputs. Change an input, and the run changes with it. For our example, two inputs matter: the seed of the machine’s random number generator device, and the rate of its clock.</p>
+<p>Let’s see what happened when we forked the run at its first checkpoint with another seed and ran the branch to the end:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork hello-random --at 1 --name hello-random-seed7 --rng-seed 7</span><br><span class="line"><span class="term-mark">✔</span> Forked hello-random/hello-random-seed7 (wijPCpkvHXN7oF2BeH28T)</span><br><span class="line">  From checkpoint 1 of hello-random, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine run hello-random-seed7 --until halted --within 5m</span><br><span class="line"><span class="term-mark">$</span> machine output hello-random-seed7 --source /output/keep/app/console -n :</span><br><span class="line">Hello from TestFlows Machine!</span><br><span class="line">Sun Mar  1 00:00:03 UTC 2026</span><br><span class="line">000000 f7 7e 81 3f 12 95 7a f7 8c 06 6f 78 7d 72 7c 55</span><br><span class="line">000010 88 5e 28 fa 76 a0 3e be 65 fe 47 7b 06 6b 24 f1</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>The bytes are different, but the date is not. The boot also took a little longer, 5.289 seconds of machine time instead of 5.213.</p>
+<p>Then we forked it again with the original seed and doubled the clock rate, from 10 to 20 nanoseconds of machine time:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork hello-random --at 1 --name hello-random-rate20</span><br><span class="line"><span class="term-mark">✔</span> Forked hello-random/hello-random-rate20 (wijPDnwGqppLEdjXwsLKg)</span><br><span class="line">  From checkpoint 1 of hello-random, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine vtime hello-random-rate20 rate 20</span><br><span class="line"><span class="term-mark">$</span> machine run hello-random-rate20 --until halted --within 5m</span><br><span class="line"><span class="term-mark">$</span> machine output hello-random-rate20 --source /output/keep/app/console -n :</span><br><span class="line">Hello from TestFlows Machine!</span><br><span class="line">Sun Mar  1 00:00:08 UTC 2026</span><br><span class="line">000000 74 b2 99 ab 90 94 1f 4e 29 5c 81 3f d3 61 2f ae</span><br><span class="line">000010 6a f4 e5 b2 85 f4 1e a9 29 6e a3 7f 31 77 c6 a5</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>The boot took 10.969 seconds of machine time instead of 5.213, and the date moved from 00:00:03 to 00:00:08, as expected. The random bytes changed as well, even though the seed did not.</p>
+<p>This is because the Linux random number generator mixes the timing of interrupts and the time stamp counter into its pool, so the machine’s clock is one of its inputs. However, both changes are recorded like everything else: a replay of the <code>hello-random-rate20</code> branch printed the same output as the branch and reached the exact same 22 hashes.</p>
+<table>
+<thead>
+<tr>
+<th>Run</th>
+<th>Seed</th>
+<th>Clock rate</th>
+<th>Machine time</th>
+<th>Date</th>
+<th>First random bytes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>hello-random</code></td>
+<td>0</td>
+<td>10</td>
+<td>5.213 s</td>
+<td>00:00:03</td>
+<td><code>05 47 34 4b</code></td>
+</tr>
+<tr>
+<td><code>hello-random-replay</code></td>
+<td>0</td>
+<td>10</td>
+<td>5.213 s</td>
+<td>00:00:03</td>
+<td><code>05 47 34 4b</code></td>
+</tr>
+<tr>
+<td><code>hello-random-seed7</code></td>
+<td>7</td>
+<td>10</td>
+<td>5.289 s</td>
+<td>00:00:03</td>
+<td><code>f7 7e 81 3f</code></td>
+</tr>
+<tr>
+<td><code>hello-random-rate20</code></td>
+<td>0</td>
+<td>20</td>
+<td>10.969 s</td>
+<td>00:00:08</td>
+<td><code>74 b2 99 ab</code></td>
+</tr>
+</tbody></table>
+<h2 id="when-a-replay-diverges"><a href="#when-a-replay-diverges" class="headerlink" title="When a replay diverges"></a>When a replay diverges</h2><p>Of course, our goal is that every recording replays without divergence, every time. A replay that converges on one recording does not prove that the next one will, which is why Machine checks every entry of every replay rather than trusting that it worked.</p>
+<p>But just like the announcements you hear on an airplane, in case of unexpected turbulence, if a replay of yours ever reports a divergence, keep the run and its branches, and ping us at <a href="mailto:support@testflows.com">support@testflows.com</a> with the session, the run, the entry the replay stopped at, and provide the commands that led to it. We will definitely investigate it. In general, a divergence is either a recording that captured a point the replay cannot reach, or something on the host that interfered with the replay, and we want to know about both so that it doesn’t happen again.</p>
+<h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>So, is execution really deterministic? On the CPU it was recorded on, yes, literally. The state of a machine is a sequence of bits, the replay reaches the same bits, and <code>machine hash</code> lets you check it yourself, from memory and disk down to each register group of each vCPU.</p>
+<p>In this post, we used a machine with a single vCPU. Machines with many vCPUs replay the same way, but that is the subject of the next post. So stay tuned and keep testing!</p>
+<p>Don’t forget to try all of this by yourself. <a href="/machine/portal/signup/">Sign up</a> for free and run your own programs deterministically.</p>
+
+        </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h2[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run.png" class="card-img-top" alt="A Deterministic Hypervisor: How Many vCPUs Can You Run?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">A Deterministic Hypervisor: How Many vCPUs Can You Run?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Production software rarely runs on a single CPU. A database sizes its thread pools by the number of ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/is-it-really-fixed-reproducing-a-juicefs-corruption-deterministically/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/is-it-really-fixed-juicefs-corruption.png" class="card-img-top" alt="Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Is It Really Fixed? Reproducing a JuiceFS Corruption Deterministically</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Back in August, JuiceFS 1.3.1 silently corrupted data in our cloud, and unfortunately we had to stop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/running-jepsen-in-a-deterministic-hypervisor.png" class="card-img-top" alt="Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Jepsen is a well-known framework used for finding bugs in distributed databases, and its approach is...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-service deterministic simulation testing (DST) environment for developers and AI coding agent...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In Part 1, we built an autonomous system that beat all four levels of Super Mario Bros. without any ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations For Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations For Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or not to BDD, or TDD, or even ATDD. How does it affect your QA team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </main>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.testflows.com/">Status</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+                <li><a href="/legal/trademark-policy/">Trademark</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1795656321675"></script>
+<script src="/js/machine-hero-type.js?v=1795656321675"></script>
+<script src="/js/download-platforms.js?v=1795656321675"></script>
+<script src="/js/anchor-case.js?v=1795656321675"></script>
+
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+
