@@ -56,7 +56,7 @@
 <meta name="twitter:image" content="https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg">
 
 
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly","description":"We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly.","image":"https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-11-24T00:00:00-05:00","dateModified":"2026-11-25T09:35:51-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly","description":"We ran an unmodified Jepsen test of etcd inside TestFlows Machine, made it catch stale reads under a partition, and replayed the failing history exactly.","image":"https://testflows.com/images/running-jepsen-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-11-24T00:00:00-05:00","dateModified":"2026-11-26T11:40:20-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/"}</script>
 
   
   
@@ -72,40 +72,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795711295593" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795711295593" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795710943576" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795711295593" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -321,7 +321,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create jepsen --cpus 4 --mem 8G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen --disk jepsen --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? true,</span><br><span class="line">control |  :valid? true&#125;</span><br><span class="line">control | Everything looks good! ヽ(‘ー`)ノ</span><br></pre></td></tr></table></figure>
 
 <p>That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and etcd stayed linearizable through all of them, which is what you’d expect from etcd with its default linearizable reads. The full log, with every operation, is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/pass.log">logs&#x2F;pass.log</a>.</p>
-<h2 id="making-it-fail"><a href="#making-it-fail" class="headerlink" title="Making it fail"></a>Making it fail</h2><p>A test that only passes doesn’t show much, so we needed a real bug for Jepsen to catch. etcd has one ready to use if you ask for it: a serializable read is answered by the node from its own copy, without going through the leader, which is faster but means a node that is behind can answer with an old value. The example has a <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/stale-reads.patch">stale-reads.patch</a> that turns those reads on, and with it applied, the run ends very differently:</p>
+<h2 id="making-it-fail"><a href="#making-it-fail" class="headerlink" title="Making it fail"></a>Making it fail</h2><p>A test that only passes doesn’t show much, so we needed a way to force a failure for Jepsen to catch. etcd gives us one if we ask for it. A serializable read is answered by the node from its own copy, without going through the leader, which is faster but means a node that is behind can answer with an old value. That is documented etcd behavior, not a defect, and it is not linearizable, so Jepsen should catch it. The example has a <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/stale-reads.patch">stale-reads.patch</a> that turns those reads on, and with it applied, the run ends very differently:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> git apply stale-reads.patch</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen-stale</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen-stale --disk jepsen-stale --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen-stale --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen-stale -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? false,</span><br><span class="line">control |  :valid? false&#125;</span><br><span class="line">control | Analysis invalid! (ﾉಥ益ಥ）ﾉ ┻━┻</span><br></pre></td></tr></table></figure>
 
 <p>Right after a partition started, a write of 0 completed, and the very next read, invoked 10 ms later, came back with 1, the value the write had just replaced:</p>
@@ -359,7 +359,7 @@
 
 <p>We first thought the difference was the cache, since the original run reads the disk for the first time, so we recorded the passing test again from the same checkpoint with everything warm, and it took as long as the first time. The difference is the cost of recording, and replaying a recorded run is more than five times faster than recording it.</p>
 <h2 id="what’s-next"><a href="#what’s-next" class="headerlink" title="What’s next"></a>What’s next</h2><p>Jepsen does its own fault injection, from inside the nodes, with iptables over SSH. Machine can also inject faults from outside, into the network, the clocks and the disks, with no changes to the nodes at all, and those faults are recorded in the run like everything else. That part is still experimental, and it’s what we want to try with Jepsen next.</p>
-<p>If you work on a distributed system and have a Jepsen test of your own, we’d love to hear how it does in a machine, and the example is a good place to start. <a href="/machine/portal/signup/">Sign up</a> and ping us at <a href="mailto:contact@testflows.com">contact@testflows.com</a>, and we’ll grant you access to our Starter or Pro plan so you can try it out for yourself. Happy distributed database testing!</p>
+<p>If you work on a distributed system and have a Jepsen test of your own, we’d love to hear how it does in a machine, and the example is a good place to start. <a href="/machine/portal/signup/">Sign up</a>, and for the bigger session it needs, just ping us at <a href="mailto:contact@testflows.com">contact@testflows.com</a>. Happy distributed database testing!</p>
 
         </div>
         
@@ -908,10 +908,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795710943577"></script>
-<script src="/js/machine-hero-type.js?v=1795710943577"></script>
-<script src="/js/download-platforms.js?v=1795710943577"></script>
-<script src="/js/anchor-case.js?v=1795710943577"></script>
+<script src="/js/index-code-type.js?v=1795711295593"></script>
+<script src="/js/machine-hero-type.js?v=1795711295593"></script>
+<script src="/js/download-platforms.js?v=1795711295593"></script>
+<script src="/js/anchor-case.js?v=1795711295593"></script>
 
 <script>
 var isInViewport = function (elem) {
