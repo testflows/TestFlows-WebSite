@@ -1,3 +1,4 @@
+https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/legal/privacy-policy/index.html
 https://testflows.com/machine/legal/privacy-policy.md
 https://testflows.com/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/
@@ -31,7 +32,6 @@ https://testflows.com/machine/download.md
 https://testflows.com/machine/portal/signup/accept/index.html
 https://testflows.com/contact.html
 https://testflows.com/contact.md
-https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/portal/signup/index.html
 https://testflows.com/legal/trademark-policy/index.html
 https://testflows.com/legal/trademark-policy.md

@@ -38,8 +38,9 @@ it.
 current price of each class. Your plan includes plan credits every month, and you buy usage credits
 at €1 a credit. A credit has no cash value.
 
-[Pricing](/machine/pricing/) lists the plans. For dedicated machines, reserved for
-your team alone, contact [sales@testflows.com](mailto:sales@testflows.com).
+[Pricing](/machine/pricing/) lists the plans. For machines reserved for your team
+alone, in our cloud or for your infrastructure, contact
+[sales@testflows.com](mailto:sales@testflows.com).
 
 A running session is charged an hour ahead. When it stops, the unused part
 of its last hour is given back. In the activity, a Charged row's TIME is the
