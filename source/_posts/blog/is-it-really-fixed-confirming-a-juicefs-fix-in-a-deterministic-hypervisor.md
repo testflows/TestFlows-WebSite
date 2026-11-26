@@ -13,7 +13,7 @@ social_image_height: 1254
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, someone reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine/) to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
+Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote, and unfortunately we had to stop using it. A few weeks later, after we switched to a different storage solution, a JuiceFS user reported a bug upstream that looked a lot like ours, and the fix shipped in JuiceFS 1.3.4 and 1.4.2. That left us with two questions. Was it really our bug? And is it really fixed? This post is about how we answered both by combining our AI coding agent and [TestFlows Machine](/machine/) to reproduce the wrong reads on the version we had used, replay it exactly, and then run the same test against the fixed release with added fault injection.<!-- more -->
 
 > Note: the bug affects only volumes formatted with zstd compression (`juicefs format --compress zstd`), which is not the default, and files written in many small appends. A volume formatted with the default, no compression, was never affected.
 
@@ -72,7 +72,7 @@ jfs | jfs | round 5: CORRUPT sha 57e6c73d3af2f1cd != 599049e5570df6de, first byt
 jfs | jfs | done: 4 of 5 rounds corrupt
 ```
 
-Each round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file read back wrong from byte 46,428,229, and 57,841 of its bytes were affected.
+Each failing round names the hash it got, the first byte that differs from the original, and how many bytes changed. In particular, round 2 showed that its file read back wrong from byte 46,428,229, and 57,841 of its bytes were affected.
 
 ## Replaying the issue
 
