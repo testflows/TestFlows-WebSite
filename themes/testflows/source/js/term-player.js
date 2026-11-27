@@ -53,22 +53,22 @@
 
   Player.prototype.build = function (box) {
     var self = this;
-    var win = el("div", "term-window");
-    win.appendChild(el("div", "term-title", box.getAttribute("data-term-title") || "terminal"));
-    var screen = el("div", "term-screen");
-    this.pre = el("pre", "term-rows");
+    var win = el("div", "term-player-window");
+    win.appendChild(el("div", "term-player-title", box.getAttribute("data-term-title") || "terminal"));
+    var screen = el("div", "term-player-screen");
+    this.pre = el("pre", "term-player-rows");
     // misc.css sizes the font so the widest row fits the window.
     this.pre.style.setProperty("--term-cols", Math.max(1, widestRow(this.data.frames)));
     screen.appendChild(this.pre);
     win.appendChild(screen);
 
-    var bar = el("div", "term-bar");
-    this.button = el("button", "term-play", "Play");
+    var bar = el("div", "term-player-bar");
+    this.button = el("button", "term-player-play", "Play");
     this.button.type = "button";
     this.button.addEventListener("click", function () {
       self.playing ? self.pause() : self.play();
     });
-    this.scrub = el("input", "term-scrub");
+    this.scrub = el("input", "term-player-scrub");
     this.scrub.type = "range";
     this.scrub.min = 0;
     this.scrub.max = this.data.duration;
@@ -78,23 +78,23 @@
       self.pause();
       self.seek(parseFloat(self.scrub.value));
     });
-    var track = el("div", "term-track");
+    var track = el("div", "term-player-track");
     track.appendChild(this.scrub);
     this.data.marks.forEach(function (mark) {
-      var tick = el("span", "term-tick");
+      var tick = el("span", "term-player-tick");
       // misc.css insets the position by the thumb's half-width.
       tick.style.setProperty("--at", mark[0] / self.data.duration);
       track.appendChild(tick);
     });
-    this.clock = el("span", "term-clock");
+    this.clock = el("span", "term-player-clock");
     bar.appendChild(this.button);
     bar.appendChild(track);
     bar.appendChild(this.clock);
 
-    var marks = el("div", "term-marks");
+    var marks = el("div", "term-player-marks");
     this.markButtons = [];
     this.data.marks.forEach(function (mark, i) {
-      var b = el("button", "term-mark", "Violation " + (i + 1));
+      var b = el("button", "term-player-mark", "Violation " + (i + 1));
       b.type = "button";
       b.title = mark[1] + ", at " + (mark[0] + self.offset).toFixed(3) + " s";
       b.addEventListener("click", function () {

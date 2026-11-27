@@ -20,7 +20,7 @@
     margin: 1.5em 0;
 }
 
-.term-window {
+.term-player-window {
     position: relative;
     border: 1px solid var(--tf-card-border);
     border-radius: var(--tf-radius);
@@ -30,11 +30,11 @@
     overflow: hidden;
 }
 
-[data-theme="light"] .term-window {
+[data-theme="light"] .term-player-window {
     box-shadow: 0 1px 0 rgba(255, 255, 255, 0.7) inset;
 }
 
-.term-title {
+.term-player-title {
     height: 2.4rem;
     line-height: 2.4rem;
     padding: 0 1.1rem;
@@ -44,7 +44,7 @@
     border-bottom: 1px solid color-mix(in srgb, var(--tf-accent) 50%, transparent);
 }
 
-.term-screen {
+.term-player-screen {
     container-type: inline-size;
     height: 60vh;
     overflow: auto;
@@ -52,11 +52,11 @@
     scrollbar-width: none;
 }
 
-.term-screen::-webkit-scrollbar {
+.term-player-screen::-webkit-scrollbar {
     display: none;
 }
 
-.term-rows {
+.term-player-rows {
     margin: 0;
     color: inherit;
     background: none;
@@ -68,14 +68,14 @@
     white-space: pre;
 }
 
-.term-bar {
+.term-player-bar {
     display: flex;
     align-items: center;
     gap: 0.9rem;
     margin-top: 0.9rem;
 }
 
-.term-track {
+.term-player-track {
     --thumb: 16px;
     position: relative;
     flex: 1;
@@ -84,7 +84,7 @@
     align-items: center;
 }
 
-.term-scrub {
+.term-player-scrub {
     width: 100%;
     margin: 0;
     accent-color: var(--tf-accent);
@@ -92,7 +92,7 @@
 }
 
 /* A violation's place on the timeline. */
-.term-tick {
+.term-player-tick {
     position: absolute;
     top: 50%;
     /* The thumb's centre travels the track less its width. */
@@ -107,7 +107,7 @@
     pointer-events: none;
 }
 
-.term-clock {
+.term-player-clock {
     font-family: var(--tf-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
     font-size: 0.85rem;
     color: var(--tf-text-muted);
@@ -115,7 +115,7 @@
     white-space: nowrap;
 }
 
-.term-marks {
+.term-player-marks {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
@@ -123,8 +123,8 @@
 }
 
 /* The site's ghost button, smaller: these sit under a figure. */
-.term-play,
-.term-mark {
+.term-player-play,
+.term-player-mark {
     display: inline-flex;
     align-items: center;
     background: transparent;
@@ -140,20 +140,20 @@
     transition: background-color 0.15s, border-color 0.15s;
 }
 
-.term-play {
+.term-player-play {
     min-width: 5rem;
     justify-content: center;
 }
 
-.term-play:hover,
-.term-mark:hover,
-.term-play:focus-visible,
-.term-mark:focus-visible {
+.term-player-play:hover,
+.term-player-mark:hover,
+.term-player-play:focus-visible,
+.term-player-mark:focus-visible {
     background: var(--tf-ghost-hover-bg);
     outline: none;
 }
 
-.term-mark.is-current {
+.term-player-mark.is-current {
     border-color: var(--tf-accent);
     color: var(--tf-accent);
     background: color-mix(in srgb, var(--tf-accent) 10%, transparent);

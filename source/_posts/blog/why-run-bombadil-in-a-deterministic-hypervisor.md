@@ -13,9 +13,7 @@ social_image_height: 1254
 icon: fas fa-glasses pt-5 pb-5
 ---
 
-[Bombadil](https://github.com/antithesishq/bombadil) is a property-based testing tool for web and terminal UIs. It allows you to describe how your application should behave and what actions can be taken to interact with it using a TypeScript specification. Bombadil uses this specification to explore your application, selecting and performing actions based on its current state while checking your properties along the way.
-
-You can run Bombadil in your local development environment, in CI, or inside Antithesis. Naturally, we also wanted to see how it would run inside Machine, our deterministic hypervisor behind the [TestFlows Machine](/machine/) simulation testing environment. Inside Antithesis, though, Bombadil runs differently because it is [integrated with their fuzzer](https://github.com/antithesishq/bombadil/pull/257). What we can do is run Bombadil much as you would run it locally, but deterministically.<!-- more -->
+[Bombadil](https://github.com/antithesishq/bombadil) is a property-based testing tool for web and terminal UIs. It allows you to describe how your application should behave and what actions can be taken to interact with it using a TypeScript specification. Bombadil uses this specification to explore your application, selecting and performing actions based on its current state while checking your properties along the way. You can run it in your local development environment, in CI, or inside Antithesis. Naturally, we also wanted to see how it would run inside Machine, our deterministic hypervisor behind the [TestFlows Machine](/machine/) simulation testing environment. Inside Antithesis, though, Bombadil runs differently because it is [integrated with their fuzzer](https://github.com/antithesishq/bombadil/pull/257). What we can do is run Bombadil much as you would run it locally, but deterministically.<!-- more -->
 
 Why would we want to do that? Simple. When Bombadil finds a violation, its [reproduce](https://antithesishq.github.io/bombadil/terminal/4.1-reproducing-violations.html#reproducing-violations) option allows you to play back the same sequence of actions, but reproduction is only best-effort because giving a program the same input doesn't necessarily mean you'll get the same output. However, by running both Bombadil and the application it tests inside a deterministic hypervisor, we can replay the whole run and any failures exactly, not just the actions Bombadil took.
 
@@ -51,7 +49,7 @@ $ machine create bombadil --disk bombadil --cpus 2 --mem 2560
 $ machine run bombadil --until halted --within 15m
 ```
 
-For testing, we gave each example 20 seconds of machine time. The whole run took 194.9 seconds of machine time and had 2,316,101 entries.
+For testing, we gave each example 20 seconds of machine time. The whole run took 194.9 seconds and had 2,316,101 entries.
 
 A great feature of Bombadil is that it logs every screen it samples and every action it takes. By collecting the screen log and trace for each example as output files of the run, we could go back and see what Bombadil saw at the sampled points in the run.
 
@@ -238,10 +236,10 @@ For example, reading the screen log was slow. We also found that the default 256
 
 We also ran into an issue with `MACHINE_OUTPUT_DIR`. We save files written there with the run as they are being written, but when we tried to read one back from inside the machine, we got an empty file, even though we hadn't written it into the drop folder. Not quite what you expect when a script is waiting for something to appear in its own log.
 
-We fixed two of these. Reading a large output got a lot faster, and a file written to `MACHINE_OUTPUT_DIR` can now be read back from inside the machine. Telling you when a machine is short of memory is next.
+We fixed two of these. Reading a large output got a lot faster, and a file written to `MACHINE_OUTPUT_DIR` can now be read back from inside the machine. We are now working on telling you when a machine is short of memory.
 
 ## What's next
 
-One of the main use cases for Bombadil is testing web UIs through a browser. That is what we want to try next, using a full web application running inside the machine. We will also add support for the Antithesis interface, using their [stub library](https://github.com/antithesishq/antithesis_stub).
+One of the main use cases for Bombadil is testing web UIs through a browser. We want to try that too, with a full web application running inside the machine. We will also add support for the Antithesis interface, using their [stub library](https://github.com/antithesishq/antithesis_stub).
 
 If you have Bombadil specifications of your own, we'd love for you to try running them in Machine. Our example is a good place to start. You can [sign up](/machine/portal/signup/) for free, and if you need a bigger session for your project, just drop us a note at [contact@testflows.com](mailto:contact@testflows.com).

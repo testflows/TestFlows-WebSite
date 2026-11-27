@@ -73,40 +73,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795822059117" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795822059117" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795820968258" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795822059117" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -312,8 +312,7 @@
         </nav>
         
         <div class="post-content col-lg-9">
-            <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil">Bombadil</a> is a property-based testing tool for web and terminal UIs. It allows you to describe how your application should behave and what actions can be taken to interact with it using a TypeScript specification. Bombadil uses this specification to explore your application, selecting and performing actions based on its current state while checking your properties along the way.</p>
-<p>You can run Bombadil in your local development environment, in CI, or inside Antithesis. Naturally, we also wanted to see how it would run inside Machine, our deterministic hypervisor behind the <a href="/machine/">TestFlows Machine</a> simulation testing environment. Inside Antithesis, though, Bombadil runs differently because it is <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil/pull/257">integrated with their fuzzer</a>. What we can do is run Bombadil much as you would run it locally, but deterministically.<span id="more"></span></p>
+            <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil">Bombadil</a> is a property-based testing tool for web and terminal UIs. It allows you to describe how your application should behave and what actions can be taken to interact with it using a TypeScript specification. Bombadil uses this specification to explore your application, selecting and performing actions based on its current state while checking your properties along the way. You can run it in your local development environment, in CI, or inside Antithesis. Naturally, we also wanted to see how it would run inside Machine, our deterministic hypervisor behind the <a href="/machine/">TestFlows Machine</a> simulation testing environment. Inside Antithesis, though, Bombadil runs differently because it is <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil/pull/257">integrated with their fuzzer</a>. What we can do is run Bombadil much as you would run it locally, but deterministically.<span id="more"></span></p>
 <p>Why would we want to do that? Simple. When Bombadil finds a violation, its <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesishq.github.io/bombadil/terminal/4.1-reproducing-violations.html#reproducing-violations">reproduce</a> option allows you to play back the same sequence of actions, but reproduction is only best-effort because giving a program the same input doesn’t necessarily mean you’ll get the same output. However, by running both Bombadil and the application it tests inside a deterministic hypervisor, we can replay the whole run and any failures exactly, not just the actions Bombadil took.</p>
 <h2 id="the-setup"><a href="#the-setup" class="headerlink" title="The setup"></a>The setup</h2><p>We selected five of Bombadil’s terminal <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil/tree/v0.8.0/examples">examples</a>:</p>
 <div class="styled-table"><table>
@@ -360,7 +359,7 @@
 <p>We put all five examples into a single Docker container, built a disk from it, and ran the examples unchanged, one after another, inside the machine using the following commands:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> docker compose build</span><br><span class="line"><span class="term-mark">$</span> machine sessions create bombadil --cpus 2 --mem 4G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . bombadil</span><br><span class="line"><span class="term-mark">$</span> machine create bombadil --disk bombadil --cpus 2 --mem 2560</span><br><span class="line"><span class="term-mark">$</span> machine run bombadil --until halted --within 15m</span><br></pre></td></tr></table></figure>
 
-<p>For testing, we gave each example 20 seconds of machine time. The whole run took 194.9 seconds of machine time and had 2,316,101 entries.</p>
+<p>For testing, we gave each example 20 seconds of machine time. The whole run took 194.9 seconds and had 2,316,101 entries.</p>
 <p>A great feature of Bombadil is that it logs every screen it samples and every action it takes. By collecting the screen log and trace for each example as output files of the run, we could go back and see what Bombadil saw at the sampled points in the run.</p>
 <h2 id="what-we-found"><a href="#what-we-found" class="headerlink" title="What we found"></a>What we found</h2><p>Four of the five examples ran until their time was up without a single violation. With <code>nano</code>, however, Bombadil found six violations of the same property, <code>hasStandardBindings</code>, which means nano’s key bindings were missing from the bottom two lines of the screen.</p>
 <p>This was unexpected. Did we find a bug in nano? Since we can tell which machine entry produced each line of the screen log, we went back to see what the screen looked like just before, during and immediately after each violation:</p>
@@ -533,8 +532,8 @@
 <h2 id="what-we-learned"><a href="#what-we-learned" class="headerlink" title="What we learned"></a>What we learned</h2><p>Running someone else’s testing tool is also a good way to test our own. We found a few things in Machine that needed improvement.</p>
 <p>For example, reading the screen log was slow. We also found that the default 256M of memory for the run was not enough when we included TigerBeetle, and nothing told us that memory was the problem.</p>
 <p>We also ran into an issue with <code>MACHINE_OUTPUT_DIR</code>. We save files written there with the run as they are being written, but when we tried to read one back from inside the machine, we got an empty file, even though we hadn’t written it into the drop folder. Not quite what you expect when a script is waiting for something to appear in its own log.</p>
-<p>We fixed two of these. Reading a large output got a lot faster, and a file written to <code>MACHINE_OUTPUT_DIR</code> can now be read back from inside the machine. Telling you when a machine is short of memory is next.</p>
-<h2 id="what’s-next"><a href="#what’s-next" class="headerlink" title="What’s next"></a>What’s next</h2><p>One of the main use cases for Bombadil is testing web UIs through a browser. That is what we want to try next, using a full web application running inside the machine. We will also add support for the Antithesis interface, using their <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/antithesis_stub">stub library</a>.</p>
+<p>We fixed two of these. Reading a large output got a lot faster, and a file written to <code>MACHINE_OUTPUT_DIR</code> can now be read back from inside the machine. We are now working on telling you when a machine is short of memory.</p>
+<h2 id="what’s-next"><a href="#what’s-next" class="headerlink" title="What’s next"></a>What’s next</h2><p>One of the main use cases for Bombadil is testing web UIs through a browser. We want to try that too, with a full web application running inside the machine. We will also add support for the Antithesis interface, using their <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/antithesis_stub">stub library</a>.</p>
 <p>If you have Bombadil specifications of your own, we’d love for you to try running them in Machine. Our example is a good place to start. You can <a href="/machine/portal/signup/">sign up</a> for free, and if you need a bigger session for your project, just drop us a note at <a href="mailto:contact@testflows.com">contact@testflows.com</a>.</p>
 
         </div>
@@ -1102,16 +1101,16 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795820968259"></script>
-<script src="/js/machine-hero-type.js?v=1795820968259"></script>
-<script src="/js/download-platforms.js?v=1795820968259"></script>
-<script src="/js/anchor-case.js?v=1795820968259"></script>
+<script src="/js/index-code-type.js?v=1795822059117"></script>
+<script src="/js/machine-hero-type.js?v=1795822059117"></script>
+<script src="/js/download-platforms.js?v=1795822059117"></script>
+<script src="/js/anchor-case.js?v=1795822059117"></script>
 
 
 
 
 
-<script src="/js/term-player.js?v=1795820968259"></script>
+<script src="/js/term-player.js?v=1795822059117"></script>
 
 
 <script defer src="/js/vendor/cloudflare-beacon-2026.10.1.min.js" data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
