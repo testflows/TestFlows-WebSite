@@ -44,6 +44,34 @@ For testing, we gave each example 20 seconds of machine time. The whole run took
 
 A great feature of Bombadil is that it logs every screen it samples and every action it takes. By collecting the screen log and trace for each example as output files of the run, we could go back and see what Bombadil saw at the sampled points in the run.
 
+Here are the output sources we had for the run:
+
+```
+$ machine output bombadil sources
+SOURCE                                             BYTES      LINES  ENTRIES
+ttyS0                                              14243        287  57:2316092
+/output/exec/agent                                     8          1  42127:42127
+/output/keep/app/console                             312         11  60388:2309612
+/output/keep/app/bombadil/.bombadil-8-0.tmp           16          1  61372:61372
+/output/keep/app/bombadil/cat.screen.log         3568190      35264  61557:107003
+/output/keep/app/bombadil/cat.bin                 475909       2036  61899:106927
+/output/keep/app/bombadil/.bombadil-14-0.tmp          16          1  107640:107640
+/output/keep/app/bombadil/nano.screen.log        7425400      65371  107798:240970
+/output/keep/app/bombadil/nano.bin                433850       1866  108272:240858
+/output/keep/app/bombadil/.bombadil-20-0.tmp          16          1  241576:241576
+/output/keep/app/bombadil/btop.screen.log       59183622      20534  241778:2018135
+/output/keep/app/bombadil/btop.bin                475325       1774  254358:2018040
+/output/keep/app/bombadil/.bombadil-27-0.tmp          16          1  2018576:2018576
+/output/keep/app/bombadil/tetris.screen.log     10918536      41455  2018624:2174353
+/output/keep/app/bombadil/tetris.bin              340624       1315  2019870:2174270
+/output/keep/app/bombadil/tigerbeetle.log          84804        963  2174540:2309522
+/output/keep/app/bombadil/.bombadil-750-0.tmp         16          1  2218680:2218680
+/output/keep/app/bombadil/tb.screen.log          3662803      36453  2218746:2309585
+/output/keep/app/bombadil/tb.bin                  279242       1100  2219287:2309449
+```
+
+Each source can be saved to a file of its own. The [example's README](https://github.com/testflows/Machine/tree/main/examples/compose/bombadil#what-it-found) shows how, for the nano screen log and TigerBeetle's log.
+
 ## What we found
 
 Four of the five examples ran until their time was up without a single violation. With `nano`, however, Bombadil found six violations of the same property, `hasStandardBindings`, which means nano's key bindings were missing from the bottom two lines of the screen.
