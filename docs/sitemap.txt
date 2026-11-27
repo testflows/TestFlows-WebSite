@@ -1,5 +1,6 @@
 https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/
 https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor.md
+https://testflows.com/casts/why-run-bombadil-nano.json
 https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor/
 https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor.md
 https://testflows.com/machine/pricing/index.html

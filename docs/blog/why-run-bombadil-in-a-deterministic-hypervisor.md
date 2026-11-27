@@ -206,6 +206,21 @@ Pick any of the fork commands and you get a new branch of the run starting at th
 
 The `--events` option writes the timestamp and machine entry for every action and violation, while the `--cast` option produces an [asciinema](https://asciinema.org) recording of the screens with a marker at each violation. When we see a violation in the recording, we can look it up in the event log and go straight to that point in the machine's execution.
 
+Here is the recording of nano from our run, the 1,323 screens Bombadil sampled. It opens on the first violation, and each button below it shows the screen of one of the six violations:
+
+{% html div data-term-frames="/casts/why-run-bombadil-nano.json" data-term-title="nano.screen.log" data-term-offset="1.115" data-term-poster="3.507" %}
+The recording plays with JavaScript enabled.
+{% endhtml %}
+
+Here is what is wrong in each of the six violations:
+
+1. At 3.507 s, entry 121303, the terminal grew from 26 to 85 rows. The bindings are still at rows 25 and 26, where the old bottom was, and the last two rows are empty.
+2. At 9.759 s, entry 160318, the terminal grew from 53 to 65 rows and got wider. nano had cleared the screen and not drawn anything yet, so the whole screen is empty.
+3. At 11.693 s, entry 169103, the terminal grew from 25 to 76 rows. The bindings are still at rows 24 and 25.
+4. At 17.286 s, entry 215475, the terminal grew from 16 to 85 rows. The bindings are still at rows 15 and 16.
+5. At 18.856 s, entry 232260, the terminal grew from 19 to 99 rows. The bindings are still at rows 18 and 19.
+6. At 18.964 s, entry 233152, the terminal grew from 87 to 98 rows and got narrower. The old bindings wrapped onto rows 83 to 87, and the last two rows are empty.
+
 ## What we learned
 
 Running someone else's testing tool is also a good way to test our own. We found a few things in Machine that needed improvement.

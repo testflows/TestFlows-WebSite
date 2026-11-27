@@ -33,6 +33,10 @@
 })();
 </script>
 <% } %>
+<%# A terminal recording, a block with data-term-frames: the site's own player, loaded only on a page that has one. %>
+<% if (/data-term-frames=/.test(String(page.content || ''))) { %>
+<script src="<%- config.root %>js/term-player.js?v=<%- Date.now() %>"></script>
+<% } %>
 <% if (String(page.path || '').indexOf('machine/portal/') !== 0) { %>
 <script defer src="<%- config.root %>js/vendor/cloudflare-beacon-2026.10.1.min.js" data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
 <% } %>
