@@ -98,9 +98,9 @@ The [explore_seeds.py](https://github.com/testflows/Machine/blob/main/sdk/python
 
 This is also where the agent guiding the walk can come in. The agent can decide where to start the walk, how many seeds to draw, and what each draw varies. A schedule varies only the length of each stretch, and a [plan](/docs/machine/#plans) can go further. It can define rules that say, for each state of the program, what to draw, such as whether a thread is held, preempted or moved to another vCPU, how fast the machine's clock runs, or how long an interrupt waits. Again, every branch that fails can be kept for investigation the same way as we did in the Jepsen run.
 
-But there is more: when the agent needs a technique of its own, we provide the [Python SDK](/docs/machine/#python-sdk), which gives it the same operations to write its own fuzzers with. A random walk, a guided one, or a walk the agent designs after reading the code are all the same thing to the machine. All these are paths through the state space, each one recorded, replayed and branched off.
+So when the agent needs a technique of its own, the [Python SDK](/docs/machine/#python-sdk) is the answer, which gives it the same operations to write its own fuzzers with. A random walk, a guided one, or a walk the agent designs after reading the code are all the same thing to the machine. All these are paths through the state space, each one recorded, replayed and branched off.
 
-## Conclusion
+## Recapitulation
 
 Writing the deterministic hypervisor was just the first step. Deterministic simulation testing is what the hypervisor now enables as part of the overall deterministic execution environment. Every run there is nothing but a path through the state space of your software, and now you just get to keep it. Combining this with an AI coding agent gives the agent what it needs to find and fix bugs, the known ones and the unknown unknowns alike.
 
