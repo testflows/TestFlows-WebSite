@@ -1,3 +1,7 @@
+https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/
+https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor.md
+https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor/
+https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor.md
 https://testflows.com/machine/pricing/index.html
 https://testflows.com/machine/legal/privacy-policy/index.html
 https://testflows.com/machine/legal/privacy-policy.md
@@ -7,8 +11,6 @@ https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-dete
 https://testflows.com/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor.md
 https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/
 https://testflows.com/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment.md
-https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor/
-https://testflows.com/blog/so-we-did-write-a-deterministic-hypervisor.md
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests/
 https://testflows.com/blog/sketching-combinations-for-combinatorial-tests.md
 https://testflows.com/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/

@@ -1,0 +1,1243 @@
+
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  <script>document.documentElement.classList.add("js");</script>
+  <script>
+  (function () {
+    try {
+      var t = localStorage.getItem("tf-theme");
+      if (t !== "light" && t !== "dark") t = "dark";
+      document.documentElement.setAttribute("data-theme", t);
+    } catch (e) {
+      document.documentElement.setAttribute("data-theme", "dark");
+    }
+  })();
+  </script>
+  
+  
+  
+  <title>Why Run Bombadil in a Deterministic Hypervisor? Violations That Replay Exactly</title>
+  <meta name="description" content="We ran Bombadil's terminal examples, nano, btop, tetris and the TigerBeetle REPL among them, unchanged inside TestFlows Machine deterministic hypervisor, replayed the run exactly, and turned every violation into a point in the run to branch from.">
+  
+  <meta name="keywords" content="Bombadil, property-based testing, terminal UI testing, TigerBeetle, deterministic simulation testing, DST, record and replay, deterministic hypervisor, TestFlows Machine">
+  
+  
+  <link rel="canonical" href="https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  
+  
+  <meta name="author" content="Vitaliy Zakaznikov">
+
+  <link rel="describedby" href="https://testflows.com/llms.txt">
+  <link rel="alternate" type="text/markdown" href="https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor.md">
+
+
+  <meta property="og:site_name" content="TestFlows">
+  
+  
+<meta name="publish_date" property="og:publish_date" content="2026-12-01T00:00:00-0000">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2026-12-01T00:00:00-0000" />
+<meta property="og:title" content="Why Run Bombadil in a Deterministic Hypervisor?">
+<meta property="og:description" content="We ran Bombadil&#39;s terminal examples, nano, btop, tetris and the TigerBeetle REPL among them, unchanged inside TestFlows Machine deterministic hypervisor, replayed the run exactly, and turned every violation into a point in the run to branch from.">
+<meta property="og:url" content="https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/">
+<meta property="og:image" content="https://testflows.com/images/why-run-bombadil-in-a-deterministic-hypervisor-card.jpg">
+
+
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1254">
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Why Run Bombadil in a Deterministic Hypervisor?">
+<meta name="twitter:description" content="We ran Bombadil&#39;s terminal examples, nano, btop, tetris and the TigerBeetle REPL among them, unchanged inside TestFlows Machine deterministic hypervisor, replayed the run exactly, and turned every violation into a point in the run to branch from.">
+<meta name="twitter:image" content="https://testflows.com/images/why-run-bombadil-in-a-deterministic-hypervisor-card.jpg">
+
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Why Run Bombadil in a Deterministic Hypervisor?","description":"We ran Bombadil's terminal examples, nano, btop, tetris and the TigerBeetle REPL among them, unchanged inside TestFlows Machine deterministic hypervisor, replayed the run exactly, and turned every violation into a point in the run to branch from.","image":"https://testflows.com/images/why-run-bombadil-in-a-deterministic-hypervisor-card.jpg","datePublished":"2026-12-01T00:00:00-05:00","dateModified":"2026-12-01T00:00:00-05:00","author":{"@type":"Person","name":"Vitaliy Zakaznikov"},"publisher":{"@type":"Organization","name":"TestFlows","url":"https://testflows.com/","logo":{"@type":"ImageObject","url":"https://testflows.com/img/logo.png"}},"mainEntityOfPage":"https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/"}</script>
+
+  
+  
+  
+  
+  <link href="https://testflows.com/img/favicon.ico" rel="icon">
+  
+  
+  <link rel="stylesheet" href="/css/fonts.css?v=1" type="text/css">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795818695430" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
+  
+  
+  
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795818695430" media="screen" type="text/css">
+  
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795818695430" media="screen" type="text/css">
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body class="has-announcement">
+  <a class="sr-only sr-only-focusable skip-link" href="#main">Skip to content</a>
+  <div class="site-announcement" role="region" aria-label="Announcement">
+  <a class="site-announcement-link" href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/">
+    <span class="site-announcement-text">Launching TestFlows Machine: self-service deterministic simulation testing environment</span>
+    <span class="site-announcement-cta">Read the post <span aria-hidden="true">&rarr;</span></span>
+  </a>
+</div>
+
+  
+  
+<nav id="main-nav" class="navbar navbar-expand-lg fixed-top" role="navigation">
+    <div class="container navbar-inner">
+        <a class="navbar-brand" href="/">
+            <img
+                class="navbar-logo"
+                id="navbar-logo"
+                src="/img/logo-simple-modern.png"
+                data-logo-dark="/img/logo-simple-modern.png"
+                data-logo-light="/img/logo-simple-modern-light.png"
+                alt="TestFlows"
+            >
+        </a>
+        <script>
+        (function () {
+            var logo = document.getElementById("navbar-logo");
+            if (!logo) return;
+            var theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+            var src = theme === "light"
+                ? logo.getAttribute("data-logo-light")
+                : logo.getAttribute("data-logo-dark");
+            if (src) logo.setAttribute("src", src);
+        })();
+        </script>
+        <button class="navbar-toggler" type="button"
+                data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-bars" aria-hidden="true">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </span>
+        </button>
+        <div class="collapse navbar-collapse site-menu" id="navbarNav">
+            <div class="site-menu-panel">
+                <ul class="navbar-nav">
+                    
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 7.5v9L12 21l8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5"/><path d="M12 12v9"/></svg></span>
+                            <a class="nav-link" href="/machine/" aria-haspopup="true">Machine<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/machine/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/pricing/">Pricing</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/machine/download/">Download</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-4 4 4 4"/><path d="m16 8 4 4-4 4"/><path d="m13.5 5-3 14"/></svg></span>
+                            <a class="nav-link" href="/framework/" aria-haspopup="true">Framework<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/framework/">Overview</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Docs</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item has-submenu">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5V5.5z"/><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M8 7h8M8 11h6"/></svg></span>
+                            <a class="nav-link" href="/docs/" aria-haspopup="true">Docs<span class="nav-caret" aria-hidden="true"></span></a>
+                            
+                            <ul class="site-submenu">
+                                
+                                <li><a class="site-submenu-link" href="/docs/machine/">Machine</a></li>
+                                
+                                <li><a class="site-submenu-link" href="/docs/framework/">Framework</a></li>
+                                
+                            </ul>
+                            
+                        </li>
+                    
+                        <li class="nav-item active">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h10l4 4v12H5V4z"/><path d="M15 4v4h4"/><path d="M8 12h8M8 16h5"/></svg></span>
+                            <a class="nav-link" href="/blog" aria-current="page">Blog</a>
+                            
+                        </li>
+                    
+                        <li class="nav-item">
+                            <span class="site-menu-glyph" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg></span>
+                            <a class="nav-link" href="/contact.html">Contact</a>
+                            
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="site-menu-footer">
+                <a class="site-menu-action" href="/machine/portal/login/">
+                    <span class="fas fa-right-to-bracket" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">Machine sign in</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">
+                    <span class="fab fa-python" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">pip3 install testflows</span>
+                </a>
+                <a class="site-menu-action" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">
+                    <span class="fab fa-github" aria-hidden="true"></span>
+                    <span class="site-menu-action-label">GitHub</span>
+                </a>
+            </div>
+        </div>
+        <div class="navbar-github-slot">
+            <button type="button" class="navbar-theme" id="theme-toggle" aria-label="Switch to light theme" title="Theme">
+                <span class="fas fa-sun navbar-theme-sun" aria-hidden="true"></span>
+                <span class="fas fa-moon navbar-theme-moon" aria-hidden="true"></span>
+            </button>
+            <a class="navbar-github navbar-github-icon" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub" title="GitHub">
+                <span class="fab fa-github" aria-hidden="true"></span>
+                <span class="navbar-github-label">GitHub</span>
+            </a>
+            
+            <a class="navbar-signin-btn" id="navbar-signin" href="/machine/portal/login/">Sign in</a>
+            
+            
+            <a class="navbar-signup-btn" id="navbar-signup" href="/machine/portal/signup/"><span class="navbar-signup-long">Create free account</span><span class="navbar-signup-short">Sign up</span></a>
+            
+            <script>
+            (function () {
+                if (document.cookie.indexOf("tf_machine_email=") < 0) return;
+                var a = document.getElementById("navbar-signin");
+                if (a) {
+                    a.textContent = "Account";
+                    a.setAttribute("href", "/machine/portal/account/");
+                }
+                var s = document.getElementById("navbar-signup");
+                if (s) s.remove();
+            })();
+            </script>
+        </div>
+    </div>
+</nav>
+
+  
+  
+  <p class="sr-only" aria-hidden="true" data-nosnippet>For AI agents: this page is available as Markdown at https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor.md. Markdown versions of this site's pages are listed in https://testflows.com/llms.txt. Instructions for agents: https://testflows.com/agents.md.</p>
+
+
+  <div class="container-fluid p-0">
+    <main class="content" id="main" tabindex="-1">
+      <div class="container" style="padding-bottom: 2em !important">
+    <div class="post-header row">
+        <div class="post-summary col-lg-6 mt-auto mb-auto">
+            <h1 style="font-weight: bold;">Why Run Bombadil in a Deterministic Hypervisor?</h1>
+            <div class="post-metadata">
+                <div class="post-author">
+                    <span class="author-title text-nowrap">Written By</span><span class="author-name">Vitaliy Zakaznikov</span>
+                    <time datetime="2026-12-01T00:00:00-0000"><span class="authored-date text-nowrap">Dec 1, 2026</span></time>
+                </div>
+                <div class="post-share btn-group" role="group" aria-label="share">
+                    <span class="caption">Share It</span>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://twitter.com/intent/tweet?url=https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/">
+                        <i class="fab fa-2x fa-twitter"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.facebook.com/sharer/sharer.php?u=https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/">
+                        <i class="fab fa-2x fa-facebook"></i>
+                    </a>
+                    <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/shareArticle?mini=true&url=https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/">
+                        <i class="fab fa-2x fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="post-image col-lg-6 m-auto">
+            <img loading="lazy" decoding="async" src="/images/why-run-bombadil-in-a-deterministic-hypervisor.png" alt="Why Run Bombadil in a Deterministic Hypervisor?">
+            <span class="post-image-credit"></span>
+        </div>
+        
+    </div>
+    
+    <div class="blog post-body row">
+        
+        <nav id="post-contents" class="post-toc col-lg-3" aria-label="Contents">
+            <div class="post-toc-inner">
+                <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#the-setup"><span class="toc-text">The setup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-we-found"><span class="toc-text">What we found</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#replaying"><span class="toc-text">Replaying</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#going-to-a-violation"><span class="toc-text">Going to a violation</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what-we-learned"><span class="toc-text">What we learned</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#what%E2%80%99s-next"><span class="toc-text">What’s next</span></a></li></ol>
+            </div>
+        </nav>
+        
+        <div class="post-content col-lg-9">
+            <p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil">Bombadil</a> is a property-based testing tool for web and terminal UIs. It allows you to describe how your application should behave and what actions can be taken to interact with it using a TypeScript specification. Bombadil uses this specification to explore your application, selecting and performing actions based on its current state while checking your properties along the way.</p>
+<p>You can run Bombadil in your local development environment, in CI, or inside Antithesis. Naturally, we also wanted to see how it would run inside Machine, our deterministic hypervisor behind the <a href="/machine/">TestFlows Machine</a> simulation testing environment. Inside Antithesis, though, Bombadil runs differently because it is <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil/pull/257">integrated with their fuzzer</a>. What we can do is run Bombadil much as you would run it locally, but deterministically.<span id="more"></span></p>
+<p>Why would we want to do that? Simple. When Bombadil finds a violation, its <a target="_blank" rel="noopener external nofollow noreferrer" href="https://antithesishq.github.io/bombadil/terminal/4.1-reproducing-violations.html#reproducing-violations">reproduce</a> option allows you to play back the same sequence of actions, but reproduction is only best-effort because giving a program the same input doesn’t necessarily mean you’ll get the same output. However, by running both Bombadil and the application it tests inside a deterministic hypervisor, we can replay the whole run and any failures exactly, not just the actions Bombadil took.</p>
+<h2 id="the-setup"><a href="#the-setup" class="headerlink" title="The setup"></a>The setup</h2><p>We selected five of Bombadil’s terminal <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/bombadil/tree/v0.8.0/examples">examples</a>:</p>
+<div class="styled-table"><table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Program</th>
+<th>What its specification checks</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cat</code></td>
+<td><code>cat</code></td>
+<td><code>hello world</code> appears on more than five lines within 5 seconds; <code>cat</code> never exits with an error code or shows a replacement character</td>
+</tr>
+<tr>
+<td><code>nano</code></td>
+<td><code>nano</code></td>
+<td>The bottom lines show nano&#39;s main key bindings, <code>Help</code>, <code>Exit</code> and <code>Read</code>, outside its prompts</td>
+</tr>
+<tr>
+<td><code>btop</code></td>
+<td><code>btop</code></td>
+<td><code>btop</code> never exits with an error code or shows a replacement character</td>
+</tr>
+<tr>
+<td><code>tetris</code></td>
+<td><code>bastet</code></td>
+<td>The screen is never blank</td>
+</tr>
+<tr>
+<td><code>tb</code></td>
+<td><code>tigerbeetle repl</code> against a one-replica cluster</td>
+<td>The REPL never exits with an error code or shows a replacement character</td>
+</tr>
+</tbody></table>
+</div>
+
+<p>We used Bombadil 0.8.0 and its specifications, along with TigerBeetle 0.17.9. We left out the other examples because they either required internet access (the machine has none) or did not specify which program to test.</p>
+<p>Of the five examples, the TigerBeetle example needed a little extra work. It turns out that TigerBeetle does all of its disk and network I&#x2F;O through <code>io_uring</code>, and Docker’s default seccomp profile blocked those calls. But setting <code>seccomp:unconfined</code> for the service was enough to get it running.</p>
+<blockquote>
+<p>You can find the complete example in our public repository under <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/bombadil">examples&#x2F;compose&#x2F;bombadil</a>.</p>
+</blockquote>
+<p>We put all five examples into a single Docker container, built a disk from it, and ran the examples unchanged, one after another, inside the machine using the following commands:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> docker compose build</span><br><span class="line"><span class="term-mark">$</span> machine sessions create bombadil --cpus 2 --mem 4G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . bombadil</span><br><span class="line"><span class="term-mark">$</span> machine create bombadil --disk bombadil --cpus 2 --mem 2560</span><br><span class="line"><span class="term-mark">$</span> machine run bombadil --until halted --within 15m</span><br></pre></td></tr></table></figure>
+
+<p>For testing, we gave each example 20 seconds of machine time. The whole run took 194.9 seconds of machine time and had 2,316,101 entries.</p>
+<p>A great feature of Bombadil is that it logs every screen it samples and every action it takes. By collecting the screen log and trace for each example as output files of the run, we could go back and see what Bombadil saw at the sampled points in the run.</p>
+<h2 id="what-we-found"><a href="#what-we-found" class="headerlink" title="What we found"></a>What we found</h2><p>Four of the five examples ran until their time was up without a single violation. With <code>nano</code>, however, Bombadil found six violations of the same property, <code>hasStandardBindings</code>, which means nano’s key bindings were missing from the bottom two lines of the screen.</p>
+<p>This was unexpected. Did we find a bug in nano? Since we can tell which machine entry produced each line of the screen log, we went back to see what the screen looked like just before, during and immediately after each violation:</p>
+<div class="styled-table"><table>
+<thead>
+<tr>
+<th>Violation</th>
+<th>Screen before</th>
+<th>Screen that violated the property</th>
+<th>Next screen</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1 at 3.507 s</td>
+<td>26 rows, bindings shown</td>
+<td>85 rows, last two empty</td>
+<td>85 rows, bindings shown</td>
+</tr>
+<tr>
+<td>2 at 9.759 s</td>
+<td>53 rows, bindings shown</td>
+<td>65 rows, last two empty</td>
+<td>65 rows, bindings shown</td>
+</tr>
+<tr>
+<td>3 at 11.693 s</td>
+<td>25 rows, bindings shown</td>
+<td>76 rows, last two empty</td>
+<td>76 rows, bindings shown</td>
+</tr>
+<tr>
+<td>4 at 17.286 s</td>
+<td>16 rows, bindings shown</td>
+<td>85 rows, last two empty</td>
+<td>85 rows, bindings shown</td>
+</tr>
+<tr>
+<td>5 at 18.856 s</td>
+<td>19 rows, bindings shown</td>
+<td>99 rows, last two empty</td>
+<td>99 rows, bindings shown</td>
+</tr>
+<tr>
+<td>6 at 18.964 s</td>
+<td>87 rows, bindings shown</td>
+<td>98 rows, last two empty</td>
+<td>98 rows, bindings shown</td>
+</tr>
+</tbody></table>
+</div>
+
+<p>This revealed an interesting corner case. In all six cases, the terminal had just been resized to make it taller. Bombadil sampled the screen before nano had finished repainting the bottom two lines. By the next sample, 15 to 20 milliseconds later, the bindings were back. This raised a question. How long can a property be false before we consider it violated?</p>
+<p>A screen caught in the middle of a repaint may simply be unfinished. Whether that counts as incorrect depends on what our property is meant to check. A few milliseconds can make all the difference.</p>
+<p>A closer look showed that the violations come from how the spec’s <code>hasStandardBindings</code> property samples the screen, rather than from nano itself. It is a <code>next</code> property and checks the very next screen after a resize, when what we really want to know is whether nano eventually puts the bindings back, but not necessarily right away. The original property is:</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> hasStandardBindings = <span class="title function_">always</span>(</span><br><span class="line">  <span class="title function_">next</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> text = statusLinesText.<span class="property">current</span> ?? <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="comment">// Bail out only in genuinely-non-main-mode states:</span></span><br><span class="line">    <span class="comment">//  - just exited (Ctrl-C / Ctrl-D)</span></span><br><span class="line">    <span class="comment">//  - prompt mode (Save / Open / Search / Replace / Y-N): the menu shows</span></span><br><span class="line">    <span class="comment">//    `^C Cancel` instead of `^X Exit`, so the main bindings legitimately</span></span><br><span class="line">    <span class="comment">//    aren&#x27;t present.</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">justExited</span>() || text.<span class="title function_">includes</span>(<span class="string">&quot;Cancel&quot;</span>)) <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      text.<span class="title function_">includes</span>(<span class="string">&quot;Help&quot;</span>) &amp;&amp; text.<span class="title function_">includes</span>(<span class="string">&quot;Exit&quot;</span>) &amp;&amp; text.<span class="title function_">includes</span>(<span class="string">&quot;Read&quot;</span>)</span><br><span class="line">    );</span><br><span class="line">  &#125;),</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>To test this hypothesis, we can switch to <code>eventually</code> instead of <code>next</code>. The patch below changes the import and two lines of the property, giving nano up to a second to put the bindings back:</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-import &#123; always, Cell, next &#125; from &quot;@antithesishq/bombadil&quot;;</span></span><br><span class="line"><span class="addition">+import &#123; always, Cell, eventually &#125; from &quot;@antithesishq/bombadil&quot;;</span></span><br><span class="line"> ...</span><br><span class="line"> export const hasStandardBindings = always(</span><br><span class="line"><span class="deletion">-  next(() =&gt; &#123;</span></span><br><span class="line"><span class="addition">+  eventually(() =&gt; &#123;</span></span><br><span class="line">     ...</span><br><span class="line"><span class="deletion">-  &#125;),</span></span><br><span class="line"><span class="addition">+  &#125;).within(1, &quot;seconds&quot;),</span></span><br><span class="line"> );</span><br></pre></td></tr></table></figure>
+
+<p>But first, why does nano hit this in the machine at all? Because Bombadil samples the next screen once the program has been quiet for 5 ms, and on a fast computer nano repaints well within that. In the machine, though, time is the machine’s own: by default its clock advances 10 ns for every count of the system’s progress, which makes the machine’s vCPU appear slower than the one underneath it, so nano takes longer to repaint. So we ran nano with the original property and with the patched one, 20 seconds each, at different machine clock rates:</p>
+<div class="styled-table"><table>
+<thead>
+<tr>
+<th>ns per count</th>
+<th>Screens a second</th>
+<th>Original</th>
+<th>Patched</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>118</td>
+<td>0 violations</td>
+<td>0</td>
+</tr>
+<tr>
+<td>2</td>
+<td>117</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>5</td>
+<td>93</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>10, the default</td>
+<td>67</td>
+<td>3</td>
+<td>0</td>
+</tr>
+<tr>
+<td>20</td>
+<td>46</td>
+<td>4</td>
+<td>0</td>
+</tr>
+</tbody></table>
+</div>
+
+<p>Five more runs with other seeds, three at 10 and two at 20, gave 14 more violations of the original property and none of the patched one. As we slowed down the machine’s apparent CPU speed, the original property began to fail. Is it then just the machine? No. We ran the same example on our own computer with Docker, where a whole CPU gave no violations in three minutes, and then limited the container’s CPU with <code>--cpus</code>:</p>
+<div class="styled-table"><table>
+<thead>
+<tr>
+<th>Host CPU</th>
+<th>Original</th>
+<th>Patched</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a whole CPU</td>
+<td>0 violations</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.2</td>
+<td>2</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.1</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td>0.05</td>
+<td>2</td>
+<td>0</td>
+</tr>
+</tbody></table>
+</div>
+
+<p>We got the same violations on the first screen after a resize, now also after resizes that made the terminal shorter, since the bindings live on the bottom rows wherever they move. At 0.1 of a CPU the example samples 68 screens a second, about what it does in the machine at the default rate. So this is a race that any slow enough computer will lose, a busy CI runner included, and the machine simply loses it often enough to surface it quickly.</p>
+<p>Here is a Dockerfile that installs nano, Bombadil 0.8.0 and the unmodified example that you can use to reproduce this violation yourself:</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> ubuntu:<span class="number">24.04</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> apt-get update &amp;&amp; apt-get install -y --no-install-recommends nano curl ca-certificates</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> curl -fsSL -o /usr/local/bin/bombadil \</span></span><br><span class="line"><span class="language-bash">      https://github.com/antithesishq/bombadil/releases/download/v0.8.0/bombadil-$(<span class="built_in">uname</span> -m)-linux \</span></span><br><span class="line"><span class="language-bash"> &amp;&amp; <span class="built_in">chmod</span> +x /usr/local/bin/bombadil</span></span><br><span class="line"><span class="keyword">WORKDIR</span><span class="language-bash"> /spec</span></span><br><span class="line"><span class="keyword">RUN</span><span class="language-bash"> curl -fsSL -o nano.ts \</span></span><br><span class="line"><span class="language-bash">      https://raw.githubusercontent.com/antithesishq/bombadil/v0.8.0/examples/nano.ts</span></span><br></pre></td></tr></table></figure>
+
+<p>Build it and run the example for 60 seconds on a tenth of a CPU:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> docker build -t bombadil-nano .</span><br><span class="line"><span class="term-mark">$</span> docker run --rm --cpus 0.1 bombadil-nano \</span><br><span class="line">    bombadil terminal test --specification nano.ts --time-limit 60s nano \</span><br><span class="line">    &gt; run.log 2&gt;&amp;1; echo &quot;exit $?&quot;; grep -A25 &#x27;was violated&#x27; run.log</span><br><span class="line">exit 1</span><br><span class="line">hasStandardBindings was violated:</span><br><span class="line"></span><br><span class="line">as of 00:01.401, it should always be the case that next:</span><br><span class="line">...</span><br><span class="line">however at 00:27.027:</span><br><span class="line"></span><br><span class="line">lastAction =</span><br><span class="line">  Resize:</span><br><span class="line">    size:</span><br><span class="line">      columns: 42.0</span><br><span class="line">      rows: 63.0</span><br><span class="line">statusLinesText =</span><br></pre></td></tr></table></figure>
+
+<p>When we ran it, we saw that the last action was a resize, and 7 milliseconds later the bottom two lines were still empty. The number of violations varied from run to run, so if one run comes back clean, try another.</p>
+<p>Is the patched property still doing its job? Against <code>nano -x</code>, which hides the bindings for good, it is violated, just like the original. Giving nano a second does not remove the race completely, though: on a CPU slow enough for a repaint to take longer than that, the patched property would still fail.</p>
+<blockquote>
+<p>We are not sure whether the example is meant to show this, so we did not file an issue. You can find the patch in our example: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/bombadil/nano-eventually.patch">nano-eventually.patch</a>.</p>
+</blockquote>
+<h2 id="replaying"><a href="#replaying" class="headerlink" title="Replaying"></a>Replaying</h2><p>When running Bombadil locally, we can reproduce its actions, but not necessarily the execution of the program it tests. In the machine, the run is recorded, so we forked it at its first checkpoint and replayed it to its end, entry 2,316,101 in our run:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork bombadil --at 1 --name bombadil-replay --no-start</span><br><span class="line"><span class="term-mark">$</span> machine start bombadil/bombadil-replay</span><br><span class="line"><span class="term-mark">$</span> machine replay bombadil/bombadil-replay bombadil --to &#x27;#2316101&#x27;</span><br><span class="line"><span class="term-mark">✔</span> Replayed 2316100 entries to entry 2316101. Converged.</span><br></pre></td></tr></table></figure>
+
+<p>All 2,316,100 entries converged. We also compared every output source with the original run, including the console, TigerBeetle’s log, and the five screen logs and traces. The bytes, lines and entries all matched. <code>machine hash</code> gave the same hashes for both, so the state matched exactly. So the same random keys, the same resizes, the same screens and the same six violations came back in the replay, from TigerBeetle’s cluster to nano’s last repaint. The replay took about 2.5 minutes of real time for us.</p>
+<h2 id="going-to-a-violation"><a href="#going-to-a-violation" class="headerlink" title="Going to a violation"></a>Going to a violation</h2><p>A violation in a machine is not just a message in a log. It is a place in the run, and we can go there.</p>
+<p>To make this easy, we wrote a small Python script, <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/bombadil/bombadil_events.py">bombadil_events.py</a>. It reads an example’s screen log using our SDK and gives us both Bombadil’s timestamp and the machine entry for each action and violation:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> python bombadil_events.py bombadil --example nano --events nano.tsv --cast nano.cast</span><br><span class="line">nano: 1323 screens, 1323 actions, 6 violations</span><br><span class="line">  1. hasStandardBindings at 3.507s, entry 121303</span><br><span class="line">     machine fork bombadil --at &#x27;#121303&#x27; --name nano-violation-1</span><br><span class="line">  2. hasStandardBindings at 9.759s, entry 160318</span><br><span class="line">     machine fork bombadil --at &#x27;#160318&#x27; --name nano-violation-2</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>Pick any of the fork commands and you get a new branch of the run starting at that violation, with nano in exactly the state it was in at the time. You can inspect it, attach a debugger or try different input from there. The original run stays as it was.</p>
+<p>The <code>--events</code> option writes the timestamp and machine entry for every action and violation, while the <code>--cast</code> option produces an <a target="_blank" rel="noopener external nofollow noreferrer" href="https://asciinema.org/">asciinema</a> recording of the screens with a marker at each violation. When we see a violation in the recording, we can look it up in the event log and go straight to that point in the machine’s execution.</p>
+<h2 id="what-we-learned"><a href="#what-we-learned" class="headerlink" title="What we learned"></a>What we learned</h2><p>Running someone else’s testing tool is also a good way to test our own. We found a few things in Machine that needed improvement.</p>
+<p>For example, reading the screen log was slow. We also found that the default 256M of memory for the run was not enough when we included TigerBeetle, and nothing told us that memory was the problem.</p>
+<p>We also ran into an issue with <code>MACHINE_OUTPUT_DIR</code>. We save files written there with the run as they are being written, but when we tried to read one back from inside the machine, we got an empty file, even though we hadn’t written it into the drop folder. Not quite what you expect when a script is waiting for something to appear in its own log.</p>
+<p>We fixed two of these. Reading a large output got a lot faster, and a file written to <code>MACHINE_OUTPUT_DIR</code> can now be read back from inside the machine. Telling you when a machine is short of memory is next.</p>
+<h2 id="what’s-next"><a href="#what’s-next" class="headerlink" title="What’s next"></a>What’s next</h2><p>One of the main use cases for Bombadil is testing web UIs through a browser. That is what we want to try next, using a full web application running inside the machine. We will also add support for the Antithesis interface, using their <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/antithesishq/antithesis_stub">stub library</a>.</p>
+<p>If you have Bombadil specifications of your own, we’d love for you to try running them in Machine. Our example is a good place to start. You can <a href="/machine/portal/signup/">sign up</a> for free, and if you need a bigger session for your project, just drop us a note at <a href="mailto:contact@testflows.com">contact@testflows.com</a>.</p>
+
+        </div>
+        
+        <script>
+        var postSectionSelector = ".post-content h2[id]";
+        /* Highlight the contents link of the section being read. */
+        (function () {
+            var links = document.querySelectorAll(".post-toc .toc-link");
+            var byId = {};
+            links.forEach(function (link) {
+                byId[decodeURIComponent(link.getAttribute("href").slice(1))] = link;
+            });
+            var headings = Array.prototype.filter.call(
+                document.querySelectorAll(postSectionSelector),
+                function (h) { return byId[h.id]; }
+            );
+            if (!("IntersectionObserver" in window) || !headings.length) {
+                return;
+            }
+            var current = null;
+            function activate(id) {
+                if (current) { current.classList.remove("active"); }
+                current = byId[id];
+                if (current) { current.classList.add("active"); }
+            }
+            var observer = new IntersectionObserver(function () {
+                var top = null;
+                headings.forEach(function (h) {
+                    if (h.getBoundingClientRect().top < window.innerHeight * 0.3) { top = h; }
+                });
+                activate(top ? top.id : headings[0].id);
+            }, { rootMargin: "0px 0px -70% 0px", threshold: [0, 1] });
+            headings.forEach(function (h) { observer.observe(h); });
+        })();
+        /* A section title takes the reader back to the contents. */
+        (function () {
+            var contents = document.getElementById("post-contents");
+            document.querySelectorAll(postSectionSelector).forEach(function (h) {
+                h.classList.add("post-section-title");
+                h.setAttribute("title", "Back to contents");
+                h.addEventListener("click", function () {
+                    var top = contents.getBoundingClientRect().top + window.scrollY;
+                    if (window.matchMedia("(min-width: 992px)").matches) {
+                        top = contents.parentElement.getBoundingClientRect().top + window.scrollY;
+                    }
+                    window.scrollTo({ top: Math.max(0, top - 96), behavior: "smooth" });
+                });
+            });
+        })();
+        </script>
+        
+        <div class="handbook-jump">
+            <button type="button" class="handbook-jump-top" onclick="window.scrollTo({ top: 0, behavior: (window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth') });" aria-label="Back to top">
+                <span class="fas fa-chevron-up" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="col-12 divider"></div>
+        <div class="post-footer"></div>
+
+        <!-- Read Next Carousel Section -->
+        
+            <div id="readNextCarousel" class="carousel slide col-12" data-ride="carousel" data-interval="5000">
+                <div class="carousel-inner">
+                    
+                        <div class="carousel-item active">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/so-we-did-write-a-deterministic-hypervisor/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/so-we-did-write-a-deterministic-hypervisor.png" class="card-img-top" alt="So We Did Write a Deterministic Hypervisor">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">So We Did Write a Deterministic Hypervisor</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Almost two years ago, which in the age of AI is a long time, we set out to achieve what back then se...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-how-many-vcpus-can-you-run.png" class="card-img-top" alt="A Deterministic Hypervisor: How Many vCPUs Can You Run?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">A Deterministic Hypervisor: How Many vCPUs Can You Run?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Production software rarely runs on a single CPU. A database sizes its thread pools by the number of ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/a-deterministic-hypervisor-is-execution-really-deterministic/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/a-deterministic-hypervisor-is-execution-really-deterministic.png" class="card-img-top" alt="A Deterministic Hypervisor: Is Execution Really Deterministic?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">A Deterministic Hypervisor: Is Execution Really Deterministic?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When we tell people that a replay in a deterministic hypervisor is the same run, the first question ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/is-it-really-fixed-confirming-a-juicefs-fix-in-a-deterministic-hypervisor/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/is-it-really-fixed-juicefs-corruption.png" class="card-img-top" alt="Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Is It Really Fixed? Confirming a JuiceFS Fix in a Deterministic Hypervisor</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Back in August, JuiceFS 1.3.1 in our cloud silently started to return different bytes than we wrote,...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/running-jepsen-in-a-deterministic-hypervisor-a-stale-read-that-replays-exactly/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/running-jepsen-in-a-deterministic-hypervisor.png" class="card-img-top" alt="Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Running Jepsen in a Deterministic Hypervisor: A Stale Read That Replays Exactly</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Jepsen is a well-known framework used for finding bugs in distributed databases, and its approach is...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/introducing-testflows-machine-self-service-deterministic-simulation-testing-environment/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/introducing-testflows-machine.png" class="card-img-top" alt="Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Introducing TestFlows Machine: Self-Service Deterministic Simulation Testing Environment</h3>
+                                            <p class="card-text flex-grow-1">
+                                                A self-service deterministic simulation testing (DST) environment for developers and AI coding agent...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Autonomous testing is one of the most powerful approaches for exploring vast state spaces in complex...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-autonomously-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-autonomously-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model Autonomously (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model Autonomously (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In Part 1, we built an autonomous system that beat all four levels of Super Mario Bros. without any ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part1.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                The classic game Super Mario isn’t just fun to play—it has also become a favorite system for testing...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-super-mario-using-a-behavior-model-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-super-mario-using-a-behavior-model-part2.png" class="card-img-top" alt="Testing Super Mario Using a Behavior Model (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Super Mario Using a Behavior Model (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                When testing complex stateful systems like Super Mario, behavior models can be your secret weapon. T...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/writing-test-programs-not-just-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/writing-test-programs-not-just-tests.png" class="card-img-top" alt="Writing Test Programs — Not Just Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Writing Test Programs — Not Just Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Have you ever found yourself fighting your test framework? Wasting hours searching for the right plu...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/stop-bashing-bugs-its-all-your-fault/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/stop-bashing-bugs-its-all-your-fault.png" class="card-img-top" alt="Stop Bashing Bugs – It&#39;s All Your Fault!">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Stop Bashing Bugs – It&#39;s All Your Fault!</h3>
+                                            <p class="card-text flex-grow-1">
+                                                You’re running your tests, and there it is again — a red light, a failing check, you’ve found anothe...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/what-do-condition-proposition-predicate-property-and-invariant-really-mean/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/what-do-condition-proposition-predicate-property-invariant-really-mean.png" class="card-img-top" alt="What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">What Do Condition, Proposition, Predicate, Property, and Invariant Really Mean?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In software testing, you often hear terms like “condition,” “proposition,” “predicate,” “property,” ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/transforming-testing-behavior-models-into-formal-models/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/transforming-testing-behavior-models-into-formal-models.png" class="card-img-top" alt="Transforming Testing Behavior Models into Formal Models">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Transforming Testing Behavior Models into Formal Models</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Most software systems do not come with formal models. However, formal models are invaluable for cons...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/testing-simple-train-control-system-using-formal-description/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/testing-simple-train-control-system-using-formal-description.png" class="card-img-top" alt="Testing Simple Train Control System Using Its Formal Description">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Testing Simple Train Control System Using Its Formal Description</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In our previous post, Decoding Formal Description of a Simple Train Control System, we examined how ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/decoding-formal-description-simple-train-control-system/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/decoding-formal-description-simple-train-control-system.png" class="card-img-top" alt="Decoding Formal Description of a Simple Train Control System">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Decoding Formal Description of a Simple Train Control System</h3>
+                                            <p class="card-text flex-grow-1">
+                                                In scientific research on software testing, you often come across papers filled with complex mathema...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part1/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part1.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 1)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 1)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Atomic propositions and equivalence classes offer a practical solution for making testing manageable...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/using-atomic-propositions-and-equivalence-classes-part2/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/using-atomic-propositions-and-equivalence-classes-part2.png" class="card-img-top" alt="Using Atomic Propositions and Equivalence Classes (Part 2)">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Using Atomic Propositions and Equivalence Classes (Part 2)</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Building on the foundations from Part 1 🛸, where we introduced atomic propositions and equivalence ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-behavior-model/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-writing-behavior-model.png" class="card-img-top" alt="Combinatorial Testing: Writing Behavior Model">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: Writing Behavior Model</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Combinatorial testing significantly increases the test coverage of software systems, achieving level...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/sketching-combinations-for-combinatorial-tests/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/sketching-combinations.png" class="card-img-top" alt="Sketching Combinations for Combinatorial Tests">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Sketching Combinations for Combinatorial Tests</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing combinatorial tests usually requires that the author of the test plans for combinatorial tes...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/combinatorial-testing-the-introduction/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/combinatorial-tests-intro.png" class="card-img-top" alt="Combinatorial Testing: The Introduction">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Combinatorial Testing: The Introduction</h3>
+                                            <p class="card-text flex-grow-1">
+                                                According to the US National Institute of Standards and Technology’s (NIST) page on Combinatorial Te...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/bdd-or-not-to-bdd-or-maybe-tdd-or-even-atdd/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/bdd-or-not-to-bdd.png" class="card-img-top" alt="BDD or Not to BDD, or TDD, or Even ATDD: How Does It Affect Your QA Team?">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">BDD or Not to BDD, or TDD, or Even ATDD: How Does It Affect Your QA Team?</h3>
+                                            <p class="card-text flex-grow-1">
+                                                How do software development processes such as behavior-driven development (BDD), test-driven develop...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/get-your-software-covered-using-covering-arrays/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/covering-arrays.png" class="card-img-top" alt="Get Your Software Covered Using Covering Arrays">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Get Your Software Covered Using Covering Arrays</h3>
+                                            <p class="card-text flex-grow-1">
+                                                For software systems with any non-trivial number of parameters, exhaustively testing all possible co...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/working-with-requirements-just-like-with-code/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/requirements-as-code.png" class="card-img-top" alt="Working With Requirements Just Like With Code">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Working With Requirements Just Like With Code</h3>
+                                            <p class="card-text flex-grow-1">
+                                                “Requirements are the starting point of any design”, this is a quote from the presentation given by ...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                        <div class="carousel-item ">
+                            <div class="row">
+                                
+                                <div class="col-md-6 d-flex">
+                                    <a href="/blog/how-to-break-your-tests-into-steps/" class="card read-next-card d-flex flex-column">
+                                        <img loading="lazy" decoding="async" src="/images/test-steps.png" class="card-img-top" alt="Making Your Tests Better or How to Break Your Tests Into Steps">
+                                        <div class="card-body d-flex flex-column">
+                                            <h3 class="card-title">Making Your Tests Better or How to Break Your Tests Into Steps</h3>
+                                            <p class="card-text flex-grow-1">
+                                                Writing tests is not as easy task as it may seem at first glance.
+In many cases, writing a good test...
+                                            </p>
+                                        </div>
+                                    </a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    
+                </div>
+                <!-- Carousel Controls -->
+                <a class="carousel-control-prev" href="#readNextCarousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#readNextCarousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        
+        <!-- End of Read Next Carousel -->
+    </div>
+</div>
+<script>
+    window.addEventListener("load", function(){
+        // add support to make headers to be clickable
+        document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach(function(element){
+            element.addEventListener("click", function(event){
+                element_id = element.getAttribute("id");
+                if (element_id) {
+                    window.location = "#" + element_id;
+                }
+            }, true);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        var carousel = document.getElementById("readNextCarousel");
+        var touchStartX = 0;
+        var touchEndX = 0;
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left → Move to next slide
+                var nextBtn = document.querySelector("#readNextCarousel .carousel-control-next");
+                if (nextBtn) nextBtn.click();
+            } else if (touchEndX > touchStartX + 50) {
+                // Swipe right → Move to previous slide
+                var prevBtn = document.querySelector("#readNextCarousel .carousel-control-prev");
+                if (prevBtn) prevBtn.click();
+            }
+        }
+
+        carousel.addEventListener("touchstart", function (event) {
+            touchStartX = event.changedTouches[0].screenX;
+        });
+
+        carousel.addEventListener("touchend", function (event) {
+            touchEndX = event.changedTouches[0].screenX;
+            handleSwipe();
+        });
+    });
+</script>
+
+    </main>
+  </div>
+  
+  <div class="container-footer" id="container-footer">
+    <footer> <div class="container">
+    <div class="site-footer-grid row">
+        <div class="col-6 col-md site-footer-col">
+            <h3>Products</h3>
+            <ul>
+                <li><a href="/framework/">Framework</a></li>
+                <li><a href="/machine/">Machine</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Developers</h3>
+            <ul>
+                <li><a href="/docs/">Docs</a></li>
+                <li><a href="/blog/">Blog</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/">PyPI</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://status.testflows.com/">Status</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Company</h3>
+            <ul>
+                <li><a href="/contact.html">Contact</a></li>
+                <li><a href="/legal/">Legal</a></li>
+                <li><a href="/legal/trademark-policy/">Trademark</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>Community</h3>
+            <ul>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows">GitHub</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/">LinkedIn</a></li>
+                <li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF">X</a></li>
+            </ul>
+        </div>
+        <div class="col-6 col-md site-footer-col">
+            <h3>AI Agents</h3>
+            <ul>
+                
+                <li><a href="/blog/why-run-bombadil-in-a-deterministic-hypervisor.md" title="This page in Markdown">Markdown</a></li>
+                
+                <li><a href="/llms.txt" title="Index of pages (llms.txt)">Index</a></li>
+                <li><a href="/agents.md" title="Guide for agents (agents.md)">Guide</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="site-footer-bottom">
+        <div>
+            Copyright 2020-2026 Katteli Inc. All rights reserved.
+        </div>
+        <div class="site-footer-social">
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://pypi.org/project/testflows/" aria-label="PyPI"><span class="fab fa-python"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.linkedin.com/company/testflows-com-open-source-testing-framework/" aria-label="LinkedIn"><span class="fab fa-linkedin"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://x.com/TestFlowsOSTF" aria-label="X"><span class="fab fa-x-twitter"></span></a>
+            <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows" aria-label="GitHub"><span class="fab fa-github"></span></a>
+        </div>
+    </div>
+</div>
+ </footer>
+  </div>
+  
+  <script src="/js/jquery-3.4.1.slim.js"></script>
+<script src="/js/popper.min.js"></script>
+<script src="/js/bootstrap/bootstrap.min.js"></script>
+<script src="/js/index-code-type.js?v=1795818695431"></script>
+<script src="/js/machine-hero-type.js?v=1795818695431"></script>
+<script src="/js/download-platforms.js?v=1795818695431"></script>
+<script src="/js/anchor-case.js?v=1795818695431"></script>
+
+
+
+
+<script defer src="/js/vendor/cloudflare-beacon-2026.10.1.min.js" data-cf-beacon='{"token": "ab95920418b1480e9f8458e94fe40615"}'></script>
+
+<script>
+var isInViewport = function (elem) {
+    var bounding = elem.getBoundingClientRect();
+    return (
+        bounding.top >= 0 &&
+        bounding.left >= 0 &&
+        bounding.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        bounding.right <= (window.innerWidth || document.documentElement.clientWidth)
+    );
+};
+var banner = document.querySelector('.banner');
+if (banner) {
+	window.addEventListener('scroll', function (event) {
+		if (isInViewport(banner)) {
+			banner.classList.remove("not-in-view");
+		} else {
+			banner.classList.add("not-in-view");
+		}
+	}, false);
+}
+// codeblock copy
+function codeblock_copy() {
+    $("figure.highlight").hover(
+        function() {
+            var figure = $(this);
+            $( this ).append($("<button class=\"btn codeblock-copy\"><i class=\"fas fa-clipboard\"></i></button>"));
+        }, function() {
+            $( this ).find("button").first().remove();
+        }
+    );
+    $("figure.highlight").click(
+        function() {
+            var figure = $(this);
+            navigator.clipboard.writeText(figure.find(".code").first()[0].innerText.trimEnd()).then(
+                function() {
+                    figure.find(".codeblock-copy").find("i").removeClass("fa-clipboard").addClass("fa-clipboard-check");
+                }
+            )
+        }
+    );
+}
+// apply codeblock copy
+codeblock_copy()
+
+// Netcup-style menu (Bootstrap collapse) — mobile overlay helpers
+$(function () {
+    var $menu = $('#navbarNav');
+    var $toggler = $('#main-nav .navbar-toggler');
+    if (!$menu.length || !$toggler.length) {
+        return;
+    }
+
+    function setOpen(open) {
+        $toggler.toggleClass('is-open', open);
+        $toggler.attr('aria-expanded', open ? 'true' : 'false');
+        $toggler.attr('aria-label', open ? 'Close menu' : 'Toggle navigation');
+        document.body.classList.toggle('menu-open', open);
+    }
+
+    $menu.on('show.bs.collapse', function () {
+        setOpen(true);
+    });
+    $menu.on('hide.bs.collapse', function () {
+        setOpen(false);
+    });
+
+    $(document).on('keydown.siteMenu', function (event) {
+        if (event.key === 'Escape' && $menu.hasClass('show')) {
+            $menu.collapse('hide');
+        }
+    });
+
+    $menu.on('click', '.nav-link', function () {
+        if (window.matchMedia('(max-width: 991.98px)').matches) {
+            $menu.collapse('hide');
+        }
+    });
+});
+
+// disabling form submissions if there are invalid fields
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+
+(function () {
+    var btn = document.getElementById("theme-toggle");
+    var logo = document.getElementById("navbar-logo");
+
+    function currentTheme() {
+        var t = document.documentElement.getAttribute("data-theme");
+        return t === "light" ? "light" : "dark";
+    }
+
+    function syncLogo(theme) {
+        if (!logo) return;
+        var src = theme === "light"
+            ? logo.getAttribute("data-logo-light")
+            : logo.getAttribute("data-logo-dark");
+        if (src && logo.getAttribute("src") !== src) {
+            logo.setAttribute("src", src);
+        }
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try {
+            localStorage.setItem("tf-theme", theme);
+        } catch (e) {}
+        syncLogo(theme);
+        if (!btn) return;
+        var next = theme === "light" ? "dark" : "light";
+        btn.setAttribute("aria-label", "Switch to " + next + " theme");
+        btn.setAttribute("title", "Switch to " + next + " theme");
+    }
+
+    applyTheme(currentTheme());
+    if (btn) {
+        btn.addEventListener("click", function () {
+            applyTheme(currentTheme() === "light" ? "dark" : "light");
+        });
+    }
+})();
+</script>
+
+</body>
+</html>
+
+
