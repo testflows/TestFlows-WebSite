@@ -73,40 +73,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795822918665" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795822918665" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795822771779" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795822918665" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -344,20 +344,20 @@
 <p>The vCPUs would run serialized even if each had a host CPU of its own. As a result a machine with more vCPUs takes longer to run in real time, and a bigger session does not make it faster. What a bigger session gives is more machines running at once, such as a recording and its replay or enabling several branches to be explored side by side.</p>
 <p>However, Linux still sees all its vCPUs as separate CPUs. It schedules threads on all of them, sends interrupts between them and keeps its per-CPU data. Most importantly, the software under test sees a multi-CPU server.</p>
 <h2 id="example-a-machine-with-16-vcpus"><a href="#example-a-machine-with-16-vcpus" class="headerlink" title="Example: A machine with 16 vCPUs"></a>Example: A machine with 16 vCPUs</h2><p>To show this in practice, we created a session with a single CPU:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create blog-determinism</span><br><span class="line"><span class="term-mark">$</span> machine sessions</span><br><span class="line">NAME              SESSION           STATE      CPUS  MEM       DISK       CLASS        ARCH     ₡/HOUR  DURATION  IDLE   COST</span><br><span class="line">blog-determinism  30316b373adb4a63  connected  1     1536M/2G  12.3G/16G  standard-ip  intel-1   ₡0.15  56m2s     6s    ₡0.14  (current)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create blog-determinism</span><br><span class="line"><span class="term-mark">$</span> machine sessions</span><br><span class="line">NAME              SESSION           STATE      CPUS  MEM       DISK       CLASS        ARCH     ₡/HOUR  DURATION  IDLE   COST</span><br><span class="line">blog-determinism  30316b373adb4a63  connected  1     1536M/2G  12.3G/16G  standard-ip  intel-1   ₡0.15  56m2s     6s    ₡0.14  (current)</span><br></pre></td></tr></table></figure>
 
 <p>Then we built a disk from the standard <code>ubuntu:24.04</code> Docker image that just prints how many CPUs the machine has and lists them from <code>/proc/cpuinfo</code> and created a machine with 16 vCPUs to run it as follows:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine disks build --from ubuntu:24.04 --entrypoint /bin/sh hello-cpus -- -c &#x27;echo &quot;Hello from TestFlows Machine!&quot;; echo &quot;CPUs: $(nproc)&quot;; grep -E &quot;^(processor|model name)&quot; /proc/cpuinfo&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine create cpus16 --disk hello-cpus --cpus 16 --mem 512</span><br><span class="line"><span class="term-mark">$</span> machine run cpus16 --until halted --within 10m</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine disks build --from ubuntu:24.04 --entrypoint /bin/sh hello-cpus -- -c &#x27;echo &quot;Hello from TestFlows Machine!&quot;; echo &quot;CPUs: $(nproc)&quot;; grep -E &quot;^(processor|model name)&quot; /proc/cpuinfo&#x27;</span><br><span class="line"><span class="term-mark">$</span> machine create cpus16 --disk hello-cpus --cpus 16 --mem 512</span><br><span class="line"><span class="term-mark">$</span> machine run cpus16 --until halted --within 10m</span><br></pre></td></tr></table></figure>
 
 <p>The kernel brought up all 16 CPUs while it booted:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">smp: Bringing up secondary CPUs ...</span><br><span class="line">smp: Brought up 1 node, 16 CPUs</span><br><span class="line">smpboot: Total of 16 processors activated (31997.85 BogoMIPS)</span><br></pre></td></tr></table></figure>
 
 <p>And the program in the container found all of them:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output cpus16 --source /output/keep/app/console -n :</span><br><span class="line">ENTRIES           SOURCE                    LINE      OUTPUT</span><br><span class="line">511483            /output/keep/app/console  1         Hello from TestFlows Machine!</span><br><span class="line">511644            /output/keep/app/console  2         CPUs: 16</span><br><span class="line">511764            /output/keep/app/console  3         processor	: 0</span><br><span class="line">511833            /output/keep/app/console  4         model name	: TestFlows Machine v1</span><br><span class="line">511901            /output/keep/app/console  5         processor	: 1</span><br><span class="line">511969            /output/keep/app/console  6         model name	: TestFlows Machine v1</span><br><span class="line">...</span><br><span class="line">514486            /output/keep/app/console  33        processor	: 15</span><br><span class="line">514573            /output/keep/app/console  34        model name	: TestFlows Machine v1</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine output cpus16 --source /output/keep/app/console -n :</span><br><span class="line">ENTRIES           SOURCE                    LINE      OUTPUT</span><br><span class="line">511483            /output/keep/app/console  1         Hello from TestFlows Machine!</span><br><span class="line">511644            /output/keep/app/console  2         CPUs: 16</span><br><span class="line">511764            /output/keep/app/console  3         processor	: 0</span><br><span class="line">511833            /output/keep/app/console  4         model name	: TestFlows Machine v1</span><br><span class="line">511901            /output/keep/app/console  5         processor	: 1</span><br><span class="line">511969            /output/keep/app/console  6         model name	: TestFlows Machine v1</span><br><span class="line">...</span><br><span class="line">514486            /output/keep/app/console  33        processor	: 15</span><br><span class="line">514573            /output/keep/app/console  34        model name	: TestFlows Machine v1</span><br></pre></td></tr></table></figure>
 
 <p>This run took 13.430 seconds of machine time and created 563,130 entries in our run log.</p>
 <h2 id="replaying-16-vcpus"><a href="#replaying-16-vcpus" class="headerlink" title="Replaying 16 vCPUs"></a>Replaying 16 vCPUs</h2><p>To show replay, we forked the run at its first checkpoint and replayed it to its end:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork cpus16 --from 1 --name cpus16-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked cpus16/cpus16-replay (wijSOH2JK0wdeMAikMKoL)</span><br><span class="line">  From checkpoint 1 of cpus16, replayed to entry 563130</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output cpus16 --source all -n :) &lt;(machine output cpus16-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork cpus16 --from 1 --name cpus16-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked cpus16/cpus16-replay (wijSOH2JK0wdeMAikMKoL)</span><br><span class="line">  From checkpoint 1 of cpus16, replayed to entry 563130</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output cpus16 --source all -n :) &lt;(machine output cpus16-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
 
 <p>Here the replay took about 17.4 seconds of real time. Its output is identical to the original on every source, and <code>machine hash</code> gave the same 187 hashes on both machines at entry 563130: the memory, the disk, the devices, the held interrupts and all the parts covering the state of each of the 16 vCPUs.</p>
 <h2 id="comparing-boot-time-from-1-to-64-vcpus"><a href="#comparing-boot-time-from-1-to-64-vcpus" class="headerlink" title="Comparing boot time from 1 to 64 vCPUs"></a>Comparing boot time from 1 to 64 vCPUs</h2><p>To demonstrate what adding more vCPUs costs we booted the same disk with 1, 2, 4, 8, 16, 32 and 64 vCPUs and 512 MB of memory. We used the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/hello-random"><code>hello-random</code></a> disk, which prints a greeting and 256 random bytes from <code>/dev/random</code>.</p>
@@ -459,7 +459,7 @@
 <p>As we can see the real time grows with the number of vCPUs, from 4.9 seconds for one to 44.5 seconds for 64, because the vCPUs take turns. Machine time grows too but not in step with the count. For example, the machine with 4 vCPUs took 10.36 seconds and the one with 8 took 9.41.</p>
 <p>With a different number of CPUs the kernel does different work and therefore waits on different timers. Also, because the runs were recorded on a class that records repeatable runs by default, an earlier recording of the same disk with 32 vCPUs took exactly 17.410739710 seconds of machine time, the same as the one in the table to the nanosecond.</p>
 <h2 id="replaying-all-64-vcpus"><a href="#replaying-all-64-vcpus" class="headerlink" title="Replaying all 64 vCPUs"></a>Replaying all 64 vCPUs</h2><p>Booting with 64 vCPUs costs real time, but, you might still wonder, does it still replay exactly? Earlier we showed that we replayed the machine with 16 vCPUs, so to be sure, here we also replayed the largest machine from the table, the one with 64 vCPUs, the same way:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork cpus-64 --from 1 --name cpus-64-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked cpus-64/cpus-64-replay (wikDAFSjfkQ5bqqLHJFSw)</span><br><span class="line">  From checkpoint 1 of cpus-64, replayed to entry 2633386</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output cpus-64 --source all -n :) &lt;(machine output cpus-64-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork cpus-64 --from 1 --name cpus-64-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked cpus-64/cpus-64-replay (wikDAFSjfkQ5bqqLHJFSw)</span><br><span class="line">  From checkpoint 1 of cpus-64, replayed to entry 2633386</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output cpus-64 --source all -n :) &lt;(machine output cpus-64-replay --source all -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
 
 <p>In our run, the replay took about 57 seconds of real time. Its output is identical to the original on every source, and <code>machine hash</code> gave the same 715 hashes on both machines at entry 2633386: the memory, the disk, the devices, the held interrupts and the 11 parts of the state of each of the 64 vCPUs.</p>
 <h2 id="conclusion"><a href="#conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Testing real programs benefits when the deterministic hypervisor supports multiple vCPUs. With TestFlows Machine, you can create machines with up to 64 vCPUs in a session of any size. This means that Linux and your software under test see a multi-CPU server. And while you can run with 1 or 64 vCPUs you can expect each run to replay exactly.</p>
@@ -1030,10 +1030,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795822771779"></script>
-<script src="/js/machine-hero-type.js?v=1795822771779"></script>
-<script src="/js/download-platforms.js?v=1795822771779"></script>
-<script src="/js/anchor-case.js?v=1795822771779"></script>
+<script src="/js/index-code-type.js?v=1795822918665"></script>
+<script src="/js/machine-hero-type.js?v=1795822918665"></script>
+<script src="/js/download-platforms.js?v=1795822918665"></script>
+<script src="/js/anchor-case.js?v=1795822918665"></script>
 
 
 

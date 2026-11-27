@@ -2,6 +2,8 @@
  * A plain-text code block that holds a terminal session shows its prompts and check marks in the accent, so the
  * commands are found at a glance. A block is a session when one of its lines starts with "$ "; any other
  * plain-text block is left as it is. Hexo has already escaped the text, so a line's content is HTML-safe here.
+ * A session's figure also gets the class "session", which content.css gives a shorter height: a command's output
+ * is read at a glance and scrolled for the rest.
  */
 
 "use strict";
@@ -27,7 +29,8 @@ function terminalBlock(block) {
     return block;
   }
   const marked = block.slice(code).replace(LINE, (_, text) => `<span class="line">${sessionLine(text)}</span>`);
-  return block.slice(0, code) + marked;
+  const head = block.slice(0, code).replace('<figure class="highlight plaintext">', '<figure class="highlight plaintext session">');
+  return head + marked;
 }
 
 hexo.extend.filter.register("after_post_render", function (data) {

@@ -632,9 +632,11 @@ blockquote::-webkit-scrollbar {
     max-height: calc(30 * 1.7em);
 }
 /* A long output a post shows only the start of: 12 lines, the rest a scroll
-   away. Wrap the fenced block in <div class="scroll-output">, with a blank
-   line on each side. */
-.post-body .scroll-output figure.highlight table {
+   away. A terminal session, a block with a "$ " line, gets it by default
+   (scripts/terminal-blocks.js); wrap any other fenced block in
+   <div class="scroll-output">, with a blank line on each side. */
+.post-body .scroll-output figure.highlight table,
+.post-body figure.highlight.session table {
     max-height: calc(12 * 1.7em);
 }.post-body figure.highlight::before,
 .post-body figure.highlight::after {

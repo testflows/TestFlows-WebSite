@@ -73,40 +73,40 @@
   
   
   <link rel="stylesheet" href="/css/bootstrap/bootstrap.css" media="screen" type="text/css">
-  <link rel="stylesheet" href="/css/highlight.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/highlight.css?v=1795822918669" media="screen" type="text/css">
   <link rel="stylesheet" href="/css/fontawesome/css/all.css?v=1.0" type="text/css">
   
   
   
-  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/tokens.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/base.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/base.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/nav.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/nav.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/footer.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/footer.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/hero.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/hero.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/index.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/index.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/machine.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/machine.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/blog.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/blog.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/contact.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/contact.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/legal.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/legal.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/docs.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/docs.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/home.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/home.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/portal.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/portal.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/content.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/content.css?v=1795822918669" media="screen" type="text/css">
   
-  <link rel="stylesheet" href="/css/tf/misc.css?v=1795822771783" media="screen" type="text/css">
+  <link rel="stylesheet" href="/css/tf/misc.css?v=1795822918669" media="screen" type="text/css">
   
 <meta name="generator" content="Hexo 7.3.0"></head>
 
@@ -319,18 +319,18 @@
 <p>The rest came down to the usual small things missing from fresh containers, such as <code>git</code> and <code>scp</code> on the control node and <code>killall</code> on the nodes, which we discovered together with our coding agent, one crash at a time.</p>
 <p>The complete example is available in our public repository at <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd">examples&#x2F;compose&#x2F;jepsen-etcd</a>.</p>
 <h2 id="running-it"><a href="#running-it" class="headerlink" title="Running it"></a>Running it</h2><p>The machine has 2 vCPUs and 4G of memory, so it needs a bigger session. We used 4 vCPUs and 8G of memory. Once the two images are built, as the <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/tree/main/examples/compose/jepsen-etcd">README</a> shows, we built the disk from the example’s directory, created a run, and ran it until Jepsen printed a verdict:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create jepsen --cpus 4 --mem 8G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen --disk jepsen --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? true,</span><br><span class="line">control |  :valid? true&#125;</span><br><span class="line">control | Everything looks good! ヽ(‘ー`)ノ</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine sessions create jepsen --cpus 4 --mem 8G</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen --disk jepsen --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? true,</span><br><span class="line">control |  :valid? true&#125;</span><br><span class="line">control | Everything looks good! ヽ(‘ー`)ノ</span><br></pre></td></tr></table></figure>
 
 <p>That run took 186 seconds of machine time and 188 seconds of real time, with three partitions along the way, and Jepsen found no linearizability violations through any of them, which is what you’d expect from etcd with its default linearizable reads. The full log, with every operation, is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/pass.log">logs&#x2F;pass.log</a>.</p>
 <h2 id="making-it-fail"><a href="#making-it-fail" class="headerlink" title="Making it fail"></a>Making it fail</h2><p>A test that only passes doesn’t show much, so we needed a way to force a failure for Jepsen to catch. etcd gives us one if we ask for it. A serializable read is answered by the node from its own copy, without going through the leader, which is faster but means a node that is behind can answer with an old value. That is documented etcd behavior, not a defect, and it is not linearizable, so Jepsen should catch it. The example has a <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/main/examples/compose/jepsen-etcd/stale-reads.patch">stale-reads.patch</a> that turns those reads on, and with it applied, the run ends very differently:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> git apply stale-reads.patch</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen-stale</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen-stale --disk jepsen-stale --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen-stale --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen-stale -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? false,</span><br><span class="line">control |  :valid? false&#125;</span><br><span class="line">control | Analysis invalid! (ﾉಥ益ಥ）ﾉ ┻━┻</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> git apply stale-reads.patch</span><br><span class="line"><span class="term-mark">$</span> machine disks build --compose . jepsen-stale</span><br><span class="line"><span class="term-mark">$</span> machine create jepsen-stale --disk jepsen-stale --cpus 2 --mem 4096</span><br><span class="line"><span class="term-mark">$</span> machine run jepsen-stale --until &#x27;console~(Everything looks good|Analysis invalid|Jepsen broke)&#x27; --within 10m</span><br><span class="line"><span class="term-mark">$</span> machine output jepsen-stale -n : | grep -E &#x27;:linear \&#123;|:valid\? (true|false)\&#125;|Everything looks good|Analysis invalid&#x27;</span><br><span class="line">control |  :linear &#123;:valid? false,</span><br><span class="line">control |  :valid? false&#125;</span><br><span class="line">control | Analysis invalid! (ﾉಥ益ಥ）ﾉ ┻━┻</span><br></pre></td></tr></table></figure>
 
 <p>Right after a partition started, a write of 0 completed, and the very next read, invoked 10 ms later, came back with 1, the value the write had just replaced:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">control | INFO [2026-03-01 00:02:11,247] jepsen worker 2 - jepsen.print 2	:ok	:write	0</span><br><span class="line">control | INFO [2026-03-01 00:02:11,257] jepsen worker 1 - jepsen.print 1	:invoke	:read	nil</span><br><span class="line">control | INFO [2026-03-01 00:02:11,276] jepsen worker 1 - jepsen.print 1	:ok	:read	1</span><br></pre></td></tr></table></figure>
 
 <p>No single register can do that, and Jepsen says so. The full log of this run is in <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/testflows/Machine/blob/4f7550f/examples/compose/jepsen-etcd/logs/fail.log">logs&#x2F;fail.log</a>.</p>
 <h2 id="replaying-the-failure"><a href="#replaying-the-failure" class="headerlink" title="Replaying the failure"></a>Replaying the failure</h2><p>This is the part we cared about most. On real hardware, you would now have a log of a failure and no way to get the same run back, because the next run partitions at a different moment and the stale read lands somewhere else, if it lands at all. In the machine, the run is recorded, so we forked it at its first checkpoint and replayed it:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork jepsen-stale --at 1 --name jepsen-stale-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked jepsen-stale/jepsen-stale-replay</span><br><span class="line">  From checkpoint 1 of jepsen-stale, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine replay jepsen-stale-replay</span><br><span class="line"><span class="term-mark">✔</span> Replayed 460379 entries to entry 460380. Converged.</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output jepsen-stale -n :) &lt;(machine output jepsen-stale-replay -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext session"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="term-mark">$</span> machine fork jepsen-stale --at 1 --name jepsen-stale-replay</span><br><span class="line"><span class="term-mark">✔</span> Forked jepsen-stale/jepsen-stale-replay</span><br><span class="line">  From checkpoint 1 of jepsen-stale, nothing replayed</span><br><span class="line"><span class="term-mark">$</span> machine replay jepsen-stale-replay</span><br><span class="line"><span class="term-mark">✔</span> Replayed 460379 entries to entry 460380. Converged.</span><br><span class="line"><span class="term-mark">$</span> diff &lt;(machine output jepsen-stale -n :) &lt;(machine output jepsen-stale-replay -n :) &amp;&amp; echo identical</span><br><span class="line">identical</span><br></pre></td></tr></table></figure>
 
 <p>All 460,379 entries converged, and the output of the replay is identical to the original, line for line, including every timestamp, every value, the stale read and the verdict. So the failing history is there to come back to as many times as you need, to put a breakpoint in etcd at the moment that read is served, or to fork just before the partition and try something else.</p>
 <p>The replay was also a lot faster than the run it replayed:</p>
@@ -927,10 +927,10 @@ In many cases, writing a good test...
   <script src="/js/jquery-3.4.1.slim.js"></script>
 <script src="/js/popper.min.js"></script>
 <script src="/js/bootstrap/bootstrap.min.js"></script>
-<script src="/js/index-code-type.js?v=1795822771783"></script>
-<script src="/js/machine-hero-type.js?v=1795822771783"></script>
-<script src="/js/download-platforms.js?v=1795822771783"></script>
-<script src="/js/anchor-case.js?v=1795822771783"></script>
+<script src="/js/index-code-type.js?v=1795822918670"></script>
+<script src="/js/machine-hero-type.js?v=1795822918670"></script>
+<script src="/js/download-platforms.js?v=1795822918670"></script>
+<script src="/js/anchor-case.js?v=1795822918670"></script>
 
 
 
