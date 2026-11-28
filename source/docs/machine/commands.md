@@ -3090,13 +3090,17 @@ the run recorded, as reverse-continue does. The machine switches onto a branch
 at that entry, as go does. The branch keeps the run's stops as they are now. The
 run stays as it was.
 
+The command waits until the run ends. Use `--no-wait` to return once the request
+is accepted. The session then drives the run to its `--until` alone. Use machine
+wait with the same predicate to wait for it later.
+
 ```
-machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--strategy name]
-            [--seed n] [--vcpu span] [--iters span] [--until predicate] [--within duration]
-            [--irqblk] [--rdtsc-exit] [--no-idle-skip] [--auto-checkpoints n]
-            [--mode mode,...] [--fast span] [--step span] [--step-into span] [--fence span]
-            [--vtime-rate span] [--vtime-add span] [--timer-slack span]
-            [--irq-delay [target=]span,...] [--vtime-io-cost span,...]
+machine run [-h] [--back] [--no-wait] [--limit span] [--backstop-limit n] [--retry n]
+            [--strategy name] [--seed n] [--vcpu span] [--iters span] [--until predicate]
+            [--within duration] [--irqblk] [--rdtsc-exit] [--no-idle-skip]
+            [--auto-checkpoints n] [--mode mode,...] [--fast span] [--step span]
+            [--step-into span] [--fence span] [--vtime-rate span] [--vtime-add span]
+            [--timer-slack span] [--irq-delay [target=]span,...] [--vtime-io-cost span,...]
             [--vtime-rdtsc-cost span,...] [--vtime-pause-cost span,...]
             [--task-pin [tid=]set,...] [--task-sched mark,...] [--task-slice slice,...]
             [--task-int int,...] [--when predicate]
@@ -3110,6 +3114,7 @@ machine run [-h] [--back] [--limit span] [--backstop-limit n] [--retry n] [--str
 | Option | Does |
 |---|---|
 | `--back` | Go back to the newest hit before now, onto a branch |
+| `--no-wait` | Return once the session drives the run to its `--until` |
 | `--limit span` | Default branches per dispatch under fast and fence, steps under step; 0 means no limit under fast, one step under step and the machine's fence under fence; default 0 |
 | `--backstop-limit n` | Step modes only: machine instructions a dispatch may run without stepping before it ends, 0 for the machine default (default: 0) |
 | `--retry n` | Retries for an entry the host interrupted, default 2; 0 does not retry |
@@ -3149,6 +3154,7 @@ machine run run1 --iters 100                 run 100 iterations
 machine run run1 --iters 0                   continue to the next hit
 machine run run1 --mode step --iters 20      single-step 20 iterations
 machine run run1 --mode fence --limit 50000  stop on 50000 branches
+machine run run1 --until halted --no-wait    leave it to the session
 machine run run1 --until 'console~login:'    until the console prints login:
 machine run run1 --until 'entry>=500'        until it reaches entry 500
 machine run run1 --until vtime=+10ms         until its clock moves 10 ms
@@ -4714,6 +4720,9 @@ a file the lines are printed alone. Use `--wide` or `--plain` to choose.
 The entry subcommand gives the one entry that printed a byte. Use it for the
 exact entry of a match.
 
+The bytes subcommand writes the bytes of a source unchanged. Use it to save a
+file that is not text.
+
 ```
 machine output [-h] [-n range] [--entries range] [-f] [--wide] [--plain] [--source name]
                run command ...
@@ -4746,6 +4755,7 @@ machine output run1 --source ttyS1                     what ttyS1 printed
 machine output run1 --source all                       every source
 machine output run1 --source /output/keep/app/app.log  an output file
 machine output run1 --source /output/keep              every file under it
+machine output run1 bytes --source /output/keep/a.bin  a file's exact bytes
 ```
 
 Prints:
@@ -5671,6 +5681,87 @@ See also:
 - [`machine catch`](#machine-catch)
 - [`machine tasks`](#machine-tasks)
 - [`machine run`](#machine-run)
+
+## machine meminfo
+
+Show the guest's memory.
+
+The command shows the guest's memory as free -h shows it. Then it shows the
+dirty pages and the memory events since boot.
+
+The machine reads the guest kernel's own counters from guest memory with the
+guest stopped. Nothing runs in the guest, and the run records nothing. The
+answer agrees with /proc/meminfo in the guest.
+
+```
+machine meminfo [-h] run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine meminfo run1          the guest's memory, as free -h shows it
+machine -o json meminfo run1  the sizes in bytes, as JSON
+```
+
+Refuses, and the way past:
+
+```
+a run on an older guest kernel  machine create run2 --disk hello
+a run in progress               machine cancel run1
+```
+
+See also:
+
+- [`machine diskinfo`](#machine-diskinfo)
+- [`machine tasks`](#machine-tasks)
+- [`machine state`](#machine-state)
+
+## machine diskinfo
+
+Show the guest's root filesystem.
+
+The command shows the root filesystem's size, use and inodes as df shows them.
+Then it shows its device's reads and writes since boot.
+
+The machine reads the guest kernel's own counters from guest memory with the
+guest stopped. Nothing runs in the guest, and the run records nothing. The space
+agrees with df in the guest before a sync.
+
+The root is the filesystem the kernel mounted at boot. Its space is read on
+ext2, ext3 and ext4.
+
+```
+machine diskinfo [-h] run
+```
+
+| Argument | Does |
+|---|---|
+| `run` | Run name |
+
+Examples:
+
+```
+machine diskinfo run1          the root filesystem, as df shows it
+machine -o json diskinfo run1  the sizes in bytes, as JSON
+```
+
+Refuses, and the way past:
+
+```
+a run on an older guest kernel  machine create run2 --disk hello
+a run in progress               machine cancel run1
+```
+
+See also:
+
+- [`machine meminfo`](#machine-meminfo)
+- [`machine fs ls`](#machine-fs-ls)
+- [`machine inject`](#machine-inject)
 
 ## machine syscalls
 

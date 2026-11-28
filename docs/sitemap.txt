@@ -1,3 +1,5 @@
+https://testflows.com/docs/machine/index.html
+https://testflows.com/docs/machine.md
 https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor/
 https://testflows.com/blog/why-run-bombadil-in-a-deterministic-hypervisor.md
 https://testflows.com/casts/why-run-bombadil-nano.json
@@ -20,8 +22,6 @@ https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-determ
 https://testflows.com/blog/a-deterministic-hypervisor-is-execution-really-deterministic.md
 https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run/
 https://testflows.com/blog/a-deterministic-hypervisor-how-many-vcpus-can-you-run.md
-https://testflows.com/docs/machine/index.html
-https://testflows.com/docs/machine.md
 https://testflows.com/machine/index.html
 https://testflows.com/machine.md
 https://testflows.com/index.html
